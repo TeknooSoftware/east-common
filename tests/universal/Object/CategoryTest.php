@@ -24,7 +24,7 @@ namespace Teknoo\Tests\East\Website\Object;
 
 use Teknoo\East\Website\Object\Category;
 use Teknoo\East\Website\Object\Type;
-use Teknoo\Tests\East\Website\Object\Traits\PublishableTestTrait;
+use Teknoo\Tests\East\Website\Object\Traits\ObjectTestTrait;
 
 /**
  * @covers \Teknoo\East\Website\Object\PublishableTrait
@@ -33,7 +33,7 @@ use Teknoo\Tests\East\Website\Object\Traits\PublishableTestTrait;
  */
 class CategoryTest extends \PHPUnit_Framework_TestCase
 {
-    use PublishableTestTrait;
+    use ObjectTestTrait;
 
     /**
      * @return Category

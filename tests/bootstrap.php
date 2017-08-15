@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East CodeRunnerBundle.
  *
  * LICENSE
  *
@@ -14,28 +14,18 @@
  *
  * @copyright   Copyright (c) 2009-2017 Richard Déloge (richarddeloge@gmail.com)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/coderunner Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\East\Website\Object\Content;
+namespace Teknoo\Tests\East\CodeRunnerBundle;
 
-use Teknoo\East\Website\Object\Content;
-use Teknoo\States\State\StateInterface;
-use Teknoo\States\State\StateTrait;
+date_default_timezone_set('UTC');
 
-class Draft implements StateInterface
-{
-    use StateTrait;
+error_reporting(E_ALL | E_STRICT);
 
-    public function setPublishedAt()
-    {
-        return function (\DateTime $dateTime): Content {
-            $this->publishedAt = $dateTime;
+ini_set('memory_limit', '24M');
 
-            return $this;
-        };
-    }
-}
+include __DIR__.'/../vendor/autoload.php';

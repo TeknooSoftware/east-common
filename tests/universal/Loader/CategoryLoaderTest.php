@@ -29,7 +29,7 @@ use Teknoo\East\Website\Loader\LoaderInterface;
 
 class CategoryLoaderTest extends \PHPUnit_Framework_TestCase
 {
-    use PublishableLoaderTestTrait;
+    use LoaderTestTrait;
 
     /**
      * @var ObjectRepository

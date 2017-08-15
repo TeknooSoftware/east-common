@@ -23,11 +23,11 @@
 namespace Teknoo\East\Website\Loader;
 
 use Doctrine\Common\Persistence\ObjectRepository;
+use Teknoo\East\Foundation\Promise\PromiseInterface;
+use Teknoo\East\Website\Object\Category;
 
-class CategoryLoader implements PublishableLoaderInterface
+class CategoryLoader implements LoaderInterface
 {
-    use PublishableLoaderTrait;
-
     /**
      * @var ObjectRepository
      */
@@ -43,10 +43,20 @@ class CategoryLoader implements PublishableLoaderInterface
     }
 
     /**
-     * @return ObjectRepository
+     * @param string $id
+     * @param PromiseInterface $promise
+     * @return LoaderInterface
      */
-    protected function getRepository(): ObjectRepository
+    public function load(string $id, PromiseInterface $promise): LoaderInterface
     {
-        return $this->repository;
+        $entity = $this->repository->find($id);
+
+        if ($entity instanceof Category) {
+            $promise->success($entity);
+        } else {
+            $promise->fail(new \DomainException('Entity not found'));
+        }
+
+        return $this;
     }
 }

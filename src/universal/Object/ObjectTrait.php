@@ -53,6 +53,17 @@ trait ObjectTrait
     }
 
     /**
+     * @param string $id
+     * @return $this
+     */
+    public function setId(string $id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
      * @return \DateTime
      */
     public function createdAt(): \DateTime

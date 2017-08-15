@@ -56,37 +56,13 @@ trait ObjectTestTrait
         $this->buildObject()->setId(new \stdClass());
     }
 
-    public function testGetCreatedAt()
+    public function testCreatedAt()
     {
         $date = new \DateTime('2017-06-13');
         self::assertEquals(
             $date,
-            $this->generateObjectPopulated(['createdAt' => $date])->getCreatedAt()
+            $this->generateObjectPopulated(['createdAt' => $date])->createdAt()
         );
-    }
-
-    public function testSetCreatedAt()
-    {
-        $date = new \DateTime('2017-06-13');
-        
-        $Object = $this->buildObject();
-        self::assertInstanceOf(
-            \get_class($Object),
-            $Object->setCreatedAt($date)
-        );
-
-        self::assertEquals(
-            $date,
-            $Object->getCreatedAt()
-        );
-    }
-
-    /**
-     * @expectedException \Throwable
-     */
-    public function testSetCreatedAtExceptionOnBadArgument()
-    {
-        $this->buildObject()->setCreatedAt(new \stdClass());
     }
 
     public function testGetUpdatedAt()
@@ -94,32 +70,8 @@ trait ObjectTestTrait
         $date = new \DateTime('2017-06-13');
         self::assertEquals(
             $date,
-            $this->generateObjectPopulated(['updatedAt' => $date])->getUpdatedAt()
+            $this->generateObjectPopulated(['updatedAt' => $date])->updatedAt()
         );
-    }
-
-    public function testSetUpdatedAt()
-    {
-        $date = new \DateTime('2017-06-13');
-        
-        $Object = $this->buildObject();
-        self::assertInstanceOf(
-            \get_class($Object),
-            $Object->setUpdatedAt($date)
-        );
-
-        self::assertEquals(
-            $date,
-            $Object->getUpdatedAt()
-        );
-    }
-
-    /**
-     * @expectedException \Throwable
-     */
-    public function testSetUpdatedAtExceptionOnBadArgument()
-    {
-        $this->buildObject()->setUpdatedAt(new \stdClass());
     }
 
     public function testGetDeletedAt()

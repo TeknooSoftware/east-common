@@ -61,18 +61,17 @@ trait PublishableLoaderTrait
      */
     public function loadPublished(string $id, PromiseInterface $promise): PublishableLoaderInterface
     {
-        $this->load(
-            $id,
-            new Promise(function ($category) use ($promise) {
-                if ($category->getPublishedAt() instanceof \DateTime) {
-                    $promise->success($category);
-                } else {
-                    $promise->fail(new \DomainException('Entity not found'));
-                }
-            }, function (\Throwable $e) use ($promise) {
-                $promise->fail($e);
-            })
-        );
+        $promise = new Promise(function ($category) use ($promise) {
+            if ($category->getPublishedAt() instanceof \DateTime) {
+                $promise->success($category);
+            } else {
+                $promise->fail(new \DomainException('Entity not found'));
+            }
+        }, function (\Throwable $e) use ($promise) {
+            $promise->fail($e);
+        });
+
+        $this->load($id, $promise);
 
         return $this;
     }

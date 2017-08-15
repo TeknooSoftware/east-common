@@ -65,6 +65,24 @@ class CategoryTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testIsHidden()
+    {
+        self::assertFalse($this->generateObjectPopulated(['hidden' => false])->isHidden());
+        self::assertTrue($this->generateObjectPopulated(['hidden' => true])->isHidden());
+    }
+
+    public function testSetHidden()
+    {
+        $Object = $this->buildObject();
+        self::assertFalse($Object->isHidden());
+        self::assertInstanceOf(
+            \get_class($Object),
+            $Object->setHidden(true)
+        );
+
+        self::assertTrue($Object->isHidden());
+    }
+
     /**
      * @expectedException \Throwable
      */

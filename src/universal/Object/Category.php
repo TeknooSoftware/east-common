@@ -53,7 +53,7 @@ class Category implements ProxyInterface, AutomatedInterface, Translatable
     /**
      * @var bool
      */
-    private $hidden;
+    private $hidden=false;
 
     /**
      * @var Type
@@ -147,18 +147,18 @@ class Category implements ProxyInterface, AutomatedInterface, Translatable
 
 
     /**
-     * @return int
+     * @return bool
      */
-    public function isHidden(): int
+    public function isHidden(): bool
     {
-        return $this->hidden;
+        return !empty($this->hidden);
     }
 
     /**
-     * @param int $isHidden
+     * @param bool $isHidden
      * @return self
      */
-    public function setHidden(int $isHidden): Category
+    public function setHidden(bool $isHidden): Category
     {
         $this->hidden = $isHidden;
 

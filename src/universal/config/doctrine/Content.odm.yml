@@ -1,0 +1,75 @@
+#src/Resources/config/doctrine/Task.orm.yml
+Teknoo\East\Website\Object\Content:
+  type: 'documents'
+  collection: 'contents'
+  gedmo:
+    soft_deleteable:
+      field_name: 'deletedAt'
+      time_aware: false
+    translation:
+      locale: 'localeField'
+  fields:
+    id:
+      id: true
+      type: 'string'
+      strategy: 'UUID'
+    title:
+      type: 'string'
+      gedmo:
+        - 'translatable'
+    subtitle:
+      type: 'string'
+      gedmo:
+        - 'translatable'
+    content:
+      type: 'string'
+      gedmo:
+        - 'translatable'
+    tags:
+      type: 'collection'
+    description:
+      type: 'string'
+      gedmo:
+        - 'translatable'
+    createdAt:
+      type: 'datetime'
+      name: 'created_at'
+      gedmo:
+        timestampable:
+          on: 'create'
+    updatedAt:
+      type: 'datetime'
+      name: 'updated_at'
+      gedmo:
+        timestampable:
+          on: 'update'
+    deletedAt:
+      type: 'datetime'
+      name: 'deleted_at'
+      nullable: true
+    publishedAt:
+      type: 'datetime'
+      name: 'published_at'
+      nullable: true
+  referenceOne:
+    type:
+      targetDocument: 'Teknoo\East\Website\Object\Type'
+      cascade: 'all'
+    author:
+      targetDocument: 'Teknoo\East\Website\Object\User'
+      cascade: 'all'
+  referenceMany:
+    categories:
+      targetDocument:  'Teknoo\East\Website\Object\Category'
+      cascade: 'all'
+  indexes:
+    publishedAt:
+      keys:
+        publishedAt: 'desc'
+      options:
+        background: true
+    deletedAt:
+      keys:
+        deletedAt: 'desc'
+      options:
+        safe: true

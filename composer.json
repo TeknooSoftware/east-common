@@ -1,0 +1,56 @@
+{
+    "name": "teknoo/east-website",
+    "description": "East bundle to run a basic website",
+    "license": "MIT",
+    "type": "library",
+    "keywords": ["east","website","cms"],
+    "homepage": "http://teknoo.software/website",
+    "authors": [
+        {
+            "name": "Richard Déloge",
+            "email": "richarddeloge@gmail.com",
+            "role":"Software architect, Lead developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Teknoo\\East\\Website\\": "src/universal",
+            "Teknoo\\East\\WebsiteBundle\\": "src/symfony"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Teknoo\\Tests\\East\\Website\\": "tests/universal",
+            "Teknoo\\Tests\\East\\WebsiteBundle\\": "tests/symfony"
+        }
+    },
+    "require": {
+        "php": ">=7.0",
+        "doctrine/common": "~2.7.0",
+        "doctrine/annotations": "~1.4.0",
+        "gedmo/doctrine-extensions": "~2.4",
+        "lexik/translation-bundle": "~4.0",
+        "teknoo/east-foundation": "^0.0.5-beta1",
+        "teknoo/immutable": "^0.0.3",
+        "teknoo/states": "^3.1.0-beta2",
+        "teknoo/states-life-cycle": "^3.0.0-beta3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~5.4",
+        "squizlabs/php_codesniffer": "~2.8",
+        "pdepend/pdepend": "~2.5",
+        "phpmd/phpmd": "~2.6",
+        "sebastian/phpcpd": "~3.0",
+        "phploc/phploc": "~3.0",
+        "php-amqplib/php-amqplib": "^2.6.0",
+        "php-amqplib/rabbitmq-bundle": "^1.11.0",
+        "symfony/symfony": "^3.2.0",
+        "sonata-project/admin-bundle": "^3.19",
+        "symfony/psr-http-message-bridge": "~1.0",
+        "zendframework/zend-diactoros": "~1.0",
+        "twig/extensions": "~1.3",
+        "twig/twig": "^1.0||^2.0",
+        "stof/doctrine-extensions-bundle": "~1.0"
+    },
+    "minimum-stability": "stable"
+}

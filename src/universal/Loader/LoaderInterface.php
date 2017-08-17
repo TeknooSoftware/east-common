@@ -27,9 +27,9 @@ use Teknoo\East\Foundation\Promise\PromiseInterface;
 interface LoaderInterface
 {
     /**
-     * @param string $id
+     * @param array $criteria
      * @param PromiseInterface $promise
      * @return LoaderInterface
      */
-    public function load(string $id, PromiseInterface $promise): LoaderInterface;
+    public function load(array $criteria, PromiseInterface $promise): LoaderInterface;
 }

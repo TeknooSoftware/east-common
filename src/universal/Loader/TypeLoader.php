@@ -43,13 +43,13 @@ class TypeLoader implements LoaderInterface
     }
 
     /**
-     * @param string $id
+     * @param array $criteria
      * @param PromiseInterface $promise
      * @return LoaderInterface
      */
-    public function load(string $id, PromiseInterface $promise): LoaderInterface
+    public function load(array $criteria, PromiseInterface $promise): LoaderInterface
     {
-        $entity = $this->repository->find($id);
+        $entity = $this->repository->findBy($criteria);
 
         if ($entity instanceof Type) {
             $promise->success($entity);

@@ -37,13 +37,13 @@ trait PublishableLoaderTrait
     abstract protected function getRepository(): ObjectRepository;
 
     /**
-     * @param string $id
+     * @param array $criteria
      * @param PromiseInterface $promise
      * @return LoaderInterface
      */
-    public function load(string $id, PromiseInterface $promise): LoaderInterface
+    public function load(array $criteria, PromiseInterface $promise): LoaderInterface
     {
-        $entity = $this->getRepository()->find($id);
+        $entity = $this->getRepository()->findBy($criteria);
 
         if (!empty($entity)) {
             $promise->success($entity);
@@ -55,15 +55,15 @@ trait PublishableLoaderTrait
     }
 
     /**
-     * @param string $id
+     * @param array $criteria
      * @param PromiseInterface $promise
      * @return PublishableLoaderInterface
      */
-    public function loadPublished(string $id, PromiseInterface $promise): PublishableLoaderInterface
+    public function loadPublished(array $criteria, PromiseInterface $promise): PublishableLoaderInterface
     {
-        $promise = new Promise(function ($category) use ($promise) {
-            if ($category->getPublishedAt() instanceof \DateTime) {
-                $promise->success($category);
+        $promise = new Promise(function ($object) use ($promise) {
+            if ($object->getPublishedAt() instanceof \DateTime) {
+                $promise->success($object);
             } else {
                 $promise->fail(new \DomainException('Entity not found'));
             }
@@ -71,7 +71,7 @@ trait PublishableLoaderTrait
             $promise->fail($e);
         });
 
-        $this->load($id, $promise);
+        $this->load($criteria, $promise);
 
         return $this;
     }

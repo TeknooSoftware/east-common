@@ -36,7 +36,7 @@ class Type implements Translatable
     /**
      * @var string
      */
-    private $code;
+    private $template;
 
     /**
      * @var Type|null
@@ -70,18 +70,18 @@ class Type implements Translatable
     /**
      * @return string
      */
-    public function getCode(): string
+    public function getTemplate(): string
     {
-        return $this->code;
+        return $this->template;
     }
 
     /**
-     * @param string $code
+     * @param string $template
      * @return self
      */
-    public function setCode(string $code): Type
+    public function setTemplate(string $template): Type
     {
-        $this->code = $code;
+        $this->template = $template;
 
         return $this;
     }

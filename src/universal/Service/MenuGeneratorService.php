@@ -24,5 +24,4 @@ namespace Teknoo\East\Website\Loader;
 
 class MenuGeneratorService
 {
-
 }

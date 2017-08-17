@@ -61,6 +61,11 @@ class Content implements ProxyInterface, AutomatedInterface, Translatable
     private $categories;
 
     /**
+     * @var string
+     */
+    private $slug;
+
+    /**
      * @var Type
      */
     private $type;
@@ -189,6 +194,25 @@ class Content implements ProxyInterface, AutomatedInterface, Translatable
     public function setCategories($categories): Content
     {
         $this->categories = $categories;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlug(): string
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param string $slug
+     * @return self
+     */
+    public function setSlug(string $slug): Content
+    {
+        $this->slug = $slug;
 
         return $this;
     }

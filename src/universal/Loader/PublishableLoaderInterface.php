@@ -27,9 +27,9 @@ use Teknoo\East\Foundation\Promise\PromiseInterface;
 interface PublishableLoaderInterface extends LoaderInterface
 {
     /**
-     * @param string $id
+     * @param array $criteria
      * @param PromiseInterface $promise
      * @return PublishableLoaderInterface
      */
-    public function loadPublished(string $id, PromiseInterface $promise): PublishableLoaderInterface;
+    public function loadPublished(array $criteria, PromiseInterface $promise): PublishableLoaderInterface;
 }

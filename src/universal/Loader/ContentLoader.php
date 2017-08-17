@@ -23,6 +23,7 @@
 namespace Teknoo\East\Website\Loader;
 
 use Doctrine\Common\Persistence\ObjectRepository;
+use Teknoo\East\Foundation\Promise\PromiseInterface;
 
 class ContentLoader implements PublishableLoaderInterface
 {
@@ -48,5 +49,21 @@ class ContentLoader implements PublishableLoaderInterface
     protected function getRepository(): ObjectRepository
     {
         return $this->repository;
+    }
+
+    /**
+     * @param string $slug
+     * @param array $categories
+     * @param PromiseInterface $promise
+     * @return ContentLoader|PublishableLoaderInterface
+     */
+    public function bySlug(string $slug, array $categories, PromiseInterface $promise): ContentLoader
+    {
+        return $this->loadPublished([
+                'slug' => $slug,
+                'categories.slug' => \array_map('stringval', $categories)
+            ],
+            $promise
+        );
     }
 }

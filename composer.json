@@ -30,7 +30,7 @@
         "doctrine/annotations": "~1.4.0",
         "gedmo/doctrine-extensions": "~2.4",
         "lexik/translation-bundle": "~4.0",
-        "teknoo/east-foundation": "^0.0.5-beta1",
+        "teknoo/east-foundation": "dev-master",
         "teknoo/immutable": "^0.0.3",
         "teknoo/states": "^3.1.0-beta2",
         "teknoo/states-life-cycle": "^3.0.0-beta3"

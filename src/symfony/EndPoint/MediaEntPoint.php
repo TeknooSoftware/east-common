@@ -20,8 +20,14 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\East\Website\Loader;
+namespace Teknoo\East\WebsiteBundle\EndPoint;
 
-class MenuGeneratorService
+use Teknoo\East\Foundation\EndPoint\EndPointInterface;
+use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
+use Teknoo\East\Website\EndPoint\MediaEndPointTrait;
+
+class MediaEntPoint implements EndPointInterface
 {
+    use EastEndPointTrait,
+        MediaEndPointTrait;
 }

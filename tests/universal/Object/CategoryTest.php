@@ -165,39 +165,6 @@ class CategoryTest extends \PHPUnit_Framework_TestCase
         $this->buildObject()->setPosition(new \stdClass());
     }
     
-    public function testGetType()
-    {
-        $object = new Type();
-        self::assertEquals(
-            $object,
-            $this->generateObjectPopulated(['type' => $object])->getType()
-        );
-    }
-
-    public function testSetType()
-    {
-        $object = new Type();
-
-        $Object = $this->buildObject();
-        self::assertInstanceOf(
-            Category::class,
-            $Object->setType($object)
-        );
-
-        self::assertEquals(
-            $object,
-            $Object->getType()
-        );
-    }
-
-    /**
-     * @expectedException \Throwable
-     */
-    public function testSetTypeExceptionOnBadArgument()
-    {
-        $this->buildObject()->setType(new \stdClass());
-    }
-    
     public function testGetParent()
     {
         $object = new Category();

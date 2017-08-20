@@ -20,14 +20,29 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\East\WebsiteBundle\EndPoint;
+namespace Teknoo\East\Website\EndPoint;
 
-use Teknoo\East\Foundation\EndPoint\EndPointInterface;
-use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
-use Teknoo\East\Website\EndPoint\ContentEndPointTrait;
+use Psr\Http\Message\ServerRequestInterface;
+use Teknoo\East\Foundation\Http\ClientInterface;
+use Teknoo\East\Website\Loader\MediaLoader;
 
-class ContentEndPoint implements EndPointInterface
+trait MediaEndPointTrait
 {
-    use EastEndPointTrait,
-        ContentEndPointTrait;
+    /**
+     * @var MediaLoader
+     */
+    private $mediaLoader;
+
+    /**
+     * @param ServerRequestInterface $request
+     * @param ClientInterface $client
+     * @param string $id
+     * @return self
+     */
+    public function display(ServerRequestInterface $request, ClientInterface $client, string $id)
+    {
+
+
+        return $this;
+    }
 }

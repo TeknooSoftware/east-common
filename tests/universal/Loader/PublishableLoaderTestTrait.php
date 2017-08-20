@@ -42,15 +42,15 @@ trait PublishableLoaderTestTrait
      */
     public function testLoadPublishedBadPromise()
     {
-        $this->buildLoader()->loadPublished('fooBar', new \stdClass());
+        $this->buildLoader()->loadPublished(['fooBar'=>true], new \stdClass());
     }
 
     public function testLoadPublishedNotFound()
     {
         $this->getRepositoryMock()
             ->expects(self::any())
-            ->method('find')
-            ->with('fooBar')
+            ->method('findBy')
+            ->with(['fooBar'=>true])
             ->willReturn(null);
 
         /**
@@ -65,7 +65,7 @@ trait PublishableLoaderTestTrait
 
         self::assertInstanceOf(
             PublishableLoaderInterface::class,
-            $this->buildLoader()->load('fooBar', $promiseMock)
+            $this->buildLoader()->load(['fooBar'=>true], $promiseMock)
         );
     }
 
@@ -76,8 +76,8 @@ trait PublishableLoaderTestTrait
 
         $this->getRepositoryMock()
             ->expects(self::any())
-            ->method('find')
-            ->with('fooBar')
+            ->method('findBy')
+            ->with(['fooBar'=>true])
             ->willReturn($entity);
 
         /**
@@ -90,7 +90,7 @@ trait PublishableLoaderTestTrait
 
         self::assertInstanceOf(
             PublishableLoaderInterface::class,
-            $this->buildLoader()->loadPublished('fooBar', $promiseMock)
+            $this->buildLoader()->loadPublished(['fooBar'=>true], $promiseMock)
         );
     }
 
@@ -100,8 +100,8 @@ trait PublishableLoaderTestTrait
 
         $this->getRepositoryMock()
             ->expects(self::any())
-            ->method('find')
-            ->with('fooBar')
+            ->method('findBy')
+            ->with(['fooBar'=>true])
             ->willReturn($entity);
 
         /**
@@ -116,7 +116,7 @@ trait PublishableLoaderTestTrait
 
         self::assertInstanceOf(
             PublishableLoaderInterface::class,
-            $this->buildLoader()->loadPublished('fooBar', $promiseMock)
+            $this->buildLoader()->loadPublished(['fooBar'=>true], $promiseMock)
         );
     }
 }

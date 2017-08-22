@@ -23,6 +23,7 @@
 namespace Teknoo\Tests\East\Website\Loader;
 
 use Doctrine\Common\Persistence\ObjectRepository;
+use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Loader\ContentLoader;
 use Teknoo\East\Website\Loader\LoaderInterface;
@@ -62,5 +63,60 @@ class ContentLoaderTest extends \PHPUnit_Framework_TestCase
     public function getEntity()
     {
         return new Content();
+    }
+
+    public function testBySlugNotFound()
+    {
+        $this->getRepositoryMock()
+            ->expects(self::any())
+            ->method('findBy')
+            ->with([
+                'slug' => 'foo',
+                'categories.slug' => ['bar', 'the']
+            ])
+            ->willReturn(null);
+
+        /**
+         * @var \PHPUnit_Framework_MockObject_MockObject $promiseMock
+         *
+         */
+        $promiseMock = $this->createMock(Promise::class);
+        $promiseMock->expects(self::never())->method('success');
+        $promiseMock->expects(self::once())
+            ->method('fail')
+            ->with($this->callback(function ($exception) { return $exception instanceof \DomainException;}));
+
+        self::assertInstanceOf(
+            ContentLoader::class,
+            $this->buildLoader()->bySlug('foo', ['bar', 'the'], $promiseMock)
+        );
+    }
+
+    public function testBySlugFound()
+    {
+        $entity = $this->getEntity();
+        $entity->setPublishedAt(new \DateTime('2017-07-01'))->updateStates();
+
+        $this->getRepositoryMock()
+            ->expects(self::any())
+            ->method('findBy')
+            ->with([
+                'slug' => 'foo',
+                'categories.slug' => ['bar', 'the']
+            ])
+            ->willReturn($entity);
+
+        /**
+         * @var \PHPUnit_Framework_MockObject_MockObject $promiseMock
+         *
+         */
+        $promiseMock = $this->createMock(Promise::class);
+        $promiseMock->expects(self::once())->method('success')->with($entity);
+        $promiseMock->expects(self::never())->method('fail');
+
+        self::assertInstanceOf(
+            ContentLoader::class,
+            $this->buildLoader()->bySlug('foo', ['bar', 'the'], $promiseMock)
+        );
     }
 }

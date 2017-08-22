@@ -65,6 +65,44 @@ class CategoryTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @expectedException \Throwable
+     */
+    public function testSetNameExceptionOnBadArgument()
+    {
+        $this->buildObject()->setName(new \stdClass());
+    }
+
+    public function testGetSlug()
+    {
+        self::assertEquals(
+            'fooBar',
+            $this->generateObjectPopulated(['slug' => 'fooBar'])->getSlug()
+        );
+    }
+
+    public function testSetSlug()
+    {
+        $Object = $this->buildObject();
+        self::assertInstanceOf(
+            \get_class($Object),
+            $Object->setSlug('fooBar')
+        );
+
+        self::assertEquals(
+            'fooBar',
+            $Object->getSlug()
+        );
+    }
+
+    /**
+     * @expectedException \Throwable
+     */
+    public function testSetSlugExceptionOnBadArgument()
+    {
+        $this->buildObject()->setSlug(new \stdClass());
+    }
+
     public function testIsHidden()
     {
         self::assertFalse($this->generateObjectPopulated(['hidden' => false])->isHidden());
@@ -81,14 +119,6 @@ class CategoryTest extends \PHPUnit_Framework_TestCase
         );
 
         self::assertTrue($Object->isHidden());
-    }
-
-    /**
-     * @expectedException \Throwable
-     */
-    public function testSetNameExceptionOnBadArgument()
-    {
-        $this->buildObject()->setName(new \stdClass());
     }
 
     public function testGetLocaleField()

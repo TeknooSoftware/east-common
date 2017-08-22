@@ -104,6 +104,36 @@ class ContentTest extends \PHPUnit_Framework_TestCase
         $this->buildObject()->setDescription(new \stdClass());
     }
 
+    public function testGetSlug()
+    {
+        self::assertEquals(
+            'fooBar',
+            $this->generateObjectPopulated(['slug' => 'fooBar'])->getSlug()
+        );
+    }
+
+    public function testSetSlug()
+    {
+        $Object = $this->buildObject();
+        self::assertInstanceOf(
+            \get_class($Object),
+            $Object->setSlug('fooBar')
+        );
+
+        self::assertEquals(
+            'fooBar',
+            $Object->getSlug()
+        );
+    }
+
+    /**
+     * @expectedException \Throwable
+     */
+    public function testSetSlugExceptionOnBadArgument()
+    {
+        $this->buildObject()->setSlug(new \stdClass());
+    }
+
     public function testGetSubtitle()
     {
         self::assertEquals(

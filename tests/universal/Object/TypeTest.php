@@ -72,6 +72,37 @@ class TypeTest extends \PHPUnit_Framework_TestCase
         $this->buildObject()->setName(new \stdClass());
     }
 
+
+    public function testGetTemplate()
+    {
+        self::assertEquals(
+            'fooBar',
+            $this->generateObjectPopulated(['template' => 'fooBar'])->getTemplate()
+        );
+    }
+
+    public function testSetTemplate()
+    {
+        $Object = $this->buildObject();
+        self::assertInstanceOf(
+            \get_class($Object),
+            $Object->setTemplate('fooBar')
+        );
+
+        self::assertEquals(
+            'fooBar',
+            $Object->getTemplate()
+        );
+    }
+
+    /**
+     * @expectedException \Throwable
+     */
+    public function testSetTemplateExceptionOnBadArgument()
+    {
+        $this->buildObject()->setTemplate(new \stdClass());
+    }
+
     public function testGetParent()
     {
         $object = new Type();

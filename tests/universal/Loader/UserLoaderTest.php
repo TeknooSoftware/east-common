@@ -23,6 +23,7 @@
 namespace Teknoo\Tests\East\Website\Loader;
 
 use Doctrine\Common\Persistence\ObjectRepository;
+use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Website\Object\User;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Loader\UserLoader;
@@ -62,5 +63,53 @@ class UserLoaderTest extends \PHPUnit_Framework_TestCase
     public function getEntity()
     {
         return new User();
+    }
+
+    public function testByEmailNotFound()
+    {
+        $this->getRepositoryMock()
+            ->expects(self::any())
+            ->method('findBy')
+            ->with(['email'=>\hash('sha512', 'foo@bar')])
+            ->willReturn(null);
+
+        /**
+         * @var \PHPUnit_Framework_MockObject_MockObject $promiseMock
+         *
+         */
+        $promiseMock = $this->createMock(Promise::class);
+        $promiseMock->expects(self::never())->method('success');
+        $promiseMock->expects(self::once())
+            ->method('fail')
+            ->with($this->callback(function ($exception) { return $exception instanceof \DomainException;}));
+
+        self::assertInstanceOf(
+            UserLoader::class,
+            $this->buildLoader()->byEmail('foo@bar', $promiseMock)
+        );
+    }
+
+    public function testByEmailFound()
+    {
+        $entity = $this->getEntity();
+
+        $this->getRepositoryMock()
+            ->expects(self::any())
+            ->method('findBy')
+            ->with(['email'=>\hash('sha512', 'foo@bar')])
+            ->willReturn($entity);
+
+        /**
+         * @var \PHPUnit_Framework_MockObject_MockObject $promiseMock
+         *
+         */
+        $promiseMock = $this->createMock(Promise::class);
+        $promiseMock->expects(self::once())->method('success')->with($entity);
+        $promiseMock->expects(self::never())->method('fail');
+
+        self::assertInstanceOf(
+            UserLoader::class,
+            $this->buildLoader()->byEmail('foo@bar', $promiseMock)
+        );
     }
 }

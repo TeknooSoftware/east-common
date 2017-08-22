@@ -61,7 +61,7 @@ class ContentLoader implements PublishableLoaderInterface
     {
         return $this->loadPublished([
                 'slug' => $slug,
-                'categories.slug' => \array_map('stringval', $categories)
+                'categories.slug' => \array_map(function ($category) { return (string) $category;}, $categories)
             ],
             $promise
         );

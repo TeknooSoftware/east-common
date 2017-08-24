@@ -23,6 +23,7 @@
 namespace Teknoo\East\Website\Loader;
 
 use Doctrine\Common\Persistence\ObjectRepository;
+use Teknoo\East\Foundation\Promise\PromiseInterface;
 
 class MediaLoader implements PublishableLoaderInterface
 {
@@ -50,5 +51,13 @@ class MediaLoader implements PublishableLoaderInterface
         return $this->repository;
     }
 
-
+    /**
+     * @param string $id
+     * @param PromiseInterface $promise
+     * @return MediaLoader
+     */
+    public function byId(string $id, PromiseInterface $promise): MediaLoader
+    {
+        return $this->loadPublished(['id' => $id], $promise);
+    }
 }

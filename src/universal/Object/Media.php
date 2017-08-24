@@ -24,7 +24,7 @@ namespace Teknoo\East\Website\Object;
 
 class Media
 {
-    use ObjectTrait;
+    use PublishableTrait;
 
     /**
      * @var string
@@ -32,9 +32,14 @@ class Media
     private $name;
 
     /**
-     * @var string
+     * @var resource
      */
-    private $location;
+    private $raw;
+
+    /**
+     * @var int
+     */
+    private $size;
 
     /**
      * @var string
@@ -66,20 +71,20 @@ class Media
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getLocation(): string
+    public function getSize(): int
     {
-        return $this->location;
+        return $this->size;
     }
 
     /**
-     * @param string $location
+     * @param int $size
      * @return self
      */
-    public function setLocation(string $location): Media
+    public function setSize(int $size): Media
     {
-        $this->location = $location;
+        $this->size = $size;
 
         return $this;
     }
@@ -118,6 +123,36 @@ class Media
     public function setAlternative(string $alternative): Media
     {
         $this->alternative = $alternative;
+
+        return $this;
+    }
+
+    /**
+     * @return resource
+     */
+    public function getRaw()
+    {
+        return $this->raw;
+    }
+
+    /**
+     * @param resource $raw
+     * @return self
+     */
+    public function setRaw($raw): Media
+    {
+        $this->raw = $raw;
+
+        return $this;
+    }
+
+    /**
+     * @param \DateTime $publishedAt
+     * @return Media
+     */
+    public function setPublishedAt(\DateTime $publishedAt): Media
+    {
+        $this->publishedAt = $publishedAt;
 
         return $this;
     }

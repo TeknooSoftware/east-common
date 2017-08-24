@@ -24,6 +24,7 @@ namespace Teknoo\Tests\East\Website\Object;
 
 use Teknoo\Tests\East\Website\Object\Traits\ObjectTestTrait;
 use Teknoo\East\Website\Object\Media;
+use Teknoo\Tests\East\Website\Object\Traits\PublishableTestTrait;
 
 /**
  * @covers \Teknoo\East\Website\Object\PublishableTrait
@@ -32,7 +33,7 @@ use Teknoo\East\Website\Object\Media;
  */
 class MediaTest extends \PHPUnit_Framework_TestCase
 {
-    use ObjectTestTrait;
+    use PublishableTestTrait;
 
     /**
      * @return Media
@@ -72,34 +73,34 @@ class MediaTest extends \PHPUnit_Framework_TestCase
         $this->buildObject()->setName(new \stdClass());
     }
     
-    public function testGetLocation()
+    public function testGetSize()
     {
         self::assertEquals(
-            'fooBar',
-            $this->generateObjectPopulated(['location' => 'fooBar'])->getLocation()
+            123,
+            $this->generateObjectPopulated(['size' => 123])->getSize()
         );
     }
 
-    public function testSetLocation()
+    public function testSetSize()
     {
         $Object = $this->buildObject();
         self::assertInstanceOf(
             \get_class($Object),
-            $Object->setLocation('fooBar')
+            $Object->setSize(123)
         );
 
         self::assertEquals(
-            'fooBar',
-            $Object->getLocation()
+            123,
+            $Object->getSize()
         );
     }
 
     /**
      * @expectedException \Throwable
      */
-    public function testSetLocationExceptionOnBadArgument()
+    public function testSetSizeExceptionOnBadArgument()
     {
-        $this->buildObject()->setLocation(new \stdClass());
+        $this->buildObject()->setSize(new \stdClass());
     }
 
     public function testGetMimeType()
@@ -160,5 +161,27 @@ class MediaTest extends \PHPUnit_Framework_TestCase
     public function testSetAlternativeExceptionOnBadArgument()
     {
         $this->buildObject()->setAlternative(new \stdClass());
+    }
+
+    public function testGetRaw()
+    {
+        self::assertEquals(
+            'fooBar',
+            $this->generateObjectPopulated(['raw' => 'fooBar'])->getRaw()
+        );
+    }
+
+    public function testSetRaw()
+    {
+        $Object = $this->buildObject();
+        self::assertInstanceOf(
+            \get_class($Object),
+            $Object->setRaw('fooBar')
+        );
+
+        self::assertEquals(
+            'fooBar',
+            $Object->getRaw()
+        );
     }
 }

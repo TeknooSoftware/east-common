@@ -23,6 +23,7 @@
 namespace Teknoo\Tests\East\Website\Loader;
 
 use Doctrine\Common\Persistence\ObjectRepository;
+use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Website\Object\Media;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Loader\MediaLoader;
@@ -62,5 +63,58 @@ class MediaLoaderTest extends \PHPUnit_Framework_TestCase
     public function getEntity()
     {
         return new Media();
+    }
+    
+    public function testByIdNotFound()
+    {
+        $this->getRepositoryMock()
+            ->expects(self::any())
+            ->method('findBy')
+            ->with([
+                'id' => 'foo'
+            ])
+            ->willReturn(null);
+
+        /**
+         * @var \PHPUnit_Framework_MockObject_MockObject $promiseMock
+         *
+         */
+        $promiseMock = $this->createMock(Promise::class);
+        $promiseMock->expects(self::never())->method('success');
+        $promiseMock->expects(self::once())
+            ->method('fail')
+            ->with($this->callback(function ($exception) { return $exception instanceof \DomainException;}));
+
+        self::assertInstanceOf(
+            MediaLoader::class,
+            $this->buildLoader()->byId('foo', $promiseMock)
+        );
+    }
+
+    public function testByIdFound()
+    {
+        $entity = $this->getEntity();
+        $entity->setPublishedAt(new \DateTime('2017-07-01'));
+
+        $this->getRepositoryMock()
+            ->expects(self::any())
+            ->method('findBy')
+            ->with([
+                'id' => 'foo'
+            ])
+            ->willReturn($entity);
+
+        /**
+         * @var \PHPUnit_Framework_MockObject_MockObject $promiseMock
+         *
+         */
+        $promiseMock = $this->createMock(Promise::class);
+        $promiseMock->expects(self::once())->method('success')->with($entity);
+        $promiseMock->expects(self::never())->method('fail');
+
+        self::assertInstanceOf(
+            MediaLoader::class,
+            $this->buildLoader()->byId('foo', $promiseMock)
+        );
     }
 }

@@ -5,8 +5,11 @@ parameters:
 services:
   teknoo.east.website.endpoint.content:
     class: '%teknoo.east.website.endpoint.content.class%'
-    autowire: true
+    arguments:
+      - '@Teknoo\East\Website\Loader\ContentLoader'
+      - '@Teknoo\East\Website\Service\MenuGenerator'
 
   teknoo.east.website.endpoint.media:
     class: '%teknoo.east.website.endpoint.media.class%'
-    autowire: true
+    arguments:
+      - '@Teknoo\East\Website\Loader\MediaLoader'

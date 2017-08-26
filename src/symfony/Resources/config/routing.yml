@@ -1,0 +1,9 @@
+content:
+    path: '/*'
+    methods:  ['GET']
+    defaults: { _controller: 'teknoo.east.website.endpoint.content' }
+
+media:
+    path: '/media/{id}'
+    methods:  ['GET']
+    defaults: { _controller: 'teknoo.east.website.endpoint.media' }

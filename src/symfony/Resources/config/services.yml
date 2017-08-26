@@ -1,4 +1,4 @@
-parametres:
+parameters:
   teknoo.east.website.endpoint.content.class: 'Teknoo\East\WebsiteBundle\EndPoint\ContentEndPoint'
   teknoo.east.website.endpoint.media.class: 'Teknoo\East\WebsiteBundle\EndPoint\MediaEntPoint'
 

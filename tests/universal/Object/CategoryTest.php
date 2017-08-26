@@ -103,6 +103,36 @@ class CategoryTest extends \PHPUnit_Framework_TestCase
         $this->buildObject()->setSlug(new \stdClass());
     }
 
+    public function testGetLocation()
+    {
+        self::assertEquals(
+            'fooBar',
+            $this->generateObjectPopulated(['location' => 'fooBar'])->getLocation()
+        );
+    }
+
+    public function testSetLocation()
+    {
+        $Object = $this->buildObject();
+        self::assertInstanceOf(
+            \get_class($Object),
+            $Object->setLocation('fooBar')
+        );
+
+        self::assertEquals(
+            'fooBar',
+            $Object->getLocation()
+        );
+    }
+
+    /**
+     * @expectedException \Throwable
+     */
+    public function testSetLocationExceptionOnBadArgument()
+    {
+        $this->buildObject()->setLocation(new \stdClass());
+    }
+
     public function testIsHidden()
     {
         self::assertFalse($this->generateObjectPopulated(['hidden' => false])->isHidden());

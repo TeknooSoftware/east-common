@@ -72,7 +72,6 @@ class ContentLoaderTest extends \PHPUnit_Framework_TestCase
             ->method('findBy')
             ->with([
                 'slug' => 'foo',
-                'categories.slug' => ['bar', 'the']
             ])
             ->willReturn(null);
 
@@ -88,7 +87,7 @@ class ContentLoaderTest extends \PHPUnit_Framework_TestCase
 
         self::assertInstanceOf(
             ContentLoader::class,
-            $this->buildLoader()->bySlug('foo', ['bar', 'the'], $promiseMock)
+            $this->buildLoader()->bySlug('foo', $promiseMock)
         );
     }
 
@@ -102,7 +101,6 @@ class ContentLoaderTest extends \PHPUnit_Framework_TestCase
             ->method('findBy')
             ->with([
                 'slug' => 'foo',
-                'categories.slug' => ['bar', 'the']
             ])
             ->willReturn($entity);
 
@@ -116,7 +114,7 @@ class ContentLoaderTest extends \PHPUnit_Framework_TestCase
 
         self::assertInstanceOf(
             ContentLoader::class,
-            $this->buildLoader()->bySlug('foo', ['bar', 'the'], $promiseMock)
+            $this->buildLoader()->bySlug('foo', $promiseMock)
         );
     }
 }

@@ -56,6 +56,11 @@ class Category implements ProxyInterface, AutomatedInterface, Translatable
     private $position;
 
     /**
+     * @var string
+     */
+    private $location;
+
+    /**
      * @var bool
      */
     private $hidden=false;
@@ -126,7 +131,6 @@ class Category implements ProxyInterface, AutomatedInterface, Translatable
         return $this;
     }
 
-
     /**
      * @return string
      */
@@ -142,6 +146,25 @@ class Category implements ProxyInterface, AutomatedInterface, Translatable
     public function setSlug(string $slug): Category
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocation(): string
+    {
+        return $this->location;
+    }
+
+    /**
+     * @param string $location
+     * @return self
+     */
+    public function setLocation(string $location): Category
+    {
+        $this->location = $location;
 
         return $this;
     }

@@ -53,15 +53,13 @@ class ContentLoader implements PublishableLoaderInterface
 
     /**
      * @param string $slug
-     * @param array $categories
      * @param PromiseInterface $promise
      * @return ContentLoader|PublishableLoaderInterface
      */
-    public function bySlug(string $slug, array $categories, PromiseInterface $promise): ContentLoader
+    public function bySlug(string $slug, PromiseInterface $promise): ContentLoader
     {
         return $this->loadPublished([
-                'slug' => $slug,
-                'categories.slug' => \array_map(function ($category) { return (string) $category;}, $categories)
+                'slug' => $slug
             ],
             $promise
         );

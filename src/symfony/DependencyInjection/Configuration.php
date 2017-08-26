@@ -20,7 +20,7 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\East\WebsiteBundle\Configuration;
+namespace Teknoo\East\WebsiteBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;

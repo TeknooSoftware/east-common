@@ -22,6 +22,7 @@
 
 namespace Teknoo\East\Website;
 
+use function DI\get;
 use Doctrine\Common\Persistence\ObjectManager;
 use Teknoo\East\Website\Loader\CategoryLoader;
 use Teknoo\East\Website\Loader\ContentLoader;
@@ -47,9 +48,11 @@ return [
     ContentLoader::class => function (ObjectManager $manager) {
         return new ContentLoader($manager->getRepository(Content::class));
     },
+    'teknoo.east.website.loader.content_loader' => get(ContentLoader::class),
     MediaLoader::class => function (ObjectManager $manager) {
         return new MediaLoader($manager->getRepository(Media::class));
     },
+    'teknoo.east.website.loader.media_loader' => get(MediaLoader::class),
     TypeLoader::class => function (ObjectManager $manager) {
         return new TypeLoader($manager->getRepository(Type::class));
     },
@@ -76,4 +79,5 @@ return [
     MenuGenerator::class => function (CategoryLoader $loader) {
         return new MenuGenerator($loader);
     },
+    'teknoo.east.website.service.menu_generator' => get(MenuGenerator::class),
 ];

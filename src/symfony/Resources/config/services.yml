@@ -6,10 +6,10 @@ services:
   teknoo.east.website.endpoint.content:
     class: '%teknoo.east.website.endpoint.content.class%'
     arguments:
-      - '@Teknoo\East\Website\Loader\ContentLoader'
-      - '@Teknoo\East\Website\Service\MenuGenerator'
+      - '@teknoo.east.website.loader.content_loader'
+      - '@teknoo.east.website.service.menu_generator'
 
   teknoo.east.website.endpoint.media:
     class: '%teknoo.east.website.endpoint.media.class%'
     arguments:
-      - '@Teknoo\East\Website\Loader\MediaLoader'
+      - '@teknoo.east.website.loader.media_loader'

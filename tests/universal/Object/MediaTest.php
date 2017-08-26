@@ -73,34 +73,94 @@ class MediaTest extends \PHPUnit_Framework_TestCase
         $this->buildObject()->setName(new \stdClass());
     }
     
-    public function testGetSize()
+    public function testGetLength()
     {
         self::assertEquals(
             123,
-            $this->generateObjectPopulated(['size' => 123])->getSize()
+            $this->generateObjectPopulated(['length' => 123])->getLength()
         );
     }
 
-    public function testSetSize()
+    public function testSetLength()
     {
         $Object = $this->buildObject();
         self::assertInstanceOf(
             \get_class($Object),
-            $Object->setSize(123)
+            $Object->setLength(123)
         );
 
         self::assertEquals(
             123,
-            $Object->getSize()
+            $Object->getLength()
         );
     }
 
     /**
      * @expectedException \Throwable
      */
-    public function testSetSizeExceptionOnBadArgument()
+    public function testSetLengthExceptionOnBadArgument()
     {
-        $this->buildObject()->setSize(new \stdClass());
+        $this->buildObject()->setLength(new \stdClass());
+    }
+    
+    public function testGetChunkSize()
+    {
+        self::assertEquals(
+            123,
+            $this->generateObjectPopulated(['chunkSize' => 123])->getChunkSize()
+        );
+    }
+
+    public function testSetChunkSize()
+    {
+        $Object = $this->buildObject();
+        self::assertInstanceOf(
+            \get_class($Object),
+            $Object->setChunkSize(123)
+        );
+
+        self::assertEquals(
+            123,
+            $Object->getChunkSize()
+        );
+    }
+
+    /**
+     * @expectedException \Throwable
+     */
+    public function testSetChunkSizeExceptionOnBadArgument()
+    {
+        $this->buildObject()->setChunkSize(new \stdClass());
+    }
+
+    public function testGetMd5()
+    {
+        self::assertEquals(
+            'fooBar',
+            $this->generateObjectPopulated(['md5' => 'fooBar'])->getMd5()
+        );
+    }
+
+    public function testSetMd5()
+    {
+        $Object = $this->buildObject();
+        self::assertInstanceOf(
+            \get_class($Object),
+            $Object->setMd5('fooBar')
+        );
+
+        self::assertEquals(
+            'fooBar',
+            $Object->getMd5()
+        );
+    }
+
+    /**
+     * @expectedException \Throwable
+     */
+    public function testSetMd5ExceptionOnBadArgument()
+    {
+        $this->buildObject()->setMd5(new \stdClass());
     }
 
     public function testGetMimeType()
@@ -163,25 +223,57 @@ class MediaTest extends \PHPUnit_Framework_TestCase
         $this->buildObject()->setAlternative(new \stdClass());
     }
 
-    public function testGetRaw()
+    public function testGetFile()
     {
         self::assertEquals(
             'fooBar',
-            $this->generateObjectPopulated(['raw' => 'fooBar'])->getRaw()
+            $this->generateObjectPopulated(['file' => 'fooBar'])->getFile()
         );
     }
 
-    public function testSetRaw()
+    public function testSetFile()
     {
         $Object = $this->buildObject();
         self::assertInstanceOf(
             \get_class($Object),
-            $Object->setRaw('fooBar')
+            $Object->setFile('fooBar')
         );
 
         self::assertEquals(
             'fooBar',
-            $Object->getRaw()
+            $Object->getFile()
+        );
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testGetResourceNotAvailable()
+    {
+        $this->generateObjectPopulated(['file' => 'fooBar'])->getResource();
+    }
+
+
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testGetResourceNotResource()
+    {
+        $file = $this->getMockBuilder('MongoGridFSFileMock')->setMethods(['getResource'])->getMock();
+        $file->expects($this->any())->method('getResource')->willReturn('foobar');
+
+        $this->generateObjectPopulated(['file' => $file])->getResource();
+    }
+
+    public function testGetResource()
+    {
+        $resource = \fopen('php://memory', 'r');
+        $file = $this->getMockBuilder('MongoGridFSFileMock')->setMethods(['getResource'])->getMock();
+        $file->expects($this->any())->method('getResource')->willReturn($resource);
+
+        self::assertEquals(
+            $resource,
+            $this->generateObjectPopulated(['file' => $file])->getResource()
         );
     }
 }

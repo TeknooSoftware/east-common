@@ -32,14 +32,24 @@ class Media
     private $name;
 
     /**
-     * @var resource
+     * @var \MongoGridFSFile
      */
-    private $raw;
+    private $file;
 
     /**
      * @var int
      */
-    private $size;
+    private $length;
+
+    /**
+     * @var int
+     * */
+    private $chunkSize;
+
+    /** 
+     * @var string
+     */
+    private $md5;
 
     /**
      * @var string
@@ -71,20 +81,77 @@ class Media
     }
 
     /**
-     * @return int
+     * @return \MongoGridFSFile
      */
-    public function getSize(): int
+    public function getFile()
     {
-        return $this->size;
+        return $this->file;
     }
 
     /**
-     * @param int $size
+     * @param \MongoGridFSFile|mixed $file
      * @return self
      */
-    public function setSize(int $size): Media
+    public function setFile($file): Media
     {
-        $this->size = $size;
+        $this->file = $file;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLength(): int
+    {
+        return $this->length;
+    }
+
+    /**
+     * @param int $length
+     * @return self
+     */
+    public function setLength(int $length): Media
+    {
+        $this->length = $length;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getChunkSize(): int
+    {
+        return $this->chunkSize;
+    }
+
+    /**
+     * @param int $chunkSize
+     * @return self
+     */
+    public function setChunkSize(int $chunkSize): Media
+    {
+        $this->chunkSize = $chunkSize;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMd5(): string
+    {
+        return $this->md5;
+    }
+
+    /**
+     * @param string $md5
+     * @return self
+     */
+    public function setMd5(string $md5): Media
+    {
+        $this->md5 = $md5;
 
         return $this;
     }
@@ -130,20 +197,17 @@ class Media
     /**
      * @return resource
      */
-    public function getRaw()
+    public function getResource()
     {
-        return $this->raw;
-    }
+        if (\is_callable([$this->file, 'getResource'])) {
+            $resource = $this->file->getResource();
 
-    /**
-     * @param resource $raw
-     * @return self
-     */
-    public function setRaw($raw): Media
-    {
-        $this->raw = $raw;
+            if (\is_resource($resource)) {
+                return $resource;
+            }
+        }
 
-        return $this;
+        throw new \RuntimeException('Any resource are available for this media');
     }
 
     /**

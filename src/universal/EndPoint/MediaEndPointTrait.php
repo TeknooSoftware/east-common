@@ -22,12 +22,10 @@
 
 namespace Teknoo\East\Website\EndPoint;
 
-use Psr\Http\Message\ServerRequestInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Website\Loader\MediaLoader;
 use Teknoo\East\Website\Object\Media;
-use Zend\Diactoros\CallbackStream;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Stream;
 
@@ -39,12 +37,11 @@ trait MediaEndPointTrait
     private $mediaLoader;
 
     /**
-     * @param ServerRequestInterface $request
      * @param ClientInterface $client
      * @param string $id
      * @return self
      */
-    public function display(ServerRequestInterface $request, ClientInterface $client, string $id)
+    public function display(ClientInterface $client, string $id)
     {
         $this->mediaLoader->byId(
            $id,
@@ -52,17 +49,17 @@ trait MediaEndPointTrait
                function (Media $media) use ($client) {
                    $client->responseFromController(
                        new Response(
-                           new Stream($media->getRaw()),
+                           new Stream($media->getResource()),
                            200, [
                            'Content-Type' => $media->getMimeType(),
-                           'Content-Length' => $media->getSize()
-                       ]);
+                           'Content-Length' => $media->getLength()
+                       ])
                    );
                },
                function () use ($client) {
                    $client->errorInRequest(
                        new \Exception('Media is not available', 404)
-                   )
+                   );
                }
            )
         );

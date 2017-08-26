@@ -21,35 +21,40 @@ Teknoo\East\Website\Object\Content:
       type: 'string'
       gedmo:
         - 'translatable'
+    slug:
+      type: 'string'
+      index: true
+      unique: true
     content:
       type: 'string'
       gedmo:
         - 'translatable'
     tags:
       type: 'collection'
-    description:
-      type: 'string'
-      gedmo:
-        - 'translatable'
+      index: true
     createdAt:
       type: 'datetime'
       name: 'created_at'
+      index: true
       gedmo:
         timestampable:
           on: 'create'
     updatedAt:
       type: 'datetime'
       name: 'updated_at'
+      index: true
       gedmo:
         timestampable:
           on: 'update'
     deletedAt:
       type: 'datetime'
       name: 'deleted_at'
+      index: true
       nullable: true
     publishedAt:
       type: 'datetime'
       name: 'published_at'
+      index: true
       nullable: true
   referenceOne:
     type:
@@ -62,14 +67,3 @@ Teknoo\East\Website\Object\Content:
     categories:
       targetDocument:  'Teknoo\East\Website\Object\Category'
       cascade: 'all'
-  indexes:
-    publishedAt:
-      keys:
-        publishedAt: 'desc'
-      options:
-        background: true
-    deletedAt:
-      keys:
-        deletedAt: 'desc'
-      options:
-        safe: true

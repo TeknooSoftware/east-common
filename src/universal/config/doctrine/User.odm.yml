@@ -13,12 +13,16 @@ Teknoo\East\Website\Object\User:
       strategy: 'UUID'
     firstName:
       type: 'string'
+      name: 'first_name'
     lastName:
       type: 'string'
+      name: 'last_name'
     roles:
       type: 'collection'
     email:
       type: 'string'
+      index: true
+      unique: true
     password:
       type: 'string'
     createdAt:
@@ -37,16 +41,4 @@ Teknoo\East\Website\Object\User:
       type: 'datetime'
       name: 'deleted_at'
       nullable: true
-  indexes:
-    deletedAt:
-      keys:
-        deletedAt: 'desc'
-      options:
-        safe: true
-    email:
-      keys:
-        email: 'asc'
-      options:
-        unique: true
-        dropDups: true
-        safe: true
+      index: true

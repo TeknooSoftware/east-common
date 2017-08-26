@@ -6,8 +6,6 @@ Teknoo\East\Website\Object\Type:
     soft_deleteable:
       field_name: 'deletedAt'
       time_aware: false
-    translation:
-      locale: 'localeField'
   fields:
     id:
       id: true
@@ -15,9 +13,7 @@ Teknoo\East\Website\Object\Type:
       strategy: 'UUID'
     name:
       type: 'string'
-      gedmo:
-        - 'translatable'
-    code:
+    template:
       type: 'string'
     createdAt:
       type: 'datetime'
@@ -35,17 +31,4 @@ Teknoo\East\Website\Object\Type:
       type: 'datetime'
       name: 'deleted_at'
       nullable: true
-  indexes:
-    deletedAt:
-      keys:
-        deletedAt: 'desc'
-      options:
-        safe: true
-    code:
-      keys:
-        code: 'asc'
-      options:
-        unique: true
-        dropDups: true
-        safe: true
-
+      index: true

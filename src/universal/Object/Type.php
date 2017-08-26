@@ -22,9 +22,7 @@
 
 namespace Teknoo\East\Website\Object;
 
-use Gedmo\Translatable\Translatable;
-
-class Type implements Translatable
+class Type
 {
     use ObjectTrait;
 
@@ -37,16 +35,6 @@ class Type implements Translatable
      * @var string
      */
     private $template;
-
-    /**
-     * @var Type|null
-     */
-    private $parent;
-
-    /**
-     * @var string
-     */
-    private $localeField;
 
     /**
      * @return string
@@ -82,59 +70,6 @@ class Type implements Translatable
     public function setTemplate(string $template): Type
     {
         $this->template = $template;
-
-        return $this;
-    }
-
-    /**
-     * @return null|Type
-     */
-    public function getParent()
-    {
-        return $this->parent;
-    }
-
-    /**
-     * @param null|Type $parent
-     * @return self
-     */
-    public function setParent(Type $parent=null): Type
-    {
-        $this->parent = $parent;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLocaleField(): string
-    {
-        return $this->localeField;
-    }
-
-    /**
-     * @param string $localeField
-     *
-     * @return self
-     */
-    public function setLocaleField(string $localeField): Type
-    {
-        $this->localeField = $localeField;
-
-        return $this;
-    }
-
-    /**
-     * Sets translatable locale
-     *
-     * @param string $locale
-     *
-     * @return self
-     */
-    public function setTranslatableLocale($locale)
-    {
-        $this->localeField = $locale;
 
         return $this;
     }

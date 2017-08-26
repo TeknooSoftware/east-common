@@ -13,8 +13,15 @@ Teknoo\East\Website\Object\Media:
       strategy: 'UUID'
     name:
       type: 'string'
-    location:
+    file:
       type: 'file'
+    length:
+      type: 'int'
+    chunkSize:
+      type: 'int'
+      name: 'chunk_size'
+    md5:
+      type: 'string'
     mimeType:
       type: 'string'
       name: 'mime_type'
@@ -36,9 +43,4 @@ Teknoo\East\Website\Object\Media:
       type: 'datetime'
       name: 'deleted_at'
       nullable: true
-  indexes:
-    deletedAt:
-      keys:
-        deletedAt: 'desc'
-      options:
-        safe: true
+      index: true

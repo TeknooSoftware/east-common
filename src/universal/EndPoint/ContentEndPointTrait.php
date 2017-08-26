@@ -27,6 +27,7 @@ use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Website\Loader\ContentLoader;
 use Teknoo\East\Website\Object\Content;
+use Teknoo\East\Website\Service\MenuGenerator;
 
 trait ContentEndPointTrait
 {
@@ -34,6 +35,11 @@ trait ContentEndPointTrait
      * @var ContentLoader
      */
     private $contentLoader;
+
+    /**
+     * @var MenuGenerator
+     */
+    private $menuGenerator;
 
     /**
      * @param ServerRequestInterface $request
@@ -59,11 +65,15 @@ trait ContentEndPointTrait
 
         $this->contentLoader->bySlug(
             $contentSlug,
-            $urlParts,
             new Promise(
                 function (Content $content) use ($client) {
                     $type = $content->getType();
-                    $this->render($client, $type->getTemplate(), ['content' => $content]);
+                    $this->render(
+                        $client,
+                        $type->getTemplate(), [
+                        'content' => $content,
+                        'menuGenerator' => $this->menuGenerator,
+                    ]);
                 },
                 function (\Throwable $e) use ($client) {
                     $client->errorInRequest($e);

@@ -37,6 +37,15 @@ trait MediaEndPointTrait
     private $mediaLoader;
 
     /**
+     * MediaEndPointTrait constructor.
+     * @param MediaLoader $mediaLoader
+     */
+    public function __construct(MediaLoader $mediaLoader)
+    {
+        $this->mediaLoader = $mediaLoader;
+    }
+
+    /**
      * @param ClientInterface $client
      * @param string $id
      * @return self

@@ -33,6 +33,15 @@ class MenuGenerator
     private $categoryLoader;
 
     /**
+     * MenuGenerator constructor.
+     * @param CategoryLoader $categoryLoader
+     */
+    public function __construct(CategoryLoader $categoryLoader)
+    {
+        $this->categoryLoader = $categoryLoader;
+    }
+
+    /**
      * @param string $location
      * @return MenuGenerator
      */

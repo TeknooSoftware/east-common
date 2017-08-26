@@ -42,6 +42,17 @@ trait ContentEndPointTrait
     private $menuGenerator;
 
     /**
+     * ContentEndPointTrait constructor.
+     * @param ContentLoader $contentLoader
+     * @param MenuGenerator $menuGenerator
+     */
+    public function __construct(ContentLoader $contentLoader , MenuGenerator $menuGenerator)
+    {
+        $this->contentLoader = $contentLoader;
+        $this->menuGenerator = $menuGenerator;
+    }
+
+    /**
      * @param ServerRequestInterface $request
      * @return string[]
      */

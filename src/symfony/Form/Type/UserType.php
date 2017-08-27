@@ -23,8 +23,42 @@
 namespace Teknoo\East\WebsiteBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class UserType extends AbstractType
 {
-
+    /**
+     * To configure this form and fields to display.
+     *
+     * @param FormBuilderInterface $builder
+     * @param array                $options
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->add('firstName', TextType::class, ['required' => true]);
+        $builder->add('lastName', TextType::class, ['required' => true]);
+        $builder->add(
+            'roles',
+            ChoiceType::class, [
+            'required' => true,
+            'multiple' => true,
+            "choices" => [
+                'user' => 'ROLE_USER',
+                'admin' => 'ROLE_ADMIN'
+            ]
+        ]);
+        $builder->add('email', EmailType::class, ['required' => true]);
+        $builder->add(
+            'password',
+            RepeatedType::class, [
+            'type' => PasswordType::class,
+            'invalid_message' => 'The password fields must match.',
+            'required' => true
+        ]);
+    }
 }

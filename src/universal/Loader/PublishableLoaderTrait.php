@@ -48,7 +48,7 @@ trait PublishableLoaderTrait
         if (!empty($entity)) {
             $promise->success($entity);
         } else {
-            $promise->fail(new \DomainException('Entity not found'));
+            $promise->fail(new \DomainException('Object not found'));
         }
 
         return $this;
@@ -65,7 +65,7 @@ trait PublishableLoaderTrait
             if ($object->getPublishedAt() instanceof \DateTime) {
                 $promise->success($object);
             } else {
-                $promise->fail(new \DomainException('Entity not found'));
+                $promise->fail(new \DomainException('Object not found'));
             }
         }, function (\Throwable $e) use ($promise) {
             $promise->fail($e);

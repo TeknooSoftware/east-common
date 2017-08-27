@@ -54,7 +54,7 @@ class CategoryLoader implements LoaderInterface
         if ($entity instanceof Category) {
             $promise->success($entity);
         } else {
-            $promise->fail(new \DomainException('Entity not found'));
+            $promise->fail(new \DomainException('Category not found'));
         }
 
         return $this;

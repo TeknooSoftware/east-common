@@ -54,7 +54,7 @@ class TypeLoader implements LoaderInterface
         if ($entity instanceof Type) {
             $promise->success($entity);
         } else {
-            $promise->fail(new \DomainException('Entity not found'));
+            $promise->fail(new \DomainException('Object not found'));
         }
 
         return $this;

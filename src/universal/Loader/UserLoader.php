@@ -54,7 +54,7 @@ class UserLoader implements LoaderInterface
         if ($entity instanceof User) {
             $promise->success($entity);
         } else {
-            $promise->fail(new \DomainException('Entity not found'));
+            $promise->fail(new \DomainException('Object not found'));
         }
 
         return $this;

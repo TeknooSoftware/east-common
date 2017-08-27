@@ -49,9 +49,6 @@ Teknoo\East\Website\Object\Category:
       nullable: true
       index: true
   referenceOne:
-    type:
-      targetDocument: 'Teknoo\East\Website\Object\Type'
-      cascade: 'all'
     parent:
       targetDocument: 'Teknoo\East\Website\Object\Category'
       cascade: 'all'

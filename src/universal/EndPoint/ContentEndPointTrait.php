@@ -66,7 +66,7 @@ trait ContentEndPointTrait
      * @param ClientInterface $client
      * @return self
      */
-    public function display(
+    public function __invoke(
         ServerRequestInterface $request,
         ClientInterface $client
     ) {

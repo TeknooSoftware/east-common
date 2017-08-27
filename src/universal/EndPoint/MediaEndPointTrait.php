@@ -50,7 +50,7 @@ trait MediaEndPointTrait
      * @param string $id
      * @return self
      */
-    public function display(ClientInterface $client, string $id)
+    public function __invoke(ClientInterface $client, string $id)
     {
         $this->mediaLoader->byId(
            $id,

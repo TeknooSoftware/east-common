@@ -33,26 +33,26 @@ Teknoo\East\Website\Object\Content:
       type: 'collection'
       index: true
     createdAt:
-      type: 'datetime'
+      type: 'date'
       name: 'created_at'
       index: true
       gedmo:
         timestampable:
           on: 'create'
     updatedAt:
-      type: 'datetime'
+      type: 'date'
       name: 'updated_at'
       index: true
       gedmo:
         timestampable:
           on: 'update'
     deletedAt:
-      type: 'datetime'
+      type: 'date'
       name: 'deleted_at'
       index: true
       nullable: true
     publishedAt:
-      type: 'datetime'
+      type: 'date'
       name: 'published_at'
       index: true
       nullable: true

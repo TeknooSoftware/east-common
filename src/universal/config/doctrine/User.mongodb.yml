@@ -26,19 +26,19 @@ Teknoo\East\Website\Object\User:
     password:
       type: 'string'
     createdAt:
-      type: 'datetime'
+      type: 'date'
       name: 'created_at'
       gedmo:
         timestampable:
           on: 'create'
     updatedAt:
-      type: 'datetime'
+      type: 'date'
       name: 'updated_at'
       gedmo:
         timestampable:
           on: 'update'
     deletedAt:
-      type: 'datetime'
+      type: 'date'
       name: 'deleted_at'
       nullable: true
       index: true

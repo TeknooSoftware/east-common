@@ -24,6 +24,7 @@ namespace Teknoo\East\Website;
 
 use function DI\get;
 use Doctrine\Common\Persistence\ObjectManager;
+use Psr\Container\ContainerInterface;
 use Teknoo\East\Website\Loader\CategoryLoader;
 use Teknoo\East\Website\Loader\ContentLoader;
 use Teknoo\East\Website\Loader\MediaLoader;
@@ -42,22 +43,22 @@ use Teknoo\East\Website\Writer\TypeWriter;
 use Teknoo\East\Website\Writer\UserWriter;
 
 return [
-    CategoryLoader::class => function (ObjectManager $manager) {
-        return new CategoryLoader($manager->getRepository(Category::class));
+    CategoryLoader::class => function (ContainerInterface $container) {
+        return new CategoryLoader($container->get(ObjectManager::class)->getRepository(Category::class));
     },
-    ContentLoader::class => function (ObjectManager $manager) {
-        return new ContentLoader($manager->getRepository(Content::class));
+    ContentLoader::class => function (ContainerInterface $container) {
+        return new ContentLoader($container->get(ObjectManager::class)->getRepository(Content::class));
     },
     'teknoo.east.website.loader.content_loader' => get(ContentLoader::class),
-    MediaLoader::class => function (ObjectManager $manager) {
-        return new MediaLoader($manager->getRepository(Media::class));
+    MediaLoader::class => function (ContainerInterface $container) {
+        return new MediaLoader($container->get(ObjectManager::class)->getRepository(Media::class));
     },
     'teknoo.east.website.loader.media_loader' => get(MediaLoader::class),
-    TypeLoader::class => function (ObjectManager $manager) {
-        return new TypeLoader($manager->getRepository(Type::class));
+    TypeLoader::class => function (ContainerInterface $container) {
+        return new TypeLoader($container->get(ObjectManager::class)->getRepository(Type::class));
     },
-    UserLoader::class => function (ObjectManager $manager) {
-        return new UserLoader($manager->getRepository(User::class));
+    UserLoader::class => function (ContainerInterface $container) {
+        return new UserLoader($container->get(ObjectManager::class)->getRepository(User::class));
     },
 
     CategoryWriter::class => function (ObjectManager $manager) {

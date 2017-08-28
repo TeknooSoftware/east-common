@@ -29,6 +29,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class ContentType extends AbstractType
 {
+    use TranslatableTrait;
+
     /**
      * To configure this form and fields to display.
      *
@@ -45,5 +47,8 @@ class ContentType extends AbstractType
         $builder->add('slug', TextType::class, ['required'=>false]);
         $builder->add('content', TextType::class, ['required'=>false]);
         $builder->add('description', TextType::class, ['required'=>false]);
+
+        $this->addTranslatableLocaleFieldHidden($builder);
+        $this->disableNonTranslatableField($builder, $options);
     }
 }

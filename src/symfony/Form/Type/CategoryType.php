@@ -31,6 +31,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class CategoryType extends AbstractType
 {
+    use TranslatableTrait;
+
     /**
      * To configure this form and fields to display.
      *
@@ -45,5 +47,8 @@ class CategoryType extends AbstractType
         $builder->add('slug', TextType::class, ['required'=>false]);
         $builder->add('hidden', CheckboxType::class, ['required'=>false]);
         $builder->add('position', IntegerType::class, ['required'=>false]);
+
+        $this->addTranslatableLocaleFieldHidden($builder);
+        $this->disableNonTranslatableField($builder, $options);
     }
 }

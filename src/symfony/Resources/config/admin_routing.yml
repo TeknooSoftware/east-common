@@ -1,0 +1,79 @@
+admin_category_list:
+    path: '/categories/'
+    methods:  ['GET']
+    defaults: { _controller: 'teknoo.east.website.endpoint.admin.list.category' }
+
+admin_category_edit:
+    path: '/category/edit/{id}'
+    methods:  ['GET']
+    defaults: { _controller: 'teknoo.east.website.endpoint.admin.edit.category' }
+
+admin_category_new:
+    path: '/category/new'
+    methods:  ['GET']
+    defaults: { _controller: 'teknoo.east.website.endpoint.admin.new.category' }
+
+admin_category_delete:
+    path: '/category/delete/{id}'
+    methods:  ['GET']
+    defaults: { _controller: 'teknoo.east.website.endpoint.admin.delete.category' }
+
+admin_content_list:
+    path: '/contents/'
+    methods:  ['GET']
+    defaults: { _controller: 'teknoo.east.website.endpoint.admin.list.content' }
+
+admin_content_edit:
+    path: '/content/edit/{id}'
+    methods:  ['GET']
+    defaults: { _controller: 'teknoo.east.website.endpoint.admin.edit.content' }
+
+admin_content_new:
+    path: '/content/new'
+    methods:  ['GET']
+    defaults: { _controller: 'teknoo.east.website.endpoint.admin.new.content' }
+
+admin_content_delete:
+    path: '/content/delete/{id}'
+    methods:  ['GET']
+    defaults: { _controller: 'teknoo.east.website.endpoint.admin.delete.content' }
+
+admin_type_list:
+    path: '/types/'
+    methods:  ['GET']
+    defaults: { _controller: 'teknoo.east.website.endpoint.admin.list.type' }
+
+admin_type_edit:
+    path: '/type/edit/{id}'
+    methods:  ['GET']
+    defaults: { _controller: 'teknoo.east.website.endpoint.admin.edit.type' }
+
+admin_type_new:
+    path: '/type/new'
+    methods:  ['GET']
+    defaults: { _controller: 'teknoo.east.website.endpoint.admin.new.type' }
+
+admin_type_delete:
+    path: '/type/delete/{id}'
+    methods:  ['GET']
+    defaults: { _controller: 'teknoo.east.website.endpoint.admin.delete.type' }
+
+admin_user_list:
+    path: '/users/'
+    methods:  ['GET']
+    defaults: { _controller: 'teknoo.east.website.endpoint.admin.list.user' }
+
+admin_user_edit:
+    path: '/user/edit/{id}'
+    methods:  ['GET']
+    defaults: { _controller: 'teknoo.east.website.endpoint.admin.edit.user' }
+
+admin_user_new:
+    path: '/user/new'
+    methods:  ['GET']
+    defaults: { _controller: 'teknoo.east.website.endpoint.admin.new.user' }
+
+admin_user_delete:
+    path: '/user/delete/{id}'
+    methods:  ['GET']
+    defaults: { _controller: 'teknoo.east.website.endpoint.admin.delete.user' }

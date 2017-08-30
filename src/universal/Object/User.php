@@ -24,7 +24,7 @@ namespace Teknoo\East\Website\Object;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class User implements UserInterface
+class User implements UserInterface, DeletableInterface
 {
     use ObjectTrait;
 

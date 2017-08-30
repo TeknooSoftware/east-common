@@ -34,7 +34,7 @@ use Teknoo\States\LifeCycle\StatedClass\Automated\AutomatedTrait;
 use Teknoo\States\Proxy\ProxyInterface;
 use Teknoo\States\Proxy\ProxyTrait;
 
-class Category implements ProxyInterface, AutomatedInterface, Translatable
+class Category implements ProxyInterface, AutomatedInterface, Translatable, DeletableInterface
 {
     use ProxyTrait,
         AutomatedTrait,

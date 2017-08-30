@@ -69,7 +69,7 @@ class UserLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $this->getRepositoryMock()
             ->expects(self::any())
-            ->method('findBy')
+            ->method('findOneBy')
             ->with(['email'=>\hash('sha512', 'foo@bar')])
             ->willReturn(null);
 
@@ -95,7 +95,7 @@ class UserLoaderTest extends \PHPUnit_Framework_TestCase
 
         $this->getRepositoryMock()
             ->expects(self::any())
-            ->method('findBy')
+            ->method('findOneBy')
             ->with(['email'=>\hash('sha512', 'foo@bar')])
             ->willReturn($entity);
 

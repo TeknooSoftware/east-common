@@ -25,39 +25,34 @@ namespace Teknoo\East\Website\Loader;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 
-class ContentLoader implements PublishableLoaderInterface
+trait CollectionLoaderTrait
 {
-    use PublishableLoaderTrait,
-        CollectionLoaderTrait;
-
     /**
-     * ContentLoader constructor.
-     * @param ObjectRepository $repository
+     * @var ObjectRepository
      */
-    public function __construct(ObjectRepository $repository)
-    {
-        $this->repository = $repository;
-    }
+    protected $repository;
 
     /**
-     * @return ObjectRepository
-     */
-    protected function getRepository(): ObjectRepository
-    {
-        return $this->repository;
-    }
-
-    /**
-     * @param string $slug
+     * @param array $criteria
      * @param PromiseInterface $promise
-     * @return ContentLoader|PublishableLoaderInterface
+     * @param array|null $order
+     * @param int|null $limit
+     * @param int|null $offset
+     * @return self|LoaderInterface
      */
-    public function bySlug(string $slug, PromiseInterface $promise): ContentLoader
-    {
-        return $this->loadPublished([
-                'slug' => $slug
-            ],
-            $promise
-        );
+    public function loadCollection(
+        array $criteria ,
+        PromiseInterface $promise ,
+        array $order = null ,
+        int $limit = null ,
+        int $offset = null
+    ): LoaderInterface {
+        try {
+            $promise->success($this->repository->findBy($criteria, $order, $limit, $offset));
+        } catch (\Throwable $e) {
+            $promise->fail($e);
+        }
+
+        return $this;
     }
 }

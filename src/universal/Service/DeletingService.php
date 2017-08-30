@@ -22,9 +22,10 @@
 
 namespace Teknoo\East\Website\Service;
 
+use Teknoo\East\Website\Object\DeletableInterface;
 use Teknoo\East\Website\Writer\WriterInterface;
 
-class DeleteService
+class DeletingService
 {
     /**
      * @var \DateTime
@@ -68,10 +69,10 @@ class DeleteService
     }
 
     /**
-     * @param $object
+     * @param DeletableInterface $object
      * @return DeleteService
      */
-    public function delete($object) : DeleteService
+    public function delete(DeletableInterface $object) : DeleteService
     {
         $object->setDeletedAt($this->getCurrentDate());
 

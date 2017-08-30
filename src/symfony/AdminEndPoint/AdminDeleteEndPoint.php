@@ -25,7 +25,9 @@ namespace Teknoo\East\WebsiteBundle\AdminEndPoint;
 use Psr\Http\Message\ServerRequestInterface;
 use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
+use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
+use Teknoo\East\Website\Service\DeletingService;
 
 class AdminDeleteEndPoint implements EndPointInterface
 {
@@ -33,14 +35,48 @@ class AdminDeleteEndPoint implements EndPointInterface
         AdminEntPointTrait;
 
     /**
+     * @var DeletingService
+     */
+    private $deletingService;
+
+    /**
+     * @param DeletingService $deletingService
+     * @return AdminDeleteEndPoint
+     */
+    public function setDeletingService(DeletingService $deletingService): AdminDeleteEndPoint
+    {
+        $this->deletingService = $deletingService;
+
+        return $this;
+    }
+
+    /**
      * @param ServerRequestInterface $request
      * @param ClientInterface $client
+     * @param string $id
+     * @param string $redirection
      * @return self
      */
     public function __invoke(
         ServerRequestInterface $request,
-        ClientInterface $client
+        ClientInterface $client,
+        string $id,
+        string $redirection
     ) {
+        $this->loader->load(
+            ['id' => $id],
+            new Promise(
+                function ($object) use ($client, $redirection) {
+                    $this->deletingService->delete($object);
 
+                    $this->redirect($client, $redirection);
+                },
+                function ($throwable) use ($client) {
+                    $client->errorInRequest($throwable);
+                }
+            )
+        );
+
+        return $this;
     }
 }

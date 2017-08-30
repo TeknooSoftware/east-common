@@ -28,10 +28,7 @@ use Teknoo\East\Website\Object\Category;
 
 class CategoryLoader implements LoaderInterface
 {
-    /**
-     * @var ObjectRepository
-     */
-    private $repository;
+    use CollectionLoaderTrait;
 
     /**
      * CategoryLoader constructor.
@@ -49,7 +46,7 @@ class CategoryLoader implements LoaderInterface
      */
     public function load(array $criteria, PromiseInterface $promise): LoaderInterface
     {
-        $entity = $this->repository->findBy($criteria);
+        $entity = $this->repository->findOneBy($criteria);
 
         if ($entity instanceof Category) {
             $promise->success($entity);

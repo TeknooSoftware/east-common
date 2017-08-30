@@ -32,4 +32,20 @@ interface LoaderInterface
      * @return LoaderInterface
      */
     public function load(array $criteria, PromiseInterface $promise): LoaderInterface;
+
+    /**
+     * @param array $criteria
+     * @param PromiseInterface $promise
+     * @param array $order|null
+     * @param int $limit|null
+     * @param int $offset|null
+     * @return LoaderInterface
+     */
+    public function loadCollection(
+        array $criteria,
+        PromiseInterface $promise,
+        array $order=null,
+        int $limit=null,
+        int $offset=null
+    ): LoaderInterface;
 }

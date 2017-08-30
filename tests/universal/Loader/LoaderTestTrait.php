@@ -63,7 +63,7 @@ trait LoaderTestTrait
     {
         $this->getRepositoryMock()
             ->expects(self::any())
-            ->method('findBy')
+            ->method('findOneBy')
             ->with(['fooBar'=>true])
             ->willReturn(null);
 
@@ -89,7 +89,7 @@ trait LoaderTestTrait
 
         $this->getRepositoryMock()
             ->expects(self::any())
-            ->method('findBy')
+            ->method('findOneBy')
             ->with(['fooBar'=>true])
             ->willReturn($entity);
 

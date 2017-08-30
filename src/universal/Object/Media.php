@@ -22,7 +22,7 @@
 
 namespace Teknoo\East\Website\Object;
 
-class Media
+class Media implements DeletableInterface, PublishableInterface
 {
     use PublishableTrait;
 

@@ -69,7 +69,7 @@ class ContentLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $this->getRepositoryMock()
             ->expects(self::any())
-            ->method('findBy')
+            ->method('findOneBy')
             ->with([
                 'slug' => 'foo',
             ])
@@ -98,7 +98,7 @@ class ContentLoaderTest extends \PHPUnit_Framework_TestCase
 
         $this->getRepositoryMock()
             ->expects(self::any())
-            ->method('findBy')
+            ->method('findOneBy')
             ->with([
                 'slug' => 'foo',
             ])

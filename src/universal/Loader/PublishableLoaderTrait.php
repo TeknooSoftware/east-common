@@ -25,6 +25,7 @@ namespace Teknoo\East\Website\Loader;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
+use Teknoo\East\Website\Object\PublishableInterface;
 
 /**
  * @mixin PublishableLoaderInterface
@@ -43,7 +44,7 @@ trait PublishableLoaderTrait
      */
     public function load(array $criteria, PromiseInterface $promise): LoaderInterface
     {
-        $entity = $this->getRepository()->findBy($criteria);
+        $entity = $this->getRepository()->findOneBy($criteria);
 
         if (!empty($entity)) {
             $promise->success($entity);
@@ -62,7 +63,7 @@ trait PublishableLoaderTrait
     public function loadPublished(array $criteria, PromiseInterface $promise): PublishableLoaderInterface
     {
         $promise = new Promise(function ($object) use ($promise) {
-            if ($object->getPublishedAt() instanceof \DateTime) {
+            if ($object instanceof PublishableInterface && $object->getPublishedAt() instanceof \DateTime) {
                 $promise->success($object);
             } else {
                 $promise->fail(new \DomainException('Object not found'));

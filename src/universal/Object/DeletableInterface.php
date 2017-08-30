@@ -22,55 +22,16 @@
 
 namespace Teknoo\East\Website\Object;
 
-class Type implements DeletableInterface
+interface DeletableInterface
 {
-    use ObjectTrait;
-
     /**
-     * @var string
+     * @return \DateTime
      */
-    private $name;
+    public function getDeletedAt(): \DateTime;
 
     /**
-     * @var string
-     */
-    private $template;
-
-    /**
-     * @return string
-     */
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param string $name
+     * @param \DateTime $deletedAt
      * @return self
      */
-    public function setName(string $name): Type
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTemplate(): string
-    {
-        return $this->template;
-    }
-
-    /**
-     * @param string $template
-     * @return self
-     */
-    public function setTemplate(string $template): Type
-    {
-        $this->template = $template;
-
-        return $this;
-    }
+    public function setDeletedAt(\DateTime $deletedAt);
 }

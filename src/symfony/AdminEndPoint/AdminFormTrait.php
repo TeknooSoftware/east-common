@@ -22,8 +22,8 @@
 
 namespace Teknoo\East\WebsiteBundle\AdminEndPoint;
 
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Form\FormInterface;
 
 trait AdminFormTrait
 {
@@ -82,12 +82,12 @@ trait AdminFormTrait
     /**
      * @param null|mixed $data
      * @param array $options
-     * @return Form
+     * @return FormInterface
      */
     private function createForm(
         $data = null,
         array $options = array()
-    ) : Form {
-        return $this->formClass->create($this->formClass, $data, $options);
+    ) : FormInterface {
+        return $this->formFactory->create($this->formClass, $data, $options);
     }
 }

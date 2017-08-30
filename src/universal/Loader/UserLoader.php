@@ -28,10 +28,7 @@ use Teknoo\East\Website\Object\User;
 
 class UserLoader implements LoaderInterface
 {
-    /**
-     * @var ObjectRepository
-     */
-    private $repository;
+    use CollectionLoaderTrait;
 
     /**
      * UserLoader constructor.
@@ -49,7 +46,7 @@ class UserLoader implements LoaderInterface
      */
     public function load(array $criteria, PromiseInterface $promise): LoaderInterface
     {
-        $entity = $this->repository->findBy($criteria);
+        $entity = $this->repository->findOneBy($criteria);
 
         if ($entity instanceof User) {
             $promise->success($entity);

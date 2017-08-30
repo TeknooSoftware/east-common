@@ -27,12 +27,8 @@ use Teknoo\East\Foundation\Promise\PromiseInterface;
 
 class MediaLoader implements PublishableLoaderInterface
 {
-    use PublishableLoaderTrait;
-
-    /**
-     * @var ObjectRepository
-     */
-    private $repository;
+    use PublishableLoaderTrait,
+        CollectionLoaderTrait;
 
     /**
      * MediaLoader constructor.
@@ -54,7 +50,7 @@ class MediaLoader implements PublishableLoaderInterface
     /**
      * @param string $id
      * @param PromiseInterface $promise
-     * @return MediaLoader
+     * @return MediaLoader|PublishableLoaderInterface
      */
     public function byId(string $id, PromiseInterface $promise): MediaLoader
     {

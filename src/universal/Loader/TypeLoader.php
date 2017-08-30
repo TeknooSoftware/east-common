@@ -28,10 +28,7 @@ use Teknoo\East\Website\Object\Type;
 
 class TypeLoader implements LoaderInterface
 {
-    /**
-     * @var ObjectRepository
-     */
-    private $repository;
+    use CollectionLoaderTrait;
 
     /**
      * TypeLoader constructor.
@@ -49,7 +46,7 @@ class TypeLoader implements LoaderInterface
      */
     public function load(array $criteria, PromiseInterface $promise): LoaderInterface
     {
-        $entity = $this->repository->findBy($criteria);
+        $entity = $this->repository->findOneBy($criteria);
 
         if ($entity instanceof Type) {
             $promise->success($entity);

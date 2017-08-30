@@ -1,15 +1,164 @@
 parameters:
+  #Front endpoints
   teknoo.east.website.endpoint.content.class: 'Teknoo\East\WebsiteBundle\EndPoint\ContentEndPoint'
   teknoo.east.website.endpoint.media.class: 'Teknoo\East\WebsiteBundle\EndPoint\MediaEntPoint'
 
+  #Admin endpoints
+  teknoo.east.website.endpoint.admin.delete.class: 'Teknoo\East\WebsiteBundle\AdminEndPoint\AdminDeleteEndPoint'
+  teknoo.east.website.endpoint.admin.edit.class: 'Teknoo\East\WebsiteBundle\AdminEndPoint\AdminEditEndPoint'
+  teknoo.east.website.endpoint.admin.list.class: 'Teknoo\East\WebsiteBundle\AdminEndPoint\AdminListEndPoint'
+  teknoo.east.website.endpoint.admin.new.class: 'Teknoo\East\WebsiteBundle\AdminEndPoint\AdminNewEndPoint'
+
+  #Admin form types
+  teknoo.east.website.form_type.category.class: 'Teknoo\East\WebsiteBundle\Form\Type\CategoryType'
+  teknoo.east.website.form_type.content.class: 'Teknoo\East\WebsiteBundle\Form\Type\ContentType'
+  teknoo.east.website.form_type.type.class: 'Teknoo\East\WebsiteBundle\Form\Type\TypeType'
+  teknoo.east.website.form_type.user.class: 'Teknoo\East\WebsiteBundle\Form\Type\UserType'
+
+  #Admin view path
+  teknoo.east.website.view.category.new.file: 'TeknooEastWebsiteBundle:AdminCategory:new.html.twig'
+  teknoo.east.website.view.category.edit.file: 'TeknooEastWebsiteBundle:AdminCategory:edit.html.twig'
+  teknoo.east.website.view.category.list.file: 'TeknooEastWebsiteBundle:AdminCategory:list.html.twig'
+
 services:
+  #Front endpoints
   teknoo.east.website.endpoint.content:
     class: '%teknoo.east.website.endpoint.content.class%'
     arguments:
-      - '@teknoo.east.website.loader.content_loader'
+      - '@teknoo.east.website.loader.content'
       - '@teknoo.east.website.service.menu_generator'
 
   teknoo.east.website.endpoint.media:
     class: '%teknoo.east.website.endpoint.media.class%'
     arguments:
-      - '@teknoo.east.website.loader.media_loader'
+      - '@teknoo.east.website.loader.media'
+
+  #Admin endpoints
+  teknoo.east.website.endpoint.admin.delete.abstract:
+    class: '%teknoo.east.website.endpoint.admin.delete.class%'
+
+  teknoo.east.website.endpoint.admin.edit.abstract:
+    class: '%teknoo.east.website.endpoint.admin.edit.class%'
+    calls:
+      - ['setFormFactory', ['@form.factory']]
+
+  teknoo.east.website.endpoint.admin.list.abstract:
+    class: '%teknoo.east.website.endpoint.admin.list.class%'
+
+  teknoo.east.website.endpoint.admin.new.abstract:
+    class: '%teknoo.east.website.endpoint.admin.new.class%'
+    calls:
+      - ['setFormFactory', ['@form.factory']]
+
+  #Categories
+  teknoo.east.website.endpoint.admin.delete.category:
+    parent: 'teknoo.east.website.endpoint.admin.delete.abstract'
+    calls:
+      - ['setDeletingService', ['@teknoo.east.website.deleting.category']]
+      - ['setLoader', ['@teknoo.east.website.loader.category']]
+
+  teknoo.east.website.endpoint.admin.edit.category:
+    parent: 'teknoo.east.website.endpoint.admin.edit.abstract'
+    calls:
+      - ['setLoader', ['@teknoo.east.website.loader.category']]
+      - ['setWriter', ['@teknoo.east.website.writer.category']]
+      - ['setFormClass', ['%teknoo.east.website.form_type.category.class%']]
+      - ['setViewPath', ['%teknoo.east.website.view.category.edit.file%']]
+
+  teknoo.east.website.endpoint.admin.list.category:
+    parent: 'teknoo.east.website.endpoint.admin.list.abstract'
+    calls:
+      - ['setLoader', ['@teknoo.east.website.loader.category']]
+      - ['setViewPath', ['%teknoo.east.website.view.category.list.file%']]
+
+  teknoo.east.website.endpoint.admin.new.category:
+    parent: 'teknoo.east.website.endpoint.admin.new.abstract'
+    calls:
+      - ['setWriter', ['@teknoo.east.website.write.category']]
+      - ['setFormClass', ['%teknoo.east.website.form_type.category.class%']]
+      - ['setViewPath', ['%teknoo.east.website.view.category.new.file%']]
+
+  #Contents
+  teknoo.east.website.endpoint.admin.delete.content:
+    parent: 'teknoo.east.website.endpoint.admin.delete.abstract'
+    calls:
+      - ['setDeletingService', ['@teknoo.east.website.deleting.content']]
+      - ['setLoader', ['@teknoo.east.website.loader.content']]
+
+  teknoo.east.website.endpoint.admin.edit.content:
+    parent: 'teknoo.east.website.endpoint.admin.edit.abstract'
+    calls:
+      - ['setLoader', ['@teknoo.east.website.loader.content']]
+      - ['setWriter', ['@teknoo.east.website.writer.content']]
+      - ['setFormClass', ['%teknoo.east.website.form_type.content.class%']]
+      - ['setViewPath', ['%teknoo.east.website.view.content.edit.file%']]
+
+  teknoo.east.website.endpoint.admin.list.content:
+    parent: 'teknoo.east.website.endpoint.admin.list.abstract'
+    calls:
+      - ['setLoader', ['@teknoo.east.website.loader.content']]
+      - ['setViewPath', ['%teknoo.east.website.view.content.list.file%']]
+
+  teknoo.east.website.endpoint.admin.new.content:
+    parent: 'teknoo.east.website.endpoint.admin.new.abstract'
+    calls:
+      - ['setWriter', ['@teknoo.east.website.write.content']]
+      - ['setFormClass', ['%teknoo.east.website.form_type.content.class%']]
+      - ['setViewPath', ['%teknoo.east.website.view.content.new.file%']]
+
+  #Type
+  teknoo.east.website.endpoint.admin.delete.type:
+    parent: 'teknoo.east.website.endpoint.admin.delete.abstract'
+    calls:
+      - ['setDeletingService', ['@teknoo.east.website.deleting.type']]
+      - ['setLoader', ['@teknoo.east.website.loader.type']]
+
+  teknoo.east.website.endpoint.admin.edit.type:
+    parent: 'teknoo.east.website.endpoint.admin.edit.abstract'
+    calls:
+      - ['setLoader', ['@teknoo.east.website.loader.type']]
+      - ['setWriter', ['@teknoo.east.website.writer.type']]
+      - ['setFormClass', ['%teknoo.east.website.form_type.type.class%']]
+      - ['setViewPath', ['%teknoo.east.website.view.type.edit.file%']]
+
+  teknoo.east.website.endpoint.admin.list.type:
+    parent: 'teknoo.east.website.endpoint.admin.list.abstract'
+    calls:
+      - ['setLoader', ['@teknoo.east.website.loader.type']]
+      - ['setViewPath', ['%teknoo.east.website.view.type.list.file%']]
+
+  teknoo.east.website.endpoint.admin.new.type:
+    parent: 'teknoo.east.website.endpoint.admin.new.abstract'
+    calls:
+      - ['setWriter', ['@teknoo.east.website.write.type']]
+      - ['setFormClass', ['%teknoo.east.website.form_type.type.class%']]
+      - ['setViewPath', ['%teknoo.east.website.view.type.new.file%']]
+
+  #User
+  teknoo.east.website.endpoint.admin.delete.user:
+    parent: 'teknoo.east.website.endpoint.admin.delete.abstract'
+    calls:
+      - ['setDeletingService', ['@teknoo.east.website.deleting.user']]
+      - ['setLoader', ['@teknoo.east.website.loader.user']]
+
+  teknoo.east.website.endpoint.admin.edit.user:
+    parent: 'teknoo.east.website.endpoint.admin.edit.abstract'
+    calls:
+      - ['setLoader', ['@teknoo.east.website.loader.user']]
+      - ['setWriter', ['@teknoo.east.website.writer.user']]
+      - ['setFormClass', ['%teknoo.east.website.form_type.user.class%']]
+      - ['setViewPath', ['%teknoo.east.website.view.user.edit.file%']]
+
+  teknoo.east.website.endpoint.admin.list.user:
+    parent: 'teknoo.east.website.endpoint.admin.list.abstract'
+    calls:
+      - ['setLoader', ['@teknoo.east.website.loader.user']]
+      - ['setViewPath', ['%teknoo.east.website.view.user.list.file%']]
+
+  teknoo.east.website.endpoint.admin.new.user:
+    parent: 'teknoo.east.website.endpoint.admin.new.abstract'
+    calls:
+      - ['setWriter', ['@teknoo.east.website.write.user']]
+      - ['setFormClass', ['%teknoo.east.website.form_type.user.class%']]
+      - ['setViewPath', ['%teknoo.east.website.view.user.new.file%']]
+

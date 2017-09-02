@@ -44,48 +44,59 @@ use Teknoo\East\Website\Writer\TypeWriter;
 use Teknoo\East\Website\Writer\UserWriter;
 
 return [
+    //Loaders
     CategoryLoader::class => function (ContainerInterface $container) {
         return new CategoryLoader($container->get(ObjectManager::class)->getRepository(Category::class));
     },
     'teknoo.east.website.loader.category' => get(CategoryLoader::class),
+
     ContentLoader::class => function (ContainerInterface $container) {
         return new ContentLoader($container->get(ObjectManager::class)->getRepository(Content::class));
     },
     'teknoo.east.website.loader.content' => get(ContentLoader::class),
+
     MediaLoader::class => function (ContainerInterface $container) {
         return new MediaLoader($container->get(ObjectManager::class)->getRepository(Media::class));
     },
+
     'teknoo.east.website.loader.media' => get(MediaLoader::class),
     TypeLoader::class => function (ContainerInterface $container) {
         return new TypeLoader($container->get(ObjectManager::class)->getRepository(Type::class));
     },
+
     'teknoo.east.website.loader.type' => get(TypeLoader::class),
     UserLoader::class => function (ContainerInterface $container) {
         return new UserLoader($container->get(ObjectManager::class)->getRepository(User::class));
     },
     'teknoo.east.website.loader.user' => get(UserLoader::class),
 
+    //Writer
     CategoryWriter::class => function (ObjectManager $manager) {
         return new CategoryWriter($manager);
     },
     'teknoo.east.website.writer.category' => get(CategoryWriter::class),
+
     ContentWriter::class => function (ObjectManager $manager) {
         return new ContentWriter($manager);
     },
     'teknoo.east.website.writer.content' => get(ContentWriter::class),
+
     MediaWriter::class => function (ObjectManager $manager) {
         return new MediaWriter($manager);
     },
     'teknoo.east.website.writer.media' => get(MediaWriter::class),
+
     TypeWriter::class => function (ObjectManager $manager) {
         return new TypeWriter($manager);
     },
     'teknoo.east.website.writer.type' => get(TypeWriter::class),
+
     UserWriter::class => function (ObjectManager $manager) {
         return new UserWriter($manager);
     },
     'teknoo.east.website.writer.user' => get(UserWriter::class),
 
+    //Deleting
     'teknoo.east.website.deleting.category' => function (CategoryWriter $writer) {
         return new DeletingService($writer);
     },

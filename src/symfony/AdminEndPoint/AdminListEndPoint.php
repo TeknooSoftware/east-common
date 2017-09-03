@@ -65,6 +65,7 @@ class AdminListEndPoint implements EndPointInterface
             }, function ($error) use ($client) {
                 $client->errorInRequest($error);
             }),
+            [],
             15,
             ($page-1)
         );

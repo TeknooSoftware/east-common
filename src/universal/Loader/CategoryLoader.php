@@ -68,7 +68,7 @@ class CategoryLoader implements LoaderInterface
      */
     public function topBySlug(string $slug, PromiseInterface $promise): CategoryLoader
     {
-        return $this->load([
+        return $this->loadCollection([
             'slug' => $slug,
             'children' => []
             ],
@@ -82,9 +82,9 @@ class CategoryLoader implements LoaderInterface
      */
     public function allTop(PromiseInterface $promise): CategoryLoader
     {
-        return $this->load([
+        return $this->loadCollection([
             'children' => []
-        ],
+            ],
             $promise
         );
     }

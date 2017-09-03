@@ -23,6 +23,7 @@
 namespace Teknoo\Tests\East\Website\Loader;
 
 use Doctrine\Common\Persistence\ObjectRepository;
+use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\Object\Category;
 use Teknoo\East\Website\Loader\CategoryLoader;
 use Teknoo\East\Website\Loader\LoaderInterface;
@@ -69,5 +70,58 @@ class CategoryLoaderTest extends \PHPUnit_Framework_TestCase
     public function getEntity()
     {
         return new Category();
+    }
+
+    public function testTopBySlug()
+    {
+        $entity = $this->getEntity();
+
+        $this->getRepositoryMock()
+            ->expects(self::any())
+            ->method('findBy')
+            ->with(['slug' => 'abc', 'children' => []])
+            ->willReturn([$entity]);
+
+        /**
+         * @var \PHPUnit_Framework_MockObject_MockObject $promiseMock
+         *
+         */
+        $promiseMock = $this->createMock(PromiseInterface::class);
+        $promiseMock->expects(self::once())->method('success')->with([$entity]);
+        $promiseMock->expects(self::never())->method('fail');
+
+        self::assertInstanceOf(
+            LoaderInterface::class,
+            $this->buildLoader()->topBySlug(
+                'abc',
+                $promiseMock
+            )
+        );
+    }
+
+    public function testAllTop()
+    {
+        $entity = $this->getEntity();
+
+        $this->getRepositoryMock()
+            ->expects(self::any())
+            ->method('findBy')
+            ->with(['children' => []])
+            ->willReturn([$entity]);
+
+        /**
+         * @var \PHPUnit_Framework_MockObject_MockObject $promiseMock
+         *
+         */
+        $promiseMock = $this->createMock(PromiseInterface::class);
+        $promiseMock->expects(self::once())->method('success')->with([$entity]);
+        $promiseMock->expects(self::never())->method('fail');
+
+        self::assertInstanceOf(
+            LoaderInterface::class,
+            $this->buildLoader()->allTop(
+                $promiseMock
+            )
+        );
     }
 }

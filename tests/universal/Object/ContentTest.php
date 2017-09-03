@@ -33,6 +33,7 @@ use Teknoo\East\Website\Object\User;
  * @covers \Teknoo\East\Website\Object\PublishableTrait
  * @covers \Teknoo\East\Website\Object\ObjectTrait
  * @covers \Teknoo\East\Website\Object\Content
+ * @covers \Teknoo\East\Website\Object\Content\Draft
  */
 class ContentTest extends \PHPUnit_Framework_TestCase
 {

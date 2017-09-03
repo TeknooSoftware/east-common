@@ -76,12 +76,14 @@ services:
       - ['setWriter', ['@teknoo.east.website.writer.category']]
       - ['setFormClass', ['%teknoo.east.website.form_type.category.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.category.edit.file%']]
+      - ['setTwig', ['@twig']]
 
   teknoo.east.website.endpoint.admin.list.category:
     parent: 'teknoo.east.website.endpoint.admin.list.abstract'
     calls:
       - ['setLoader', ['@teknoo.east.website.loader.category']]
       - ['setViewPath', ['%teknoo.east.website.view.category.list.file%']]
+      - ['setTwig', ['@twig']]
 
   teknoo.east.website.endpoint.admin.new.category:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
@@ -89,6 +91,7 @@ services:
       - ['setWriter', ['@teknoo.east.website.write.category']]
       - ['setFormClass', ['%teknoo.east.website.form_type.category.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.category.new.file%']]
+      - ['setTwig', ['@twig']]
 
   #Contents
   teknoo.east.website.endpoint.admin.delete.content:
@@ -104,12 +107,14 @@ services:
       - ['setWriter', ['@teknoo.east.website.writer.content']]
       - ['setFormClass', ['%teknoo.east.website.form_type.content.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.content.edit.file%']]
+      - ['setTwig', ['@twig']]
 
   teknoo.east.website.endpoint.admin.list.content:
     parent: 'teknoo.east.website.endpoint.admin.list.abstract'
     calls:
       - ['setLoader', ['@teknoo.east.website.loader.content']]
       - ['setViewPath', ['%teknoo.east.website.view.content.list.file%']]
+      - ['setTwig', ['@twig']]
 
   teknoo.east.website.endpoint.admin.new.content:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
@@ -117,6 +122,7 @@ services:
       - ['setWriter', ['@teknoo.east.website.write.content']]
       - ['setFormClass', ['%teknoo.east.website.form_type.content.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.content.new.file%']]
+      - ['setTwig', ['@twig']]
 
   #Type
   teknoo.east.website.endpoint.admin.delete.type:
@@ -132,12 +138,14 @@ services:
       - ['setWriter', ['@teknoo.east.website.writer.type']]
       - ['setFormClass', ['%teknoo.east.website.form_type.type.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.type.edit.file%']]
+      - ['setTwig', ['@twig']]
 
   teknoo.east.website.endpoint.admin.list.type:
     parent: 'teknoo.east.website.endpoint.admin.list.abstract'
     calls:
       - ['setLoader', ['@teknoo.east.website.loader.type']]
       - ['setViewPath', ['%teknoo.east.website.view.type.list.file%']]
+      - ['setTwig', ['@twig']]
 
   teknoo.east.website.endpoint.admin.new.type:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
@@ -145,6 +153,7 @@ services:
       - ['setWriter', ['@teknoo.east.website.write.type']]
       - ['setFormClass', ['%teknoo.east.website.form_type.type.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.type.new.file%']]
+      - ['setTwig', ['@twig']]
 
   #User
   teknoo.east.website.endpoint.admin.delete.user:
@@ -160,12 +169,14 @@ services:
       - ['setWriter', ['@teknoo.east.website.writer.user']]
       - ['setFormClass', ['%teknoo.east.website.form_type.user.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.user.edit.file%']]
+      - ['setTwig', ['@twig']]
 
   teknoo.east.website.endpoint.admin.list.user:
     parent: 'teknoo.east.website.endpoint.admin.list.abstract'
     calls:
       - ['setLoader', ['@teknoo.east.website.loader.user']]
       - ['setViewPath', ['%teknoo.east.website.view.user.list.file%']]
+      - ['setTwig', ['@twig']]
 
   teknoo.east.website.endpoint.admin.new.user:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
@@ -173,4 +184,4 @@ services:
       - ['setWriter', ['@teknoo.east.website.write.user']]
       - ['setFormClass', ['%teknoo.east.website.form_type.user.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.user.new.file%']]
-
+      - ['setTwig', ['@twig']]

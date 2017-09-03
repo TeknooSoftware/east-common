@@ -25,6 +25,7 @@ namespace Teknoo\East\WebsiteBundle\AdminEndPoint;
 use Psr\Http\Message\ServerRequestInterface;
 use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
+use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
 
 /**
@@ -39,12 +40,35 @@ class AdminListEndPoint implements EndPointInterface
     /**
      * @param ServerRequestInterface $request
      * @param ClientInterface $client
+     * @param int $page
      * @return self
      */
     public function __invoke(
         ServerRequestInterface $request,
-        ClientInterface $client
-    ) {
+        ClientInterface $client,
+        int $page=1
+    ) :AdminListEndPoint {
+        if ($page < 1) {
+            $page = 1;
+        }
 
+        $this->loader->loadCollection(
+            [],
+            new Promise(function ($objects) use ($client, $page) {
+                $this->render(
+                    $client,
+                    $this->viewPath, [
+                    'objectsCollection' => $objects,
+                    'page' => $page
+                ]);
+
+            }, function ($error) use ($client) {
+                $client->errorInRequest($error);
+            }),
+            15,
+            ($page-1)
+        );
+
+        return $this;
     }
 }

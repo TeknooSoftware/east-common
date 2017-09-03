@@ -26,6 +26,10 @@ use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
 use Teknoo\East\Website\EndPoint\MediaEndPointTrait;
 
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 class MediaEntPoint implements EndPointInterface
 {
     use EastEndPointTrait,

@@ -24,6 +24,10 @@ namespace Teknoo\East\Website\Writer;
 
 use Teknoo\East\Website\Object\Category;
 
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 class CategoryWriter implements WriterInterface
 {
     use DoctrinePersistTrait;

@@ -22,6 +22,10 @@
 
 namespace Teknoo\East\Website\Object;
 
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 interface PublishableInterface
 {
     /**

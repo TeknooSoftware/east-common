@@ -24,6 +24,10 @@ namespace Teknoo\East\Website\Writer;
 
 use Teknoo\East\Website\Object\Content;
 
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 class ContentWriter implements WriterInterface
 {
     use DoctrinePersistTrait;

@@ -27,6 +27,8 @@ use Teknoo\East\Website\Object\Media;
 use Teknoo\Tests\East\Website\Object\Traits\PublishableTestTrait;
 
 /**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers \Teknoo\East\Website\Object\PublishableTrait
  * @covers \Teknoo\East\Website\Object\ObjectTrait
  * @covers \Teknoo\East\Website\Object\Media

@@ -28,7 +28,8 @@ use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\Object\PublishableInterface;
 
 /**
- * @mixin PublishableLoaderInterface
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 trait PublishableLoaderTrait
 {
@@ -40,7 +41,7 @@ trait PublishableLoaderTrait
     /**
      * @param array $criteria
      * @param PromiseInterface $promise
-     * @return LoaderInterface
+     * @return LoaderInterface|self
      */
     public function load(array $criteria, PromiseInterface $promise): LoaderInterface
     {
@@ -58,7 +59,7 @@ trait PublishableLoaderTrait
     /**
      * @param array $criteria
      * @param PromiseInterface $promise
-     * @return PublishableLoaderInterface
+     * @return PublishableLoaderInterface|self
      */
     public function loadPublished(array $criteria, PromiseInterface $promise): PublishableLoaderInterface
     {

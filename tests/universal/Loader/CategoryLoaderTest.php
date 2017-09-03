@@ -27,6 +27,12 @@ use Teknoo\East\Website\Object\Category;
 use Teknoo\East\Website\Loader\CategoryLoader;
 use Teknoo\East\Website\Loader\LoaderInterface;
 
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ * @covers      \Teknoo\East\Website\Loader\CategoryLoader
+ * @covers      \Teknoo\East\Website\Loader\CollectionLoaderTrait
+ */
 class CategoryLoaderTest extends \PHPUnit_Framework_TestCase
 {
     use LoaderTestTrait;

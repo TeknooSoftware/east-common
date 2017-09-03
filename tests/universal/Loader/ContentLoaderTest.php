@@ -28,6 +28,13 @@ use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Loader\ContentLoader;
 use Teknoo\East\Website\Loader\LoaderInterface;
 
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ * @covers      \Teknoo\East\Website\Loader\ContentLoader
+ * @covers      \Teknoo\East\Website\Loader\PublishableLoaderTrait
+ * @covers      \Teknoo\East\Website\Loader\CollectionLoaderTrait
+ */
 class ContentLoaderTest extends \PHPUnit_Framework_TestCase
 {
     use PublishableLoaderTestTrait;

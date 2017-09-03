@@ -25,6 +25,10 @@ namespace Teknoo\East\Website\Loader;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 class ContentLoader implements PublishableLoaderInterface
 {
     use PublishableLoaderTrait,

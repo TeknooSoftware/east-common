@@ -24,6 +24,10 @@ namespace Teknoo\East\WebsiteBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 class TeknooEastWebsiteBundle extends Bundle
 {
 

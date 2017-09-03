@@ -25,6 +25,10 @@ namespace Teknoo\Tests\East\Website\Loader;
 use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Website\Loader\PublishableLoaderInterface;
 
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 trait PublishableLoaderTestTrait
 {
     use LoaderTestTrait;

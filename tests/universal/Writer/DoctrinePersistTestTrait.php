@@ -25,6 +25,10 @@ namespace Teknoo\Tests\East\Website\Writer;
 use Doctrine\Common\Persistence\ObjectManager;
 use Teknoo\East\Website\Writer\WriterInterface;
 
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 trait DoctrinePersistTestTrait
 {
     /**

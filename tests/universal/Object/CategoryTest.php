@@ -27,6 +27,8 @@ use Teknoo\East\Website\Object\Type;
 use Teknoo\Tests\East\Website\Object\Traits\ObjectTestTrait;
 
 /**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers \Teknoo\East\Website\Object\PublishableTrait
  * @covers \Teknoo\East\Website\Object\ObjectTrait
  * @covers \Teknoo\East\Website\Object\Category

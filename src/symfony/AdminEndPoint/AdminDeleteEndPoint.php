@@ -29,6 +29,10 @@ use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
 use Teknoo\East\Website\Service\DeletingService;
 
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 class AdminDeleteEndPoint implements EndPointInterface
 {
     use EastEndPointTrait,

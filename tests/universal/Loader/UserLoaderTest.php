@@ -28,6 +28,12 @@ use Teknoo\East\Website\Object\User;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Loader\UserLoader;
 
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ * @covers      \Teknoo\East\Website\Loader\UserLoader
+ * @covers      \Teknoo\East\Website\Loader\CollectionLoaderTrait
+ */
 class UserLoaderTest extends \PHPUnit_Framework_TestCase
 {
     use LoaderTestTrait;

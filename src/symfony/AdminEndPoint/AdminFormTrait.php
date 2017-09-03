@@ -25,6 +25,10 @@ namespace Teknoo\East\WebsiteBundle\AdminEndPoint;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
 
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 trait AdminFormTrait
 {
     /**

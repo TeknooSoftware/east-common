@@ -25,6 +25,10 @@ namespace Teknoo\East\WebsiteBundle\AdminEndPoint;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Writer\WriterInterface;
 
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 trait AdminEntPointTrait
 {
     /**

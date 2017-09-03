@@ -26,6 +26,10 @@ use Doctrine\Common\Persistence\ObjectRepository;
 use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Website\Loader\LoaderInterface;
 
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 trait LoaderTestTrait
 {
     /**

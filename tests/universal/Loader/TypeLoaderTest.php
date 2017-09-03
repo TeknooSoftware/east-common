@@ -27,6 +27,12 @@ use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Loader\TypeLoader;
 
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ * @covers      \Teknoo\East\Website\Loader\TypeLoader
+ * @covers      \Teknoo\East\Website\Loader\CollectionLoaderTrait
+ */
 class TypeLoaderTest extends \PHPUnit_Framework_TestCase
 {
     use LoaderTestTrait;

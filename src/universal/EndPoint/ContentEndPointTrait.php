@@ -29,6 +29,10 @@ use Teknoo\East\Website\Loader\ContentLoader;
 use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Service\MenuGenerator;
 
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 trait ContentEndPointTrait
 {
     /**

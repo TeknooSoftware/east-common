@@ -27,6 +27,10 @@ use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
 
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 class AdminListEndPoint implements EndPointInterface
 {
     use EastEndPointTrait,

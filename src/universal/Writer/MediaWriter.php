@@ -24,6 +24,10 @@ namespace Teknoo\East\Website\Writer;
 
 use Teknoo\East\Website\Object\Media;
 
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 class MediaWriter implements WriterInterface
 {
     use DoctrinePersistTrait;

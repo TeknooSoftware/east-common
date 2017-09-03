@@ -27,6 +27,8 @@ use Teknoo\East\Website\Writer\TypeWriter;
 use Teknoo\East\Website\Writer\WriterInterface;
 
 /**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers \Teknoo\East\Website\Writer\TypeWriter
  * @covers \Teknoo\East\Website\Writer\DoctrinePersistTrait
  */

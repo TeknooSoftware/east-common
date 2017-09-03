@@ -25,6 +25,10 @@ namespace Teknoo\East\Website\Service;
 use Teknoo\East\Website\Object\DeletableInterface;
 use Teknoo\East\Website\Writer\WriterInterface;
 
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 class DeletingService
 {
     /**
@@ -48,9 +52,9 @@ class DeletingService
 
     /**
      * @param \DateTime $currentDate
-     * @return DeleteService
+     * @return DeletingService
      */
-    public function setCurrentDate(\DateTime $currentDate): DeleteService
+    public function setCurrentDate(\DateTime $currentDate): DeletingService
     {
         $this->currentDate = $currentDate;
         return $this;
@@ -70,9 +74,9 @@ class DeletingService
 
     /**
      * @param DeletableInterface $object
-     * @return DeleteService
+     * @return DeletingService
      */
-    public function delete(DeletableInterface $object) : DeleteService
+    public function delete(DeletableInterface $object) : DeletingService
     {
         $object->setDeletedAt($this->getCurrentDate());
 

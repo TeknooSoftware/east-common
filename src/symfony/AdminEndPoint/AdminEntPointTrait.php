@@ -42,6 +42,22 @@ trait AdminEntPointTrait
     private $writer;
 
     /**
+     * @var string
+     */
+    private $viewPath;
+
+    /**
+     * @param string $viewPath
+     * @return self
+     */
+    public function setViewPath(string $viewPath)
+    {
+        $this->viewPath = $viewPath;
+
+        return $this;
+    }
+
+    /**
      * @param LoaderInterface $loader
      * @return self
      */

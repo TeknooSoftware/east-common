@@ -42,22 +42,6 @@ trait AdminFormTrait
     private $formFactory;
 
     /**
-     * @var string
-     */
-    private $viewPath;
-
-    /**
-     * @param string $viewPath
-     * @return self
-     */
-    public function setViewPath(string $viewPath)
-    {
-        $this->viewPath = $viewPath;
-
-        return $this;
-    }
-
-    /**
      * @param string $formClass
      * @return self
      */

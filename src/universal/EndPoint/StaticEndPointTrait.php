@@ -20,18 +20,33 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\East\WebsiteBundle\EndPoint;
+namespace Teknoo\East\Website\EndPoint;
 
-use Teknoo\East\Foundation\EndPoint\EndPointInterface;
-use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
-use Teknoo\East\Website\EndPoint\MediaEndPointTrait;
+use Teknoo\East\Foundation\Http\ClientInterface;
+use Teknoo\East\Foundation\Promise\Promise;
+use Teknoo\East\Website\Loader\MediaLoader;
+use Teknoo\East\Website\Object\Media;
+use Zend\Diactoros\Response;
+use Zend\Diactoros\Stream;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class MediaEntPoint implements EndPointInterface
+trait StaticEndPointTrait
 {
-    use EastEndPointTrait,
-        MediaEndPointTrait;
+    /**
+     * @param ClientInterface $client
+     * @param string $template
+     * @return self
+     */
+    public function __invoke(ClientInterface $client, string $template)
+    {
+        $this->render(
+            $client,
+            $template
+        );
+
+        return $this;
+    }
 }

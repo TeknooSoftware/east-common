@@ -1,7 +1,8 @@
 parameters:
   #Front endpoints
   teknoo.east.website.endpoint.content.class: 'Teknoo\East\WebsiteBundle\EndPoint\ContentEndPoint'
-  teknoo.east.website.endpoint.media.class: 'Teknoo\East\WebsiteBundle\EndPoint\MediaEntPoint'
+  teknoo.east.website.endpoint.media.class: 'Teknoo\East\WebsiteBundle\EndPoint\MediaEndPoint'
+  teknoo.east.website.endpoint.static.class: 'Teknoo\East\WebsiteBundle\EndPoint\StaticEndPoint'
 
   #Admin endpoints
   teknoo.east.website.endpoint.admin.delete.class: 'Teknoo\East\WebsiteBundle\AdminEndPoint\AdminDeleteEndPoint'
@@ -39,11 +40,20 @@ services:
     arguments:
       - '@teknoo.east.website.loader.content'
       - '@teknoo.east.website.service.menu_generator'
+    calls:
+      - ['setTwig', ['@twig']]
 
   teknoo.east.website.endpoint.media:
     class: '%teknoo.east.website.endpoint.media.class%'
     arguments:
       - '@teknoo.east.website.loader.media'
+    calls:
+      - ['setTwig', ['@twig']]
+
+  teknoo.east.website.endpoint.static:
+    class: '%teknoo.east.website.endpoint.static.class%'
+    calls:
+      - ['setTwig', ['@twig']]
 
   #Admin endpoints
   teknoo.east.website.endpoint.admin.delete.abstract:

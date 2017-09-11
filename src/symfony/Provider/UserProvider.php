@@ -24,7 +24,7 @@ namespace Teknoo\East\WebsiteBundle\Provider;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Teknoo\East\Website\Object\User;
+use Teknoo\East\Website\Object\User as BaseUser;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -54,6 +54,6 @@ class UserProvider implements UserProviderInterface
     public function supportsClass($class)
     {
         $reflection = new \ReflectionClass($class);
-        return $reflection->isSubclassOf(User::class);
+        return $reflection->isSubclassOf(BaseUser::class);
     }
 }

@@ -24,11 +24,10 @@ namespace Teknoo\East\Website\Object;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Translatable\Translatable;
-use Symfony\Component\Validator\Constraints\IsFalse;
-use Symfony\Component\Validator\Constraints\IsTrue;
 use Teknoo\East\Website\Object\Category\Hidden;
 use Teknoo\East\Website\Object\Category\Available;
 use Teknoo\States\LifeCycle\StatedClass\Automated\Assertion\Assertion;
+use Teknoo\States\LifeCycle\StatedClass\Automated\Assertion\Property\IsEqual;
 use Teknoo\States\LifeCycle\StatedClass\Automated\AutomatedInterface;
 use Teknoo\States\LifeCycle\StatedClass\Automated\AutomatedTrait;
 use Teknoo\States\Proxy\ProxyInterface;
@@ -111,8 +110,8 @@ class Category implements ProxyInterface, AutomatedInterface, Translatable, Dele
     public function getStatesAssertions(): array
     {
         return [
-            (new Assertion([Hidden::class]))->with('hidden', new IsFalse()),
-            (new Assertion([Available::class]))->with('hidden', new IsTrue()),
+            (new Assertion([Hidden::class]))->with('hidden', new IsEqual(true)),
+            (new Assertion([Available::class]))->with('hidden', new IsEqual(false)),
         ];
     }
 

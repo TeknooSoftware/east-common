@@ -22,13 +22,11 @@
 
 namespace Teknoo\East\Website\Object;
 
-use Symfony\Component\Security\Core\User\UserInterface;
-
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class User implements UserInterface, DeletableInterface
+class User implements DeletableInterface
 {
     use ObjectTrait;
 

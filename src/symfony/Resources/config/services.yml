@@ -201,6 +201,6 @@ services:
 
   #Provider
   teknoo.east.website.bundle.user_provider:
-    class: 'teknoo.east.website.bundle.user_provider.class'
+    class: '%teknoo.east.website.bundle.user_provider.class%'
     arguments:
       - '@teknoo.east.website.loader.user'

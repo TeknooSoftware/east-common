@@ -24,7 +24,10 @@ namespace Teknoo\East\WebsiteBundle\Provider;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Teknoo\East\Foundation\Promise\Promise;
+use Teknoo\East\Website\Loader\UserLoader;
 use Teknoo\East\Website\Object\User as BaseUser;
+use Teknoo\East\WebsiteBundle\User\User;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -33,11 +36,24 @@ use Teknoo\East\Website\Object\User as BaseUser;
 class UserProvider implements UserProviderInterface
 {
     /**
+     * @var UserLoader
+     */
+    private $loader;
+
+    /**
      * {@inheritdoc}
      */
     public function loadUserByUsername($username)
     {
-        // TODO: Implement loadUserByUsername() method.
+        $loadedUser = null;
+        $this->loader->byEmail(
+            $username,
+            new Promise(function ($user) use (&$loadedUser) {
+                $loadedUser = new User($user);
+            })
+        );
+
+        return $loadedUser;
     }
 
     /**

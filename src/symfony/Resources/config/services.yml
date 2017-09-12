@@ -33,6 +33,9 @@ parameters:
   teknoo.east.website.view.user.edit.file: 'TeknooEastWebsiteBundle:AdminUser:edit.html.twig'
   teknoo.east.website.view.user.list.file: 'TeknooEastWebsiteBundle:AdminUser:list.html.twig'
 
+  #Provider
+  teknoo.east.website.bundle.user_provider.class: 'Teknoo\East\WebsiteBundle\Provider\UserProvider'
+
 services:
   #Front endpoints
   teknoo.east.website.endpoint.content:
@@ -195,3 +198,9 @@ services:
       - ['setFormClass', ['%teknoo.east.website.form_type.user.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.user.new.file%']]
       - ['setTwig', ['@twig']]
+
+  #Provider
+  teknoo.east.website.bundle.user_provider:
+    class: 'teknoo.east.website.bundle.user_provider.class'
+    arguments:
+      - '@teknoo.east.website.loader.user'

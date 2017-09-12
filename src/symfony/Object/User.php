@@ -30,8 +30,64 @@ use Teknoo\East\Website\Object\User as BaseUser;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class User extends BaseUser implements UserInterface, EquatableInterface
+class User implements UserInterface, EquatableInterface
 {
+    /**
+     * @var BaseUser
+     */
+    private $user;
+
+    /**
+     * User constructor.
+     * @param BaseUser $user
+     */
+    public function __construct(BaseUser $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRoles()
+    {
+        return $this->user->getRoles();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPassword()
+    {
+        return $this->user->getPassword();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSalt()
+    {
+        return $this->user->getSalt();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getUsername()
+    {
+        return $this->user->getUsername();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function eraseCredentials()
+    {
+        $this->user->eraseCredentials();
+
+        return $this;
+    }
+
     /**
      * {@inheritdoc}
      */

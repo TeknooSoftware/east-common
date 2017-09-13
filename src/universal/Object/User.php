@@ -61,6 +61,15 @@ class User implements DeletableInterface
     private $salt;
 
     /**
+     * User constructor.
+     */
+    public function __construct()
+    {
+        //initialize for new user
+        $this->salt = \sha1(\uniqid(null, true));
+    }
+
+    /**
      * @return string
      */
     public function getFirstName(): string

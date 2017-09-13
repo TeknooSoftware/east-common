@@ -36,6 +36,9 @@ parameters:
   #Provider
   teknoo.east.website.bundle.user_provider.class: 'Teknoo\East\WebsiteBundle\Provider\UserProvider'
 
+  #Command
+  teknoo.east.website.bundle.command.create_user.class: 'Teknoo\East\WebsiteBundle\Command\CreateUserCommand'
+
 services:
   #Front endpoints
   teknoo.east.website.endpoint.content:
@@ -204,3 +207,12 @@ services:
     class: '%teknoo.east.website.bundle.user_provider.class%'
     arguments:
       - '@teknoo.east.website.loader.user'
+
+  #Command
+  teknoo.east.website.bundle.command.create_user:
+    class: '%teknoo.east.website.bundle.command.create_user.class%'
+    arguments:
+      - '@teknoo.east.website.writer.user'
+      - '@security.encoder_factory'
+    tags:
+      - { name: console.command }

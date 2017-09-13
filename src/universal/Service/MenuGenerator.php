@@ -49,15 +49,18 @@ class MenuGenerator
      * @param string $location
      * @return MenuGenerator
      */
-    public function extract(string $location): MenuGenerator
+    public function extract(string $location)
     {
-        $promise = new Promise(function ($categories) {
-            foreach ($categories as $category) {
-                yield $category;
-            }
+        $stacks = [];
+        $promise = new Promise(function ($categories) use (&$stacks){
+            $stacks = $categories;
         });
 
         $this->categoryLoader->topBySlug($location, $promise);
+
+        foreach ($stacks as $element) {
+            yield $element;
+        }
 
         return $this;
     }

@@ -27,7 +27,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Website\Loader\UserLoader;
 use Teknoo\East\Website\Object\User as BaseUser;
-use Teknoo\East\WebsiteBundle\User\User;
+use Teknoo\East\WebsiteBundle\Object\User;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License

@@ -29,7 +29,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Teknoo\East\Website\Object\User as BaseUser;
 use Teknoo\East\Website\Writer\UserWriter;
-use Teknoo\East\WebsiteBundle\User\User;
+use Teknoo\East\WebsiteBundle\Object\User;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License

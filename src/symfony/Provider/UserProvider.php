@@ -41,6 +41,15 @@ class UserProvider implements UserProviderInterface
     private $loader;
 
     /**
+     * UserProvider constructor.
+     * @param UserLoader $loader
+     */
+    public function __construct(UserLoader $loader)
+    {
+        $this->loader = $loader;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function loadUserByUsername($username)

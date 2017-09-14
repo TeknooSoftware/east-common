@@ -68,7 +68,6 @@ class UserLoader implements LoaderInterface
      */
     public function byEmail(string $email, PromiseInterface $promise): LoaderInterface
     {
-        $encodedEmail = \hash('sha512', $email);
-        return $this->load(['email' => $encodedEmail], $promise);
+        return $this->load(['email' => $email], $promise);
     }
 }

@@ -16,6 +16,12 @@ parameters:
   teknoo.east.website.form_type.type.class: 'Teknoo\East\WebsiteBundle\Form\Type\TypeType'
   teknoo.east.website.form_type.user.class: 'Teknoo\East\WebsiteBundle\Form\Type\UserType'
 
+  #Class
+  teknoo.east.website.category.class: 'Teknoo\East\Website\Object\Category'
+  teknoo.east.website.content.class: 'Teknoo\East\Website\Object\Content'
+  teknoo.east.website.type.class: 'Teknoo\East\Website\Object\Type'
+  teknoo.east.website.user.class: 'Teknoo\East\Website\Object\User'
+
   #Admin view path
   teknoo.east.website.view.category.new.file: 'TeknooEastWebsiteBundle:AdminCategory:new.html.twig'
   teknoo.east.website.view.category.edit.file: 'TeknooEastWebsiteBundle:AdminCategory:edit.html.twig'
@@ -104,9 +110,10 @@ services:
   teknoo.east.website.endpoint.admin.new.category:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
     calls:
-      - ['setWriter', ['@teknoo.east.website.write.category']]
+      - ['setWriter', ['@teknoo.east.website.writer.category']]
       - ['setFormClass', ['%teknoo.east.website.form_type.category.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.category.new.file%']]
+      - ['setObjectClass', ['%teknoo.east.website.category.class%']]
       - ['setTwig', ['@twig']]
 
   #Contents
@@ -135,9 +142,10 @@ services:
   teknoo.east.website.endpoint.admin.new.content:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
     calls:
-      - ['setWriter', ['@teknoo.east.website.write.content']]
+      - ['setWriter', ['@teknoo.east.website.writer.content']]
       - ['setFormClass', ['%teknoo.east.website.form_type.content.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.content.new.file%']]
+      - ['setObjectClass', ['%teknoo.east.website.content.class%']]
       - ['setTwig', ['@twig']]
 
   #Type
@@ -166,9 +174,10 @@ services:
   teknoo.east.website.endpoint.admin.new.type:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
     calls:
-      - ['setWriter', ['@teknoo.east.website.write.type']]
+      - ['setWriter', ['@teknoo.east.website.writer.type']]
       - ['setFormClass', ['%teknoo.east.website.form_type.type.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.type.new.file%']]
+      - ['setObjectClass', ['%teknoo.east.website.type.class%']]
       - ['setTwig', ['@twig']]
 
   #User
@@ -197,9 +206,10 @@ services:
   teknoo.east.website.endpoint.admin.new.user:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
     calls:
-      - ['setWriter', ['@teknoo.east.website.write.user']]
+      - ['setWriter', ['@teknoo.east.website.writer.user']]
       - ['setFormClass', ['%teknoo.east.website.form_type.user.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.user.new.file%']]
+      - ['setObjectClass', ['%teknoo.east.website.user.class%']]
       - ['setTwig', ['@twig']]
 
   #Provider

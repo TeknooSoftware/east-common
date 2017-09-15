@@ -22,7 +22,8 @@
 
 namespace Teknoo\East\WebsiteBundle\Form\Type;
 
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+
+use Doctrine\Bundle\MongoDBBundle\Form\Type\DocumentType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -47,7 +48,7 @@ class CategoryType extends AbstractType
     {
         $builder->add('name', TextType::class, ['required'=>true]);
         $builder->add('location', TextType::class, ['required'=>true]);
-        $builder->add('parent', EntityType::class, ['required'=>true, 'multiple'=>false]);
+        $builder->add('parent', DocumentType::class, ['required'=>true, 'multiple'=>false]);
         $builder->add('slug', TextType::class, ['required'=>false]);
         $builder->add('hidden', CheckboxType::class, ['required'=>false]);
         $builder->add('position', IntegerType::class, ['required'=>false]);

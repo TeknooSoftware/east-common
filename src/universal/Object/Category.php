@@ -258,7 +258,7 @@ class Category implements ProxyInterface, AutomatedInterface, Translatable, Dele
      */
     public function getLocaleField(): string
     {
-        return $this->localeField;
+        return (string) $this->localeField;
     }
 
     /**
@@ -285,5 +285,15 @@ class Category implements ProxyInterface, AutomatedInterface, Translatable, Dele
         $this->localeField = $locale;
 
         return $this;
+    }
+
+    /**
+     * Sets translatable locale
+     *
+     * @return string
+     */
+    public function getTranslatableLocale(): string
+    {
+        return (string) $this->localeField;
     }
 }

@@ -330,4 +330,14 @@ class Content implements ProxyInterface, AutomatedInterface, Translatable, Delet
 
         return $this;
     }
+
+    /**
+     * Sets translatable locale
+     *
+     * @return string
+     */
+    public function getTranslatableLocale()
+    {
+        return (string) $this->localeField;
+    }
 }

@@ -29,6 +29,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Teknoo\East\Website\Object\Category;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -48,7 +49,7 @@ class CategoryType extends AbstractType
     {
         $builder->add('name', TextType::class, ['required'=>true]);
         $builder->add('location', TextType::class, ['required'=>true]);
-        $builder->add('parent', DocumentType::class, ['required'=>true, 'multiple'=>false]);
+        $builder->add('parent', DocumentType::class, ['class' => Category::class, 'required'=>true, 'multiple'=>false]);
         $builder->add('slug', TextType::class, ['required'=>false]);
         $builder->add('hidden', CheckboxType::class, ['required'=>false]);
         $builder->add('position', IntegerType::class, ['required'=>false]);

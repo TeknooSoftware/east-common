@@ -26,6 +26,9 @@ use Doctrine\Bundle\MongoDBBundle\Form\Type\DocumentType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Teknoo\East\Website\Object\Category;
+use Teknoo\East\Website\Object\Type;
+use Teknoo\East\Website\Object\User;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -43,9 +46,9 @@ class ContentType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('author', DocumentType::class, ['required'=>true, 'multiple'=>false]);
-        $builder->add('type', DocumentType::class, ['required'=>true, 'multiple'=>false]);
-        $builder->add('categories', DocumentType::class, ['required'=>true, 'multiple'=>true]);
+        $builder->add('author', DocumentType::class, ['class' => User::class, 'required'=>true, 'multiple'=>false]);
+        $builder->add('type', DocumentType::class, ['class' => Type::class, 'required'=>true, 'multiple'=>false]);
+        $builder->add('categories', DocumentType::class, ['class' => Category::class, 'required'=>true, 'multiple'=>true]);
         $builder->add('title', TextType::class, ['required'=>true]);
         $builder->add('subtitle', TextType::class, ['required'=>false]);
         $builder->add('slug', TextType::class, ['required'=>false]);

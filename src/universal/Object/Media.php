@@ -70,7 +70,7 @@ class Media implements DeletableInterface, PublishableInterface
      */
     public function getName(): string
     {
-        return $this->name;
+        return (string) $this->name;
     }
 
     /**
@@ -108,7 +108,7 @@ class Media implements DeletableInterface, PublishableInterface
      */
     public function getLength(): int
     {
-        return $this->length;
+        return (int) $this->length;
     }
 
     /**
@@ -127,7 +127,7 @@ class Media implements DeletableInterface, PublishableInterface
      */
     public function getChunkSize(): int
     {
-        return $this->chunkSize;
+        return (int) $this->chunkSize;
     }
 
     /**
@@ -146,7 +146,7 @@ class Media implements DeletableInterface, PublishableInterface
      */
     public function getMd5(): string
     {
-        return $this->md5;
+        return (string) $this->md5;
     }
 
     /**
@@ -165,7 +165,7 @@ class Media implements DeletableInterface, PublishableInterface
      */
     public function getMimeType(): string
     {
-        return $this->mimeType;
+        return (string) $this->mimeType;
     }
 
     /**
@@ -184,7 +184,7 @@ class Media implements DeletableInterface, PublishableInterface
      */
     public function getAlternative(): string
     {
-        return $this->alternative;
+        return (string) $this->alternative;
     }
 
     /**

@@ -120,7 +120,7 @@ class Category implements ProxyInterface, AutomatedInterface, Translatable, Dele
      */
     public function getName(): string
     {
-        return $this->name;
+        return (string) $this->name;
     }
 
     /**
@@ -139,7 +139,7 @@ class Category implements ProxyInterface, AutomatedInterface, Translatable, Dele
      */
     public function getSlug(): string
     {
-        return $this->slug;
+        return (string) $this->slug;
     }
 
     /**
@@ -158,7 +158,7 @@ class Category implements ProxyInterface, AutomatedInterface, Translatable, Dele
      */
     public function getLocation(): string
     {
-        return $this->location;
+        return (string) $this->location;
     }
 
     /**
@@ -177,7 +177,7 @@ class Category implements ProxyInterface, AutomatedInterface, Translatable, Dele
      */
     public function getPosition(): int
     {
-        return $this->position;
+        return (int) $this->position;
     }
 
     /**
@@ -233,7 +233,7 @@ class Category implements ProxyInterface, AutomatedInterface, Translatable, Dele
     /**
      * @return Category[]
      */
-    public function getChildren(): array
+    public function getChildren()
     {
         return $this->children;
     }
@@ -242,8 +242,12 @@ class Category implements ProxyInterface, AutomatedInterface, Translatable, Dele
      * @param Category[] $children
      * @return self
      */
-    public function setChildren(array $children): Category
+    public function setChildren($children): Category
     {
+        if (!\is_array($children) && !$children instanceof \Traversable) {
+            throw new \RuntimeException('Bad argument type for $children');
+        }
+        
         $this->children = $children;
 
         return $this;

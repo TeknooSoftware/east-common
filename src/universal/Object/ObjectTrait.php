@@ -53,7 +53,7 @@ trait ObjectTrait
      */
     public function getId(): string
     {
-        return $this->id;
+        return (string) $this->id;
     }
 
     /**

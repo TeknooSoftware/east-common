@@ -74,7 +74,7 @@ class User implements DeletableInterface
      */
     public function getFirstName(): string
     {
-        return $this->firstName;
+        return (string) $this->firstName;
     }
 
     /**
@@ -93,7 +93,7 @@ class User implements DeletableInterface
      */
     public function getLastName(): string
     {
-        return $this->lastName;
+        return (string) $this->lastName;
     }
 
     /**
@@ -131,7 +131,7 @@ class User implements DeletableInterface
      */
     public function getEmail(): string
     {
-        return $this->email;
+        return (string) $this->email;
     }
 
     /**
@@ -150,7 +150,7 @@ class User implements DeletableInterface
      */
     public function getPassword(): string
     {
-        return $this->password;
+        return (string) $this->password;
     }
 
     /**
@@ -169,7 +169,7 @@ class User implements DeletableInterface
      */
     public function getSalt(): string
     {
-        return $this->salt;
+        return (string) $this->salt;
     }
 
     /**

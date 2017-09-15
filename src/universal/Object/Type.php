@@ -45,7 +45,7 @@ class Type implements DeletableInterface
      */
     public function getName(): string
     {
-        return $this->name;
+        return (string) $this->name;
     }
 
     /**
@@ -64,7 +64,7 @@ class Type implements DeletableInterface
      */
     public function getTemplate(): string
     {
-        return $this->template;
+        return (string) $this->template;
     }
 
     /**

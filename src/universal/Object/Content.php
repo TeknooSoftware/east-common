@@ -150,7 +150,7 @@ class Content implements ProxyInterface, AutomatedInterface, Translatable, Delet
      */
     public function getTitle(): string
     {
-        return $this->title;
+        return (string) $this->title;
     }
 
     /**
@@ -169,7 +169,7 @@ class Content implements ProxyInterface, AutomatedInterface, Translatable, Delet
      */
     public function getSubtitle(): string
     {
-        return $this->subtitle;
+        return (string) $this->subtitle;
     }
 
     /**
@@ -186,7 +186,7 @@ class Content implements ProxyInterface, AutomatedInterface, Translatable, Delet
     /**
      * @return Category[]
      */
-    public function getCategories(): array
+    public function getCategories()
     {
         return $this->categories;
     }
@@ -207,7 +207,7 @@ class Content implements ProxyInterface, AutomatedInterface, Translatable, Delet
      */
     public function getSlug(): string
     {
-        return $this->slug;
+        return (string) $this->slug;
     }
 
     /**
@@ -224,7 +224,7 @@ class Content implements ProxyInterface, AutomatedInterface, Translatable, Delet
     /**
      * @return Type
      */
-    public function getType(): Type
+    public function getType()
     {
         return $this->type;
     }
@@ -245,7 +245,7 @@ class Content implements ProxyInterface, AutomatedInterface, Translatable, Delet
      */
     public function getContent(): string
     {
-        return $this->content;
+        return (string) $this->content;
     }
 
     /**
@@ -283,7 +283,7 @@ class Content implements ProxyInterface, AutomatedInterface, Translatable, Delet
      */
     public function getDescription(): string
     {
-        return $this->description;
+        return (string) $this->description;
     }
 
     /**
@@ -302,7 +302,7 @@ class Content implements ProxyInterface, AutomatedInterface, Translatable, Delet
      */
     public function getLocaleField(): string
     {
-        return $this->localeField;
+        return (string) $this->localeField;
     }
 
     /**

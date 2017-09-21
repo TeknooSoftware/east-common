@@ -5,12 +5,12 @@ admin_category_list:
 
 admin_category_edit:
     path: '/category/edit/{id}'
-    methods:  ['GET']
+    methods:  ['GET', 'POST', 'PUST']
     defaults: { _controller: 'teknoo.east.website.endpoint.admin.edit.category' }
 
 admin_category_new:
     path: '/category/new'
-    methods:  ['GET']
+    methods:  ['GET', 'POST', 'PUST']
     defaults: { _controller: 'teknoo.east.website.endpoint.admin.new.category' }
 
 admin_category_delete:
@@ -25,12 +25,12 @@ admin_content_list:
 
 admin_content_edit:
     path: '/content/edit/{id}'
-    methods:  ['GET']
+    methods:  ['GET', 'POST', 'PUST']
     defaults: { _controller: 'teknoo.east.website.endpoint.admin.edit.content' }
 
 admin_content_new:
     path: '/content/new'
-    methods:  ['GET']
+    methods:  ['GET', 'POST', 'PUST']
     defaults: { _controller: 'teknoo.east.website.endpoint.admin.new.content' }
 
 admin_content_delete:
@@ -45,12 +45,12 @@ admin_type_list:
 
 admin_type_edit:
     path: '/type/edit/{id}'
-    methods:  ['GET']
+    methods:  ['GET', 'POST', 'PUST']
     defaults: { _controller: 'teknoo.east.website.endpoint.admin.edit.type' }
 
 admin_type_new:
     path: '/type/new'
-    methods:  ['GET']
+    methods:  ['GET', 'POST', 'PUST']
     defaults: { _controller: 'teknoo.east.website.endpoint.admin.new.type' }
 
 admin_type_delete:
@@ -65,12 +65,12 @@ admin_user_list:
 
 admin_user_edit:
     path: '/user/edit/{id}'
-    methods:  ['GET']
+    methods:  ['GET', 'POST', 'PUST']
     defaults: { _controller: 'teknoo.east.website.endpoint.admin.edit.user' }
 
 admin_user_new:
     path: '/user/new'
-    methods:  ['GET']
+    methods:  ['GET', 'POST', 'PUST']
     defaults: { _controller: 'teknoo.east.website.endpoint.admin.new.user' }
 
 admin_user_delete:

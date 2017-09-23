@@ -41,7 +41,7 @@ class UserWriterTest extends \PHPUnit_Framework_TestCase
         return new UserWriter($this->getObjectManager());
     }
 
-    public function getEntity()
+    public function getObject()
     {
         return new User();
     }

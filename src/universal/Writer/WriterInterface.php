@@ -22,6 +22,8 @@
 
 namespace Teknoo\East\Website\Writer;
 
+use Teknoo\East\Foundation\Promise\PromiseInterface;
+
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -29,8 +31,9 @@ namespace Teknoo\East\Website\Writer;
 interface WriterInterface
 {
     /**
-     * @param $object
+     * @param object $object
+     * @param PromiseInterface|null $promise
      * @return WriterInterface
      */
-    public function save($object): WriterInterface;
+    public function save($object, PromiseInterface $promise=null): WriterInterface;
 }

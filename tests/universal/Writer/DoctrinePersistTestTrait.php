@@ -23,6 +23,7 @@
 namespace Teknoo\Tests\East\Website\Writer;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\Writer\WriterInterface;
 
 /**
@@ -56,21 +57,74 @@ trait DoctrinePersistTestTrait
     /**
      * @return object
      */
-    abstract public function getEntity();
+    abstract public function getObject();
 
     public function testSave()
     {
-        $entity = $this->getEntity();
+        $object = $this->getObject();
 
         $this->getObjectManager()
             ->expects(self::once())
             ->method('persist')
-            ->with($entity);
+            ->with($object);
 
         $this->getObjectManager()
             ->expects(self::once())
             ->method('flush');
 
-        self::assertInstanceOf(WriterInterface::class, $this->buildWriter()->save($entity));
+        self::assertInstanceOf(WriterInterface::class, $this->buildWriter()->save($object));
+    }
+
+    public function testSaveWithPromiseSuccess()
+    {
+        $object = $this->getObject();
+
+        $this->getObjectManager()
+            ->expects(self::once())
+            ->method('persist')
+            ->with($object);
+
+        $this->getObjectManager()
+            ->expects(self::once())
+            ->method('flush');
+
+        $promise = $this->createMock(PromiseInterface::class);
+        $promise->expects(self::once())
+            ->method('success')
+            ->with($object)
+            ->willReturnSelf();
+
+        $promise->expects(self::never())
+            ->method('fail');
+
+        self::assertInstanceOf(WriterInterface::class, $this->buildWriter()->save($object, $promise));
+    }
+
+    public function testSaveWithPromiseFailure()
+    {
+        $object = $this->getObject();
+
+        $this->getObjectManager()
+            ->expects(self::once())
+            ->method('persist')
+            ->with($object);
+
+        $error = new \Exception();
+
+        $this->getObjectManager()
+            ->expects(self::once())
+            ->method('flush')
+            ->willThrowException($error);
+
+        $promise = $this->createMock(PromiseInterface::class);
+        $promise->expects(self::never())
+            ->method('success');
+
+        $promise->expects(self::once())
+            ->method('fail')
+            ->with($error)
+            ->willReturnSelf();
+
+        self::assertInstanceOf(WriterInterface::class, $this->buildWriter()->save($object, $promise));
     }
 }

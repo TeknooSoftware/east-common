@@ -25,6 +25,7 @@ namespace Teknoo\East\WebsiteBundle\AdminEndPoint;
 use Psr\Http\Message\ServerRequestInterface;
 use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
+use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
 
 /**
@@ -66,7 +67,7 @@ class AdminNewEndPoint implements EndPointInterface
     public function __invoke(
         ServerRequestInterface $request,
         ClientInterface $client,
-        string $editRoute=null
+        string $editRoute
     ) {
         $class = $this->objectClass;
 
@@ -75,13 +76,16 @@ class AdminNewEndPoint implements EndPointInterface
         $form->handleRequest($request->getAttribute('request'));
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->writer->save($object);
+            $this->writer->save($object, new Promise(
+                function ($object) use ($client, $editRoute) {
+                    $this->redirectToRoute($client , $editRoute , ['id' => $object->getId()]);
+                },
+                function ($error) use ($client) {
+                    $client->errorInRequest($error);
+                }
+            ));
 
-            if (!empty($editRoute)) {
-                $this->redirectToRoute($client , $editRoute , ['id' => $object->getId()]);
-
-                return $this;
-            }
+            return $this;
         }
 
         $this->render(

@@ -58,22 +58,22 @@ class AdminDeleteEndPoint implements EndPointInterface
      * @param ServerRequestInterface $request
      * @param ClientInterface $client
      * @param string $id
-     * @param string $redirection
+     * @param string $nextRoute
      * @return self
      */
     public function __invoke(
         ServerRequestInterface $request,
         ClientInterface $client,
         string $id,
-        string $redirection
+        string $nextRoute
     ) {
         $this->loader->load(
             ['id' => $id],
             new Promise(
-                function ($object) use ($client, $redirection) {
+                function ($object) use ($client, $nextRoute) {
                     $this->deletingService->delete($object);
 
-                    $this->redirect($client, $redirection);
+                    $this->redirectToRoute($client, $nextRoute);
                 },
                 function ($throwable) use ($client) {
                     $client->errorInRequest($throwable);

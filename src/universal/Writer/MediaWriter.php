@@ -22,7 +22,7 @@
 
 namespace Teknoo\East\Website\Writer;
 
-use Teknoo\East\Website\Object\Media;
+use Teknoo\East\Foundation\Promise\PromiseInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -33,12 +33,11 @@ class MediaWriter implements WriterInterface
     use DoctrinePersistTrait;
 
     /**
-     * @param Media $object
-     * @return WriterInterface
+     * {@inheritdoc}
      */
-    public function save($object): WriterInterface
+    public function save($object, PromiseInterface $promise=null): WriterInterface
     {
-        $this->persist($object);
+        $this->persist($object, $promise);
 
         return $this;
     }

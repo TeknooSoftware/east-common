@@ -23,6 +23,7 @@
 namespace Teknoo\East\Website\Writer;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Teknoo\East\Foundation\Promise\PromiseInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -45,11 +46,23 @@ trait DoctrinePersistTrait
     }
 
     /**
-     * @param object $entity
+     * @param object $object
+     * @param PromiseInterface|null $promise
+     * @return self
      */
-    private function persist($entity)
+    private function persist($object, PromiseInterface $promise=null)
     {
-        $this->manager->persist($entity);
-        $this->manager->flush();
+        try {
+            $this->manager->persist($object);
+            $this->manager->flush();
+
+            if ($promise instanceof PromiseInterface) {
+                $promise->success($object);
+            }
+        } catch (\Throwable $error) {
+            $promise->fail($error);
+        }
+
+        return $this;
     }
 }

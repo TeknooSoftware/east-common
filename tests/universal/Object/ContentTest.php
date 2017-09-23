@@ -328,6 +328,14 @@ class ContentTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testGetTranslatableLocale()
+    {
+        self::assertEquals(
+            'fooBar',
+            $this->generateObjectPopulated(['localeField' => 'fooBar'])->getTranslatableLocale()
+        );
+    }
+
     public function testSetLocaleField()
     {
         $Object = $this->buildObject();

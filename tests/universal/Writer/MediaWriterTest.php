@@ -41,7 +41,7 @@ class MediaWriterTest extends \PHPUnit_Framework_TestCase
         return new MediaWriter($this->getObjectManager());
     }
 
-    public function getEntity()
+    public function getObject()
     {
         return new Media();
     }

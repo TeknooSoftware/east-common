@@ -41,7 +41,7 @@ class TypeWriterTest extends \PHPUnit_Framework_TestCase
         return new TypeWriter($this->getObjectManager());
     }
 
-    public function getEntity()
+    public function getObject()
     {
         return new Type();
     }

@@ -41,7 +41,7 @@ class CategoryWriterTest extends \PHPUnit_Framework_TestCase
         return new CategoryWriter($this->getObjectManager());
     }
 
-    public function getEntity()
+    public function getObject()
     {
         return new Category();
     }

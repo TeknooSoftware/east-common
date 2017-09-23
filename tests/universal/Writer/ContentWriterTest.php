@@ -41,7 +41,7 @@ class ContentWriterTest extends \PHPUnit_Framework_TestCase
         return new ContentWriter($this->getObjectManager());
     }
 
-    public function getEntity()
+    public function getObject()
     {
         return new Content();
     }

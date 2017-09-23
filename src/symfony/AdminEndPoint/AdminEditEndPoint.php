@@ -54,6 +54,7 @@ class AdminEditEndPoint implements EndPointInterface
             new Promise(
                 function ($object) use ($client) {
                     $form = $this->createForm($object);
+                    $form->handleRequest($request->getAttribute('request'));
 
                     if ($form->isSubmitted() && $form->isValid()) {
                         $this->writer->save($object);

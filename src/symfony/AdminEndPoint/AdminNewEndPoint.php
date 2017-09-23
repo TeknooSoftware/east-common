@@ -72,6 +72,7 @@ class AdminNewEndPoint implements EndPointInterface
 
         $object = new $class;
         $form = $this->createForm($object);
+        $form->handleRequest($request->getAttribute('request'));
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->writer->save($object);

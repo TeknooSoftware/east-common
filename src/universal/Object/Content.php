@@ -214,7 +214,7 @@ class Content implements ProxyInterface, AutomatedInterface, Translatable, Delet
      * @param string $slug
      * @return self
      */
-    public function setSlug(string $slug): Content
+    public function setSlug(string $slug=null): Content
     {
         $this->slug = $slug;
 

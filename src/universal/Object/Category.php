@@ -146,7 +146,7 @@ class Category implements ProxyInterface, AutomatedInterface, Translatable, Dele
      * @param string $slug
      * @return self
      */
-    public function setSlug(string $slug): Category
+    public function setSlug(string $slug=null): Category
     {
         $this->slug = $slug;
 

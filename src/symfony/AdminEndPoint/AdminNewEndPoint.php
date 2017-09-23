@@ -60,11 +60,13 @@ class AdminNewEndPoint implements EndPointInterface
     /**
      * @param ServerRequestInterface $request
      * @param ClientInterface $client
+     * @param string $editRoute=null
      * @return self
      */
     public function __invoke(
         ServerRequestInterface $request,
-        ClientInterface $client
+        ClientInterface $client,
+        string $editRoute=null
     ) {
         $class = $this->objectClass;
 
@@ -73,6 +75,12 @@ class AdminNewEndPoint implements EndPointInterface
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->writer->save($object);
+
+            if (!empty($editRoute)) {
+                $this->redirectToRoute($client , $editRoute , ['id' => $object->getId()]);
+
+                return $this;
+            }
         }
 
         $this->render(

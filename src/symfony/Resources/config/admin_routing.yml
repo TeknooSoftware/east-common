@@ -11,7 +11,7 @@ admin_category_edit:
 admin_category_new:
     path: '/category/new'
     methods:  ['GET', 'POST', 'PUST']
-    defaults: { _controller: 'teknoo.east.website.endpoint.admin.new.category' }
+    defaults: { _controller: 'teknoo.east.website.endpoint.admin.new.category', editRoute: 'admin_category_edit'  }
 
 admin_category_delete:
     path: '/category/delete/{id}'
@@ -31,7 +31,7 @@ admin_content_edit:
 admin_content_new:
     path: '/content/new'
     methods:  ['GET', 'POST', 'PUST']
-    defaults: { _controller: 'teknoo.east.website.endpoint.admin.new.content' }
+    defaults: { _controller: 'teknoo.east.website.endpoint.admin.new.content', editRoute: 'admin_content_edit' }
 
 admin_content_delete:
     path: '/content/delete/{id}'
@@ -51,7 +51,7 @@ admin_type_edit:
 admin_type_new:
     path: '/type/new'
     methods:  ['GET', 'POST', 'PUST']
-    defaults: { _controller: 'teknoo.east.website.endpoint.admin.new.type' }
+    defaults: { _controller: 'teknoo.east.website.endpoint.admin.new.type', editRoute: 'admin_type_edit' }
 
 admin_type_delete:
     path: '/type/delete/{id}'
@@ -71,7 +71,7 @@ admin_user_edit:
 admin_user_new:
     path: '/user/new'
     methods:  ['GET', 'POST', 'PUST']
-    defaults: { _controller: 'teknoo.east.website.endpoint.admin.new.user' }
+    defaults: { _controller: 'teknoo.east.website.endpoint.admin.new.user', editRoute: 'admin_user_edit' }
 
 admin_user_delete:
     path: '/user/delete/{id}'

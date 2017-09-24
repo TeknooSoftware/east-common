@@ -249,10 +249,10 @@ class Content implements ProxyInterface, AutomatedInterface, Translatable, Delet
     }
 
     /**
-     * @param string $content
+     * @param string|null $content
      * @return self
      */
-    public function setContent(string $content): Content
+    public function setContent(string $content=null): Content
     {
         $this->content = $content;
 
@@ -287,10 +287,10 @@ class Content implements ProxyInterface, AutomatedInterface, Translatable, Delet
     }
 
     /**
-     * @param string $description
+     * @param string|null $description
      * @return self
      */
-    public function setDescription(string $description): Content
+    public function setDescription(string $description=null): Content
     {
         $this->description = $description;
 

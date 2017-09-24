@@ -24,6 +24,7 @@ namespace Teknoo\East\WebsiteBundle\Form\Type;
 
 use Doctrine\Bundle\MongoDBBundle\Form\Type\DocumentType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Teknoo\East\Website\Object\Category;
@@ -52,8 +53,8 @@ class ContentType extends AbstractType
         $builder->add('title', TextType::class, ['required'=>true]);
         $builder->add('subtitle', TextType::class, ['required'=>false]);
         $builder->add('slug', TextType::class, ['required'=>false]);
-        $builder->add('content', TextType::class, ['required'=>false]);
-        $builder->add('description', TextType::class, ['required'=>false]);
+        $builder->add('content', TextAreaType::class, ['required'=>false]);
+        $builder->add('description', TextAreaType::class, ['required'=>false]);
 
         $this->addTranslatableLocaleFieldHidden($builder);
         $this->disableNonTranslatableField($builder, $options);

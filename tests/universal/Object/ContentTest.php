@@ -67,6 +67,14 @@ class ContentTest extends \PHPUnit_Framework_TestCase
             'fooBar',
             $Object->getContent()
         );
+        self::assertInstanceOf(
+            \get_class($Object),
+            $Object->setContent(null)
+        );
+
+        self::assertEmpty(
+            $Object->getContent()
+        );
     }
 
     /**
@@ -95,6 +103,15 @@ class ContentTest extends \PHPUnit_Framework_TestCase
 
         self::assertEquals(
             'fooBar',
+            $Object->getDescription()
+        );
+
+        self::assertInstanceOf(
+            \get_class($Object),
+            $Object->setDescription(null)
+        );
+
+        self::assertEmpty(
             $Object->getDescription()
         );
     }

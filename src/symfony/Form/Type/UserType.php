@@ -64,7 +64,7 @@ class UserType extends AbstractType
             'first_options' => ['label' => 'Password'],
             'second_options' => ['label' => 'Confirm it'],
             'invalid_message' => 'The password fields must match.',
-            'required' => true
+            'required' => false
         ]);
     }
 }

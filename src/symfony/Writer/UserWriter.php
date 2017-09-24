@@ -61,9 +61,13 @@ class UserWriter implements WriterInterface
      */
     private function encodePassword(BaseUser $user)
     {
-        $encoder = $this->encoderFactory->getEncoder(new User($user));
-        $salt = $user->getSalt();
-        $user->setPassword($encoder->encodePassword($user->getPassword(), $salt));
+        if ($user->hasUpdatedPassword()) {
+            $encoder = $this->encoderFactory->getEncoder(new User($user));
+            $salt = $user->getSalt();
+            $user->setPassword($encoder->encodePassword($user->getPassword() , $salt));
+        } else {
+            $user->resetPassword();
+        }
     }
 
     /**
@@ -73,9 +77,7 @@ class UserWriter implements WriterInterface
      */
     public function save($object , PromiseInterface $promise = null): WriterInterface
     {
-        if ($object->hasUpdatedPassword()) {
-            $this->encodePassword($object);
-        }
+        $this->encodePassword($object);
 
         $this->universalWriter->save($object, $promise);
 

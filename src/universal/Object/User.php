@@ -178,7 +178,17 @@ class User implements DeletableInterface
         $pwd = $this->getPassword();
         $originalPwd = $this->getOriginalPassword();
 
-        return empty($originalPwd) || $originalPwd != $pwd;
+        return !empty($pwd) && $originalPwd != $pwd;
+    }
+
+    /**
+     * @return User
+     */
+    public function resetPassword(): User
+    {
+        $this->password = $this->originalPassword;
+
+        return $this;
     }
 
     /**

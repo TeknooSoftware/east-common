@@ -26,7 +26,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Website\Loader\UserLoader;
-use Teknoo\East\Website\Object\User as BaseUser;
 use Teknoo\East\WebsiteBundle\Object\User;
 
 /**

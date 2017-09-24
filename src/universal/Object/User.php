@@ -58,6 +58,11 @@ class User implements DeletableInterface
     /**
      * @var string
      */
+    private $originalPassword;
+
+    /**
+     * @var string
+     */
     private $salt;
 
     /**
@@ -150,7 +155,30 @@ class User implements DeletableInterface
      */
     public function getPassword(): string
     {
+        if (empty($this->originalPassword)) {
+            $this->originalPassword = $this->password;
+        }
+
         return (string) $this->password;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOriginalPassword(): string
+    {
+        return (string) $this->originalPassword;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasUpdatedPassword(): bool
+    {
+        $pwd = $this->getPassword();
+        $originalPwd = $this->getOriginalPassword();
+
+        return empty($originalPwd) || $originalPwd != $pwd;
     }
 
     /**
@@ -159,6 +187,8 @@ class User implements DeletableInterface
      */
     public function setPassword(string $password): User
     {
+        $this->originalPassword = $this->password;
+
         $this->password = $password;
 
         return $this;

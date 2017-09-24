@@ -45,6 +45,9 @@ parameters:
   #Command
   teknoo.east.website.bundle.command.create_user.class: 'Teknoo\East\WebsiteBundle\Command\CreateUserCommand'
 
+  #Writer
+  teknoo.east.website.bundle.writer.user.class: 'Teknoo\East\WebsiteBundle\Writer\UserWriter'
+
 services:
   #Front endpoints
   teknoo.east.website.endpoint.content:
@@ -198,7 +201,7 @@ services:
     parent: 'teknoo.east.website.endpoint.admin.edit.abstract'
     calls:
       - ['setLoader', ['@teknoo.east.website.loader.user']]
-      - ['setWriter', ['@teknoo.east.website.writer.user']]
+      - ['setWriter', ['@teknoo.east.website.bundle.writer.user']]
       - ['setFormClass', ['%teknoo.east.website.form_type.user.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.user.edit.file%']]
       - ['setTwig', ['@twig']]
@@ -213,7 +216,7 @@ services:
   teknoo.east.website.endpoint.admin.new.user:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
     calls:
-      - ['setWriter', ['@teknoo.east.website.writer.user']]
+      - ['setWriter', ['@teknoo.east.website.bundle.writer.user']]
       - ['setFormClass', ['%teknoo.east.website.form_type.user.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.user.new.file%']]
       - ['setObjectClass', ['%teknoo.east.website.user.class%']]
@@ -234,3 +237,10 @@ services:
       - '@security.encoder_factory'
     tags:
       - { name: console.command }
+
+  #Writer
+  teknoo.east.website.bundle.writer.user:
+    class: '%teknoo.east.website.bundle.writer.user.class%'
+    arguments:
+      - '@teknoo.east.website.writer.user'
+      - '@security.encoder_factory'

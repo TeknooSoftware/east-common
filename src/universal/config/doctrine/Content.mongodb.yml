@@ -25,6 +25,11 @@ Teknoo\East\Website\Object\Content:
       type: 'string'
       index: true
       unique: true
+      gedmo:
+        slug:
+          separator: '-'
+          fields:
+            - title
     content:
       type: 'string'
       gedmo:

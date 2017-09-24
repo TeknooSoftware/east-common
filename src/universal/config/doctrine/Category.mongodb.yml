@@ -21,6 +21,11 @@ Teknoo\East\Website\Object\Category:
       type: 'string'
       index: true
       unique: true
+      gedmo:
+        slug:
+          separator: '-'
+          fields:
+            - name
     location:
       type: 'string'
       index: true

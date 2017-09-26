@@ -66,7 +66,7 @@ class UserWriter implements WriterInterface
             $salt = $user->getSalt();
             $user->setPassword($encoder->encodePassword($user->getPassword() , $salt));
         } else {
-            $user->resetPassword();
+            $user->eraseCredentials();
         }
     }
 

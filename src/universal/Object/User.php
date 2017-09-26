@@ -175,20 +175,10 @@ class User implements DeletableInterface
      */
     public function hasUpdatedPassword(): bool
     {
-        $pwd = $this->getPassword();
         $originalPwd = $this->getOriginalPassword();
+        $pwd = $this->getPassword();
 
-        return !empty($pwd) && $originalPwd != $pwd;
-    }
-
-    /**
-     * @return User
-     */
-    public function resetPassword(): User
-    {
-        $this->password = $this->originalPassword;
-
-        return $this;
+        return empty($originalPwd) && !empty($pwd) || ($originalPwd != $pwd);
     }
 
     /**
@@ -197,7 +187,7 @@ class User implements DeletableInterface
      */
     public function setPassword(string $password=null): User
     {
-        if (!empty($this->password)) {
+        if (empty($this->originalPassword)) {
             $this->originalPassword = $this->password;
         }
 
@@ -239,6 +229,7 @@ class User implements DeletableInterface
     public function eraseCredentials()
     {
         $this->password = '';
+        $this->originalPassword = '';
 
         return $this;
     }

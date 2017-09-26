@@ -54,15 +54,15 @@ class UserTest extends \PHPUnit_Framework_TestCase
 
     public function testSetFirstName()
     {
-        $Object = $this->buildObject();
+        $object = $this->buildObject();
         self::assertInstanceOf(
-            \get_class($Object),
-            $Object->setFirstName('fooBar')
+            \get_class($object),
+            $object->setFirstName('fooBar')
         );
 
         self::assertEquals(
             'fooBar',
-            $Object->getFirstName()
+            $object->getFirstName()
         );
     }
 
@@ -84,15 +84,15 @@ class UserTest extends \PHPUnit_Framework_TestCase
 
     public function testSetLastName()
     {
-        $Object = $this->buildObject();
+        $object = $this->buildObject();
         self::assertInstanceOf(
-            \get_class($Object),
-            $Object->setLastName('fooBar')
+            \get_class($object),
+            $object->setLastName('fooBar')
         );
 
         self::assertEquals(
             'fooBar',
-            $Object->getLastName()
+            $object->getLastName()
         );
     }
 
@@ -122,15 +122,15 @@ class UserTest extends \PHPUnit_Framework_TestCase
 
     public function testSetEmail()
     {
-        $Object = $this->buildObject();
+        $object = $this->buildObject();
         self::assertInstanceOf(
-            \get_class($Object),
-            $Object->setEmail('fooBar')
+            \get_class($object),
+            $object->setEmail('fooBar')
         );
 
         self::assertEquals(
             'fooBar',
-            $Object->getEmail()
+            $object->getEmail()
         );
     }
 
@@ -152,37 +152,115 @@ class UserTest extends \PHPUnit_Framework_TestCase
 
     public function testSetPassword()
     {
-        $Object = $this->buildObject();
+        $object = $this->buildObject();
         self::assertInstanceOf(
-            \get_class($Object),
-            $Object->setPassword('fooBar')
+            \get_class($object),
+            $object->setPassword('fooBar')
         );
 
         self::assertEquals(
             'fooBar',
-            $Object->getPassword()
+            $object->getPassword()
         );
     }
 
     public function testEraseCredentials()
     {
-        $Object = $this->buildObject();
+        $object = $this->buildObject();
         self::assertInstanceOf(
-            \get_class($Object),
-            $Object->setPassword('fooBar')
+            \get_class($object),
+            $object->setPassword('fooBar')
         );
 
         self::assertEquals(
             'fooBar',
-            $Object->getPassword()
+            $object->getPassword()
+        );
+
+        self::assertEquals(
+            'fooBar',
+            $object->getOriginalPassword()
         );
 
         self::assertInstanceOf(
-            \get_class($Object),
-            $Object->eraseCredentials()
+            \get_class($object),
+            $object->setPassword('fooBar2')
         );
 
-        self::assertEmpty($Object->getPassword());
+        self::assertEquals(
+            'fooBar2',
+            $object->getPassword()
+        );
+
+        self::assertEquals(
+            'fooBar',
+            $object->getOriginalPassword()
+        );
+
+        self::assertInstanceOf(
+            \get_class($object),
+            $object->eraseCredentials()
+        );
+
+        self::assertEmpty($object->getPassword());
+        self::assertEmpty($object->getOriginalPassword());
+    }
+    
+    public function testHasUpdatedPassword()
+    {
+        $object = $this->buildObject();
+        self::assertFalse($object->hasUpdatedPassword());
+        self::assertInstanceOf(
+            \get_class($object),
+            $object->setPassword('fooBar')
+        );
+
+        self::assertTrue($object->hasUpdatedPassword());
+
+        self::assertInstanceOf(
+            \get_class($object),
+            $object->setPassword('fooBar2')
+        );
+
+        self::assertTrue($object->hasUpdatedPassword());
+
+        $object = $this->buildObject(['password' => 'fooBar']);
+        self::assertFalse($object->hasUpdatedPassword());
+
+        self::assertInstanceOf(
+            \get_class($object),
+            $object->setPassword(null)
+        );
+
+        self::assertFalse($object->hasUpdatedPassword());
+
+        $object = $this->buildObject();
+        $refProperty = new \ReflectionProperty($object, 'password');
+        $refProperty->setAccessible(true);
+        $refProperty->setValue($object, 'fooBar');
+
+        self::assertTrue($object->hasUpdatedPassword());
+
+        self::assertInstanceOf(
+            \get_class($object),
+            $object->setPassword('fooBar')
+        );
+
+        self::assertFalse($object->hasUpdatedPassword());
+
+        self::assertInstanceOf(
+            \get_class($object),
+            $object->setPassword('fooBar2')
+        );
+
+        self::assertTrue($object->hasUpdatedPassword());
+
+        self::assertInstanceOf(
+            \get_class($object),
+            $object->setPassword('fooBar3')
+        );
+
+        self::assertTrue($object->hasUpdatedPassword());
     }
 
     /**
@@ -203,15 +281,15 @@ class UserTest extends \PHPUnit_Framework_TestCase
 
     public function testSetSalt()
     {
-        $Object = $this->buildObject();
+        $object = $this->buildObject();
         self::assertInstanceOf(
-            \get_class($Object),
-            $Object->setSalt('fooBar')
+            \get_class($object),
+            $object->setSalt('fooBar')
         );
 
         self::assertEquals(
             'fooBar',
-            $Object->getSalt()
+            $object->getSalt()
         );
     }
 
@@ -233,15 +311,15 @@ class UserTest extends \PHPUnit_Framework_TestCase
 
     public function testSetRoles()
     {
-        $Object = $this->buildObject();
+        $object = $this->buildObject();
         self::assertInstanceOf(
-            \get_class($Object),
-            $Object->setRoles(['foo'=>'bar'])
+            \get_class($object),
+            $object->setRoles(['foo'=>'bar'])
         );
 
         self::assertEquals(
             ['foo'=>'bar'],
-            $Object->getRoles()
+            $object->getRoles()
         );
     }
 

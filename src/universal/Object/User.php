@@ -192,12 +192,14 @@ class User implements DeletableInterface
     }
 
     /**
-     * @param string $password
+     * @param string|null $password
      * @return self
      */
-    public function setPassword(string $password): User
+    public function setPassword(string $password=null): User
     {
-        $this->originalPassword = $this->password;
+        if (!empty($this->password)) {
+            $this->originalPassword = $this->password;
+        }
 
         $this->password = $password;
 

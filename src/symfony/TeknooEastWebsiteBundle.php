@@ -30,5 +30,4 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class TeknooEastWebsiteBundle extends Bundle
 {
-
 }

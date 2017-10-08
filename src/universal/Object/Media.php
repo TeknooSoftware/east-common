@@ -50,7 +50,7 @@ class Media implements DeletableInterface, PublishableInterface
      * */
     private $chunkSize;
 
-    /** 
+    /**
      * @var string
      */
     private $md5;

@@ -58,7 +58,8 @@ class ContentLoader implements PublishableLoaderInterface
      */
     public function bySlug(string $slug, PromiseInterface $promise): ContentLoader
     {
-        return $this->loadPublished([
+        return $this->loadPublished(
+            [
                 'slug' => $slug
             ],
             $promise

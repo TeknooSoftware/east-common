@@ -45,10 +45,10 @@ trait CollectionLoaderTrait
      * @return self|LoaderInterface
      */
     public function loadCollection(
-        array $criteria ,
-        PromiseInterface $promise ,
-        array $order = null ,
-        int $limit = null ,
+        array $criteria,
+        PromiseInterface $promise,
+        array $order = null,
+        int $limit = null,
         int $offset = null
     ): LoaderInterface {
         try {

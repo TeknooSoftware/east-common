@@ -50,7 +50,7 @@ trait ContentEndPointTrait
      * @param ContentLoader $contentLoader
      * @param MenuGenerator $menuGenerator
      */
-    public function __construct(ContentLoader $contentLoader , MenuGenerator $menuGenerator)
+    public function __construct(ContentLoader $contentLoader, MenuGenerator $menuGenerator)
     {
         $this->contentLoader = $contentLoader;
         $this->menuGenerator = $menuGenerator;
@@ -74,7 +74,6 @@ trait ContentEndPointTrait
         ServerRequestInterface $request,
         ClientInterface $client
     ) {
-
         $urlParts = $this->parseUrl($request);
         $contentSlug = \array_pop($urlParts);
 
@@ -85,10 +84,12 @@ trait ContentEndPointTrait
                     $type = $content->getType();
                     $this->render(
                         $client,
-                        $type->getTemplate(), [
+                        $type->getTemplate(),
+                        [
                         'content' => $content,
                         'menuGenerator' => $this->menuGenerator,
-                    ]);
+                    ]
+                    );
                 },
                 function (\Throwable $e) use ($client) {
                     $client->errorInRequest($e);

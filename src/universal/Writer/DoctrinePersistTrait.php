@@ -50,7 +50,7 @@ trait DoctrinePersistTrait
      * @param PromiseInterface|null $promise
      * @return self
      */
-    private function persist($object, PromiseInterface $promise=null)
+    private function persist($object, PromiseInterface $promise = null)
     {
         try {
             $this->manager->persist($object);

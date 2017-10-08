@@ -52,7 +52,7 @@ class MenuGenerator
     public function extract(string $location)
     {
         $stacks = [];
-        $promise = new Promise(function ($categories) use (&$stacks){
+        $promise = new Promise(function ($categories) use (&$stacks) {
             $stacks = $categories;
         });
 

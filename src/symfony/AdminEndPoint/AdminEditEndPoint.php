@@ -61,10 +61,12 @@ class AdminEditEndPoint implements EndPointInterface
                             function ($object) use ($client, $form) {
                                 $this->render(
                                     $client,
-                                    $this->viewPath, [
-                                    'objectInstance' => $object,
-                                    'formView' => $form->createView()
-                                ]);
+                                    $this->viewPath,
+                                    [
+                                        'objectInstance' => $object,
+                                        'formView' => $form->createView()
+                                    ]
+                                );
                             },
                             function ($error) use ($client) {
                                 $client->errorInRequest($error);
@@ -76,10 +78,12 @@ class AdminEditEndPoint implements EndPointInterface
 
                     $this->render(
                         $client,
-                        $this->viewPath, [
-                        'objectInstance' => $object,
-                        'formView' => $form->createView()
-                    ]);
+                        $this->viewPath,
+                        [
+                            'objectInstance' => $object,
+                            'formView' => $form->createView()
+                        ]
+                    );
                 },
                 function ($error) use ($client) {
                     $client->errorInRequest($error);

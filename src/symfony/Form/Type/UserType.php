@@ -48,23 +48,27 @@ class UserType extends AbstractType
         $builder->add('lastName', TextType::class, ['required' => true]);
         $builder->add(
             'roles',
-            ChoiceType::class, [
+            ChoiceType::class,
+            [
             'required' => true,
             'multiple' => true,
             "choices" => [
                 'user' => 'ROLE_USER',
                 'admin' => 'ROLE_ADMIN'
             ]
-        ]);
+        ]
+        );
         $builder->add('email', EmailType::class, ['required' => true]);
         $builder->add(
             'password',
-            RepeatedType::class, [
+            RepeatedType::class,
+            [
             'type' => PasswordType::class,
             'first_options' => ['label' => 'Password'],
             'second_options' => ['label' => 'Confirm it'],
             'invalid_message' => 'The password fields must match.',
             'required' => false
-        ]);
+        ]
+        );
     }
 }

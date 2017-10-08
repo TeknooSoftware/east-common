@@ -35,5 +35,5 @@ interface WriterInterface
      * @param PromiseInterface|null $promise
      * @return WriterInterface
      */
-    public function save($object, PromiseInterface $promise=null): WriterInterface;
+    public function save($object, PromiseInterface $promise = null): WriterInterface;
 }

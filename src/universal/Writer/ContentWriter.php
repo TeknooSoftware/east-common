@@ -35,7 +35,7 @@ class ContentWriter implements WriterInterface
     /**
      * {@inheritdoc}
      */
-    public function save($object, PromiseInterface $promise=null): WriterInterface
+    public function save($object, PromiseInterface $promise = null): WriterInterface
     {
         $this->persist($object, $promise);
 

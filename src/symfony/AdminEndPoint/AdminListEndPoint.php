@@ -57,11 +57,12 @@ class AdminListEndPoint implements EndPointInterface
             new Promise(function ($objects) use ($client, $page) {
                 $this->render(
                     $client,
-                    $this->viewPath, [
-                    'objectsCollection' => $objects,
-                    'page' => $page
-                ]);
-
+                    $this->viewPath,
+                    [
+                        'objectsCollection' => $objects,
+                        'page' => $page
+                    ]
+                );
             }, function ($error) use ($client) {
                 $client->errorInRequest($error);
             }),

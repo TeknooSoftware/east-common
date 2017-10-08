@@ -48,8 +48,8 @@ interface LoaderInterface
     public function loadCollection(
         array $criteria,
         PromiseInterface $promise,
-        array $order=null,
-        int $limit=null,
-        int $offset=null
+        array $order = null,
+        int $limit = null,
+        int $offset = null
     ): LoaderInterface;
 }

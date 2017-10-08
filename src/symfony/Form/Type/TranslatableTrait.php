@@ -77,10 +77,12 @@ trait TranslatableTrait
     {
         $builder->add(
             'translatableLocale',
-            ChoiceType::class, [
-            'choices' => $this->locales,
-            'label' => 'Language version',
-        ]);
+            ChoiceType::class,
+            [
+                'choices' => $this->locales,
+                'label' => 'Language version',
+            ]
+        );
 
         return $this;
     }

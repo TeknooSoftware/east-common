@@ -50,7 +50,7 @@ class UserWriter implements WriterInterface
      * @param UniversalWriter $universalWriter
      * @param EncoderFactoryInterface $encoderFactory
      */
-    public function __construct(UniversalWriter $universalWriter , EncoderFactoryInterface $encoderFactory)
+    public function __construct(UniversalWriter $universalWriter, EncoderFactoryInterface $encoderFactory)
     {
         $this->universalWriter = $universalWriter;
         $this->encoderFactory = $encoderFactory;
@@ -64,7 +64,7 @@ class UserWriter implements WriterInterface
         if ($user->hasUpdatedPassword()) {
             $encoder = $this->encoderFactory->getEncoder(new User($user));
             $salt = $user->getSalt();
-            $user->setPassword($encoder->encodePassword($user->getPassword() , $salt));
+            $user->setPassword($encoder->encodePassword($user->getPassword(), $salt));
         } else {
             $user->eraseCredentials();
         }
@@ -75,7 +75,7 @@ class UserWriter implements WriterInterface
      * @param PromiseInterface|null $promise
      * @return WriterInterface
      */
-    public function save($object , PromiseInterface $promise = null): WriterInterface
+    public function save($object, PromiseInterface $promise = null): WriterInterface
     {
         $this->encodePassword($object);
 

@@ -22,7 +22,6 @@
 
 namespace Teknoo\East\WebsiteBundle\Form\Type;
 
-
 use Doctrine\Bundle\MongoDBBundle\Form\Type\DocumentType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;

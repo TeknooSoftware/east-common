@@ -22,8 +22,6 @@
 
 namespace Teknoo\East\Website;
 
-namespace Teknoo\States\LifeCycle;
-
 use DI\ContainerBuilder;
 
 $containerDefinition = new ContainerBuilder();

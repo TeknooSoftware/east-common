@@ -78,7 +78,7 @@ class AdminNewEndPoint implements EndPointInterface
         if ($form->isSubmitted() && $form->isValid()) {
             $this->writer->save($object, new Promise(
                 function ($object) use ($client, $editRoute) {
-                    $this->redirectToRoute($client , $editRoute , ['id' => $object->getId()]);
+                    $this->redirectToRoute($client, $editRoute, ['id' => $object->getId()]);
                 },
                 function ($error) use ($client) {
                     $client->errorInRequest($error);
@@ -90,10 +90,12 @@ class AdminNewEndPoint implements EndPointInterface
 
         $this->render(
             $client,
-            $this->viewPath, [
-            'objectInstance' => $object,
-            'formView' => $form->createView()
-        ]);
+            $this->viewPath,
+            [
+                'objectInstance' => $object,
+                'formView' => $form->createView()
+            ]
+        );
 
         return $this;
     }

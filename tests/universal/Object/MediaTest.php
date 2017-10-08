@@ -33,7 +33,7 @@ use Teknoo\Tests\East\Website\Object\Traits\PublishableTestTrait;
  * @covers \Teknoo\East\Website\Object\ObjectTrait
  * @covers \Teknoo\East\Website\Object\Media
  */
-class MediaTest extends \PHPUnit_Framework_TestCase
+class MediaTest extends \PHPUnit\Framework\TestCase
 {
     use PublishableTestTrait;
 

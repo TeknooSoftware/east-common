@@ -35,7 +35,7 @@ use Teknoo\East\Website\Object\User;
  * @covers \Teknoo\East\Website\Object\Content
  * @covers \Teknoo\East\Website\Object\Content\Draft
  */
-class ContentTest extends \PHPUnit_Framework_TestCase
+class ContentTest extends \PHPUnit\Framework\TestCase
 {
     use PublishableTestTrait;
 

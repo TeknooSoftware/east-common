@@ -23,13 +23,18 @@
 namespace Teknoo\East\Website;
 
 use function DI\get;
+use function DI\decorate;
 use Doctrine\Common\Persistence\ObjectManager;
+use Gedmo\Translatable\TranslatableListener;
 use Psr\Container\ContainerInterface;
+use Teknoo\East\Foundation\Manager\Manager;
+use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Website\Loader\CategoryLoader;
 use Teknoo\East\Website\Loader\ContentLoader;
 use Teknoo\East\Website\Loader\MediaLoader;
 use Teknoo\East\Website\Loader\TypeLoader;
 use Teknoo\East\Website\Loader\UserLoader;
+use Teknoo\East\Website\Middleware\LocaleMiddleware;
 use Teknoo\East\Website\Object\Category;
 use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Object\Media;
@@ -117,4 +122,17 @@ return [
         return new MenuGenerator($loader);
     },
     'teknoo.east.website.service.menu_generator' => get(MenuGenerator::class),
+
+    //Middleware
+    LocaleMiddleware::class => function (TranslatableListener $listenerTranslatable) {
+        return new LocaleMiddleware($listenerTranslatable);
+    },
+
+    Manager::class => decorate(function ($previous, ContainerInterface $container) {
+        if ($previous instanceof ManagerInterface) {
+            $previous->registerMiddleware($container->get(LocaleMiddleware::class, 6));
+        }
+
+        return $previous;
+    })
 ];

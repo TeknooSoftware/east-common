@@ -32,7 +32,7 @@ use Teknoo\East\Website\Service\MenuGenerator;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers \Teknoo\East\Website\Service\MenuGenerator
  */
-class MenuGeneratorTest extends \PHPUnit_Framework_TestCase
+class MenuGeneratorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var CategoryLoader

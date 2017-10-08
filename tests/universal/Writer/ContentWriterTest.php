@@ -32,7 +32,7 @@ use Teknoo\East\Website\Writer\WriterInterface;
  * @covers \Teknoo\East\Website\Writer\ContentWriter
  * @covers \Teknoo\East\Website\Writer\DoctrinePersistTrait
  */
-class ContentWriterTest extends \PHPUnit_Framework_TestCase
+class ContentWriterTest extends \PHPUnit\Framework\TestCase
 {
     use DoctrinePersistTestTrait;
 

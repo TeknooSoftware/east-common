@@ -34,7 +34,7 @@ use Teknoo\East\Website\Loader\UserLoader;
  * @covers      \Teknoo\East\Website\Loader\UserLoader
  * @covers      \Teknoo\East\Website\Loader\CollectionLoaderTrait
  */
-class UserLoaderTest extends \PHPUnit_Framework_TestCase
+class UserLoaderTest extends \PHPUnit\Framework\TestCase
 {
     use LoaderTestTrait;
 

@@ -35,7 +35,7 @@ use Teknoo\East\Website\Loader\MediaLoader;
  * @covers      \Teknoo\East\Website\Loader\PublishableLoaderTrait
  * @covers      \Teknoo\East\Website\Loader\CollectionLoaderTrait
  */
-class MediaLoaderTest extends \PHPUnit_Framework_TestCase
+class MediaLoaderTest extends \PHPUnit\Framework\TestCase
 {
     use LoaderTestTrait;
 

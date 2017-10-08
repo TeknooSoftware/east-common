@@ -33,7 +33,7 @@ use Teknoo\Tests\East\Website\Object\Traits\ObjectTestTrait;
  * @covers \Teknoo\East\Website\Object\ObjectTrait
  * @covers \Teknoo\East\Website\Object\Category
  */
-class CategoryTest extends \PHPUnit_Framework_TestCase
+class CategoryTest extends \PHPUnit\Framework\TestCase
 {
     use ObjectTestTrait;
 

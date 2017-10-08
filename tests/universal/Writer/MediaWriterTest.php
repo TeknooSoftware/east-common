@@ -32,7 +32,7 @@ use Teknoo\East\Website\Writer\WriterInterface;
  * @covers \Teknoo\East\Website\Writer\MediaWriter
  * @covers \Teknoo\East\Website\Writer\DoctrinePersistTrait
  */
-class MediaWriterTest extends \PHPUnit_Framework_TestCase
+class MediaWriterTest extends \PHPUnit\Framework\TestCase
 {
     use DoctrinePersistTestTrait;
 

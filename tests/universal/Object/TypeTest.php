@@ -32,7 +32,7 @@ use Teknoo\East\Website\Object\Type;
  * @covers \Teknoo\East\Website\Object\ObjectTrait
  * @covers \Teknoo\East\Website\Object\Type
  */
-class TypeTest extends \PHPUnit_Framework_TestCase
+class TypeTest extends \PHPUnit\Framework\TestCase
 {
     use ObjectTestTrait;
 

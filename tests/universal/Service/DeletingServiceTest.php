@@ -31,7 +31,7 @@ use Teknoo\East\Website\Writer\WriterInterface;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers \Teknoo\East\Website\Service\DeletingService
  */
-class DeletingServiceTest extends \PHPUnit_Framework_TestCase
+class DeletingServiceTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var WriterInterface

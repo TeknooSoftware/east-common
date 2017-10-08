@@ -33,7 +33,7 @@ use Teknoo\East\Website\Loader\TypeLoader;
  * @covers      \Teknoo\East\Website\Loader\TypeLoader
  * @covers      \Teknoo\East\Website\Loader\CollectionLoaderTrait
  */
-class TypeLoaderTest extends \PHPUnit_Framework_TestCase
+class TypeLoaderTest extends \PHPUnit\Framework\TestCase
 {
     use LoaderTestTrait;
 

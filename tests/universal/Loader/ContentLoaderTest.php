@@ -35,7 +35,7 @@ use Teknoo\East\Website\Loader\LoaderInterface;
  * @covers      \Teknoo\East\Website\Loader\PublishableLoaderTrait
  * @covers      \Teknoo\East\Website\Loader\CollectionLoaderTrait
  */
-class ContentLoaderTest extends \PHPUnit_Framework_TestCase
+class ContentLoaderTest extends \PHPUnit\Framework\TestCase
 {
     use PublishableLoaderTestTrait;
 

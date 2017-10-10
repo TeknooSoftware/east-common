@@ -46,22 +46,22 @@ parameters:
   teknoo.east.website.bundle.command.create_user.class: 'Teknoo\East\WebsiteBundle\Command\CreateUserCommand'
 
   #Writer
-  teknoo.east.website.bundle.writer.user.class: 'Teknoo\East\WebsiteBundle\Writer\UserWriter'
+  Teknoo\East\Website\Writer\UserWriter.class: 'Teknoo\East\WebsiteBundle\Writer\UserWriter'
 
 services:
   #Front endpoints
   teknoo.east.website.endpoint.content:
     class: '%teknoo.east.website.endpoint.content.class%'
     arguments:
-      - '@teknoo.east.website.loader.content'
-      - '@teknoo.east.website.service.menu_generator'
+      - '@Teknoo\East\Website\Loader\ContentLoader'
+      - '@Teknoo\East\Website\Service\MenuGenerator'
     calls:
       - ['setTwig', ['@twig']]
 
   teknoo.east.website.endpoint.media:
     class: '%teknoo.east.website.endpoint.media.class%'
     arguments:
-      - '@teknoo.east.website.loader.media'
+      - '@Teknoo\East\Website\Loader\MediaLoader'
     calls:
       - ['setTwig', ['@twig']]
 
@@ -87,19 +87,19 @@ services:
     calls:
       - ['setFormFactory', ['@form.factory']]
 
-  #Categories
+  #Categories 
   teknoo.east.website.endpoint.admin.delete.category:
     parent: 'teknoo.east.website.endpoint.admin.delete.abstract'
     calls:
       - ['setDeletingService', ['@teknoo.east.website.deleting.category']]
-      - ['setLoader', ['@teknoo.east.website.loader.category']]
+      - ['setLoader', ['@Teknoo\East\Website\Loader\CategoryLoader']]
       - ['setRouter', ['@router']]
 
   teknoo.east.website.endpoint.admin.edit.category:
     parent: 'teknoo.east.website.endpoint.admin.edit.abstract'
     calls:
-      - ['setLoader', ['@teknoo.east.website.loader.category']]
-      - ['setWriter', ['@teknoo.east.website.writer.category']]
+      - ['setLoader', ['@Teknoo\East\Website\Loader\CategoryLoader']]
+      - ['setWriter', ['@Teknoo\East\Website\Writer\CategoryWriter']]
       - ['setFormClass', ['%teknoo.east.website.form_type.category.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.category.edit.file%']]
       - ['setTwig', ['@twig']]
@@ -107,14 +107,14 @@ services:
   teknoo.east.website.endpoint.admin.list.category:
     parent: 'teknoo.east.website.endpoint.admin.list.abstract'
     calls:
-      - ['setLoader', ['@teknoo.east.website.loader.category']]
+      - ['setLoader', ['@Teknoo\East\Website\Loader\CategoryLoader']]
       - ['setViewPath', ['%teknoo.east.website.view.category.list.file%']]
       - ['setTwig', ['@twig']]
 
   teknoo.east.website.endpoint.admin.new.category:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
     calls:
-      - ['setWriter', ['@teknoo.east.website.writer.category']]
+      - ['setWriter', ['@Teknoo\East\Website\Writer\CategoryWriter']]
       - ['setFormClass', ['%teknoo.east.website.form_type.category.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.category.new.file%']]
       - ['setObjectClass', ['%teknoo.east.website.category.class%']]
@@ -126,14 +126,14 @@ services:
     parent: 'teknoo.east.website.endpoint.admin.delete.abstract'
     calls:
       - ['setDeletingService', ['@teknoo.east.website.deleting.content']]
-      - ['setLoader', ['@teknoo.east.website.loader.content']]
+      - ['setLoader', ['@Teknoo\East\Website\Loader\ContentLoader']]
       - ['setRouter', ['@router']]
 
   teknoo.east.website.endpoint.admin.edit.content:
     parent: 'teknoo.east.website.endpoint.admin.edit.abstract'
     calls:
-      - ['setLoader', ['@teknoo.east.website.loader.content']]
-      - ['setWriter', ['@teknoo.east.website.writer.content']]
+      - ['setLoader', ['@Teknoo\East\Website\Loader\ContentLoader']]
+      - ['setWriter', ['@Teknoo\East\Website\Writer\ContentWriter']]
       - ['setFormClass', ['%teknoo.east.website.form_type.content.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.content.edit.file%']]
       - ['setTwig', ['@twig']]
@@ -141,14 +141,14 @@ services:
   teknoo.east.website.endpoint.admin.list.content:
     parent: 'teknoo.east.website.endpoint.admin.list.abstract'
     calls:
-      - ['setLoader', ['@teknoo.east.website.loader.content']]
+      - ['setLoader', ['@Teknoo\East\Website\Loader\ContentLoader']]
       - ['setViewPath', ['%teknoo.east.website.view.content.list.file%']]
       - ['setTwig', ['@twig']]
 
   teknoo.east.website.endpoint.admin.new.content:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
     calls:
-      - ['setWriter', ['@teknoo.east.website.writer.content']]
+      - ['setWriter', ['@Teknoo\East\Website\Writer\ContentWriter']]
       - ['setFormClass', ['%teknoo.east.website.form_type.content.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.content.new.file%']]
       - ['setObjectClass', ['%teknoo.east.website.content.class%']]
@@ -160,14 +160,14 @@ services:
     parent: 'teknoo.east.website.endpoint.admin.delete.abstract'
     calls:
       - ['setDeletingService', ['@teknoo.east.website.deleting.type']]
-      - ['setLoader', ['@teknoo.east.website.loader.type']]
+      - ['setLoader', ['@Teknoo\East\Website\Loader\TypeLoader']]
       - ['setRouter', ['@router']]
 
   teknoo.east.website.endpoint.admin.edit.type:
     parent: 'teknoo.east.website.endpoint.admin.edit.abstract'
     calls:
-      - ['setLoader', ['@teknoo.east.website.loader.type']]
-      - ['setWriter', ['@teknoo.east.website.writer.type']]
+      - ['setLoader', ['@Teknoo\East\Website\Loader\TypeLoader']]
+      - ['setWriter', ['@Teknoo\East\Website\Writer\TypeWriter']]
       - ['setFormClass', ['%teknoo.east.website.form_type.type.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.type.edit.file%']]
       - ['setTwig', ['@twig']]
@@ -175,14 +175,14 @@ services:
   teknoo.east.website.endpoint.admin.list.type:
     parent: 'teknoo.east.website.endpoint.admin.list.abstract'
     calls:
-      - ['setLoader', ['@teknoo.east.website.loader.type']]
+      - ['setLoader', ['@Teknoo\East\Website\Loader\TypeLoader']]
       - ['setViewPath', ['%teknoo.east.website.view.type.list.file%']]
       - ['setTwig', ['@twig']]
 
   teknoo.east.website.endpoint.admin.new.type:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
     calls:
-      - ['setWriter', ['@teknoo.east.website.writer.type']]
+      - ['setWriter', ['@Teknoo\East\Website\Writer\TypeWriter']]
       - ['setFormClass', ['%teknoo.east.website.form_type.type.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.type.new.file%']]
       - ['setObjectClass', ['%teknoo.east.website.type.class%']]
@@ -194,14 +194,14 @@ services:
     parent: 'teknoo.east.website.endpoint.admin.delete.abstract'
     calls:
       - ['setDeletingService', ['@teknoo.east.website.deleting.user']]
-      - ['setLoader', ['@teknoo.east.website.loader.user']]
+      - ['setLoader', ['@Teknoo\East\Website\Loader\UserLoader']]
       - ['setRouter', ['@router']]
 
   teknoo.east.website.endpoint.admin.edit.user:
     parent: 'teknoo.east.website.endpoint.admin.edit.abstract'
     calls:
-      - ['setLoader', ['@teknoo.east.website.loader.user']]
-      - ['setWriter', ['@teknoo.east.website.bundle.writer.user']]
+      - ['setLoader', ['@Teknoo\East\Website\Loader\UserLoader']]
+      - ['setWriter', ['@Teknoo\East\Website\Writer\UserWriter']]
       - ['setFormClass', ['%teknoo.east.website.form_type.user.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.user.edit.file%']]
       - ['setTwig', ['@twig']]
@@ -209,14 +209,14 @@ services:
   teknoo.east.website.endpoint.admin.list.user:
     parent: 'teknoo.east.website.endpoint.admin.list.abstract'
     calls:
-      - ['setLoader', ['@teknoo.east.website.loader.user']]
+      - ['setLoader', ['@Teknoo\East\Website\Loader\UserLoader']]
       - ['setViewPath', ['%teknoo.east.website.view.user.list.file%']]
       - ['setTwig', ['@twig']]
 
   teknoo.east.website.endpoint.admin.new.user:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
     calls:
-      - ['setWriter', ['@teknoo.east.website.bundle.writer.user']]
+      - ['setWriter', ['@Teknoo\East\Website\Writer\UserWriter']]
       - ['setFormClass', ['%teknoo.east.website.form_type.user.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.user.new.file%']]
       - ['setObjectClass', ['%teknoo.east.website.user.class%']]
@@ -227,20 +227,20 @@ services:
   teknoo.east.website.bundle.user_provider:
     class: '%teknoo.east.website.bundle.user_provider.class%'
     arguments:
-      - '@teknoo.east.website.loader.user'
+      - '@Teknoo\East\Website\Loader\UserLoader'
 
   #Command
   teknoo.east.website.bundle.command.create_user:
     class: '%teknoo.east.website.bundle.command.create_user.class%'
     arguments:
-      - '@teknoo.east.website.writer.user'
+      - '@Teknoo\East\Website\Writer\UserWriter'
       - '@security.encoder_factory'
     tags:
       - { name: console.command }
 
   #Writer
-  teknoo.east.website.bundle.writer.user:
-    class: '%teknoo.east.website.bundle.writer.user.class%'
+  Teknoo\East\Website\Writer\UserWriter:
+    class: '%Teknoo\East\Website\Writer\UserWriter.class%'
     arguments:
-      - '@teknoo.east.website.writer.user'
+      - '@Teknoo\East\Website\Writer\UserWriter'
       - '@security.encoder_factory'

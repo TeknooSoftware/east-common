@@ -27,7 +27,6 @@ use function DI\decorate;
 use Doctrine\Common\Persistence\ObjectManager;
 use Gedmo\Translatable\TranslatableListener;
 use Psr\Container\ContainerInterface;
-use Teknoo\East\Foundation\Manager\Manager;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Website\Loader\CategoryLoader;
 use Teknoo\East\Website\Loader\ContentLoader;
@@ -53,53 +52,35 @@ return [
     CategoryLoader::class => function (ContainerInterface $container) {
         return new CategoryLoader($container->get(ObjectManager::class)->getRepository(Category::class));
     },
-    'teknoo.east.website.loader.category' => get(CategoryLoader::class),
-
     ContentLoader::class => function (ContainerInterface $container) {
         return new ContentLoader($container->get(ObjectManager::class)->getRepository(Content::class));
     },
-    'teknoo.east.website.loader.content' => get(ContentLoader::class),
-
     MediaLoader::class => function (ContainerInterface $container) {
         return new MediaLoader($container->get(ObjectManager::class)->getRepository(Media::class));
     },
-
-    'teknoo.east.website.loader.media' => get(MediaLoader::class),
     TypeLoader::class => function (ContainerInterface $container) {
         return new TypeLoader($container->get(ObjectManager::class)->getRepository(Type::class));
     },
-
-    'teknoo.east.website.loader.type' => get(TypeLoader::class),
     UserLoader::class => function (ContainerInterface $container) {
         return new UserLoader($container->get(ObjectManager::class)->getRepository(User::class));
     },
-    'teknoo.east.website.loader.user' => get(UserLoader::class),
 
     //Writer
     CategoryWriter::class => function (ObjectManager $manager) {
         return new CategoryWriter($manager);
     },
-    'teknoo.east.website.writer.category' => get(CategoryWriter::class),
-
     ContentWriter::class => function (ObjectManager $manager) {
         return new ContentWriter($manager);
     },
-    'teknoo.east.website.writer.content' => get(ContentWriter::class),
-
     MediaWriter::class => function (ObjectManager $manager) {
         return new MediaWriter($manager);
     },
-    'teknoo.east.website.writer.media' => get(MediaWriter::class),
-
     TypeWriter::class => function (ObjectManager $manager) {
         return new TypeWriter($manager);
     },
-    'teknoo.east.website.writer.type' => get(TypeWriter::class),
-
     UserWriter::class => function (ObjectManager $manager) {
         return new UserWriter($manager);
     },
-    'teknoo.east.website.writer.user' => get(UserWriter::class),
 
     //Deleting
     'teknoo.east.website.deleting.category' => function (CategoryWriter $writer) {
@@ -121,18 +102,17 @@ return [
     MenuGenerator::class => function (CategoryLoader $loader) {
         return new MenuGenerator($loader);
     },
-    'teknoo.east.website.service.menu_generator' => get(MenuGenerator::class),
 
     //Middleware
     LocaleMiddleware::class => function (TranslatableListener $listenerTranslatable) {
         return new LocaleMiddleware($listenerTranslatable);
     },
 
-    Manager::class => decorate(function ($previous, ContainerInterface $container) {
+    ManagerInterface::class => decorate(function ($previous, ContainerInterface $container) {
         if ($previous instanceof ManagerInterface) {
             $previous->registerMiddleware($container->get(LocaleMiddleware::class, 6));
         }
 
         return $previous;
-    })
+    }),
 ];

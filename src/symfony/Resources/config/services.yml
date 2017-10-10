@@ -46,7 +46,7 @@ parameters:
   teknoo.east.website.bundle.command.create_user.class: 'Teknoo\East\WebsiteBundle\Command\CreateUserCommand'
 
   #Writer
-  Teknoo\East\Website\Writer\UserWriter.class: 'Teknoo\East\WebsiteBundle\Writer\UserWriter'
+  teknoo.east.website.bundle.writer.user.class: 'Teknoo\East\WebsiteBundle\Writer\UserWriter'
 
 services:
   #Front endpoints
@@ -87,7 +87,7 @@ services:
     calls:
       - ['setFormFactory', ['@form.factory']]
 
-  #Categories 
+  #Categories
   teknoo.east.website.endpoint.admin.delete.category:
     parent: 'teknoo.east.website.endpoint.admin.delete.abstract'
     calls:
@@ -201,7 +201,7 @@ services:
     parent: 'teknoo.east.website.endpoint.admin.edit.abstract'
     calls:
       - ['setLoader', ['@Teknoo\East\Website\Loader\UserLoader']]
-      - ['setWriter', ['@Teknoo\East\Website\Writer\UserWriter']]
+      - ['setWriter', ['@teknoo.east.website.bundle.writer.user']]
       - ['setFormClass', ['%teknoo.east.website.form_type.user.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.user.edit.file%']]
       - ['setTwig', ['@twig']]
@@ -216,7 +216,7 @@ services:
   teknoo.east.website.endpoint.admin.new.user:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
     calls:
-      - ['setWriter', ['@Teknoo\East\Website\Writer\UserWriter']]
+      - ['setWriter', ['@teknoo.east.website.bundle.writer.user']]
       - ['setFormClass', ['%teknoo.east.website.form_type.user.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.user.new.file%']]
       - ['setObjectClass', ['%teknoo.east.website.user.class%']]
@@ -233,14 +233,14 @@ services:
   teknoo.east.website.bundle.command.create_user:
     class: '%teknoo.east.website.bundle.command.create_user.class%'
     arguments:
-      - '@Teknoo\East\Website\Writer\UserWriter'
+      - '@teknoo.east.website.bundle.writer.user'
       - '@security.encoder_factory'
     tags:
       - { name: console.command }
 
   #Writer
-  Teknoo\East\Website\Writer\UserWriter:
-    class: '%Teknoo\East\Website\Writer\UserWriter.class%'
+  teknoo.east.website.bundle.writer.user:
+    class: '%teknoo.east.website.bundle.writer.user.class%'
     arguments:
       - '@Teknoo\East\Website\Writer\UserWriter'
       - '@security.encoder_factory'

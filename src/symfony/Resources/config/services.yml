@@ -233,7 +233,7 @@ services:
   teknoo.east.website.bundle.command.create_user:
     class: '%teknoo.east.website.bundle.command.create_user.class%'
     arguments:
-      - '@teknoo.east.website.bundle.writer.user'
+      - '@Teknoo\East\Website\Writer\UserWriter'
       - '@security.encoder_factory'
     tags:
       - { name: console.command }

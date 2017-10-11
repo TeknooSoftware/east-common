@@ -99,7 +99,7 @@ return [
 
     ManagerInterface::class => decorate(function ($previous, ContainerInterface $container) {
         if ($previous instanceof ManagerInterface) {
-            $previous->registerMiddleware($container->get(LocaleMiddleware::class, 6));
+            $previous->registerMiddleware($container->get(LocaleMiddleware::class), LocaleMiddleware::MIDDLEWARE_PRIORITY);
         }
 
         return $previous;

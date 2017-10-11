@@ -37,6 +37,7 @@ use Teknoo\East\Foundation\Session\SessionInterface;
 class LocaleMiddleware implements MiddlewareInterface
 {
     const SESSION_KEY = 'locale';
+    const MIDDLEWARE_PRIORITY = 6;
 
     /**
      * @var TranslatableListener

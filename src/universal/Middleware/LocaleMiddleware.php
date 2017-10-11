@@ -95,7 +95,9 @@ class LocaleMiddleware implements MiddlewareInterface
         ServerRequestInterface $request,
         ManagerInterface $manager
     ): MiddlewareInterface {
-        if (null !== ($locale = $request->getAttribute('locale', null))) {
+        $queryParams = $request->getQueryParams();
+        if (isset($queryParams['locale'])) {
+            $locale = $queryParams['locale'];
             $this->listenerTranslatable->setTranslatableLocale($locale);
             $this->registerLocaleInSession($request, $locale);
         } else {

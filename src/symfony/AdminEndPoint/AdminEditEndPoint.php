@@ -58,13 +58,14 @@ class AdminEditEndPoint implements EndPointInterface
 
                     if ($form->isSubmitted() && $form->isValid()) {
                         $this->writer->save($object, new Promise(
-                            function ($object) use ($client, $form) {
+                            function ($object) use ($client, $form, $request) {
                                 $this->render(
                                     $client,
                                     $this->viewPath,
                                     [
                                         'objectInstance' => $object,
-                                        'formView' => $form->createView()
+                                        'formView' => $form->createView(),
+                                        'request' => $request
                                     ]
                                 );
                             },

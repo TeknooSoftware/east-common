@@ -72,14 +72,15 @@ class LocaleMiddleware implements MiddlewareInterface
      * @param ServerRequestInterface $request
      * @return LocaleMiddleware
      */
-    private function getLocaleFromSession(ServerRequestInterface $request): LocaleMiddleware
+    private function getLocaleFromSession(ServerRequestInterface &$request): LocaleMiddleware
     {
         $session = $request->getAttribute(SessionInterface::ATTRIBUTE_KEY);
         if ($session instanceof SessionInterface) {
             $session->get(
                 static::SESSION_KEY,
-                new Promise(function (string $locale) {
+                new Promise(function (string $locale) use (&$request) {
                    $this->listenerTranslatable->setTranslatableLocale($locale);
+                   $request = $request->withAttribute('locale', $locale);
                 })
             );
         }
@@ -100,9 +101,13 @@ class LocaleMiddleware implements MiddlewareInterface
             $locale = $queryParams['locale'];
             $this->listenerTranslatable->setTranslatableLocale($locale);
             $this->registerLocaleInSession($request, $locale);
+            $request = $request->withAttribute('locale', $locale);
+
         } else {
             $this->getLocaleFromSession($request);
         }
+
+        $manager->continueExecution($client, $request);
 
         return $this;
     }

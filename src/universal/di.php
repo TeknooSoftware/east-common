@@ -70,13 +70,13 @@ return [
     CategoryWriter::class => object(CategoryWriter::class)
         ->constructor(get(ObjectManager::class)),
     ContentWriter::class => object(ContentWriter::class)
-        ->constructor(get(ContentWriter::class)),
+        ->constructor(get(ObjectManager::class)),
     MediaWriter::class => object(MediaWriter::class)
-        ->constructor(get(MediaWriter::class)),
+        ->constructor(get(ObjectManager::class)),
     TypeWriter::class => object(TypeWriter::class)
-        ->constructor(get(TypeWriter::class)),
+        ->constructor(get(ObjectManager::class)),
     UserWriter::class => object(UserWriter::class)
-        ->constructor(get(UserWriter::class)),
+        ->constructor(get(ObjectManager::class)),
 
     //Deleting
     'teknoo.east.website.deleting.category' => object(DeletingService::class)

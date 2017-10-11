@@ -93,7 +93,8 @@ class AdminNewEndPoint implements EndPointInterface
             $this->viewPath,
             [
                 'objectInstance' => $object,
-                'formView' => $form->createView()
+                'formView' => $form->createView(),
+                'request' => $request
             ]
         );
 

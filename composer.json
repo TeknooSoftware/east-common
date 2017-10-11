@@ -33,7 +33,8 @@
         "teknoo/east-foundation": "dev-master",
         "teknoo/immutable": "^0.0.3",
         "teknoo/states": "^3.1.0-beta3",
-        "teknoo/states-life-cycle": "^3.0.0-beta3"
+        "teknoo/states-life-cycle": "^3.0.0-beta3",
+        "php-di/php-di": "^5.4.1"
     },
     "require-dev": {
         "phpunit/phpunit": "~6.2",

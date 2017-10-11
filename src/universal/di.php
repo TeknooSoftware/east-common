@@ -24,6 +24,7 @@ namespace Teknoo\East\Website;
 
 use function DI\get;
 use function DI\decorate;
+use function DI\object;
 use Doctrine\Common\Persistence\ObjectManager;
 use Gedmo\Translatable\TranslatableListener;
 use Psr\Container\ContainerInterface;
@@ -66,47 +67,35 @@ return [
     },
 
     //Writer
-    CategoryWriter::class => function (ObjectManager $manager) {
-        return new CategoryWriter($manager);
-    },
-    ContentWriter::class => function (ObjectManager $manager) {
-        return new ContentWriter($manager);
-    },
-    MediaWriter::class => function (ObjectManager $manager) {
-        return new MediaWriter($manager);
-    },
-    TypeWriter::class => function (ObjectManager $manager) {
-        return new TypeWriter($manager);
-    },
-    UserWriter::class => function (ObjectManager $manager) {
-        return new UserWriter($manager);
-    },
+    CategoryWriter::class => object(CategoryWriter::class)
+        ->constructor(get(ObjectManager::class)),
+    ContentWriter::class => object(ContentWriter::class)
+        ->constructor(get(ContentWriter::class)),
+    MediaWriter::class => object(MediaWriter::class)
+        ->constructor(get(MediaWriter::class)),
+    TypeWriter::class => object(TypeWriter::class)
+        ->constructor(get(TypeWriter::class)),
+    UserWriter::class => object(UserWriter::class)
+        ->constructor(get(UserWriter::class)),
 
     //Deleting
-    'teknoo.east.website.deleting.category' => function (CategoryWriter $writer) {
-        return new DeletingService($writer);
-    },
-    'teknoo.east.website.deleting.content' => function (ContentWriter $writer) {
-        return new DeletingService($writer);
-    },
-    'teknoo.east.website.deleting.media' => function (MediaWriter $writer) {
-        return new DeletingService($writer);
-    },
-    'teknoo.east.website.deleting.type' => function (TypeWriter $writer) {
-        return new DeletingService($writer);
-    },
-    'teknoo.east.website.deleting.user' => function (UserWriter $writer) {
-        return new DeletingService($writer);
-    },
+    'teknoo.east.website.deleting.category' => object(DeletingService::class)
+        ->constructor(get(CategoryWriter::class)),
+    'teknoo.east.website.deleting.content' => object(DeletingService::class)
+        ->constructor(get(ContentWriter::class)),
+    'teknoo.east.website.deleting.media' => object(DeletingService::class)
+        ->constructor(get(MediaWriter::class)),
+    'teknoo.east.website.deleting.type' => object(DeletingService::class)
+        ->constructor(get(TypeWriter::class)),
+    'teknoo.east.website.deleting.user' => object(DeletingService::class)
+        ->constructor(get(UserWriter::class)),
 
-    MenuGenerator::class => function (CategoryLoader $loader) {
-        return new MenuGenerator($loader);
-    },
+    MenuGenerator::class => object(MenuGenerator::class)
+        ->constructor(get(CategoryLoader::class)),
 
     //Middleware
-    LocaleMiddleware::class => function (TranslatableListener $listenerTranslatable) {
-        return new LocaleMiddleware($listenerTranslatable);
-    },
+    LocaleMiddleware::class => object(LocaleMiddleware::class)
+        ->constructor(get(TranslatableListener::class)),
 
     ManagerInterface::class => decorate(function ($previous, ContainerInterface $container) {
         if ($previous instanceof ManagerInterface) {

@@ -23,26 +23,23 @@
 namespace Teknoo\Tests\East\Website\Object;
 
 use Teknoo\East\Website\Object\Block;
-use Teknoo\Tests\East\Website\Object\Traits\ObjectTestTrait;
-use Teknoo\East\Website\Object\Type;
+use Teknoo\Tests\East\Website\Object\Traits\PopulateObjectTrait;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Object\PublishableTrait
- * @covers \Teknoo\East\Website\Object\ObjectTrait
- * @covers \Teknoo\East\Website\Object\Type
+ * @covers \Teknoo\East\Website\Object\Block
  */
-class TypeTest extends \PHPUnit\Framework\TestCase
+class BlockTest extends \PHPUnit\Framework\TestCase
 {
-    use ObjectTestTrait;
+    use PopulateObjectTrait;
 
     /**
-     * @return Type
+     * @return Block
      */
-    public function buildObject(): Type
+    public function buildObject(): Block
     {
-        return new Type();
+        return new Block('', '');
     }
 
     public function testGetName()
@@ -83,65 +80,34 @@ class TypeTest extends \PHPUnit\Framework\TestCase
         $this->buildObject()->setName(new \stdClass());
     }
 
-
-    public function testGetTemplate()
+    public function testGetType()
     {
         self::assertEquals(
             'fooBar',
-            $this->generateObjectPopulated(['template' => 'fooBar'])->getTemplate()
+            $this->generateObjectPopulated(['type' => 'fooBar'])->getType()
         );
     }
 
-    public function testSetTemplate()
+    public function testSetType()
     {
         $Object = $this->buildObject();
         self::assertInstanceOf(
             \get_class($Object),
-            $Object->setTemplate('fooBar')
+            $Object->setType('fooBar')
         );
 
         self::assertEquals(
             'fooBar',
-            $Object->getTemplate()
+            $Object->getType()
         );
     }
 
     /**
      * @expectedException \Throwable
      */
-    public function testSetTemplateExceptionOnBadArgument()
+    public function testSetTypeExceptionOnBadArgument()
     {
-        $this->buildObject()->setTemplate(new \stdClass());
+        $this->buildObject()->setType(new \stdClass());
     }
 
-
-    public function testGetBlocks()
-    {
-        self::assertEquals(
-            [new Block('foo', 'bar')],
-            $this->generateObjectPopulated(['blocks' => ['foo'=>'bar']])->getBlocks()
-        );
-    }
-
-    public function testSetBlocks()
-    {
-        $Object = $this->buildObject();
-        self::assertInstanceOf(
-            \get_class($Object),
-            $Object->setBlocks([new Block('foo', 'bar')])
-        );
-
-        self::assertEquals(
-            [new Block('foo', 'bar')],
-            $Object->getBlocks()
-        );
-    }
-
-    /**
-     * @expectedException \Throwable
-     */
-    public function testSetBlocksExceptionOnBadArgument()
-    {
-        $this->buildObject()->setBlocks(new \stdClass());
-    }
 }

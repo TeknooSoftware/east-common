@@ -26,10 +26,8 @@ namespace Teknoo\East\Website\Object;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class Type implements DeletableInterface
+class Block
 {
-    use ObjectTrait;
-
     /**
      * @var string
      */
@@ -38,12 +36,18 @@ class Type implements DeletableInterface
     /**
      * @var string
      */
-    private $template;
+    private $type;
 
     /**
-     * @var array
+     * Blocks constructor.
+     * @param string $name
+     * @param string $type
      */
-    private $blocks = [];
+    public function __construct(string $name , string $type)
+    {
+        $this->name = $name;
+        $this->type = $type;
+    }
 
     /**
      * @return string
@@ -54,10 +58,18 @@ class Type implements DeletableInterface
     }
 
     /**
-     * @param string $name
-     * @return self
+     * {@inheritdoc}
      */
-    public function setName(string $name): Type
+    public function __toString(): string
+    {
+        return $this->getName();
+    }
+
+    /**
+     * @param string $name
+     * @return Block
+     */
+    public function setName(string $name): Block
     {
         $this->name = $name;
 
@@ -67,53 +79,18 @@ class Type implements DeletableInterface
     /**
      * @return string
      */
-    public function __toString()
+    public function getType(): string
     {
-        return $this->getName();
+        return (string) $this->type;
     }
 
     /**
-     * @return string
+     * @param string $type
+     * @return Block
      */
-    public function getTemplate(): string
+    public function setType(string $type): Block
     {
-        return (string) $this->template;
-    }
-
-    /**
-     * @param string $template
-     * @return self
-     */
-    public function setTemplate(string $template): Type
-    {
-        $this->template = $template;
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getBlocks(): array
-    {
-        return \array_map(
-            function ($key, $value) { return new Block($key, $value); },
-            \array_keys($this->blocks),
-            \array_values($this->blocks)
-        );
-    }
-
-    /**
-     * @param array|Block[] $blocks
-     * @return self
-     */
-    public function setBlocks(array $blocks): Type
-    {
-        $this->blocks = [];
-
-        foreach ($blocks as $block) {
-            $this->blocks[$block->getName()] = $block->getType();
-        }
+        $this->type = $type;
 
         return $this;
     }

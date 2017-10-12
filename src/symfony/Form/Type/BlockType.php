@@ -23,15 +23,17 @@
 namespace Teknoo\East\WebsiteBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Teknoo\East\Website\Object\Block;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class TypeType extends AbstractType
+class BlockType extends AbstractType
 {
     /**
      * To configure this form and fields to display.
@@ -42,11 +44,20 @@ class TypeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', TextType::class, ['required' => true]);
-        $builder->add('template', TextType::class, ['required' => true]);
-        $builder->add('blocks', CollectionType::class, array(
-            'entry_type' => BlockType::class,
-            'entry_options' => array('label' => false),
-            'allow_add' => true,
+        $builder->add(
+            'type',
+            ChoiceType::class, [
+            'required' => true,
+            'choices' => ['Textarea' => 'textarea', 'Text'=>'text', 'Numeric'=>'numeric']
+        ]);
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+
+        $resolver->setDefaults(array(
+            'data_class' => Block::class,
         ));
     }
 }

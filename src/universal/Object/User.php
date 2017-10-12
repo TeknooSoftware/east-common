@@ -113,6 +113,14 @@ class User implements DeletableInterface
     }
 
     /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return \trim($this->getFirstName().' '.$this->getLastName());
+    }
+
+    /**
      * @return \string[]
      */
     public function getRoles(): array

@@ -124,6 +124,14 @@ class Category implements ProxyInterface, AutomatedInterface, Translatable, Dele
     }
 
     /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getName();
+    }
+
+    /**
      * @param string $name
      * @return self
      */

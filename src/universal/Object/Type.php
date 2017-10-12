@@ -62,6 +62,14 @@ class Type implements DeletableInterface
     /**
      * @return string
      */
+    public function __toString()
+    {
+        return $this->getName();
+    }
+
+    /**
+     * @return string
+     */
     public function getTemplate(): string
     {
         return (string) $this->template;

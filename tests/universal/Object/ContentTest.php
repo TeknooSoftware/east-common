@@ -192,6 +192,14 @@ class ContentTest extends \PHPUnit\Framework\TestCase
         );
     }
 
+    public function testToString()
+    {
+        self::assertEquals(
+            'fooBar',
+            (string) $this->generateObjectPopulated(['title' => 'fooBar'])
+        );
+    }
+
     public function testSetTitle()
     {
         $Object = $this->buildObject();

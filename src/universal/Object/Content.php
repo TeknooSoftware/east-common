@@ -167,6 +167,14 @@ class Content implements ProxyInterface, AutomatedInterface, Translatable, Delet
     /**
      * @return string
      */
+    public function __toString()
+    {
+        return $this->getTitle();
+    }
+
+    /**
+     * @return string
+     */
     public function getSubtitle(): string
     {
         return (string) $this->subtitle;

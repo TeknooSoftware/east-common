@@ -52,6 +52,14 @@ class UserTest extends \PHPUnit\Framework\TestCase
         );
     }
 
+    public function testToString()
+    {
+        self::assertEquals(
+            'foo Bar',
+            (string) $this->generateObjectPopulated(['firstName' => 'foo', 'lastName' => 'Bar'])
+        );
+    }
+
     public function testSetFirstName()
     {
         $object = $this->buildObject();

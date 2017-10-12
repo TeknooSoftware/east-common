@@ -53,6 +53,14 @@ class CategoryTest extends \PHPUnit\Framework\TestCase
         );
     }
 
+    public function testToString()
+    {
+        self::assertEquals(
+            'fooBar',
+            (string) $this->generateObjectPopulated(['name' => 'fooBar'])
+        );
+    }
+
     public function testSetName()
     {
         $Object = $this->buildObject();

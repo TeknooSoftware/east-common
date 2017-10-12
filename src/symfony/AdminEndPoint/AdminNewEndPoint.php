@@ -61,13 +61,15 @@ class AdminNewEndPoint implements EndPointInterface
     /**
      * @param ServerRequestInterface $request
      * @param ClientInterface $client
-     * @param string $editRoute=null
+     * @param string $editRoute=null,
+     * @param bool $isTranslatable=false
      * @return self
      */
     public function __invoke(
         ServerRequestInterface $request,
         ClientInterface $client,
-        string $editRoute
+        string $editRoute,
+        bool $isTranslatable=false
     ) {
         $class = $this->objectClass;
 
@@ -94,7 +96,8 @@ class AdminNewEndPoint implements EndPointInterface
             [
                 'objectInstance' => $object,
                 'formView' => $form->createView(),
-                'request' => $request
+                'request' => $request,
+                'isTranslatable' => $isTranslatable
             ]
         );
 

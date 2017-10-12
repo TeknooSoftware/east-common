@@ -42,30 +42,33 @@ class AdminEditEndPoint implements EndPointInterface
      * @param ServerRequestInterface $request
      * @param ClientInterface $client
      * @param string $id
+     * @param bool $isTranslatable
      * @return self
      */
     public function __invoke(
         ServerRequestInterface $request,
         ClientInterface $client,
-        string $id
+        string $id,
+        bool $isTranslatable=false
     ) {
         $this->loader->load(
             ['id' => $id],
             new Promise(
-                function ($object) use ($client, $request) {
+                function ($object) use ($client, $request, $isTranslatable) {
                     $form = $this->createForm($object);
                     $form->handleRequest($request->getAttribute('request'));
 
                     if ($form->isSubmitted() && $form->isValid()) {
                         $this->writer->save($object, new Promise(
-                            function ($object) use ($client, $form, $request) {
+                            function ($object) use ($client, $form, $request, $isTranslatable) {
                                 $this->render(
                                     $client,
                                     $this->viewPath,
                                     [
                                         'objectInstance' => $object,
                                         'formView' => $form->createView(),
-                                        'request' => $request
+                                        'request' => $request,
+                                        'isTranslatable' => $isTranslatable
                                     ]
                                 );
                             },

@@ -6,12 +6,12 @@ admin_category_list:
 admin_category_edit:
     path: '/category/edit/{id}'
     methods:  ['GET', 'POST', 'PUST']
-    defaults: { _controller: 'teknoo.east.website.endpoint.admin.edit.category' }
+    defaults: { _controller: 'teknoo.east.website.endpoint.admin.edit.category', isTranslatable: true }
 
 admin_category_new:
     path: '/category/new'
     methods:  ['GET', 'POST', 'PUST']
-    defaults: { _controller: 'teknoo.east.website.endpoint.admin.new.category', editRoute: 'admin_category_edit'  }
+    defaults: { _controller: 'teknoo.east.website.endpoint.admin.new.category', editRoute: 'admin_category_edit', isTranslatable: true  }
 
 admin_category_delete:
     path: '/category/delete/{id}'
@@ -26,12 +26,12 @@ admin_content_list:
 admin_content_edit:
     path: '/content/edit/{id}'
     methods:  ['GET', 'POST', 'PUST']
-    defaults: { _controller: 'teknoo.east.website.endpoint.admin.edit.content' }
+    defaults: { _controller: 'teknoo.east.website.endpoint.admin.edit.content', isTranslatable: true }
 
 admin_content_new:
     path: '/content/new'
     methods:  ['GET', 'POST', 'PUST']
-    defaults: { _controller: 'teknoo.east.website.endpoint.admin.new.content', editRoute: 'admin_content_edit' }
+    defaults: { _controller: 'teknoo.east.website.endpoint.admin.new.content', editRoute: 'admin_content_edit', isTranslatable: true }
 
 admin_content_delete:
     path: '/content/delete/{id}'

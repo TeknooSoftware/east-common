@@ -60,8 +60,7 @@ class AdminListEndPoint implements EndPointInterface
                     $this->viewPath,
                     [
                         'objectsCollection' => $objects,
-                        'page' => $page,
-                        'request' => $request
+                        'page' => $page
                     ]
                 );
             }, function ($error) use ($client) {

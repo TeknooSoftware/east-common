@@ -94,8 +94,16 @@ return [
         ->constructor(get(CategoryLoader::class)),
 
     //Middleware
-    LocaleMiddleware::class => object(LocaleMiddleware::class)
-        ->constructor(get(TranslatableListener::class)),
+    LocaleMiddleware::class => function (ContainerInterface $container): LocaleMiddleware {
+        $listener = null;
+        if ($container->has('stof_doctrine_extensions.listener.translatable')) {
+            $listener = $container->get('stof_doctrine_extensions.listener.translatable');
+        } else {
+            $listener = $container->get(TranslatableListener::class);
+        }
+
+        return new LocaleMiddleware($listener);
+    },
 
     ManagerInterface::class => decorate(function ($previous, ContainerInterface $container) {
         if ($previous instanceof ManagerInterface) {

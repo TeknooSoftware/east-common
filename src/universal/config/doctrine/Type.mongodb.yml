@@ -16,7 +16,7 @@ Teknoo\East\Website\Object\Type:
     template:
       type: 'string'
     blocks:
-      type: 'field'
+      type: 'hash'
     createdAt:
       type: 'date'
       name: 'created_at'

@@ -112,4 +112,35 @@ class TypeTest extends \PHPUnit\Framework\TestCase
     {
         $this->buildObject()->setTemplate(new \stdClass());
     }
+
+
+    public function testGetBlocks()
+    {
+        self::assertEquals(
+            'fooBar',
+            $this->generateObjectPopulated(['blocks' => 'fooBar'])->getBlocks()
+        );
+    }
+
+    public function testSetBlocks()
+    {
+        $Object = $this->buildObject();
+        self::assertInstanceOf(
+            \get_class($Object),
+            $Object->setBlocks('fooBar')
+        );
+
+        self::assertEquals(
+            'fooBar',
+            $Object->getBlocks()
+        );
+    }
+
+    /**
+     * @expectedException \Throwable
+     */
+    public function testSetBlocksExceptionOnBadArgument()
+    {
+        $this->buildObject()->setBlocks(new \stdClass());
+    }
 }

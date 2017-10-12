@@ -41,6 +41,11 @@ class Type implements DeletableInterface
     private $template;
 
     /**
+     * @var string
+     */
+    private $blocks;
+
+    /**
      * @return string
      */
     public function getName(): string
@@ -82,6 +87,25 @@ class Type implements DeletableInterface
     public function setTemplate(string $template): Type
     {
         $this->template = $template;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBlocks(): string
+    {
+        return (string) $this->blocks;
+    }
+
+    /**
+     * @param string $blocks
+     * @return self
+     */
+    public function setBlocks(string $blocks): Type
+    {
+        $this->blocks = $blocks;
 
         return $this;
     }

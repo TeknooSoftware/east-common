@@ -86,7 +86,8 @@ class AdminEditEndPoint implements EndPointInterface
                         [
                             'objectInstance' => $object,
                             'formView' => $form->createView(),
-                            'request' => $request
+                            'request' => $request,
+                            'isTranslatable' => $isTranslatable
                         ]
                     );
                 },

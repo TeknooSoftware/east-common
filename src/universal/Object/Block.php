@@ -43,7 +43,7 @@ class Block
      * @param string $name
      * @param string $type
      */
-    public function __construct(string $name , string $type)
+    public function __construct(string $name = '', string $type = '')
     {
         $this->name = $name;
         $this->type = $type;

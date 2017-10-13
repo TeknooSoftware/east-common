@@ -47,6 +47,8 @@ class TypeType extends AbstractType
             'entry_type' => BlockType::class,
             'entry_options' => array('label' => false),
             'allow_add' => true,
+            'allow_delete' => true,
+            'delete_empty' => true,
         ));
     }
 }

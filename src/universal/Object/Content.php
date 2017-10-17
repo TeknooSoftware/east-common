@@ -184,9 +184,9 @@ class Content implements ProxyInterface, AutomatedInterface, Translatable, Delet
      * @param string $subtitle
      * @return self
      */
-    public function setSubtitle(string $subtitle): Content
+    public function setSubtitle(string $subtitle=null): Content
     {
-        $this->subtitle = $subtitle;
+        $this->subtitle = (string) $subtitle;
 
         return $this;
     }

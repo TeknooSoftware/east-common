@@ -30,7 +30,7 @@ Teknoo\East\Website\Object\Content:
           separator: '-'
           fields:
             - title
-    content:
+    parts:
       type: 'collection'
       gedmo:
         - 'translatable'

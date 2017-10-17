@@ -1,7 +1,12 @@
 content:
     path: '/{slug}'
     methods:  ['GET']
-    defaults: { _controller: 'teknoo.east.website.endpoint.content', slug: '' }
+    defaults: { _controller: 'teknoo.east.website.endpoint.content' }
+
+home:
+    path: '/'
+    methods:  ['GET']
+    defaults: { _controller: 'teknoo.east.website.endpoint.content', slug: '/' }
 
 media:
     path: '/media/{id}'

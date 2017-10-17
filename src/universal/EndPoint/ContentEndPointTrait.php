@@ -77,6 +77,10 @@ trait ContentEndPointTrait
         $urlParts = $this->parseUrl($request);
         $contentSlug = \array_pop($urlParts);
 
+        if (empty($contentSlug)) {
+            $contentSlug = 'default';
+        }
+
         $this->contentLoader->bySlug(
             $contentSlug,
             new Promise(

@@ -70,7 +70,7 @@ class ContentType extends AbstractType
                 }
 
                 $type = $data->getType();
-                $parts = $block->getParts();
+                $parts = $data->getParts();
 
                 foreach ($type->getBlocks() as $block) {
                     switch ($block->getType()) {

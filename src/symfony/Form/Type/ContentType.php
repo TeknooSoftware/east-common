@@ -95,7 +95,8 @@ class ContentType extends AbstractType
                         $block->getName(),
                         $formType, [
                         'mapped' => false,
-                        'data' => $value
+                        'data' => $value,
+                        'required' => false,
                     ]);
                 }
             }
@@ -120,7 +121,7 @@ class ContentType extends AbstractType
                     }
                 }
 
-                $data['parts'] = $contentValue;
+                $contentObject->setParts($contentValue);
             }
         );
 

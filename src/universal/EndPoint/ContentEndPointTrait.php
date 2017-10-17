@@ -90,9 +90,9 @@ trait ContentEndPointTrait
                         $client,
                         $type->getTemplate(),
                         [
-                        'content' => $content,
-                        'menuGenerator' => $this->menuGenerator,
-                    ]
+                            'content' => $content,
+                            'menuGenerator' => $this->menuGenerator,
+                        ]
                     );
                 },
                 function (\Throwable $e) use ($client) {

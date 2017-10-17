@@ -65,9 +65,9 @@ trait MediaEndPointTrait
                            new Stream($media->getResource()),
                            200,
                            [
-                           'Content-Type' => $media->getMimeType(),
-                           'Content-Length' => $media->getLength()
-                       ]
+                               'Content-Type' => $media->getMimeType(),
+                               'Content-Length' => $media->getLength()
+                           ]
                        )
                    );
                },

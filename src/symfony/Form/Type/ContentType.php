@@ -53,7 +53,7 @@ class ContentType extends AbstractType
     {
         $builder->add('author', DocumentType::class, ['class' => User::class, 'required'=>true, 'multiple'=>false, 'choice_label'=>'username']);
         $builder->add('type', DocumentType::class, ['class' => Type::class, 'required'=>true, 'multiple'=>false, 'choice_label' => 'name']);
-        $builder->add('categories', DocumentType::class, ['class' => Category::class, 'required'=>true, 'multiple'=>true, 'choice_label' => 'name']);
+        $builder->add('categories', DocumentType::class, ['class' => Category::class, 'required'=>false, 'multiple'=>true, 'choice_label' => 'name']);
         $builder->add('title', TextType::class, ['required'=>true]);
         $builder->add('subtitle', TextType::class, ['required'=>false]);
         $builder->add('slug', TextType::class, ['required'=>false]);

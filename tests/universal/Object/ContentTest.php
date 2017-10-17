@@ -47,40 +47,40 @@ class ContentTest extends \PHPUnit\Framework\TestCase
         return new Content();
     }
 
-    public function testGetContent()
+    public function testGetParts()
     {
         self::assertEquals(
-            'fooBar',
-            $this->generateObjectPopulated(['content' => 'fooBar'])->getContent()
+            ['fooBar'],
+            $this->generateObjectPopulated(['parts' => ['fooBar']])->getParts()
         );
     }
 
-    public function testSetContent()
+    public function testSetParts()
     {
         $Object = $this->buildObject();
         self::assertInstanceOf(
             \get_class($Object),
-            $Object->setContent('fooBar')
+            $Object->setParts(['fooBar'])
         );
 
         self::assertEquals(
-            'fooBar',
-            $Object->getContent()
+            ['fooBar'],
+            $Object->getParts()
         );
         self::assertInstanceOf(
             \get_class($Object),
-            $Object->setContent(null)
+            $Object->setParts(null)
         );
 
         self::assertEmpty(
-            $Object->getContent()
+            $Object->getParts()
         );
     }
 
     /**
      * @expectedException \Throwable
      */
-    public function testSetContentExceptionOnBadArgument()
+    public function testSetPartsExceptionOnBadArgument()
     {
         $this->buildObject()->setContent(new \stdClass());
     }

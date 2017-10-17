@@ -31,7 +31,7 @@ Teknoo\East\Website\Object\Content:
           fields:
             - title
     content:
-      type: 'string'
+      type: 'collection'
       gedmo:
         - 'translatable'
     tags:

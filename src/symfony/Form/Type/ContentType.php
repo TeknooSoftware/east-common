@@ -24,10 +24,14 @@ namespace Teknoo\East\WebsiteBundle\Form\Type;
 
 use Doctrine\Bundle\MongoDBBundle\Form\Type\DocumentType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Teknoo\East\Website\Object\Category;
+use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Object\User;
 
@@ -53,8 +57,72 @@ class ContentType extends AbstractType
         $builder->add('title', TextType::class, ['required'=>true]);
         $builder->add('subtitle', TextType::class, ['required'=>false]);
         $builder->add('slug', TextType::class, ['required'=>false]);
-        $builder->add('content', TextAreaType::class, ['required'=>false]);
         $builder->add('description', TextAreaType::class, ['required'=>false]);
+
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) {
+                $data = $event->getData();
+                $form = $event->getForm();
+
+                if (!$data instanceof Content || !$data->getType() instanceof Type) {
+                    return;
+                }
+
+                $type = $data->getType();
+                $parts = $block->getParts();
+
+                foreach ($type->getBlocks() as $block) {
+                    switch ($block->getType()) {
+                        case 'textarea':
+                            $formType = TextareaType::class;
+                            break;
+                        case 'numeric':
+                            $formType = NumberType::class;
+                            break;
+                        case 'text':
+                        default:
+                            $formType = TextType::class;
+                            break;
+                    };
+
+                    $value = '';
+                    if (isset($parts[$block->getName()])) {
+                        $value = $parts[$block->getName()];
+                    }
+
+                    $form->add(
+                        $block->getName(),
+                        $formType, [
+                        'mapped' => false,
+                        'data' => $value
+                    ]);
+                }
+            }
+        );
+
+        $builder->addEventListener(
+            FormEvents::PRE_SUBMIT,
+            function (FormEvent $event) {
+                $form = $event->getForm();
+                $data = $event->getData();
+                $contentObject = $form->getNormData();
+
+                if (!$contentObject instanceof Content || !$contentObject->getType() instanceof Type) {
+                    return;
+                }
+
+                $type = $contentObject->getType();
+                $contentValue = [];
+                foreach ($type->getBlocks() as $block) {
+                    if (isset($data[$block->getName()])) {
+                        $contentValue[$block->getName()] = $data[$block->getName()];
+                    }
+                }
+
+                $data['parts'] = $contentValue;
+            }
+        );
 
         $this->addTranslatableLocaleFieldHidden($builder);
         $this->disableNonTranslatableField($builder, $options);

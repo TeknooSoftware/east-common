@@ -75,9 +75,9 @@ class Content implements ProxyInterface, AutomatedInterface, Translatable, Delet
     private $type;
 
     /**
-     * @var string
+     * @var string[]
      */
-    private $content;
+    private $parts = [];
 
     /**
      * @var string[]
@@ -249,20 +249,20 @@ class Content implements ProxyInterface, AutomatedInterface, Translatable, Delet
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function getContent(): string
+    public function getParts(): array
     {
-        return (string) $this->content;
+        return (array) $this->parts;
     }
 
     /**
-     * @param string|null $content
+     * @param string[]|null $parts
      * @return self
      */
-    public function setContent(string $content=null): Content
+    public function setParts(array $parts=null): Content
     {
-        $this->content = $content;
+        $this->parts = $parts;
 
         return $this;
     }

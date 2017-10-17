@@ -92,7 +92,7 @@ class Type implements DeletableInterface
     }
 
     /**
-     * @return array
+     * @return array|Block[]
      */
     public function getBlocks(): array
     {

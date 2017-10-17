@@ -77,7 +77,7 @@ class Content implements ProxyInterface, AutomatedInterface, Translatable, Delet
     /**
      * @var string[]
      */
-    private $parts = [];
+    private $parts;
 
     /**
      * @var string[]
@@ -253,7 +253,7 @@ class Content implements ProxyInterface, AutomatedInterface, Translatable, Delet
      */
     public function getParts(): array
     {
-        return (array) $this->parts;
+        return (array) \json_decode($this->parts, true);
     }
 
     /**
@@ -262,7 +262,7 @@ class Content implements ProxyInterface, AutomatedInterface, Translatable, Delet
      */
     public function setParts(array $parts=null): Content
     {
-        $this->parts = $parts;
+        $this->parts = \json_encode($parts);
 
         return $this;
     }

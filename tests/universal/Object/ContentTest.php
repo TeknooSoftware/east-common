@@ -51,7 +51,7 @@ class ContentTest extends \PHPUnit\Framework\TestCase
     {
         self::assertEquals(
             ['fooBar'],
-            $this->generateObjectPopulated(['parts' => ['fooBar']])->getParts()
+            $this->generateObjectPopulated(['parts' => \json_encode(['fooBar'])])->getParts()
         );
     }
 

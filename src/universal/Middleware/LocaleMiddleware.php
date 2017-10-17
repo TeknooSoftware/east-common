@@ -45,12 +45,19 @@ class LocaleMiddleware implements MiddlewareInterface
     private $listenerTranslatable;
 
     /**
+     * @var string
+     */
+    private $defaultLocale = 'en';
+
+    /**
      * LocaleRouter constructor.
      * @param TranslatableListener $listenerTranslatable
+     * @param string $defaultLocale
      */
-    public function __construct(TranslatableListener $listenerTranslatable)
+    public function __construct(TranslatableListener $listenerTranslatable, string $defaultLocale='en')
     {
         $this->listenerTranslatable = $listenerTranslatable;
+        $this->defaultLocale = $defaultLocale;
     }
 
     /**
@@ -78,10 +85,15 @@ class LocaleMiddleware implements MiddlewareInterface
         if ($session instanceof SessionInterface) {
             $session->get(
                 static::SESSION_KEY,
-                new Promise(function (string $locale) use (&$request) {
-                   $this->listenerTranslatable->setTranslatableLocale($locale);
-                   $request = $request->withAttribute('locale', $locale);
-                })
+                new Promise(
+                    function (string $locale) use (&$request) {
+                        $this->listenerTranslatable->setTranslatableLocale($locale);
+                        $request = $request->withAttribute('locale', $locale);
+                    }, function () use (&$request) {
+                        $this->listenerTranslatable->setTranslatableLocale($this->defaultLocale);
+                        $request = $request->withAttribute('locale', $this->defaultLocale);
+                    }
+                )
             );
         }
 
@@ -102,7 +114,6 @@ class LocaleMiddleware implements MiddlewareInterface
             $this->listenerTranslatable->setTranslatableLocale($locale);
             $this->registerLocaleInSession($request, $locale);
             $request = $request->withAttribute('locale', $locale);
-
         } else {
             $this->getLocaleFromSession($request);
         }

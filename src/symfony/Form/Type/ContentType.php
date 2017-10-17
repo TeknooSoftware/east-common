@@ -24,7 +24,6 @@ namespace Teknoo\East\WebsiteBundle\Form\Type;
 
 use Doctrine\Bundle\MongoDBBundle\Form\Type\DocumentType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -59,7 +58,6 @@ class ContentType extends AbstractType
         $builder->add('subtitle', TextType::class, ['required'=>false]);
         $builder->add('slug', TextType::class, ['required'=>false]);
         $builder->add('description', TextAreaType::class, ['required'=>false]);
-        $builder->add('publishedAt', DateTimeType::class, ['required'=>false]);
 
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,

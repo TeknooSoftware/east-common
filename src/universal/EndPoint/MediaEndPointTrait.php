@@ -59,7 +59,7 @@ trait MediaEndPointTrait
         $this->mediaLoader->byId(
            $id,
            new Promise(
-               function (Media $medcia) use ($client) {
+               function (Media $media) use ($client) {
                    $client->responseFromController(
                        new Response(
                            new Stream($media->getResource()),

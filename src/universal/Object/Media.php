@@ -21,6 +21,8 @@
  */
 
 namespace Teknoo\East\Website\Object;
+use Doctrine\MongoDB\GridFS;
+use Doctrine\MongoDB\GridFSFile;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -159,8 +161,14 @@ class Media implements DeletableInterface
      */
     public function getResource()
     {
-        if (\is_callable([$this->file, 'getResource'])) {
-            $resource = $this->file->getResource();
+        $file = $this->file;
+
+        if ($file instanceof GridFSFile) {
+            $file = $file->getMongoGridFSFile();
+        }
+
+        if (\is_callable([$file, 'getResource'])) {
+            $resource = $file->getResource();
 
             if (\is_resource($resource)) {
                 return $resource;

@@ -101,7 +101,6 @@ class MediaLoaderTest extends \PHPUnit\Framework\TestCase
     public function testByIdFound()
     {
         $entity = $this->getEntity();
-        $entity->setPublishedAt(new \DateTime('2017-07-01'));
 
         $this->getRepositoryMock()
             ->expects(self::any())

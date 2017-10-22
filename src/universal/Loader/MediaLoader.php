@@ -29,10 +29,9 @@ use Teknoo\East\Foundation\Promise\PromiseInterface;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class MediaLoader implements PublishableLoaderInterface
+class MediaLoader implements LoaderInterface
 {
-    use PublishableLoaderTrait,
-        CollectionLoaderTrait;
+    use CollectionLoaderTrait;
 
     /**
      * MediaLoader constructor.
@@ -52,12 +51,30 @@ class MediaLoader implements PublishableLoaderInterface
     }
 
     /**
+     * @param array $criteria
+     * @param PromiseInterface $promise
+     * @return LoaderInterface|self
+     */
+    public function load(array $criteria, PromiseInterface $promise): LoaderInterface
+    {
+        $entity = $this->getRepository()->findOneBy($criteria);
+
+        if (!empty($entity)) {
+            $promise->success($entity);
+        } else {
+            $promise->fail(new \DomainException('Object not found'));
+        }
+
+        return $this;
+    }
+
+    /**
      * @param string $id
      * @param PromiseInterface $promise
      * @return MediaLoader|PublishableLoaderInterface
      */
     public function byId(string $id, PromiseInterface $promise): MediaLoader
     {
-        return $this->loadPublished(['id' => $id], $promise);
+        return $this->load(['id' => $id], $promise);
     }
 }

@@ -36,8 +36,3 @@ Teknoo\East\Website\Object\Media:
       name: 'deleted_at'
       nullable: true
       index: true
-    publishedAt:
-      type: 'date'
-      name: 'published_at'
-      index: true
-      nullable: true

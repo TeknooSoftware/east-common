@@ -26,9 +26,9 @@ namespace Teknoo\East\Website\Object;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class Media implements DeletableInterface, PublishableInterface
+class Media implements DeletableInterface
 {
-    use PublishableTrait;
+    use ObjectTrait;
 
     /**
      * @var string
@@ -168,16 +168,5 @@ class Media implements DeletableInterface, PublishableInterface
         }
 
         throw new \RuntimeException('Any resource are available for this media');
-    }
-
-    /**
-     * @param \DateTime $publishedAt
-     * @return Media
-     */
-    public function setPublishedAt(\DateTime $publishedAt): Media
-    {
-        $this->publishedAt = $publishedAt;
-
-        return $this;
     }
 }

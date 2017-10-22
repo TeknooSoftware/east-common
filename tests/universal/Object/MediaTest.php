@@ -35,7 +35,7 @@ use Teknoo\Tests\East\Website\Object\Traits\PublishableTestTrait;
  */
 class MediaTest extends \PHPUnit\Framework\TestCase
 {
-    use PublishableTestTrait;
+    use ObjectTestTrait;
 
     /**
      * @return Media

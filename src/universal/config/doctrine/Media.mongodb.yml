@@ -17,14 +17,6 @@ Teknoo\East\Website\Object\Media:
       type: 'file'
     length:
       type: 'int'
-    chunkSize:
-      type: 'int'
-      name: 'chunk_size'
-    md5:
-      type: 'string'
-    mimeType:
-      type: 'string'
-      name: 'mime_type'
     alternative:
       type: 'string'
     createdAt:

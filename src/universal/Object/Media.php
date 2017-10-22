@@ -48,6 +48,11 @@ class Media implements DeletableInterface, PublishableInterface
     /**
      * @var string
      */
+    private $mimeType;
+
+    /**
+     * @var string
+     */
     private $alternative;
 
     /**
@@ -107,6 +112,25 @@ class Media implements DeletableInterface, PublishableInterface
     public function setLength(int $length): Media
     {
         $this->length = $length;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMimeType(): string
+    {
+        return (string) $this->mimeType;
+    }
+
+    /**
+     * @param string $mimeType
+     * @return self
+     */
+    public function setMimeType(string $mimeType): Media
+    {
+        $this->mimeType = $mimeType;
 
         return $this;
     }

@@ -105,6 +105,36 @@ class MediaTest extends \PHPUnit\Framework\TestCase
         $this->buildObject()->setLength(new \stdClass());
     }
 
+    public function testGetMimeType()
+    {
+        self::assertEquals(
+            'fooBar',
+            $this->generateObjectPopulated(['mimeType' => 'fooBar'])->getMimeType()
+        );
+    }
+
+    public function testSetMimeType()
+    {
+        $Object = $this->buildObject();
+        self::assertInstanceOf(
+            \get_class($Object),
+            $Object->setMimeType('fooBar')
+        );
+
+        self::assertEquals(
+            'fooBar',
+            $Object->getMimeType()
+        );
+    }
+
+    /**
+     * @expectedException \Throwable
+     */
+    public function testSetMimeTypeExceptionOnBadArgument()
+    {
+        $this->buildObject()->setMimeType(new \stdClass());
+    }
+
     public function testGetAlternative()
     {
         self::assertEquals(

@@ -58,7 +58,7 @@ class MediaType extends AbstractType
 
                 if (!$contentObject instanceof Media
                     || !isset($data['image'])
-                    || $data['image'] instanceof UploadedFile) {
+                    || !$data['image'] instanceof UploadedFile) {
                     return;
                 }
 

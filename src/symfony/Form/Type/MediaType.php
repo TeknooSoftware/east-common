@@ -26,6 +26,10 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Teknoo\East\Website\Object\Media;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -43,6 +47,28 @@ class MediaType extends AbstractType
     {
         $builder->add('name', TextType::class, ['required' => true]);
         $builder->add('alternative', TextType::class, ['required' => true]);
-        $builder->add('file', FileType::class, ['required' => true]);
+        $builder->add('image', FileType::class, ['required' => true, 'mapped' => false]);
+
+        $builder->addEventListener(
+            FormEvents::PRE_SUBMIT,
+            function (FormEvent $event) {
+                $form = $event->getForm();
+                $data = $event->getData();
+                $contentObject = $form->getNormData();
+
+                if (!$contentObject instanceof Media
+                    || !isset($data['image'])
+                    || $data['image'] instanceof UploadedFile) {
+                    return;
+                }
+
+                /**
+                 * @var UploadedFile $image
+                 */
+                $image = $data['image'];
+                $contentObject->setFile($image->getPathname());
+                $contentObject->setLength($image->getSize());
+            }
+        );
     }
 }

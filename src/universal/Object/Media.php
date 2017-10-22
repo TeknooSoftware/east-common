@@ -46,21 +46,6 @@ class Media implements DeletableInterface, PublishableInterface
     private $length;
 
     /**
-     * @var int
-     * */
-    private $chunkSize;
-
-    /**
-     * @var string
-     */
-    private $md5;
-
-    /**
-     * @var string
-     */
-    private $mimeType;
-
-    /**
      * @var string
      */
     private $alternative;
@@ -100,6 +85,10 @@ class Media implements DeletableInterface, PublishableInterface
     {
         $this->file = $file;
 
+        if ($this->file instanceof \MongoGridFSFile) {
+            $this->length = $this->file->getSize();
+        }
+
         return $this;
     }
 
@@ -118,63 +107,6 @@ class Media implements DeletableInterface, PublishableInterface
     public function setLength(int $length): Media
     {
         $this->length = $length;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getChunkSize(): int
-    {
-        return (int) $this->chunkSize;
-    }
-
-    /**
-     * @param int $chunkSize
-     * @return self
-     */
-    public function setChunkSize(int $chunkSize): Media
-    {
-        $this->chunkSize = $chunkSize;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMd5(): string
-    {
-        return (string) $this->md5;
-    }
-
-    /**
-     * @param string $md5
-     * @return self
-     */
-    public function setMd5(string $md5): Media
-    {
-        $this->md5 = $md5;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMimeType(): string
-    {
-        return (string) $this->mimeType;
-    }
-
-    /**
-     * @param string $mimeType
-     * @return self
-     */
-    public function setMimeType(string $mimeType): Media
-    {
-        $this->mimeType = $mimeType;
 
         return $this;
     }

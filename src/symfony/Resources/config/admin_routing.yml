@@ -5,12 +5,12 @@ admin_category_list:
 
 admin_category_edit:
     path: '/category/edit/{id}'
-    methods:  ['GET', 'POST', 'PUST']
+    methods:  ['GET', 'POST', 'PUT']
     defaults: { _controller: 'teknoo.east.website.endpoint.admin.edit.category', isTranslatable: true }
 
 admin_category_new:
     path: '/category/new'
-    methods:  ['GET', 'POST', 'PUST']
+    methods:  ['GET', 'POST', 'PUT']
     defaults: { _controller: 'teknoo.east.website.endpoint.admin.new.category', editRoute: 'admin_category_edit', isTranslatable: true  }
 
 admin_category_delete:
@@ -25,18 +25,33 @@ admin_content_list:
 
 admin_content_edit:
     path: '/content/edit/{id}'
-    methods:  ['GET', 'POST', 'PUST']
+    methods:  ['GET', 'POST', 'PUT']
     defaults: { _controller: 'teknoo.east.website.endpoint.admin.edit.content', isTranslatable: true }
 
 admin_content_new:
     path: '/content/new'
-    methods:  ['GET', 'POST', 'PUST']
+    methods:  ['GET', 'POST', 'PUT']
     defaults: { _controller: 'teknoo.east.website.endpoint.admin.new.content', editRoute: 'admin_content_edit', isTranslatable: true }
 
 admin_content_delete:
     path: '/content/delete/{id}'
     methods:  ['GET']
     defaults: { _controller: 'teknoo.east.website.endpoint.admin.delete.content' }
+
+admin_media_list:
+    path: '/media/'
+    methods:  ['GET']
+    defaults: { _controller: 'teknoo.east.website.endpoint.admin.list.media' }
+
+admin_media_new:
+    path: '/media/new'
+    methods:  ['GET', 'POST', 'PUT']
+    defaults: { _controller: 'teknoo.east.website.endpoint.admin.new.media', editRoute: 'admin_media_edit' }
+
+admin_media_delete:
+    path: '/media/delete/{id}'
+    methods:  ['GET']
+    defaults: { _controller: 'teknoo.east.website.endpoint.admin.delete.media' }
 
 admin_type_list:
     path: '/types/'
@@ -45,12 +60,12 @@ admin_type_list:
 
 admin_type_edit:
     path: '/type/edit/{id}'
-    methods:  ['GET', 'POST', 'PUST']
+    methods:  ['GET', 'POST', 'PUT']
     defaults: { _controller: 'teknoo.east.website.endpoint.admin.edit.type' }
 
 admin_type_new:
     path: '/type/new'
-    methods:  ['GET', 'POST', 'PUST']
+    methods:  ['GET', 'POST', 'PUT']
     defaults: { _controller: 'teknoo.east.website.endpoint.admin.new.type', editRoute: 'admin_type_edit' }
 
 admin_type_delete:
@@ -65,12 +80,12 @@ admin_user_list:
 
 admin_user_edit:
     path: '/user/edit/{id}'
-    methods:  ['GET', 'POST', 'PUST']
+    methods:  ['GET', 'POST', 'PUT']
     defaults: { _controller: 'teknoo.east.website.endpoint.admin.edit.user' }
 
 admin_user_new:
     path: '/user/new'
-    methods:  ['GET', 'POST', 'PUST']
+    methods:  ['GET', 'POST', 'PUT']
     defaults: { _controller: 'teknoo.east.website.endpoint.admin.new.user', editRoute: 'admin_user_edit' }
 
 admin_user_delete:

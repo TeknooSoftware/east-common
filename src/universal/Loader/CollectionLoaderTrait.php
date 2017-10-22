@@ -52,6 +52,7 @@ trait CollectionLoaderTrait
         int $offset = null
     ): LoaderInterface {
         try {
+            $criteria['deletedAt'] = null;
             $promise->success($this->repository->findBy($criteria, $order, $limit, $offset));
         } catch (\Throwable $e) {
             $promise->fail($e);

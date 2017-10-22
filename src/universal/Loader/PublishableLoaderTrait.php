@@ -45,6 +45,7 @@ trait PublishableLoaderTrait
      */
     public function load(array $criteria, PromiseInterface $promise): LoaderInterface
     {
+        $criteria['deletedAt'] = null;
         $entity = $this->getRepository()->findOneBy($criteria);
 
         if (!empty($entity)) {

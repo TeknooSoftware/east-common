@@ -50,6 +50,7 @@ class TypeLoader implements LoaderInterface
      */
     public function load(array $criteria, PromiseInterface $promise): LoaderInterface
     {
+        $criteria['deletedAt'] = null;
         $entity = $this->repository->findOneBy($criteria);
 
         if ($entity instanceof Type) {

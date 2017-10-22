@@ -60,7 +60,7 @@ trait MediaEndPointTrait
            $id,
            new Promise(
                function (Media $media) use ($client) {
-                   $client->responseFromController(
+                   $client->acceptResponse(
                        new Response(
                            new Stream($media->getResource()),
                            200,

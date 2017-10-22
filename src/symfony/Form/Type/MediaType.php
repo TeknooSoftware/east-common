@@ -22,8 +22,8 @@
 
 namespace Teknoo\East\WebsiteBundle\Form\Type;
 
-use Doctrine\ODM\MongoDB\Types\FileType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 

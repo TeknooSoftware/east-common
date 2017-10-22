@@ -78,7 +78,8 @@ class MediaLoaderTest extends \PHPUnit\Framework\TestCase
             ->expects(self::any())
             ->method('findOneBy')
             ->with([
-                'id' => 'foo'
+                'id' => 'foo',
+                'deletedAt'=>null,
             ])
             ->willReturn(null);
 
@@ -106,7 +107,8 @@ class MediaLoaderTest extends \PHPUnit\Framework\TestCase
             ->expects(self::any())
             ->method('findOneBy')
             ->with([
-                'id' => 'foo'
+                'id' => 'foo',
+                'deletedAt'=>null,
             ])
             ->willReturn($entity);
 

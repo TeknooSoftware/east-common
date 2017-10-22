@@ -69,7 +69,7 @@ trait LoaderTestTrait
         $this->getRepositoryMock()
             ->expects(self::any())
             ->method('findOneBy')
-            ->with(['fooBar'=>true])
+            ->with(['fooBar'=>true, 'deletedAt'=>null])
             ->willReturn(null);
 
         /**
@@ -95,7 +95,7 @@ trait LoaderTestTrait
         $this->getRepositoryMock()
             ->expects(self::any())
             ->method('findOneBy')
-            ->with(['fooBar'=>true])
+            ->with(['fooBar'=>true, 'deletedAt'=>null])
             ->willReturn($entity);
 
         /**
@@ -134,7 +134,7 @@ trait LoaderTestTrait
     public function testLoadCollectionBadOrder()
     {
         $this->buildLoader()->loadCollection(
-            ['fooBar'=>true],
+            ['fooBar'=>true, 'deletedAt'=>null],
             $this->createMock(PromiseInterface::class),
             new \stdClass()
         );
@@ -146,7 +146,7 @@ trait LoaderTestTrait
     public function testLoadCollectionBadLimit()
     {
         $this->buildLoader()->loadCollection(
-            ['fooBar'=>true],
+            ['fooBar'=>true, 'deletedAt'=>null],
             $this->createMock(PromiseInterface::class),
             ['fooBar' => 'ASC'],
             new \stdClass()
@@ -159,7 +159,7 @@ trait LoaderTestTrait
     public function testLoadCollectionBadOffSet()
     {
         $this->buildLoader()->loadCollection(
-            ['fooBar'=>true],
+            ['fooBar'=>true, 'deletedAt'=>null],
             $this->createMock(PromiseInterface::class),
             ['fooBar' => 'ASC'],
             123,
@@ -173,7 +173,7 @@ trait LoaderTestTrait
         $this->getRepositoryMock()
             ->expects(self::any())
             ->method('findBy')
-            ->with(['fooBar'=>true], ['fooBar' => 'ASC'], 123, 456)
+            ->with(['fooBar'=>true, 'deletedAt'=>null], ['fooBar' => 'ASC'], 123, 456)
             ->willThrowException($e);
 
         /**
@@ -201,7 +201,7 @@ trait LoaderTestTrait
         $this->getRepositoryMock()
             ->expects(self::any())
             ->method('findBy')
-            ->with(['fooBar'=>true], ['fooBar' => 'ASC'], 123, 456)
+            ->with(['fooBar'=>true, 'deletedAt'=>null], ['fooBar' => 'ASC'], 123, 456)
             ->willReturn([]);
 
         /**
@@ -231,7 +231,7 @@ trait LoaderTestTrait
         $this->getRepositoryMock()
             ->expects(self::any())
             ->method('findBy')
-            ->with(['fooBar'=>true], ['fooBar' => 'ASC'], 123, 456)
+            ->with(['fooBar'=>true, 'deletedAt'=>null], ['fooBar' => 'ASC'], 123, 456)
             ->willReturn([$entity]);
 
         /**

@@ -79,7 +79,7 @@ class CategoryLoaderTest extends \PHPUnit\Framework\TestCase
         $this->getRepositoryMock()
             ->expects(self::any())
             ->method('findBy')
-            ->with(['slug' => 'abc', 'children' => []])
+            ->with(['slug' => 'abc', 'children' => [], 'deletedAt'=>null])
             ->willReturn([$entity]);
 
         /**
@@ -106,7 +106,7 @@ class CategoryLoaderTest extends \PHPUnit\Framework\TestCase
         $this->getRepositoryMock()
             ->expects(self::any())
             ->method('findBy')
-            ->with(['children' => []])
+            ->with(['children' => [], 'deletedAt'=>null])
             ->willReturn([$entity]);
 
         /**

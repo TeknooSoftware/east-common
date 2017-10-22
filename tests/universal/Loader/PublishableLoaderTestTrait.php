@@ -54,7 +54,7 @@ trait PublishableLoaderTestTrait
         $this->getRepositoryMock()
             ->expects(self::any())
             ->method('findOneBy')
-            ->with(['fooBar'=>true])
+            ->with(['fooBar'=>true, 'deletedAt'=>null])
             ->willReturn(null);
 
         /**
@@ -81,7 +81,7 @@ trait PublishableLoaderTestTrait
         $this->getRepositoryMock()
             ->expects(self::any())
             ->method('findOneBy')
-            ->with(['fooBar'=>true])
+            ->with(['fooBar'=>true, 'deletedAt'=>null])
             ->willReturn($entity);
 
         /**
@@ -105,7 +105,7 @@ trait PublishableLoaderTestTrait
         $this->getRepositoryMock()
             ->expects(self::any())
             ->method('findOneBy')
-            ->with(['fooBar'=>true])
+            ->with(['fooBar'=>true, 'deletedAt'=>null])
             ->willReturn($entity);
 
         /**

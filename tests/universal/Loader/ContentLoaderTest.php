@@ -79,6 +79,7 @@ class ContentLoaderTest extends \PHPUnit\Framework\TestCase
             ->method('findOneBy')
             ->with([
                 'slug' => 'foo',
+                'deletedAt'=>null,
             ])
             ->willReturn(null);
 
@@ -108,6 +109,7 @@ class ContentLoaderTest extends \PHPUnit\Framework\TestCase
             ->method('findOneBy')
             ->with([
                 'slug' => 'foo',
+                'deletedAt'=>null,
             ])
             ->willReturn($entity);
 

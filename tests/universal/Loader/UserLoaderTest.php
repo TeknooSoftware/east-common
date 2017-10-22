@@ -76,7 +76,7 @@ class UserLoaderTest extends \PHPUnit\Framework\TestCase
         $this->getRepositoryMock()
             ->expects(self::any())
             ->method('findOneBy')
-            ->with(['email'=>'foo@bar'])
+            ->with(['email'=>'foo@bar', 'deletedAt'=>null])
             ->willReturn(null);
 
         /**
@@ -102,7 +102,7 @@ class UserLoaderTest extends \PHPUnit\Framework\TestCase
         $this->getRepositoryMock()
             ->expects(self::any())
             ->method('findOneBy')
-            ->with(['email'=>'foo@bar'])
+            ->with(['email'=>'foo@bar', 'deletedAt'=>null])
             ->willReturn($entity);
 
         /**

@@ -46,7 +46,7 @@ admin_media_list:
 admin_media_new:
     path: '/media/new'
     methods:  ['GET', 'POST', 'PUT']
-    defaults: { _controller: 'teknoo.east.website.endpoint.admin.new.media', editRoute: 'admin_media_edit' }
+    defaults: { _controller: 'teknoo.east.website.endpoint.admin.new.media', editRoute: 'admin_media_list' }
 
 admin_media_delete:
     path: '/media/delete/{id}'

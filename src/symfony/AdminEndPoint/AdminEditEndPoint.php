@@ -43,14 +43,21 @@ class AdminEditEndPoint implements EndPointInterface
      * @param ClientInterface $client
      * @param string $id
      * @param bool $isTranslatable
+     * @param string|null $viewPath
      * @return self
      */
     public function __invoke(
         ServerRequestInterface $request,
         ClientInterface $client,
         string $id,
-        bool $isTranslatable=false
+        bool $isTranslatable=false,
+        string $viewPath =null
     ) {
+
+        if (null == $viewPath) {
+            $viewPath = $this->viewPath;
+        }
+
         $this->loader->load(
             ['id' => $id],
             new Promise(
@@ -63,7 +70,7 @@ class AdminEditEndPoint implements EndPointInterface
                             function ($object) use ($client, $form, $request, $isTranslatable) {
                                 $this->render(
                                     $client,
-                                    $this->viewPath,
+                                    $viewPath,
                                     [
                                         'objectInstance' => $object,
                                         'formView' => $form->createView(),
@@ -82,7 +89,7 @@ class AdminEditEndPoint implements EndPointInterface
 
                     $this->render(
                         $client,
-                        $this->viewPath,
+                        $viewPath,
                         [
                             'objectInstance' => $object,
                             'formView' => $form->createView(),

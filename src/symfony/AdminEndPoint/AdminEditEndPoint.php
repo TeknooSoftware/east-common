@@ -61,13 +61,13 @@ class AdminEditEndPoint implements EndPointInterface
         $this->loader->load(
             ['id' => $id],
             new Promise(
-                function ($object) use ($client, $request, $isTranslatable) {
+                function ($object) use ($client, $request, $isTranslatable, $viewPath) {
                     $form = $this->createForm($object);
                     $form->handleRequest($request->getAttribute('request'));
 
                     if ($form->isSubmitted() && $form->isValid()) {
                         $this->writer->save($object, new Promise(
-                            function ($object) use ($client, $form, $request, $isTranslatable) {
+                            function ($object) use ($client, $form, $request, $isTranslatable, $viewPath) {
                                 $this->render(
                                     $client,
                                     $viewPath,

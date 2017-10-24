@@ -41,23 +41,29 @@ class AdminListEndPoint implements EndPointInterface
      * @param ServerRequestInterface $request
      * @param ClientInterface $client
      * @param int $page
+     * @param string|null $viewPath
      * @return self
      */
     public function __invoke(
         ServerRequestInterface $request,
         ClientInterface $client,
-        int $page=1
+        int $page=1,
+        string $viewPath =null
     ) :AdminListEndPoint {
         if ($page < 1) {
             $page = 1;
         }
 
+        if (null == $viewPath) {
+            $viewPath = $this->viewPath;
+        }
+
         $this->loader->loadCollection(
             [],
-            new Promise(function ($objects) use ($client, $page) {
+            new Promise(function ($objects) use ($client, $page, $viewPath) {
                 $this->render(
                     $client,
-                    $this->viewPath,
+                    $viewPath,
                     [
                         'objectsCollection' => $objects,
                         'page' => $page

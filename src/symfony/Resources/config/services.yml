@@ -59,7 +59,6 @@ services:
     class: '%teknoo.east.website.endpoint.content.class%'
     arguments:
       - '@Teknoo\East\Website\Loader\ContentLoader'
-      - '@Teknoo\East\Website\Service\MenuGenerator'
     calls:
       - ['setTwig', ['@twig']]
 

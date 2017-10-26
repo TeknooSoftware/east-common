@@ -35,6 +35,7 @@ use Teknoo\East\Website\Loader\MediaLoader;
 use Teknoo\East\Website\Loader\TypeLoader;
 use Teknoo\East\Website\Loader\UserLoader;
 use Teknoo\East\Website\Middleware\LocaleMiddleware;
+use Teknoo\East\Website\Middleware\MenuMiddleware;
 use Teknoo\East\Website\Object\Category;
 use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Object\Media;
@@ -90,8 +91,11 @@ return [
     'teknoo.east.website.deleting.user' => object(DeletingService::class)
         ->constructor(get(UserWriter::class)),
 
+    //Menu
     MenuGenerator::class => object(MenuGenerator::class)
         ->constructor(get(CategoryLoader::class)),
+    MenuMiddleware::class => object(MenuMiddleware::class)
+        ->constructor(get(MenuGenerator::class)),
 
     //Middleware
     LocaleMiddleware::class => function (ContainerInterface $container): LocaleMiddleware {

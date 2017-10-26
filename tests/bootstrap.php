@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East CodeRunnerBundle.
+ * East Website.
  *
  * LICENSE
  *
@@ -14,13 +14,11 @@
  *
  * @copyright   Copyright (c) 2009-2017 Richard Déloge (richarddeloge@gmail.com)
  *
- * @link        http://teknoo.software/east/coderunner Project website
+ * @link        http://teknoo.software/east/website Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-
-namespace Teknoo\Tests\East\CodeRunnerBundle;
 
 date_default_timezone_set('UTC');
 
@@ -29,3 +27,16 @@ error_reporting(E_ALL | E_STRICT);
 ini_set('memory_limit', '24M');
 
 include __DIR__.'/../vendor/autoload.php';
+
+if (!\class_exists(\MongoGridFSFile::class)) {
+    /*
+     * To avoid error on test where mongodb lib is not installed
+     */
+    class MongoGridFSFile
+    {
+        public function getSize()
+        {
+
+        }
+    }
+}

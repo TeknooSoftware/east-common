@@ -22,9 +22,9 @@
 
 namespace Teknoo\Tests\East\Website\Object;
 
+use Doctrine\MongoDB\GridFSFile;
 use Teknoo\Tests\East\Website\Object\Traits\ObjectTestTrait;
 use Teknoo\East\Website\Object\Media;
-use Teknoo\Tests\East\Website\Object\Traits\PublishableTestTrait;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -55,15 +55,15 @@ class MediaTest extends \PHPUnit\Framework\TestCase
 
     public function testSetName()
     {
-        $Object = $this->buildObject();
+        $object = $this->buildObject();
         self::assertInstanceOf(
-            \get_class($Object),
-            $Object->setName('fooBar')
+            \get_class($object),
+            $object->setName('fooBar')
         );
 
         self::assertEquals(
             'fooBar',
-            $Object->getName()
+            $object->getName()
         );
     }
 
@@ -85,15 +85,15 @@ class MediaTest extends \PHPUnit\Framework\TestCase
 
     public function testSetLength()
     {
-        $Object = $this->buildObject();
+        $object = $this->buildObject();
         self::assertInstanceOf(
-            \get_class($Object),
-            $Object->setLength(123)
+            \get_class($object),
+            $object->setLength(123)
         );
 
         self::assertEquals(
             123,
-            $Object->getLength()
+            $object->getLength()
         );
     }
 
@@ -115,15 +115,15 @@ class MediaTest extends \PHPUnit\Framework\TestCase
 
     public function testSetMimeType()
     {
-        $Object = $this->buildObject();
+        $object = $this->buildObject();
         self::assertInstanceOf(
-            \get_class($Object),
-            $Object->setMimeType('fooBar')
+            \get_class($object),
+            $object->setMimeType('fooBar')
         );
 
         self::assertEquals(
             'fooBar',
-            $Object->getMimeType()
+            $object->getMimeType()
         );
     }
 
@@ -145,15 +145,15 @@ class MediaTest extends \PHPUnit\Framework\TestCase
 
     public function testSetAlternative()
     {
-        $Object = $this->buildObject();
+        $object = $this->buildObject();
         self::assertInstanceOf(
-            \get_class($Object),
-            $Object->setAlternative('fooBar')
+            \get_class($object),
+            $object->setAlternative('fooBar')
         );
 
         self::assertEquals(
             'fooBar',
-            $Object->getAlternative()
+            $object->getAlternative()
         );
     }
 
@@ -175,15 +175,37 @@ class MediaTest extends \PHPUnit\Framework\TestCase
 
     public function testSetFile()
     {
-        $Object = $this->buildObject();
+        $object = $this->buildObject();
         self::assertInstanceOf(
-            \get_class($Object),
-            $Object->setFile('fooBar')
+            \get_class($object),
+            $object->setFile('fooBar')
         );
 
         self::assertEquals(
             'fooBar',
-            $Object->getFile()
+            $object->getFile()
+        );
+    }
+
+    public function testSetFileWithLength()
+    {
+        $mongoFile = $this->createMock(\MongoGridFSFile::class);
+        $mongoFile->expects($this->any())->method('getSize')->willReturn(123);
+        
+        $object = $this->buildObject();
+        self::assertInstanceOf(
+            \get_class($object),
+            $object->setFile($mongoFile)
+        );
+
+        self::assertEquals(
+            $mongoFile,
+            $object->getFile()
+        );
+
+        self::assertEquals(
+            123,
+            $object->getLength()
         );
     }
 
@@ -216,6 +238,22 @@ class MediaTest extends \PHPUnit\Framework\TestCase
         self::assertEquals(
             $resource,
             $this->generateObjectPopulated(['file' => $file])->getResource()
+        );
+    }
+
+    public function testGetResourceFromMongo()
+    {
+        $resource = \fopen('php://memory', 'r');
+        $file = $this->getMockBuilder('MongoGridFSFileMock')->setMethods(['getResource'])->getMock();
+        $file->expects($this->any())->method('getResource')->willReturn($resource);
+
+
+        $mongoFile = $this->createMock(GridFSFile::class);
+        $mongoFile->expects($this->any())->method('getMongoGridFSFile')->willReturn($file);
+
+        self::assertEquals(
+            $resource,
+            $this->generateObjectPopulated(['file' => $mongoFile])->getResource()
         );
     }
 }

@@ -38,7 +38,7 @@ use Zend\Diactoros\Response\TextResponse;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers      \Teknoo\East\Website\EndPoint\ContentEndPointTrait;
+ * @covers      \Teknoo\East\Website\EndPoint\ContentEndPointTrait
  */
 class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
 {

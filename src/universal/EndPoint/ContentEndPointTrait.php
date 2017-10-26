@@ -26,6 +26,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Website\Loader\ContentLoader;
+use Teknoo\East\Website\Middleware\ViewParameterInterface;
 use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Service\MenuGenerator;
 
@@ -41,19 +42,12 @@ trait ContentEndPointTrait
     private $contentLoader;
 
     /**
-     * @var MenuGenerator
-     */
-    private $menuGenerator;
-
-    /**
      * ContentEndPointTrait constructor.
      * @param ContentLoader $contentLoader
-     * @param MenuGenerator $menuGenerator
      */
-    public function __construct(ContentLoader $contentLoader, MenuGenerator $menuGenerator)
+    public function __construct(ContentLoader $contentLoader)
     {
         $this->contentLoader = $contentLoader;
-        $this->menuGenerator = $menuGenerator;
     }
 
     /**
@@ -84,15 +78,15 @@ trait ContentEndPointTrait
         $this->contentLoader->bySlug(
             $contentSlug,
             new Promise(
-                function (Content $content) use ($client) {
+                function (Content $content) use ($client, $request) {
                     $type = $content->getType();
+                    $viewParameters = $request->getAttribute(ViewParameterInterface::REQUEST_PARAMETER_KEY, []);
+                    $viewParameters = \array_merge($viewParameters, ['content' => $content]);
+
                     $this->render(
                         $client,
                         $type->getTemplate(),
-                        [
-                            'content' => $content,
-                            'menuGenerator' => $this->menuGenerator,
-                        ]
+                        $viewParameters
                     );
                 },
                 function (\Throwable $e) use ($client) {

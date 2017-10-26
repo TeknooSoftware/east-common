@@ -30,9 +30,9 @@ use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
 use Teknoo\East\Website\EndPoint\ContentEndPointTrait;
 use Teknoo\East\Website\Loader\ContentLoader;
+use Teknoo\East\Website\Middleware\ViewParameterInterface;
 use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Object\Type;
-use Teknoo\East\Website\Service\MenuGenerator;
 use Zend\Diactoros\Response\TextResponse;
 
 /**
@@ -48,11 +48,6 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
     private $contentLoader;
 
     /**
-     * @var MenuGenerator
-     */
-    private $menuGenerator;
-
-    /**
      * @return ContentLoader|\PHPUnit_Framework_MockObject_MockObject
      */
     public function getContentLoader(): ContentLoader
@@ -65,25 +60,13 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @return MenuGenerator|\PHPUnit_Framework_MockObject_MockObject
-     */
-    public function getMenuGenerator(): MenuGenerator
-    {
-        if (!$this->menuGenerator instanceof MenuGenerator) {
-            $this->menuGenerator = $this->createMock(MenuGenerator::class);
-        }
-
-        return $this->menuGenerator;
-    }
-
-    /**
      * @return EndPointInterface
      */
     public function buildEndPoint(): EndPointInterface
     {
         $contentLoader = $this->getContentLoader();
-        $menuGenerator = $this->getMenuGenerator();
-        return new class ($contentLoader, $menuGenerator) implements EndPointInterface
+
+        return new class ($contentLoader) implements EndPointInterface
         {
             use EastEndPointTrait;
             use ContentEndPointTrait;
@@ -93,6 +76,14 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
              */
             public function render(ClientInterface $client, string $view, array $parameters = array()): EndPointInterface
             {
+                if (!isset($parameters['content'])) {
+                    throw new \Exception('missing content key in view parameters');
+                }
+
+                if (!isset($parameters['foo']) || 'bar' != $parameters['foo']) {
+                    throw new \Exception('missing foo key in view parameters');
+                }
+
                 $client->acceptResponse(new TextResponse($view.':executed'));
                 return $this;
             }
@@ -186,6 +177,12 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
             ->method('getUri')
             ->willReturn('/category/sub/foo-bar');
 
+        $request->expects(self::any())
+            ->method('getAttribute')
+            ->willReturnMap([
+                [ViewParameterInterface::REQUEST_PARAMETER_KEY, [], ['foo'=>'bar']]
+            ]);
+
         self::assertInstanceOf(
             EndPointInterface::class,
             $this->buildEndPoint()($client, $request)
@@ -228,6 +225,12 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
         $request->expects(self::any())
             ->method('getUri')
             ->willReturn('/');
+
+        $request->expects(self::any())
+            ->method('getAttribute')
+            ->willReturnMap([
+                [ViewParameterInterface::REQUEST_PARAMETER_KEY, [], ['foo'=>'bar']]
+            ]);
 
         self::assertInstanceOf(
             EndPointInterface::class,

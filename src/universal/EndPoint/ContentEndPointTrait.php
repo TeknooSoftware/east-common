@@ -62,17 +62,17 @@ trait ContentEndPointTrait
      */
     private function parseUrl(ServerRequestInterface $request): array
     {
-        return \explode('\\', \trim('/', $request->getUri()));
+        return \explode('/', \trim($request->getUri(), '/'));
     }
 
     /**
-     * @param ServerRequestInterface $request
      * @param ClientInterface $client
+     * @param ServerRequestInterface $request
      * @return self
      */
     public function __invoke(
-        ServerRequestInterface $request,
-        ClientInterface $client
+        ClientInterface $client,
+        ServerRequestInterface $request
     ) {
         $urlParts = $this->parseUrl($request);
         $contentSlug = \array_pop($urlParts);

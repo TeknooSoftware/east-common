@@ -22,9 +22,14 @@
 
 namespace Teknoo\Tests\East\Website\EndPoint;
 
+use Psr\Http\Message\ResponseInterface;
 use Teknoo\East\Foundation\EndPoint\EndPointInterface;
+use Teknoo\East\Foundation\Http\ClientInterface;
+use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
 use Teknoo\East\Website\EndPoint\MediaEndPointTrait;
+use Teknoo\East\Website\Loader\MediaLoader;
+use Teknoo\East\Website\Object\Media;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -34,14 +39,118 @@ use Teknoo\East\Website\EndPoint\MediaEndPointTrait;
 class MediaEndPointTraitTest extends \PHPUnit\Framework\TestCase
 {
     /**
+     * @var MediaLoader
+     */
+    private $mediaLoader;
+
+    /**
+     * @return MediaLoader|\PHPUnit_Framework_MockObject_MockObject
+     */
+    public function getMediaLoader(): MediaLoader
+    {
+        if (!$this->mediaLoader instanceof MediaLoader) {
+            $this->mediaLoader = $this->createMock(MediaLoader::class);
+        }
+
+        return $this->mediaLoader;
+    }
+
+    /**
      * @return EndPointInterface
      */
     public function buildEndPoint(): EndPointInterface
     {
-        return new class implements EndPointInterface
+        $mediaLoader = $this->getMediaLoader();
+        return new class ($mediaLoader) implements EndPointInterface
         {
             use EastEndPointTrait;
             use MediaEndPointTrait;
         };
+    }
+
+    /**
+     * @expectedException \TypeError
+     */
+    public function testInvokeBadClient()
+    {
+        $this->buildEndPoint()(new \stdClass(), 'fooBar');
+    }
+
+    /**
+     * @expectedException \TypeError
+     */
+    public function testInvokeBadId()
+    {
+        $this->buildEndPoint()(
+            $this->createMock(ClientInterface::class),
+            new \stdClass()
+        );
+    }
+
+    public function testInvokeFound()
+    {
+        $client = $this->createMock(ClientInterface::class);
+        $client->expects(self::once())
+            ->method('acceptResponse')
+            ->with($this->callback(function ($value) {
+                if ($value instanceof ResponseInterface) {
+                    return 'fooBarContent' == (string) $value->getBody();
+                }
+
+                return false;
+            }))
+            ->willReturnSelf();
+
+        $client->expects(self::never())->method('errorInRequest');
+
+        $this->getMediaLoader()
+            ->expects(self::any())
+            ->method('byId')
+            ->with('fooBar')
+            ->willReturnCallback(function ($id, PromiseInterface $promise) {
+                $media = new Media();
+                $media->setFile(new class {
+                    public function getResource()
+                    {
+                        $hf = fopen('php://memory', 'rw+');
+                        fwrite($hf, 'fooBarContent');
+                        return $hf;
+                    }
+                });
+                $promise->success($media);
+
+                return $this->getMediaLoader();
+            });
+
+        self::assertInstanceOf(
+            EndPointInterface::class,
+            $this->buildEndPoint()($client, 'fooBar')
+        );
+    }
+
+    public function testInvokeNotFound()
+    {
+        $client = $this->createMock(ClientInterface::class);
+        $client->expects(self::never())
+            ->method('acceptResponse');
+
+        $client->expects(self::once())
+            ->method('errorInRequest')
+            ->willReturnSelf();
+
+        $this->getMediaLoader()
+            ->expects(self::any())
+            ->method('byId')
+            ->with('fooBar')
+            ->willReturnCallback(function ($id, PromiseInterface $promise) {
+                $promise->fail(new \DomainException());
+
+                return $this->getMediaLoader();
+            });
+
+        self::assertInstanceOf(
+            EndPointInterface::class,
+            $this->buildEndPoint()($client, 'fooBar')
+        );
     }
 }

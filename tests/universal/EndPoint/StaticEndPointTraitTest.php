@@ -22,9 +22,12 @@
 
 namespace Teknoo\Tests\East\Website\EndPoint;
 
+use Psr\Http\Message\ResponseInterface;
 use Teknoo\East\Foundation\EndPoint\EndPointInterface;
+use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
 use Teknoo\East\Website\EndPoint\StaticEndPointTrait;
+use Zend\Diactoros\Response;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -42,6 +45,54 @@ class StaticEndPointTraitTest extends \PHPUnit\Framework\TestCase
         {
             use EastEndPointTrait;
             use StaticEndPointTrait;
+
+            /**
+             * {@inheritdoc}
+             */
+            public function render(ClientInterface $client, string $view, array $parameters = array()): EndPointInterface
+            {
+                $client->acceptResponse(new Response\TextResponse($view.':executed'));
+                return $this;
+            }
         };
+    }
+
+    /**
+     * @expectedException \TypeError
+     */
+    public function testInvokeBadClient()
+    {
+        $this->buildEndPoint()(new \stdClass(), 'fooBar');
+    }
+
+    /**
+     * @expectedException \TypeError
+     */
+    public function testInvokeBadTemplate()
+    {
+        $this->buildEndPoint()(
+            $this->createMock(ClientInterface::class),
+            new \stdClass()
+        );
+    }
+
+    public function testInvoke()
+    {
+        $client = $this->createMock(ClientInterface::class);
+        $client->expects(self::once())
+            ->method('acceptResponse')
+            ->with($this->callback(function ($value) {
+                if ($value instanceof ResponseInterface) {
+                    return 'fooBar:executed' == (string) $value->getBody();
+                }
+
+                return false;
+            }))
+            ->willReturnSelf();
+
+        self::assertInstanceOf(
+            EndPointInterface::class,
+            $this->buildEndPoint()($client, 'fooBar')
+        );
     }
 }

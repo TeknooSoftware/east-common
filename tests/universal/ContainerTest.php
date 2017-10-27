@@ -23,6 +23,7 @@
 namespace Teknoo\Tests\East\Website;
 
 use DI\Container;
+use DI\ContainerBuilder;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Gedmo\Translatable\TranslatableListener;
@@ -252,6 +253,33 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
 
     public function testEastManagerMiddlewareInjection()
     {
+        $containerDefinition = new ContainerBuilder();
+        $containerDefinition->addDefinitions(__DIR__.'/../../vendor/teknoo/east-foundation/src/universal/di.php');
+        $containerDefinition->addDefinitions(__DIR__.'/../../src/universal/di.php');
 
+        $container = $containerDefinition->build();
+
+        $objectManager = $this->createMock(ObjectManager::class);
+        $objectManager->expects(self::any())->method('getRepository')->willReturn(
+            $this->createMock(ObjectRepository::class)
+        );
+
+        $container->set(LoggerInterface::class, $this->createMock(LoggerInterface::class));
+        $container->set(ObjectManager::class, $objectManager);
+
+        $manager1 = $container->get(Manager::class);
+        $manager2 = $container->get(ManagerInterface::class);
+
+        self::assertInstanceOf(
+            Manager::class,
+            $manager1
+        );
+
+        self::assertInstanceOf(
+            Manager::class,
+            $manager2
+        );
+
+        self::assertSame($manager1, $manager2);
     }
 }

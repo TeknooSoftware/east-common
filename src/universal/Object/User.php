@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * East Website.
  *
@@ -71,7 +73,7 @@ class User implements DeletableInterface
     public function __construct()
     {
         //initialize for new user
-        $this->salt = \sha1(\uniqid(null, true));
+        $this->salt = \sha1(\uniqid('', true));
     }
 
     /**

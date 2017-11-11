@@ -30,7 +30,6 @@ use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Website\Loader\ContentLoader;
 use Teknoo\East\Website\Middleware\ViewParameterInterface;
 use Teknoo\East\Website\Object\Content;
-use Teknoo\East\Website\Service\MenuGenerator;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License

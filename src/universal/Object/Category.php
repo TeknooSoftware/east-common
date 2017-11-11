@@ -28,10 +28,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Translatable\Translatable;
 use Teknoo\East\Website\Object\Category\Hidden;
 use Teknoo\East\Website\Object\Category\Available;
-use Teknoo\States\LifeCycle\StatedClass\Automated\Assertion\Assertion;
-use Teknoo\States\LifeCycle\StatedClass\Automated\Assertion\Property\IsEqual;
-use Teknoo\States\LifeCycle\StatedClass\Automated\AutomatedInterface;
-use Teknoo\States\LifeCycle\StatedClass\Automated\AutomatedTrait;
+use Teknoo\States\Automated\Assertion\Property;
+use Teknoo\States\Automated\Assertion\Property\IsEqual;
+use Teknoo\States\Automated\AutomatedInterface;
+use Teknoo\States\Automated\AutomatedTrait;
 use Teknoo\States\Proxy\ProxyInterface;
 use Teknoo\States\Proxy\ProxyTrait;
 
@@ -109,11 +109,12 @@ class Category implements ProxyInterface, AutomatedInterface, Translatable, Dele
     /**
      * {@inheritdoc}
      */
-    public function getStatesAssertions(): array
+    protected function listAssertions(): array
+
     {
         return [
-            (new Assertion([Hidden::class]))->with('hidden', new IsEqual(true)),
-            (new Assertion([Available::class]))->with('hidden', new IsEqual(false)),
+            (new Property([Hidden::class]))->with('hidden', new IsEqual(true)),
+            (new Property([Available::class]))->with('hidden', new IsEqual(false)),
         ];
     }
 

@@ -5,6 +5,12 @@
     "type": "library",
     "keywords": ["east","website","cms"],
     "homepage": "http://teknoo.software/website",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@bitbucket.org:teknoosoftware/recipe.git"
+        }
+    ],
     "authors": [
         {
             "name": "Richard Déloge",
@@ -30,10 +36,10 @@
         "doctrine/annotations": "~1.5",
         "gedmo/doctrine-extensions": "~2.4",
         "lexik/translation-bundle": "~4.0",
+        "teknoo/recipe": "dev-master",
         "teknoo/east-foundation": "dev-master",
         "teknoo/immutable": "^0.0.3",
-        "teknoo/states": "^3.1.0-RC1",
-        "teknoo/states-life-cycle": "^3.0.0-beta3",
+        "teknoo/states": "^3.2.0-beta3",
         "php-di/php-di": "^5.4.1"
     },
     "require-dev": {

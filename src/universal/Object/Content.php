@@ -28,11 +28,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Translatable\Translatable;
 use Teknoo\East\Website\Object\Content\Draft;
 use Teknoo\East\Website\Object\Content\Published;
-use Teknoo\States\LifeCycle\StatedClass\Automated\Assertion\Assertion;
-use Teknoo\States\LifeCycle\StatedClass\Automated\Assertion\Property\IsInstanceOf;
-use Teknoo\States\LifeCycle\StatedClass\Automated\Assertion\Property\IsNotInstanceOf;
-use Teknoo\States\LifeCycle\StatedClass\Automated\AutomatedInterface;
-use Teknoo\States\LifeCycle\StatedClass\Automated\AutomatedTrait;
+use Teknoo\States\Automated\Assertion\Property;
+use Teknoo\States\Automated\Assertion\Property\IsInstanceOf;
+use Teknoo\States\Automated\Assertion\Property\IsNotInstanceOf;
+use Teknoo\States\Automated\AutomatedInterface;
+use Teknoo\States\Automated\AutomatedTrait;
 use Teknoo\States\Proxy\ProxyInterface;
 use Teknoo\States\Proxy\ProxyTrait;
 
@@ -120,11 +120,11 @@ class Content implements ProxyInterface, AutomatedInterface, Translatable, Delet
     /**
      * {@inheritdoc}
      */
-    public function getStatesAssertions(): array
+    protected function listAssertions(): array
     {
         return [
-            (new Assertion([Draft::class]))->with('publishedAt', new IsNotInstanceOf(\DateTime::class)),
-            (new Assertion([Published::class]))->with('publishedAt', new IsInstanceOf(\DateTime::class)),
+            (new Property([Draft::class]))->with('publishedAt', new IsNotInstanceOf(\DateTime::class)),
+            (new Property([Published::class]))->with('publishedAt', new IsInstanceOf(\DateTime::class)),
         ];
     }
 

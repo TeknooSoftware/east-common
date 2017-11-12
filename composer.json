@@ -36,10 +36,10 @@
         "doctrine/annotations": "~1.5",
         "gedmo/doctrine-extensions": "~2.4",
         "lexik/translation-bundle": "~4.0",
-        "teknoo/recipe": "dev-master",
-        "teknoo/east-foundation": "dev-master",
-        "teknoo/immutable": "^0.0.3",
-        "teknoo/states": "^3.2.0-beta3",
+        "teknoo/recipe": "1.0.0-beta1",
+        "teknoo/east-foundation": "0.0.5-beta3",
+        "teknoo/immutable": "~1.0",
+        "teknoo/states": "^3.2.0-beta4",
         "php-di/php-di": "^5.4.1"
     },
     "require-dev": {

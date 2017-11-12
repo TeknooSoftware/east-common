@@ -26,7 +26,7 @@ namespace Teknoo\East\Website;
 
 use function DI\get;
 use function DI\decorate;
-use function DI\create;
+use function DI\object;
 use Doctrine\Common\Persistence\ObjectManager;
 use Gedmo\Translatable\TranslatableListener;
 use Psr\Container\ContainerInterface;
@@ -70,33 +70,33 @@ return [
     },
 
     //Writer
-    CategoryWriter::class => create(CategoryWriter::class)
+    CategoryWriter::class => object(CategoryWriter::class)
         ->constructor(get(ObjectManager::class)),
-    ContentWriter::class => create(ContentWriter::class)
+    ContentWriter::class => object(ContentWriter::class)
         ->constructor(get(ObjectManager::class)),
-    MediaWriter::class => create(MediaWriter::class)
+    MediaWriter::class => object(MediaWriter::class)
         ->constructor(get(ObjectManager::class)),
-    TypeWriter::class => create(TypeWriter::class)
+    TypeWriter::class => object(TypeWriter::class)
         ->constructor(get(ObjectManager::class)),
-    UserWriter::class => create(UserWriter::class)
+    UserWriter::class => object(UserWriter::class)
         ->constructor(get(ObjectManager::class)),
 
     //Deleting
-    'teknoo.east.website.deleting.category' => create(DeletingService::class)
+    'teknoo.east.website.deleting.category' => object(DeletingService::class)
         ->constructor(get(CategoryWriter::class)),
-    'teknoo.east.website.deleting.content' => create(DeletingService::class)
+    'teknoo.east.website.deleting.content' => object(DeletingService::class)
         ->constructor(get(ContentWriter::class)),
-    'teknoo.east.website.deleting.media' => create(DeletingService::class)
+    'teknoo.east.website.deleting.media' => object(DeletingService::class)
         ->constructor(get(MediaWriter::class)),
-    'teknoo.east.website.deleting.type' => create(DeletingService::class)
+    'teknoo.east.website.deleting.type' => object(DeletingService::class)
         ->constructor(get(TypeWriter::class)),
-    'teknoo.east.website.deleting.user' => create(DeletingService::class)
+    'teknoo.east.website.deleting.user' => object(DeletingService::class)
         ->constructor(get(UserWriter::class)),
 
     //Menu
-    MenuGenerator::class => create(MenuGenerator::class)
+    MenuGenerator::class => object(MenuGenerator::class)
         ->constructor(get(CategoryLoader::class)),
-    MenuMiddleware::class => create(MenuMiddleware::class)
+    MenuMiddleware::class => object(MenuMiddleware::class)
         ->constructor(get(MenuGenerator::class)),
 
     //Middleware

@@ -22,12 +22,17 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\Object;
 
+use Teknoo\East\WebsiteBundle\Object\User;
+
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers      \
+ * @covers      \Teknoo\East\WebsiteBundle\Object\User
  */
 class UserTest extends \PHPUnit\Framework\TestCase
 {
-
+    public function buildObject(): User
+    {
+        return new User();
+    }
 }

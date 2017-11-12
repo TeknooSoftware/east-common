@@ -22,12 +22,17 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\Form\Type;
 
+use Teknoo\East\WebsiteBundle\Form\Type\UserType;
+
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers      \
+ * @covers      \Teknoo\East\WebsiteBundle\Form\Type\UserType
  */
 class UserTypeTest extends \PHPUnit\Framework\TestCase
 {
-
+    public function buildForm(): UserType
+    {
+        return new UserType;
+    }
 }

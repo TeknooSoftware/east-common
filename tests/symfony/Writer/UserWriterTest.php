@@ -22,12 +22,18 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\Writer;
 
+use Teknoo\East\WebsiteBundle\Writer\UserWriter;
+
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers      \
+ * @covers      \Teknoo\East\WebsiteBundle\Writer\UserWriter
  */
 class UserWriterTest extends \PHPUnit\Framework\TestCase
 {
 
+    public function buildWriter(): UserWriter
+    {
+        return new UserWriter();
+    }
 }

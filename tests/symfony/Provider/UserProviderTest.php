@@ -22,12 +22,17 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\Provider;
 
+use Teknoo\East\WebsiteBundle\Provider\UserProvider;
+
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers      \
+ * @covers      \Teknoo\East\WebsiteBundle\Provider\UserProvider
  */
 class UserProviderTest extends \PHPUnit\Framework\TestCase
 {
-
+    public function buildProvider(): UserProvider
+    {
+        return new UserProvider();
+    }
 }

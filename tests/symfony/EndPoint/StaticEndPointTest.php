@@ -22,16 +22,18 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\EndPoint;
 
+use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\WebsiteBundle\EndPoint\StaticEndPoint;
+use Teknoo\Tests\East\Website\EndPoint\StaticEndPointTraitTest;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers      \Teknoo\East\WebsiteBundle\EndPoint\StaticEndPoint
  */
-class StaticEndPointTest extends \PHPUnit\Framework\TestCase
+class StaticEndPointTest extends StaticEndPointTraitTest
 {
-    public function buildEndPoint()
+    public function buildEndPoint(): EndPointInterface
     {
         return new StaticEndPoint();
     }

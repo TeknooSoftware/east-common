@@ -22,17 +22,19 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\EndPoint;
 
+use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\WebsiteBundle\EndPoint\ContentEndPoint;
+use Teknoo\Tests\East\Website\EndPoint\ContentEndPointTraitTest;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers      \Teknoo\East\WebsiteBundle\EndPoint\ContentEndPoint
  */
-class ContentEndPointTest extends \PHPUnit\Framework\TestCase
+class ContentEndPointTest extends ContentEndPointTraitTest
 {
-    public function buildEndPoint()
+    public function buildEndPoint(): EndPointInterface
     {
-        return new ContentEndPoint();
+        return new ContentEndPoint($this->getContentLoader());
     }
 }

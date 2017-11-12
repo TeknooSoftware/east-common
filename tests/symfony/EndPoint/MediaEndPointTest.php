@@ -22,17 +22,19 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\EndPoint;
 
+use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\WebsiteBundle\EndPoint\MediaEndPoint;
+use Teknoo\Tests\East\Website\EndPoint\MediaEndPointTraitTest;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers      \Teknoo\East\WebsiteBundle\EndPoint\MediaEndPoint
  */
-class MediaEndPointTest extends \PHPUnit\Framework\TestCase
+class MediaEndPointTest extends MediaEndPointTraitTest
 {
-    public function buildEndPoint()
+    public function buildEndPoint(): EndPointInterface
     {
-        return new MediaEndPoint();
+        return new MediaEndPoint($this->getMediaLoader());
     }
 }

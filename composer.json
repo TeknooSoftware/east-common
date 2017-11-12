@@ -54,6 +54,7 @@
         "symfony/console": "~3.4.0-beta1||~4.0-beta1",
         "symfony/validator": "~3.4.0-beta1||~4.0-beta1",
         "symfony/yaml": "~3.4.0-beta1||~4.0-beta1",
+        "symfony/form": "~3.4.0-beta1||~4.0-beta1",
         "symfony/twig-bundle": "~3.4.0-beta1||~4.0-beta1",
         "symfony/templating": "~3.4.0-beta1||~4.0-beta1",
         "symfony/security": "~3.4.0-beta1||~4.0-beta1",

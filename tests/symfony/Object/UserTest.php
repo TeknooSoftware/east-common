@@ -23,6 +23,7 @@
 namespace Teknoo\Tests\East\WebsiteBundle\Object;
 
 use Teknoo\East\WebsiteBundle\Object\User;
+use Teknoo\East\Website\Object\User as BaseUser;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -31,8 +32,25 @@ use Teknoo\East\WebsiteBundle\Object\User;
  */
 class UserTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @var BaseUser
+     */
+    private $user;
+
+    /**
+     * @return BaseUser|\PHPUnit_Framework_MockObject_MockObject
+     */
+    public function getUser(): BaseUser
+    {
+        if (!$this->user instanceof BaseUser) {
+            $this->user = $this->createMock(BaseUser::class);
+        }
+
+        return $this->user;
+    }
+
     public function buildObject(): User
     {
-        return new User();
+        return new User($this->getUser());
     }
 }

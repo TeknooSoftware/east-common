@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\Provider;
 
+use Teknoo\East\Website\Loader\UserLoader;
 use Teknoo\East\WebsiteBundle\Provider\UserProvider;
 
 /**
@@ -31,8 +32,25 @@ use Teknoo\East\WebsiteBundle\Provider\UserProvider;
  */
 class UserProviderTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @var UserLoader
+     */
+    private $loader;
+
+    /**
+     * @return UserLoader|\PHPUnit_Framework_MockObject_MockObject
+     */
+    public function getLoader(): UserLoader
+    {
+        if (!$this->loader instanceof UserLoader) {
+            $this->loader = $this->createMock(UserLoader::class);
+        }
+
+        return $this->loader;
+    }
+
     public function buildProvider(): UserProvider
     {
-        return new UserProvider();
+        return new UserProvider($this->getLoader());
     }
 }

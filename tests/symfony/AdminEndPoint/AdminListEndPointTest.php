@@ -22,12 +22,17 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\AdminEndPoint;
 
+use Teknoo\East\WebsiteBundle\AdminEndPoint\AdminListEndPoint;
+
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers      \
+ * @covers      \Teknoo\East\WebsiteBundle\AdminEndPoint\AdminListEndPoint
  */
 class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
 {
-
+    public function buildEndPoint()
+    {
+        return new AdminListEndPoint();
+    }
 }

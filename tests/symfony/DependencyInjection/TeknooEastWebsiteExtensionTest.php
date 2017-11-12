@@ -22,12 +22,70 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\DependencyInjection;
 
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Teknoo\East\WebsiteBundle\DependencyInjection\TeknooEastWebsiteExtension;
+
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers      \
+ * @covers      \Teknoo\East\WebsiteBundle\DependencyInjection\TeknooEastWebsiteExtension
  */
 class TeknooEastWebsiteExtensionTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @var ContainerBuilder
+     */
+    private $container;
 
+    /**
+     * @return ContainerBuilder|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private function getContainerBuilderMock()
+    {
+        if (!$this->container instanceof ContainerBuilder) {
+            $this->container = $this->createMock(ContainerBuilder::class);
+        }
+
+        return $this->container;
+    }
+
+    /**
+     * @return TeknooEastWebsiteExtension
+     */
+    private function buildExtension(): TeknooEastWebsiteExtension
+    {
+        return new TeknooEastWebsiteExtension();
+    }
+
+    /**
+     * @return string
+     */
+    private function getExtensionClass(): string
+    {
+        return TeknooEastWebsiteExtension::class;
+    }
+
+    public function testLoad()
+    {
+        self::assertInstanceOf(
+            $this->getExtensionClass(),
+            $this->buildExtension()->load([], $this->getContainerBuilderMock())
+        );
+    }
+
+    /**
+     * @expectedException \TypeError
+     */
+    public function testLoadErrorContainer()
+    {
+        $this->buildExtension()->load([], new \stdClass());
+    }
+
+    /**
+     * @expectedException \TypeError
+     */
+    public function testLoadErrorConfig()
+    {
+        $this->buildExtension()->load(new \stdClass(), $this->getContainerBuilderMock());
+    }
 }

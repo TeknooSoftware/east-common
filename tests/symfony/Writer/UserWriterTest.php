@@ -22,7 +22,9 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\Writer;
 
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Teknoo\East\WebsiteBundle\Writer\UserWriter;
+use Teknoo\East\Website\Writer\UserWriter as UniversalWriter;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -31,9 +33,45 @@ use Teknoo\East\WebsiteBundle\Writer\UserWriter;
  */
 class UserWriterTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @var UniversalWriter
+     */
+    private $universalWriter;
+
+    /**
+     * @var EncoderFactoryInterface
+     */
+    private $encoderFactory;
+
+    /**
+     * @return UniversalWriter|\PHPUnit_Framework_MockObject_MockObject
+     */
+    public function getUniversalWriter(): UniversalWriter
+    {
+        if (!$this->universalWriter instanceof UniversalWriter) {
+            $this->universalWriter = $this->createMock(UniversalWriter::class);
+        }
+
+        return $this->universalWriter;
+    }
+
+    /**
+     * @return EncoderFactoryInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    public function getEncoderFactory(): EncoderFactoryInterface
+    {
+        if (!$this->encoderFactory instanceof EncoderFactoryInterface) {
+            $this->encoderFactory = $this->createMock(EncoderFactoryInterface::class);
+        }
+
+        return $this->encoderFactory;
+    }
 
     public function buildWriter(): UserWriter
     {
-        return new UserWriter();
+        return new UserWriter(
+            $this->getUniversalWriter(),
+            $this->getEncoderFactory()
+        );
     }
 }

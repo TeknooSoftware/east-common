@@ -22,12 +22,31 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\DependencyInjection;
 
+use Teknoo\East\WebsiteBundle\DependencyInjection\Configuration;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers      \
+ * @covers      \Teknoo\East\WebsiteBundle\DependencyInjection\Configuration
  */
 class ConfigurationTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @return Configuration
+     */
+    private function buildConfiguration(): Configuration
+    {
+        return new Configuration();
+    }
 
+    public function testGetConfigTreeBuilder()
+    {
+        $treeBuilder = $this->buildConfiguration()->getConfigTreeBuilder();
+
+        self::assertInstanceOf(
+            TreeBuilder::class,
+            $treeBuilder
+        );
+    }
 }

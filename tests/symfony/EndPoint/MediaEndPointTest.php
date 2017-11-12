@@ -22,12 +22,17 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\EndPoint;
 
+use Teknoo\East\WebsiteBundle\EndPoint\MediaEndPoint;
+
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers      \
+ * @covers      \Teknoo\East\WebsiteBundle\EndPoint\MediaEndPoint
  */
 class MediaEndPointTest extends \PHPUnit\Framework\TestCase
 {
-
+    public function buildEndPoint()
+    {
+        return new MediaEndPoint();
+    }
 }

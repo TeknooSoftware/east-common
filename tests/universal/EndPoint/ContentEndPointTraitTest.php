@@ -147,7 +147,8 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
             ->method('acceptResponse')
             ->with($this->callback(function ($value) {
                 if ($value instanceof ResponseInterface) {
-                    return 'fooBar:executed' == (string) $value->getBody();
+                    $result = 'fooBar:executed' == (string) $value->getBody();
+                    return $result;
                 }
 
                 return false;

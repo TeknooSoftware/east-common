@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\EndPoint;
 
+use Symfony\Bundle\TwigBundle\TwigEngine;
 use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\WebsiteBundle\EndPoint\ContentEndPoint;
 use Teknoo\Tests\East\Website\EndPoint\ContentEndPointTraitTest;
@@ -33,8 +34,52 @@ use Teknoo\Tests\East\Website\EndPoint\ContentEndPointTraitTest;
  */
 class ContentEndPointTest extends ContentEndPointTraitTest
 {
+    /**
+     * @var TwigEngine
+     */
+    protected $templating;
+
+    /**
+     * @var \Twig_Environment
+     */
+    protected $twig;
+
+    /**
+     * @return TwigEngine|\PHPUnit_Framework_MockObject_MockObject
+     */
+    public function getTemplating(): TwigEngine
+    {
+        if (!$this->templating instanceof TwigEngine) {
+            $this->templating = $this->createMock(TwigEngine::class);
+
+            $this->templating->expects(self::any())
+                ->method('render')
+                ->willReturn('fooBar:executed');
+        }
+
+        return $this->templating;
+    }
+
+    /**
+     * @return \Twig_Environment|\PHPUnit_Framework_MockObject_MockObject
+     */
+    public function getTwig(): \Twig_Environment
+    {
+        if (!$this->twig instanceof \Twig_Environment) {
+            $this->twig = $this->createMock(\Twig_Environment::class);
+
+            $this->twig->expects(self::any())
+                ->method('render')
+                ->willReturn('fooBar:executed');
+        }
+
+        return $this->twig;
+    }
+
     public function buildEndPoint(): EndPointInterface
     {
-        return new ContentEndPoint($this->getContentLoader());
+        return (new ContentEndPoint($this->getContentLoader()))
+            ->setTwig($this->getTwig())
+            ->setTemplating($this->getTemplating());
     }
 }

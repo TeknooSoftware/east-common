@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\Object;
 
+use Symfony\Component\Security\Core\User\UserInterface;
 use Teknoo\East\WebsiteBundle\Object\User;
 use Teknoo\East\Website\Object\User as BaseUser;
 
@@ -52,5 +53,122 @@ class UserTest extends \PHPUnit\Framework\TestCase
     public function buildObject(): User
     {
         return new User($this->getUser());
+    }
+
+    /**
+     * @expectedException \TypeError
+     */
+    public function testExceptionWithBadUser()
+    {
+        new User(new \stdClass());
+    }
+
+    public function testGetRoles()
+    {
+        $this->getUser()
+            ->expects(self::once())
+            ->method('getRoles')
+            ->willReturn(['foo','bar']);
+
+        self::assertEquals(
+            ['foo','bar'],
+            $this->buildObject()->getRoles()
+        );
+    }
+
+    public function testGetPassword()
+    {
+        $this->getUser()
+            ->expects(self::once())
+            ->method('getPassword')
+            ->willReturn('foo');
+
+        self::assertEquals(
+            'foo',
+            $this->buildObject()->getPassword()
+        );
+    }
+
+    public function testGetSalt()
+    {
+        $this->getUser()
+            ->expects(self::once())
+            ->method('getSalt')
+            ->willReturn('salt');
+
+        self::assertEquals(
+            'salt',
+            $this->buildObject()->getSalt()
+        );
+    }
+
+    public function testGetUsername()
+    {
+        $this->getUser()
+            ->expects(self::once())
+            ->method('getUsername')
+            ->willReturn('username');
+
+        self::assertEquals(
+            'username',
+            $this->buildObject()->getUsername()
+        );
+    }
+
+    public function testEraseCredentials()
+    {
+        $this->getUser()
+            ->expects(self::once())
+            ->method('eraseCredentials')
+            ->willReturnSelf();
+
+        self::assertInstanceOf(
+            User::class,
+            $this->buildObject()->eraseCredentials()
+        );
+    }
+
+    /**
+     * @expectedException \TypeError
+     */
+    public function testExceptionOnIsEqualToWithBadUser()
+    {
+        $this->buildObject()->isEqualTo(new \stdClass());
+    }
+
+    public function testIsEqualToNotSameUserName()
+    {
+        $this->getUser()
+            ->expects(self::once())
+            ->method('getUsername')
+            ->willReturn('myUserName');
+
+        $user = $this->createMock(UserInterface::class);
+        $user
+            ->expects(self::once())
+            ->method('getUsername')
+            ->willReturn('notUserName');
+
+        self::assertFalse(
+            $this->buildObject()->isEqualTo($user)
+        );
+    }
+
+    public function testIsEqualToSameUserName()
+    {
+        $this->getUser()
+            ->expects(self::once())
+            ->method('getUsername')
+            ->willReturn('myUserName');
+
+        $user = $this->createMock(UserInterface::class);
+        $user
+            ->expects(self::once())
+            ->method('getUsername')
+            ->willReturn('myUserName');
+
+        self::assertTrue(
+            $this->buildObject()->isEqualTo($user)
+        );
     }
 }

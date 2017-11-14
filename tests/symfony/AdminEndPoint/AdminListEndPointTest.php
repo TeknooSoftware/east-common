@@ -22,17 +22,56 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\AdminEndPoint;
 
+use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\WebsiteBundle\AdminEndPoint\AdminListEndPoint;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers      \Teknoo\East\WebsiteBundle\AdminEndPoint\AdminListEndPoint
+ * @covers      \Teknoo\East\WebsiteBundle\AdminEndPoint\AdminEndPointTrait
  */
 class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @var LoaderInterface
+     */
+    private $loaderService;
+
+    /**
+     * @var \Twig_Environment
+     */
+    private $twig;
+
+    /**
+     * @return LoaderInterface
+     */
+    public function getLoaderService(): LoaderInterface
+    {
+        if (!$this->loaderService instanceof LoaderInterface) {
+            $this->loaderService = $this->createMock(LoaderInterface::class);
+        }
+
+        return $this->loaderService;
+    }
+
+    /**
+     * @return \Twig_Environment
+     */
+    public function getTwig(): \Twig_Environment
+    {
+        if (!$this->twig instanceof \Twig_Environment) {
+            $this->twig = $this->createMock(\Twig_Environment::class);
+        }
+
+        return $this->twig;
+    }
+
     public function buildEndPoint()
     {
-        return new AdminListEndPoint();
+        return (new AdminListEndPoint())
+            ->setLoader($this->getLoaderService())
+            ->setTwig($this->getTwig())
+            ->setViewPath('foo:bar.html.twig');
     }
 }

@@ -40,6 +40,7 @@ class TypeType extends AbstractType
      *
      * @param FormBuilderInterface $builder
      * @param array                $options
+     * @return self
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -52,5 +53,7 @@ class TypeType extends AbstractType
             'allow_delete' => true,
             'delete_empty' => true,
         ));
+
+        return $this;
     }
 }

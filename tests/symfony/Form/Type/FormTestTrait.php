@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * East Website.
  *
@@ -22,42 +20,22 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\East\WebsiteBundle\Form\Type;
+namespace Teknoo\Tests\East\WebsiteBundle\Form\Type;
 
-use Gedmo\Translatable\TranslatableListener;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-trait TranslatableTrait
+trait FormTestTrait
 {
-    /**
-     * @var TranslatableListener
-     */
-    private $listenerTranslatable;
-
-    /**
-     * @var string
-     */
-    private $locales;
-
-    /**
-     * @param FormBuilderInterface $builder
-     *
-     * @return self
-     */
-    protected function addTranslatableLocaleFieldHidden(FormBuilderInterface $builder)
+    public function testBuildForm()
     {
-        $builder->add(
-            'translatableLocale',
-            HiddenType::class
+        self::assertInstanceOf(
+            AbstractType::class,
+            $this->buildForm()->buildForm($this->createMock(FormBuilderInterface::class), [])
         );
-
-        return $this;
     }
 }

@@ -43,6 +43,7 @@ class UserType extends AbstractType
      *
      * @param FormBuilderInterface $builder
      * @param array                $options
+     * @return self
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -65,12 +66,14 @@ class UserType extends AbstractType
             'password',
             RepeatedType::class,
             [
-            'type' => PasswordType::class,
-            'first_options' => ['label' => 'Password'],
-            'second_options' => ['label' => 'Confirm it'],
-            'invalid_message' => 'The password fields must match.',
-            'required' => false
-        ]
+                'type' => PasswordType::class,
+                'first_options' => ['label' => 'Password'],
+                'second_options' => ['label' => 'Confirm it'],
+                'invalid_message' => 'The password fields must match.',
+                'required' => false
+            ]
         );
+
+        return $this;
     }
 }

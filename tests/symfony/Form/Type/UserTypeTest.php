@@ -31,6 +31,8 @@ use Teknoo\East\WebsiteBundle\Form\Type\UserType;
  */
 class UserTypeTest extends \PHPUnit\Framework\TestCase
 {
+    use FormTestTrait;
+
     public function buildForm(): UserType
     {
         return new UserType;

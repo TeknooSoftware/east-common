@@ -38,7 +38,7 @@ use Teknoo\East\Website\Service\DeletingService;
 class AdminDeleteEndPoint implements EndPointInterface
 {
     use EastEndPointTrait,
-        AdminEntPointTrait;
+        AdminEndPointTrait;
 
     /**
      * @var DeletingService

@@ -37,7 +37,7 @@ use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
 class AdminNewEndPoint implements EndPointInterface
 {
     use EastEndPointTrait,
-        AdminEntPointTrait,
+        AdminEndPointTrait,
         AdminFormTrait;
 
     /**

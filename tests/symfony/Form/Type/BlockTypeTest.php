@@ -22,6 +22,8 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\Form\Type;
 
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Teknoo\East\WebsiteBundle\Form\Type\BlockType;
 
 /**
@@ -31,8 +33,20 @@ use Teknoo\East\WebsiteBundle\Form\Type\BlockType;
  */
 class BlockTypeTest extends \PHPUnit\Framework\TestCase
 {
+    use FormTestTrait;
+
     public function buildForm()
     {
         return new BlockType();
+    }
+
+    public function testConfigureOptions()
+    {
+        self::assertInstanceOf(
+            AbstractType::class,
+            $this->buildForm()->configureOptions(
+                $this->createMock(OptionsResolver::class)
+            )
+        );
     }
 }

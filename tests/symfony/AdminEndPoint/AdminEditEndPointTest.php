@@ -22,17 +22,77 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\AdminEndPoint;
 
+use Teknoo\East\Website\Loader\LoaderInterface;
+use Teknoo\East\Website\Writer\WriterInterface;
 use Teknoo\East\WebsiteBundle\AdminEndPoint\AdminEditEndPoint;
+use Teknoo\East\WebsiteBundle\Form\Type\TypeType;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers      \Teknoo\East\WebsiteBundle\AdminEndPoint\AdminEditEndPoint
+ * @covers      \Teknoo\East\WebsiteBundle\AdminEndPoint\AdminEndPointTrait
+ * @covers      \Teknoo\East\WebsiteBundle\AdminEndPoint\AdminFormTrait
  */
 class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @var LoaderInterface
+     */
+    private $loaderService;
+
+    /**
+     * @var WriterInterface
+     */
+    private $writerService;
+
+    /**
+     * @var \Twig_Environment
+     */
+    private $twig;
+    /**
+     * @return LoaderInterface
+     */
+    public function getLoaderService(): LoaderInterface
+    {
+        if (!$this->loaderService instanceof LoaderInterface) {
+            $this->loaderService = $this->createMock(LoaderInterface::class);
+        }
+
+        return $this->loaderService;
+    }
+
+    /**
+     * @return WriterInterface
+     */
+    public function getWriterService(): WriterInterface
+    {
+        if (!$this->writerService instanceof WriterInterface) {
+            $this->writerService = $this->createMock(WriterInterface::class);
+        }
+
+        return $this->writerService;
+    }
+
+    /**
+     * @return \Twig_Environment
+     */
+    public function getTwig(): \Twig_Environment
+    {
+        if (!$this->twig instanceof \Twig_Environment) {
+            $this->twig = $this->createMock(\Twig_Environment::class);
+        }
+
+        return $this->twig;
+    }
+
     public function buildEndPoint()
     {
-        return new AdminEditEndPoint();
+        return (new AdminEditEndPoint())
+            ->setWriter($this->getWriterService())
+            ->setLoader($this->getLoaderService())
+            ->setTwig($this->getTwig())
+            ->setFormClass(TypeType::class)
+            ->setViewPath('foo:bar.html.twig');
     }
 }

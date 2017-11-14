@@ -50,6 +50,7 @@ class ContentType extends AbstractType
      *
      * @param FormBuilderInterface $builder
      * @param array                $options
+     * @return self
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -128,6 +129,7 @@ class ContentType extends AbstractType
         );
 
         $this->addTranslatableLocaleFieldHidden($builder);
-        $this->disableNonTranslatableField($builder, $options);
+
+        return $this;
     }
 }

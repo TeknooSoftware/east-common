@@ -28,9 +28,12 @@ use Teknoo\East\WebsiteBundle\Form\Type\CategoryType;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers      \Teknoo\East\WebsiteBundle\Form\Type\CategoryType
+ * @covers      \Teknoo\East\WebsiteBundle\Form\Type\TranslatableTrait
  */
 class CategoryTypeTest extends \PHPUnit\Framework\TestCase
 {
+    use FormTestTrait;
+
     public function buildForm()
     {
         return new CategoryType();

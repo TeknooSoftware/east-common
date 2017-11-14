@@ -42,6 +42,7 @@ class BlockType extends AbstractType
      *
      * @param FormBuilderInterface $builder
      * @param array                $options
+     * @return self
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -52,8 +53,14 @@ class BlockType extends AbstractType
             'required' => true,
             'choices' => ['Textarea' => 'textarea', 'Text'=>'text', 'Numeric'=>'numeric']
         ]);
+
+        return $this;
     }
 
+    /**
+     * @param OptionsResolver $resolver
+     * @return $this
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
@@ -61,5 +68,7 @@ class BlockType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => Block::class,
         ));
+
+        return $this;
     }
 }

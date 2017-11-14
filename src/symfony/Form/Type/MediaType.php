@@ -44,6 +44,7 @@ class MediaType extends AbstractType
      *
      * @param FormBuilderInterface $builder
      * @param array                $options
+     * @return self
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -58,8 +59,7 @@ class MediaType extends AbstractType
                 $data = $event->getData();
                 $contentObject = $form->getNormData();
 
-                if (!$contentObject instanceof Media
-                    || !isset($data['image'])
+                if (!$contentObject instanceof Media || !isset($data['image'])
                     || !$data['image'] instanceof UploadedFile) {
                     return;
                 }
@@ -72,5 +72,7 @@ class MediaType extends AbstractType
                 $contentObject->setLength($image->getSize());
             }
         );
+
+        return $this;
     }
 }

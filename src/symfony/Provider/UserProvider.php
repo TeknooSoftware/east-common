@@ -80,6 +80,6 @@ class UserProvider implements UserProviderInterface
     public function supportsClass($class)
     {
         $reflection = new \ReflectionClass($class);
-        return $reflection->isSubclassOf(User::class);
+        return $class === User::class || $reflection->isSubclassOf(User::class);
     }
 }

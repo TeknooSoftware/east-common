@@ -45,6 +45,7 @@ class CategoryType extends AbstractType
      *
      * @param FormBuilderInterface $builder
      * @param array                $options
+     * @return self
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -56,6 +57,7 @@ class CategoryType extends AbstractType
         $builder->add('position', IntegerType::class, ['required'=>false]);
 
         $this->addTranslatableLocaleFieldHidden($builder);
-        $this->disableNonTranslatableField($builder, $options);
+
+        return $this;
     }
 }

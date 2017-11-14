@@ -22,6 +22,13 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\Form\Type;
 
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Teknoo\East\Website\Object\Media;
 use Teknoo\East\WebsiteBundle\Form\Type\MediaType;
 
 /**
@@ -34,5 +41,47 @@ class MediaTypeTest extends \PHPUnit\Framework\TestCase
     public function buildForm()
     {
         return new MediaType();
+    }
+
+    public function testBuildForm()
+    {
+        $builder = $this->createMock(FormBuilderInterface::class);
+        $builder->expects(self::once())
+            ->method('addEventListener')
+            ->willReturnCallback(function ($name, $callable) {
+                self::assertEquals(FormEvents::PRE_SUBMIT, $name);
+
+                $form = $this->createMock(FormInterface::class);
+                $event = new FormEvent($form, []);
+                $callable($event);
+            });
+
+        self::assertInstanceOf(
+            AbstractType::class,
+            $this->buildForm()->buildForm($builder, [])
+        );
+    }
+
+    public function testBuildFormPopulatedDate()
+    {
+        $builder = $this->createMock(FormBuilderInterface::class);
+        $builder->expects(self::once())
+            ->method('addEventListener')
+            ->willReturnCallback(function ($name, $callable) {
+                self::assertEquals(FormEvents::PRE_SUBMIT, $name);
+
+                $form = $this->createMock(FormInterface::class);
+                $form->expects(self::once())->method('getNormData')
+                    ->willReturn($this->createMock(Media::class));
+                $image = $this->createMock(UploadedFile::class);
+                $image->expects(self::any())->method('getSize')->willReturn(123);
+                $event = new FormEvent($form, ['image' => $image]);
+                $callable($event);
+            });
+
+        self::assertInstanceOf(
+            AbstractType::class,
+            $this->buildForm()->buildForm($builder, [])
+        );
     }
 }

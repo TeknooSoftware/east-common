@@ -31,6 +31,8 @@ use Teknoo\East\WebsiteBundle\Form\Type\TypeType;
  */
 class TypeTypeTest extends \PHPUnit\Framework\TestCase
 {
+    use FormTestTrait;
+
     public function buildForm()
     {
         return new TypeType();

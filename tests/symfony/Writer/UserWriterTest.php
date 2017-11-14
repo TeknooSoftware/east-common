@@ -23,8 +23,11 @@
 namespace Teknoo\Tests\East\WebsiteBundle\Writer;
 
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\WebsiteBundle\Writer\UserWriter;
 use Teknoo\East\Website\Writer\UserWriter as UniversalWriter;
+use Teknoo\East\Website\Object\User as BaseUser;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -72,6 +75,82 @@ class UserWriterTest extends \PHPUnit\Framework\TestCase
         return new UserWriter(
             $this->getUniversalWriter(),
             $this->getEncoderFactory()
+        );
+    }
+
+    /**
+     * @expectedException \TypeError
+     */
+    public function testExceptionOnSaveWithBadPromise()
+    {
+        $this->buildWriter()->save(new \stdClass(), new \stdClass());
+    }
+
+    public function testSaveWithUserWithNoUpdatedPassword()
+    {
+        $promise = $this->createMock(PromiseInterface::class);
+        $user = $this->createMock(BaseUser::class);
+        $user->expects(self::once())
+            ->method('hasUpdatedPassword')
+            ->willReturn(false);
+
+        $user->expects(self::once())
+            ->method('eraseCredentials');
+
+        $user->expects(self::never())
+            ->method('setPassword');
+
+        $this->getUniversalWriter()
+            ->expects(self::once())
+            ->method('save')
+            ->with($user, $promise)
+            ->willReturnSelf();
+
+        self::assertInstanceOf(
+            UserWriter::class,
+            $this->buildWriter()->save($user, $promise)
+        );
+    }
+
+    public function testSaveWithUserWithUpdatedPassword()
+    {
+        $promise = $this->createMock(PromiseInterface::class);
+        $user = $this->createMock(BaseUser::class);
+        $encoder = $this->createMock(PasswordEncoderInterface::class);
+
+        $this->getEncoderFactory()
+            ->expects(self::any())
+            ->method('getEncoder')
+            ->willReturn($encoder);
+
+        $encoder->expects(self::once())
+            ->method('encodePassword')
+            ->willReturn('fooBar');
+
+        $user->expects(self::once())
+            ->method('hasUpdatedPassword')
+            ->willReturn(true);
+
+        $user->expects(self::never())
+            ->method('eraseCredentials');
+
+        $user->expects(self::once())
+            ->method('getSalt');
+
+        $user->expects(self::once())
+            ->method('setPassword')
+            ->with('fooBar')
+            ->willReturnSelf();
+
+        $this->getUniversalWriter()
+            ->expects(self::once())
+            ->method('save')
+            ->with($user, $promise)
+            ->willReturnSelf();
+
+        self::assertInstanceOf(
+            UserWriter::class,
+            $this->buildWriter()->save($user, $promise)
         );
     }
 }

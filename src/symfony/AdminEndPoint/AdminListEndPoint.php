@@ -37,7 +37,7 @@ use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
 class AdminListEndPoint implements EndPointInterface
 {
     use EastEndPointTrait,
-        AdminEntPointTrait;
+        AdminEndPointTrait;
 
     /**
      * @param ServerRequestInterface $request

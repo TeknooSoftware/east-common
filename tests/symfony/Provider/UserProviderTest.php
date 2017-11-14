@@ -23,7 +23,10 @@
 namespace Teknoo\Tests\East\WebsiteBundle\Provider;
 
 use Teknoo\East\Website\Loader\UserLoader;
+use Teknoo\East\WebsiteBundle\Object\User;
 use Teknoo\East\WebsiteBundle\Provider\UserProvider;
+use Teknoo\Recipe\Promise\PromiseInterface;
+use Teknoo\East\Website\Object\User as BaseUser;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -52,5 +55,84 @@ class UserProviderTest extends \PHPUnit\Framework\TestCase
     public function buildProvider(): UserProvider
     {
         return new UserProvider($this->getLoader());
+    }
+
+    public function testLoadUserByUsernameNotFound()
+    {
+        $this->getLoader()
+            ->expects(self::once())
+            ->method('byEmail')
+            ->willReturnCallback(function ($name, PromiseInterface $promise) {
+                self::assertEquals('foo@bar', $name);
+                $promise->fail(new \DomainException());
+
+                return $this->getLoader();
+            });
+
+        self::assertNull($this->buildProvider()->loadUserByUsername('foo@bar'));
+    }
+
+    public function testLoadUserByUsernameFound()
+    {
+        $user = new BaseUser();
+        $user->setEmail('foo@bar');
+
+        $this->getLoader()
+            ->expects(self::once())
+            ->method('byEmail')
+            ->willReturnCallback(function ($name, PromiseInterface $promise) use($user) {
+                self::assertEquals('foo@bar', $name);
+                $promise->success($user);
+
+                return $this->getLoader();
+            });
+
+        self::assertEquals(
+            (new User($user)),
+            $this->buildProvider()->loadUserByUsername('foo@bar')
+        );
+    }
+
+    public function testrefreshUserNotFound()
+    {
+        $this->getLoader()
+            ->expects(self::once())
+            ->method('byEmail')
+            ->willReturnCallback(function ($name, PromiseInterface $promise) {
+                self::assertEquals('foo@bar', $name);
+                $promise->fail(new \DomainException());
+
+                return $this->getLoader();
+            });
+
+        self::assertNull($this->buildProvider()->refreshUser(new User((new BaseUser())->setEmail('foo@bar'))));
+    }
+
+    public function testrefreshUserFound()
+    {
+        $user = new BaseUser();
+        $user->setEmail('foo@bar');
+
+        $this->getLoader()
+            ->expects(self::once())
+            ->method('byEmail')
+            ->willReturnCallback(function ($name, PromiseInterface $promise) use($user) {
+                self::assertEquals('foo@bar', $name);
+                $promise->success($user);
+
+                return $this->getLoader();
+            });
+
+        self::assertEquals(
+            (new User($user)),
+            $this->buildProvider()->refreshUser(new User((new BaseUser())->setEmail('foo@bar')))
+        );
+    }
+
+    public function testSupportsClass()
+    {
+        self::assertTrue($this->buildProvider()->supportsClass(User::class));
+        self::assertFalse($this->buildProvider()->supportsClass(BaseUser::class));
+        self::assertFalse($this->buildProvider()->supportsClass(\DateTime::class));
     }
 }

@@ -22,8 +22,11 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\AdminEndPoint;
 
+use Psr\Http\Message\ServerRequestInterface;
+use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\WebsiteBundle\AdminEndPoint\AdminListEndPoint;
+use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -44,7 +47,7 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
     private $twig;
 
     /**
-     * @return LoaderInterface
+     * @return LoaderInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     public function getLoaderService(): LoaderInterface
     {
@@ -56,7 +59,7 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @return \Twig_Environment
+     * @return \Twig_Environment|\PHPUnit_Framework_MockObject_MockObject
      */
     public function getTwig(): \Twig_Environment
     {
@@ -73,5 +76,157 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
             ->setLoader($this->getLoaderService())
             ->setTwig($this->getTwig())
             ->setViewPath('foo:bar.html.twig');
+    }
+
+    /**
+     * @expectedException \TypeError
+     */
+    public function testExceptionOnInvokeWithBadRequest()
+    {
+        ($this->buildEndPoint())(
+            new \stdClass(),
+            $this->createMock(ClientInterface::class),
+            123,
+            'bar'
+        );
+    }
+
+    /**
+     * @expectedException \TypeError
+     */
+    public function testExceptionOnInvokeWithBadClient()
+    {
+        ($this->buildEndPoint())(
+            $this->createMock(ServerRequestInterface::class),
+            new \stdClass(),
+            123,
+            'bar'
+        );
+    }
+
+    /**
+     * @expectedException \TypeError
+     */
+    public function testExceptionOnInvokeWithBadId()
+    {
+        ($this->buildEndPoint())(
+            $this->createMock(ServerRequestInterface::class),
+            $this->createMock(ClientInterface::class),
+            new \stdClass(),
+            'foo'
+        );
+    }
+
+    /**
+     * @expectedException \TypeError
+     */
+    public function testExceptionOnInvokeWithBadRoute()
+    {
+        ($this->buildEndPoint())(
+            $this->createMock(ServerRequestInterface::class),
+            $this->createMock(ClientInterface::class),
+            123,
+            new \stdClass()
+        );
+    }
+
+    public function testInvokeNotFound()
+    {
+        $request = $this->createMock(ServerRequestInterface::class);
+        $client = $this->createMock(ClientInterface::class);
+        $client->expects(self::never())->method('acceptResponse');
+        $client->expects(self::once())->method('errorInRequest');
+
+        $this->getLoaderService()
+            ->expects(self::any())
+            ->method('loadCollection')
+            ->willReturnCallback(function ($search, PromiseInterface $promise) {
+                $promise->fail(new \DomainException());
+
+                return $this->getLoaderService();
+            });
+
+        self::assertInstanceOf(
+            AdminListEndPoint::class,
+            ($this->buildEndPoint())($request, $client, 1, 'bar')
+        );
+    }
+
+    public function testInvokeFound()
+    {
+        $request = $this->createMock(ServerRequestInterface::class);
+        $client = $this->createMock(ClientInterface::class);
+
+        $client->expects(self::once())->method('acceptResponse');
+        $client->expects(self::never())->method('errorInRequest');
+
+        $this->getLoaderService()
+            ->expects(self::any())
+            ->method('loadCollection')
+            ->willReturnCallback(function ($collection, PromiseInterface $promise, $order, $limit, $page) {
+                self::assertEquals(1, $page);
+                self::assertEquals(15, $limit);
+                self::assertEquals([], $order);
+                $promise->success([new \stdClass(), new \stdClass()]);
+
+                return $this->getLoaderService();
+            });
+
+        self::assertInstanceOf(
+            AdminListEndPoint::class,
+            ($this->buildEndPoint())($request, $client, 2, 'bar')
+        );
+    }
+
+    public function testInvokeFoundPageNegative()
+    {
+        $request = $this->createMock(ServerRequestInterface::class);
+        $client = $this->createMock(ClientInterface::class);
+
+        $client->expects(self::once())->method('acceptResponse');
+        $client->expects(self::never())->method('errorInRequest');
+
+        $this->getLoaderService()
+            ->expects(self::any())
+            ->method('loadCollection')
+            ->willReturnCallback(function ($collection, PromiseInterface $promise, $order, $limit, $page) {
+                self::assertEquals(0, $page);
+                self::assertEquals(15, $limit);
+                self::assertEquals([], $order);
+                $promise->success([new \stdClass(), new \stdClass()]);
+
+                return $this->getLoaderService();
+            });
+
+        self::assertInstanceOf(
+            AdminListEndPoint::class,
+            ($this->buildEndPoint())($request, $client, -1, 'bar')
+        );
+    }
+
+    public function testInvokeFoundDefaultView()
+    {
+        $request = $this->createMock(ServerRequestInterface::class);
+        $client = $this->createMock(ClientInterface::class);
+
+        $client->expects(self::once())->method('acceptResponse');
+        $client->expects(self::never())->method('errorInRequest');
+
+        $this->getLoaderService()
+            ->expects(self::any())
+            ->method('loadCollection')
+            ->willReturnCallback(function ($collection, PromiseInterface $promise, $order, $limit, $page) {
+                self::assertEquals(0, $page);
+                self::assertEquals(15, $limit);
+                self::assertEquals([], $order);
+                $promise->success([new \stdClass(), new \stdClass()]);
+
+                return $this->getLoaderService();
+            });
+
+        self::assertInstanceOf(
+            AdminListEndPoint::class,
+            ($this->buildEndPoint())($request, $client)
+        );
     }
 }

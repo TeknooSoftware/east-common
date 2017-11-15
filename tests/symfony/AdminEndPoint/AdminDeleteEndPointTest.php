@@ -22,10 +22,14 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\AdminEndPoint;
 
+use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
+use Teknoo\East\Website\Object\DeletableInterface;
 use Teknoo\East\Website\Service\DeletingService;
 use Teknoo\East\WebsiteBundle\AdminEndPoint\AdminDeleteEndPoint;
+use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -51,7 +55,7 @@ class AdminDeleteEndPointTest extends \PHPUnit\Framework\TestCase
     private $router;
 
     /**
-     * @return DeletingService
+     * @return DeletingService|\PHPUnit_Framework_MockObject_MockObject
      */
     public function getDeletingService(): DeletingService
     {
@@ -63,7 +67,7 @@ class AdminDeleteEndPointTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @return LoaderInterface
+     * @return LoaderInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     public function getLoaderService(): LoaderInterface
     {
@@ -75,7 +79,7 @@ class AdminDeleteEndPointTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @return RouterInterface
+     * @return RouterInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     public function getRouter(): RouterInterface
     {
@@ -86,11 +90,136 @@ class AdminDeleteEndPointTest extends \PHPUnit\Framework\TestCase
         return $this->router;
     }
 
+    /**
+     * @return \Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait|AdminDeleteEndPoint
+     */
     public function buildEndPoint()
     {
         return (new AdminDeleteEndPoint())
             ->setDeletingService($this->getDeletingService())
             ->setLoader($this->getLoaderService())
             ->setRouter($this->getRouter());
+    }
+
+    /**
+     * @expectedException \TypeError
+     */
+    public function testExceptionOnSetDeletingServiceWithBadInstance()
+    {
+        (new AdminDeleteEndPoint)->setDeletingService(new \stdClass());
+    }
+
+    /**
+     * @expectedException \TypeError
+     */
+    public function testExceptionOnInvokeWithBadRequest()
+    {
+        ($this->buildEndPoint())(
+            new \stdClass(),
+            $this->createMock(ClientInterface::class),
+            'foo',
+            'bar'
+        );
+    }
+
+    /**
+     * @expectedException \TypeError
+     */
+    public function testExceptionOnInvokeWithBadClient()
+    {
+        ($this->buildEndPoint())(
+            $this->createMock(ServerRequestInterface::class),
+            new \stdClass(),
+            'foo',
+            'bar'
+        );
+    }
+
+    /**
+     * @expectedException \TypeError
+     */
+    public function testExceptionOnInvokeWithBadId()
+    {
+        ($this->buildEndPoint())(
+            $this->createMock(ServerRequestInterface::class),
+            $this->createMock(ClientInterface::class),
+            new \stdClass(),
+            'foo'
+        );
+    }
+
+    /**
+     * @expectedException \TypeError
+     */
+    public function testExceptionOnInvokeWithBadRoute()
+    {
+        ($this->buildEndPoint())(
+            $this->createMock(ServerRequestInterface::class),
+            $this->createMock(ClientInterface::class),
+            'foo',
+            new \stdClass()
+        );
+    }
+
+    public function testInvokeNotFound()
+    {
+        $request = $this->createMock(ServerRequestInterface::class);
+        $client = $this->createMock(ClientInterface::class);
+        $client->expects(self::never())->method('acceptResponse');
+        $client->expects(self::once())->method('errorInRequest');
+
+        $this->getDeletingService()
+            ->expects(self::never())
+            ->method('delete');
+
+        $this->getLoaderService()
+            ->expects(self::any())
+            ->method('load')
+            ->willReturnCallback(function ($id, PromiseInterface $promise) {
+                $promise->fail(new \DomainException());
+
+                return $this->getLoaderService();
+            });
+
+        self::assertInstanceOf(
+            AdminDeleteEndPoint::class,
+            ($this->buildEndPoint())($request, $client, 'foo', 'bar')
+        );
+    }
+
+    public function testInvokeFound()
+    {
+        $request = $this->createMock(ServerRequestInterface::class);
+        $client = $this->createMock(ClientInterface::class);
+        $object = $this->createMock(DeletableInterface::class);
+
+        $client->expects(self::once())->method('acceptResponse');
+        $client->expects(self::never())->method('errorInRequest');
+
+        $this->getDeletingService()
+            ->expects(self::once())
+            ->method('delete')
+            ->with($object)
+            ->willReturnSelf();
+
+        $this->getRouter()
+            ->expects(self::once())
+            ->method('generate')
+            ->with('bar')
+            ->willReturn('foo');
+
+        $this->getLoaderService()
+            ->expects(self::any())
+            ->method('load')
+            ->willReturnCallback(function ($id, PromiseInterface $promise) use ($object) {
+                $promise->success($object);
+
+                return $this->getLoaderService();
+            });
+
+        self::assertInstanceOf(
+            AdminDeleteEndPoint::class,
+            ($this->buildEndPoint())($request, $client, 'foo', 'bar')
+        );
     }
 }

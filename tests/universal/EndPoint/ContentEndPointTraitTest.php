@@ -66,8 +66,7 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
     {
         $contentLoader = $this->getContentLoader();
 
-        return new class ($contentLoader) implements EndPointInterface
-        {
+        return new class($contentLoader) implements EndPointInterface {
             use EastEndPointTrait;
             use ContentEndPointTrait;
 

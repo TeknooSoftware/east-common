@@ -103,7 +103,9 @@ class CreateUserCommandTest extends TestCase
         $this->getEncoderFactory()
             ->expects(self::once())
             ->method('getEncoder')
-            ->with($this->callback(function ($instance) {return $instance instanceof User;}))
+            ->with($this->callback(function ($instance) {
+                return $instance instanceof User;
+            }))
             ->willReturn($encoder);
 
         $this->getWriter()

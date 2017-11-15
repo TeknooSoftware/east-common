@@ -60,7 +60,9 @@ class DeletingServiceTest extends \PHPUnit\Framework\TestCase
         $object = $this->createMock(DeletableInterface::class);
         $object->expects(self::once())
             ->method('setDeletedAt')
-            ->with($this->callback(function ($date) {return $date instanceof \DateTime;}))
+            ->with($this->callback(function ($date) {
+                return $date instanceof \DateTime;
+            }))
             ->willReturnSelf();
 
         $this->getWriterMock()

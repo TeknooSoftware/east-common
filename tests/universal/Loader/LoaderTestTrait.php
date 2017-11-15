@@ -80,7 +80,9 @@ trait LoaderTestTrait
         $promiseMock->expects(self::never())->method('success');
         $promiseMock->expects(self::once())
             ->method('fail')
-            ->with($this->callback(function ($exception) { return $exception instanceof \DomainException;}));
+            ->with($this->callback(function ($exception) {
+                return $exception instanceof \DomainException;
+            }));
 
         self::assertInstanceOf(
             LoaderInterface::class,

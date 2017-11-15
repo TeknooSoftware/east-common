@@ -56,7 +56,7 @@ class LocaleMiddleware implements MiddlewareInterface
      * @param TranslatableListener $listenerTranslatable
      * @param string $defaultLocale
      */
-    public function __construct(TranslatableListener $listenerTranslatable, string $defaultLocale='en')
+    public function __construct(TranslatableListener $listenerTranslatable, string $defaultLocale = 'en')
     {
         $this->listenerTranslatable = $listenerTranslatable;
         $this->defaultLocale = $defaultLocale;
@@ -91,7 +91,8 @@ class LocaleMiddleware implements MiddlewareInterface
                     function (string $locale) use (&$request) {
                         $this->listenerTranslatable->setTranslatableLocale($locale);
                         $request = $request->withAttribute('locale', $locale);
-                    }, function () use (&$request) {
+                    },
+                    function () use (&$request) {
                         $this->listenerTranslatable->setTranslatableLocale($this->defaultLocale);
                         $request = $request->withAttribute('locale', $this->defaultLocale);
                     }

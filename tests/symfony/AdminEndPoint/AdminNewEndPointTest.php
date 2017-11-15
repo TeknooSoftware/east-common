@@ -119,7 +119,8 @@ class AdminNewEndPointTest extends \PHPUnit\Framework\TestCase
             ->setFormFactory($this->getFormFactory())
             ->setFormClass(TypeType::class)
             ->setObjectClass(Type::class)
-            ->setViewPath('foo:bar.html.twig');;
+            ->setViewPath('foo:bar.html.twig');
+        ;
     }
 
     /**

@@ -41,8 +41,7 @@ class StaticEndPointTraitTest extends \PHPUnit\Framework\TestCase
      */
     public function buildEndPoint(): EndPointInterface
     {
-        return new class implements EndPointInterface
-        {
+        return new class implements EndPointInterface {
             use EastEndPointTrait;
             use StaticEndPointTrait;
 

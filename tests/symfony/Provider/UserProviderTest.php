@@ -80,7 +80,7 @@ class UserProviderTest extends \PHPUnit\Framework\TestCase
         $this->getLoader()
             ->expects(self::once())
             ->method('byEmail')
-            ->willReturnCallback(function ($name, PromiseInterface $promise) use($user) {
+            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
                 self::assertEquals('foo@bar', $name);
                 $promise->success($user);
 
@@ -116,7 +116,7 @@ class UserProviderTest extends \PHPUnit\Framework\TestCase
         $this->getLoader()
             ->expects(self::once())
             ->method('byEmail')
-            ->willReturnCallback(function ($name, PromiseInterface $promise) use($user) {
+            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
                 self::assertEquals('foo@bar', $name);
                 $promise->success($user);
 

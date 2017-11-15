@@ -49,10 +49,12 @@ class BlockType extends AbstractType
         $builder->add('name', TextType::class, ['required' => true]);
         $builder->add(
             'type',
-            ChoiceType::class, [
-            'required' => true,
-            'choices' => ['Textarea' => 'textarea', 'Text'=>'text', 'Numeric'=>'numeric']
-        ]);
+            ChoiceType::class,
+            [
+                'required' => true,
+                'choices' => ['Textarea' => 'textarea', 'Text'=>'text', 'Numeric'=>'numeric']
+            ]
+        );
 
         return $this;
     }

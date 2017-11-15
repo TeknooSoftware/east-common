@@ -99,7 +99,9 @@ class Type implements DeletableInterface
     public function getBlocks(): array
     {
         return \array_map(
-            function ($key, $value) { return new Block($key, $value); },
+            function ($key, $value) {
+                return new Block($key, $value);
+            },
             \array_keys($this->blocks),
             \array_values($this->blocks)
         );

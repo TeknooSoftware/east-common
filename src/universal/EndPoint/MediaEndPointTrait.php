@@ -59,26 +59,26 @@ trait MediaEndPointTrait
     public function __invoke(ClientInterface $client, string $id)
     {
         $this->mediaLoader->byId(
-           $id,
-           new Promise(
-               function (Media $media) use ($client) {
-                   $client->acceptResponse(
-                       new Response(
-                           new Stream($media->getResource()),
-                           200,
-                           [
-                               'Content-Type' => $media->getMimeType(),
-                               'Content-Length' => $media->getLength()
-                           ]
-                       )
-                   );
-               },
-               function () use ($client) {
-                   $client->errorInRequest(
-                       new \Exception('Media is not available', 404)
-                   );
-               }
-           )
+            $id,
+            new Promise(
+                function (Media $media) use ($client) {
+                    $client->acceptResponse(
+                        new Response(
+                            new Stream($media->getResource()),
+                            200,
+                            [
+                                'Content-Type' => $media->getMimeType(),
+                                'Content-Length' => $media->getLength()
+                            ]
+                        )
+                    );
+                },
+                function () use ($client) {
+                    $client->errorInRequest(
+                        new \Exception('Media is not available', 404)
+                    );
+                }
+            )
         );
 
         return $this;

@@ -78,7 +78,6 @@ class ContentTypeTest extends \PHPUnit\Framework\TestCase
         $builder->expects(self::any())
             ->method('addEventListener')
             ->willReturnCallback(function ($name, $callable) {
-
                 $form = $this->createMock(FormInterface::class);
                 $content = new Content();
                 $type = new Type();

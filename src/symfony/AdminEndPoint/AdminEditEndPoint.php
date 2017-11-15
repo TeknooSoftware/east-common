@@ -52,10 +52,9 @@ class AdminEditEndPoint implements EndPointInterface
         ServerRequestInterface $request,
         ClientInterface $client,
         string $id,
-        bool $isTranslatable=false,
-        string $viewPath =null
+        bool $isTranslatable = false,
+        string $viewPath = null
     ) {
-
         if (null == $viewPath) {
             $viewPath = $this->viewPath;
         }

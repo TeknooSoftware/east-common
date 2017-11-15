@@ -36,7 +36,6 @@ if (!\class_exists(\MongoGridFSFile::class)) {
     {
         public function getSize()
         {
-
         }
     }
 }

@@ -51,7 +51,11 @@ class CategoryType extends AbstractType
     {
         $builder->add('name', TextType::class, ['required'=>true]);
         $builder->add('location', TextType::class, ['required'=>true]);
-        $builder->add('parent', DocumentType::class, ['class' => Category::class, 'required'=>false, 'multiple'=>false, 'choice_label' => 'name']);
+        $builder->add(
+            'parent',
+            DocumentType::class,
+            ['class' => Category::class, 'required'=>false, 'multiple'=>false, 'choice_label' => 'name']
+        );
         $builder->add('slug', TextType::class, ['required'=>false]);
         $builder->add('hidden', CheckboxType::class, ['required'=>false]);
         $builder->add('position', IntegerType::class, ['required'=>false]);

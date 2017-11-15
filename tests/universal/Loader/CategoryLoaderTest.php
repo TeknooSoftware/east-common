@@ -48,7 +48,6 @@ class CategoryLoaderTest extends \PHPUnit\Framework\TestCase
      */
     public function getRepositoryMock(): ObjectRepository
     {
-
         if (!$this->repository instanceof ObjectRepository) {
             $this->repository = $this->createMock(ObjectRepository::class);
         }

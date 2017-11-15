@@ -109,5 +109,4 @@ class BlockTest extends \PHPUnit\Framework\TestCase
     {
         $this->buildObject()->setType(new \stdClass());
     }
-
 }

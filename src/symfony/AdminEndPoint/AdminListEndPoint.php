@@ -49,8 +49,8 @@ class AdminListEndPoint implements EndPointInterface
     public function __invoke(
         ServerRequestInterface $request,
         ClientInterface $client,
-        int $page=1,
-        string $viewPath =null
+        int $page = 1,
+        string $viewPath = null
     ) :AdminListEndPoint {
         if ($page < 1) {
             $page = 1;

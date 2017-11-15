@@ -186,7 +186,7 @@ class Content implements ProxyInterface, AutomatedInterface, Translatable, Delet
      * @param string $subtitle
      * @return self
      */
-    public function setSubtitle(string $subtitle=null): Content
+    public function setSubtitle(string $subtitle = null): Content
     {
         $this->subtitle = (string) $subtitle;
 
@@ -224,7 +224,7 @@ class Content implements ProxyInterface, AutomatedInterface, Translatable, Delet
      * @param string $slug
      * @return self
      */
-    public function setSlug(string $slug=null): Content
+    public function setSlug(string $slug = null): Content
     {
         $this->slug = $slug;
 
@@ -262,7 +262,7 @@ class Content implements ProxyInterface, AutomatedInterface, Translatable, Delet
      * @param string[]|null $parts
      * @return self
      */
-    public function setParts(array $parts=null): Content
+    public function setParts(array $parts = null): Content
     {
         $this->parts = \json_encode($parts);
 
@@ -300,7 +300,7 @@ class Content implements ProxyInterface, AutomatedInterface, Translatable, Delet
      * @param string|null $description
      * @return self
      */
-    public function setDescription(string $description=null): Content
+    public function setDescription(string $description = null): Content
     {
         $this->description = $description;
 

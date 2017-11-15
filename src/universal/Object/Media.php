@@ -23,6 +23,7 @@ declare(strict_types=1);
  */
 
 namespace Teknoo\East\Website\Object;
+
 use Doctrine\MongoDB\GridFS;
 use Doctrine\MongoDB\GridFSFile;
 

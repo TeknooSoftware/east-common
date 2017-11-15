@@ -59,11 +59,10 @@ class MenuMiddleware implements ViewParameterInterface
      * {@inheritdoc}
      */
     public function execute(
-        ClientInterface $client ,
-        ServerRequestInterface $request ,
+        ClientInterface $client,
+        ServerRequestInterface $request,
         ManagerInterface $manager
-    ): MiddlewareInterface
-    {
+    ): MiddlewareInterface {
         $parameters = $this->getViewParameters($request);
         $parameters['menuGenerator'] = $this->menuGenerator;
 

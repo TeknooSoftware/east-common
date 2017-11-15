@@ -110,7 +110,6 @@ class Category implements ProxyInterface, AutomatedInterface, Translatable, Dele
      * {@inheritdoc}
      */
     protected function listAssertions(): array
-
     {
         return [
             (new Property([Hidden::class]))->with('hidden', new IsEqual(true)),
@@ -157,7 +156,7 @@ class Category implements ProxyInterface, AutomatedInterface, Translatable, Dele
      * @param string $slug
      * @return self
      */
-    public function setSlug(string $slug=null): Category
+    public function setSlug(string $slug = null): Category
     {
         $this->slug = $slug;
 
@@ -234,7 +233,7 @@ class Category implements ProxyInterface, AutomatedInterface, Translatable, Dele
      * @param null|Category $parent
      * @return self
      */
-    public function setParent(Category $parent=null): Category
+    public function setParent(Category $parent = null): Category
     {
         $this->parent = $parent;
 

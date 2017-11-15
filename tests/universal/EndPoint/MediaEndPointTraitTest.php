@@ -61,8 +61,7 @@ class MediaEndPointTraitTest extends \PHPUnit\Framework\TestCase
     public function buildEndPoint(): EndPointInterface
     {
         $mediaLoader = $this->getMediaLoader();
-        return new class ($mediaLoader) implements EndPointInterface
-        {
+        return new class($mediaLoader) implements EndPointInterface {
             use EastEndPointTrait;
             use MediaEndPointTrait;
         };

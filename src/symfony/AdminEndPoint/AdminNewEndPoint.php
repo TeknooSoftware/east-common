@@ -72,10 +72,9 @@ class AdminNewEndPoint implements EndPointInterface
         ServerRequestInterface $request,
         ClientInterface $client,
         string $editRoute,
-        bool $isTranslatable=false,
-        string $viewPath =null
+        bool $isTranslatable = false,
+        string $viewPath = null
     ) {
-
         if (null == $viewPath) {
             $viewPath = $this->viewPath;
         }

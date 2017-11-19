@@ -25,11 +25,6 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\EndPoint;
 
 use Teknoo\East\Foundation\Http\ClientInterface;
-use Teknoo\East\Foundation\Promise\Promise;
-use Teknoo\East\Website\Loader\MediaLoader;
-use Teknoo\East\Website\Object\Media;
-use Zend\Diactoros\Response;
-use Zend\Diactoros\Stream;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License

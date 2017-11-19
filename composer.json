@@ -5,12 +5,6 @@
     "type": "library",
     "keywords": ["east","website","cms"],
     "homepage": "http://teknoo.software/website",
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "git@bitbucket.org:teknoosoftware/recipe.git"
-        }
-    ],
     "authors": [
         {
             "name": "Richard Déloge",

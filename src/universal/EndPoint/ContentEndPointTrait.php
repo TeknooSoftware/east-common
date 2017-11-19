@@ -57,7 +57,7 @@ trait ContentEndPointTrait
      */
     private function parseUrl(ServerRequestInterface $request): array
     {
-        return \explode('/', \trim($request->getUri(), '/'));
+        return \explode('/', \trim((string) $request->getUri()->getPath(), '/'));
     }
 
     /**

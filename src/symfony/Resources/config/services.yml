@@ -60,19 +60,19 @@ services:
     arguments:
       - '@Teknoo\East\Website\Loader\ContentLoader'
     calls:
-      - ['setTwig', ['@twig']]
+      - ['setTemplating', ['@templating.engine.twig']]
 
   teknoo.east.website.endpoint.media:
     class: '%teknoo.east.website.endpoint.media.class%'
     arguments:
       - '@Teknoo\East\Website\Loader\MediaLoader'
     calls:
-      - ['setTwig', ['@twig']]
+      - ['setTemplating', ['@templating.engine.twig']]
 
   teknoo.east.website.endpoint.static:
     class: '%teknoo.east.website.endpoint.static.class%'
     calls:
-      - ['setTwig', ['@twig']]
+      - ['setTemplating', ['@templating.engine.twig']]
 
   #Admin endpoints
   teknoo.east.website.endpoint.admin.delete.abstract:
@@ -106,14 +106,14 @@ services:
       - ['setWriter', ['@Teknoo\East\Website\Writer\CategoryWriter']]
       - ['setFormClass', ['%teknoo.east.website.form_type.category.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.category.edit.file%']]
-      - ['setTwig', ['@twig']]
+      - ['setTemplating', ['@templating.engine.twig']]
 
   teknoo.east.website.endpoint.admin.list.category:
     parent: 'teknoo.east.website.endpoint.admin.list.abstract'
     calls:
       - ['setLoader', ['@Teknoo\East\Website\Loader\CategoryLoader']]
       - ['setViewPath', ['%teknoo.east.website.view.category.list.file%']]
-      - ['setTwig', ['@twig']]
+      - ['setTemplating', ['@templating.engine.twig']]
 
   teknoo.east.website.endpoint.admin.new.category:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
@@ -123,7 +123,7 @@ services:
       - ['setViewPath', ['%teknoo.east.website.view.category.new.file%']]
       - ['setObjectClass', ['%teknoo.east.website.category.class%']]
       - ['setRouter', ['@router']]
-      - ['setTwig', ['@twig']]
+      - ['setTemplating', ['@templating.engine.twig']]
 
   #Contents
   teknoo.east.website.endpoint.admin.delete.content:
@@ -140,14 +140,14 @@ services:
       - ['setWriter', ['@Teknoo\East\Website\Writer\ContentWriter']]
       - ['setFormClass', ['%teknoo.east.website.form_type.content.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.content.edit.file%']]
-      - ['setTwig', ['@twig']]
+      - ['setTemplating', ['@templating.engine.twig']]
 
   teknoo.east.website.endpoint.admin.list.content:
     parent: 'teknoo.east.website.endpoint.admin.list.abstract'
     calls:
       - ['setLoader', ['@Teknoo\East\Website\Loader\ContentLoader']]
       - ['setViewPath', ['%teknoo.east.website.view.content.list.file%']]
-      - ['setTwig', ['@twig']]
+      - ['setTemplating', ['@templating.engine.twig']]
 
   teknoo.east.website.endpoint.admin.new.content:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
@@ -157,7 +157,7 @@ services:
       - ['setViewPath', ['%teknoo.east.website.view.content.new.file%']]
       - ['setObjectClass', ['%teknoo.east.website.content.class%']]
       - ['setRouter', ['@router']]
-      - ['setTwig', ['@twig']]
+      - ['setTemplating', ['@templating.engine.twig']]
 
   #Media
   teknoo.east.website.endpoint.admin.delete.media:
@@ -172,7 +172,7 @@ services:
     calls:
       - ['setLoader', ['@Teknoo\East\Website\Loader\MediaLoader']]
       - ['setViewPath', ['%teknoo.east.website.view.media.list.file%']]
-      - ['setTwig', ['@twig']]
+      - ['setTemplating', ['@templating.engine.twig']]
 
   teknoo.east.website.endpoint.admin.new.media:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
@@ -182,7 +182,7 @@ services:
       - ['setViewPath', ['%teknoo.east.website.view.media.new.file%']]
       - ['setObjectClass', ['%teknoo.east.website.media.class%']]
       - ['setRouter', ['@router']]
-      - ['setTwig', ['@twig']]
+      - ['setTemplating', ['@templating.engine.twig']]
 
   #Type
   teknoo.east.website.endpoint.admin.delete.type:
@@ -199,14 +199,14 @@ services:
       - ['setWriter', ['@Teknoo\East\Website\Writer\TypeWriter']]
       - ['setFormClass', ['%teknoo.east.website.form_type.type.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.type.edit.file%']]
-      - ['setTwig', ['@twig']]
+      - ['setTemplating', ['@templating.engine.twig']]
 
   teknoo.east.website.endpoint.admin.list.type:
     parent: 'teknoo.east.website.endpoint.admin.list.abstract'
     calls:
       - ['setLoader', ['@Teknoo\East\Website\Loader\TypeLoader']]
       - ['setViewPath', ['%teknoo.east.website.view.type.list.file%']]
-      - ['setTwig', ['@twig']]
+      - ['setTemplating', ['@templating.engine.twig']]
 
   teknoo.east.website.endpoint.admin.new.type:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
@@ -216,7 +216,7 @@ services:
       - ['setViewPath', ['%teknoo.east.website.view.type.new.file%']]
       - ['setObjectClass', ['%teknoo.east.website.type.class%']]
       - ['setRouter', ['@router']]
-      - ['setTwig', ['@twig']]
+      - ['setTemplating', ['@templating.engine.twig']]
 
   #User
   teknoo.east.website.endpoint.admin.delete.user:
@@ -233,14 +233,14 @@ services:
       - ['setWriter', ['@teknoo.east.website.bundle.writer.user']]
       - ['setFormClass', ['%teknoo.east.website.form_type.user.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.user.edit.file%']]
-      - ['setTwig', ['@twig']]
+      - ['setTemplating', ['@templating.engine.twig']]
 
   teknoo.east.website.endpoint.admin.list.user:
     parent: 'teknoo.east.website.endpoint.admin.list.abstract'
     calls:
       - ['setLoader', ['@Teknoo\East\Website\Loader\UserLoader']]
       - ['setViewPath', ['%teknoo.east.website.view.user.list.file%']]
-      - ['setTwig', ['@twig']]
+      - ['setTemplating', ['@templating.engine.twig']]
 
   teknoo.east.website.endpoint.admin.new.user:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
@@ -250,7 +250,7 @@ services:
       - ['setViewPath', ['%teknoo.east.website.view.user.new.file%']]
       - ['setObjectClass', ['%teknoo.east.website.user.class%']]
       - ['setRouter', ['@router']]
-      - ['setTwig', ['@twig']]
+      - ['setTemplating', ['@templating.engine.twig']]
 
   #Provider
   teknoo.east.website.bundle.user_provider:

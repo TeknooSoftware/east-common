@@ -23,6 +23,7 @@
 namespace Teknoo\Tests\East\WebsiteBundle\AdminEndPoint;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
@@ -53,7 +54,7 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
     private $writerService;
 
     /**
-     * @var \Twig_Environment
+     * @var TwigEngine
      */
     private $twig;
 
@@ -87,12 +88,12 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @return \Twig_Environment|\PHPUnit_Framework_MockObject_MockObject
+     * @return TwigEngine|\PHPUnit_Framework_MockObject_MockObject
      */
-    public function getTwig(): \Twig_Environment
+    public function getTwig(): TwigEngine
     {
-        if (!$this->twig instanceof \Twig_Environment) {
-            $this->twig = $this->createMock(\Twig_Environment::class);
+        if (!$this->twig instanceof TwigEngine) {
+            $this->twig = $this->createMock(TwigEngine::class);
         }
 
         return $this->twig;
@@ -116,7 +117,7 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
             ->setWriter($this->getWriterService())
             ->setLoader($this->getLoaderService())
             ->setFormFactory($this->getFormFactory())
-            ->setTwig($this->getTwig())
+            ->setTemplating($this->getTwig())
             ->setFormClass(TypeType::class)
             ->setViewPath('foo:bar.html.twig');
     }

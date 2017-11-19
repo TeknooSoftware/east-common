@@ -24,6 +24,7 @@ namespace Teknoo\Tests\East\Website\EndPoint;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UriInterface;
 use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
@@ -128,10 +129,15 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
                 return $this->getContentLoader();
             });
 
+        $uri = $this->createMock(UriInterface::class);
+        $uri->expects(self::any())
+            ->method('getPath')
+            ->willReturn('/category/sub/foo-bar');
+
         $request = $this->createMock(ServerRequestInterface::class);
         $request->expects(self::any())
             ->method('getUri')
-            ->willReturn('/category/sub/foo-bar');
+            ->willReturn($uri);
 
         self::assertInstanceOf(
             EndPointInterface::class,
@@ -172,10 +178,15 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
                 return $this->getContentLoader();
             });
 
+        $uri = $this->createMock(UriInterface::class);
+        $uri->expects(self::any())
+            ->method('getPath')
+            ->willReturn('/category/sub/foo-bar');
+
         $request = $this->createMock(ServerRequestInterface::class);
         $request->expects(self::any())
             ->method('getUri')
-            ->willReturn('/category/sub/foo-bar');
+            ->willReturn($uri);
 
         $request->expects(self::any())
             ->method('getAttribute')
@@ -221,10 +232,15 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
                 return $this->getContentLoader();
             });
 
+        $uri = $this->createMock(UriInterface::class);
+        $uri->expects(self::any())
+            ->method('getPath')
+            ->willReturn('/');
+
         $request = $this->createMock(ServerRequestInterface::class);
         $request->expects(self::any())
             ->method('getUri')
-            ->willReturn('/');
+            ->willReturn($uri);
 
         $request->expects(self::any())
             ->method('getAttribute')

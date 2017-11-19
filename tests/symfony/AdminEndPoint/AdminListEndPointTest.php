@@ -23,6 +23,7 @@
 namespace Teknoo\Tests\East\WebsiteBundle\AdminEndPoint;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Symfony\Bundle\TwigBundle\TwigEngine;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\WebsiteBundle\AdminEndPoint\AdminListEndPoint;
@@ -59,12 +60,12 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @return \Twig_Environment|\PHPUnit_Framework_MockObject_MockObject
+     * @return TwigEngine|\PHPUnit_Framework_MockObject_MockObject
      */
-    public function getTwig(): \Twig_Environment
+    public function getTwig(): TwigEngine
     {
-        if (!$this->twig instanceof \Twig_Environment) {
-            $this->twig = $this->createMock(\Twig_Environment::class);
+        if (!$this->twig instanceof TwigEngine) {
+            $this->twig = $this->createMock(TwigEngine::class);
         }
 
         return $this->twig;
@@ -74,7 +75,7 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
     {
         return (new AdminListEndPoint())
             ->setLoader($this->getLoaderService())
-            ->setTwig($this->getTwig())
+            ->setTemplating($this->getTwig())
             ->setViewPath('foo:bar.html.twig');
     }
 

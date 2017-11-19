@@ -36,8 +36,8 @@
         "doctrine/annotations": "~1.5",
         "gedmo/doctrine-extensions": "~2.4",
         "lexik/translation-bundle": "~4.0",
-        "teknoo/recipe": "1.0.0-beta1",
-        "teknoo/east-foundation": "0.0.5-beta3",
+        "teknoo/recipe": "^1.0.0-beta1",
+        "teknoo/east-foundation": "^0.0.5-beta5",
         "teknoo/immutable": "~1.0",
         "teknoo/states": "^3.2.0-beta4",
         "php-di/php-di": "^5.4.1"
@@ -49,6 +49,7 @@
         "phpmd/phpmd": "~2.6",
         "sebastian/phpcpd": "~3.0",
         "phploc/phploc": "~4.0",
+        "behat/behat": "~3.4",
         "symfony/framework-bundle": "~3.4.0-beta1||~4.0-beta1",
         "symfony/routing": "~3.4.0-beta1||~4.0-beta1",
         "symfony/console": "~3.4.0-beta1||~4.0-beta1",

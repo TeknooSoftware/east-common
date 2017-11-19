@@ -23,6 +23,7 @@
 namespace Teknoo\Tests\East\WebsiteBundle\AdminEndPoint;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -48,7 +49,7 @@ class AdminNewEndPointTest extends \PHPUnit\Framework\TestCase
     private $writerService;
 
     /**
-     * @var \Twig_Environment
+     * @var TwigEngine
      */
     private $twig;
 
@@ -75,12 +76,12 @@ class AdminNewEndPointTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @return \Twig_Environment|\PHPUnit_Framework_MockObject_MockObject
+     * @return TwigEngine|\PHPUnit_Framework_MockObject_MockObject
      */
-    public function getTwig(): \Twig_Environment
+    public function getTwig(): TwigEngine
     {
-        if (!$this->twig instanceof \Twig_Environment) {
-            $this->twig = $this->createMock(\Twig_Environment::class);
+        if (!$this->twig instanceof TwigEngine) {
+            $this->twig = $this->createMock(TwigEngine::class);
         }
 
         return $this->twig;
@@ -114,7 +115,7 @@ class AdminNewEndPointTest extends \PHPUnit\Framework\TestCase
     {
         return (new AdminNewEndPoint())
             ->setWriter($this->getWriterService())
-            ->setTwig($this->getTwig())
+            ->setTemplating($this->getTwig())
             ->setRouter($this->getRouter())
             ->setFormFactory($this->getFormFactory())
             ->setFormClass(TypeType::class)

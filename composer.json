@@ -1,6 +1,6 @@
 {
     "name": "teknoo/east-website",
-    "description": "East bundle to run a basic website",
+    "description": "East package to run a basic website",
     "license": "MIT",
     "type": "library",
     "keywords": ["east","website","cms"],

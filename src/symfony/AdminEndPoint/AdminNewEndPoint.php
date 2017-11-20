@@ -29,6 +29,7 @@ use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
+use Teknoo\East\Website\Object\ObjectInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -75,7 +76,7 @@ class AdminNewEndPoint implements EndPointInterface
         bool $isTranslatable = false,
         string $viewPath = null
     ) {
-        if (null == $viewPath) {
+        if (null === $viewPath) {
             $viewPath = $this->viewPath;
         }
 
@@ -87,7 +88,7 @@ class AdminNewEndPoint implements EndPointInterface
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->writer->save($object, new Promise(
-                function ($object) use ($client, $editRoute) {
+                function (ObjectInterface $object) use ($client, $editRoute) {
                     $this->redirectToRoute($client, $editRoute, ['id' => $object->getId()]);
                 },
                 function ($error) use ($client) {

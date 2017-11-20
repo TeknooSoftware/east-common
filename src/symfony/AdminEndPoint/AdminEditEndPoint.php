@@ -55,7 +55,7 @@ class AdminEditEndPoint implements EndPointInterface
         bool $isTranslatable = false,
         string $viewPath = null
     ) {
-        if (null == $viewPath) {
+        if (null === $viewPath) {
             $viewPath = $this->viewPath;
         }
 

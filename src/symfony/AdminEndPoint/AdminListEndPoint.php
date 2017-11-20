@@ -56,7 +56,7 @@ class AdminListEndPoint implements EndPointInterface
             $page = 1;
         }
 
-        if (null == $viewPath) {
+        if (null === $viewPath) {
             $viewPath = $this->viewPath;
         }
 

@@ -39,7 +39,7 @@ use Teknoo\States\Proxy\ProxyTrait;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class Category implements ProxyInterface, AutomatedInterface, Translatable, DeletableInterface
+class Category implements ObjectInterface, ProxyInterface, AutomatedInterface, Translatable, DeletableInterface
 {
     use ProxyTrait,
         AutomatedTrait,

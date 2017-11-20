@@ -31,7 +31,7 @@ use Doctrine\MongoDB\GridFSFile;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class Media implements DeletableInterface
+class Media implements ObjectInterface, DeletableInterface
 {
     use ObjectTrait;
 

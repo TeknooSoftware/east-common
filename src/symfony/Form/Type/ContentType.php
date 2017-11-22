@@ -79,7 +79,7 @@ class ContentType extends AbstractType
             'publishedAt',
             DateTimeType::class,
             [
-                'required'=>false,
+                'required' => false,
                 'attr' => ['readonly' => true],
                 'widget' => 'single_text',
                 'mapped' => false,
@@ -101,7 +101,7 @@ class ContentType extends AbstractType
                         'publishedAt',
                         DateTimeType::class,
                         [
-                            'required'=>false,
+                            'required' => false,
                             'attr' => ['readonly' => true],
                             'widget' => 'single_text',
                             'mapped' => false,

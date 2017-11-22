@@ -41,6 +41,8 @@ class Draft implements StateInterface
         return function (\DateTimeInterface $dateTime): Content {
             $this->publishedAt = $dateTime;
 
+            $this->updateStates();
+
             return $this;
         };
     }

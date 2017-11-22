@@ -97,17 +97,22 @@ class AdminEditEndPoint implements EndPointInterface
             ['id' => $id],
             new Promise(
                 function (ObjectInterface $object) use ($client, $request, $isTranslatable, $viewPath) {
-                    $form = $this->createForm($object);
-                    $form->handleRequest($request->getAttribute('request'));
-
                     if ($object instanceof PublishableInterface && isset($request->getParsedBody()['publish'])) {
                         $object->setPublishedAt($this->getCurrentDateTime());
                     }
 
+                    $form = $this->createForm($object);
+                    $form->handleRequest($request->getAttribute('request'));
+
                     if ($form->isSubmitted() && $form->isValid()) {
                         $this->writer->save($object, new Promise(
-                            function (ObjectInterface $object)
-                                use ($client, $form, $request, $isTranslatable, $viewPath) {
+                            function (ObjectInterface $object) use (
+                                $client,
+                                $form,
+                                $request,
+                                $isTranslatable,
+                                $viewPath
+                            ) {
                                 $this->render(
                                     $client,
                                     $viewPath,

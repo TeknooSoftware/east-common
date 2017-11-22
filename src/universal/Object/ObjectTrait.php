@@ -36,17 +36,17 @@ trait ObjectTrait
     private $id;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeInterface
      */
     private $createdAt;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeInterface
      */
     private $updatedAt;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeInterface
      */
     private $deletedAt;
 
@@ -70,34 +70,34 @@ trait ObjectTrait
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeInterface
      */
-    public function createdAt(): \DateTime
+    public function createdAt(): \DateTimeInterface
     {
         return $this->createdAt;
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeInterface
      */
-    public function updatedAt(): \DateTime
+    public function updatedAt(): \DateTimeInterface
     {
         return $this->updatedAt;
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeInterface
      */
-    public function getDeletedAt(): \DateTime
+    public function getDeletedAt(): \DateTimeInterface
     {
         return $this->deletedAt;
     }
 
     /**
-     * @param \DateTime $deletedAt
+     * @param \DateTimeInterface $deletedAt
      * @return self
      */
-    public function setDeletedAt(\DateTime $deletedAt)
+    public function setDeletedAt(\DateTimeInterface $deletedAt)
     {
         $this->deletedAt = $deletedAt;
 

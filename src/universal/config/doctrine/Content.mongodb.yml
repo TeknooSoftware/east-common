@@ -72,3 +72,5 @@ Teknoo\East\Website\Object\Content:
     categories:
       targetDocument:  'Teknoo\East\Website\Object\Category'
       cascade: 'all'
+  lifecycleCallbacks:
+    postLoad: ['postLoadDoctrine']

@@ -29,7 +29,7 @@ namespace Teknoo\East\Website\Object;
 interface PublishableInterface
 {
     /**
-     * @return \DateTime
+     * @return \DateTimeInterface
      */
     public function getPublishedAt();
 }

@@ -29,6 +29,8 @@ use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
+use Teknoo\East\Website\Object\ObjectInterface;
+use Teknoo\East\Website\Object\PublishableInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -39,6 +41,38 @@ class AdminEditEndPoint implements EndPointInterface
     use EastEndPointTrait,
         AdminEndPointTrait,
         AdminFormTrait;
+
+    /**
+     * @var \DateTimeImmutable
+     */
+    private $currentDate;
+
+    /**
+     * @param \DateTimeInterface $currentDate
+     * @return AdminEditEndPoint
+     */
+    public function setCurrentDate(\DateTimeInterface $currentDate): AdminEditEndPoint
+    {
+        if ($currentDate instanceof \DateTime) {
+            $this->currentDate = \DateTimeImmutable::createFromMutable($currentDate);
+        } else {
+            $this->currentDate = $currentDate;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTimeImmutable
+     */
+    private function getCurrentDateTime(): \DateTimeImmutable
+    {
+        if (!$this->currentDate instanceof \DateTimeImmutable) {
+            $this->setCurrentDate(new \DateTime());
+        }
+
+        return $this->currentDate;
+    }
 
     /**
      * @param ServerRequestInterface $request
@@ -62,13 +96,18 @@ class AdminEditEndPoint implements EndPointInterface
         $this->loader->load(
             ['id' => $id],
             new Promise(
-                function ($object) use ($client, $request, $isTranslatable, $viewPath) {
+                function (ObjectInterface $object) use ($client, $request, $isTranslatable, $viewPath) {
                     $form = $this->createForm($object);
                     $form->handleRequest($request->getAttribute('request'));
 
+                    if ($object instanceof PublishableInterface && isset($request->getParsedBody()['publish'])) {
+                        $object->setPublishedAt($this->getCurrentDateTime());
+                    }
+
                     if ($form->isSubmitted() && $form->isValid()) {
                         $this->writer->save($object, new Promise(
-                            function ($object) use ($client, $form, $request, $isTranslatable, $viewPath) {
+                            function (ObjectInterface $object)
+                                use ($client, $form, $request, $isTranslatable, $viewPath) {
                                 $this->render(
                                     $client,
                                     $viewPath,

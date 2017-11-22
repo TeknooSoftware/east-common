@@ -38,7 +38,7 @@ class Draft implements StateInterface
 
     public function setPublishedAt()
     {
-        return function (\DateTime $dateTime): Content {
+        return function (\DateTimeInterface $dateTime): Content {
             $this->publishedAt = $dateTime;
 
             return $this;

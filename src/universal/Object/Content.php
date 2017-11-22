@@ -34,7 +34,7 @@ use Teknoo\States\Automated\Assertion\Property\IsNotInstanceOf;
 use Teknoo\States\Automated\AutomatedInterface;
 use Teknoo\States\Automated\AutomatedTrait;
 use Teknoo\States\Proxy\ProxyInterface;
-use Teknoo\States\Proxy\ProxyTrait;
+use Teknoo\UniversalPackage\States\Document\StandardTrait;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -49,8 +49,10 @@ class Content implements
     PublishableInterface
 {
     use PublishableTrait,
-        ProxyTrait,
-        AutomatedTrait;
+        StandardTrait,
+        AutomatedTrait {
+        AutomatedTrait::updateStates insteadof StandardTrait;
+    }
 
     /**
      * @var User
@@ -129,8 +131,8 @@ class Content implements
     protected function listAssertions(): array
     {
         return [
-            (new Property([Draft::class]))->with('publishedAt', new IsNotInstanceOf(\DateTime::class)),
-            (new Property([Published::class]))->with('publishedAt', new IsInstanceOf(\DateTime::class)),
+            (new Property([Draft::class]))->with('publishedAt', new IsNotInstanceOf(\DateTimeInterface::class)),
+            (new Property([Published::class]))->with('publishedAt', new IsInstanceOf(\DateTimeInterface::class)),
         ];
     }
 
@@ -261,7 +263,7 @@ class Content implements
      */
     public function getParts(): array
     {
-        return (array) \json_decode($this->parts, true);
+        return (array) \json_decode((string) $this->parts, true);
     }
 
     /**

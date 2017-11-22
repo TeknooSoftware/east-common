@@ -33,11 +33,11 @@ interface DeletableInterface
     /**
      * @return \DateTime
      */
-    public function getDeletedAt(): \DateTime;
+    public function getDeletedAt(): \DateTimeInterface;
 
     /**
      * @param \DateTime $deletedAt
      * @return self
      */
-    public function setDeletedAt(\DateTime $deletedAt);
+    public function setDeletedAt(\DateTimeInterface $deletedAt);
 }

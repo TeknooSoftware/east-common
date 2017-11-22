@@ -33,12 +33,12 @@ trait PublishableTrait
     use ObjectTrait;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeInterface
      */
     private $publishedAt;
 
     /**
-     * @return \DateTime
+     * @return \DateTimeInterface
      */
     public function getPublishedAt()
     {

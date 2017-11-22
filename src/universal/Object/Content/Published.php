@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Object\Content;
 
+use Teknoo\East\Website\Object\Content;
 use Teknoo\States\State\StateInterface;
 use Teknoo\States\State\StateTrait;
 
@@ -34,4 +35,12 @@ use Teknoo\States\State\StateTrait;
 class Published implements StateInterface
 {
     use StateTrait;
+
+    public function setPublishedAt()
+    {
+        return function (\DateTimeInterface $dateTime): Content {
+
+            return $this;
+        };
+    }
 }

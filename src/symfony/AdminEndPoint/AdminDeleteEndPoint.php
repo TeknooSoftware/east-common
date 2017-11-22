@@ -29,6 +29,7 @@ use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
+use Teknoo\East\Website\Object\DeletableInterface;
 use Teknoo\East\Website\Service\DeletingService;
 
 /**
@@ -72,7 +73,7 @@ class AdminDeleteEndPoint implements EndPointInterface
         $this->loader->load(
             ['id' => $id],
             new Promise(
-                function ($object) use ($client, $nextRoute) {
+                function (DeletableInterface $object) use ($client, $nextRoute) {
                     $this->deletingService->delete($object);
 
                     $this->redirectToRoute($client, $nextRoute);

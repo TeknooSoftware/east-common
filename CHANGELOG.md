@@ -1,6 +1,10 @@
 #Teknoo Software - Website - Change Log
 
-##[0.0.1-beta1] - 2017-11-27
+##[0.0.1-beta1] - 2017-11-22
+###Changed
+- Symfony optional support requires now 3.4-rc1 or 4.0-rc1
+
+##[0.0.1-beta1] - 2017-11-21
 ###First beta release
 
 ###Added

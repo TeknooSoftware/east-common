@@ -28,9 +28,11 @@ use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
+use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Writer\WriterInterface;
 use Teknoo\East\WebsiteBundle\AdminEndPoint\AdminEditEndPoint;
+use Teknoo\East\WebsiteBundle\Form\Type\ContentType;
 use Teknoo\East\WebsiteBundle\Form\Type\TypeType;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
@@ -111,15 +113,41 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
         return $this->formFactory;
     }
 
-    public function buildEndPoint()
+    public function buildEndPoint($formClass = TypeType::class)
     {
         return (new AdminEditEndPoint())
             ->setWriter($this->getWriterService())
             ->setLoader($this->getLoaderService())
             ->setFormFactory($this->getFormFactory())
             ->setTemplating($this->getTwig())
-            ->setFormClass(TypeType::class)
+            ->setFormClass($formClass)
             ->setViewPath('foo:bar.html.twig');
+    }
+
+    /**
+     * @expectedException \TypeError
+     */
+    public function testExceptionOnSetCurrentDateWithBadInstance()
+    {
+        $this->buildEndPoint()->setCurrentDate(new \stdClass());
+    }
+
+    public function testSetCurrentDateWithDateTime()
+    {
+        self::assertInstanceOf(
+            AdminEditEndPoint::class,
+            $this->buildEndPoint()
+                ->setCurrentDate(new \DateTime('2017-11-01'))
+        );
+    }
+
+    public function testSetCurrentDateWithDateTimeImmutable()
+    {
+        self::assertInstanceOf(
+            AdminEditEndPoint::class,
+            $this->buildEndPoint()
+                ->setCurrentDate(new \DateTimeImmutable('2017-11-01'))
+        );
     }
 
     /**
@@ -348,6 +376,179 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
         self::assertInstanceOf(
             AdminEditEndPoint::class,
             ($this->buildEndPoint())($request, $client, 'foo')
+        );
+    }
+
+    public function testInvokeSubmittedSuccessWithPublishedContentNotPublishing()
+    {
+        $request = $this->createMock(ServerRequestInterface::class);
+        $client = $this->createMock(ClientInterface::class);
+
+        $client->expects(self::once())->method('acceptResponse');
+        $client->expects(self::never())->method('errorInRequest');
+
+        $content = $this->createMock(Content::class);
+        $content->expects(self::never())->method('__call');
+
+        $this->getLoaderService()
+            ->expects(self::once())
+            ->method('load')
+            ->willReturnCallback(function ($criteria, PromiseInterface $promise) use ($content) {
+                self::assertEquals(['id' => 'foo'], $criteria);
+                $promise->success($content);
+
+                return $this->getLoaderService();
+            });
+
+        $form = $this->createMock(FormInterface::class);
+        $form->expects(self::any())->method('isSubmitted')->willReturn(true);
+        $form->expects(self::any())->method('isValid')->willReturn(true);
+
+        $this->getFormFactory()
+            ->expects(self::once())
+            ->method('create')
+            ->with(ContentType::class)
+            ->willReturn($form);
+
+        $this->getWriterService()
+            ->expects(self::once())
+            ->method('save')
+            ->willReturnCallback(function ($object, PromiseInterface $promise) {
+                self::assertInstanceOf(Content::class, $object);
+                $promise->success($object);
+
+                return $this->getWriterService();
+            });
+
+        $endPoint = $this->buildEndPoint(ContentType::class);
+
+        self::assertInstanceOf(
+            AdminEditEndPoint::class,
+            $endPoint
+                ->setCurrentDate(new \DateTimeImmutable('2017-11-01'))
+        );
+
+        self::assertInstanceOf(
+            AdminEditEndPoint::class,
+            $endPoint($request, $client, 'foo')
+        );
+    }
+
+    public function testInvokeSubmittedSuccessWithPublishedContentPublishing()
+    {
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->expects(self::any())
+            ->method('getParsedBody')
+            ->willReturn(['publish' => '']);
+
+        $client = $this->createMock(ClientInterface::class);
+
+        $client->expects(self::once())->method('acceptResponse');
+        $client->expects(self::never())->method('errorInRequest');
+
+        $content = $this->createMock(Content::class);
+        $content->expects(self::once())
+            ->method('__call')
+            ->with('setPublishedAt', [new \DateTimeImmutable('2017-11-01')])
+            ->willReturnSelf();
+
+        $this->getLoaderService()
+            ->expects(self::once())
+            ->method('load')
+            ->willReturnCallback(function ($criteria, PromiseInterface $promise) use ($content) {
+                self::assertEquals(['id' => 'foo'], $criteria);
+                $promise->success($content);
+
+                return $this->getLoaderService();
+            });
+
+        $form = $this->createMock(FormInterface::class);
+        $form->expects(self::any())->method('isSubmitted')->willReturn(true);
+        $form->expects(self::any())->method('isValid')->willReturn(true);
+
+        $this->getFormFactory()
+            ->expects(self::once())
+            ->method('create')
+            ->with(ContentType::class)
+            ->willReturn($form);
+
+        $this->getWriterService()
+            ->expects(self::once())
+            ->method('save')
+            ->willReturnCallback(function ($object, PromiseInterface $promise) {
+                self::assertInstanceOf(Content::class, $object);
+                $promise->success($object);
+
+                return $this->getWriterService();
+            });
+
+        $endPoint = $this->buildEndPoint(ContentType::class);
+
+        self::assertInstanceOf(
+            AdminEditEndPoint::class,
+            $endPoint
+                ->setCurrentDate(new \DateTimeImmutable('2017-11-01'))
+        );
+
+        self::assertInstanceOf(
+            AdminEditEndPoint::class,
+            $endPoint($request, $client, 'foo')
+        );
+    }
+
+    public function testInvokeSubmittedSuccessWithPublishedContentPublishingWithNoDateMock()
+    {
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->expects(self::any())
+            ->method('getParsedBody')
+            ->willReturn(['publish' => '']);
+
+        $client = $this->createMock(ClientInterface::class);
+
+        $client->expects(self::once())->method('acceptResponse');
+        $client->expects(self::never())->method('errorInRequest');
+
+        $content = $this->createMock(Content::class);
+        $content->expects(self::once())
+            ->method('__call')
+            ->with('setPublishedAt')
+            ->willReturnSelf();
+
+        $this->getLoaderService()
+            ->expects(self::once())
+            ->method('load')
+            ->willReturnCallback(function ($criteria, PromiseInterface $promise) use ($content) {
+                self::assertEquals(['id' => 'foo'], $criteria);
+                $promise->success($content);
+
+                return $this->getLoaderService();
+            });
+
+        $form = $this->createMock(FormInterface::class);
+        $form->expects(self::any())->method('isSubmitted')->willReturn(true);
+        $form->expects(self::any())->method('isValid')->willReturn(true);
+
+        $this->getFormFactory()
+            ->expects(self::once())
+            ->method('create')
+            ->with(ContentType::class)
+            ->willReturn($form);
+
+        $this->getWriterService()
+            ->expects(self::once())
+            ->method('save')
+            ->willReturnCallback(function ($object, PromiseInterface $promise) {
+                self::assertInstanceOf(Content::class, $object);
+                $promise->success($object);
+
+                return $this->getWriterService();
+            });
+
+        $endPoint = $this->buildEndPoint(ContentType::class);
+
+        self::assertInstanceOf(
+            AdminEditEndPoint::class,
+            $endPoint($request, $client, 'foo')
         );
     }
 }

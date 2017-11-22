@@ -72,6 +72,34 @@ class ContentTypeTest extends \PHPUnit\Framework\TestCase
         );
     }
 
+    public function testBuildFormWithPublishedContent()
+    {
+        $builder = $this->createMock(FormBuilderInterface::class);
+        $builder->expects(self::any())
+            ->method('addEventListener')
+            ->willReturnCallback(function ($name, $callable) {
+                $form = $this->createMock(FormInterface::class);
+                $content = new Content();
+                $type = new Type();
+                $type->setBlocks([
+                    new Block('foo', 'text'),
+                    new Block('foo2', 'textarea'),
+                    new Block('foo3', 'numeric')
+                ]);
+                $content->setType($type);
+                $content->setParts(['foo' => 'bar']);
+                $content->setPublishedAt(new \DateTime('2017-11-01'));
+
+                $event = new FormEvent($form, $content);
+                $callable($event);
+            });
+
+        self::assertInstanceOf(
+            AbstractType::class,
+            $this->buildForm()->buildForm($builder, [])
+        );
+    }
+
     public function testBuildFormSubmittedData()
     {
         $builder = $this->createMock(FormBuilderInterface::class);

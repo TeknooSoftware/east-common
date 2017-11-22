@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\WebsiteBundle\EndPoint;
 
+use Psr\Http\Message\ServerRequestInterface;
 use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
 use Teknoo\East\Website\EndPoint\ContentEndPointTrait;
@@ -36,4 +37,15 @@ class ContentEndPoint implements EndPointInterface
 {
     use EastEndPointTrait,
         ContentEndPointTrait;
+
+    /**
+     * @param ServerRequestInterface $request
+     * @return string[]
+     */
+    private function parseUrl(ServerRequestInterface $request): array
+    {
+        $path = (string) $request->getUri()->getPath();
+        $path = \str_replace(['app.php', 'app_dev.php'], '', $path);
+        return \explode('/', \trim($path, '/'));
+    }
 }

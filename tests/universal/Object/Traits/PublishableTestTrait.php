@@ -42,11 +42,17 @@ trait PublishableTestTrait
     public function testSetPublishedAt()
     {
         $date = new \DateTime('2017-06-13');
+        $date2 = new \DateTime('2017-06-14');
 
         $Object = $this->buildObject();
         self::assertInstanceOf(
             \get_class($Object),
             $Object->setPublishedAt($date)
+        );
+
+        self::assertInstanceOf(
+            \get_class($Object),
+            $Object->setPublishedAt($date2)
         );
 
         self::assertEquals(

@@ -34,6 +34,7 @@ use Teknoo\East\Website\Object\User;
  * @covers \Teknoo\East\Website\Object\ObjectTrait
  * @covers \Teknoo\East\Website\Object\Content
  * @covers \Teknoo\East\Website\Object\Content\Draft
+ * @covers \Teknoo\East\Website\Object\Content\Published
  */
 class ContentTest extends \PHPUnit\Framework\TestCase
 {

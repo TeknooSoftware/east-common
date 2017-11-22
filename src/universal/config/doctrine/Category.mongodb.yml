@@ -61,3 +61,5 @@ Teknoo\East\Website\Object\Category:
     children:
       targetDocument:  'Teknoo\East\Website\Object\Category'
       cascade: 'all'
+  lifecycleCallbacks:
+    postLoad: ['postLoadDoctrine']

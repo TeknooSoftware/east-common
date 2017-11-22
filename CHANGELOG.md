@@ -1,5 +1,11 @@
 #Teknoo Software - Website - Change Log
 
+##[0.0.1-beta3] - 2017-11-22
+###Fixed
+- Add publishing button and behavior of Publishable content in AdminEditEndPoint
+- Migrate \DateTime type hitting to \DateTimeInterface
+- Fix bug in MongoDB document postLoad
+
 ##[0.0.1-beta2] - 2017-11-22
 ###Changed
 - Symfony optional support requires now 3.4-rc1 or 4.0-rc1

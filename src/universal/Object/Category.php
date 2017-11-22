@@ -34,6 +34,7 @@ use Teknoo\States\Automated\AutomatedInterface;
 use Teknoo\States\Automated\AutomatedTrait;
 use Teknoo\States\Proxy\ProxyInterface;
 use Teknoo\States\Proxy\ProxyTrait;
+use Teknoo\UniversalPackage\States\Entity\StandardTrait;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -41,9 +42,11 @@ use Teknoo\States\Proxy\ProxyTrait;
  */
 class Category implements ObjectInterface, ProxyInterface, AutomatedInterface, Translatable, DeletableInterface
 {
-    use ProxyTrait,
+    use StandardTrait,
         AutomatedTrait,
-        ObjectTrait;
+        ObjectTrait{
+        AutomatedTrait::updateStates insteadof StandardTrait;
+    }
 
     /**
      * @var string

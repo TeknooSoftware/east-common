@@ -42,7 +42,7 @@ class ContentEndPoint implements EndPointInterface
      * @param ServerRequestInterface $request
      * @return string[]
      */
-    private function parseUrl(ServerRequestInterface $request): array
+    protected function parseUrl(ServerRequestInterface $request): array
     {
         $path = (string) $request->getUri()->getPath();
         $path = \str_replace(['app.php', 'app_dev.php'], '', $path);

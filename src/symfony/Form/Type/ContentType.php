@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Teknoo\East\WebsiteBundle\Form\Type;
 
 use Doctrine\Bundle\MongoDBBundle\Form\Type\DocumentType;
+use Doctrine\ODM\MongoDB\DocumentRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -59,17 +60,44 @@ class ContentType extends AbstractType
         $builder->add(
             'author',
             DocumentType::class,
-            ['class' => User::class, 'required'=>true, 'multiple'=>false, 'choice_label'=>'username']
+            [
+                'class' => User::class,
+                'required' => true,
+                'multiple' => false,
+                'choice_label' => 'username',
+                'query_builder' => function (DocumentRepository $repository) {
+                    return $repository->createQueryBuilder()
+                        ->field('deletedAt')->equals(null);
+                }
+            ]
         );
         $builder->add(
             'type',
             DocumentType::class,
-            ['class' => Type::class, 'required'=>true, 'multiple'=>false, 'choice_label' => 'name']
+            [
+                'class' => Type::class,
+                'required' => true,
+                'multiple' => false,
+                'choice_label' => 'name',
+                'query_builder' => function (DocumentRepository $repository) {
+                    return $repository->createQueryBuilder()
+                        ->field('deletedAt')->equals(null);
+                }
+            ]
         );
         $builder->add(
             'categories',
             DocumentType::class,
-            ['class' => Category::class, 'required'=>false, 'multiple'=>true, 'choice_label' => 'name']
+            [
+                'class' => Category::class,
+                'required' => false,
+                'multiple' => true,
+                'choice_label' => 'name',
+                'query_builder' => function (DocumentRepository $repository) {
+                    return $repository->createQueryBuilder()
+                        ->field('deletedAt')->equals(null);
+                }
+            ]
         );
         $builder->add('title', TextType::class, ['required'=>true]);
         $builder->add('subtitle', TextType::class, ['required'=>false]);

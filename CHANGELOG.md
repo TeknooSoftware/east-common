@@ -1,5 +1,9 @@
 #Teknoo Software - Website - Change Log
 
+##[0.0.1-beta4] - 2017-11-24
+###Fixed
+- Not show solft deletd content into admin crud
+
 ##[0.0.1-beta3] - 2017-11-22
 ###Fixed
 - Add publishing button and behavior of Publishable content in AdminEditEndPoint

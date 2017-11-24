@@ -22,6 +22,9 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\Form\Type;
 
+use Doctrine\Bundle\MongoDBBundle\Form\Type\DocumentType;
+use Doctrine\MongoDB\Query\Builder;
+use Doctrine\ODM\MongoDB\DocumentRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -66,6 +69,33 @@ class ContentTypeTest extends \PHPUnit\Framework\TestCase
                 $callable($event);
             });
 
+        $builder->expects(self::any())
+            ->method('add')
+            ->willReturnCallback(
+                function ($child, $type, array $options = array()) use ($builder) {
+                    if (DocumentType::class == $type && isset($options['query_builder'])) {
+                        $qBuilder = $this->createMock(Builder::class);
+                        $qBuilder->expects(self::once())
+                            ->method('field')
+                            ->with('deletedAt')
+                            ->willReturnSelf();
+
+                        $qBuilder->expects(self::once())
+                            ->method('equals')
+                            ->with(null)
+                            ->willReturnSelf();
+
+                        $repository = $this->createMock(DocumentRepository::class);
+                        $repository->expects(self::once())
+                            ->method('createQueryBuilder')
+                            ->willReturn($qBuilder);
+
+                        $options['query_builder']($repository);
+                    }
+
+                    return $this;
+                });
+
         self::assertInstanceOf(
             AbstractType::class,
             $this->buildForm()->buildForm($builder, [])
@@ -94,6 +124,33 @@ class ContentTypeTest extends \PHPUnit\Framework\TestCase
                 $callable($event);
             });
 
+        $builder->expects(self::any())
+            ->method('add')
+            ->willReturnCallback(
+                function ($child, $type, array $options = array()) use ($builder) {
+                    if (DocumentType::class == $type && isset($options['query_builder'])) {
+                        $qBuilder = $this->createMock(Builder::class);
+                        $qBuilder->expects(self::once())
+                            ->method('field')
+                            ->with('deletedAt')
+                            ->willReturnSelf();
+
+                        $qBuilder->expects(self::once())
+                            ->method('equals')
+                            ->with(null)
+                            ->willReturnSelf();
+
+                        $repository = $this->createMock(DocumentRepository::class);
+                        $repository->expects(self::once())
+                            ->method('createQueryBuilder')
+                            ->willReturn($qBuilder);
+
+                        $options['query_builder']($repository);
+                    }
+
+                    return $this;
+                });
+
         self::assertInstanceOf(
             AbstractType::class,
             $this->buildForm()->buildForm($builder, [])
@@ -116,6 +173,33 @@ class ContentTypeTest extends \PHPUnit\Framework\TestCase
                 $event = new FormEvent($form, ['foo'=>'bar', 'foo2'=>'bar']);
                 $callable($event);
             });
+
+        $builder->expects(self::any())
+            ->method('add')
+            ->willReturnCallback(
+                function ($child, $type, array $options = array()) use ($builder) {
+                    if (DocumentType::class == $type && isset($options['query_builder'])) {
+                        $qBuilder = $this->createMock(Builder::class);
+                        $qBuilder->expects(self::once())
+                            ->method('field')
+                            ->with('deletedAt')
+                            ->willReturnSelf();
+
+                        $qBuilder->expects(self::once())
+                            ->method('equals')
+                            ->with(null)
+                            ->willReturnSelf();
+
+                        $repository = $this->createMock(DocumentRepository::class);
+                        $repository->expects(self::once())
+                            ->method('createQueryBuilder')
+                            ->willReturn($qBuilder);
+
+                        $options['query_builder']($repository);
+                    }
+
+                    return $this;
+                });
 
         self::assertInstanceOf(
             AbstractType::class,

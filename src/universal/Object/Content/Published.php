@@ -39,7 +39,6 @@ class Published implements StateInterface
     public function setPublishedAt()
     {
         return function (\DateTimeInterface $dateTime): Content {
-
             return $this;
         };
     }

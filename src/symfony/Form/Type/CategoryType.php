@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Teknoo\East\WebsiteBundle\Form\Type;
 
 use Doctrine\Bundle\MongoDBBundle\Form\Type\DocumentType;
+use Doctrine\ODM\MongoDB\DocumentRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -54,7 +55,16 @@ class CategoryType extends AbstractType
         $builder->add(
             'parent',
             DocumentType::class,
-            ['class' => Category::class, 'required'=>false, 'multiple'=>false, 'choice_label' => 'name']
+            [
+                'class' => Category::class,
+                'required'=>false,
+                'multiple'=>false,
+                'choice_label' => 'name',
+                'query_builder' => function (DocumentRepository $repository) {
+                    return $repository->createQueryBuilder()
+                        ->field('deletedAt')->equals(null);
+                }
+            ]
         );
         $builder->add('slug', TextType::class, ['required'=>false]);
         $builder->add('hidden', CheckboxType::class, ['required'=>false]);

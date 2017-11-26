@@ -1,5 +1,14 @@
 #Teknoo Software - Website - Change Log
 
+##[0.0.1-beta5] - 2017-11-27
+###Fixed
+- Fix category use Document Standard trait from states instead of entity
+- Fix menu generator to use TopByLocation instead slug and replace TopBySlug method in Category loader by TopByLocation
+
+###Updated
+- Remove link in content to category rename Category to item
+- Add reference to content into Items.
+
 ##[0.0.1-beta4] - 2017-11-24
 ###Fixed
 - Not show solft deletd content into admin crud

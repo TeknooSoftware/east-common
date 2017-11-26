@@ -33,8 +33,7 @@ use Teknoo\States\Automated\Assertion\Property\IsEqual;
 use Teknoo\States\Automated\AutomatedInterface;
 use Teknoo\States\Automated\AutomatedTrait;
 use Teknoo\States\Proxy\ProxyInterface;
-use Teknoo\States\Proxy\ProxyTrait;
-use Teknoo\UniversalPackage\States\Entity\StandardTrait;
+use Teknoo\UniversalPackage\States\Document\StandardTrait;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License

@@ -97,30 +97,4 @@ class CategoryLoaderTest extends \PHPUnit\Framework\TestCase
             )
         );
     }
-
-    public function testAllTop()
-    {
-        $entity = $this->getEntity();
-
-        $this->getRepositoryMock()
-            ->expects(self::any())
-            ->method('findBy')
-            ->with(['children' => [], 'deletedAt'=>null])
-            ->willReturn([$entity]);
-
-        /**
-         * @var \PHPUnit_Framework_MockObject_MockObject $promiseMock
-         *
-         */
-        $promiseMock = $this->createMock(PromiseInterface::class);
-        $promiseMock->expects(self::once())->method('success')->with([$entity]);
-        $promiseMock->expects(self::never())->method('fail');
-
-        self::assertInstanceOf(
-            LoaderInterface::class,
-            $this->buildLoader()->allTop(
-                $promiseMock
-            )
-        );
-    }
 }

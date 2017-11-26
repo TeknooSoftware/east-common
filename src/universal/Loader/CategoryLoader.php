@@ -79,18 +79,4 @@ class CategoryLoader implements LoaderInterface
             $promise
         );
     }
-
-    /**
-     * @param PromiseInterface $promise
-     * @return CategoryLoader|LoaderInterface
-     */
-    public function allTop(PromiseInterface $promise): CategoryLoader
-    {
-        return $this->loadCollection(
-            [
-            'children' => []
-            ],
-            $promise
-        );
-    }
 }

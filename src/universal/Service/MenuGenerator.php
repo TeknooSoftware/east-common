@@ -54,8 +54,8 @@ class MenuGenerator
     public function extract(string $location)
     {
         $stacks = [];
-        $promise = new Promise(function ($categories) use (&$stacks) {
-            $stacks = $categories;
+        $promise = new Promise(function ($items) use (&$stacks) {
+            $stacks = $items;
         });
 
         $this->itemLoader->topByLocation($location, $promise);

@@ -1,7 +1,7 @@
 #src/Resources/config/doctrine/Task.orm.yml
 Teknoo\East\Website\Object\Item:
   type: 'documents'
-  collection: 'categories'
+  collection: 'items'
   gedmo:
     soft_deleteable:
       field_name: 'deletedAt'

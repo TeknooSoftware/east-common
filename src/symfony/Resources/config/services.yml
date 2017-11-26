@@ -91,7 +91,7 @@ services:
     calls:
       - ['setFormFactory', ['@form.factory']]
 
-  #Categories
+  #Items
   teknoo.east.website.endpoint.admin.delete.item:
     parent: 'teknoo.east.website.endpoint.admin.delete.abstract'
     calls:

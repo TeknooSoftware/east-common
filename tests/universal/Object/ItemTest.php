@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests\East\Website\Object;
 
+use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Object\Item;
 use Teknoo\Tests\East\Website\Object\Traits\ObjectTestTrait;
 
@@ -110,6 +111,46 @@ class ItemTest extends \PHPUnit\Framework\TestCase
     public function testSetSlugExceptionOnBadArgument()
     {
         $this->buildObject()->setSlug(new \stdClass());
+    }
+
+    public function testGetContent()
+    {
+        $object = new Content();
+        self::assertEquals(
+            $object,
+            $this->generateObjectPopulated(['content' => $object])->getContent()
+        );
+    }
+
+    public function testSetContent()
+    {
+        $object = new Content();
+
+        $Object = $this->buildObject();
+        self::assertInstanceOf(
+            Item::class,
+            $Object->setContent($object)
+        );
+
+        self::assertEquals(
+            $object,
+            $Object->getContent()
+        );
+
+        self::assertInstanceOf(
+            Item::class,
+            $Object->setContent(null)
+        );
+
+        self::assertEmpty($Object->getContent());
+    }
+
+    /**
+     * @expectedException \Throwable
+     */
+    public function testSetContentExceptionOnBadArgument()
+    {
+        $this->buildObject()->setContent(new \stdClass());
     }
 
     public function testGetLocation()

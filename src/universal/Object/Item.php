@@ -56,6 +56,11 @@ class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, Trans
      * @var string
      */
     private $slug;
+
+    /**
+     * @var Content
+     */
+    private $content;
     
     /**
      * @var int
@@ -161,6 +166,25 @@ class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, Trans
     public function setSlug(string $slug = null): Item
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * @return Content
+     */
+    public function getContent(): ?Content
+    {
+        return $this->content;
+    }
+
+    /**
+     * @param Content $content
+     * @return self
+     */
+    public function setContent(Content $content = null): Item
+    {
+        $this->content = $content;
 
         return $this;
     }

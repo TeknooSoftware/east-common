@@ -31,6 +31,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Object\Item;
 
 /**
@@ -66,6 +67,21 @@ class ItemType extends AbstractType
                 }
             ]
         );
+        $builder->add(
+            'content',
+            DocumentType::class,
+            [
+                'class' => Content::class,
+                'required'=>false,
+                'multiple'=>false,
+                'choice_label' => 'title',
+                'query_builder' => function (DocumentRepository $repository) {
+                    return $repository->createQueryBuilder()
+                        ->field('deletedAt')->equals(null);
+                }
+            ]
+        );
+        $builder->add('slug', TextType::class, ['required'=>false]);
         $builder->add('slug', TextType::class, ['required'=>false]);
         $builder->add('hidden', CheckboxType::class, ['required'=>false]);
         $builder->add('position', IntegerType::class, ['required'=>false]);

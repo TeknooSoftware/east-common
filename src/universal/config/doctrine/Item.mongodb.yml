@@ -57,6 +57,9 @@ Teknoo\East\Website\Object\Item:
     parent:
       targetDocument: 'Teknoo\East\Website\Object\Item'
       cascade: 'all'
+    content:
+      targetDocument: 'Teknoo\East\Website\Object\Content'
+      cascade: 'none'
   referenceMany:
     children:
       targetDocument:  'Teknoo\East\Website\Object\Item'

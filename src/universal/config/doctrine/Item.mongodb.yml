@@ -1,5 +1,5 @@
 #src/Resources/config/doctrine/Task.orm.yml
-Teknoo\East\Website\Object\Category:
+Teknoo\East\Website\Object\Item:
   type: 'documents'
   collection: 'categories'
   gedmo:
@@ -55,11 +55,11 @@ Teknoo\East\Website\Object\Category:
       index: true
   referenceOne:
     parent:
-      targetDocument: 'Teknoo\East\Website\Object\Category'
+      targetDocument: 'Teknoo\East\Website\Object\Item'
       cascade: 'all'
   referenceMany:
     children:
-      targetDocument:  'Teknoo\East\Website\Object\Category'
+      targetDocument:  'Teknoo\East\Website\Object\Item'
       cascade: 'all'
   lifecycleCallbacks:
     postLoad: ['postLoadDoctrine']

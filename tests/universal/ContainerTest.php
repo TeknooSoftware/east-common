@@ -34,7 +34,7 @@ use Teknoo\East\Foundation\Manager\Queue\Queue;
 use Teknoo\East\Foundation\Manager\Queue\QueueInterface;
 use Teknoo\East\Foundation\Processor\Processor;
 use Teknoo\East\Foundation\Processor\ProcessorInterface;
-use Teknoo\East\Website\Loader\CategoryLoader;
+use Teknoo\East\Website\Loader\ItemLoader;
 use Teknoo\East\Website\Loader\ContentLoader;
 use Teknoo\East\Website\Loader\MediaLoader;
 use Teknoo\East\Website\Loader\TypeLoader;
@@ -43,7 +43,7 @@ use Teknoo\East\Website\Middleware\LocaleMiddleware;
 use Teknoo\East\Website\Middleware\MenuMiddleware;
 use Teknoo\East\Website\Service\DeletingService;
 use Teknoo\East\Website\Service\MenuGenerator;
-use Teknoo\East\Website\Writer\CategoryWriter;
+use Teknoo\East\Website\Writer\ItemWriter;
 use Teknoo\East\Website\Writer\ContentWriter;
 use Teknoo\East\Website\Writer\MediaWriter;
 use Teknoo\East\Website\Writer\TypeWriter;
@@ -86,9 +86,9 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testCategoryLoader()
+    public function testItemLoader()
     {
-        $this->generateTestForLoader(CategoryLoader::class);
+        $this->generateTestForLoader(ItemLoader::class);
     }
 
     public function testContentLoader()
@@ -125,9 +125,9 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testCategoryWriter()
+    public function testItemWriter()
     {
-        $this->generateTestForWriter(CategoryWriter::class);
+        $this->generateTestForWriter(ItemWriter::class);
     }
 
     public function testContentWriter()
@@ -164,9 +164,9 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testCategoryDelete()
+    public function testItemDelete()
     {
-        $this->generateTestForDelete('teknoo.east.website.deleting.category');
+        $this->generateTestForDelete('teknoo.east.website.deleting.item');
     }
 
     public function testContentDelete()

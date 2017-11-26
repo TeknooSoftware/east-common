@@ -24,17 +24,17 @@ namespace Teknoo\Tests\East\Website\Loader;
 
 use Doctrine\Common\Persistence\ObjectRepository;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
-use Teknoo\East\Website\Object\Category;
-use Teknoo\East\Website\Loader\CategoryLoader;
+use Teknoo\East\Website\Object\Item;
+use Teknoo\East\Website\Loader\ItemLoader;
 use Teknoo\East\Website\Loader\LoaderInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers      \Teknoo\East\Website\Loader\CategoryLoader
+ * @covers      \Teknoo\East\Website\Loader\ItemLoader
  * @covers      \Teknoo\East\Website\Loader\CollectionLoaderTrait
  */
-class CategoryLoaderTest extends \PHPUnit\Framework\TestCase
+class ItemLoaderTest extends \PHPUnit\Framework\TestCase
 {
     use LoaderTestTrait;
 
@@ -56,19 +56,19 @@ class CategoryLoaderTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @return LoaderInterface|CategoryLoader
+     * @return LoaderInterface|ItemLoader
      */
     public function buildLoader(): LoaderInterface
     {
-        return new CategoryLoader($this->getRepositoryMock());
+        return new ItemLoader($this->getRepositoryMock());
     }
 
     /**
-     * @return Category
+     * @return Item
      */
     public function getEntity()
     {
-        return new Category();
+        return new Item();
     }
 
     public function testTopByLocation()

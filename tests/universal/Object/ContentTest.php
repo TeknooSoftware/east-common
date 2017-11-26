@@ -288,28 +288,6 @@ class ContentTest extends \PHPUnit\Framework\TestCase
     {
         $this->buildObject()->setType(new \stdClass());
     }
-    
-    public function testGetCategories()
-    {
-        self::assertEquals(
-            [],
-            $this->generateObjectPopulated(['categories' => []])->getCategories()
-        );
-    }
-
-    public function testSetCategories()
-    {
-        $Object = $this->buildObject();
-        self::assertInstanceOf(
-            \get_class($Object),
-            $Object->setCategories(['foo'=>'bar'])
-        );
-
-        self::assertEquals(
-            ['foo'=>'bar'],
-            $Object->getCategories()
-        );
-    }
 
     public function testGetTags()
     {

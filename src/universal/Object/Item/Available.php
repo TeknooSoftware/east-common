@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * East Website.
  *
@@ -20,22 +22,16 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\WebsiteBundle\Form\Type;
+namespace Teknoo\East\Website\Object\Item;
 
-use Teknoo\East\WebsiteBundle\Form\Type\CategoryType;
+use Teknoo\States\State\StateInterface;
+use Teknoo\States\State\StateTrait;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers      \Teknoo\East\WebsiteBundle\Form\Type\CategoryType
- * @covers      \Teknoo\East\WebsiteBundle\Form\Type\TranslatableTrait
  */
-class CategoryTypeTest extends \PHPUnit\Framework\TestCase
+class Available implements StateInterface
 {
-    use FormTestTrait;
-
-    public function buildForm()
-    {
-        return new CategoryType();
-    }
+    use StateTrait;
 }

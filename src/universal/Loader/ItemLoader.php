@@ -26,18 +26,18 @@ namespace Teknoo\East\Website\Loader;
 
 use Doctrine\Common\Persistence\ObjectRepository;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
-use Teknoo\East\Website\Object\Category;
+use Teknoo\East\Website\Object\Item;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class CategoryLoader implements LoaderInterface
+class ItemLoader implements LoaderInterface
 {
     use CollectionLoaderTrait;
 
     /**
-     * CategoryLoader constructor.
+     * ItemLoader constructor.
      * @param ObjectRepository $repository
      */
     public function __construct(ObjectRepository $repository)
@@ -55,10 +55,10 @@ class CategoryLoader implements LoaderInterface
         $criteria['deletedAt'] = null;
         $entity = $this->repository->findOneBy($criteria);
 
-        if ($entity instanceof Category) {
+        if ($entity instanceof Item) {
             $promise->success($entity);
         } else {
-            $promise->fail(new \DomainException('Category not found'));
+            $promise->fail(new \DomainException('Item not found'));
         }
 
         return $this;
@@ -67,9 +67,9 @@ class CategoryLoader implements LoaderInterface
     /**
      * @param string $location
      * @param PromiseInterface $promise
-     * @return CategoryLoader|LoaderInterface
+     * @return ItemLoader|LoaderInterface
      */
-    public function topByLocation(string $location, PromiseInterface $promise): CategoryLoader
+    public function topByLocation(string $location, PromiseInterface $promise): ItemLoader
     {
         return $this->loadCollection(
             [

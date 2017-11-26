@@ -31,21 +31,21 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Gedmo\Translatable\TranslatableListener;
 use Psr\Container\ContainerInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
-use Teknoo\East\Website\Loader\CategoryLoader;
+use Teknoo\East\Website\Loader\ItemLoader;
 use Teknoo\East\Website\Loader\ContentLoader;
 use Teknoo\East\Website\Loader\MediaLoader;
 use Teknoo\East\Website\Loader\TypeLoader;
 use Teknoo\East\Website\Loader\UserLoader;
 use Teknoo\East\Website\Middleware\LocaleMiddleware;
 use Teknoo\East\Website\Middleware\MenuMiddleware;
-use Teknoo\East\Website\Object\Category;
+use Teknoo\East\Website\Object\Item;
 use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Object\Media;
 use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Object\User;
 use Teknoo\East\Website\Service\DeletingService;
 use Teknoo\East\Website\Service\MenuGenerator;
-use Teknoo\East\Website\Writer\CategoryWriter;
+use Teknoo\East\Website\Writer\ItemWriter;
 use Teknoo\East\Website\Writer\ContentWriter;
 use Teknoo\East\Website\Writer\MediaWriter;
 use Teknoo\East\Website\Writer\TypeWriter;
@@ -53,8 +53,8 @@ use Teknoo\East\Website\Writer\UserWriter;
 
 return [
     //Loaders
-    CategoryLoader::class => function (ContainerInterface $container) {
-        return new CategoryLoader($container->get(ObjectManager::class)->getRepository(Category::class));
+    ItemLoader::class => function (ContainerInterface $container) {
+        return new ItemLoader($container->get(ObjectManager::class)->getRepository(Item::class));
     },
     ContentLoader::class => function (ContainerInterface $container) {
         return new ContentLoader($container->get(ObjectManager::class)->getRepository(Content::class));
@@ -70,7 +70,7 @@ return [
     },
 
     //Writer
-    CategoryWriter::class => object(CategoryWriter::class)
+    ItemWriter::class => object(ItemWriter::class)
         ->constructor(get(ObjectManager::class)),
     ContentWriter::class => object(ContentWriter::class)
         ->constructor(get(ObjectManager::class)),
@@ -82,8 +82,8 @@ return [
         ->constructor(get(ObjectManager::class)),
 
     //Deleting
-    'teknoo.east.website.deleting.category' => object(DeletingService::class)
-        ->constructor(get(CategoryWriter::class)),
+    'teknoo.east.website.deleting.item' => object(DeletingService::class)
+        ->constructor(get(ItemWriter::class)),
     'teknoo.east.website.deleting.content' => object(DeletingService::class)
         ->constructor(get(ContentWriter::class)),
     'teknoo.east.website.deleting.media' => object(DeletingService::class)
@@ -95,7 +95,7 @@ return [
 
     //Menu
     MenuGenerator::class => object(MenuGenerator::class)
-        ->constructor(get(CategoryLoader::class)),
+        ->constructor(get(ItemLoader::class)),
     MenuMiddleware::class => object(MenuMiddleware::class)
         ->constructor(get(MenuGenerator::class)),
 

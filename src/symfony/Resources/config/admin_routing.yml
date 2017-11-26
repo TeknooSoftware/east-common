@@ -1,22 +1,22 @@
-admin_category_list:
+admin_item_list:
     path: '/categories/'
     methods:  ['GET']
-    defaults: { _controller: 'teknoo.east.website.endpoint.admin.list.category' }
+    defaults: { _controller: 'teknoo.east.website.endpoint.admin.list.item' }
 
-admin_category_edit:
-    path: '/category/edit/{id}'
+admin_item_edit:
+    path: '/item/edit/{id}'
     methods:  ['GET', 'POST', 'PUT']
-    defaults: { _controller: 'teknoo.east.website.endpoint.admin.edit.category', isTranslatable: true }
+    defaults: { _controller: 'teknoo.east.website.endpoint.admin.edit.item', isTranslatable: true }
 
-admin_category_new:
-    path: '/category/new'
+admin_item_new:
+    path: '/item/new'
     methods:  ['GET', 'POST', 'PUT']
-    defaults: { _controller: 'teknoo.east.website.endpoint.admin.new.category', editRoute: 'admin_category_edit', isTranslatable: true  }
+    defaults: { _controller: 'teknoo.east.website.endpoint.admin.new.item', editRoute: 'admin_item_edit', isTranslatable: true  }
 
-admin_category_delete:
-    path: '/category/delete/{id}'
+admin_item_delete:
+    path: '/item/delete/{id}'
     methods:  ['GET']
-    defaults: { _controller: 'teknoo.east.website.endpoint.admin.delete.category', nextRoute: 'admin_category_list'}
+    defaults: { _controller: 'teknoo.east.website.endpoint.admin.delete.item', nextRoute: 'admin_item_list'}
 
 admin_content_list:
     path: '/contents/'

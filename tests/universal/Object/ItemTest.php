@@ -22,8 +22,7 @@
 
 namespace Teknoo\Tests\East\Website\Object;
 
-use Teknoo\East\Website\Object\Category;
-use Teknoo\East\Website\Object\Type;
+use Teknoo\East\Website\Object\Item;
 use Teknoo\Tests\East\Website\Object\Traits\ObjectTestTrait;
 
 /**
@@ -31,18 +30,18 @@ use Teknoo\Tests\East\Website\Object\Traits\ObjectTestTrait;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers \Teknoo\East\Website\Object\PublishableTrait
  * @covers \Teknoo\East\Website\Object\ObjectTrait
- * @covers \Teknoo\East\Website\Object\Category
+ * @covers \Teknoo\East\Website\Object\Item
  */
-class CategoryTest extends \PHPUnit\Framework\TestCase
+class ItemTest extends \PHPUnit\Framework\TestCase
 {
     use ObjectTestTrait;
 
     /**
-     * @return Category
+     * @return Item
      */
-    public function buildObject(): Category
+    public function buildObject(): Item
     {
-        return new Category();
+        return new Item();
     }
 
     public function testGetName()
@@ -245,7 +244,7 @@ class CategoryTest extends \PHPUnit\Framework\TestCase
     
     public function testGetParent()
     {
-        $object = new Category();
+        $object = new Item();
         self::assertEquals(
             $object,
             $this->generateObjectPopulated(['parent' => $object])->getParent()
@@ -254,11 +253,11 @@ class CategoryTest extends \PHPUnit\Framework\TestCase
 
     public function testSetParent()
     {
-        $object = new Category();
+        $object = new Item();
 
         $Object = $this->buildObject();
         self::assertInstanceOf(
-            Category::class,
+            Item::class,
             $Object->setParent($object)
         );
 
@@ -268,7 +267,7 @@ class CategoryTest extends \PHPUnit\Framework\TestCase
         );
 
         self::assertInstanceOf(
-            Category::class,
+            Item::class,
             $Object->setParent(null)
         );
 
@@ -315,6 +314,6 @@ class CategoryTest extends \PHPUnit\Framework\TestCase
 
     public function testStatesListDeclaration()
     {
-        self::assertInternalType('array', Category::statesListDeclaration());
+        self::assertInternalType('array', Item::statesListDeclaration());
     }
 }

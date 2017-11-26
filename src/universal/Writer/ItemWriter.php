@@ -22,16 +22,25 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\East\Website\Object\Category;
+namespace Teknoo\East\Website\Writer;
 
-use Teknoo\States\State\StateInterface;
-use Teknoo\States\State\StateTrait;
+use Teknoo\East\Foundation\Promise\PromiseInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class Hidden implements StateInterface
+class ItemWriter implements WriterInterface
 {
-    use StateTrait;
+    use DoctrinePersistTrait;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function save($object, PromiseInterface $promise = null): WriterInterface
+    {
+        $this->persist($object, $promise);
+
+        return $this;
+    }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * East Website.
  *
@@ -20,29 +22,16 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Writer;
+namespace Teknoo\East\Website\Object\Item;
 
-use Teknoo\East\Website\Object\Category;
-use Teknoo\East\Website\Writer\CategoryWriter;
-use Teknoo\East\Website\Writer\WriterInterface;
+use Teknoo\States\State\StateInterface;
+use Teknoo\States\State\StateTrait;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Writer\CategoryWriter
- * @covers \Teknoo\East\Website\Writer\DoctrinePersistTrait
  */
-class CategoryWriterTest extends \PHPUnit\Framework\TestCase
+class Hidden implements StateInterface
 {
-    use DoctrinePersistTestTrait;
-
-    public function buildWriter(): WriterInterface
-    {
-        return new CategoryWriter($this->getObjectManager());
-    }
-
-    public function getObject()
-    {
-        return new Category();
-    }
+    use StateTrait;
 }

@@ -11,23 +11,23 @@ parameters:
   teknoo.east.website.endpoint.admin.new.class: 'Teknoo\East\WebsiteBundle\AdminEndPoint\AdminNewEndPoint'
 
   #Admin form types
-  teknoo.east.website.form_type.category.class: 'Teknoo\East\WebsiteBundle\Form\Type\CategoryType'
+  teknoo.east.website.form_type.item.class: 'Teknoo\East\WebsiteBundle\Form\Type\ItemType'
   teknoo.east.website.form_type.content.class: 'Teknoo\East\WebsiteBundle\Form\Type\ContentType'
   teknoo.east.website.form_type.media.class: 'Teknoo\East\WebsiteBundle\Form\Type\MediaType'
   teknoo.east.website.form_type.type.class: 'Teknoo\East\WebsiteBundle\Form\Type\TypeType'
   teknoo.east.website.form_type.user.class: 'Teknoo\East\WebsiteBundle\Form\Type\UserType'
 
   #Class
-  teknoo.east.website.category.class: 'Teknoo\East\Website\Object\Category'
+  teknoo.east.website.item.class: 'Teknoo\East\Website\Object\Item'
   teknoo.east.website.content.class: 'Teknoo\East\Website\Object\Content'
   teknoo.east.website.media.class: 'Teknoo\East\Website\Object\Media'
   teknoo.east.website.type.class: 'Teknoo\East\Website\Object\Type'
   teknoo.east.website.user.class: 'Teknoo\East\Website\Object\User'
 
   #Admin view path
-  teknoo.east.website.view.category.new.file: 'TeknooEastWebsiteBundle:AdminCategory:new.html.twig'
-  teknoo.east.website.view.category.edit.file: 'TeknooEastWebsiteBundle:AdminCategory:edit.html.twig'
-  teknoo.east.website.view.category.list.file: 'TeknooEastWebsiteBundle:AdminCategory:list.html.twig'
+  teknoo.east.website.view.item.new.file: 'TeknooEastWebsiteBundle:AdminItem:new.html.twig'
+  teknoo.east.website.view.item.edit.file: 'TeknooEastWebsiteBundle:AdminItem:edit.html.twig'
+  teknoo.east.website.view.item.list.file: 'TeknooEastWebsiteBundle:AdminItem:list.html.twig'
 
   teknoo.east.website.view.content.new.file: 'TeknooEastWebsiteBundle:AdminContent:new.html.twig'
   teknoo.east.website.view.content.edit.file: 'TeknooEastWebsiteBundle:AdminContent:edit.html.twig'
@@ -92,36 +92,36 @@ services:
       - ['setFormFactory', ['@form.factory']]
 
   #Categories
-  teknoo.east.website.endpoint.admin.delete.category:
+  teknoo.east.website.endpoint.admin.delete.item:
     parent: 'teknoo.east.website.endpoint.admin.delete.abstract'
     calls:
-      - ['setDeletingService', ['@teknoo.east.website.deleting.category']]
-      - ['setLoader', ['@Teknoo\East\Website\Loader\CategoryLoader']]
+      - ['setDeletingService', ['@teknoo.east.website.deleting.item']]
+      - ['setLoader', ['@Teknoo\East\Website\Loader\ItemLoader']]
       - ['setRouter', ['@router']]
 
-  teknoo.east.website.endpoint.admin.edit.category:
+  teknoo.east.website.endpoint.admin.edit.item:
     parent: 'teknoo.east.website.endpoint.admin.edit.abstract'
     calls:
-      - ['setLoader', ['@Teknoo\East\Website\Loader\CategoryLoader']]
-      - ['setWriter', ['@Teknoo\East\Website\Writer\CategoryWriter']]
-      - ['setFormClass', ['%teknoo.east.website.form_type.category.class%']]
-      - ['setViewPath', ['%teknoo.east.website.view.category.edit.file%']]
+      - ['setLoader', ['@Teknoo\East\Website\Loader\ItemLoader']]
+      - ['setWriter', ['@Teknoo\East\Website\Writer\ItemWriter']]
+      - ['setFormClass', ['%teknoo.east.website.form_type.item.class%']]
+      - ['setViewPath', ['%teknoo.east.website.view.item.edit.file%']]
       - ['setTemplating', ['@templating.engine.twig']]
 
-  teknoo.east.website.endpoint.admin.list.category:
+  teknoo.east.website.endpoint.admin.list.item:
     parent: 'teknoo.east.website.endpoint.admin.list.abstract'
     calls:
-      - ['setLoader', ['@Teknoo\East\Website\Loader\CategoryLoader']]
-      - ['setViewPath', ['%teknoo.east.website.view.category.list.file%']]
+      - ['setLoader', ['@Teknoo\East\Website\Loader\ItemLoader']]
+      - ['setViewPath', ['%teknoo.east.website.view.item.list.file%']]
       - ['setTemplating', ['@templating.engine.twig']]
 
-  teknoo.east.website.endpoint.admin.new.category:
+  teknoo.east.website.endpoint.admin.new.item:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
     calls:
-      - ['setWriter', ['@Teknoo\East\Website\Writer\CategoryWriter']]
-      - ['setFormClass', ['%teknoo.east.website.form_type.category.class%']]
-      - ['setViewPath', ['%teknoo.east.website.view.category.new.file%']]
-      - ['setObjectClass', ['%teknoo.east.website.category.class%']]
+      - ['setWriter', ['@Teknoo\East\Website\Writer\ItemWriter']]
+      - ['setFormClass', ['%teknoo.east.website.form_type.item.class%']]
+      - ['setViewPath', ['%teknoo.east.website.view.item.new.file%']]
+      - ['setObjectClass', ['%teknoo.east.website.item.class%']]
       - ['setRouter', ['@router']]
       - ['setTemplating', ['@templating.engine.twig']]
 

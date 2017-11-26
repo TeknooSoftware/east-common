@@ -70,11 +70,6 @@ class Content implements
     private $subtitle;
 
     /**
-     * @var Category[]
-     */
-    private $categories;
-
-    /**
      * @var string
      */
     private $slug;
@@ -109,7 +104,6 @@ class Content implements
      */
     public function __construct()
     {
-        $this->categories = new ArrayCollection();
         $this->initializeProxy();
         $this->updateStates();
     }
@@ -197,25 +191,6 @@ class Content implements
     public function setSubtitle(string $subtitle = null): Content
     {
         $this->subtitle = (string) $subtitle;
-
-        return $this;
-    }
-
-    /**
-     * @return Category[]
-     */
-    public function getCategories()
-    {
-        return $this->categories;
-    }
-
-    /**
-     * @param Category[] $categories
-     * @return self
-     */
-    public function setCategories($categories): Content
-    {
-        $this->categories = $categories;
 
         return $this;
     }

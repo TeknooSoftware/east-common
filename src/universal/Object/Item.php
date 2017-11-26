@@ -26,8 +26,8 @@ namespace Teknoo\East\Website\Object;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Translatable\Translatable;
-use Teknoo\East\Website\Object\Category\Hidden;
-use Teknoo\East\Website\Object\Category\Available;
+use Teknoo\East\Website\Object\Item\Hidden;
+use Teknoo\East\Website\Object\Item\Available;
 use Teknoo\States\Automated\Assertion\Property;
 use Teknoo\States\Automated\Assertion\Property\IsEqual;
 use Teknoo\States\Automated\AutomatedInterface;
@@ -39,7 +39,7 @@ use Teknoo\UniversalPackage\States\Document\StandardTrait;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class Category implements ObjectInterface, ProxyInterface, AutomatedInterface, Translatable, DeletableInterface
+class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, Translatable, DeletableInterface
 {
     use StandardTrait,
         AutomatedTrait,
@@ -73,12 +73,12 @@ class Category implements ObjectInterface, ProxyInterface, AutomatedInterface, T
     private $hidden=false;
 
     /**
-     * @var Category|null
+     * @var Item|null
      */
     private $parent;
 
     /**
-     * @var Category[]
+     * @var Item[]
      */
     private $children;
 
@@ -88,7 +88,7 @@ class Category implements ObjectInterface, ProxyInterface, AutomatedInterface, T
     private $localeField;
 
     /**
-     * Category constructor.
+     * Item constructor.
      */
     public function __construct()
     {
@@ -139,7 +139,7 @@ class Category implements ObjectInterface, ProxyInterface, AutomatedInterface, T
      * @param string $name
      * @return self
      */
-    public function setName(string $name): Category
+    public function setName(string $name): Item
     {
         $this->name = $name;
 
@@ -158,7 +158,7 @@ class Category implements ObjectInterface, ProxyInterface, AutomatedInterface, T
      * @param string $slug
      * @return self
      */
-    public function setSlug(string $slug = null): Category
+    public function setSlug(string $slug = null): Item
     {
         $this->slug = $slug;
 
@@ -177,7 +177,7 @@ class Category implements ObjectInterface, ProxyInterface, AutomatedInterface, T
      * @param string $location
      * @return self
      */
-    public function setLocation(string $location): Category
+    public function setLocation(string $location): Item
     {
         $this->location = $location;
 
@@ -196,7 +196,7 @@ class Category implements ObjectInterface, ProxyInterface, AutomatedInterface, T
      * @param int $position
      * @return self
      */
-    public function setPosition(int $position): Category
+    public function setPosition(int $position): Item
     {
         $this->position = $position;
 
@@ -216,7 +216,7 @@ class Category implements ObjectInterface, ProxyInterface, AutomatedInterface, T
      * @param bool $isHidden
      * @return self
      */
-    public function setHidden(bool $isHidden): Category
+    public function setHidden(bool $isHidden): Item
     {
         $this->hidden = $isHidden;
 
@@ -224,7 +224,7 @@ class Category implements ObjectInterface, ProxyInterface, AutomatedInterface, T
     }
 
     /**
-     * @return null|Category
+     * @return null|Item
      */
     public function getParent()
     {
@@ -232,10 +232,10 @@ class Category implements ObjectInterface, ProxyInterface, AutomatedInterface, T
     }
 
     /**
-     * @param null|Category $parent
+     * @param null|Item $parent
      * @return self
      */
-    public function setParent(Category $parent = null): Category
+    public function setParent(Item $parent = null): Item
     {
         $this->parent = $parent;
 
@@ -243,7 +243,7 @@ class Category implements ObjectInterface, ProxyInterface, AutomatedInterface, T
     }
 
     /**
-     * @return Category[]
+     * @return Item[]
      */
     public function getChildren()
     {
@@ -251,10 +251,10 @@ class Category implements ObjectInterface, ProxyInterface, AutomatedInterface, T
     }
 
     /**
-     * @param Category[] $children
+     * @param Item[] $children
      * @return self
      */
-    public function setChildren($children): Category
+    public function setChildren($children): Item
     {
         if (!\is_array($children) && !$children instanceof \Traversable) {
             throw new \RuntimeException('Bad argument type for $children');
@@ -278,7 +278,7 @@ class Category implements ObjectInterface, ProxyInterface, AutomatedInterface, T
      *
      * @return self
      */
-    public function setLocaleField(string $localeField): Category
+    public function setLocaleField(string $localeField): Item
     {
         $this->localeField = $localeField;
 

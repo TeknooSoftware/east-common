@@ -132,7 +132,7 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
         $uri = $this->createMock(UriInterface::class);
         $uri->expects(self::any())
             ->method('getPath')
-            ->willReturn('/category/sub/foo-bar');
+            ->willReturn('/item/sub/foo-bar');
 
         $request = $this->createMock(ServerRequestInterface::class);
         $request->expects(self::any())
@@ -181,7 +181,7 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
         $uri = $this->createMock(UriInterface::class);
         $uri->expects(self::any())
             ->method('getPath')
-            ->willReturn('/category/sub/foo-bar');
+            ->willReturn('/item/sub/foo-bar');
 
         $request = $this->createMock(ServerRequestInterface::class);
         $request->expects(self::any())

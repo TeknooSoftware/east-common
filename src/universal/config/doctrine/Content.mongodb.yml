@@ -68,9 +68,5 @@ Teknoo\East\Website\Object\Content:
     author:
       targetDocument: 'Teknoo\East\Website\Object\User'
       cascade: 'all'
-  referenceMany:
-    categories:
-      targetDocument:  'Teknoo\East\Website\Object\Category'
-      cascade: 'all'
   lifecycleCallbacks:
     postLoad: ['postLoadDoctrine']

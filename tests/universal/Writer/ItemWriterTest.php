@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * East Website.
  *
@@ -22,16 +20,29 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\East\Website\Object\Category;
+namespace Teknoo\Tests\East\Website\Writer;
 
-use Teknoo\States\State\StateInterface;
-use Teknoo\States\State\StateTrait;
+use Teknoo\East\Website\Object\Item;
+use Teknoo\East\Website\Writer\ItemWriter;
+use Teknoo\East\Website\Writer\WriterInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ * @covers \Teknoo\East\Website\Writer\ItemWriter
+ * @covers \Teknoo\East\Website\Writer\DoctrinePersistTrait
  */
-class Available implements StateInterface
+class ItemWriterTest extends \PHPUnit\Framework\TestCase
 {
-    use StateTrait;
+    use DoctrinePersistTestTrait;
+
+    public function buildWriter(): WriterInterface
+    {
+        return new ItemWriter($this->getObjectManager());
+    }
+
+    public function getObject()
+    {
+        return new Item();
+    }
 }

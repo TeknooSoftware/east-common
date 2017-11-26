@@ -23,8 +23,8 @@
 namespace Teknoo\Tests\East\Website\Service;
 
 use Teknoo\East\Foundation\Promise\PromiseInterface;
-use Teknoo\East\Website\Loader\CategoryLoader;
-use Teknoo\East\Website\Object\Category;
+use Teknoo\East\Website\Loader\ItemLoader;
+use Teknoo\East\Website\Object\Item;
 use Teknoo\East\Website\Service\MenuGenerator;
 
 /**
@@ -35,20 +35,20 @@ use Teknoo\East\Website\Service\MenuGenerator;
 class MenuGeneratorTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var CategoryLoader
+     * @var ItemLoader
      */
-    private $categoryLoader;
+    private $itemLoader;
 
     /**
-     * @return CategoryLoader|\PHPUnit_Framework_MockObject_MockObject
+     * @return ItemLoader|\PHPUnit_Framework_MockObject_MockObject
      */
-    public function getCategoryLoader(): CategoryLoader
+    public function getItemLoader(): ItemLoader
     {
-        if (!$this->categoryLoader instanceof CategoryLoader) {
-            $this->categoryLoader = $this->createMock(CategoryLoader::class);
+        if (!$this->itemLoader instanceof ItemLoader) {
+            $this->itemLoader = $this->createMock(ItemLoader::class);
         }
 
-        return $this->categoryLoader;
+        return $this->itemLoader;
     }
 
     /**
@@ -56,23 +56,23 @@ class MenuGeneratorTest extends \PHPUnit\Framework\TestCase
      */
     public function buildService()
     {
-        return new MenuGenerator($this->getCategoryLoader());
+        return new MenuGenerator($this->getItemLoader());
     }
 
     public function testExtract()
     {
-        $category1 = new Category();
-        $category2 = new Category();
-        $category3 = new Category();
+        $item1 = new Item();
+        $item2 = new Item();
+        $item3 = new Item();
 
-        $this->getCategoryLoader()
+        $this->getItemLoader()
             ->expects(self::any())
             ->method('topByLocation')
             ->with('location1')
-            ->willReturnCallback(function ($value, PromiseInterface $promise) use ($category1, $category2, $category3) {
-                $promise->success([$category1, $category2, $category3]);
+            ->willReturnCallback(function ($value, PromiseInterface $promise) use ($item1, $item2, $item3) {
+                $promise->success([$item1, $item2, $item3]);
 
-                return $this->getCategoryLoader();
+                return $this->getItemLoader();
             });
 
         $stack = [];
@@ -80,6 +80,6 @@ class MenuGeneratorTest extends \PHPUnit\Framework\TestCase
             $stack[] = $element;
         }
 
-        self::assertEquals([$category1, $category2, $category3], $stack);
+        self::assertEquals([$item1, $item2, $item3], $stack);
     }
 }

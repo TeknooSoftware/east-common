@@ -31,13 +31,13 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Teknoo\East\Website\Object\Category;
+use Teknoo\East\Website\Object\Item;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class CategoryType extends AbstractType
+class ItemType extends AbstractType
 {
     use TranslatableTrait;
 
@@ -56,7 +56,7 @@ class CategoryType extends AbstractType
             'parent',
             DocumentType::class,
             [
-                'class' => Category::class,
+                'class' => Item::class,
                 'required'=>false,
                 'multiple'=>false,
                 'choice_label' => 'name',

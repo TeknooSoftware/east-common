@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * East Website.
  *
@@ -22,25 +20,22 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\East\Website\Writer;
+namespace Teknoo\Tests\East\WebsiteBundle\Form\Type;
 
-use Teknoo\East\Foundation\Promise\PromiseInterface;
+use Teknoo\East\WebsiteBundle\Form\Type\ItemType;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ * @covers      \Teknoo\East\WebsiteBundle\Form\Type\ItemType
+ * @covers      \Teknoo\East\WebsiteBundle\Form\Type\TranslatableTrait
  */
-class CategoryWriter implements WriterInterface
+class ItemTypeTest extends \PHPUnit\Framework\TestCase
 {
-    use DoctrinePersistTrait;
+    use FormTestTrait;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function save($object, PromiseInterface $promise = null): WriterInterface
+    public function buildForm()
     {
-        $this->persist($object, $promise);
-
-        return $this;
+        return new ItemType();
     }
 }

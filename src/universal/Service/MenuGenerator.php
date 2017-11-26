@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Service;
 
 use Teknoo\East\Foundation\Promise\Promise;
-use Teknoo\East\Website\Loader\CategoryLoader;
+use Teknoo\East\Website\Loader\ItemLoader;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -34,17 +34,17 @@ use Teknoo\East\Website\Loader\CategoryLoader;
 class MenuGenerator
 {
     /**
-     * @var CategoryLoader
+     * @var ItemLoader
      */
-    private $categoryLoader;
+    private $itemLoader;
 
     /**
      * MenuGenerator constructor.
-     * @param CategoryLoader $categoryLoader
+     * @param ItemLoader $itemLoader
      */
-    public function __construct(CategoryLoader $categoryLoader)
+    public function __construct(ItemLoader $itemLoader)
     {
-        $this->categoryLoader = $categoryLoader;
+        $this->itemLoader = $itemLoader;
     }
 
     /**
@@ -58,7 +58,7 @@ class MenuGenerator
             $stacks = $categories;
         });
 
-        $this->categoryLoader->topByLocation($location, $promise);
+        $this->itemLoader->topByLocation($location, $promise);
 
         foreach ($stacks as $element) {
             yield $element;

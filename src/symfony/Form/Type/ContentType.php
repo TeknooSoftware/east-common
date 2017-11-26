@@ -34,7 +34,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Teknoo\East\Website\Object\Category;
 use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Object\User;
@@ -78,20 +77,6 @@ class ContentType extends AbstractType
                 'class' => Type::class,
                 'required' => true,
                 'multiple' => false,
-                'choice_label' => 'name',
-                'query_builder' => function (DocumentRepository $repository) {
-                    return $repository->createQueryBuilder()
-                        ->field('deletedAt')->equals(null);
-                }
-            ]
-        );
-        $builder->add(
-            'categories',
-            DocumentType::class,
-            [
-                'class' => Category::class,
-                'required' => false,
-                'multiple' => true,
                 'choice_label' => 'name',
                 'query_builder' => function (DocumentRepository $repository) {
                     return $repository->createQueryBuilder()

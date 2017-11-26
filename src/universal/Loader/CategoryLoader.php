@@ -65,18 +65,20 @@ class CategoryLoader implements LoaderInterface
     }
 
     /**
-     * @param string $slug
+     * @param string $location
      * @param PromiseInterface $promise
      * @return CategoryLoader|LoaderInterface
      */
-    public function topBySlug(string $slug, PromiseInterface $promise): CategoryLoader
+    public function topByLocation(string $location, PromiseInterface $promise): CategoryLoader
     {
         return $this->loadCollection(
             [
-            'slug' => $slug,
-            'children' => []
+                'location' => $location,
             ],
-            $promise
+            $promise,
+            [
+                'position' => 'ASC'
+            ]
         );
     }
 }

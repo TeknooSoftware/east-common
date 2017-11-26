@@ -67,7 +67,7 @@ class MenuGeneratorTest extends \PHPUnit\Framework\TestCase
 
         $this->getCategoryLoader()
             ->expects(self::any())
-            ->method('topBySlug')
+            ->method('topByLocation')
             ->with('location1')
             ->willReturnCallback(function ($value, PromiseInterface $promise) use ($category1, $category2, $category3) {
                 $promise->success([$category1, $category2, $category3]);

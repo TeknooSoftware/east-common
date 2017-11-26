@@ -71,15 +71,9 @@ class CategoryLoaderTest extends \PHPUnit\Framework\TestCase
         return new Category();
     }
 
-    public function testTopBySlug()
+    public function testTopByLocation()
     {
         $entity = $this->getEntity();
-
-        $this->getRepositoryMock()
-            ->expects(self::any())
-            ->method('findBy')
-            ->with(['slug' => 'abc', 'children' => [], 'deletedAt'=>null])
-            ->willReturn([$entity]);
 
         /**
          * @var \PHPUnit_Framework_MockObject_MockObject $promiseMock
@@ -89,9 +83,15 @@ class CategoryLoaderTest extends \PHPUnit\Framework\TestCase
         $promiseMock->expects(self::once())->method('success')->with([$entity]);
         $promiseMock->expects(self::never())->method('fail');
 
+        $this->getRepositoryMock()
+            ->expects(self::any())
+            ->method('findBy')
+            ->with(['location' => 'abc', 'deletedAt'=>null], ['position' => 'ASC'])
+            ->willReturn([$entity]);
+
         self::assertInstanceOf(
             LoaderInterface::class,
-            $this->buildLoader()->topBySlug(
+            $this->buildLoader()->topByLocation(
                 'abc',
                 $promiseMock
             )

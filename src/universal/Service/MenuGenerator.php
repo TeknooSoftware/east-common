@@ -58,7 +58,7 @@ class MenuGenerator
             $stacks = $categories;
         });
 
-        $this->categoryLoader->topBySlug($location, $promise);
+        $this->categoryLoader->topByLocation($location, $promise);
 
         foreach ($stacks as $element) {
             yield $element;

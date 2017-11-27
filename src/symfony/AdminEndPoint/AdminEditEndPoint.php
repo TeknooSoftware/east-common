@@ -113,6 +113,9 @@ class AdminEditEndPoint implements EndPointInterface
                                 $isTranslatable,
                                 $viewPath
                             ) {
+                                //Recreate form to avoid error on dynamic form according to object.
+                                $form = $this->createForm($object);
+
                                 $this->render(
                                     $client,
                                     $viewPath,

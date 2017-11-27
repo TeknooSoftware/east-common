@@ -358,7 +358,7 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
         $form->expects(self::any())->method('isValid')->willReturn(true);
 
         $this->getFormFactory()
-            ->expects(self::once())
+            ->expects(self::atLeastOnce())
             ->method('create')
             ->with(TypeType::class)
             ->willReturn($form);
@@ -405,7 +405,7 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
         $form->expects(self::any())->method('isValid')->willReturn(true);
 
         $this->getFormFactory()
-            ->expects(self::once())
+            ->expects(self::atLeastOnce())
             ->method('create')
             ->with(ContentType::class)
             ->willReturn($form);
@@ -467,7 +467,7 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
         $form->expects(self::any())->method('isValid')->willReturn(true);
 
         $this->getFormFactory()
-            ->expects(self::once())
+            ->expects(self::atLeastOnce())
             ->method('create')
             ->with(ContentType::class)
             ->willReturn($form);
@@ -529,7 +529,7 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
         $form->expects(self::any())->method('isValid')->willReturn(true);
 
         $this->getFormFactory()
-            ->expects(self::once())
+            ->expects(self::atLeastOnce())
             ->method('create')
             ->with(ContentType::class)
             ->willReturn($form);

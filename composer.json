@@ -31,7 +31,7 @@
         "gedmo/doctrine-extensions": "~2.4",
         "lexik/translation-bundle": "~4.0",
         "teknoo/recipe": "^1.0.0-beta1",
-        "teknoo/east-foundation": "^0.0.5-beta5",
+        "teknoo/east-foundation": "^0.0.5-beta7",
         "teknoo/immutable": "~1.0",
         "teknoo/states": "^3.2.0-beta5",
         "php-di/php-di": "^5.4.1"

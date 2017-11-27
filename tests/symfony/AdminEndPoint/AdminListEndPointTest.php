@@ -165,7 +165,7 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
             ->expects(self::any())
             ->method('loadCollection')
             ->willReturnCallback(function ($collection, PromiseInterface $promise, $order, $limit, $page) {
-                self::assertEquals(1, $page);
+                self::assertEquals(15, $page);
                 self::assertEquals(15, $limit);
                 self::assertEquals([], $order);
                 $promise->success([new \stdClass(), new \stdClass()]);
@@ -176,6 +176,32 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
         self::assertInstanceOf(
             AdminListEndPoint::class,
             ($this->buildEndPoint())($request, $client, 2, 'bar')
+        );
+    }
+
+    public function testInvokeFoundPage3()
+    {
+        $request = $this->createMock(ServerRequestInterface::class);
+        $client = $this->createMock(ClientInterface::class);
+
+        $client->expects(self::once())->method('acceptResponse');
+        $client->expects(self::never())->method('errorInRequest');
+
+        $this->getLoaderService()
+            ->expects(self::any())
+            ->method('loadCollection')
+            ->willReturnCallback(function ($collection, PromiseInterface $promise, $order, $limit, $page) {
+                self::assertEquals(30, $page);
+                self::assertEquals(15, $limit);
+                self::assertEquals([], $order);
+                $promise->success([new \stdClass(), new \stdClass()]);
+
+                return $this->getLoaderService();
+            });
+
+        self::assertInstanceOf(
+            AdminListEndPoint::class,
+            ($this->buildEndPoint())($request, $client, 3, 'bar')
         );
     }
 

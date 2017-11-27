@@ -49,9 +49,11 @@ class AdminListEndPoint implements EndPointInterface
     public function __invoke(
         ServerRequestInterface $request,
         ClientInterface $client,
-        int $page = 1,
+        string $page = '1',
         string $viewPath = null
     ) :AdminListEndPoint {
+        $page = (int) $page;
+
         if ($page < 1) {
             $page = 1;
         }
@@ -76,7 +78,7 @@ class AdminListEndPoint implements EndPointInterface
             }),
             [],
             15,
-            ($page-1)
+            ($page-1)*15
         );
 
         return $this;

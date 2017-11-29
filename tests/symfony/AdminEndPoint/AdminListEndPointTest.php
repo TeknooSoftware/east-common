@@ -180,6 +180,36 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
         );
     }
 
+    public function testInvokeFoundOrdering()
+    {
+        $request = $this->createMock(ServerRequestInterface::class);
+        $client = $this->createMock(ClientInterface::class);
+
+        $request->expects(self::any())
+            ->method('getQueryParams')
+            ->willReturn(['order' => 'foo']);
+
+        $client->expects(self::once())->method('acceptResponse');
+        $client->expects(self::never())->method('errorInRequest');
+
+        $this->getLoaderService()
+            ->expects(self::once())
+            ->method('loadCollection')
+            ->willReturnCallback(function ($collection, PromiseInterface $promise, $order, $limit, $page) {
+                self::assertEquals(15, $page);
+                self::assertEquals(15, $limit);
+                self::assertEquals(['foo' => 'ASC'], $order);
+                $promise->success($this->createMock(Iterator::class));
+
+                return $this->getLoaderService();
+            });
+
+        self::assertInstanceOf(
+            AdminListEndPoint::class,
+            ($this->buildEndPoint())($request, $client, 2, 'bar')
+        );
+    }
+
     public function testInvokeFoundPage3()
     {
         $request = $this->createMock(ServerRequestInterface::class);

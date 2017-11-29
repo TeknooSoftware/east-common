@@ -45,6 +45,21 @@ class AdminListEndPoint implements EndPointInterface
 
     /**
      * @param ServerRequestInterface $request
+     * @return array
+     */
+    private function extractOrder(ServerRequestInterface $request): array
+    {
+        $order = [];
+        $queryParams = $request->getQueryParams();
+        if (isset($queryParams['order'])) {
+            $order[$queryParams['order']] = 'ASC';
+        }
+
+        return $order;
+    }
+
+    /**
+     * @param ServerRequestInterface $request
      * @param ClientInterface $client
      * @param string $page
      * @param string|null $viewPath
@@ -66,22 +81,29 @@ class AdminListEndPoint implements EndPointInterface
             $viewPath = $this->viewPath;
         }
 
+        $order = $this->extractOrder($request);
+
         $this->loader->loadCollection(
             [],
-            new Promise(function (Iterator $objects) use ($client, $page, $viewPath) {
+            new Promise(function ($objects) use ($client, $page, $viewPath) {
+                $pageCount = 1;
+                if ($objects instanceof \Countable) {
+                    $pageCount =  \ceil($objects->count()/$this->itemsPerPage);
+                }
+
                 $this->render(
                     $client,
                     $viewPath,
                     [
                         'objectsCollection' => $objects,
                         'page' => $page,
-                        'pageCount' => \ceil($objects->count()/$this->itemsPerPage),
+                        'pageCount' => $pageCount,
                     ]
                 );
             }, function ($error) use ($client) {
                 $client->errorInRequest($error);
             }),
-            [],
+            $order,
             $this->itemsPerPage,
             ($page-1)*$this->itemsPerPage
         );

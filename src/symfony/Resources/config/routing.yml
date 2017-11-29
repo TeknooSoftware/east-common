@@ -1,14 +1,16 @@
+media:
+    path: '/media/{id}'
+    methods:  ['GET']
+    defaults: { _controller: 'teknoo.east.website.endpoint.media' }
+
 content:
     path: '/{slug}'
     methods:  ['GET']
     defaults: { _controller: 'teknoo.east.website.endpoint.content' }
+    requirements:
+      slug: .+
 
 home:
     path: '/'
     methods:  ['GET']
     defaults: { _controller: 'teknoo.east.website.endpoint.content', slug: '/' }
-
-media:
-    path: '/media/{id}'
-    methods:  ['GET']
-    defaults: { _controller: 'teknoo.east.website.endpoint.media' }

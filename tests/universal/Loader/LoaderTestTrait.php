@@ -23,6 +23,8 @@
 namespace Teknoo\Tests\East\Website\Loader;
 
 use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\MongoDB\Query\Builder;
+use Doctrine\ODM\MongoDB\Query\Query;
 use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
@@ -172,10 +174,32 @@ trait LoaderTestTrait
     public function testLoadCollectionError()
     {
         $e = new \Exception();
+        $queryBuilder = $this->createMock(Builder::class);
+        $queryBuilder->expects(self::any())
+            ->method('equals')
+            ->with(['fooBar'=>true, 'deletedAt'=>null])
+            ->willReturnSelf();
+        $queryBuilder->expects(self::any())
+            ->method('sort')
+            ->with(['fooBar' => 'ASC'])
+            ->willReturnSelf();
+        $queryBuilder->expects(self::any())
+            ->method('limit')
+            ->with(123)
+            ->willReturnSelf();
+        $queryBuilder->expects(self::any())
+            ->method('skip')
+            ->with(456)
+            ->willReturnSelf();
+
         $this->getRepositoryMock()
             ->expects(self::any())
-            ->method('findBy')
-            ->with(['fooBar'=>true, 'deletedAt'=>null], ['fooBar' => 'ASC'], 123, 456)
+            ->method('createQueryBuilder')
+            ->willReturn($queryBuilder);
+
+        $queryBuilder
+            ->expects(self::any())
+            ->method('getQuery')
             ->willThrowException($e);
 
         /**
@@ -200,11 +224,38 @@ trait LoaderTestTrait
 
     public function testLoadCollectionNotFound()
     {
+        $queryBuilder = $this->createMock(Builder::class);
+        $queryBuilder->expects(self::any())
+            ->method('equals')
+            ->with(['fooBar'=>true, 'deletedAt'=>null])
+            ->willReturnSelf();
+        $queryBuilder->expects(self::any())
+            ->method('sort')
+            ->with(['fooBar' => 'ASC'])
+            ->willReturnSelf();
+        $queryBuilder->expects(self::any())
+            ->method('limit')
+            ->with(123)
+            ->willReturnSelf();
+        $queryBuilder->expects(self::any())
+            ->method('skip')
+            ->with(456)
+            ->willReturnSelf();
+
         $this->getRepositoryMock()
             ->expects(self::any())
-            ->method('findBy')
-            ->with(['fooBar'=>true, 'deletedAt'=>null], ['fooBar' => 'ASC'], 123, 456)
+            ->method('createQueryBuilder')
+            ->willReturn($queryBuilder);
+
+        $query = $this->createMock(Query::class);
+        $query->expects(self::any())
+            ->method('execute')
             ->willReturn([]);
+
+        $queryBuilder
+            ->expects(self::any())
+            ->method('getQuery')
+            ->willReturn($query);
 
         /**
          * @var \PHPUnit_Framework_MockObject_MockObject $promiseMock
@@ -229,12 +280,38 @@ trait LoaderTestTrait
     public function testLoadCollectionFound()
     {
         $entity = $this->getEntity();
+        $queryBuilder = $this->createMock(Builder::class);
+        $queryBuilder->expects(self::any())
+            ->method('equals')
+            ->with(['fooBar'=>true, 'deletedAt'=>null])
+            ->willReturnSelf();
+        $queryBuilder->expects(self::any())
+            ->method('sort')
+            ->with(['fooBar' => 'ASC'])
+            ->willReturnSelf();
+        $queryBuilder->expects(self::any())
+            ->method('limit')
+            ->with(123)
+            ->willReturnSelf();
+        $queryBuilder->expects(self::any())
+            ->method('skip')
+            ->with(456)
+            ->willReturnSelf();
 
         $this->getRepositoryMock()
             ->expects(self::any())
-            ->method('findBy')
-            ->with(['fooBar'=>true, 'deletedAt'=>null], ['fooBar' => 'ASC'], 123, 456)
+            ->method('createQueryBuilder')
+            ->willReturn($queryBuilder);
+
+        $query = $this->createMock(Query::class);
+        $query->expects(self::any())
+            ->method('execute')
             ->willReturn([$entity]);
+
+        $queryBuilder
+            ->expects(self::any())
+            ->method('getQuery')
+            ->willReturn($query);
 
         /**
          * @var \PHPUnit_Framework_MockObject_MockObject $promiseMock

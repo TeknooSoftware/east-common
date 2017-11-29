@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Loader;
 
 use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\ODM\MongoDB\DocumentRepository;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 
 /**
@@ -34,9 +35,31 @@ use Teknoo\East\Foundation\Promise\PromiseInterface;
 trait CollectionLoaderTrait
 {
     /**
-     * @var ObjectRepository
+     * @var ObjectRepository|DocumentRepository
      */
     protected $repository;
+
+    /**
+     * @param array $criteria
+     * @param array $order
+     * @param int|null $limit
+     * @param int|null $offset
+     * @return \Doctrine\ODM\MongoDB\Query\Builder
+     */
+    private function prepareQuery(
+        array &$criteria,
+        array &$order,
+        ?int $limit,
+        ?int $offset
+    ) {
+        $query = $this->repository->createQueryBuilder();
+        $query->equals($criteria);
+        $query->sort($order);
+        $query->limit($limit);
+        $query->skip($offset);
+
+        return $query;
+    }
 
     /**
      * @param array $criteria
@@ -55,7 +78,8 @@ trait CollectionLoaderTrait
     ): LoaderInterface {
         try {
             $criteria['deletedAt'] = null;
-            $promise->success($this->repository->findBy($criteria, $order, $limit, $offset));
+            $query = $this->prepareQuery($criteria, $order, $limit, $offset);
+            $promise->success($query->getQuery()->execute());
         } catch (\Throwable $e) {
             $promise->fail($e);
         }

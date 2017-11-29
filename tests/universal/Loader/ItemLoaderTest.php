@@ -23,6 +23,9 @@
 namespace Teknoo\Tests\East\Website\Loader;
 
 use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\ODM\MongoDB\DocumentRepository;
+use Doctrine\ODM\MongoDB\Query\Builder;
+use Doctrine\ODM\MongoDB\Query\Query;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\Object\Item;
 use Teknoo\East\Website\Loader\ItemLoader;
@@ -49,7 +52,7 @@ class ItemLoaderTest extends \PHPUnit\Framework\TestCase
     public function getRepositoryMock(): ObjectRepository
     {
         if (!$this->repository instanceof ObjectRepository) {
-            $this->repository = $this->createMock(ObjectRepository::class);
+            $this->repository = $this->createMock(DocumentRepository::class);
         }
 
         return $this->repository;
@@ -83,11 +86,39 @@ class ItemLoaderTest extends \PHPUnit\Framework\TestCase
         $promiseMock->expects(self::once())->method('success')->with([$entity]);
         $promiseMock->expects(self::never())->method('fail');
 
+        $entity = $this->getEntity();
+        $queryBuilder = $this->createMock(Builder::class);
+        $queryBuilder->expects(self::any())
+            ->method('equals')
+            ->with(['location' => 'abc', 'deletedAt'=>null])
+            ->willReturnSelf();
+        $queryBuilder->expects(self::any())
+            ->method('sort')
+            ->with(['position' => 'ASC'])
+            ->willReturnSelf();
+        $queryBuilder->expects(self::any())
+            ->method('limit')
+            ->with(null)
+            ->willReturnSelf();
+        $queryBuilder->expects(self::any())
+            ->method('skip')
+            ->with(null)
+            ->willReturnSelf();
+
         $this->getRepositoryMock()
             ->expects(self::any())
-            ->method('findBy')
-            ->with(['location' => 'abc', 'deletedAt'=>null], ['position' => 'ASC'])
+            ->method('createQueryBuilder')
+            ->willReturn($queryBuilder);
+
+        $query = $this->createMock(Query::class);
+        $query->expects(self::any())
+            ->method('execute')
             ->willReturn([$entity]);
+
+        $queryBuilder
+            ->expects(self::any())
+            ->method('getQuery')
+            ->willReturn($query);
 
         self::assertInstanceOf(
             LoaderInterface::class,

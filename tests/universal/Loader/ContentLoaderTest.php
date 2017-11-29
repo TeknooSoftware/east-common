@@ -23,6 +23,7 @@
 namespace Teknoo\Tests\East\Website\Loader;
 
 use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\ODM\MongoDB\DocumentRepository;
 use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Loader\ContentLoader;
@@ -50,7 +51,7 @@ class ContentLoaderTest extends \PHPUnit\Framework\TestCase
     public function getRepositoryMock(): ObjectRepository
     {
         if (!$this->repository instanceof ObjectRepository) {
-            $this->repository = $this->createMock(ObjectRepository::class);
+            $this->repository = $this->createMock(DocumentRepository::class);
         }
 
         return $this->repository;

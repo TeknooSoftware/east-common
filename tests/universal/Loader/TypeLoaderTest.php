@@ -23,6 +23,7 @@
 namespace Teknoo\Tests\East\Website\Loader;
 
 use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\ODM\MongoDB\DocumentRepository;
 use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Loader\TypeLoader;
@@ -48,7 +49,7 @@ class TypeLoaderTest extends \PHPUnit\Framework\TestCase
     public function getRepositoryMock(): ObjectRepository
     {
         if (!$this->repository instanceof ObjectRepository) {
-            $this->repository = $this->createMock(ObjectRepository::class);
+            $this->repository = $this->createMock(DocumentRepository::class);
         }
 
         return $this->repository;

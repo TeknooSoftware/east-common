@@ -25,6 +25,7 @@ namespace Teknoo\Tests\East\Website\Loader;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ODM\MongoDB\DocumentRepository;
 use Teknoo\East\Foundation\Promise\Promise;
+use Teknoo\East\Website\Loader\MongoDbCollectionLoaderTrait;
 use Teknoo\East\Website\Object\User;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Loader\UserLoader;
@@ -34,6 +35,7 @@ use Teknoo\East\Website\Loader\UserLoader;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers      \Teknoo\East\Website\Loader\UserLoader
  * @covers      \Teknoo\East\Website\Loader\CollectionLoaderTrait
+ * @covers      \Teknoo\East\Website\Loader\MongoDbCollectionLoaderTrait
  */
 class UserLoaderTest extends \PHPUnit\Framework\TestCase
 {
@@ -61,7 +63,37 @@ class UserLoaderTest extends \PHPUnit\Framework\TestCase
      */
     public function buildLoader(): LoaderInterface
     {
-        return new UserLoader($this->getRepositoryMock());
+        $repository = $this->getRepositoryMock();
+        return new class($repository) extends UserLoader {
+            use MongoDbCollectionLoaderTrait;
+        };
+    }
+
+    /**
+     * @return LoaderInterface|UserLoader
+     */
+    public function buildLoaderWithBadCollectionImplementation(): LoaderInterface
+    {
+        $repository = $this->getRepositoryMock();
+        return new class($repository) extends UserLoader {
+            protected function prepareQuery(
+                array &$criteria,
+                ?array $order,
+                ?int $limit,
+                ?int $offset
+            ) {
+                return [];
+            }
+        };
+    }
+
+    /**
+     * @return LoaderInterface|UserLoader
+     */
+    public function buildLoaderWithNotCollectionImplemented(): LoaderInterface
+    {
+        $repository = $this->getRepositoryMock();
+        return new UserLoader($repository);
     }
 
     /**

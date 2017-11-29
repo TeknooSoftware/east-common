@@ -46,6 +46,16 @@ trait LoaderTestTrait
     abstract public function buildLoader(): LoaderInterface;
 
     /**
+     * @return LoaderInterface
+     */
+    abstract public function buildLoaderWithNotCollectionImplemented(): LoaderInterface;
+
+    /**
+     * @return LoaderInterface
+     */
+    abstract public function buildLoaderWithBadCollectionImplementation(): LoaderInterface;
+
+    /**
      * @return object
      */
     abstract public function getEntity();
@@ -275,6 +285,36 @@ trait LoaderTestTrait
                 456
             )
         );
+    }
+
+    public function testLoadCollectionFoundWithNonImplementedPrepareQuery()
+    {
+        /**
+         * @var \PHPUnit_Framework_MockObject_MockObject $promiseMock
+         *
+         */
+        $promiseMock = $this->createMock(Promise::class);
+        $promiseMock->expects(self::never())->method('success');
+        $promiseMock->expects(self::once())->method('fail')->with(
+            $this->callback(function ($exception) { return $exception instanceof \LogicException;})
+        )->willReturnSelf();
+
+        $this->buildLoaderWithNotCollectionImplemented()->loadCollection(['fooBar' => true], $promiseMock);
+    }
+
+    public function testLoadCollectionFoundWithBadImplementedPrepareQuery()
+    {
+        /**
+         * @var \PHPUnit_Framework_MockObject_MockObject $promiseMock
+         *
+         */
+        $promiseMock = $this->createMock(Promise::class);
+        $promiseMock->expects(self::never())->method('success');
+        $promiseMock->expects(self::once())->method('fail')->with(
+            $this->callback(function ($exception) { return $exception instanceof \LogicException;})
+        )->willReturnSelf();
+
+        $this->buildLoaderWithBadCollectionImplementation()->loadCollection(['fooBar' => true], $promiseMock);
     }
 
     public function testLoadCollectionFound()

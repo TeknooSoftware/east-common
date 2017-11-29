@@ -24,6 +24,7 @@ namespace Teknoo\Tests\East\Website\Loader;
 
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ODM\MongoDB\DocumentRepository;
+use Teknoo\East\Website\Loader\MongoDbCollectionLoaderTrait;
 use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Loader\TypeLoader;
@@ -33,6 +34,7 @@ use Teknoo\East\Website\Loader\TypeLoader;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers      \Teknoo\East\Website\Loader\TypeLoader
  * @covers      \Teknoo\East\Website\Loader\CollectionLoaderTrait
+ * @covers      \Teknoo\East\Website\Loader\MongoDbCollectionLoaderTrait
  */
 class TypeLoaderTest extends \PHPUnit\Framework\TestCase
 {
@@ -60,7 +62,37 @@ class TypeLoaderTest extends \PHPUnit\Framework\TestCase
      */
     public function buildLoader(): LoaderInterface
     {
-        return new TypeLoader($this->getRepositoryMock());
+        $repository = $this->getRepositoryMock();
+        return new class($repository) extends TypeLoader {
+            use MongoDbCollectionLoaderTrait;
+        };
+    }
+
+    /**
+     * @return LoaderInterface|TypeLoader
+     */
+    public function buildLoaderWithBadCollectionImplementation(): LoaderInterface
+    {
+        $repository = $this->getRepositoryMock();
+        return new class($repository) extends TypeLoader {
+            protected function prepareQuery(
+                array &$criteria,
+                ?array $order,
+                ?int $limit,
+                ?int $offset
+            ) {
+                return [];
+            }
+        };
+    }
+
+    /**
+     * @return LoaderInterface|TypeLoader
+     */
+    public function buildLoaderWithNotCollectionImplemented(): LoaderInterface
+    {
+        $repository = $this->getRepositoryMock();
+        return new TypeLoader($repository);
     }
 
     /**

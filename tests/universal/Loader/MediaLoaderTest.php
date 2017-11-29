@@ -25,6 +25,7 @@ namespace Teknoo\Tests\East\Website\Loader;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ODM\MongoDB\DocumentRepository;
 use Teknoo\East\Foundation\Promise\Promise;
+use Teknoo\East\Website\Loader\MongoDbCollectionLoaderTrait;
 use Teknoo\East\Website\Object\Media;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Loader\MediaLoader;
@@ -35,6 +36,7 @@ use Teknoo\East\Website\Loader\MediaLoader;
  * @covers      \Teknoo\East\Website\Loader\MediaLoader
  * @covers      \Teknoo\East\Website\Loader\PublishableLoaderTrait
  * @covers      \Teknoo\East\Website\Loader\CollectionLoaderTrait
+ * @covers      \Teknoo\East\Website\Loader\MongoDbCollectionLoaderTrait
  */
 class MediaLoaderTest extends \PHPUnit\Framework\TestCase
 {
@@ -62,7 +64,37 @@ class MediaLoaderTest extends \PHPUnit\Framework\TestCase
      */
     public function buildLoader(): LoaderInterface
     {
-        return new MediaLoader($this->getRepositoryMock());
+        $repository = $this->getRepositoryMock();
+        return new class($repository) extends MediaLoader {
+            use MongoDbCollectionLoaderTrait;
+        };
+    }
+
+    /**
+     * @return LoaderInterface|MediaLoader
+     */
+    public function buildLoaderWithBadCollectionImplementation(): LoaderInterface
+    {
+        $repository = $this->getRepositoryMock();
+        return new class($repository) extends MediaLoader {
+            protected function prepareQuery(
+                array &$criteria,
+                ?array $order,
+                ?int $limit,
+                ?int $offset
+            ) {
+                return [];
+            }
+        };
+    }
+
+    /**
+     * @return LoaderInterface|MediaLoader
+     */
+    public function buildLoaderWithNotCollectionImplemented(): LoaderInterface
+    {
+        $repository = $this->getRepositoryMock();
+        return new MediaLoader($repository);
     }
 
     /**

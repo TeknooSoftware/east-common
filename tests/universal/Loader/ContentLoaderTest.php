@@ -25,6 +25,7 @@ namespace Teknoo\Tests\East\Website\Loader;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ODM\MongoDB\DocumentRepository;
 use Teknoo\East\Foundation\Promise\Promise;
+use Teknoo\East\Website\Loader\MongoDbCollectionLoaderTrait;
 use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Loader\ContentLoader;
 use Teknoo\East\Website\Loader\LoaderInterface;
@@ -35,6 +36,7 @@ use Teknoo\East\Website\Loader\LoaderInterface;
  * @covers      \Teknoo\East\Website\Loader\ContentLoader
  * @covers      \Teknoo\East\Website\Loader\PublishableLoaderTrait
  * @covers      \Teknoo\East\Website\Loader\CollectionLoaderTrait
+ * @covers      \Teknoo\East\Website\Loader\MongoDbCollectionLoaderTrait
  */
 class ContentLoaderTest extends \PHPUnit\Framework\TestCase
 {
@@ -62,7 +64,37 @@ class ContentLoaderTest extends \PHPUnit\Framework\TestCase
      */
     public function buildLoader(): LoaderInterface
     {
-        return new ContentLoader($this->getRepositoryMock());
+        $repository = $this->getRepositoryMock();
+        return new class($repository) extends ContentLoader {
+            use MongoDbCollectionLoaderTrait;
+        };
+    }
+
+    /**
+     * @return LoaderInterface|ContentLoader
+     */
+    public function buildLoaderWithBadCollectionImplementation(): LoaderInterface
+    {
+        $repository = $this->getRepositoryMock();
+        return new class($repository) extends ContentLoader {
+            protected function prepareQuery(
+                array &$criteria,
+                ?array $order,
+                ?int $limit,
+                ?int $offset
+            ) {
+                return [];
+            }
+        };
+    }
+
+    /**
+     * @return LoaderInterface|ContentLoader
+     */
+    public function buildLoaderWithNotCollectionImplemented(): LoaderInterface
+    {
+        $repository = $this->getRepositoryMock();
+        return new ContentLoader($repository);
     }
 
     /**

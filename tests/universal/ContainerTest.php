@@ -26,14 +26,11 @@ use DI\Container;
 use DI\ContainerBuilder;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\ODM\MongoDB\DocumentRepository;
 use Gedmo\Translatable\TranslatableListener;
 use Psr\Log\LoggerInterface;
 use Teknoo\East\Foundation\Manager\Manager;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
-use Teknoo\East\Foundation\Manager\Queue\Queue;
-use Teknoo\East\Foundation\Manager\Queue\QueueInterface;
-use Teknoo\East\Foundation\Processor\Processor;
-use Teknoo\East\Foundation\Processor\ProcessorInterface;
 use Teknoo\East\Website\Loader\ItemLoader;
 use Teknoo\East\Website\Loader\ContentLoader;
 use Teknoo\East\Website\Loader\MediaLoader;
@@ -74,7 +71,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         $container = $this->buildContainer();
         $objectManager = $this->createMock(ObjectManager::class);
         $objectManager->expects(self::any())->method('getRepository')->willReturn(
-            $this->createMock(ObjectRepository::class)
+            $this->createMock(DocumentRepository::class)
         );
 
         $container->set(ObjectManager::class, $objectManager);
@@ -84,6 +81,18 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
             $className,
             $loader
         );
+    }
+
+    private function generateTestForLoaderWithUnsupportedRepository(string $className)
+    {
+        $container = $this->buildContainer();
+        $objectManager = $this->createMock(ObjectManager::class);
+        $objectManager->expects(self::any())->method('getRepository')->willReturn(
+            $this->createMock(ObjectRepository::class)
+        );
+
+        $container->set(ObjectManager::class, $objectManager);
+        $container->get($className);
     }
 
     public function testItemLoader()
@@ -109,6 +118,46 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
     public function testUserLoader()
     {
         $this->generateTestForLoader(UserLoader::class);
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testItemLoaderWithUnsupportedRepository()
+    {
+        $this->generateTestForLoaderWithUnsupportedRepository(ItemLoader::class);
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testContentLoaderWithUnsupportedRepository()
+    {
+        $this->generateTestForLoaderWithUnsupportedRepository(ContentLoader::class);
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testMediaLoaderWithUnsupportedRepository()
+    {
+        $this->generateTestForLoaderWithUnsupportedRepository(MediaLoader::class);
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testTypeLoaderWithUnsupportedRepository()
+    {
+        $this->generateTestForLoaderWithUnsupportedRepository(TypeLoader::class);
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testUserLoaderWithUnsupportedRepository()
+    {
+        $this->generateTestForLoaderWithUnsupportedRepository(UserLoader::class);
     }
 
     private function generateTestForWriter(string $className)
@@ -194,7 +243,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         $container = $this->buildContainer();
         $objectManager = $this->createMock(ObjectManager::class);
         $objectManager->expects(self::any())->method('getRepository')->willReturn(
-            $this->createMock(ObjectRepository::class)
+            $this->createMock(DocumentRepository::class)
         );
 
         $container->set(ObjectManager::class, $objectManager);
@@ -211,7 +260,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         $container = $this->buildContainer();
         $objectManager = $this->createMock(ObjectManager::class);
         $objectManager->expects(self::any())->method('getRepository')->willReturn(
-            $this->createMock(ObjectRepository::class)
+            $this->createMock(DocumentRepository::class)
         );
 
         $container->set(ObjectManager::class, $objectManager);
@@ -261,7 +310,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
 
         $objectManager = $this->createMock(ObjectManager::class);
         $objectManager->expects(self::any())->method('getRepository')->willReturn(
-            $this->createMock(ObjectRepository::class)
+            $this->createMock(DocumentRepository::class)
         );
 
         $container->set(LoggerInterface::class, $this->createMock(LoggerInterface::class));

@@ -27,26 +27,17 @@ namespace Teknoo\East\Website\Loader;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\MongoDB\Query\Builder;
 use Doctrine\ODM\MongoDB\DocumentRepository;
-use Teknoo\East\Foundation\Promise\PromiseInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-trait CollectionLoaderTrait
+trait MongoDbCollectionLoaderTrait
 {
     /**
-     * @var ObjectRepository|DocumentRepository
+     * @return ObjectRepository|DocumentRepository
      */
-    protected $repository;
-
-    /**
-     * @return ObjectRepository
-     */
-    protected function getRepository(): ObjectRepository
-    {
-        return $this->repository;
-    }
+    abstract protected function getRepository(): ObjectRepository;
 
     /**
      * @param array $criteria
@@ -61,41 +52,25 @@ trait CollectionLoaderTrait
         ?int $limit,
         ?int $offset
     ) {
-        throw new \LogicException('Error, must be implemented');
+        $query = $this->getRepository()->createQueryBuilder();
+        $query->equals($criteria);
+        $query->sort($order);
+        $query->limit($limit);
+        $query->skip($offset);
+
+        return $query;
     }
 
     /**
      * @param Builder $query
-     * @return \Iterator|\Countable
+     * @return mixed
      */
     protected function executeQuery($query)
     {
-        throw new \LogicException('Error, must be implemented');
-    }
-
-    /**
-     * @param array $criteria
-     * @param PromiseInterface $promise
-     * @param array|null $order
-     * @param int|null $limit
-     * @param int|null $offset
-     * @return self|LoaderInterface
-     */
-    public function loadCollection(
-        array $criteria,
-        PromiseInterface $promise,
-        array $order = null,
-        int $limit = null,
-        int $offset = null
-    ): LoaderInterface {
-        try {
-            $criteria['deletedAt'] = null;
-            $query = $this->prepareQuery($criteria, $order, $limit, $offset);
-            $promise->success($this->executeQuery($query));
-        } catch (\Throwable $e) {
-            $promise->fail($e);
+        if ($query instanceof Builder) {
+            $query = $query->getQuery();
         }
 
-        return $this;
+        return $query->execute();
     }
 }

@@ -27,6 +27,7 @@ use Doctrine\ODM\MongoDB\DocumentRepository;
 use Doctrine\ODM\MongoDB\Query\Builder;
 use Doctrine\ODM\MongoDB\Query\Query;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
+use Teknoo\East\Website\Loader\MongoDbCollectionLoaderTrait;
 use Teknoo\East\Website\Object\Item;
 use Teknoo\East\Website\Loader\ItemLoader;
 use Teknoo\East\Website\Loader\LoaderInterface;
@@ -36,6 +37,7 @@ use Teknoo\East\Website\Loader\LoaderInterface;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers      \Teknoo\East\Website\Loader\ItemLoader
  * @covers      \Teknoo\East\Website\Loader\CollectionLoaderTrait
+ * @covers      \Teknoo\East\Website\Loader\MongoDbCollectionLoaderTrait
  */
 class ItemLoaderTest extends \PHPUnit\Framework\TestCase
 {
@@ -63,7 +65,37 @@ class ItemLoaderTest extends \PHPUnit\Framework\TestCase
      */
     public function buildLoader(): LoaderInterface
     {
-        return new ItemLoader($this->getRepositoryMock());
+        $repository = $this->getRepositoryMock();
+        return new class($repository) extends ItemLoader {
+            use MongoDbCollectionLoaderTrait;
+        };
+    }
+
+    /**
+     * @return LoaderInterface|ItemLoader
+     */
+    public function buildLoaderWithBadCollectionImplementation(): LoaderInterface
+    {
+        $repository = $this->getRepositoryMock();
+        return new class($repository) extends ItemLoader {
+            protected function prepareQuery(
+                array &$criteria,
+                ?array $order,
+                ?int $limit,
+                ?int $offset
+            ) {
+                return [];
+            }
+        };
+    }
+
+    /**
+     * @return LoaderInterface|ItemLoader
+     */
+    public function buildLoaderWithNotCollectionImplemented(): LoaderInterface
+    {
+        $repository = $this->getRepositoryMock();
+        return new ItemLoader($repository);
     }
 
     /**

@@ -28,12 +28,14 @@ use function DI\get;
 use function DI\decorate;
 use function DI\object;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ODM\MongoDB\DocumentRepository;
 use Gedmo\Translatable\TranslatableListener;
 use Psr\Container\ContainerInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
 use Teknoo\East\Website\Loader\ItemLoader;
 use Teknoo\East\Website\Loader\ContentLoader;
 use Teknoo\East\Website\Loader\MediaLoader;
+use Teknoo\East\Website\Loader\MongoDbCollectionLoaderTrait;
 use Teknoo\East\Website\Loader\TypeLoader;
 use Teknoo\East\Website\Loader\UserLoader;
 use Teknoo\East\Website\Middleware\LocaleMiddleware;
@@ -54,19 +56,73 @@ use Teknoo\East\Website\Writer\UserWriter;
 return [
     //Loaders
     ItemLoader::class => function (ContainerInterface $container) {
-        return new ItemLoader($container->get(ObjectManager::class)->getRepository(Item::class));
+        $repository = $container->get(ObjectManager::class)->getRepository(Item::class);
+        if ($repository instanceof DocumentRepository) {
+            return new class($repository) extends ItemLoader {
+                use MongoDbCollectionLoaderTrait;
+            };
+        }
+
+        throw new \RuntimeException(sprintf(
+            "Error, repository of class %s are not currently managed",
+            \get_class($repository)
+        ));
     },
     ContentLoader::class => function (ContainerInterface $container) {
-        return new ContentLoader($container->get(ObjectManager::class)->getRepository(Content::class));
+        $repository = $container->get(ObjectManager::class)->getRepository(Content::class);
+        if ($repository instanceof DocumentRepository) {
+            return new class($repository) extends ContentLoader {
+                use MongoDbCollectionLoaderTrait;
+
+            };
+        }
+
+        throw new \RuntimeException(sprintf(
+            "Error, repository of class %s are not currently managed",
+            \get_class($repository)
+        ));
     },
     MediaLoader::class => function (ContainerInterface $container) {
-        return new MediaLoader($container->get(ObjectManager::class)->getRepository(Media::class));
+        $repository = $container->get(ObjectManager::class)->getRepository(Media::class);
+        if ($repository instanceof DocumentRepository) {
+            return new class($repository) extends MediaLoader {
+                use MongoDbCollectionLoaderTrait;
+
+            };
+        }
+
+        throw new \RuntimeException(sprintf(
+            "Error, repository of class %s are not currently managed",
+            \get_class($repository)
+        ));
     },
     TypeLoader::class => function (ContainerInterface $container) {
-        return new TypeLoader($container->get(ObjectManager::class)->getRepository(Type::class));
+        $repository = $container->get(ObjectManager::class)->getRepository(Type::class);
+        if ($repository instanceof DocumentRepository) {
+            return new class($repository) extends TypeLoader {
+                use MongoDbCollectionLoaderTrait;
+
+            };
+        }
+
+        throw new \RuntimeException(sprintf(
+            "Error, repository of class %s are not currently managed",
+            \get_class($repository)
+        ));
     },
     UserLoader::class => function (ContainerInterface $container) {
-        return new UserLoader($container->get(ObjectManager::class)->getRepository(User::class));
+        $repository = $container->get(ObjectManager::class)->getRepository(User::class);
+        if ($repository instanceof DocumentRepository) {
+            return new class($repository) extends UserLoader {
+                use MongoDbCollectionLoaderTrait;
+
+            };
+        }
+
+        throw new \RuntimeException(sprintf(
+            "Error, repository of class %s are not currently managed",
+            \get_class($repository)
+        ));
     },
 
     //Writer

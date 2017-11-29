@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace Teknoo\East\WebsiteBundle\AdminEndPoint;
 
+use Doctrine\MongoDB\Iterator;
+use Doctrine\ODM\MongoDB\Cursor;
 use Psr\Http\Message\ServerRequestInterface;
 use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
@@ -39,10 +41,12 @@ class AdminListEndPoint implements EndPointInterface
     use EastEndPointTrait,
         AdminEndPointTrait;
 
+    private $itemsPerPage = 15;
+
     /**
      * @param ServerRequestInterface $request
      * @param ClientInterface $client
-     * @param int $page
+     * @param string $page
      * @param string|null $viewPath
      * @return self
      */
@@ -64,21 +68,22 @@ class AdminListEndPoint implements EndPointInterface
 
         $this->loader->loadCollection(
             [],
-            new Promise(function ($objects) use ($client, $page, $viewPath) {
+            new Promise(function (Iterator $objects) use ($client, $page, $viewPath) {
                 $this->render(
                     $client,
                     $viewPath,
                     [
                         'objectsCollection' => $objects,
-                        'page' => $page
+                        'page' => $page,
+                        'pageCount' => \ceil($objects->count()/$this->itemsPerPage),
                     ]
                 );
             }, function ($error) use ($client) {
                 $client->errorInRequest($error);
             }),
             [],
-            15,
-            ($page-1)*15
+            $this->itemsPerPage,
+            ($page-1)*$this->itemsPerPage
         );
 
         return $this;

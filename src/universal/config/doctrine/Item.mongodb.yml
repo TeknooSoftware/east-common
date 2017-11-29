@@ -57,6 +57,7 @@ Teknoo\East\Website\Object\Item:
     parent:
       targetDocument: 'Teknoo\East\Website\Object\Item'
       cascade: 'all'
+      inversedBy: 'children'
     content:
       targetDocument: 'Teknoo\East\Website\Object\Content'
       cascade: 'none'
@@ -64,5 +65,6 @@ Teknoo\East\Website\Object\Item:
     children:
       targetDocument:  'Teknoo\East\Website\Object\Item'
       cascade: 'all'
+      mappedBy: 'parent'
   lifecycleCallbacks:
     postLoad: ['postLoadDoctrine']

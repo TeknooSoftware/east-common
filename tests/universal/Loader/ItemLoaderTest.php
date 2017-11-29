@@ -122,7 +122,7 @@ class ItemLoaderTest extends \PHPUnit\Framework\TestCase
         $queryBuilder = $this->createMock(Builder::class);
         $queryBuilder->expects(self::any())
             ->method('equals')
-            ->with(['location' => 'abc', 'deletedAt'=>null])
+            ->with(['location' => 'abc', 'parent' => null, 'deletedAt'=>null])
             ->willReturnSelf();
         $queryBuilder->expects(self::any())
             ->method('sort')

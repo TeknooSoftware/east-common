@@ -74,6 +74,7 @@ class ItemLoader implements LoaderInterface
         return $this->loadCollection(
             [
                 'location' => $location,
+                'parent' => null
             ],
             $promise,
             [

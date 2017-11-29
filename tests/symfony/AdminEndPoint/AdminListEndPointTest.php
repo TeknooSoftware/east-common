@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\AdminEndPoint;
 
+use Doctrine\MongoDB\Iterator;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Teknoo\East\Foundation\Http\ClientInterface;
@@ -168,7 +169,7 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
                 self::assertEquals(15, $page);
                 self::assertEquals(15, $limit);
                 self::assertEquals([], $order);
-                $promise->success([new \stdClass(), new \stdClass()]);
+                $promise->success($this->createMock(Iterator::class));
 
                 return $this->getLoaderService();
             });
@@ -194,7 +195,7 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
                 self::assertEquals(30, $page);
                 self::assertEquals(15, $limit);
                 self::assertEquals([], $order);
-                $promise->success([new \stdClass(), new \stdClass()]);
+                $promise->success($this->createMock(Iterator::class));
 
                 return $this->getLoaderService();
             });
@@ -220,7 +221,7 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
                 self::assertEquals(0, $page);
                 self::assertEquals(15, $limit);
                 self::assertEquals([], $order);
-                $promise->success([new \stdClass(), new \stdClass()]);
+                $promise->success($this->createMock(Iterator::class));
 
                 return $this->getLoaderService();
             });
@@ -246,7 +247,7 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
                 self::assertEquals(0, $page);
                 self::assertEquals(15, $limit);
                 self::assertEquals([], $order);
-                $promise->success([new \stdClass(), new \stdClass()]);
+                $promise->success($this->createMock(Iterator::class));
 
                 return $this->getLoaderService();
             });

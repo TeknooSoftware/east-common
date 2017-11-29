@@ -1,5 +1,15 @@
 #Teknoo Software - Website - Change Log
 
+##[0.0.1-beta6] - 2017-11-29
+###Fixed
+- Update AdminEditEndPoint to recreate a form instance if the object has been updated to avoid error with dynamic form
+ following a state of the object
+
+###Updated
+- Add pagination capacities in the Admin list endpoint
+- Update collection loader to allow use iterator and countable results set to manage pagination
+- Split mongo logic into a separated trait, added automatically in the DI
+
 ##[0.0.1-beta5] - 2017-11-27
 ###Fixed
 - Fix category use Document Standard trait from states instead of entity

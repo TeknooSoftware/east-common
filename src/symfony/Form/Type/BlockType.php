@@ -52,7 +52,13 @@ class BlockType extends AbstractType
             ChoiceType::class,
             [
                 'required' => true,
-                'choices' => ['Textarea' => 'textarea', 'Text'=>'text', 'Numeric'=>'numeric']
+                'choices' => [
+                    'Textarea' => 'textarea',
+                    'Raw' => 'raw',
+                    'Text' => 'text',
+                    'Numeric' => 'numeric',
+                    'Image' => 'image'
+                ]
             ]
         );
 

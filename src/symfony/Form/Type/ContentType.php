@@ -129,12 +129,14 @@ class ContentType extends AbstractType
                 foreach ($type->getBlocks() as $block) {
                     switch ($block->getType()) {
                         case 'textarea':
+                        case 'raw':
                             $formType = TextareaType::class;
                             break;
                         case 'numeric':
                             $formType = NumberType::class;
                             break;
                         case 'text':
+                        case 'image':
                         default:
                             $formType = TextType::class;
                             break;
@@ -152,6 +154,7 @@ class ContentType extends AbstractType
                             'mapped' => false,
                             'data' => $value,
                             'required' => false,
+                            'attr' => ['data-type' => $block->getType()]
                         ]
                     );
                 }

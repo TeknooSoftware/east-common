@@ -85,10 +85,6 @@ This library requires :
     * Teknoo/East-Foundation.
     * Optional: Symfony 3.4+ (for administration)
 
-API Documentation
------------------
-The API documentation is available at : [API](docs/howto/api/index.index).
-
 Credits
 -------
 Richard Déloge - <richarddeloge@gmail.com> - Lead developer.

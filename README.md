@@ -6,6 +6,69 @@ Teknoo Software - Website library
 Universal package, following the #East programming philosophy, build on Teknoo/East-Foundation (and Teknoo/Recipe),
 and implementing a basic CMS to display dynamics pages with different types and templates.
 
+Example with Symfony
+--------------------
+
+    <?php
+
+    //In the AppKernel:
+    use DI\Bridge\Symfony\Kernel;
+    use DI\ContainerBuilder as DIContainerBuilder;
+    use Doctrine\Common\Persistence\ObjectManager;
+
+    class AppKernel extends Kernel
+    {
+        public function registerBundles()
+        {
+            $bundles = [
+                //..
+                new Teknoo\East\FoundationBundle\EastFoundationBundle(),
+                new Teknoo\East\WebsiteBundle\TeknooEastWebsiteBundle(),
+            ];
+
+            //..
+
+            return $bundles;
+        }
+
+        protected function buildPHPDIContainer(DIContainerBuilder $builder)
+        {
+            // Configure your container here
+            $vendorPath = dirname(__DIR__).'/vendor';
+            $builder->addDefinitions($vendorPath.'/teknoo/east-foundation/src/universal/di.php');
+            $builder->addDefinitions($vendorPath.'/teknoo/east-foundation/src/symfony/Resources/config/di.php');
+            $builder->addDefinitions($vendorPath.'/teknoo/east-website/src/universal/di.php');
+            $builder->addDefinitions([
+                ObjectManager::class => \DI\get('doctrine_mongodb.odm.default_document_manager')
+            ]);
+
+            return $builder->build();
+        }
+    }
+
+    //In app/config.yml
+    doctrine_mongodb:
+      document_managers:
+        default:
+          auto_mapping: true
+          mappings:
+            TeknooEastWebsite:
+              type: 'yml'
+              dir: '%kernel.root_dir%/../vendor/teknoo/east-website/src/universal/config/doctrine'
+              is_bundle: false
+              prefix: 'Teknoo\East\Website\Object'
+
+    //In app/security.yml
+    security:
+      //..
+      providers:
+        main:
+          id: 'teknoo.east.website.bundle.user_provider'
+
+    //In app/routing.yml
+    website:
+      resource: '@TeknooEastWebsiteBundle/Resources/config/routing.yml'
+
 Installation & Requirements
 ---------------------------
 To install this library with composer, run this command :

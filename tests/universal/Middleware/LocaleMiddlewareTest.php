@@ -29,6 +29,7 @@ use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Foundation\Session\SessionInterface;
 use Teknoo\East\Website\Middleware\LocaleMiddleware;
+use Teknoo\East\Website\Middleware\ViewParameterInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -136,6 +137,15 @@ class LocaleMiddlewareTest extends \PHPUnit\Framework\TestCase
             ->with(SessionInterface::ATTRIBUTE_KEY)
             ->willReturn($sessionMiddleware);
 
+        $serverRequestFinal->expects(self::any())
+            ->method('getAttribute')
+            ->willReturn([]);
+
+        $serverRequestFinal->expects(self::any())
+            ->method('withAttribute')
+            ->with(ViewParameterInterface::REQUEST_PARAMETER_KEY, ['locale' => 'en'])
+            ->willReturnSelf();
+
         self::assertInstanceOf(
             LocaleMiddleware::class,
             $this->buildMiddleware('en')->execute($client, $serverRequest, $manager)
@@ -179,6 +189,15 @@ class LocaleMiddlewareTest extends \PHPUnit\Framework\TestCase
             ->with(SessionInterface::ATTRIBUTE_KEY)
             ->willReturn($sessionMiddleware);
 
+        $serverRequestFinal->expects(self::any())
+            ->method('getAttribute')
+            ->willReturn(['foo' => 'bar']);
+
+        $serverRequestFinal->expects(self::any())
+            ->method('withAttribute')
+            ->with(ViewParameterInterface::REQUEST_PARAMETER_KEY, ['foo'=>'bar', 'locale' => 'fr'])
+            ->willReturnSelf();
+
         self::assertInstanceOf(
             LocaleMiddleware::class,
             $this->buildMiddleware('en')->execute($client, $serverRequest, $manager)
@@ -220,6 +239,15 @@ class LocaleMiddlewareTest extends \PHPUnit\Framework\TestCase
             ->method('getAttribute')
             ->with(SessionInterface::ATTRIBUTE_KEY)
             ->willReturn($sessionMiddleware);
+
+        $serverRequestFinal->expects(self::any())
+            ->method('getAttribute')
+            ->willReturn([]);
+
+        $serverRequestFinal->expects(self::any())
+            ->method('withAttribute')
+            ->with(ViewParameterInterface::REQUEST_PARAMETER_KEY, ['locale' => 'es'])
+            ->willReturnSelf();
 
         self::assertInstanceOf(
             LocaleMiddleware::class,

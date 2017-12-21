@@ -79,18 +79,20 @@ class LocaleMiddleware implements MiddlewareInterface
 
     /**
      * @param ServerRequestInterface $request
-     * @return LocaleMiddleware
+     * @return string
      */
-    private function getLocaleFromSession(ServerRequestInterface &$request): LocaleMiddleware
+    private function getLocaleFromSession(ServerRequestInterface &$request): string
     {
+        $returnedLocale = $this->defaultLocale;
         $session = $request->getAttribute(SessionInterface::ATTRIBUTE_KEY);
         if ($session instanceof SessionInterface) {
             $session->get(
                 static::SESSION_KEY,
                 new Promise(
-                    function (string $locale) use (&$request) {
+                    function (string $locale) use (&$request, &$returnedLocale) {
                         $this->listenerTranslatable->setTranslatableLocale($locale);
                         $request = $request->withAttribute('locale', $locale);
+                        $returnedLocale = $locale;
                     },
                     function () use (&$request) {
                         $this->listenerTranslatable->setTranslatableLocale($this->defaultLocale);
@@ -100,7 +102,29 @@ class LocaleMiddleware implements MiddlewareInterface
             );
         }
 
-        return $this;
+        return $returnedLocale;
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @return array
+     */
+    private function getViewParameters(ServerRequestInterface $request): array
+    {
+        return $request->getAttribute(ViewParameterInterface::REQUEST_PARAMETER_KEY, []);
+    }
+
+    /**
+     * @param string $locale
+     * @param ServerRequestInterface $request
+     * @return ServerRequestInterface
+     */
+    private function updateViewParameters(string $locale, ServerRequestInterface $request): ServerRequestInterface
+    {
+        $parameters = $this->getViewParameters($request);
+        $parameters['locale'] = $locale;
+
+        return $request->withAttribute(ViewParameterInterface::REQUEST_PARAMETER_KEY, $parameters);
     }
 
     /**
@@ -118,8 +142,10 @@ class LocaleMiddleware implements MiddlewareInterface
             $this->registerLocaleInSession($request, $locale);
             $request = $request->withAttribute('locale', $locale);
         } else {
-            $this->getLocaleFromSession($request);
+            $locale = $this->getLocaleFromSession($request);
         }
+
+        $request = $this->updateViewParameters($locale, $request);
 
         $manager->continueExecution($client, $request);
 

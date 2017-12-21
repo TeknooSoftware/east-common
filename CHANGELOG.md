@@ -1,5 +1,15 @@
 #Teknoo Software - Website - Change Log
 
+##[0.0.1-beta7] - 2017-12-21
+###Fixed
+- Fix item loader to loading top
+- Fix symfony routing failback for content in front
+- QA
+
+###Updated
+- Update locale middleware to inject also locale in the view parameters list
+- Add block type row
+
 ##[0.0.1-beta6] - 2017-11-29
 ###Fixed
 - Update AdminEditEndPoint to recreate a form instance if the object has been updated to avoid error with dynamic form

@@ -23,6 +23,7 @@ Teknoo\East\Website\Object\Item:
       unique: true
       gedmo:
         slug:
+          updatable: false
           separator: '-'
           fields:
             - name

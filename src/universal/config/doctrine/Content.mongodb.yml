@@ -27,6 +27,7 @@ Teknoo\East\Website\Object\Content:
       unique: true
       gedmo:
         slug:
+          updatable: false
           separator: '-'
           fields:
             - title

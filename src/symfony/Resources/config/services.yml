@@ -61,6 +61,7 @@ services:
       - '@Teknoo\East\Website\Loader\ContentLoader'
     calls:
       - ['setTemplating', ['@templating.engine.twig']]
+    public: true
 
   teknoo.east.website.endpoint.media:
     class: '%teknoo.east.website.endpoint.media.class%'
@@ -68,28 +69,34 @@ services:
       - '@Teknoo\East\Website\Loader\MediaLoader'
     calls:
       - ['setTemplating', ['@templating.engine.twig']]
+    public: true
 
   teknoo.east.website.endpoint.static:
     class: '%teknoo.east.website.endpoint.static.class%'
     calls:
       - ['setTemplating', ['@templating.engine.twig']]
+    public: true
 
   #Admin endpoints
   teknoo.east.website.endpoint.admin.delete.abstract:
     class: '%teknoo.east.website.endpoint.admin.delete.class%'
+    public: true
 
   teknoo.east.website.endpoint.admin.edit.abstract:
     class: '%teknoo.east.website.endpoint.admin.edit.class%'
     calls:
       - ['setFormFactory', ['@form.factory']]
+    public: true
 
   teknoo.east.website.endpoint.admin.list.abstract:
     class: '%teknoo.east.website.endpoint.admin.list.class%'
+    public: true
 
   teknoo.east.website.endpoint.admin.new.abstract:
     class: '%teknoo.east.website.endpoint.admin.new.class%'
     calls:
       - ['setFormFactory', ['@form.factory']]
+    public: true
 
   #Items
   teknoo.east.website.endpoint.admin.delete.item:
@@ -98,6 +105,7 @@ services:
       - ['setDeletingService', ['@teknoo.east.website.deleting.item']]
       - ['setLoader', ['@Teknoo\East\Website\Loader\ItemLoader']]
       - ['setRouter', ['@router']]
+    public: true
 
   teknoo.east.website.endpoint.admin.edit.item:
     parent: 'teknoo.east.website.endpoint.admin.edit.abstract'
@@ -107,6 +115,7 @@ services:
       - ['setFormClass', ['%teknoo.east.website.form_type.item.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.item.edit.file%']]
       - ['setTemplating', ['@templating.engine.twig']]
+    public: true
 
   teknoo.east.website.endpoint.admin.list.item:
     parent: 'teknoo.east.website.endpoint.admin.list.abstract'
@@ -114,6 +123,7 @@ services:
       - ['setLoader', ['@Teknoo\East\Website\Loader\ItemLoader']]
       - ['setViewPath', ['%teknoo.east.website.view.item.list.file%']]
       - ['setTemplating', ['@templating.engine.twig']]
+    public: true
 
   teknoo.east.website.endpoint.admin.new.item:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
@@ -124,6 +134,7 @@ services:
       - ['setObjectClass', ['%teknoo.east.website.item.class%']]
       - ['setRouter', ['@router']]
       - ['setTemplating', ['@templating.engine.twig']]
+    public: true
 
   #Contents
   teknoo.east.website.endpoint.admin.delete.content:
@@ -132,6 +143,7 @@ services:
       - ['setDeletingService', ['@teknoo.east.website.deleting.content']]
       - ['setLoader', ['@Teknoo\East\Website\Loader\ContentLoader']]
       - ['setRouter', ['@router']]
+    public: true
 
   teknoo.east.website.endpoint.admin.edit.content:
     parent: 'teknoo.east.website.endpoint.admin.edit.abstract'
@@ -141,6 +153,7 @@ services:
       - ['setFormClass', ['%teknoo.east.website.form_type.content.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.content.edit.file%']]
       - ['setTemplating', ['@templating.engine.twig']]
+    public: true
 
   teknoo.east.website.endpoint.admin.list.content:
     parent: 'teknoo.east.website.endpoint.admin.list.abstract'
@@ -148,6 +161,7 @@ services:
       - ['setLoader', ['@Teknoo\East\Website\Loader\ContentLoader']]
       - ['setViewPath', ['%teknoo.east.website.view.content.list.file%']]
       - ['setTemplating', ['@templating.engine.twig']]
+    public: true
 
   teknoo.east.website.endpoint.admin.new.content:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
@@ -158,6 +172,7 @@ services:
       - ['setObjectClass', ['%teknoo.east.website.content.class%']]
       - ['setRouter', ['@router']]
       - ['setTemplating', ['@templating.engine.twig']]
+    public: true
 
   #Media
   teknoo.east.website.endpoint.admin.delete.media:
@@ -166,6 +181,7 @@ services:
       - ['setDeletingService', ['@teknoo.east.website.deleting.media']]
       - ['setLoader', ['@Teknoo\East\Website\Loader\MediaLoader']]
       - ['setRouter', ['@router']]
+    public: true
 
   teknoo.east.website.endpoint.admin.list.media:
     parent: 'teknoo.east.website.endpoint.admin.list.abstract'
@@ -173,6 +189,7 @@ services:
       - ['setLoader', ['@Teknoo\East\Website\Loader\MediaLoader']]
       - ['setViewPath', ['%teknoo.east.website.view.media.list.file%']]
       - ['setTemplating', ['@templating.engine.twig']]
+    public: true
 
   teknoo.east.website.endpoint.admin.new.media:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
@@ -183,6 +200,7 @@ services:
       - ['setObjectClass', ['%teknoo.east.website.media.class%']]
       - ['setRouter', ['@router']]
       - ['setTemplating', ['@templating.engine.twig']]
+    public: true
 
   #Type
   teknoo.east.website.endpoint.admin.delete.type:
@@ -191,6 +209,7 @@ services:
       - ['setDeletingService', ['@teknoo.east.website.deleting.type']]
       - ['setLoader', ['@Teknoo\East\Website\Loader\TypeLoader']]
       - ['setRouter', ['@router']]
+    public: true
 
   teknoo.east.website.endpoint.admin.edit.type:
     parent: 'teknoo.east.website.endpoint.admin.edit.abstract'
@@ -200,6 +219,7 @@ services:
       - ['setFormClass', ['%teknoo.east.website.form_type.type.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.type.edit.file%']]
       - ['setTemplating', ['@templating.engine.twig']]
+    public: true
 
   teknoo.east.website.endpoint.admin.list.type:
     parent: 'teknoo.east.website.endpoint.admin.list.abstract'
@@ -207,6 +227,7 @@ services:
       - ['setLoader', ['@Teknoo\East\Website\Loader\TypeLoader']]
       - ['setViewPath', ['%teknoo.east.website.view.type.list.file%']]
       - ['setTemplating', ['@templating.engine.twig']]
+    public: true
 
   teknoo.east.website.endpoint.admin.new.type:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
@@ -217,6 +238,7 @@ services:
       - ['setObjectClass', ['%teknoo.east.website.type.class%']]
       - ['setRouter', ['@router']]
       - ['setTemplating', ['@templating.engine.twig']]
+    public: true
 
   #User
   teknoo.east.website.endpoint.admin.delete.user:
@@ -225,6 +247,7 @@ services:
       - ['setDeletingService', ['@teknoo.east.website.deleting.user']]
       - ['setLoader', ['@Teknoo\East\Website\Loader\UserLoader']]
       - ['setRouter', ['@router']]
+    public: true
 
   teknoo.east.website.endpoint.admin.edit.user:
     parent: 'teknoo.east.website.endpoint.admin.edit.abstract'
@@ -234,6 +257,7 @@ services:
       - ['setFormClass', ['%teknoo.east.website.form_type.user.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.user.edit.file%']]
       - ['setTemplating', ['@templating.engine.twig']]
+    public: true
 
   teknoo.east.website.endpoint.admin.list.user:
     parent: 'teknoo.east.website.endpoint.admin.list.abstract'
@@ -241,6 +265,7 @@ services:
       - ['setLoader', ['@Teknoo\East\Website\Loader\UserLoader']]
       - ['setViewPath', ['%teknoo.east.website.view.user.list.file%']]
       - ['setTemplating', ['@templating.engine.twig']]
+    public: true
 
   teknoo.east.website.endpoint.admin.new.user:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
@@ -251,12 +276,14 @@ services:
       - ['setObjectClass', ['%teknoo.east.website.user.class%']]
       - ['setRouter', ['@router']]
       - ['setTemplating', ['@templating.engine.twig']]
+    public: true
 
   #Provider
   teknoo.east.website.bundle.user_provider:
     class: '%teknoo.east.website.bundle.user_provider.class%'
     arguments:
       - '@Teknoo\East\Website\Loader\UserLoader'
+    public: false
 
   #Command
   teknoo.east.website.bundle.command.create_user:
@@ -266,6 +293,7 @@ services:
       - '@security.encoder_factory'
     tags:
       - { name: console.command }
+    public: false
 
   #Writer
   teknoo.east.website.bundle.writer.user:
@@ -273,3 +301,4 @@ services:
     arguments:
       - '@Teknoo\East\Website\Writer\UserWriter'
       - '@security.encoder_factory'
+    public: false

@@ -13,6 +13,9 @@ Teknoo\East\Website\Object\Media:
       strategy: 'UUID'
     name:
       type: 'string'
+    mimeType:
+      name: 'mime_type'
+      type: 'string'
     file:
       type: 'file'
     length:

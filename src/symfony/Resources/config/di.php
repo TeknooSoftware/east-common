@@ -25,14 +25,15 @@ declare(strict_types=1);
 namespace Teknoo\East\WebsiteBundle\Resources\config;
 
 use function DI\decorate;
-use function DI\object;
 use Psr\Container\ContainerInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
 use Teknoo\East\WebsiteBundle\Middleware\LocaleMiddleware;
 
 return [
     //Middleware
-    LocaleMiddleware::class => object(LocaleMiddleware::class),
+    LocaleMiddleware::class => function (ContainerInterface $container): LocaleMiddleware {
+        return new LocaleMiddleware($container->get('translator'));
+    },
 
     RecipeInterface::class => decorate(function ($previous, ContainerInterface $container) {
         if ($previous instanceof RecipeInterface) {

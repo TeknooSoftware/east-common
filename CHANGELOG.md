@@ -1,5 +1,15 @@
 #Teknoo Software - Website - Change Log
 
+##[0.0.1-beta8] - 2017-12-27
+###Fixed
+- Remove Lexik bundle (useless)
+- Set content type on media in Symfony Admin
+- Fix deprecation with Symfony 3.4+
+- Fix sluggable behavior
+
+###Added
+- Locale middleware dedicated to symfony translator updating,
+
 ##[0.0.1-beta7] - 2017-12-21
 ###Fixed
 - Fix item loader to loading top

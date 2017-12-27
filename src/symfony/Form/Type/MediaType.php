@@ -70,6 +70,7 @@ class MediaType extends AbstractType
                 $image = $data['image'];
                 $contentObject->setFile($image->getPathname());
                 $contentObject->setLength($image->getSize());
+                $contentObject->setMimeType((string) $image->getClientMimeType());
             }
         );
 

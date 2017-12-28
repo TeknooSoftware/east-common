@@ -22,7 +22,7 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\EndPoint;
 
-use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\Templating\EngineInterface;
 use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\WebsiteBundle\EndPoint\ContentEndPoint;
 use Teknoo\Tests\East\Website\EndPoint\ContentEndPointTraitTest;
@@ -35,7 +35,7 @@ use Teknoo\Tests\East\Website\EndPoint\ContentEndPointTraitTest;
 class ContentEndPointTest extends ContentEndPointTraitTest
 {
     /**
-     * @var TwigEngine
+     * @var EngineInterface
      */
     protected $templating;
 
@@ -45,12 +45,12 @@ class ContentEndPointTest extends ContentEndPointTraitTest
     protected $twig;
 
     /**
-     * @return TwigEngine|\PHPUnit_Framework_MockObject_MockObject
+     * @return EngineInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    public function getTemplating(): TwigEngine
+    public function getTemplating(): EngineInterface
     {
-        if (!$this->templating instanceof TwigEngine) {
-            $this->templating = $this->createMock(TwigEngine::class);
+        if (!$this->templating instanceof EngineInterface) {
+            $this->templating = $this->createMock(EngineInterface::class);
 
             $this->templating->expects(self::any())
                 ->method('render')

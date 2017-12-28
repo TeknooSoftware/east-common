@@ -24,7 +24,7 @@ namespace Teknoo\Tests\East\WebsiteBundle\AdminEndPoint;
 
 use Doctrine\MongoDB\Iterator;
 use Psr\Http\Message\ServerRequestInterface;
-use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\Templating\EngineInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\WebsiteBundle\AdminEndPoint\AdminListEndPoint;
@@ -44,7 +44,7 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
     private $loaderService;
 
     /**
-     * @var \Twig_Environment
+     * @var EngineInterface
      */
     private $twig;
 
@@ -61,12 +61,12 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @return TwigEngine|\PHPUnit_Framework_MockObject_MockObject
+     * @return EngineInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    public function getTwig(): TwigEngine
+    public function getTwig(): EngineInterface
     {
-        if (!$this->twig instanceof TwigEngine) {
-            $this->twig = $this->createMock(TwigEngine::class);
+        if (!$this->twig instanceof EngineInterface) {
+            $this->twig = $this->createMock(EngineInterface::class);
         }
 
         return $this->twig;

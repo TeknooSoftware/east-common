@@ -44,21 +44,15 @@
         "phploc/phploc": "~4.0",
         "behat/behat": "~3.4",
         "behat/transliterator": "~1.2",
-        "symfony/framework-bundle": "~3.4.0-rc1||~4.0-rc1",
-        "symfony/routing": "~3.4.0-rc1||~4.0-rc1",
-        "symfony/console": "~3.4.0-rc1||~4.0-rc1",
-        "symfony/validator": "~3.4.0-rc1||~4.0-rc1",
-        "symfony/yaml": "~3.4.0-rc1||~4.0-rc1",
-        "symfony/form": "~3.4.0-rc1||~4.0-rc1",
-        "symfony/twig-bundle": "~3.4.0-rc1||~4.0-rc1",
-        "symfony/templating": "~3.4.0-rc1||~4.0-rc1",
-        "symfony/security": "~3.4.0-rc1||~4.0-rc1",
+        "symfony/console": "~3.4||~4.0",
+        "symfony/yaml": "~3.4||~4.0",
+        "symfony/form": "~3.4||~4.0",
+        "symfony/templating": "~3.4||~4.0",
+        "symfony/security": "~3.4||~4.0",
         "zendframework/zend-diactoros": "~1.6",
-        "twig/extensions": "~1.5",
-        "twig/twig": "^2.4.4",
         "stof/doctrine-extensions-bundle": "~1.2",
         "doctrine/mongodb-odm": "~1.1",
         "doctrine/mongodb-odm-bundle": "~3.4"
     },
-    "minimum-stability": "beta"
+    "minimum-stability": "stable"
 }

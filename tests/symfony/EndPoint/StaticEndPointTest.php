@@ -22,7 +22,7 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\EndPoint;
 
-use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\Templating\EngineInterface;
 use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\WebsiteBundle\EndPoint\StaticEndPoint;
 use Teknoo\Tests\East\Website\EndPoint\StaticEndPointTraitTest;
@@ -35,17 +35,17 @@ use Teknoo\Tests\East\Website\EndPoint\StaticEndPointTraitTest;
 class StaticEndPointTest extends StaticEndPointTraitTest
 {
     /**
-     * @var TwigEngine
+     * @var EngineInterface
      */
     protected $templating;
 
     /**
-     * @return TwigEngine|\PHPUnit_Framework_MockObject_MockObject
+     * @return EngineInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    public function getTemplating(): TwigEngine
+    public function getTemplating(): EngineInterface
     {
-        if (!$this->templating instanceof TwigEngine) {
-            $this->templating = $this->createMock(TwigEngine::class);
+        if (!$this->templating instanceof EngineInterface) {
+            $this->templating = $this->createMock(EngineInterface::class);
 
             $this->templating->expects(self::any())
                 ->method('render')

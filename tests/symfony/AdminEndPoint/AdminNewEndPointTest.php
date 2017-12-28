@@ -23,10 +23,10 @@
 namespace Teknoo\Tests\East\WebsiteBundle\AdminEndPoint;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Templating\EngineInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Writer\WriterInterface;
@@ -49,7 +49,7 @@ class AdminNewEndPointTest extends \PHPUnit\Framework\TestCase
     private $writerService;
 
     /**
-     * @var TwigEngine
+     * @var EngineInterface
      */
     private $twig;
 
@@ -76,12 +76,12 @@ class AdminNewEndPointTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @return TwigEngine|\PHPUnit_Framework_MockObject_MockObject
+     * @return EngineInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    public function getTwig(): TwigEngine
+    public function getTwig(): EngineInterface
     {
-        if (!$this->twig instanceof TwigEngine) {
-            $this->twig = $this->createMock(TwigEngine::class);
+        if (!$this->twig instanceof EngineInterface) {
+            $this->twig = $this->createMock(EngineInterface::class);
         }
 
         return $this->twig;

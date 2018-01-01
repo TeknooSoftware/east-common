@@ -1,5 +1,12 @@
 #Teknoo Software - Website - Change Log
 
+##[0.0.1] - 2018-01-01
+###First stable release
+###Added
+- add 404 response behavior when a content was not found
+###Fixed
+- update composer dev requirement and minimum stability
+
 ##[0.0.1-beta8] - 2017-12-27
 ###Fixed
 - Remove Lexik bundle (useless)

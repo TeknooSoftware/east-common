@@ -54,7 +54,9 @@ class ContentEndPointTest extends ContentEndPointTraitTest
 
             $this->templating->expects(self::any())
                 ->method('render')
-                ->willReturn('fooBar:executed');
+                ->willReturnCallback(function ($script) {
+                    return $script.':executed';
+                });
         }
 
         return $this->templating;
@@ -62,7 +64,7 @@ class ContentEndPointTest extends ContentEndPointTraitTest
 
     public function buildEndPoint(): EndPointInterface
     {
-        return (new ContentEndPoint($this->getContentLoader()))
+        return (new ContentEndPoint($this->getContentLoader(), 'error-404'))
             ->setTemplating($this->getTemplating());
     }
 }

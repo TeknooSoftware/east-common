@@ -24,6 +24,9 @@ parameters:
   teknoo.east.website.type.class: 'Teknoo\East\Website\Object\Type'
   teknoo.east.website.user.class: 'Teknoo\East\Website\Object\User'
 
+  #Path
+  teknoo.east.website.view.404-error.file: 'TeknooEastWebsiteBundle:Error:404.html.twig'
+
   #Admin view path
   teknoo.east.website.view.item.new.file: 'TeknooEastWebsiteBundle:AdminItem:new.html.twig'
   teknoo.east.website.view.item.edit.file: 'TeknooEastWebsiteBundle:AdminItem:edit.html.twig'
@@ -59,6 +62,7 @@ services:
     class: '%teknoo.east.website.endpoint.content.class%'
     arguments:
       - '@Teknoo\East\Website\Loader\ContentLoader'
+      - '%teknoo.east.website.view.404-error.file%'
     calls:
       - ['setTemplating', ['@templating.engine.twig']]
     public: true

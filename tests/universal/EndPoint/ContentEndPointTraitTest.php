@@ -67,21 +67,23 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
     {
         $contentLoader = $this->getContentLoader();
 
-        return new class($contentLoader) implements EndPointInterface {
+        return new class($contentLoader, 'error-404') implements EndPointInterface {
             use EastEndPointTrait;
             use ContentEndPointTrait;
 
             /**
              * {@inheritdoc}
              */
-            public function render(ClientInterface $client, string $view, array $parameters = array()): EndPointInterface
+            public function render(ClientInterface $client, string $view, array $parameters = array(), int $status = 200): EndPointInterface
             {
-                if (!isset($parameters['content'])) {
-                    throw new \Exception('missing content key in view parameters');
-                }
+                if ('error-404' != $view) {
+                    if (!isset($parameters['content'])) {
+                        throw new \Exception('missing content key in view parameters');
+                    }
 
-                if (!isset($parameters['foo']) || 'bar' != $parameters['foo']) {
-                    throw new \Exception('missing foo key in view parameters');
+                    if (!isset($parameters['foo']) || 'bar' != $parameters['foo']) {
+                        throw new \Exception('missing foo key in view parameters');
+                    }
                 }
 
                 $client->acceptResponse(new TextResponse($view.':executed'));
@@ -112,6 +114,51 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
     public function testInvokeNotFound()
     {
         $client = $this->createMock(ClientInterface::class);
+        $client->expects(self::once())
+            ->method('acceptResponse')
+            ->with($this->callback(function ($value) {
+                if ($value instanceof ResponseInterface) {
+                    $result = 'error-404:executed' == (string) $value->getBody();
+                    return $result;
+                }
+
+                return false;
+            }))
+            ->willReturnSelf();
+
+        $client->expects(self::never())
+            ->method('errorInRequest')
+            ->willReturnSelf();
+
+        $this->getContentLoader()
+            ->expects(self::any())
+            ->method('bySlug')
+            ->with('foo-bar')
+            ->willReturnCallback(function ($id, PromiseInterface $promise) {
+                $promise->fail(new \DomainException());
+
+                return $this->getContentLoader();
+            });
+
+        $uri = $this->createMock(UriInterface::class);
+        $uri->expects(self::any())
+            ->method('getPath')
+            ->willReturn('/item/sub/foo-bar');
+
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->expects(self::any())
+            ->method('getUri')
+            ->willReturn($uri);
+
+        self::assertInstanceOf(
+            EndPointInterface::class,
+            $this->buildEndPoint()($client, $request)
+        );
+    }
+
+    public function testInvokeOtherError()
+    {
+        $client = $this->createMock(ClientInterface::class);
         $client->expects(self::never())
             ->method('acceptResponse');
 
@@ -124,7 +171,7 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
             ->method('bySlug')
             ->with('foo-bar')
             ->willReturnCallback(function ($id, PromiseInterface $promise) {
-                $promise->fail(new \DomainException());
+                $promise->fail(new \Exception());
 
                 return $this->getContentLoader();
             });

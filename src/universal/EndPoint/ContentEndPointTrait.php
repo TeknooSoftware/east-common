@@ -43,12 +43,19 @@ trait ContentEndPointTrait
     private $contentLoader;
 
     /**
+     * @var string
+     */
+    private $error404Template;
+
+    /**
      * ContentEndPointTrait constructor.
      * @param ContentLoader $contentLoader
+     * @param string $error404Template
      */
-    public function __construct(ContentLoader $contentLoader)
+    public function __construct(ContentLoader $contentLoader, string $error404Template)
     {
         $this->contentLoader = $contentLoader;
+        $this->error404Template = $error404Template;
     }
 
     /**
@@ -91,7 +98,16 @@ trait ContentEndPointTrait
                     );
                 },
                 function (\Throwable $e) use ($client) {
-                    $client->errorInRequest($e);
+                    if ($e instanceof \DomainException) {
+                        $this->render(
+                            $client,
+                            $this->error404Template,
+                            [],
+                            404
+                        );
+                    } else {
+                        $client->errorInRequest($e);
+                    }
                 }
             )
         );

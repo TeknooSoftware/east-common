@@ -48,7 +48,7 @@ class StaticEndPointTraitTest extends \PHPUnit\Framework\TestCase
             /**
              * {@inheritdoc}
              */
-            public function render(ClientInterface $client, string $view, array $parameters = array()): EndPointInterface
+            public function render(ClientInterface $client, string $view, array $parameters = array(), int $status = 200): EndPointInterface
             {
                 $client->acceptResponse(new Response\TextResponse($view.':executed'));
                 return $this;

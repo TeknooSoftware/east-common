@@ -190,6 +190,10 @@ class FeatureContext implements Context
                 if (\array_key_exists('deletedAt', $criteria)) {
                     unset($criteria['deletedAt']);
                 }
+                
+                if (isset($criteria['slug']) && 'page-with-error' == $criteria['slug']) {
+                    throw new \Exception('Error');
+                }
 
                 if ($this->criteria == $criteria) {
                     return $this->object;
@@ -491,7 +495,7 @@ class FeatureContext implements Context
      */
     public function aEndpointAbleToRenderAndServePage()
     {
-        $this->contentEndPoint = new class($this->contentLoader) implements EndPointInterface {
+        $this->contentEndPoint = new class($this->contentLoader, '404-error') implements EndPointInterface {
             use EastEndPointTrait;
             use ContentEndPointTrait;
         };
@@ -515,6 +519,10 @@ class FeatureContext implements Context
 
             public function render($name, array $parameters = array())
             {
+                if ('404-error' === $name) {
+                    return 'Error 404';
+                }
+                
                 Assert::assertEquals($this->context->templateToCall, $name);
 
                 $keys = [];

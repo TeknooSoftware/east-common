@@ -48,12 +48,16 @@ trait PublishableLoaderTrait
     public function load(array $criteria, PromiseInterface $promise): LoaderInterface
     {
         $criteria['deletedAt'] = null;
-        $entity = $this->getRepository()->findOneBy($criteria);
+        try {
+            $entity = $this->getRepository()->findOneBy($criteria);
 
-        if (!empty($entity)) {
-            $promise->success($entity);
-        } else {
-            $promise->fail(new \DomainException('Object not found'));
+            if (!empty($entity)) {
+                $promise->success($entity);
+            } else {
+                $promise->fail(new \DomainException('Object not found'));
+            }
+        } catch (\Throwable $exception) {
+            $promise->fail($exception);
         }
 
         return $this;

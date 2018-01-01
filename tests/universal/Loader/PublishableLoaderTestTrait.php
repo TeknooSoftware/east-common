@@ -75,6 +75,32 @@ trait PublishableLoaderTestTrait
         );
     }
 
+    public function testLoadPublishedError()
+    {
+        $this->getRepositoryMock()
+            ->expects(self::any())
+            ->method('findOneBy')
+            ->with(['fooBar'=>true, 'deletedAt'=>null])
+            ->willThrowException(new \Exception('foo'));
+
+        /**
+         * @var \PHPUnit_Framework_MockObject_MockObject $promiseMock
+         *
+         */
+        $promiseMock = $this->createMock(Promise::class);
+        $promiseMock->expects(self::never())->method('success');
+        $promiseMock->expects(self::once())
+            ->method('fail')
+            ->with($this->callback(function ($exception) {
+                return $exception instanceof \Exception;
+            }));
+
+        self::assertInstanceOf(
+            PublishableLoaderInterface::class,
+            $this->buildLoader()->load(['fooBar'=>true], $promiseMock)
+        );
+    }
+
     public function testLoadPublishedFoundPublished()
     {
         $entity = $this->getEntity();

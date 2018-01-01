@@ -97,12 +97,14 @@ trait ContentEndPointTrait
                         $viewParameters
                     );
                 },
-                function (\Throwable $e) use ($client) {
+                function (\Throwable $e) use ($client, $request) {
                     if ($e instanceof \DomainException) {
+                        $viewParameters = $request->getAttribute(ViewParameterInterface::REQUEST_PARAMETER_KEY, []);
+
                         $this->render(
                             $client,
                             $this->error404Template,
-                            [],
+                            $viewParameters,
                             404
                         );
                     } else {

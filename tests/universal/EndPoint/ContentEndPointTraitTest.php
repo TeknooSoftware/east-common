@@ -150,6 +150,13 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
             ->method('getUri')
             ->willReturn($uri);
 
+        $request->expects(self::any())
+            ->method('getAttribute')
+            ->willReturnMap([
+                [ViewParameterInterface::REQUEST_PARAMETER_KEY, [], ['foo'=>'bar']]
+            ]);
+
+
         self::assertInstanceOf(
             EndPointInterface::class,
             $this->buildEndPoint()($client, $request)

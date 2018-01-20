@@ -1,7 +1,12 @@
 #Teknoo Software - Website - Change Log
 
+##[0.0.3] - 2018-01-20
+###Fix
+fix doctrine mongodb configuration
+
 ##[0.0.2] - 2018-01-20
-###Update composer requirement (optional, only to use with Symfony) : require symfony/psr-http-message-bridge 1.0+ and zendframework/zend-diactoros 1.7+
+###Change
+Update composer requirement (optional, only to use with Symfony) : require symfony/psr-http-message-bridge 1.0+ and zendframework/zend-diactoros 1.7+
 
 ##[0.0.1] - 2018-01-01
 ###First stable release

@@ -34,7 +34,8 @@ use Teknoo\East\Website\Object\User;
  */
 class UserLoader implements LoaderInterface
 {
-    use CollectionLoaderTrait;
+    use CollectionLoaderTrait,
+        LoaderTrait;
 
     /**
      * UserLoader constructor.
@@ -43,25 +44,6 @@ class UserLoader implements LoaderInterface
     public function __construct(ObjectRepository $repository)
     {
         $this->repository = $repository;
-    }
-
-    /**
-     * @param array $criteria
-     * @param PromiseInterface $promise
-     * @return LoaderInterface
-     */
-    public function load(array $criteria, PromiseInterface $promise): LoaderInterface
-    {
-        $criteria['deletedAt'] = null;
-        $entity = $this->repository->findOneBy($criteria);
-
-        if ($entity instanceof User) {
-            $promise->success($entity);
-        } else {
-            $promise->fail(new \DomainException('Object not found'));
-        }
-
-        return $this;
     }
 
     /**

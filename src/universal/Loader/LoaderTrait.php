@@ -25,33 +25,41 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Loader;
 
 use Doctrine\Common\Persistence\ObjectRepository;
+use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
+use Teknoo\East\Website\Object\PublishableInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class MediaLoader implements LoaderInterface
+trait LoaderTrait
 {
-    use CollectionLoaderTrait,
-        LoaderTrait;
-
     /**
-     * MediaLoader constructor.
-     * @param ObjectRepository $repository
+     * @return ObjectRepository
      */
-    public function __construct(ObjectRepository $repository)
-    {
-        $this->repository = $repository;
-    }
+    abstract protected function getRepository(): ObjectRepository;
 
     /**
-     * @param string $id
+     * @param array $criteria
      * @param PromiseInterface $promise
-     * @return MediaLoader|PublishableLoaderInterface
+     * @return LoaderInterface|self
      */
-    public function byId(string $id, PromiseInterface $promise): MediaLoader
+    public function load(array $criteria, PromiseInterface $promise): LoaderInterface
     {
-        return $this->load(['id' => $id], $promise);
+        $criteria['deletedAt'] = null;
+        try {
+            $entity = $this->getRepository()->findOneBy($criteria);
+
+            if (!empty($entity)) {
+                $promise->success($entity);
+            } else {
+                $promise->fail(new \DomainException('Object not found'));
+            }
+        } catch (\Throwable $exception) {
+            $promise->fail($exception);
+        }
+
+        return $this;
     }
 }

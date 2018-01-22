@@ -34,6 +34,7 @@ use Teknoo\East\Website\Loader\LoaderInterface;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers      \Teknoo\East\Website\Loader\ContentLoader
+ * @covers      \Teknoo\East\Website\Loader\LoaderTrait
  * @covers      \Teknoo\East\Website\Loader\PublishableLoaderTrait
  * @covers      \Teknoo\East\Website\Loader\CollectionLoaderTrait
  * @covers      \Teknoo\East\Website\Loader\MongoDbCollectionLoaderTrait

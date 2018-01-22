@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Loader;
 
-use Doctrine\Common\Persistence\ObjectRepository;
 use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\Object\PublishableInterface;
@@ -35,33 +34,7 @@ use Teknoo\East\Website\Object\PublishableInterface;
  */
 trait PublishableLoaderTrait
 {
-    /**
-     * @return ObjectRepository
-     */
-    abstract protected function getRepository(): ObjectRepository;
-
-    /**
-     * @param array $criteria
-     * @param PromiseInterface $promise
-     * @return LoaderInterface|self
-     */
-    public function load(array $criteria, PromiseInterface $promise): LoaderInterface
-    {
-        $criteria['deletedAt'] = null;
-        try {
-            $entity = $this->getRepository()->findOneBy($criteria);
-
-            if (!empty($entity)) {
-                $promise->success($entity);
-            } else {
-                $promise->fail(new \DomainException('Object not found'));
-            }
-        } catch (\Throwable $exception) {
-            $promise->fail($exception);
-        }
-
-        return $this;
-    }
+    use LoaderTrait;
 
     /**
      * @param array $criteria

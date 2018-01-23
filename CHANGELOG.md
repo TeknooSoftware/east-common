@@ -1,5 +1,9 @@
 #Teknoo Software - Website - Change Log
 
+##[0.0.4] - 2018-01-23
+###Updated
+- Create a LoaderTrait to factorize code for non publishable object
+
 ##[0.0.3] - 2018-01-20
 ###Fix
 fix doctrine mongodb configuration

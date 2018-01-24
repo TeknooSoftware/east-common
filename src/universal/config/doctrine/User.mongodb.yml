@@ -1,4 +1,4 @@
-#src/Resources/config/doctrine/Task.orm.yml
+#src/universal/config/doctrine/User.mongodb.yml
 Teknoo\East\Website\Object\User:
   type: 'documents'
   collection: 'users'

@@ -1,4 +1,4 @@
-#src/Resources/config/doctrine/Task.orm.yml
+#src/universal/config/doctrine/Content.mongodb.yml
 Teknoo\East\Website\Object\Content:
   type: 'documents'
   collection: 'contents'

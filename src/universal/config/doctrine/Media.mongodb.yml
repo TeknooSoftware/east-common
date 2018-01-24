@@ -1,4 +1,4 @@
-#src/Resources/config/doctrine/Task.orm.yml
+#src/universal/config/doctrine/Media.mongodb.yml
 Teknoo\East\Website\Object\Media:
   type: 'documents'
   collection: 'media'

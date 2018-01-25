@@ -1,5 +1,9 @@
 #Teknoo Software - Website - Change Log
 
+##[0.0.5] - 2018-01-25
+###Updated
+- Add tests files into package (remove from export-ignore
+
 ##[0.0.4] - 2018-01-23
 ###Updated
 - Create a LoaderTrait to factorize code for non publishable object

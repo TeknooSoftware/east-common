@@ -15,11 +15,7 @@
     "autoload": {
         "psr-4": {
             "Teknoo\\East\\Website\\": "src/universal",
-            "Teknoo\\East\\WebsiteBundle\\": "src/symfony"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
+            "Teknoo\\East\\WebsiteBundle\\": "src/symfony",
             "Teknoo\\Tests\\East\\Website\\": "tests/universal",
             "Teknoo\\Tests\\East\\WebsiteBundle\\": "tests/symfony"
         }

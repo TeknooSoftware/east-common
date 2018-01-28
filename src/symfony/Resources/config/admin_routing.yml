@@ -1,5 +1,5 @@
 admin_item_list:
-    path: '/categories/'
+    path: '/items/'
     methods:  ['GET']
     defaults: { _controller: 'teknoo.east.website.endpoint.admin.list.item' }
 

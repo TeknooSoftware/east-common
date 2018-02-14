@@ -26,7 +26,7 @@
         "doctrine/annotations": "~1.5",
         "gedmo/doctrine-extensions": "~2.4",
         "teknoo/recipe": "^1.0.0",
-        "teknoo/east-foundation": "^0.0.6",
+        "teknoo/east-foundation": "^0.0.7-beta1",
         "teknoo/immutable": "~1.0",
         "teknoo/states": "^3.2.0",
         "php-di/php-di": "^5.4.6"
@@ -49,6 +49,5 @@
         "stof/doctrine-extensions-bundle": "~1.2",
         "doctrine/mongodb-odm": "~1.1",
         "doctrine/mongodb-odm-bundle": "~3.4"
-    },
-    "minimum-stability": "stable"
+    }
 }

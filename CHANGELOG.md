@@ -1,5 +1,10 @@
 #Teknoo Software - Website - Change Log
 
+##[0.0.6-beta1] - 2018-02-24
+###Updated
+- Use States 3.2.1 and last East Foundation 0.0.7-beta3
+- Fix admin routing
+
 ##[0.0.5] - 2018-01-25
 ###Updated
 - Add tests files into package (remove from export-ignore

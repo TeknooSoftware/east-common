@@ -28,8 +28,8 @@
         "teknoo/recipe": "^1.0.0",
         "teknoo/east-foundation": "^0.0.7-beta1",
         "teknoo/immutable": "~1.0",
-        "teknoo/states": "^3.2.0",
-        "php-di/php-di": "^5.4.6"
+        "teknoo/states": "^3.2.1",
+        "php-di/php-di": "~6.0"
     },
     "require-dev": {
         "phpunit/phpunit": "~6.2",

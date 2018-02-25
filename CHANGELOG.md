@@ -1,5 +1,9 @@
 #Teknoo Software - Website - Change Log
 
+##[0.0.6-beta3] - 2018-02-26
+###Fixed
+- Fix error on writer when it's fail but not promise passed
+
 ##[0.0.6-beta2] - 2018-02-24
 ###Updated
 - Use States 3.2.1 and last East Foundation 0.0.7-beta3

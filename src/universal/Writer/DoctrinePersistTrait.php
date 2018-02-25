@@ -51,6 +51,7 @@ trait DoctrinePersistTrait
      * @param object $object
      * @param PromiseInterface|null $promise
      * @return self
+     * @throws \Throwable
      */
     private function persist($object, PromiseInterface $promise = null)
     {
@@ -62,7 +63,11 @@ trait DoctrinePersistTrait
                 $promise->success($object);
             }
         } catch (\Throwable $error) {
-            $promise->fail($error);
+            if ($promise instanceof PromiseInterface) {
+                $promise->fail($error);
+            } else {
+                throw $error;
+            }
         }
 
         return $this;

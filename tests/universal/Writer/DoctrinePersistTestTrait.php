@@ -127,4 +127,26 @@ trait DoctrinePersistTestTrait
 
         self::assertInstanceOf(WriterInterface::class, $this->buildWriter()->save($object, $promise));
     }
+
+    /**
+     * @expectedException \Exception
+     */
+    public function testSaveWithoutPromiseFailure()
+    {
+        $object = $this->getObject();
+
+        $this->getObjectManager()
+            ->expects(self::once())
+            ->method('persist')
+            ->with($object);
+
+        $error = new \Exception();
+
+        $this->getObjectManager()
+            ->expects(self::once())
+            ->method('flush')
+            ->willThrowException($error);
+
+        self::assertInstanceOf(WriterInterface::class, $this->buildWriter()->save($object));
+    }
 }

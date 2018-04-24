@@ -31,9 +31,9 @@ namespace Teknoo\East\Website\Object;
 interface DeletableInterface
 {
     /**
-     * @return \DateTime
+     * @return \DateTimeInterface|null
      */
-    public function getDeletedAt(): \DateTimeInterface;
+    public function getDeletedAt(): ?\DateTimeInterface;
 
     /**
      * @param \DateTime $deletedAt

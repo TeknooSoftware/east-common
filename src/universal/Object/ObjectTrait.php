@@ -88,7 +88,7 @@ trait ObjectTrait
     /**
      * @return \DateTimeInterface
      */
-    public function getDeletedAt(): \DateTimeInterface
+    public function getDeletedAt(): ?\DateTimeInterface
     {
         return $this->deletedAt;
     }

@@ -1,5 +1,13 @@
 #Teknoo Software - Website - Change Log
 
+##[0.0.6] - 2018-06-02
+###Release
+- Stable release
+
+##[0.0.6-beta4] - 2018-04-18
+###Fixed
+- Fix getDeletedAt can be null
+
 ##[0.0.6-beta3] - 2018-02-26
 ###Fixed
 - Fix error on writer when it's fail but not promise passed

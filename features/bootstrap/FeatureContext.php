@@ -2,13 +2,12 @@
 
 use Behat\Behat\Context\Context;
 use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\Common\Persistence\ObjectManager;
 use PHPUnit\Framework\Assert;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Templating\EngineInterface;
-use Teknoo\East\Foundation\Recipe\Recipe;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
-use Teknoo\East\Foundation\Processor\ProcessorInterface;
 use Teknoo\East\Foundation\Router\RouterInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
@@ -34,9 +33,9 @@ use Zend\Diactoros\ServerRequest;
 class FeatureContext implements Context
 {
     /**
-     * @var RecipeInterface
+     * @var \DI\Container
      */
-    private $recipe;
+    private $container;
 
     /**
      * @var RouterInterface
@@ -120,18 +119,97 @@ class FeatureContext implements Context
     }
 
     /**
-     * @Given I have an empty recipe
+     * @Given I have DI initialized
      */
-    public function iHaveAnEmptyRecipe()
+    public function iHaveDiInitialized()
     {
-        $this->recipe = new Recipe();
+        $containerDefinition = new \DI\ContainerBuilder();
+        $containerDefinition->addDefinitions(
+            include \dirname(\dirname(__DIR__)).'/vendor/teknoo/east-foundation/src/universal/di.php'
+        );
+        $containerDefinition->addDefinitions(
+            include \dirname(\dirname(__DIR__)).'/src/universal/di.php'
+        );
+
+        $this->container = $containerDefinition->build();
+
+        $this->container->set(ObjectManager::class, $this->buildObjectManager());
+    }
+
+    public function buildObjectManager(): ObjectManager
+    {
+        return new class($this) implements ObjectManager {
+            private $featureContext;
+
+            /**
+             *  constructor.
+             * @param FeatureContext $featureContext
+             */
+            public function __construct(FeatureContext $featureContext)
+            {
+                $this->featureContext = $featureContext;
+            }
+
+            public function find($className, $id)
+            {
+            }
+
+            public function persist($object)
+            {
+            }
+
+            public function remove($object)
+            {
+            }
+
+            public function merge($object)
+            {
+            }
+
+            public function clear($objectName = null)
+            {
+            }
+
+            public function detach($object)
+            {
+            }
+
+            public function refresh($object)
+            {
+            }
+
+            public function flush()
+            {
+            }
+
+            public function getRepository($className)
+            {
+                return $this->featureContext->buildObjectRepository($className);
+            }
+
+            public function getClassMetadata($className)
+            {
+            }
+
+            public function getMetadataFactory()
+            {
+            }
+
+            public function initializeObject($obj)
+            {
+            }
+
+            public function contains($object)
+            {
+            }
+        };
     }
 
     /**
      * @param string $className
      * @return ObjectRepository
      */
-    private function buildObjectRepository(string $className): ObjectRepository
+    public function buildObjectRepository(string $className): ObjectRepository
     {
         $this->objectRepository = new class($className) implements ObjectRepository {
             /**
@@ -256,17 +334,6 @@ class FeatureContext implements Context
     }
 
     /**
-     * @Given I register the processor :arg1
-     */
-    public function iRegisterTheProcessor($arg1)
-    {
-        $this->recipe = $this->recipe->registerMiddleware(
-            new $arg1,
-            ProcessorInterface::MIDDLEWARE_PRIORITY
-        );
-    }
-
-    /**
      * @Given I register a router
      */
     public function iRegisterARouter()
@@ -309,6 +376,8 @@ class FeatureContext implements Context
                             $request = $request->withAttribute($key, $value);
                         }
 
+                        $manager->updateWorkPlan([\Teknoo\East\Foundation\Router\ResultInterface::class => $result]);
+
                         $manager->continueExecution($client, $request);
 
                         break;
@@ -319,7 +388,7 @@ class FeatureContext implements Context
             }
         };
 
-        $this->recipe = $this->recipe->registerMiddleware($this->router);
+        $this->container->set(RouterInterface::class, $this->router);
     }
 
     /**
@@ -348,7 +417,7 @@ class FeatureContext implements Context
      */
     public function theServerWillReceiveTheRequest($arg1)
     {
-        $manager = new Manager($this->recipe);
+        $manager = new Manager($this->container->get(RecipeInterface::class));
 
         $this->response = null;
         $this->error = null;

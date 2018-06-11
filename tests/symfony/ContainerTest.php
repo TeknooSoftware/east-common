@@ -31,6 +31,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Teknoo\East\Foundation\Manager\Manager;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
+use Teknoo\East\Foundation\Router\RouterInterface;
 use Teknoo\East\WebsiteBundle\Middleware\LocaleMiddleware;
 
 /**
@@ -82,6 +83,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         );
 
         $container->set(LoggerInterface::class, $this->createMock(LoggerInterface::class));
+        $container->set(RouterInterface::class, $this->createMock(RouterInterface::class));
         $container->set(ObjectManager::class, $objectManager);
         $container->set('translator', $this->createMock(TranslatorInterface::class));
 

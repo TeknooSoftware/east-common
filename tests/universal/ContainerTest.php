@@ -31,6 +31,7 @@ use Gedmo\Translatable\TranslatableListener;
 use Psr\Log\LoggerInterface;
 use Teknoo\East\Foundation\Manager\Manager;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
+use Teknoo\East\Foundation\Router\RouterInterface;
 use Teknoo\East\Website\Loader\ItemLoader;
 use Teknoo\East\Website\Loader\ContentLoader;
 use Teknoo\East\Website\Loader\MediaLoader;
@@ -88,7 +89,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         $container = $this->buildContainer();
         $objectManager = $this->createMock(ObjectManager::class);
         $objectManager->expects(self::any())->method('getRepository')->willReturn(
-            $this->createMock(ObjectRepository::class)
+            $this->createMock(\DateTime::class)
         );
 
         $container->set(ObjectManager::class, $objectManager);
@@ -314,6 +315,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         );
 
         $container->set(LoggerInterface::class, $this->createMock(LoggerInterface::class));
+        $container->set(RouterInterface::class, $this->createMock(RouterInterface::class));
         $container->set(ObjectManager::class, $objectManager);
 
         $manager1 = $container->get(Manager::class);

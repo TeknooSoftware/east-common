@@ -26,7 +26,6 @@ namespace Teknoo\East\Website\Loader;
 
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\MongoDB\Query\Builder;
-use Doctrine\ODM\MongoDB\DocumentRepository;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 
 /**
@@ -36,7 +35,7 @@ use Teknoo\East\Foundation\Promise\PromiseInterface;
 trait CollectionLoaderTrait
 {
     /**
-     * @var ObjectRepository|DocumentRepository
+     * @var ObjectRepository
      */
     protected $repository;
 

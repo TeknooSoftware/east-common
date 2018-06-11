@@ -28,7 +28,7 @@ use function DI\get;
 use function DI\decorate;
 use function DI\create;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ODM\MongoDB\DocumentRepository;
+use Doctrine\Common\Persistence\ObjectRepository;
 use Gedmo\Translatable\TranslatableListener;
 use Psr\Container\ContainerInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
@@ -57,7 +57,7 @@ return [
     //Loaders
     ItemLoader::class => function (ContainerInterface $container) {
         $repository = $container->get(ObjectManager::class)->getRepository(Item::class);
-        if ($repository instanceof DocumentRepository) {
+        if ($repository instanceof ObjectRepository) {
             return new class($repository) extends ItemLoader {
                 use MongoDbCollectionLoaderTrait;
             };
@@ -70,7 +70,7 @@ return [
     },
     ContentLoader::class => function (ContainerInterface $container) {
         $repository = $container->get(ObjectManager::class)->getRepository(Content::class);
-        if ($repository instanceof DocumentRepository) {
+        if ($repository instanceof ObjectRepository) {
             return new class($repository) extends ContentLoader {
                 use MongoDbCollectionLoaderTrait;
 
@@ -84,7 +84,7 @@ return [
     },
     MediaLoader::class => function (ContainerInterface $container) {
         $repository = $container->get(ObjectManager::class)->getRepository(Media::class);
-        if ($repository instanceof DocumentRepository) {
+        if ($repository instanceof ObjectRepository) {
             return new class($repository) extends MediaLoader {
                 use MongoDbCollectionLoaderTrait;
 
@@ -98,7 +98,7 @@ return [
     },
     TypeLoader::class => function (ContainerInterface $container) {
         $repository = $container->get(ObjectManager::class)->getRepository(Type::class);
-        if ($repository instanceof DocumentRepository) {
+        if ($repository instanceof ObjectRepository) {
             return new class($repository) extends TypeLoader {
                 use MongoDbCollectionLoaderTrait;
 
@@ -112,7 +112,7 @@ return [
     },
     UserLoader::class => function (ContainerInterface $container) {
         $repository = $container->get(ObjectManager::class)->getRepository(User::class);
-        if ($repository instanceof DocumentRepository) {
+        if ($repository instanceof ObjectRepository) {
             return new class($repository) extends UserLoader {
                 use MongoDbCollectionLoaderTrait;
 

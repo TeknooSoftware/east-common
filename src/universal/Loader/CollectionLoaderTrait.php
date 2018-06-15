@@ -24,9 +24,9 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Loader;
 
-use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\MongoDB\Query\Builder;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
+use Teknoo\East\Website\DBSource\RepositoryInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -35,14 +35,14 @@ use Teknoo\East\Foundation\Promise\PromiseInterface;
 trait CollectionLoaderTrait
 {
     /**
-     * @var ObjectRepository
+     * @var RepositoryInterface
      */
     protected $repository;
 
     /**
-     * @return ObjectRepository
+     * @return RepositoryInterface
      */
-    protected function getRepository(): ObjectRepository
+    protected function getRepository(): RepositoryInterface
     {
         return $this->repository;
     }

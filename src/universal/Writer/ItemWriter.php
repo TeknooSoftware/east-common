@@ -32,7 +32,7 @@ use Teknoo\East\Foundation\Promise\PromiseInterface;
  */
 class ItemWriter implements WriterInterface
 {
-    use DoctrinePersistTrait;
+    use PersistTrait;
 
     /**
      * {@inheritdoc}

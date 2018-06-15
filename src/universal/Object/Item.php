@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Object;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Translatable\Translatable;
 use Teknoo\East\Website\Object\Item\Hidden;
 use Teknoo\East\Website\Object\Item\Available;
@@ -97,7 +96,7 @@ class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, Trans
      */
     public function __construct()
     {
-        $this->children = new ArrayCollection();
+        $this->children = new \ArrayObject();
         $this->initializeProxy();
         $this->updateStates();
     }

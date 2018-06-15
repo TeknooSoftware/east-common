@@ -24,9 +24,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Loader;
 
-use Doctrine\Common\Persistence\ObjectRepository;
-use Teknoo\East\Foundation\Promise\PromiseInterface;
-use Teknoo\East\Website\Object\Type;
+use Teknoo\East\Website\DBSource\RepositoryInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -39,9 +37,9 @@ class TypeLoader implements LoaderInterface
 
     /**
      * TypeLoader constructor.
-     * @param ObjectRepository $repository
+     * @param RepositoryInterface $repository
      */
-    public function __construct(ObjectRepository $repository)
+    public function __construct(RepositoryInterface $repository)
     {
         $this->repository = $repository;
     }

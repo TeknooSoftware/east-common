@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Object;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Translatable\Translatable;
 use Teknoo\East\Website\Object\Content\Draft;
 use Teknoo\East\Website\Object\Content\Published;

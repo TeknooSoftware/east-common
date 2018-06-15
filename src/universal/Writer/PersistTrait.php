@@ -24,25 +24,25 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Writer;
 
-use Doctrine\Common\Persistence\ObjectManager;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
+use Teknoo\East\Website\DBSource\ManagerInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-trait DoctrinePersistTrait
+trait PersistTrait
 {
     /**
-     * @var ObjectManager
+     * @var ManagerInterface
      */
     private $manager;
 
     /**
-     * DoctrinePersistTrait constructor.
-     * @param ObjectManager $manager
+     * PersistTrait constructor.
+     * @param ManagerInterface $manager
      */
-    public function __construct(ObjectManager $manager)
+    public function __construct(ManagerInterface $manager)
     {
         $this->manager = $manager;
     }

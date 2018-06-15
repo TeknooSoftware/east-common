@@ -24,10 +24,8 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Loader;
 
-use Doctrine\Common\Persistence\ObjectRepository;
-use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
-use Teknoo\East\Website\Object\PublishableInterface;
+use Teknoo\East\Website\DBSource\RepositoryInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -36,9 +34,9 @@ use Teknoo\East\Website\Object\PublishableInterface;
 trait LoaderTrait
 {
     /**
-     * @return ObjectRepository
+     * @return RepositoryInterface
      */
-    abstract protected function getRepository(): ObjectRepository;
+    abstract protected function getRepository(): RepositoryInterface;
 
     /**
      * @param array $criteria

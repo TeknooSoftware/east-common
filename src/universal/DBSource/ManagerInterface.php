@@ -22,25 +22,31 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\East\Website\Writer;
-
-use Teknoo\East\Foundation\Promise\PromiseInterface;
+namespace Teknoo\East\Website\DBSource;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class ContentWriter implements WriterInterface
+interface ManagerInterface
 {
-    use PersistTrait;
+    /**
+     * Tells the ObjectManager to make an instance managed and persistent.
+     *
+     * The object will be entered into the database as a result of the flush operation.
+     *
+     * @param object $object The instance to make managed and persistent.
+     *
+     * @return void
+     */
+    public function persist($object): void;
 
     /**
-     * {@inheritdoc}
+     * Flushes all changes to objects that have been queued up to now to the database.
+     * This effectively synchronizes the in-memory state of managed objects with the
+     * database.
+     *
+     * @return void
      */
-    public function save($object, PromiseInterface $promise = null): WriterInterface
-    {
-        $this->persist($object, $promise);
-
-        return $this;
-    }
+    public function flush();
 }

@@ -1,5 +1,9 @@
 #Teknoo Software - Website - Change Log
 
+##[0.0.7-beta1] - 2018-06-15
+###Update
+- update to use recipe 1.1 and east foundation 0.0.8
+
 ##[0.0.6] - 2018-06-02
 ###Release
 - Stable release

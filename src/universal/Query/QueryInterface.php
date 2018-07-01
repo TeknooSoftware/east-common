@@ -22,39 +22,27 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\East\Website\Loader;
+namespace Teknoo\East\Website\Query;
 
-use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
-use Teknoo\East\Website\Object\PublishableInterface;
+use Teknoo\East\Website\DBSource\RepositoryInterface;
+use Teknoo\East\Website\Loader\LoaderInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-trait PublishableLoaderTrait
+interface QueryInterface
 {
-    use LoaderTrait;
-
     /**
-     * @param array $criteria
+     * @param LoaderInterface $loader
+     * @param RepositoryInterface $repository
      * @param PromiseInterface $promise
-     * @return PublishableLoaderInterface|self
+     * @return QueryInterface
      */
-    public function loadPublished(array $criteria, PromiseInterface $promise): PublishableLoaderInterface
-    {
-        $promise = new Promise(function ($object) use ($promise) {
-            if ($object instanceof PublishableInterface && $object->getPublishedAt() instanceof \DateTime) {
-                $promise->success($object);
-            } else {
-                $promise->fail(new \DomainException('Object not found'));
-            }
-        }, function (\Throwable $e) use ($promise) {
-            $promise->fail($e);
-        });
-
-        $this->load($criteria, $promise);
-
-        return $this;
-    }
+    public function execute(
+        LoaderInterface $loader,
+        RepositoryInterface $repository,
+        PromiseInterface $promise
+    ): QueryInterface;
 }

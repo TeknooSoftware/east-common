@@ -24,17 +24,15 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Loader;
 
-use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class ContentLoader implements PublishableLoaderInterface
+class ContentLoader implements LoaderInterface
 {
-    use PublishableLoaderTrait,
-        CollectionLoaderTrait;
+    use LoaderTrait;
 
     /**
      * ContentLoader constructor.
@@ -43,28 +41,5 @@ class ContentLoader implements PublishableLoaderInterface
     public function __construct(RepositoryInterface $repository)
     {
         $this->repository = $repository;
-    }
-
-    /**
-     * @return RepositoryInterface
-     */
-    protected function getRepository(): RepositoryInterface
-    {
-        return $this->repository;
-    }
-
-    /**
-     * @param string $slug
-     * @param PromiseInterface $promise
-     * @return ContentLoader|PublishableLoaderInterface
-     */
-    public function bySlug(string $slug, PromiseInterface $promise): ContentLoader
-    {
-        return $this->loadPublished(
-            [
-                'slug' => $slug
-            ],
-            $promise
-        );
     }
 }

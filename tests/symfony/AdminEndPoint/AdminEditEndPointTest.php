@@ -240,7 +240,7 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
             ->expects(self::once())
             ->method('load')
             ->willReturnCallback(function ($criteria, PromiseInterface $promise) {
-                self::assertEquals(['id' => 'foo'], $criteria);
+                self::assertEquals('foo', $criteria);
                 $promise->fail(new \DomainException());
 
                 return $this->getLoaderService();
@@ -268,7 +268,7 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
             ->expects(self::once())
             ->method('load')
             ->willReturnCallback(function ($criteria, PromiseInterface $promise) {
-                self::assertEquals(['id' => 'foo'], $criteria);
+                self::assertEquals('foo', $criteria);
                 $promise->success(new Type());
 
                 return $this->getLoaderService();
@@ -303,7 +303,7 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
             ->expects(self::once())
             ->method('load')
             ->willReturnCallback(function ($criteria, PromiseInterface $promise) {
-                self::assertEquals(['id' => 'foo'], $criteria);
+                self::assertEquals('foo', $criteria);
                 $promise->success(new Type());
 
                 return $this->getLoaderService();
@@ -347,7 +347,7 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
             ->expects(self::once())
             ->method('load')
             ->willReturnCallback(function ($criteria, PromiseInterface $promise) {
-                self::assertEquals(['id' => 'foo'], $criteria);
+                self::assertEquals('foo', $criteria);
                 $promise->success(new Type());
 
                 return $this->getLoaderService();
@@ -394,7 +394,7 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
             ->expects(self::once())
             ->method('load')
             ->willReturnCallback(function ($criteria, PromiseInterface $promise) use ($content) {
-                self::assertEquals(['id' => 'foo'], $criteria);
+                self::assertEquals('foo', $criteria);
                 $promise->success($content);
 
                 return $this->getLoaderService();
@@ -456,7 +456,7 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
             ->expects(self::once())
             ->method('load')
             ->willReturnCallback(function ($criteria, PromiseInterface $promise) use ($content) {
-                self::assertEquals(['id' => 'foo'], $criteria);
+                self::assertEquals('foo', $criteria);
                 $promise->success($content);
 
                 return $this->getLoaderService();
@@ -518,7 +518,7 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
             ->expects(self::once())
             ->method('load')
             ->willReturnCallback(function ($criteria, PromiseInterface $promise) use ($content) {
-                self::assertEquals(['id' => 'foo'], $criteria);
+                self::assertEquals('foo', $criteria);
                 $promise->success($content);
 
                 return $this->getLoaderService();

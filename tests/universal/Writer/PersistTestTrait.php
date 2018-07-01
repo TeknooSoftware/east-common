@@ -24,13 +24,14 @@ namespace Teknoo\Tests\East\Website\Writer;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
+use Teknoo\East\Website\DBSource\ManagerInterface;
 use Teknoo\East\Website\Writer\WriterInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-trait DoctrinePersistTestTrait
+trait PersistTestTrait
 {
     /**
      * @var ObjectManager
@@ -38,12 +39,12 @@ trait DoctrinePersistTestTrait
     private $manager;
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|ObjectManager
+     * @return \PHPUnit_Framework_MockObject_MockObject|ManagerInterface
      */
-    public function getObjectManager(): ObjectManager
+    public function getObjectManager(): ManagerInterface
     {
-        if (!$this->manager instanceof ObjectManager) {
-            $this->manager = $this->createMock(ObjectManager::class);
+        if (!$this->manager instanceof ManagerInterface) {
+            $this->manager = $this->createMock(ManagerInterface::class);
         }
 
         return $this->manager;

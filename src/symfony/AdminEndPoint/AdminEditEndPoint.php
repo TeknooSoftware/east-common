@@ -94,7 +94,7 @@ class AdminEditEndPoint implements EndPointInterface
         }
 
         $this->loader->load(
-            ['id' => $id],
+            $id,
             new Promise(
                 function (ObjectInterface $object) use ($client, $request, $isTranslatable, $viewPath) {
                     if ($object instanceof PublishableInterface && isset($request->getParsedBody()['publish'])) {

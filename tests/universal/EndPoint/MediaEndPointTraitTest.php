@@ -104,7 +104,7 @@ class MediaEndPointTraitTest extends \PHPUnit\Framework\TestCase
 
         $this->getMediaLoader()
             ->expects(self::any())
-            ->method('byId')
+            ->method('load')
             ->with('fooBar')
             ->willReturnCallback(function ($id, PromiseInterface $promise) {
                 $media = new Media();
@@ -139,7 +139,7 @@ class MediaEndPointTraitTest extends \PHPUnit\Framework\TestCase
 
         $this->getMediaLoader()
             ->expects(self::any())
-            ->method('byId')
+            ->method('load')
             ->with('fooBar')
             ->willReturnCallback(function ($id, PromiseInterface $promise) {
                 $promise->fail(new \DomainException());

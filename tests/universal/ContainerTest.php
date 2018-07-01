@@ -25,7 +25,6 @@ namespace Teknoo\Tests\East\Website;
 use DI\Container;
 use DI\ContainerBuilder;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ODM\MongoDB\DocumentRepository;
 use Gedmo\Translatable\TranslatableListener;
 use Psr\Log\LoggerInterface;

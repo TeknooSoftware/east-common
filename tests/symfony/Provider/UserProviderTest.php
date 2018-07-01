@@ -23,6 +23,7 @@
 namespace Teknoo\Tests\East\WebsiteBundle\Provider;
 
 use Teknoo\East\Website\Loader\UserLoader;
+use Teknoo\East\Website\Query\User\UserByEmailQuery;
 use Teknoo\East\WebsiteBundle\Object\User;
 use Teknoo\East\WebsiteBundle\Provider\UserProvider;
 use Teknoo\Recipe\Promise\PromiseInterface;
@@ -61,9 +62,9 @@ class UserProviderTest extends \PHPUnit\Framework\TestCase
     {
         $this->getLoader()
             ->expects(self::once())
-            ->method('byEmail')
+            ->method('query')
             ->willReturnCallback(function ($name, PromiseInterface $promise) {
-                self::assertEquals('foo@bar', $name);
+                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
                 $promise->fail(new \DomainException());
 
                 return $this->getLoader();
@@ -79,9 +80,9 @@ class UserProviderTest extends \PHPUnit\Framework\TestCase
 
         $this->getLoader()
             ->expects(self::once())
-            ->method('byEmail')
+            ->method('query')
             ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
-                self::assertEquals('foo@bar', $name);
+                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
                 $promise->success($user);
 
                 return $this->getLoader();
@@ -97,9 +98,9 @@ class UserProviderTest extends \PHPUnit\Framework\TestCase
     {
         $this->getLoader()
             ->expects(self::once())
-            ->method('byEmail')
+            ->method('query')
             ->willReturnCallback(function ($name, PromiseInterface $promise) {
-                self::assertEquals('foo@bar', $name);
+                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
                 $promise->fail(new \DomainException());
 
                 return $this->getLoader();
@@ -115,9 +116,9 @@ class UserProviderTest extends \PHPUnit\Framework\TestCase
 
         $this->getLoader()
             ->expects(self::once())
-            ->method('byEmail')
+            ->method('query')
             ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
-                self::assertEquals('foo@bar', $name);
+                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
                 $promise->success($user);
 
                 return $this->getLoader();

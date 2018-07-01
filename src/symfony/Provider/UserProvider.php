@@ -28,6 +28,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Website\Loader\UserLoader;
+use Teknoo\East\Website\Query\User\UserByEmailQuery;
 use Teknoo\East\WebsiteBundle\Object\User;
 
 /**
@@ -56,8 +57,8 @@ class UserProvider implements UserProviderInterface
     public function loadUserByUsername($username)
     {
         $loadedUser = null;
-        $this->loader->byEmail(
-            $username,
+        $this->loader->query(
+            new UserByEmailQuery($username),
             new Promise(function ($user) use (&$loadedUser) {
                 $loadedUser = new User($user);
             })
@@ -76,6 +77,7 @@ class UserProvider implements UserProviderInterface
 
     /**
      * {@inheritdoc}
+     * @throws \ReflectionException
      */
     public function supportsClass($class)
     {

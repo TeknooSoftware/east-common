@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Loader;
 
-use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 
 /**
@@ -33,8 +32,7 @@ use Teknoo\East\Website\DBSource\RepositoryInterface;
  */
 class UserLoader implements LoaderInterface
 {
-    use CollectionLoaderTrait,
-        LoaderTrait;
+    use LoaderTrait;
 
     /**
      * UserLoader constructor.
@@ -43,15 +41,5 @@ class UserLoader implements LoaderInterface
     public function __construct(RepositoryInterface $repository)
     {
         $this->repository = $repository;
-    }
-
-    /**
-     * @param string $email
-     * @param PromiseInterface $promise
-     * @return LoaderInterface
-     */
-    public function byEmail(string $email, PromiseInterface $promise): LoaderInterface
-    {
-        return $this->load(['email' => $email], $promise);
     }
 }

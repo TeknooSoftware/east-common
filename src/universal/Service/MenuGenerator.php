@@ -26,6 +26,7 @@ namespace Teknoo\East\Website\Service;
 
 use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Website\Loader\ItemLoader;
+use Teknoo\East\Website\Query\Item\TopItemByLocationQuery;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -58,7 +59,7 @@ class MenuGenerator
             $stacks = $items;
         });
 
-        $this->itemLoader->topByLocation($location, $promise);
+        $this->itemLoader->query(new TopItemByLocationQuery($location), $promise);
 
         foreach ($stacks as $element) {
             yield $element;

@@ -34,6 +34,7 @@ use Teknoo\East\Website\Loader\ContentLoader;
 use Teknoo\East\Website\Middleware\ViewParameterInterface;
 use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Object\Type;
+use Teknoo\East\Website\Query\Content\PublishedContentFromSlugQuery;
 use Zend\Diactoros\Response\TextResponse;
 
 /**
@@ -132,8 +133,8 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
 
         $this->getContentLoader()
             ->expects(self::any())
-            ->method('bySlug')
-            ->with('foo-bar')
+            ->method('query')
+            ->with(new PublishedContentFromSlugQuery('foo-bar'))
             ->willReturnCallback(function ($id, PromiseInterface $promise) {
                 $promise->fail(new \DomainException());
 
@@ -175,8 +176,8 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
 
         $this->getContentLoader()
             ->expects(self::any())
-            ->method('bySlug')
-            ->with('foo-bar')
+            ->method('query')
+            ->with(new PublishedContentFromSlugQuery('foo-bar'))
             ->willReturnCallback(function ($id, PromiseInterface $promise) {
                 $promise->fail(new \Exception());
 
@@ -220,8 +221,8 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
 
         $this->getContentLoader()
             ->expects(self::any())
-            ->method('bySlug')
-            ->with('foo-bar')
+            ->method('query')
+            ->with(new PublishedContentFromSlugQuery('foo-bar'))
             ->willReturnCallback(function ($id, PromiseInterface $promise) {
                 $content = new Content();
                 $type = new Type();
@@ -274,8 +275,8 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
 
         $this->getContentLoader()
             ->expects(self::any())
-            ->method('bySlug')
-            ->with('default')
+            ->method('query')
+            ->with(new PublishedContentFromSlugQuery('default'))
             ->willReturnCallback(function ($id, PromiseInterface $promise) {
                 $content = new Content();
                 $type = new Type();

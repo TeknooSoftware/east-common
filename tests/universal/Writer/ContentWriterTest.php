@@ -30,11 +30,10 @@ use Teknoo\East\Website\Writer\WriterInterface;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers \Teknoo\East\Website\Writer\ContentWriter
- * @covers \Teknoo\East\Website\Writer\DoctrinePersistTrait
  */
 class ContentWriterTest extends \PHPUnit\Framework\TestCase
 {
-    use DoctrinePersistTestTrait;
+    use PersistTestTrait;
 
     public function buildWriter(): WriterInterface
     {

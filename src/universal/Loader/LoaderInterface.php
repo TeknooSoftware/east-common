@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Loader;
 
 use Teknoo\East\Foundation\Promise\PromiseInterface;
+use Teknoo\East\Website\Query\QueryInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -33,25 +34,16 @@ use Teknoo\East\Foundation\Promise\PromiseInterface;
 interface LoaderInterface
 {
     /**
-     * @param array $criteria
+     * @param string $id
      * @param PromiseInterface $promise
      * @return LoaderInterface
      */
-    public function load(array $criteria, PromiseInterface $promise): LoaderInterface;
-
+    public function load(string $id, PromiseInterface $promise): LoaderInterface;
+    
     /**
-     * @param array $criteria
+     * @param QueryInterface $query
      * @param PromiseInterface $promise
-     * @param array $order|null
-     * @param int $limit|null
-     * @param int $offset|null
      * @return LoaderInterface
      */
-    public function loadCollection(
-        array $criteria,
-        PromiseInterface $promise,
-        array $order = null,
-        int $limit = null,
-        int $offset = null
-    ): LoaderInterface;
+    public function query(QueryInterface $query, PromiseInterface $promise): LoaderInterface;
 }

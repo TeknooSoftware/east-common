@@ -58,7 +58,7 @@ trait MediaEndPointTrait
      */
     public function __invoke(ClientInterface $client, string $id)
     {
-        $this->mediaLoader->byId(
+        $this->mediaLoader->load(
             $id,
             new Promise(
                 function (Media $media) use ($client) {

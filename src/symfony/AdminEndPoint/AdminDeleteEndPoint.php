@@ -71,7 +71,7 @@ class AdminDeleteEndPoint implements EndPointInterface
         string $nextRoute
     ) {
         $this->loader->load(
-            ['id' => $id],
+            $id,
             new Promise(
                 function (DeletableInterface $object) use ($client, $nextRoute) {
                     $this->deletingService->delete($object);

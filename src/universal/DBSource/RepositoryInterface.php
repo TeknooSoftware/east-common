@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\DBSource;
 
+use Teknoo\East\Foundation\Promise\PromiseInterface;
+
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -33,18 +35,21 @@ interface RepositoryInterface
     /**
      * Finds an object by its primary key / identifier.
      *
-     * @param mixed $id The identifier.
+     * @param string $id The identifier.
+     * @param PromiseInterface $promise
      *
-     * @return object|null The object.
+     * @return RepositoryInterface self
      */
-    public function find($id);
+    public function find(string $id, PromiseInterface $promise): RepositoryInterface;
 
     /**
      * Finds all objects in the repository.
      *
-     * @return array The objects.
+     * @param PromiseInterface $promise
+     *
+     * @return RepositoryInterface self
      */
-    public function findAll();
+    public function findAll(PromiseInterface $promise): RepositoryInterface;
 
     /**
      * Finds objects by a set of criteria.
@@ -54,29 +59,30 @@ interface RepositoryInterface
      * not supported.
      *
      * @param array      $criteria
+     * @param PromiseInterface $promise
      * @param array|null $orderBy
      * @param int|null   $limit
      * @param int|null   $offset
      *
-     * @return array The objects.
+     * @return RepositoryInterface self
      *
      * @throws \UnexpectedValueException
      */
-    public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null);
+    public function findBy(
+        array $criteria,
+        PromiseInterface $promise,
+        array $orderBy = null,
+        $limit = null,
+        $offset = null
+    ): RepositoryInterface;
 
     /**
      * Finds a single object by a set of criteria.
      *
      * @param array $criteria The criteria.
+     * @param PromiseInterface $promise
      *
-     * @return object|null The object.
+     * @return RepositoryInterface self
      */
-    public function findOneBy(array $criteria);
-
-    /**
-     * Returns the class name of the object managed by the repository.
-     *
-     * @return string
-     */
-    public function getClassName();
+    public function findOneBy(array $criteria, PromiseInterface $promise): RepositoryInterface;
 }

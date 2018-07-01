@@ -27,6 +27,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Templating\EngineInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
+use Teknoo\East\Website\Query\PaginationQuery;
 use Teknoo\East\WebsiteBundle\AdminEndPoint\AdminListEndPoint;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
@@ -141,7 +142,7 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
 
         $this->getLoaderService()
             ->expects(self::any())
-            ->method('loadCollection')
+            ->method('query')
             ->willReturnCallback(function ($search, PromiseInterface $promise) {
                 $promise->fail(new \DomainException());
 
@@ -164,11 +165,9 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
 
         $this->getLoaderService()
             ->expects(self::any())
-            ->method('loadCollection')
-            ->willReturnCallback(function ($collection, PromiseInterface $promise, $order, $limit, $page) {
-                self::assertEquals(15, $page);
-                self::assertEquals(15, $limit);
-                self::assertEquals([], $order);
+            ->method('query')
+            ->willReturnCallback(function ($query, PromiseInterface $promise) {
+                self::assertEquals(new PaginationQuery([], [], 15, 15), $query);
                 $promise->success($this->createMock(Iterator::class));
 
                 return $this->getLoaderService();
@@ -194,11 +193,9 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
 
         $this->getLoaderService()
             ->expects(self::once())
-            ->method('loadCollection')
-            ->willReturnCallback(function ($collection, PromiseInterface $promise, $order, $limit, $page) {
-                self::assertEquals(15, $page);
-                self::assertEquals(15, $limit);
-                self::assertEquals(['foo' => 'ASC'], $order);
+            ->method('query')
+            ->willReturnCallback(function ($query, PromiseInterface $promise) {
+                self::assertEquals(new PaginationQuery([], ['foo' => 'ASC'], 15, 15), $query);
                 $promise->success($this->createMock(Iterator::class));
 
                 return $this->getLoaderService();
@@ -220,11 +217,9 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
 
         $this->getLoaderService()
             ->expects(self::any())
-            ->method('loadCollection')
-            ->willReturnCallback(function ($collection, PromiseInterface $promise, $order, $limit, $page) {
-                self::assertEquals(30, $page);
-                self::assertEquals(15, $limit);
-                self::assertEquals([], $order);
+            ->method('query')
+            ->willReturnCallback(function ($query, PromiseInterface $promise) {
+                self::assertEquals(new PaginationQuery([], [], 15, 30), $query);
                 $promise->success($this->createMock(Iterator::class));
 
                 return $this->getLoaderService();
@@ -246,11 +241,9 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
 
         $this->getLoaderService()
             ->expects(self::any())
-            ->method('loadCollection')
-            ->willReturnCallback(function ($collection, PromiseInterface $promise, $order, $limit, $page) {
-                self::assertEquals(0, $page);
-                self::assertEquals(15, $limit);
-                self::assertEquals([], $order);
+            ->method('query')
+            ->willReturnCallback(function ($query, PromiseInterface $promise) {
+                self::assertEquals(new PaginationQuery([], [], 15, 0), $query);
                 $promise->success($this->createMock(Iterator::class));
 
                 return $this->getLoaderService();
@@ -272,11 +265,9 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
 
         $this->getLoaderService()
             ->expects(self::any())
-            ->method('loadCollection')
-            ->willReturnCallback(function ($collection, PromiseInterface $promise, $order, $limit, $page) {
-                self::assertEquals(0, $page);
-                self::assertEquals(15, $limit);
-                self::assertEquals([], $order);
+            ->method('query')
+            ->willReturnCallback(function ($query, PromiseInterface $promise) {
+                self::assertEquals(new PaginationQuery([], [], 15, 0), $query);
                 $promise->success($this->createMock(Iterator::class));
 
                 return $this->getLoaderService();

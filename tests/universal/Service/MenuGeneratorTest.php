@@ -25,6 +25,7 @@ namespace Teknoo\Tests\East\Website\Service;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\Loader\ItemLoader;
 use Teknoo\East\Website\Object\Item;
+use Teknoo\East\Website\Query\Item\TopItemByLocationQuery;
 use Teknoo\East\Website\Service\MenuGenerator;
 
 /**
@@ -67,8 +68,8 @@ class MenuGeneratorTest extends \PHPUnit\Framework\TestCase
 
         $this->getItemLoader()
             ->expects(self::any())
-            ->method('topByLocation')
-            ->with('location1')
+            ->method('query')
+            ->with(new TopItemByLocationQuery('location1'))
             ->willReturnCallback(function ($value, PromiseInterface $promise) use ($item1, $item2, $item3) {
                 $promise->success([$item1, $item2, $item3]);
 

@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Loader;
 
-use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 
 /**
@@ -33,8 +32,7 @@ use Teknoo\East\Website\DBSource\RepositoryInterface;
  */
 class ItemLoader implements LoaderInterface
 {
-    use CollectionLoaderTrait,
-        LoaderTrait;
+    use LoaderTrait;
 
     /**
      * ItemLoader constructor.
@@ -43,24 +41,5 @@ class ItemLoader implements LoaderInterface
     public function __construct(RepositoryInterface $repository)
     {
         $this->repository = $repository;
-    }
-
-    /**
-     * @param string $location
-     * @param PromiseInterface $promise
-     * @return ItemLoader|LoaderInterface
-     */
-    public function topByLocation(string $location, PromiseInterface $promise): ItemLoader
-    {
-        return $this->loadCollection(
-            [
-                'location' => $location,
-                'parent' => null
-            ],
-            $promise,
-            [
-                'position' => 'ASC'
-            ]
-        );
     }
 }

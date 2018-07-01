@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * East Website.
  *
@@ -22,62 +20,58 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\East\Website\Loader;
+namespace Teknoo\Tests\East\Website\Query;
 
+use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
+use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Query\QueryInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @mixin LoaderInterface
  */
-trait LoaderTrait
+trait QueryTestTrait
 {
     /**
-     * @var RepositoryInterface
+     * @return QueryInterface
      */
-    protected $repository;
+    abstract public function buildQuery(): QueryInterface;
 
     /**
-     * @return RepositoryInterface
+     * @expectedException \TypeError
      */
-    protected function getRepository(): RepositoryInterface
+    public function testExecuteBadLoader()
     {
-        return $this->repository;
+        $this->buildQuery()->execute(
+            new \stdClass(),
+            $this->createMock(RepositoryInterface::class),
+            $this->createMock(PromiseInterface::class)
+        );
     }
 
     /**
-     * @param string $id
-     * @param PromiseInterface $promise
-     * @return LoaderInterface
+     * @expectedException \TypeError
      */
-    public function load(string $id, PromiseInterface $promise): LoaderInterface
+    public function testExecuteBadRepository()
     {
-        $criteria = [
-            'id' => $id,
-            'deletedAt' => null
-        ];
-
-        try {
-            $this->getRepository()->findOneBy($criteria, $promise);
-        } catch (\Throwable $exception) {
-            $promise->fail($exception);
-        }
-
-        return $this;
+        $this->buildQuery()->execute(
+            $this->createMock(LoaderInterface::class),
+            new \stdClass(),
+            $this->createMock(PromiseInterface::class)
+        );
     }
 
     /**
-     * @param QueryInterface $query
-     * @param PromiseInterface $promise
-     * @return LoaderInterface
+     * @expectedException \TypeError
      */
-    public function query(QueryInterface $query, PromiseInterface $promise): LoaderInterface
+    public function testExecuteBadPromise()
     {
-        $query->execute($this, $this->getRepository(), $promise);
-
-        return $this;
+        $this->buildQuery()->execute(
+            $this->createMock(LoaderInterface::class),
+            $this->createMock(RepositoryInterface::class),
+            new \stdClass()
+        );
     }
 }

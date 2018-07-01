@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * East Website.
  *
@@ -20,54 +22,53 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Loader;
+namespace Teknoo\East\Website\Query\User;
 
+use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
-use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Loader\LoaderInterface;
-use Teknoo\East\Website\Loader\TypeLoader;
+use Teknoo\East\Website\Query\QueryInterface;
+use Teknoo\Immutable\ImmutableInterface;
+use Teknoo\Immutable\ImmutableTrait;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers      \Teknoo\East\Website\Loader\TypeLoader
- * @covers      \Teknoo\East\Website\Loader\LoaderTrait
  */
-class TypeLoaderTest extends \PHPUnit\Framework\TestCase
+class UserByEmailQuery implements QueryInterface, ImmutableInterface
 {
-    use LoaderTestTrait;
+    use ImmutableTrait;
 
     /**
-     * @var RepositoryInterface
+     * @var string
      */
-    private $repository;
+    private $email;
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|RepositoryInterface
+     * UserByEmailQuery constructor.
+     * @param string $email
      */
-    public function getRepositoryMock(): RepositoryInterface
+    public function __construct(string $email)
     {
-        if (!$this->repository instanceof RepositoryInterface) {
-            $this->repository = $this->createMock(RepositoryInterface::class);
-        }
+        $this->uniqueConstructorCheck();
 
-        return $this->repository;
+        $this->email = $email;
     }
 
     /**
-     * @return LoaderInterface|TypeLoader
+     * @inheritDoc
      */
-    public function buildLoader(): LoaderInterface
+    public function execute(
+        LoaderInterface $loader ,
+        RepositoryInterface $repository ,
+        PromiseInterface $promise
+    ): QueryInterface
     {
-        $repository = $this->getRepositoryMock();
-        return new TypeLoader($repository);
-    }
+        $repository->findOneBy(
+            ['email' => $this->email, 'deletedAt' => null],
+            $promise
+        );
 
-    /**
-     * @return Type
-     */
-    public function getEntity()
-    {
-        return new Type();
+        return $this;
     }
 }

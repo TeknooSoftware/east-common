@@ -31,6 +31,7 @@ use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
+use Teknoo\East\Website\Query\PaginationQuery;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -83,8 +84,8 @@ class AdminListEndPoint implements EndPointInterface
 
         $order = $this->extractOrder($request);
 
-        $this->loader->loadCollection(
-            [],
+        $this->loader->query(
+            new PaginationQuery([], $order, $this->itemsPerPage, ($page-1)*$this->itemsPerPage),
             new Promise(function ($objects) use ($client, $page, $viewPath) {
                 $pageCount = 1;
                 if ($objects instanceof \Countable) {
@@ -102,10 +103,7 @@ class AdminListEndPoint implements EndPointInterface
                 );
             }, function ($error) use ($client) {
                 $client->errorInRequest($error);
-            }),
-            $order,
-            $this->itemsPerPage,
-            ($page-1)*$this->itemsPerPage
+            })
         );
 
         return $this;

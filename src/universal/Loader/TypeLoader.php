@@ -32,8 +32,7 @@ use Teknoo\East\Website\DBSource\RepositoryInterface;
  */
 class TypeLoader implements LoaderInterface
 {
-    use CollectionLoaderTrait,
-        LoaderTrait;
+    use LoaderTrait;
 
     /**
      * TypeLoader constructor.

@@ -30,6 +30,7 @@ use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Website\Loader\ContentLoader;
 use Teknoo\East\Website\Middleware\ViewParameterInterface;
 use Teknoo\East\Website\Object\Content;
+use Teknoo\East\Website\Query\Content\PublishedContentFromSlugQuery;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -83,8 +84,8 @@ trait ContentEndPointTrait
             $contentSlug = 'default';
         }
 
-        $this->contentLoader->bySlug(
-            $contentSlug,
+        $this->contentLoader->query(
+            new PublishedContentFromSlugQuery($contentSlug),
             new Promise(
                 function (Content $content) use ($client, $request) {
                     $type = $content->getType();

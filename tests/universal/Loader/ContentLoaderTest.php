@@ -22,10 +22,7 @@
 
 namespace Teknoo\Tests\East\Website\Loader;
 
-use Doctrine\Common\Persistence\ObjectRepository;
-use Doctrine\ODM\MongoDB\DocumentRepository;
-use Teknoo\East\Foundation\Promise\Promise;
-use Teknoo\East\Website\Loader\MongoDbCollectionLoaderTrait;
+use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Loader\ContentLoader;
 use Teknoo\East\Website\Loader\LoaderInterface;
@@ -35,26 +32,23 @@ use Teknoo\East\Website\Loader\LoaderInterface;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers      \Teknoo\East\Website\Loader\ContentLoader
  * @covers      \Teknoo\East\Website\Loader\LoaderTrait
- * @covers      \Teknoo\East\Website\Loader\PublishableLoaderTrait
- * @covers      \Teknoo\East\Website\Loader\CollectionLoaderTrait
- * @covers      \Teknoo\East\Website\Loader\MongoDbCollectionLoaderTrait
  */
 class ContentLoaderTest extends \PHPUnit\Framework\TestCase
 {
-    use PublishableLoaderTestTrait;
+    use LoaderTestTrait;
 
     /**
-     * @var ObjectRepository
+     * @var RepositoryInterface
      */
     private $repository;
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|ObjectRepository
+     * @return \PHPUnit_Framework_MockObject_MockObject|RepositoryInterface
      */
-    public function getRepositoryMock(): ObjectRepository
+    public function getRepositoryMock(): RepositoryInterface
     {
-        if (!$this->repository instanceof ObjectRepository) {
-            $this->repository = $this->createMock(DocumentRepository::class);
+        if (!$this->repository instanceof RepositoryInterface) {
+            $this->repository = $this->createMock(RepositoryInterface::class);
         }
 
         return $this->repository;
@@ -66,35 +60,6 @@ class ContentLoaderTest extends \PHPUnit\Framework\TestCase
     public function buildLoader(): LoaderInterface
     {
         $repository = $this->getRepositoryMock();
-        return new class($repository) extends ContentLoader {
-            use MongoDbCollectionLoaderTrait;
-        };
-    }
-
-    /**
-     * @return LoaderInterface|ContentLoader
-     */
-    public function buildLoaderWithBadCollectionImplementation(): LoaderInterface
-    {
-        $repository = $this->getRepositoryMock();
-        return new class($repository) extends ContentLoader {
-            protected function prepareQuery(
-                array &$criteria,
-                ?array $order,
-                ?int $limit,
-                ?int $offset
-            ) {
-                return [];
-            }
-        };
-    }
-
-    /**
-     * @return LoaderInterface|ContentLoader
-     */
-    public function buildLoaderWithNotCollectionImplemented(): LoaderInterface
-    {
-        $repository = $this->getRepositoryMock();
         return new ContentLoader($repository);
     }
 
@@ -104,62 +69,5 @@ class ContentLoaderTest extends \PHPUnit\Framework\TestCase
     public function getEntity()
     {
         return new Content();
-    }
-
-    public function testBySlugNotFound()
-    {
-        $this->getRepositoryMock()
-            ->expects(self::any())
-            ->method('findOneBy')
-            ->with([
-                'slug' => 'foo',
-                'deletedAt'=>null,
-            ])
-            ->willReturn(null);
-
-        /**
-         * @var \PHPUnit_Framework_MockObject_MockObject $promiseMock
-         *
-         */
-        $promiseMock = $this->createMock(Promise::class);
-        $promiseMock->expects(self::never())->method('success');
-        $promiseMock->expects(self::once())
-            ->method('fail')
-            ->with($this->callback(function ($exception) {
-                return $exception instanceof \DomainException;
-            }));
-
-        self::assertInstanceOf(
-            ContentLoader::class,
-            $this->buildLoader()->bySlug('foo', $promiseMock)
-        );
-    }
-
-    public function testBySlugFound()
-    {
-        $entity = $this->getEntity();
-        $entity->setPublishedAt(new \DateTime('2017-07-01'))->updateStates();
-
-        $this->getRepositoryMock()
-            ->expects(self::any())
-            ->method('findOneBy')
-            ->with([
-                'slug' => 'foo',
-                'deletedAt'=>null,
-            ])
-            ->willReturn($entity);
-
-        /**
-         * @var \PHPUnit_Framework_MockObject_MockObject $promiseMock
-         *
-         */
-        $promiseMock = $this->createMock(Promise::class);
-        $promiseMock->expects(self::once())->method('success')->with($entity);
-        $promiseMock->expects(self::never())->method('fail');
-
-        self::assertInstanceOf(
-            ContentLoader::class,
-            $this->buildLoader()->bySlug('foo', $promiseMock)
-        );
     }
 }

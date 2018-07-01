@@ -31,22 +31,24 @@ namespace Teknoo\East\Website\DBSource;
 interface ManagerInterface
 {
     /**
-     * Tells the ObjectManager to make an instance managed and persistent.
+     * Tells the Manager to make an instance managed and persistent.
      *
      * The object will be entered into the database as a result of the flush operation.
      *
      * @param object $object The instance to make managed and persistent.
      *
-     * @return void
+     * @return ManagerInterface
      */
-    public function persist($object): void;
+    public function persist($object): ManagerInterface;
 
     /**
      * Flushes all changes to objects that have been queued up to now to the database.
      * This effectively synchronizes the in-memory state of managed objects with the
      * database.
      *
-     * @return void
+     * @param object|null $object The instance to make managed and persistent.
+     *
+     * @return ManagerInterface
      */
-    public function flush();
+    public function flush($object=null): ManagerInterface;
 }

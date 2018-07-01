@@ -22,12 +22,10 @@
 
 namespace Teknoo\Tests\East\Website\Loader;
 
-use Doctrine\Common\Persistence\ObjectRepository;
-use Doctrine\MongoDB\Query\Builder;
-use Doctrine\ODM\MongoDB\Query\Query;
 use Teknoo\East\Foundation\Promise\Promise;
-use Teknoo\East\Foundation\Promise\PromiseInterface;
+use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
+use Teknoo\East\Website\Query\QueryInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -36,24 +34,14 @@ use Teknoo\East\Website\Loader\LoaderInterface;
 trait LoaderTestTrait
 {
     /**
-     * @return ObjectRepository|\PHPUnit_Framework_MockObject_MockObject
+     * @return RepositoryInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    abstract public function getRepositoryMock(): ObjectRepository;
+    abstract public function getRepositoryMock(): RepositoryInterface;
 
     /**
      * @return LoaderInterface
      */
     abstract public function buildLoader(): LoaderInterface;
-
-    /**
-     * @return LoaderInterface
-     */
-    abstract public function buildLoaderWithNotCollectionImplemented(): LoaderInterface;
-
-    /**
-     * @return LoaderInterface
-     */
-    abstract public function buildLoaderWithBadCollectionImplementation(): LoaderInterface;
 
     /**
      * @return object
@@ -73,17 +61,11 @@ trait LoaderTestTrait
      */
     public function testLoadBadPromise()
     {
-        $this->buildLoader()->load(['fooBar'=>true], new \stdClass());
+        $this->buildLoader()->load('fooBar', new \stdClass());
     }
 
-    public function testLoadNotFound()
+    public function testLoadWithError()
     {
-        $this->getRepositoryMock()
-            ->expects(self::any())
-            ->method('findOneBy')
-            ->with(['fooBar'=>true, 'deletedAt'=>null])
-            ->willReturn(null);
-
         /**
          * @var \PHPUnit_Framework_MockObject_MockObject $promiseMock
          *
@@ -91,285 +73,79 @@ trait LoaderTestTrait
         $promiseMock = $this->createMock(Promise::class);
         $promiseMock->expects(self::never())->method('success');
         $promiseMock->expects(self::once())
-            ->method('fail')
-            ->with($this->callback(function ($exception) {
-                return $exception instanceof \DomainException;
-            }));
-
-        self::assertInstanceOf(
-            LoaderInterface::class,
-            $this->buildLoader()->load(['fooBar'=>true], $promiseMock)
-        );
-    }
-
-    public function testLoadFound()
-    {
-        $entity = $this->getEntity();
+            ->method('fail');
 
         $this->getRepositoryMock()
             ->expects(self::any())
             ->method('findOneBy')
-            ->with(['fooBar'=>true, 'deletedAt'=>null])
-            ->willReturn($entity);
-
-        /**
-         * @var \PHPUnit_Framework_MockObject_MockObject $promiseMock
-         *
-         */
-        $promiseMock = $this->createMock(Promise::class);
-        $promiseMock->expects(self::once())->method('success')->with($entity);
-        $promiseMock->expects(self::never())->method('fail');
+            ->with(['id'=>'fooBar', 'deletedAt'=>null], $promiseMock)
+            ->willThrowException(new \Exception());
 
         self::assertInstanceOf(
             LoaderInterface::class,
-            $this->buildLoader()->load(['fooBar'=>true], $promiseMock)
+            $this->buildLoader()->load('fooBar', $promiseMock)
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
-    public function testLoadCollectionBadId()
+    public function testLoad()
     {
-        $this->buildLoader()->loadCollection(new \stdClass(), new Promise());
-    }
-
-    /**
-     * @expectedException \Throwable
-     */
-    public function testLoadCollectionBadPromise()
-    {
-        $this->buildLoader()->loadCollection(['fooBar'=>true], new \stdClass());
-    }
-
-    /**
-     * @expectedException \Throwable
-     */
-    public function testLoadCollectionBadOrder()
-    {
-        $this->buildLoader()->loadCollection(
-            ['fooBar'=>true, 'deletedAt'=>null],
-            $this->createMock(PromiseInterface::class),
-            new \stdClass()
-        );
-    }
-
-    /**
-     * @expectedException \Throwable
-     */
-    public function testLoadCollectionBadLimit()
-    {
-        $this->buildLoader()->loadCollection(
-            ['fooBar'=>true, 'deletedAt'=>null],
-            $this->createMock(PromiseInterface::class),
-            ['fooBar' => 'ASC'],
-            new \stdClass()
-        );
-    }
-
-    /**
-     * @expectedException \Throwable
-     */
-    public function testLoadCollectionBadOffSet()
-    {
-        $this->buildLoader()->loadCollection(
-            ['fooBar'=>true, 'deletedAt'=>null],
-            $this->createMock(PromiseInterface::class),
-            ['fooBar' => 'ASC'],
-            123,
-            new \stdClass()
-        );
-    }
-
-    public function testLoadCollectionError()
-    {
-        $e = new \Exception();
-        $queryBuilder = $this->createMock(Builder::class);
-        $queryBuilder->expects(self::any())
-            ->method('equals')
-            ->with(['fooBar'=>true, 'deletedAt'=>null])
-            ->willReturnSelf();
-        $queryBuilder->expects(self::any())
-            ->method('sort')
-            ->with(['fooBar' => 'ASC'])
-            ->willReturnSelf();
-        $queryBuilder->expects(self::any())
-            ->method('limit')
-            ->with(123)
-            ->willReturnSelf();
-        $queryBuilder->expects(self::any())
-            ->method('skip')
-            ->with(456)
-            ->willReturnSelf();
+        /**
+         * @var \PHPUnit_Framework_MockObject_MockObject $promiseMock
+         */
+        $promiseMock = $this->createMock(Promise::class);
+        $promiseMock->expects(self::never())->method('success');
+        $promiseMock->expects(self::never())->method('fail');
 
         $this->getRepositoryMock()
             ->expects(self::any())
-            ->method('createQueryBuilder')
-            ->willReturn($queryBuilder);
+            ->method('findOneBy')
+            ->with(['id'=>'fooBar', 'deletedAt'=>null], $promiseMock);
 
-        $queryBuilder
-            ->expects(self::any())
-            ->method('getQuery')
-            ->willThrowException($e);
+        self::assertInstanceOf(
+            LoaderInterface::class,
+            $this->buildLoader()->load('fooBar', $promiseMock)
+        );
+    }
 
+    /**
+     * @expectedException \Throwable
+     */
+    public function testQueryBadQuery()
+    {
+        $this->buildLoader()->query(new \stdClass(), new Promise());
+    }
+
+    /**
+     * @expectedException \Throwable
+     */
+    public function testQueryBadPromise()
+    {
+        $this->buildLoader()->query($this->createMock(QueryInterface::class), new \stdClass());
+    }
+
+    public function testQuery()
+    {
         /**
          * @var \PHPUnit_Framework_MockObject_MockObject $promiseMock
          *
          */
         $promiseMock = $this->createMock(Promise::class);
         $promiseMock->expects(self::never())->method('success');
-        $promiseMock->expects(self::once())->method('fail')->with($e);
+        $promiseMock->expects(self::never())->method('fail');
 
-        self::assertInstanceOf(
-            LoaderInterface::class,
-            $this->buildLoader()->loadCollection(
-                ['fooBar'=>true],
-                $promiseMock,
-                ['fooBar' => 'ASC'],
-                123,
-                456
-            )
-        );
-    }
+        $loader = $this->buildLoader();
 
-    public function testLoadCollectionNotFound()
-    {
-        $queryBuilder = $this->createMock(Builder::class);
-        $queryBuilder->expects(self::any())
-            ->method('equals')
-            ->with(['fooBar'=>true, 'deletedAt'=>null])
-            ->willReturnSelf();
-        $queryBuilder->expects(self::any())
-            ->method('sort')
-            ->with(['fooBar' => 'ASC'])
-            ->willReturnSelf();
-        $queryBuilder->expects(self::any())
-            ->method('limit')
-            ->with(123)
-            ->willReturnSelf();
-        $queryBuilder->expects(self::any())
-            ->method('skip')
-            ->with(456)
-            ->willReturnSelf();
-
-        $this->getRepositoryMock()
-            ->expects(self::any())
-            ->method('createQueryBuilder')
-            ->willReturn($queryBuilder);
-
-        $query = $this->createMock(Query::class);
-        $query->expects(self::any())
+        /**
+         * @var \PHPUnit_Framework_MockObject_MockObject $queryMock
+         */
+        $queryMock = $this->createMock(QueryInterface::class);
+        $queryMock->expects(self::once())
             ->method('execute')
-            ->willReturn([]);
-
-        $queryBuilder
-            ->expects(self::any())
-            ->method('getQuery')
-            ->willReturn($query);
-
-        /**
-         * @var \PHPUnit_Framework_MockObject_MockObject $promiseMock
-         *
-         */
-        $promiseMock = $this->createMock(Promise::class);
-        $promiseMock->expects(self::once())->method('success')->with([]);
-        $promiseMock->expects(self::never())->method('fail');
+            ->with($loader, $this->getRepositoryMock(), $promiseMock);
 
         self::assertInstanceOf(
             LoaderInterface::class,
-            $this->buildLoader()->loadCollection(
-                ['fooBar'=>true],
-                $promiseMock,
-                ['fooBar' => 'ASC'],
-                123,
-                456
-            )
-        );
-    }
-
-    public function testLoadCollectionFoundWithNonImplementedPrepareQuery()
-    {
-        /**
-         * @var \PHPUnit_Framework_MockObject_MockObject $promiseMock
-         *
-         */
-        $promiseMock = $this->createMock(Promise::class);
-        $promiseMock->expects(self::never())->method('success');
-        $promiseMock->expects(self::once())->method('fail')->with(
-            $this->callback(function ($exception) { return $exception instanceof \LogicException;})
-        )->willReturnSelf();
-
-        $this->buildLoaderWithNotCollectionImplemented()->loadCollection(['fooBar' => true], $promiseMock);
-    }
-
-    public function testLoadCollectionFoundWithBadImplementedPrepareQuery()
-    {
-        /**
-         * @var \PHPUnit_Framework_MockObject_MockObject $promiseMock
-         *
-         */
-        $promiseMock = $this->createMock(Promise::class);
-        $promiseMock->expects(self::never())->method('success');
-        $promiseMock->expects(self::once())->method('fail')->with(
-            $this->callback(function ($exception) { return $exception instanceof \LogicException;})
-        )->willReturnSelf();
-
-        $this->buildLoaderWithBadCollectionImplementation()->loadCollection(['fooBar' => true], $promiseMock);
-    }
-
-    public function testLoadCollectionFound()
-    {
-        $entity = $this->getEntity();
-        $queryBuilder = $this->createMock(Builder::class);
-        $queryBuilder->expects(self::any())
-            ->method('equals')
-            ->with(['fooBar'=>true, 'deletedAt'=>null])
-            ->willReturnSelf();
-        $queryBuilder->expects(self::any())
-            ->method('sort')
-            ->with(['fooBar' => 'ASC'])
-            ->willReturnSelf();
-        $queryBuilder->expects(self::any())
-            ->method('limit')
-            ->with(123)
-            ->willReturnSelf();
-        $queryBuilder->expects(self::any())
-            ->method('skip')
-            ->with(456)
-            ->willReturnSelf();
-
-        $this->getRepositoryMock()
-            ->expects(self::any())
-            ->method('createQueryBuilder')
-            ->willReturn($queryBuilder);
-
-        $query = $this->createMock(Query::class);
-        $query->expects(self::any())
-            ->method('execute')
-            ->willReturn([$entity]);
-
-        $queryBuilder
-            ->expects(self::any())
-            ->method('getQuery')
-            ->willReturn($query);
-
-        /**
-         * @var \PHPUnit_Framework_MockObject_MockObject $promiseMock
-         *
-         */
-        $promiseMock = $this->createMock(Promise::class);
-        $promiseMock->expects(self::once())->method('success')->with([$entity]);
-        $promiseMock->expects(self::never())->method('fail');
-
-        self::assertInstanceOf(
-            LoaderInterface::class,
-            $this->buildLoader()->loadCollection(
-                ['fooBar'=>true],
-                $promiseMock,
-                ['fooBar' => 'ASC'],
-                123,
-                456
-            )
+            $loader->query($queryMock, $promiseMock)
         );
     }
 }

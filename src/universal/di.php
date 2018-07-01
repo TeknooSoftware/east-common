@@ -27,11 +27,11 @@ namespace Teknoo\East\Website;
 use function DI\get;
 use function DI\decorate;
 use function DI\create;
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Gedmo\Translatable\TranslatableListener;
 use Psr\Container\ContainerInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
+use Teknoo\East\Website\DBSource\ManagerInterface;
 use Teknoo\East\Website\Loader\ItemLoader;
 use Teknoo\East\Website\Loader\ContentLoader;
 use Teknoo\East\Website\Loader\MediaLoader;
@@ -56,7 +56,7 @@ use Teknoo\East\Website\Writer\UserWriter;
 return [
     //Loaders
     ItemLoader::class => function (ContainerInterface $container) {
-        $repository = $container->get(ObjectManager::class)->getRepository(Item::class);
+        $repository = $container->get(ManagerInterface::class)->getRepository(Item::class);
         if ($repository instanceof ObjectRepository) {
             return new class($repository) extends ItemLoader {
                 use MongoDbCollectionLoaderTrait;
@@ -69,7 +69,7 @@ return [
         ));
     },
     ContentLoader::class => function (ContainerInterface $container) {
-        $repository = $container->get(ObjectManager::class)->getRepository(Content::class);
+        $repository = $container->get(ManagerInterface::class)->getRepository(Content::class);
         if ($repository instanceof ObjectRepository) {
             return new class($repository) extends ContentLoader {
                 use MongoDbCollectionLoaderTrait;
@@ -83,7 +83,7 @@ return [
         ));
     },
     MediaLoader::class => function (ContainerInterface $container) {
-        $repository = $container->get(ObjectManager::class)->getRepository(Media::class);
+        $repository = $container->get(ManagerInterface::class)->getRepository(Media::class);
         if ($repository instanceof ObjectRepository) {
             return new class($repository) extends MediaLoader {
                 use MongoDbCollectionLoaderTrait;
@@ -97,7 +97,7 @@ return [
         ));
     },
     TypeLoader::class => function (ContainerInterface $container) {
-        $repository = $container->get(ObjectManager::class)->getRepository(Type::class);
+        $repository = $container->get(ManagerInterface::class)->getRepository(Type::class);
         if ($repository instanceof ObjectRepository) {
             return new class($repository) extends TypeLoader {
                 use MongoDbCollectionLoaderTrait;
@@ -111,7 +111,7 @@ return [
         ));
     },
     UserLoader::class => function (ContainerInterface $container) {
-        $repository = $container->get(ObjectManager::class)->getRepository(User::class);
+        $repository = $container->get(ManagerInterface::class)->getRepository(User::class);
         if ($repository instanceof ObjectRepository) {
             return new class($repository) extends UserLoader {
                 use MongoDbCollectionLoaderTrait;
@@ -127,15 +127,15 @@ return [
 
     //Writer
     ItemWriter::class => create(ItemWriter::class)
-        ->constructor(get(ObjectManager::class)),
+        ->constructor(get(ManagerInterface::class)),
     ContentWriter::class => create(ContentWriter::class)
-        ->constructor(get(ObjectManager::class)),
+        ->constructor(get(ManagerInterface::class)),
     MediaWriter::class => create(MediaWriter::class)
-        ->constructor(get(ObjectManager::class)),
+        ->constructor(get(ManagerInterface::class)),
     TypeWriter::class => create(TypeWriter::class)
-        ->constructor(get(ObjectManager::class)),
+        ->constructor(get(ManagerInterface::class)),
     UserWriter::class => create(UserWriter::class)
-        ->constructor(get(ObjectManager::class)),
+        ->constructor(get(ManagerInterface::class)),
 
     //Deleting
     'teknoo.east.website.deleting.item' => create(DeletingService::class)

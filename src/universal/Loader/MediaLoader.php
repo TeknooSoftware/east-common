@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Loader;
 
-use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 
 /**
@@ -33,8 +32,7 @@ use Teknoo\East\Website\DBSource\RepositoryInterface;
  */
 class MediaLoader implements LoaderInterface
 {
-    use CollectionLoaderTrait,
-        LoaderTrait;
+    use LoaderTrait;
 
     /**
      * MediaLoader constructor.
@@ -43,15 +41,5 @@ class MediaLoader implements LoaderInterface
     public function __construct(RepositoryInterface $repository)
     {
         $this->repository = $repository;
-    }
-
-    /**
-     * @param string $id
-     * @param PromiseInterface $promise
-     * @return MediaLoader|PublishableLoaderInterface
-     */
-    public function byId(string $id, PromiseInterface $promise): MediaLoader
-    {
-        return $this->load(['id' => $id], $promise);
     }
 }

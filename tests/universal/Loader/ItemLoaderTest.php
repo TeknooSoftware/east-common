@@ -22,12 +22,7 @@
 
 namespace Teknoo\Tests\East\Website\Loader;
 
-use Doctrine\Common\Persistence\ObjectRepository;
-use Doctrine\ODM\MongoDB\DocumentRepository;
-use Doctrine\ODM\MongoDB\Query\Builder;
-use Doctrine\ODM\MongoDB\Query\Query;
-use Teknoo\East\Foundation\Promise\PromiseInterface;
-use Teknoo\East\Website\Loader\MongoDbCollectionLoaderTrait;
+use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Object\Item;
 use Teknoo\East\Website\Loader\ItemLoader;
 use Teknoo\East\Website\Loader\LoaderInterface;
@@ -37,25 +32,23 @@ use Teknoo\East\Website\Loader\LoaderInterface;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers      \Teknoo\East\Website\Loader\ItemLoader
  * @covers      \Teknoo\East\Website\Loader\LoaderTrait
- * @covers      \Teknoo\East\Website\Loader\CollectionLoaderTrait
- * @covers      \Teknoo\East\Website\Loader\MongoDbCollectionLoaderTrait
  */
 class ItemLoaderTest extends \PHPUnit\Framework\TestCase
 {
     use LoaderTestTrait;
 
     /**
-     * @var ObjectRepository
+     * @var RepositoryInterface
      */
     private $repository;
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|ObjectRepository
+     * @return \PHPUnit_Framework_MockObject_MockObject|RepositoryInterface
      */
-    public function getRepositoryMock(): ObjectRepository
+    public function getRepositoryMock(): RepositoryInterface
     {
-        if (!$this->repository instanceof ObjectRepository) {
-            $this->repository = $this->createMock(DocumentRepository::class);
+        if (!$this->repository instanceof RepositoryInterface) {
+            $this->repository = $this->createMock(RepositoryInterface::class);
         }
 
         return $this->repository;
@@ -67,35 +60,6 @@ class ItemLoaderTest extends \PHPUnit\Framework\TestCase
     public function buildLoader(): LoaderInterface
     {
         $repository = $this->getRepositoryMock();
-        return new class($repository) extends ItemLoader {
-            use MongoDbCollectionLoaderTrait;
-        };
-    }
-
-    /**
-     * @return LoaderInterface|ItemLoader
-     */
-    public function buildLoaderWithBadCollectionImplementation(): LoaderInterface
-    {
-        $repository = $this->getRepositoryMock();
-        return new class($repository) extends ItemLoader {
-            protected function prepareQuery(
-                array &$criteria,
-                ?array $order,
-                ?int $limit,
-                ?int $offset
-            ) {
-                return [];
-            }
-        };
-    }
-
-    /**
-     * @return LoaderInterface|ItemLoader
-     */
-    public function buildLoaderWithNotCollectionImplemented(): LoaderInterface
-    {
-        $repository = $this->getRepositoryMock();
         return new ItemLoader($repository);
     }
 
@@ -105,60 +69,5 @@ class ItemLoaderTest extends \PHPUnit\Framework\TestCase
     public function getEntity()
     {
         return new Item();
-    }
-
-    public function testTopByLocation()
-    {
-        $entity = $this->getEntity();
-
-        /**
-         * @var \PHPUnit_Framework_MockObject_MockObject $promiseMock
-         *
-         */
-        $promiseMock = $this->createMock(PromiseInterface::class);
-        $promiseMock->expects(self::once())->method('success')->with([$entity]);
-        $promiseMock->expects(self::never())->method('fail');
-
-        $entity = $this->getEntity();
-        $queryBuilder = $this->createMock(Builder::class);
-        $queryBuilder->expects(self::any())
-            ->method('equals')
-            ->with(['location' => 'abc', 'parent' => null, 'deletedAt'=>null])
-            ->willReturnSelf();
-        $queryBuilder->expects(self::any())
-            ->method('sort')
-            ->with(['position' => 'ASC'])
-            ->willReturnSelf();
-        $queryBuilder->expects(self::any())
-            ->method('limit')
-            ->with(null)
-            ->willReturnSelf();
-        $queryBuilder->expects(self::any())
-            ->method('skip')
-            ->with(null)
-            ->willReturnSelf();
-
-        $this->getRepositoryMock()
-            ->expects(self::any())
-            ->method('createQueryBuilder')
-            ->willReturn($queryBuilder);
-
-        $query = $this->createMock(Query::class);
-        $query->expects(self::any())
-            ->method('execute')
-            ->willReturn([$entity]);
-
-        $queryBuilder
-            ->expects(self::any())
-            ->method('getQuery')
-            ->willReturn($query);
-
-        self::assertInstanceOf(
-            LoaderInterface::class,
-            $this->buildLoader()->topByLocation(
-                'abc',
-                $promiseMock
-            )
-        );
     }
 }

@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests\East\Website\Loader;
 
+use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Loader\ContentLoader;
@@ -48,7 +49,7 @@ class ContentLoaderTest extends \PHPUnit\Framework\TestCase
     public function getRepositoryMock(): RepositoryInterface
     {
         if (!$this->repository instanceof RepositoryInterface) {
-            $this->repository = $this->createMock(RepositoryInterface::class);
+            $this->repository = $this->createMock(ContentRepositoryInterface::class);
         }
 
         return $this->repository;

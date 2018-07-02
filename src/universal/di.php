@@ -27,24 +27,22 @@ namespace Teknoo\East\Website;
 use function DI\get;
 use function DI\decorate;
 use function DI\create;
-use Doctrine\Common\Persistence\ObjectRepository;
 use Gedmo\Translatable\TranslatableListener;
 use Psr\Container\ContainerInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
 use Teknoo\East\Website\DBSource\ManagerInterface;
+use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
+use Teknoo\East\Website\DBSource\Repository\ItemRepositoryInterface;
+use Teknoo\East\Website\DBSource\Repository\MediaRepositoryInterface;
+use Teknoo\East\Website\DBSource\Repository\TypeRepositoryInterface;
+use Teknoo\East\Website\DBSource\Repository\UserRepositoryInterface;
 use Teknoo\East\Website\Loader\ItemLoader;
 use Teknoo\East\Website\Loader\ContentLoader;
 use Teknoo\East\Website\Loader\MediaLoader;
-use Teknoo\East\Website\Loader\MongoDbCollectionLoaderTrait;
 use Teknoo\East\Website\Loader\TypeLoader;
 use Teknoo\East\Website\Loader\UserLoader;
 use Teknoo\East\Website\Middleware\LocaleMiddleware;
 use Teknoo\East\Website\Middleware\MenuMiddleware;
-use Teknoo\East\Website\Object\Item;
-use Teknoo\East\Website\Object\Content;
-use Teknoo\East\Website\Object\Media;
-use Teknoo\East\Website\Object\Type;
-use Teknoo\East\Website\Object\User;
 use Teknoo\East\Website\Service\DeletingService;
 use Teknoo\East\Website\Service\MenuGenerator;
 use Teknoo\East\Website\Writer\ItemWriter;
@@ -55,75 +53,16 @@ use Teknoo\East\Website\Writer\UserWriter;
 
 return [
     //Loaders
-    ItemLoader::class => function (ContainerInterface $container) {
-        $repository = $container->get(ManagerInterface::class)->getRepository(Item::class);
-        if ($repository instanceof ObjectRepository) {
-            return new class($repository) extends ItemLoader {
-                use MongoDbCollectionLoaderTrait;
-            };
-        }
-
-        throw new \RuntimeException(sprintf(
-            "Error, repository of class %s are not currently managed",
-            \get_class($repository)
-        ));
-    },
-    ContentLoader::class => function (ContainerInterface $container) {
-        $repository = $container->get(ManagerInterface::class)->getRepository(Content::class);
-        if ($repository instanceof ObjectRepository) {
-            return new class($repository) extends ContentLoader {
-                use MongoDbCollectionLoaderTrait;
-
-            };
-        }
-
-        throw new \RuntimeException(sprintf(
-            "Error, repository of class %s are not currently managed",
-            \get_class($repository)
-        ));
-    },
-    MediaLoader::class => function (ContainerInterface $container) {
-        $repository = $container->get(ManagerInterface::class)->getRepository(Media::class);
-        if ($repository instanceof ObjectRepository) {
-            return new class($repository) extends MediaLoader {
-                use MongoDbCollectionLoaderTrait;
-
-            };
-        }
-
-        throw new \RuntimeException(sprintf(
-            "Error, repository of class %s are not currently managed",
-            \get_class($repository)
-        ));
-    },
-    TypeLoader::class => function (ContainerInterface $container) {
-        $repository = $container->get(ManagerInterface::class)->getRepository(Type::class);
-        if ($repository instanceof ObjectRepository) {
-            return new class($repository) extends TypeLoader {
-                use MongoDbCollectionLoaderTrait;
-
-            };
-        }
-
-        throw new \RuntimeException(sprintf(
-            "Error, repository of class %s are not currently managed",
-            \get_class($repository)
-        ));
-    },
-    UserLoader::class => function (ContainerInterface $container) {
-        $repository = $container->get(ManagerInterface::class)->getRepository(User::class);
-        if ($repository instanceof ObjectRepository) {
-            return new class($repository) extends UserLoader {
-                use MongoDbCollectionLoaderTrait;
-
-            };
-        }
-
-        throw new \RuntimeException(sprintf(
-            "Error, repository of class %s are not currently managed",
-            \get_class($repository)
-        ));
-    },
+    ItemLoader::class => create(ItemLoader::class)
+        ->constructor(get(ItemRepositoryInterface::class)),
+    ContentLoader::class => create(ContentLoader::class)
+        ->constructor(get(ContentRepositoryInterface::class)),
+    MediaLoader::class => create(MediaLoader::class)
+        ->constructor(get(MediaRepositoryInterface::class)),
+    TypeLoader::class => create(TypeLoader::class)
+        ->constructor(get(TypeRepositoryInterface::class)),
+    UserLoader::class => create(UserLoader::class)
+        ->constructor(get(UserRepositoryInterface::class)),
 
     //Writer
     ItemWriter::class => create(ItemWriter::class)

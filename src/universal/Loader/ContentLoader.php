@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Loader;
 
-use Teknoo\East\Website\DBSource\RepositoryInterface;
+use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -36,9 +36,9 @@ class ContentLoader implements LoaderInterface
 
     /**
      * ContentLoader constructor.
-     * @param RepositoryInterface $repository
+     * @param ContentRepositoryInterface $repository
      */
-    public function __construct(RepositoryInterface $repository)
+    public function __construct(ContentRepositoryInterface $repository)
     {
         $this->repository = $repository;
     }

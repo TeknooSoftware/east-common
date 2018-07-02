@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Loader;
 
-use Teknoo\East\Website\DBSource\RepositoryInterface;
+use Teknoo\East\Website\DBSource\Repository\MediaRepositoryInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -36,9 +36,9 @@ class MediaLoader implements LoaderInterface
 
     /**
      * MediaLoader constructor.
-     * @param RepositoryInterface $repository
+     * @param MediaRepositoryInterface $repository
      */
-    public function __construct(RepositoryInterface $repository)
+    public function __construct(MediaRepositoryInterface $repository)
     {
         $this->repository = $repository;
     }

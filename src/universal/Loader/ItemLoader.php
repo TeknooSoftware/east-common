@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Loader;
 
-use Teknoo\East\Website\DBSource\RepositoryInterface;
+use Teknoo\East\Website\DBSource\Repository\ItemRepositoryInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -36,9 +36,9 @@ class ItemLoader implements LoaderInterface
 
     /**
      * ItemLoader constructor.
-     * @param RepositoryInterface $repository
+     * @param ItemRepositoryInterface $repository
      */
-    public function __construct(RepositoryInterface $repository)
+    public function __construct(ItemRepositoryInterface $repository)
     {
         $this->repository = $repository;
     }

@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests\East\Website\Loader;
 
+use Teknoo\East\Website\DBSource\Repository\ItemRepositoryInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Object\Item;
 use Teknoo\East\Website\Loader\ItemLoader;
@@ -48,7 +49,7 @@ class ItemLoaderTest extends \PHPUnit\Framework\TestCase
     public function getRepositoryMock(): RepositoryInterface
     {
         if (!$this->repository instanceof RepositoryInterface) {
-            $this->repository = $this->createMock(RepositoryInterface::class);
+            $this->repository = $this->createMock(ItemRepositoryInterface::class);
         }
 
         return $this->repository;

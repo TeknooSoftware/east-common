@@ -22,24 +22,14 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\East\Website\Loader;
+namespace Teknoo\East\Website\DBSource\Repository;
 
-use Teknoo\East\Website\DBSource\Repository\TypeRepositoryInterface;
+use Teknoo\East\Website\DBSource\RepositoryInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class TypeLoader implements LoaderInterface
+interface MediaRepositoryInterface extends RepositoryInterface
 {
-    use LoaderTrait;
-
-    /**
-     * TypeLoader constructor.
-     * @param TypeRepositoryInterface $repository
-     */
-    public function __construct(TypeRepositoryInterface $repository)
-    {
-        $this->repository = $repository;
-    }
 }

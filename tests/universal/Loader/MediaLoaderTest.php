@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests\East\Website\Loader;
 
+use Teknoo\East\Website\DBSource\Repository\MediaRepositoryInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Object\Media;
 use Teknoo\East\Website\Loader\LoaderInterface;
@@ -48,7 +49,7 @@ class MediaLoaderTest extends \PHPUnit\Framework\TestCase
     public function getRepositoryMock(): RepositoryInterface
     {
         if (!$this->repository instanceof RepositoryInterface) {
-            $this->repository = $this->createMock(RepositoryInterface::class);
+            $this->repository = $this->createMock(MediaRepositoryInterface::class);
         }
 
         return $this->repository;

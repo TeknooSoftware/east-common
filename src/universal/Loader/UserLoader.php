@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Loader;
 
-use Teknoo\East\Website\DBSource\RepositoryInterface;
+use Teknoo\East\Website\DBSource\Repository\UserRepositoryInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -36,9 +36,9 @@ class UserLoader implements LoaderInterface
 
     /**
      * UserLoader constructor.
-     * @param RepositoryInterface $repository
+     * @param UserRepositoryInterface $repository
      */
-    public function __construct(RepositoryInterface $repository)
+    public function __construct(UserRepositoryInterface $repository)
     {
         $this->repository = $repository;
     }

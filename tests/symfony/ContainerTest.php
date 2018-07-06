@@ -24,14 +24,11 @@ namespace Teknoo\Tests\East\WebsiteBundle;
 
 use DI\Container;
 use DI\ContainerBuilder;
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ODM\MongoDB\DocumentRepository;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
-use Teknoo\East\Foundation\Manager\Manager;
-use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
 use Teknoo\East\Foundation\Router\RouterInterface;
+use Teknoo\East\Website\DBSource\Repository\ItemRepositoryInterface;
 use Teknoo\East\WebsiteBundle\Middleware\LocaleMiddleware;
 
 /**
@@ -51,7 +48,12 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
      */
     protected function buildContainer() : Container
     {
-        return include __DIR__.'/../../src/symfony/generator.php';
+        $containerDefinition = new ContainerBuilder();
+        $containerDefinition->addDefinitions(__DIR__.'/../../vendor/teknoo/east-foundation/src/universal/di.php');
+        $containerDefinition->addDefinitions(__DIR__.'/../../src/universal/di.php');
+        $containerDefinition->addDefinitions(__DIR__.'/../../src/symfony/Resources/config/di.php');
+
+        return $containerDefinition->build();
     }
 
     public function testLocaleMiddleware()
@@ -70,21 +72,11 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
 
     public function testEastManagerMiddlewareInjection()
     {
-        $containerDefinition = new ContainerBuilder();
-        $containerDefinition->addDefinitions(__DIR__.'/../../vendor/teknoo/east-foundation/src/universal/di.php');
-        $containerDefinition->addDefinitions(__DIR__.'/../../src/universal/di.php');
-        $containerDefinition->addDefinitions(__DIR__.'/../../src/symfony/Resources/config/di.php');
-
-        $container = $containerDefinition->build();
-
-        $objectManager = $this->createMock(ObjectManager::class);
-        $objectManager->expects(self::any())->method('getRepository')->willReturn(
-            $this->createMock(DocumentRepository::class)
-        );
+        $container = $this->buildContainer();
 
         $container->set(LoggerInterface::class, $this->createMock(LoggerInterface::class));
         $container->set(RouterInterface::class, $this->createMock(RouterInterface::class));
-        $container->set(ObjectManager::class, $objectManager);
+        $container->set(ItemRepositoryInterface::class, $this->createMock(ItemRepositoryInterface::class));
         $container->set('translator', $this->createMock(TranslatorInterface::class));
 
         self::assertInstanceOf(

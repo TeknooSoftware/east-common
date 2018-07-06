@@ -24,13 +24,17 @@ namespace Teknoo\Tests\East\Website;
 
 use DI\Container;
 use DI\ContainerBuilder;
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ODM\MongoDB\DocumentRepository;
 use Gedmo\Translatable\TranslatableListener;
 use Psr\Log\LoggerInterface;
 use Teknoo\East\Foundation\Manager\Manager;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Router\RouterInterface;
+use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
+use Teknoo\East\Website\DBSource\Repository\ItemRepositoryInterface;
+use Teknoo\East\Website\DBSource\Repository\MediaRepositoryInterface;
+use Teknoo\East\Website\DBSource\Repository\TypeRepositoryInterface;
+use Teknoo\East\Website\DBSource\Repository\UserRepositoryInterface;
+use Teknoo\East\Website\DBSource\ManagerInterface as DbManagerInterface;
 use Teknoo\East\Website\Loader\ItemLoader;
 use Teknoo\East\Website\Loader\ContentLoader;
 use Teknoo\East\Website\Loader\MediaLoader;
@@ -60,21 +64,23 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @return Container
+     * @throws \Exception
      */
     protected function buildContainer() : Container
     {
-        return include __DIR__.'/../../src/universal/generator.php';
+        $containerDefinition = new ContainerBuilder();
+        $containerDefinition->addDefinitions(__DIR__.'/../../vendor/teknoo/east-foundation/src/universal/di.php');
+        $containerDefinition->addDefinitions(__DIR__.'/../../src/universal/di.php');
+
+        return $containerDefinition->build();
     }
 
-    private function generateTestForLoader(string $className)
+    private function generateTestForLoader(string $className, string $repositoryInterface)
     {
         $container = $this->buildContainer();
-        $objectManager = $this->createMock(ObjectManager::class);
-        $objectManager->expects(self::any())->method('getRepository')->willReturn(
-            $this->createMock(DocumentRepository::class)
-        );
+        $repository = $this->createMock($repositoryInterface);
 
-        $container->set(ObjectManager::class, $objectManager);
+        $container->set($repositoryInterface, $repository);
         $loader = $container->get($className);
 
         self::assertInstanceOf(
@@ -83,89 +89,37 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    private function generateTestForLoaderWithUnsupportedRepository(string $className)
-    {
-        $container = $this->buildContainer();
-        $objectManager = $this->createMock(ObjectManager::class);
-        $objectManager->expects(self::any())->method('getRepository')->willReturn(
-            $this->createMock(\DateTime::class)
-        );
-
-        $container->set(ObjectManager::class, $objectManager);
-        $container->get($className);
-    }
-
     public function testItemLoader()
     {
-        $this->generateTestForLoader(ItemLoader::class);
+        $this->generateTestForLoader(ItemLoader::class, ItemRepositoryInterface::class);
     }
 
     public function testContentLoader()
     {
-        $this->generateTestForLoader(ContentLoader::class);
+        $this->generateTestForLoader(ContentLoader::class, ContentRepositoryInterface::class);
     }
 
     public function testMediaLoader()
     {
-        $this->generateTestForLoader(MediaLoader::class);
+        $this->generateTestForLoader(MediaLoader::class, MediaRepositoryInterface::class);
     }
 
     public function testTypeLoader()
     {
-        $this->generateTestForLoader(TypeLoader::class);
+        $this->generateTestForLoader(TypeLoader::class, TypeRepositoryInterface::class);
     }
 
     public function testUserLoader()
     {
-        $this->generateTestForLoader(UserLoader::class);
-    }
-
-    /**
-     * @expectedException \RuntimeException
-     */
-    public function testItemLoaderWithUnsupportedRepository()
-    {
-        $this->generateTestForLoaderWithUnsupportedRepository(ItemLoader::class);
-    }
-
-    /**
-     * @expectedException \RuntimeException
-     */
-    public function testContentLoaderWithUnsupportedRepository()
-    {
-        $this->generateTestForLoaderWithUnsupportedRepository(ContentLoader::class);
-    }
-
-    /**
-     * @expectedException \RuntimeException
-     */
-    public function testMediaLoaderWithUnsupportedRepository()
-    {
-        $this->generateTestForLoaderWithUnsupportedRepository(MediaLoader::class);
-    }
-
-    /**
-     * @expectedException \RuntimeException
-     */
-    public function testTypeLoaderWithUnsupportedRepository()
-    {
-        $this->generateTestForLoaderWithUnsupportedRepository(TypeLoader::class);
-    }
-
-    /**
-     * @expectedException \RuntimeException
-     */
-    public function testUserLoaderWithUnsupportedRepository()
-    {
-        $this->generateTestForLoaderWithUnsupportedRepository(UserLoader::class);
+        $this->generateTestForLoader(UserLoader::class, UserRepositoryInterface::class);
     }
 
     private function generateTestForWriter(string $className)
     {
         $container = $this->buildContainer();
-        $objectManager = $this->createMock(ObjectManager::class);
+        $objectManager = $this->createMock(DbManagerInterface::class);
 
-        $container->set(ObjectManager::class, $objectManager);
+        $container->set(DbManagerInterface::class, $objectManager);
         $loader = $container->get($className);
 
         self::assertInstanceOf(
@@ -202,9 +156,9 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
     private function generateTestForDelete(string $key)
     {
         $container = $this->buildContainer();
-        $objectManager = $this->createMock(ObjectManager::class);
+        $objectManager = $this->createMock(DbManagerInterface::class);
 
-        $container->set(ObjectManager::class, $objectManager);
+        $container->set(DbManagerInterface::class, $objectManager);
         $loader = $container->get($key);
 
         self::assertInstanceOf(
@@ -241,12 +195,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
     public function testMenuGenerator()
     {
         $container = $this->buildContainer();
-        $objectManager = $this->createMock(ObjectManager::class);
-        $objectManager->expects(self::any())->method('getRepository')->willReturn(
-            $this->createMock(DocumentRepository::class)
-        );
-
-        $container->set(ObjectManager::class, $objectManager);
+        $container->set(ItemRepositoryInterface::class, $this->createMock(ItemRepositoryInterface::class));
         $loader = $container->get(MenuGenerator::class);
 
         self::assertInstanceOf(
@@ -258,12 +207,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
     public function testMenuMiddleware()
     {
         $container = $this->buildContainer();
-        $objectManager = $this->createMock(ObjectManager::class);
-        $objectManager->expects(self::any())->method('getRepository')->willReturn(
-            $this->createMock(DocumentRepository::class)
-        );
-
-        $container->set(ObjectManager::class, $objectManager);
+        $container->set(ItemRepositoryInterface::class, $this->createMock(ItemRepositoryInterface::class));
         $loader = $container->get(MenuMiddleware::class);
 
         self::assertInstanceOf(
@@ -308,14 +252,9 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
 
         $container = $containerDefinition->build();
 
-        $objectManager = $this->createMock(ObjectManager::class);
-        $objectManager->expects(self::any())->method('getRepository')->willReturn(
-            $this->createMock(DocumentRepository::class)
-        );
-
         $container->set(LoggerInterface::class, $this->createMock(LoggerInterface::class));
         $container->set(RouterInterface::class, $this->createMock(RouterInterface::class));
-        $container->set(ObjectManager::class, $objectManager);
+        $container->set(ItemRepositoryInterface::class, $this->createMock(ItemRepositoryInterface::class));
 
         $manager1 = $container->get(Manager::class);
         $manager2 = $container->get(ManagerInterface::class);

@@ -24,46 +24,14 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\DBSource;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use Teknoo\East\Website\DBSource\ManagerInterface;
+use Teknoo\East\Website\DBSource\Repository\UserRepositoryInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class Manager implements ManagerInterface
+class UserRepository implements UserRepositoryInterface
 {
-    /**
-     * @var ObjectManager
-     */
-    private $objectManager;
+    use RepositoryTrait;
 
-    /**
-     * Manager constructor.
-     * @param ObjectManager $objectManager
-     */
-    public function __construct(ObjectManager $objectManager)
-    {
-        $this->objectManager = $objectManager;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function persist($object): ManagerInterface
-    {
-        $this->objectManager->persist($object);
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function flush($object = null): ManagerInterface
-    {
-        $this->objectManager->flush($object);
-
-        return $this;
-    }
 }

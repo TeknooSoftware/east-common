@@ -28,6 +28,10 @@ use Doctrine\Common\Persistence\ObjectRepository;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 trait RepositoryTrait
 {
     /**
@@ -91,12 +95,16 @@ trait RepositoryTrait
      */
     public function findOneBy(array $criteria, PromiseInterface $promise): RepositoryInterface
     {
-        $result = $this->repository->findOneBy($criteria);
+        try {
+            $result = $this->repository->findOneBy($criteria);
 
-        if (!empty($result)) {
-            $promise->success($result);
-        } else {
-            $promise->fail(new \DomainException('Object not found'));
+            if (!empty($result)) {
+                $promise->success($result);
+            } else {
+                $promise->fail(new \DomainException('Object not found'));
+            }
+        } catch (\Throwable $error) {
+            $promise->fail($error);
         }
 
         return $this;

@@ -35,8 +35,13 @@ use Teknoo\East\Website\DBSource\Repository\ItemRepositoryInterface;
 use Teknoo\East\Website\DBSource\Repository\MediaRepositoryInterface;
 use Teknoo\East\Website\DBSource\Repository\TypeRepositoryInterface;
 use Teknoo\East\Website\DBSource\Repository\UserRepositoryInterface;
+use Teknoo\East\Website\Doctrine\DBSource\ContentRepository;
+use Teknoo\East\Website\Doctrine\DBSource\ItemRepository;
 use Teknoo\East\Website\Doctrine\DBSource\Manager;
+use Teknoo\East\Website\Doctrine\DBSource\MediaRepository;
 use Teknoo\East\Website\Doctrine\DBSource\RepositoryTrait;
+use Teknoo\East\Website\Doctrine\DBSource\TypeRepository;
+use Teknoo\East\Website\Doctrine\DBSource\UserRepository;
 use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Object\Item;
 use Teknoo\East\Website\Object\Media;
@@ -50,10 +55,7 @@ return [
     ContentRepositoryInterface::class => function (ContainerInterface $container): ContentRepositoryInterface {
         $repository = $container->get(ObjectManager::class)->getRepository(Content::class);
         if ($repository instanceof ObjectRepository) {
-            return new class($repository) implements ContentRepositoryInterface{
-                use RepositoryTrait;
-
-            };
+            return new ContentRepository($repository);
         }
 
         throw new \RuntimeException(sprintf(
@@ -65,10 +67,7 @@ return [
     ItemRepositoryInterface::class => function (ContainerInterface $container): ItemRepositoryInterface {
         $repository = $container->get(ObjectManager::class)->getRepository(Item::class);
         if ($repository instanceof ObjectRepository) {
-            return new class($repository) implements ItemRepositoryInterface{
-                use RepositoryTrait;
-
-            };
+            return new ItemRepository($repository);
         }
 
         throw new \RuntimeException(sprintf(
@@ -80,10 +79,7 @@ return [
     MediaRepositoryInterface::class => function (ContainerInterface $container): MediaRepositoryInterface {
         $repository = $container->get(ObjectManager::class)->getRepository(Media::class);
         if ($repository instanceof ObjectRepository) {
-            return new class($repository) implements MediaRepositoryInterface{
-                use RepositoryTrait;
-
-            };
+            return new MediaRepository($repository);
         }
 
         throw new \RuntimeException(sprintf(
@@ -95,10 +91,7 @@ return [
     TypeRepositoryInterface::class => function (ContainerInterface $container): TypeRepositoryInterface {
         $repository = $container->get(ObjectManager::class)->getRepository(Type::class);
         if ($repository instanceof ObjectRepository) {
-            return new class($repository) implements TypeRepositoryInterface{
-                use RepositoryTrait;
-
-            };
+            return new TypeRepository($repository);
         }
 
         throw new \RuntimeException(sprintf(
@@ -110,10 +103,7 @@ return [
     UserRepositoryInterface::class => function (ContainerInterface $container): UserRepositoryInterface {
         $repository = $container->get(ObjectManager::class)->getRepository(User::class);
         if ($repository instanceof ObjectRepository) {
-            return new class($repository) implements UserRepositoryInterface{
-                use RepositoryTrait;
-
-            };
+            return new UserRepository($repository);
         }
 
         throw new \RuntimeException(sprintf(

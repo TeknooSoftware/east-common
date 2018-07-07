@@ -15,6 +15,7 @@ use Teknoo\East\Foundation\Manager\Manager;
 use Teknoo\East\Foundation\Router\Result;
 use Teknoo\East\Foundation\Middleware\MiddlewareInterface;
 use Teknoo\East\Foundation\EndPoint\EndPointInterface;
+use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
 use Teknoo\East\Website\Loader\MediaLoader;
 use Teknoo\East\Website\Loader\ContentLoader;
 use Teknoo\East\Website\EndPoint\MediaEndPointTrait;
@@ -129,6 +130,9 @@ class FeatureContext implements Context
         );
         $containerDefinition->addDefinitions(
             include \dirname(\dirname(__DIR__)).'/src/universal/di.php'
+        );
+        $containerDefinition->addDefinitions(
+            include \dirname(\dirname(__DIR__)).'/src/doctrine/di.php'
         );
 
         $this->container = $containerDefinition->build();
@@ -294,9 +298,7 @@ class FeatureContext implements Context
      */
     public function aMediaLoader()
     {
-        $this->mediaLoader = new MediaLoader(
-            $this->buildObjectRepository(Media::class)
-        );
+        $this->mediaLoader = $this->container->get(MediaLoader::class);
     }
 
     /**
@@ -524,7 +526,7 @@ class FeatureContext implements Context
     public function aContentLoader()
     {
         $this->contentLoader = new ContentLoader(
-            $this->buildObjectRepository(Content::class)
+            $this->container->get(ContentRepositoryInterface::class)
         );
     }
 

@@ -18,7 +18,8 @@
             "Teknoo\\East\\WebsiteBundle\\": "src/symfony",
             "Teknoo\\East\\Website\\Doctrine\\": "src/doctrine",
             "Teknoo\\Tests\\East\\Website\\": "tests/universal",
-            "Teknoo\\Tests\\East\\WebsiteBundle\\": "tests/symfony"
+            "Teknoo\\Tests\\East\\WebsiteBundle\\": "tests/symfony",
+            "Teknoo\\Tests\\East\\Website\\Doctrine\\": "tests/doctrine"
         }
     },
     "require": {

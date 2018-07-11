@@ -64,8 +64,7 @@ class PublishedContentFromSlugQuery implements QueryInterface, ImmutableInterfac
         LoaderInterface $loader,
         RepositoryInterface $repository,
         PromiseInterface $promise
-    ): QueryInterface
-    {
+    ): QueryInterface {
         $fetchingPromise = new Promise(
             function ($object, PromiseInterface $next) use ($promise) {
                 if ($object instanceof PublishableInterface && $object->getPublishedAt() instanceof \DateTime) {
@@ -73,15 +72,18 @@ class PublishedContentFromSlugQuery implements QueryInterface, ImmutableInterfac
                 } else {
                     $next->fail(new \DomainException('Object not found'));
                 }
-            }, function (\Throwable $e, PromiseInterface $next) use ($promise) {
+            },
+            function (\Throwable $e, PromiseInterface $next) use ($promise) {
                 $next->fail($e);
             }
         );
 
-        $repository->findOneBy([
+        $repository->findOneBy(
+            [
             'slug' => $this->slug,
             'deletedAt' => null,
-            ], $fetchingPromise->next($promise)
+            ],
+            $fetchingPromise->next($promise)
         );
 
         return $this;

@@ -33,5 +33,4 @@ use Teknoo\East\Website\DBSource\Repository\MediaRepositoryInterface;
 class MediaRepository implements MediaRepositoryInterface
 {
     use RepositoryTrait;
-
 }

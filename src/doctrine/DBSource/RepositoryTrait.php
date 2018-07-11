@@ -83,8 +83,7 @@ trait RepositoryTrait
         array $orderBy = null,
         $limit = null,
         $offset = null
-    ): RepositoryInterface
-    {
+    ): RepositoryInterface {
         $promise->success($this->repository->findBy($criteria, $orderBy, $limit, $offset));
 
         return $this;

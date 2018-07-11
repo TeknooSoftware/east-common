@@ -55,11 +55,10 @@ class TopItemByLocationQuery implements QueryInterface, ImmutableInterface
      * @inheritDoc
      */
     public function execute(
-        LoaderInterface $loader ,
-        RepositoryInterface $repository ,
+        LoaderInterface $loader,
+        RepositoryInterface $repository,
         PromiseInterface $promise
-    ): QueryInterface
-    {
+    ): QueryInterface {
         $repository->findBy(
             [
                 'location' => $this->location,

@@ -59,11 +59,10 @@ class UserByEmailQuery implements QueryInterface, ImmutableInterface
      * @inheritDoc
      */
     public function execute(
-        LoaderInterface $loader ,
-        RepositoryInterface $repository ,
+        LoaderInterface $loader,
+        RepositoryInterface $repository,
         PromiseInterface $promise
-    ): QueryInterface
-    {
+    ): QueryInterface {
         $repository->findOneBy(
             ['email' => $this->email, 'deletedAt' => null],
             $promise

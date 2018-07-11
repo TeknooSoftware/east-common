@@ -50,5 +50,5 @@ interface ManagerInterface
      *
      * @return ManagerInterface
      */
-    public function flush($object=null): ManagerInterface;
+    public function flush($object = null): ManagerInterface;
 }

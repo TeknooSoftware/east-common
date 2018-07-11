@@ -33,5 +33,4 @@ use Teknoo\East\Website\DBSource\Repository\UserRepositoryInterface;
 class UserRepository implements UserRepositoryInterface
 {
     use RepositoryTrait;
-
 }

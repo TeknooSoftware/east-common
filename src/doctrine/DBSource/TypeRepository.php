@@ -33,5 +33,4 @@ use Teknoo\East\Website\DBSource\Repository\TypeRepositoryInterface;
 class TypeRepository implements TypeRepositoryInterface
 {
     use RepositoryTrait;
-
 }

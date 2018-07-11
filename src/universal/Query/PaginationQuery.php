@@ -23,6 +23,7 @@ declare(strict_types=1);
  */
 
 namespace Teknoo\East\Website\Query;
+
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
@@ -78,11 +79,10 @@ class PaginationQuery implements QueryInterface, ImmutableInterface
      * @inheritDoc
      */
     public function execute(
-        LoaderInterface $loader ,
-        RepositoryInterface $repository ,
+        LoaderInterface $loader,
+        RepositoryInterface $repository,
         PromiseInterface $promise
-    ): QueryInterface
-    {
+    ): QueryInterface {
         $criteria = $this->criteria;
         $criteria['deletedAt'] = null;
         $repository->findBy($criteria, $promise, $this->order, $this->limit, $this->offset);

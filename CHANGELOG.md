@@ -1,5 +1,18 @@
 #Teknoo Software - Website - Change Log
 
+
+##[0.0.7-beta2] - 2018-07-14
+###Update
+- Create DBSource interfaces to define object manager and object repository and allow loaders 
+  and writers to be independent of Doctrine common. Theses interfaces are inspirated from Doctrine interfaces.
+- Main Website namespace is Doctrine independent. Loaders and writers are agnostics.
+- Create default implementation of DBSources interfaces with Doctrine ODM.
+- Loader are simplified, queries are externalized into independent class.
+- LoaderInterface load method accepts only ids, no other criteria are allowed.
+
+###Added
+- LoaderInterface query method to execute a QueryInterface instance about objects managed by the loader.
+
 ##[0.0.7-beta1] - 2018-06-15
 ###Update
 - update to use recipe 1.1 and east foundation 0.0.8

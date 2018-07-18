@@ -30,6 +30,10 @@ use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Middleware\MiddlewareInterface;
 use Teknoo\East\Website\Service\MenuGenerator;
 
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 class MenuMiddleware implements ViewParameterInterface
 {
     /**

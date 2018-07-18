@@ -31,6 +31,10 @@ use Teknoo\East\Website\Query\QueryInterface;
 use Teknoo\Immutable\ImmutableInterface;
 use Teknoo\Immutable\ImmutableTrait;
 
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 class TopItemByLocationQuery implements QueryInterface, ImmutableInterface
 {
     use ImmutableTrait;

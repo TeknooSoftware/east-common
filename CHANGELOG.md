@@ -1,5 +1,7 @@
 #Teknoo Software - Website - Change Log
 
+##[0.0.7] - 2018-07-18
+Stable release
 
 ##[0.0.7-beta2] - 2018-07-14
 ###Update

@@ -1,5 +1,10 @@
 #Teknoo Software - Website - Change Log
 
+##[0.0.8] - 2018-07-19
+###Fix
+- Item object use an array instead of ArrayObject to avoid error mapping
+- RepositoryTrait Doctrine bridge suppports DocumentRepository and use a query for findBy() method in this case
+
 ##[0.0.7] - 2018-07-18
 Stable release
 

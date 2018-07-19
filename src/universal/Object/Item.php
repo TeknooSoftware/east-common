@@ -96,7 +96,7 @@ class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, Trans
      */
     public function __construct()
     {
-        $this->children = new \ArrayObject();
+        $this->children = [];
         $this->initializeProxy();
         $this->updateStates();
     }

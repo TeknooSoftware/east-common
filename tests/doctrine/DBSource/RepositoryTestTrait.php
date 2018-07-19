@@ -23,6 +23,9 @@
 namespace Teknoo\Tests\East\Website\Doctrine\DBSource;
 
 use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\MongoDB\Query\Builder;
+use Doctrine\MongoDB\Query\Query;
+use Doctrine\ODM\MongoDB\DocumentRepository;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 
@@ -167,6 +170,38 @@ trait RepositoryTestTrait
         self::assertInstanceOf(
             RepositoryInterface::class,
             $this->buildRepository()->findBy(['foo' => 'bar'], $promise)
+        );
+    }
+
+    public function testFindByForMongo()
+    {
+        $this->objectRepository = $this->createMock(DocumentRepository::class);
+
+        $object = [new \stdClass()];
+        $promise = $this->createMock(PromiseInterface::class);
+        $promise->expects(self::once())->method('success')->with($object);
+        $promise->expects(self::never())->method('fail');
+
+        $this->objectRepository
+            ->expects(self::never())
+            ->method('findBy');
+
+        $query = $this->createMock(Query::class);
+        $query->expects(self::once())->method('execute')->willReturn($object);
+
+        $queryBuilderMock = $this->createMock(Builder::class);
+        $queryBuilderMock->expects(self::any())
+            ->method('getQuery')
+            ->willReturn($query);
+
+        $this->objectRepository
+            ->expects(self::once())
+            ->method('createQueryBuilder')
+            ->willReturn($queryBuilderMock);
+
+        self::assertInstanceOf(
+            RepositoryInterface::class,
+            $this->buildRepository()->findBy(['foo' => 'bar'], $promise, ['foo'=>'ASC'], 1, 2)
         );
     }
 

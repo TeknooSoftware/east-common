@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Doctrine\DBSource;
 
 use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\ODM\MongoDB\DocumentRepository;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 
@@ -35,7 +36,7 @@ use Teknoo\East\Website\DBSource\RepositoryInterface;
 trait RepositoryTrait
 {
     /**
-     * @var ObjectRepository
+     * @var ObjectRepository|DocumentRepository
      */
     private $repository;
 
@@ -84,7 +85,28 @@ trait RepositoryTrait
         $limit = null,
         $offset = null
     ): RepositoryInterface {
-        $promise->success($this->repository->findBy($criteria, $orderBy, $limit, $offset));
+        if ($this->repository instanceof DocumentRepository) {
+            $queryBuilder = $this->repository->createQueryBuilder();
+
+            $queryBuilder->equals($criteria);
+            if (!empty($orderBy)) {
+                $queryBuilder->sort($orderBy);
+            }
+
+            if (!empty($limit)) {
+                $queryBuilder->limit($limit);
+            }
+
+            if (!empty($offset)) {
+                $queryBuilder->skip($offset);
+            }
+
+            $query = $queryBuilder->getQuery();
+
+            $promise->success($query->execute());
+        } else {
+            $promise->success($this->repository->findBy($criteria, $orderBy, $limit, $offset));
+        }
 
         return $this;
     }

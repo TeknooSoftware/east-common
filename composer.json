@@ -23,15 +23,14 @@
         }
     },
     "require": {
-
         "php": ">=7.1",
         "doctrine/common": "~2.8",
         "doctrine/annotations": "~1.5",
         "gedmo/doctrine-extensions": "~2.4",
         "teknoo/immutable": "~1.0",
         "teknoo/states": "^3.2.2",
-        "teknoo/recipe": "1.1.0",
-        "teknoo/east-foundation": "^0.0.8",
+        "teknoo/recipe": "^1.1.1",
+        "teknoo/east-foundation": "^0.0.9",
         "php-di/php-di": "~6.0"
     },
     "require-dev": {

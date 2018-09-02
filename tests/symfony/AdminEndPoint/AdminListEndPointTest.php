@@ -207,6 +207,140 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
         );
     }
 
+    public function testInvokeFoundOrderingWithDirectionAsc()
+    {
+        $request = $this->createMock(ServerRequestInterface::class);
+        $client = $this->createMock(ClientInterface::class);
+
+        $request->expects(self::any())
+            ->method('getQueryParams')
+            ->willReturn(['order' => 'foo', 'direction' => 'ASC']);
+
+        $client->expects(self::once())->method('acceptResponse');
+        $client->expects(self::never())->method('errorInRequest');
+
+        $this->getLoaderService()
+            ->expects(self::once())
+            ->method('query')
+            ->willReturnCallback(function ($query, PromiseInterface $promise) {
+                self::assertEquals(new PaginationQuery([], ['foo' => 'ASC'], 15, 15), $query);
+                $promise->success($this->createMock(Iterator::class));
+
+                return $this->getLoaderService();
+            });
+
+        self::assertInstanceOf(
+            AdminListEndPoint::class,
+            ($this->buildEndPoint())($request, $client, 2, 'bar')
+        );
+    }
+
+    public function testInvokeFoundOrderingWithDirectionDesc()
+    {
+        $request = $this->createMock(ServerRequestInterface::class);
+        $client = $this->createMock(ClientInterface::class);
+
+        $request->expects(self::any())
+            ->method('getQueryParams')
+            ->willReturn(['order' => 'foo', 'direction' => 'DESC']);
+
+        $client->expects(self::once())->method('acceptResponse');
+        $client->expects(self::never())->method('errorInRequest');
+
+        $this->getLoaderService()
+            ->expects(self::once())
+            ->method('query')
+            ->willReturnCallback(function ($query, PromiseInterface $promise) {
+                self::assertEquals(new PaginationQuery([], ['foo' => 'DESC'], 15, 15), $query);
+                $promise->success($this->createMock(Iterator::class));
+
+                return $this->getLoaderService();
+            });
+
+        self::assertInstanceOf(
+            AdminListEndPoint::class,
+            ($this->buildEndPoint())($request, $client, 2, 'bar')
+        );
+    }
+
+    public function testInvokeFoundOrderingWithWrongDirection()
+    {
+        $request = $this->createMock(ServerRequestInterface::class);
+        $client = $this->createMock(ClientInterface::class);
+
+        $request->expects(self::any())
+            ->method('getQueryParams')
+            ->willReturn(['order' => 'foo', 'direction' => 'foo']);
+
+        $client->expects(self::never())->method('acceptResponse');
+        $client->expects(self::once())->method('errorInRequest');
+
+        $this->getLoaderService()
+            ->expects(self::never())
+            ->method('query');
+
+        self::assertInstanceOf(
+            AdminListEndPoint::class,
+            ($this->buildEndPoint())($request, $client, 2, 'bar')
+        );
+    }
+
+    public function testInvokeFoundOrderingWithDefaultAsc()
+    {
+        $request = $this->createMock(ServerRequestInterface::class);
+        $client = $this->createMock(ClientInterface::class);
+
+        $request->expects(self::any())
+            ->method('getQueryParams')
+            ->willReturn([]);
+
+        $client->expects(self::once())->method('acceptResponse');
+        $client->expects(self::never())->method('errorInRequest');
+
+        $this->getLoaderService()
+            ->expects(self::once())
+            ->method('query')
+            ->willReturnCallback(function ($query, PromiseInterface $promise) {
+                self::assertEquals(new PaginationQuery([], ['foo' => 'ASC'], 15, 15), $query);
+                $promise->success($this->createMock(Iterator::class));
+
+                return $this->getLoaderService();
+            });
+
+        self::assertInstanceOf(
+            AdminListEndPoint::class,
+            ($this->buildEndPoint()->setOrder('foo', 'ASC'))($request, $client, 2, 'bar')
+        );
+    }
+
+    public function testInvokeFoundOrderingWithDefaultDesc()
+    {
+        $request = $this->createMock(ServerRequestInterface::class);
+        $client = $this->createMock(ClientInterface::class);
+
+        $request->expects(self::any())
+            ->method('getQueryParams')
+            ->willReturn([]);
+
+        $client->expects(self::once())->method('acceptResponse');
+        $client->expects(self::never())->method('errorInRequest');
+
+        $this->getLoaderService()
+            ->expects(self::once())
+            ->method('query')
+            ->willReturnCallback(function ($query, PromiseInterface $promise) {
+                self::assertEquals(new PaginationQuery([], ['foo' => 'DESC'], 15, 15), $query);
+                $promise->success($this->createMock(Iterator::class));
+
+                return $this->getLoaderService();
+            });
+
+        self::assertInstanceOf(
+            AdminListEndPoint::class,
+            ($this->buildEndPoint()->setOrder('foo', 'DESC'))($request, $client, 2, 'bar')
+        );
+    }
+
     public function testInvokeFoundPage3()
     {
         $request = $this->createMock(ServerRequestInterface::class);
@@ -277,5 +411,29 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
             AdminListEndPoint::class,
             ($this->buildEndPoint())($request, $client)
         );
+    }
+
+    /**
+     * @expectedException \TypeError
+     */
+    public function testSetOrderWithBadColumn()
+    {
+        $this->buildEndPoint()->setOrder(new \stdClass(), 'foo');
+    }
+
+    /**
+     * @expectedException \TypeError
+     */
+    public function testSetOrderWithBadDirectionType()
+    {
+        $this->buildEndPoint()->setOrder('foo', new \stdClass());
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testSetOrderWithBadDirectionValue()
+    {
+        $this->buildEndPoint()->setOrder('foo', 'bar');
     }
 }

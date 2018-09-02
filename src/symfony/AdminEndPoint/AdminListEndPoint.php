@@ -24,8 +24,6 @@ declare(strict_types=1);
 
 namespace Teknoo\East\WebsiteBundle\AdminEndPoint;
 
-use Doctrine\MongoDB\Iterator;
-use Doctrine\ODM\MongoDB\Cursor;
 use Psr\Http\Message\ServerRequestInterface;
 use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
@@ -44,6 +42,35 @@ class AdminListEndPoint implements EndPointInterface
 
     private $itemsPerPage = 15;
 
+    private $defaultOrderColumn = null;
+
+    /**
+     * @var string
+     */
+    private $defaultOrderDirection = 'ASC';
+
+    /**
+     * @param string $column
+     * @param string $direction
+     * @return AdminListEndPoint
+     */
+    public function setOrder(string $column, string $direction): self
+    {
+        switch ($value = \strtoupper($direction)) {
+            case 'ASC':
+            case 'DESC':
+                $direction = $value;
+                break;
+            default:
+                throw new \InvalidArgumentException("Invalid direction value %value");
+        }
+
+        $this->defaultOrderColumn = $column;
+        $this->defaultOrderDirection = $direction;
+
+        return $this;
+    }
+
     /**
      * @param ServerRequestInterface $request
      * @return array
@@ -52,8 +79,22 @@ class AdminListEndPoint implements EndPointInterface
     {
         $order = [];
         $queryParams = $request->getQueryParams();
+        $direction = $this->defaultOrderDirection;
+        if (isset($queryParams['direction'])) {
+            switch ($value = \strtoupper($queryParams['direction'])) {
+                case 'ASC':
+                case 'DESC':
+                    $direction = $value;
+                    break;
+                default:
+                    throw new \InvalidArgumentException("Invalid direction value %value");
+            }
+        }
+
         if (isset($queryParams['order'])) {
-            $order[$queryParams['order']] = 'ASC';
+            $order[$queryParams['order']] = $direction;
+        } elseif (!empty($this->defaultOrderColumn)) {
+            $order[$this->defaultOrderColumn] = $direction;
         }
 
         return $order;
@@ -82,7 +123,13 @@ class AdminListEndPoint implements EndPointInterface
             $viewPath = $this->viewPath;
         }
 
-        $order = $this->extractOrder($request);
+        try {
+            $order = $this->extractOrder($request);
+        } catch (\Throwable $e) {
+            $client->errorInRequest($e);
+
+            return $this;
+        }
 
         $this->loader->query(
             new PaginationQuery([], $order, $this->itemsPerPage, ($page-1)*$this->itemsPerPage),

@@ -1,5 +1,10 @@
 #Teknoo Software - Website - Change Log
 
+##[0.0.10] - 2018-09-02
+###Add
+- Add direction attribute support to sort results with AdminListEndPoint
+- Add change/set default column to order and sort direction to sort results with AdminListEndPoint
+
 ##[0.0.9] - 2018-08-15
 ###Fix
 - Fix Recipe bowl, they have an extra looping because the loop counter had a bug.

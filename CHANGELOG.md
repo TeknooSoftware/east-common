@@ -1,5 +1,9 @@
 #Teknoo Software - Website - Change Log
 
+##[0.0.11] - 2018-09-02
+###Add
+- Pass query param to the view list
+
 ##[0.0.10] - 2018-09-02
 ###Add
 - Add direction attribute support to sort results with AdminListEndPoint

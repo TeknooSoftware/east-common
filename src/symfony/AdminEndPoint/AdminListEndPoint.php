@@ -133,7 +133,7 @@ class AdminListEndPoint implements EndPointInterface
 
         $this->loader->query(
             new PaginationQuery([], $order, $this->itemsPerPage, ($page-1)*$this->itemsPerPage),
-            new Promise(function ($objects) use ($client, $page, $viewPath) {
+            new Promise(function ($objects) use ($client, $page, $viewPath, $request) {
                 $pageCount = 1;
                 if ($objects instanceof \Countable) {
                     $pageCount =  \ceil($objects->count()/$this->itemsPerPage);
@@ -146,6 +146,7 @@ class AdminListEndPoint implements EndPointInterface
                         'objectsCollection' => $objects,
                         'page' => $page,
                         'pageCount' => $pageCount,
+                        'queryParams' => $request->getQueryParams()
                     ]
                 );
             }, function ($error) use ($client) {

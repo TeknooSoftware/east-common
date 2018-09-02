@@ -1,5 +1,9 @@
 #Teknoo Software - Website - Change Log
 
+##[0.0.12] - 2018-09-02
+###Fix
+- Fix exception when order is empty
+
 ##[0.0.11] - 2018-09-02
 ###Add
 - Pass query param to the view list

@@ -91,7 +91,7 @@ class AdminListEndPoint implements EndPointInterface
             }
         }
 
-        if (isset($queryParams['order'])) {
+        if (!empty($queryParams['order'])) {
             $order[$queryParams['order']] = $direction;
         } elseif (!empty($this->defaultOrderColumn)) {
             $order[$this->defaultOrderColumn] = $direction;

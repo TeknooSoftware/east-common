@@ -1,5 +1,9 @@
 #Teknoo Software - Website - Change Log
 
+##[0.0.13] - 2018-10-27
+###Fix
+- Fix syntax of template layout to follow normalize form "@BundleName/Controller/action.format.engine"
+
 ##[0.0.12] - 2018-09-02
 ###Fix
 - Fix exception when order is empty

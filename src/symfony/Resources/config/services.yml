@@ -25,27 +25,27 @@ parameters:
   teknoo.east.website.user.class: 'Teknoo\East\Website\Object\User'
 
   #Path
-  teknoo.east.website.view.404-error.file: 'TeknooEastWebsiteBundle:Error:404.html.twig'
+  teknoo.east.website.view.404-error.file: "@@TeknooEastWebsite/Error/404.html.twig"
 
   #Admin view path
-  teknoo.east.website.view.item.new.file: 'TeknooEastWebsiteBundle:AdminItem:new.html.twig'
-  teknoo.east.website.view.item.edit.file: 'TeknooEastWebsiteBundle:AdminItem:edit.html.twig'
-  teknoo.east.website.view.item.list.file: 'TeknooEastWebsiteBundle:AdminItem:list.html.twig'
+  teknoo.east.website.view.item.new.file: '@@TeknooEastWebsite/AdminItem/new.html.twig'
+  teknoo.east.website.view.item.edit.file: '@@TeknooEastWebsite/AdminItem/edit.html.twig'
+  teknoo.east.website.view.item.list.file: '@@TeknooEastWebsite/AdminItem/list.html.twig'
 
-  teknoo.east.website.view.content.new.file: 'TeknooEastWebsiteBundle:AdminContent:new.html.twig'
-  teknoo.east.website.view.content.edit.file: 'TeknooEastWebsiteBundle:AdminContent:edit.html.twig'
-  teknoo.east.website.view.content.list.file: 'TeknooEastWebsiteBundle:AdminContent:list.html.twig'
+  teknoo.east.website.view.content.new.file: '@@TeknooEastWebsite/AdminContent/new.html.twig'
+  teknoo.east.website.view.content.edit.file: '@@TeknooEastWebsite/AdminContent/edit.html.twig'
+  teknoo.east.website.view.content.list.file: '@@TeknooEastWebsite/AdminContent/list.html.twig'
 
-  teknoo.east.website.view.media.new.file: 'TeknooEastWebsiteBundle:AdminMedia:new.html.twig'
-  teknoo.east.website.view.media.list.file: 'TeknooEastWebsiteBundle:AdminMedia:list.html.twig'
+  teknoo.east.website.view.media.new.file: '@@TeknooEastWebsite/AdminMedia/new.html.twig'
+  teknoo.east.website.view.media.list.file: '@@TeknooEastWebsite/AdminMedia/list.html.twig'
 
-  teknoo.east.website.view.type.new.file: 'TeknooEastWebsiteBundle:AdminType:new.html.twig'
-  teknoo.east.website.view.type.edit.file: 'TeknooEastWebsiteBundle:AdminType:edit.html.twig'
-  teknoo.east.website.view.type.list.file: 'TeknooEastWebsiteBundle:AdminType:list.html.twig'
+  teknoo.east.website.view.type.new.file: '@@TeknooEastWebsite/AdminType/new.html.twig'
+  teknoo.east.website.view.type.edit.file: '@@TeknooEastWebsite/AdminType/edit.html.twig'
+  teknoo.east.website.view.type.list.file: '@@TeknooEastWebsite/AdminType/list.html.twig'
 
-  teknoo.east.website.view.user.new.file: 'TeknooEastWebsiteBundle:AdminUser:new.html.twig'
-  teknoo.east.website.view.user.edit.file: 'TeknooEastWebsiteBundle:AdminUser:edit.html.twig'
-  teknoo.east.website.view.user.list.file: 'TeknooEastWebsiteBundle:AdminUser:list.html.twig'
+  teknoo.east.website.view.user.new.file: '@@TeknooEastWebsite/AdminUser/new.html.twig'
+  teknoo.east.website.view.user.edit.file: '@@TeknooEastWebsite/AdminUser/edit.html.twig'
+  teknoo.east.website.view.user.list.file: '@@TeknooEastWebsite/AdminUser/list.html.twig'
 
   #Provider
   teknoo.east.website.bundle.user_provider.class: 'Teknoo\East\WebsiteBundle\Provider\UserProvider'

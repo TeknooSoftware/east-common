@@ -52,7 +52,7 @@ trait AdminEndPointTrait
      * @param string $viewPath
      * @return self
      */
-    public function setViewPath(string $viewPath)
+    public function setViewPath(string $viewPath): self
     {
         $this->viewPath = $viewPath;
 
@@ -63,7 +63,7 @@ trait AdminEndPointTrait
      * @param LoaderInterface $loader
      * @return self
      */
-    public function setLoader(LoaderInterface $loader)
+    public function setLoader(LoaderInterface $loader): self
     {
         $this->loader = $loader;
 
@@ -74,7 +74,7 @@ trait AdminEndPointTrait
      * @param WriterInterface $writer
      * @return self
      */
-    public function setWriter(WriterInterface $writer)
+    public function setWriter(WriterInterface $writer): self
     {
         $this->writer = $writer;
 

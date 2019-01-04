@@ -44,7 +44,7 @@ class BlockType extends AbstractType
      * @param array                $options
      * @return self
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): self
     {
         $builder->add('name', TextType::class, ['required' => true]);
         $builder->add(
@@ -69,7 +69,7 @@ class BlockType extends AbstractType
      * @param OptionsResolver $resolver
      * @return $this
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): self
     {
         parent::configureOptions($resolver);
 

@@ -45,7 +45,7 @@ class UserType extends AbstractType
      * @param array                $options
      * @return self
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): self
     {
         $builder->add('firstName', TextType::class, ['required' => true]);
         $builder->add('lastName', TextType::class, ['required' => true]);
@@ -55,7 +55,7 @@ class UserType extends AbstractType
             [
                 'required' => true,
                 'multiple' => true,
-                "choices" => [
+                'choices' => [
                     'user' => 'ROLE_USER',
                     'admin' => 'ROLE_ADMIN'
                 ]

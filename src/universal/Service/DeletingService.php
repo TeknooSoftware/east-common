@@ -64,6 +64,7 @@ class DeletingService
 
     /**
      * @return \DateTime
+     * @throws \Exception
      */
     private function getCurrentDate(): \DateTime
     {
@@ -77,6 +78,7 @@ class DeletingService
     /**
      * @param DeletableInterface $object
      * @return DeletingService
+     * @throws \Exception
      */
     public function delete(DeletableInterface $object) : DeletingService
     {

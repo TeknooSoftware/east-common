@@ -100,6 +100,7 @@ class Content implements
 
     /**
      * Content constructor.
+     * @throws \Exception
      */
     public function __construct()
     {

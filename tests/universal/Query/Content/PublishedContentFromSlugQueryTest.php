@@ -125,7 +125,11 @@ class PublishedContentFromSlugQueryTest extends TestCase
         $repository->expects(self::once())
             ->method('findOneBy')
             ->willReturnCallback(function ($criteria, PromiseInterface $promise) use ($repository) {
-                $promise->success($this->createMock(Content::class));
+                $object = $this->createMock(Content::class);
+                $object->expects(self::any())->method('getPublishedAt')->willReturn(
+                    null
+                );
+                $promise->success($object);
 
                 return $repository;
             });

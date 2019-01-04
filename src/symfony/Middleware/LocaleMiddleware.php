@@ -36,7 +36,7 @@ use Teknoo\East\Foundation\Middleware\MiddlewareInterface;
  */
 class LocaleMiddleware implements MiddlewareInterface
 {
-    const MIDDLEWARE_PRIORITY = 7;
+    public const MIDDLEWARE_PRIORITY = 7;
 
     /**
      * @var TranslatorInterface

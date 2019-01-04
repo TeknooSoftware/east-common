@@ -40,7 +40,7 @@ trait PublishableTrait
     /**
      * @return \DateTimeInterface
      */
-    public function getPublishedAt()
+    public function getPublishedAt(): ?\DateTimeInterface
     {
         return $this->publishedAt;
     }

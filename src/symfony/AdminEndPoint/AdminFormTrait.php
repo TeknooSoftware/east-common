@@ -47,7 +47,7 @@ trait AdminFormTrait
      * @param string $formClass
      * @return self
      */
-    public function setFormClass(string $formClass)
+    public function setFormClass(string $formClass): self
     {
         if (!\class_exists($formClass)) {
             throw new \LogicException("Error the class $formClass is not available");
@@ -62,7 +62,7 @@ trait AdminFormTrait
      * @param FormFactory $formFactory
      * @return self
      */
-    public function setFormFactory(FormFactory $formFactory)
+    public function setFormFactory(FormFactory $formFactory): self
     {
         $this->formFactory = $formFactory;
 

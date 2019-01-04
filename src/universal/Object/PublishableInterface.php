@@ -31,5 +31,5 @@ interface PublishableInterface
     /**
      * @return \DateTimeInterface
      */
-    public function getPublishedAt();
+    public function getPublishedAt(): ?\DateTimeInterface;
 }

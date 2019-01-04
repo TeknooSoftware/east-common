@@ -31,12 +31,14 @@ use Teknoo\States\State\StateTrait;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @mixin Content
  */
 class Draft implements StateInterface
 {
     use StateTrait;
 
-    public function setPublishedAt()
+    public function setPublishedAt(): callable
     {
         return function (\DateTimeInterface $dateTime): Content {
             $this->publishedAt = $dateTime;

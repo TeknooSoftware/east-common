@@ -42,7 +42,7 @@ class AdminListEndPoint implements EndPointInterface
 
     private $itemsPerPage = 15;
 
-    private $defaultOrderColumn = null;
+    private $defaultOrderColumn;
 
     /**
      * @var string
@@ -62,7 +62,7 @@ class AdminListEndPoint implements EndPointInterface
                 $direction = $value;
                 break;
             default:
-                throw new \InvalidArgumentException("Invalid direction value %value");
+                throw new \InvalidArgumentException('Invalid direction value %value');
         }
 
         $this->defaultOrderColumn = $column;
@@ -87,7 +87,7 @@ class AdminListEndPoint implements EndPointInterface
                     $direction = $value;
                     break;
                 default:
-                    throw new \InvalidArgumentException("Invalid direction value %value");
+                    throw new \InvalidArgumentException('Invalid direction value %value');
             }
         }
 

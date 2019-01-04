@@ -36,6 +36,7 @@ class ContentWriter implements WriterInterface
 
     /**
      * {@inheritdoc}
+     * @throws \Throwable
      */
     public function save($object, PromiseInterface $promise = null): WriterInterface
     {

@@ -50,7 +50,7 @@ class AdminNewEndPoint implements EndPointInterface
      * @param string $objectClass
      * @return self
      */
-    public function setObjectClass(string $objectClass)
+    public function setObjectClass(string $objectClass): self
     {
         if (!\class_exists($objectClass)) {
             throw new \LogicException("Error the object class $objectClass is not available");

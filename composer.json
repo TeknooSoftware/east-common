@@ -24,6 +24,7 @@
     },
     "require": {
         "php": ">=7.1",
+        "ext-json": "*",
         "doctrine/common": "~2.8",
         "doctrine/annotations": "~1.5",
         "gedmo/doctrine-extensions": "~2.4",

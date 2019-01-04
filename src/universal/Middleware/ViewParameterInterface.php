@@ -30,7 +30,7 @@ use Teknoo\East\Foundation\Middleware\MiddlewareInterface;
  */
 interface ViewParameterInterface extends MiddlewareInterface
 {
-    const REQUEST_PARAMETER_KEY = 'view.parameters';
+    public const REQUEST_PARAMETER_KEY = 'view.parameters';
 
-    const MIDDLEWARE_PRIORITY = 7;
+    public const MIDDLEWARE_PRIORITY = 7;
 }

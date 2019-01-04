@@ -67,7 +67,8 @@ class PublishedContentFromSlugQuery implements QueryInterface, ImmutableInterfac
     ): QueryInterface {
         $fetchingPromise = new Promise(
             function ($object, PromiseInterface $next) {
-                if ($object instanceof PublishableInterface && $object->getPublishedAt() instanceof \DateTime) {
+                if ($object instanceof PublishableInterface
+                    && $object->getPublishedAt() instanceof \DateTimeInterface) {
                     $next->success($object);
                 } else {
                     $next->fail(new \DomainException('Object not found'));

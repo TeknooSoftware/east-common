@@ -51,12 +51,12 @@ class PaginationQuery implements QueryInterface, ImmutableInterface
     /**
      * @var int
      */
-    private $limit = null;
+    private $limit;
 
     /**
      * @var int
      */
-    private $offset = null;
+    private $offset;
 
     /**
      * PaginationQuery constructor.

@@ -54,7 +54,7 @@ class UserProvider implements UserProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function loadUserByUsername($username)
+    public function loadUserByUsername($username): ?UserInterface
     {
         $loadedUser = null;
         $this->loader->query(
@@ -70,7 +70,7 @@ class UserProvider implements UserProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function refreshUser(UserInterface $user)
+    public function refreshUser(UserInterface $user): ?UserInterface
     {
         return $this->loadUserByUsername($user->getUsername());
     }
@@ -79,7 +79,7 @@ class UserProvider implements UserProviderInterface
      * {@inheritdoc}
      * @throws \ReflectionException
      */
-    public function supportsClass($class)
+    public function supportsClass($class): bool
     {
         $reflection = new \ReflectionClass($class);
         return $class === User::class || $reflection->isSubclassOf(User::class);

@@ -64,6 +64,7 @@ class AdminEditEndPoint implements EndPointInterface
 
     /**
      * @return \DateTimeImmutable
+     * @throws \Exception
      */
     private function getCurrentDateTime(): \DateTimeImmutable
     {

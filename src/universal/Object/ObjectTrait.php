@@ -62,7 +62,7 @@ trait ObjectTrait
      * @param string $id
      * @return $this
      */
-    public function setId(string $id)
+    public function setId(string $id): self
     {
         $this->id = $id;
 
@@ -95,9 +95,9 @@ trait ObjectTrait
 
     /**
      * @param \DateTimeInterface $deletedAt
-     * @return self
+     * @return DeletableInterface
      */
-    public function setDeletedAt(\DateTimeInterface $deletedAt)
+    public function setDeletedAt(\DateTimeInterface $deletedAt): DeletableInterface
     {
         $this->deletedAt = $deletedAt;
 

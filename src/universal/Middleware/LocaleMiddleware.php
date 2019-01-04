@@ -38,8 +38,8 @@ use Teknoo\East\Foundation\Session\SessionInterface;
  */
 class LocaleMiddleware implements MiddlewareInterface
 {
-    const SESSION_KEY = 'locale';
-    const MIDDLEWARE_PRIORITY = 6;
+    public const SESSION_KEY = 'locale';
+    public const MIDDLEWARE_PRIORITY = 6;
 
     /**
      * @var TranslatableListener

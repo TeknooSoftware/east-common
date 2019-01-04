@@ -61,7 +61,7 @@ class UserWriter implements WriterInterface
     /**
      * @param BaseUser $user
      */
-    private function encodePassword(BaseUser $user)
+    private function encodePassword(BaseUser $user): void
     {
         if ($user->hasUpdatedPassword()) {
             $encoder = $this->encoderFactory->getEncoder(new User($user));

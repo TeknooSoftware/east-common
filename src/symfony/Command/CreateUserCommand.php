@@ -65,7 +65,7 @@ class CreateUserCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName('teknoo:website:create-admin')
             ->setDescription('Creates a new admin user in the website package')

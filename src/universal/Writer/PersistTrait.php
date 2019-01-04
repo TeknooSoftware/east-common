@@ -53,7 +53,7 @@ trait PersistTrait
      * @return self
      * @throws \Throwable
      */
-    private function persist($object, PromiseInterface $promise = null)
+    private function persist($object, PromiseInterface $promise = null): self
     {
         try {
             $this->manager->persist($object);

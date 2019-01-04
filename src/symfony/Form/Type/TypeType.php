@@ -42,7 +42,7 @@ class TypeType extends AbstractType
      * @param array                $options
      * @return self
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): self
     {
         $builder->add('name', TextType::class, ['required' => true]);
         $builder->add('template', TextType::class, ['required' => true]);

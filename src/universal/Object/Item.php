@@ -93,6 +93,7 @@ class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, Trans
 
     /**
      * Item constructor.
+     * @throws \Exception
      */
     public function __construct()
     {

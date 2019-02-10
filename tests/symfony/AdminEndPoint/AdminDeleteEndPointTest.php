@@ -55,7 +55,7 @@ class AdminDeleteEndPointTest extends \PHPUnit\Framework\TestCase
     private $router;
 
     /**
-     * @return DeletingService|\PHPUnit_Framework_MockObject_MockObject
+     * @return DeletingService|\PHPUnit\Framework\MockObject\MockObject
      */
     public function getDeletingService(): DeletingService
     {
@@ -67,7 +67,7 @@ class AdminDeleteEndPointTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @return LoaderInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @return LoaderInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     public function getLoaderService(): LoaderInterface
     {
@@ -79,7 +79,7 @@ class AdminDeleteEndPointTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @return RouterInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @return RouterInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     public function getRouter(): RouterInterface
     {

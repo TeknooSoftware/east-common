@@ -50,7 +50,7 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
     private $contentLoader;
 
     /**
-     * @return ContentLoader|\PHPUnit_Framework_MockObject_MockObject
+     * @return ContentLoader|\PHPUnit\Framework\MockObject\MockObject
      */
     public function getContentLoader(): ContentLoader
     {

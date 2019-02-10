@@ -44,7 +44,7 @@ class MediaLoaderTest extends \PHPUnit\Framework\TestCase
     private $repository;
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|RepositoryInterface
+     * @return \PHPUnit\Framework\MockObject\MockObject|RepositoryInterface
      */
     public function getRepositoryMock(): RepositoryInterface
     {

@@ -40,7 +40,7 @@ class StaticEndPointTest extends StaticEndPointTraitTest
     protected $templating;
 
     /**
-     * @return EngineInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @return EngineInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     public function getTemplating(): EngineInterface
     {

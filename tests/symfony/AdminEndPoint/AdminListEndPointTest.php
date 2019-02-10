@@ -50,7 +50,7 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
     private $twig;
 
     /**
-     * @return LoaderInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @return LoaderInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     public function getLoaderService(): LoaderInterface
     {
@@ -62,7 +62,7 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @return EngineInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @return EngineInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     public function getTwig(): EngineInterface
     {

@@ -39,7 +39,7 @@ class ManagerTest extends TestCase
     private $objectManager;
 
     /**
-     * @return ObjectManager|\PHPUnit_Framework_MockObject_MockObject
+     * @return ObjectManager|\PHPUnit\Framework\MockObject\MockObject
      */
     protected function getDoctrineObjectManagerMock(): ObjectManager
     {

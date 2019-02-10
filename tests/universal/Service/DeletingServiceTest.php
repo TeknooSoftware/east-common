@@ -39,7 +39,7 @@ class DeletingServiceTest extends \PHPUnit\Framework\TestCase
     private $writer;
 
     /**
-     * @return WriterInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @return WriterInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     public function getWriterMock(): WriterInterface
     {

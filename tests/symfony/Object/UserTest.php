@@ -39,7 +39,7 @@ class UserTest extends \PHPUnit\Framework\TestCase
     private $user;
 
     /**
-     * @return BaseUser|\PHPUnit_Framework_MockObject_MockObject
+     * @return BaseUser|\PHPUnit\Framework\MockObject\MockObject
      */
     public function getUser(): BaseUser
     {

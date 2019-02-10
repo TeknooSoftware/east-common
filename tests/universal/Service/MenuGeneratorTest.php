@@ -41,7 +41,7 @@ class MenuGeneratorTest extends \PHPUnit\Framework\TestCase
     private $itemLoader;
 
     /**
-     * @return ItemLoader|\PHPUnit_Framework_MockObject_MockObject
+     * @return ItemLoader|\PHPUnit\Framework\MockObject\MockObject
      */
     public function getItemLoader(): ItemLoader
     {

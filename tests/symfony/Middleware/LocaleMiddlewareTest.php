@@ -41,7 +41,7 @@ class LocaleMiddlewareTest extends \PHPUnit\Framework\TestCase
     private $translator;
 
     /**
-     * @return TranslatorInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @return TranslatorInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     public function getTranslator(): TranslatorInterface
     {

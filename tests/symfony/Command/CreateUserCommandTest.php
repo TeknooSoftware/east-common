@@ -49,7 +49,7 @@ class CreateUserCommandTest extends TestCase
     private $encoderFactory;
 
     /**
-     * @return UserWriter|\PHPUnit_Framework_MockObject_MockObject
+     * @return UserWriter|\PHPUnit\Framework\MockObject\MockObject
      */
     public function getWriter(): UserWriter
     {
@@ -61,7 +61,7 @@ class CreateUserCommandTest extends TestCase
     }
 
     /**
-     * @return EncoderFactoryInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @return EncoderFactoryInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     public function getEncoderFactory(): EncoderFactoryInterface
     {

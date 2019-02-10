@@ -45,7 +45,7 @@ class ContentEndPointTest extends ContentEndPointTraitTest
     protected $twig;
 
     /**
-     * @return EngineInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @return EngineInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     public function getTemplating(): EngineInterface
     {

@@ -41,7 +41,7 @@ trait RepositoryTestTrait
     private $objectRepository;
 
     /**
-     * @return ObjectRepository|\PHPUnit_Framework_MockObject_MockObject
+     * @return ObjectRepository|\PHPUnit\Framework\MockObject\MockObject
      */
     protected function getDoctrineObjectRepositoryMock(): ObjectRepository
     {

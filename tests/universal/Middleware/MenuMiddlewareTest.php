@@ -42,7 +42,7 @@ class MenuMiddlewareTest extends \PHPUnit\Framework\TestCase
     private $menuGenerator;
 
     /**
-     * @return MenuGenerator|\PHPUnit_Framework_MockObject_MockObject
+     * @return MenuGenerator|\PHPUnit\Framework\MockObject\MockObject
      */
     public function getMenuGenerator()
     {

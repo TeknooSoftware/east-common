@@ -42,7 +42,7 @@ class UserProviderTest extends \PHPUnit\Framework\TestCase
     private $loader;
 
     /**
-     * @return UserLoader|\PHPUnit_Framework_MockObject_MockObject
+     * @return UserLoader|\PHPUnit\Framework\MockObject\MockObject
      */
     public function getLoader(): UserLoader
     {

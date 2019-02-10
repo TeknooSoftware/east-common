@@ -39,7 +39,7 @@ trait PersistTestTrait
     private $manager;
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|ManagerInterface
+     * @return \PHPUnit\Framework\MockObject\MockObject|ManagerInterface
      */
     public function getObjectManager(): ManagerInterface
     {

@@ -44,7 +44,7 @@ class LocaleMiddlewareTest extends \PHPUnit\Framework\TestCase
     private $listenerTranslatable;
 
     /**
-     * @return TranslatableListener|\PHPUnit_Framework_MockObject_MockObject
+     * @return TranslatableListener|\PHPUnit\Framework\MockObject\MockObject
      */
     public function getListenerTranslatable(): TranslatableListener
     {

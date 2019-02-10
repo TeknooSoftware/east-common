@@ -34,7 +34,7 @@ use Teknoo\East\Website\Query\QueryInterface;
 trait LoaderTestTrait
 {
     /**
-     * @return RepositoryInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @return RepositoryInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     abstract public function getRepositoryMock(): RepositoryInterface;
 
@@ -63,7 +63,7 @@ trait LoaderTestTrait
     public function testLoadWithError()
     {
         /**
-         * @var \PHPUnit_Framework_MockObject_MockObject $promiseMock
+         * @var \PHPUnit\Framework\MockObject\MockObject $promiseMock
          *
          */
         $promiseMock = $this->createMock(Promise::class);
@@ -86,7 +86,7 @@ trait LoaderTestTrait
     public function testLoad()
     {
         /**
-         * @var \PHPUnit_Framework_MockObject_MockObject $promiseMock
+         * @var \PHPUnit\Framework\MockObject\MockObject $promiseMock
          */
         $promiseMock = $this->createMock(Promise::class);
         $promiseMock->expects(self::never())->method('success');
@@ -128,7 +128,7 @@ trait LoaderTestTrait
         $loader = $this->buildLoader();
 
         /**
-         * @var \PHPUnit_Framework_MockObject_MockObject $queryMock
+         * @var \PHPUnit\Framework\MockObject\MockObject $queryMock
          */
         $queryMock = $this->createMock(QueryInterface::class);
         $queryMock->expects(self::once())

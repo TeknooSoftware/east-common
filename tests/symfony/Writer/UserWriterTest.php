@@ -47,7 +47,7 @@ class UserWriterTest extends \PHPUnit\Framework\TestCase
     private $encoderFactory;
 
     /**
-     * @return UniversalWriter|\PHPUnit_Framework_MockObject_MockObject
+     * @return UniversalWriter|\PHPUnit\Framework\MockObject\MockObject
      */
     public function getUniversalWriter(): UniversalWriter
     {
@@ -59,7 +59,7 @@ class UserWriterTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @return EncoderFactoryInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @return EncoderFactoryInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     public function getEncoderFactory(): EncoderFactoryInterface
     {

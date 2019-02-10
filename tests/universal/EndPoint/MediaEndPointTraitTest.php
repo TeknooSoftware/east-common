@@ -44,7 +44,7 @@ class MediaEndPointTraitTest extends \PHPUnit\Framework\TestCase
     private $mediaLoader;
 
     /**
-     * @return MediaLoader|\PHPUnit_Framework_MockObject_MockObject
+     * @return MediaLoader|\PHPUnit\Framework\MockObject\MockObject
      */
     public function getMediaLoader(): MediaLoader
     {

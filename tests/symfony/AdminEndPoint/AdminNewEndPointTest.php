@@ -64,7 +64,7 @@ class AdminNewEndPointTest extends \PHPUnit\Framework\TestCase
     private $formFactory;
 
     /**
-     * @return WriterInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @return WriterInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     public function getWriterService(): WriterInterface
     {
@@ -76,7 +76,7 @@ class AdminNewEndPointTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @return EngineInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @return EngineInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     public function getTwig(): EngineInterface
     {
@@ -88,7 +88,7 @@ class AdminNewEndPointTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @return RouterInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @return RouterInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     public function getRouter(): RouterInterface
     {
@@ -100,7 +100,7 @@ class AdminNewEndPointTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @return FormFactory|\PHPUnit_Framework_MockObject_MockObject
+     * @return FormFactory|\PHPUnit\Framework\MockObject\MockObject
      */
     public function getFormFactory(): FormFactory
     {

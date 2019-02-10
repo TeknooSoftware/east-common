@@ -125,43 +125,33 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         $this->generateTestForRepository(User::class, UserRepositoryInterface::class);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testItemRepositoryWithUnsupportedRepository()
     {
+        $this->expectException(\RuntimeException::class);
         $this->generateTestForRepositoryWithUnsupportedRepository(Item::class, ItemRepositoryInterface::class);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testContentRepositoryWithUnsupportedRepository()
     {
+        $this->expectException(\RuntimeException::class);
         $this->generateTestForRepositoryWithUnsupportedRepository(Content::class, ContentRepositoryInterface::class);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testMediaRepositoryWithUnsupportedRepository()
     {
+        $this->expectException(\RuntimeException::class);
         $this->generateTestForRepositoryWithUnsupportedRepository(Media::class, MediaRepositoryInterface::class);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testTypeRepositoryWithUnsupportedRepository()
     {
+        $this->expectException(\RuntimeException::class);
         $this->generateTestForRepositoryWithUnsupportedRepository(Type::class, TypeRepositoryInterface::class);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testUserRepositoryWithUnsupportedRepository()
     {
+        $this->expectException(\RuntimeException::class);
         $this->generateTestForRepositoryWithUnsupportedRepository(User::class, UserRepositoryInterface::class);
     }
 }

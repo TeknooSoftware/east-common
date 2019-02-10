@@ -60,7 +60,8 @@ class ContentTypeTest extends \PHPUnit\Framework\TestCase
                 $type->setBlocks([
                     new Block('foo', 'text'),
                     new Block('foo2', 'textarea'),
-                    new Block('foo3', 'numeric')
+                    new Block('foo3', 'numeric'),
+                    new Block('foo3', 'image')
                 ]);
                 $content->setType($type);
                 $content->setParts(['foo' => 'bar']);

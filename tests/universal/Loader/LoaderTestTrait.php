@@ -48,19 +48,15 @@ trait LoaderTestTrait
      */
     abstract public function getEntity();
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testLoadBadId()
     {
+        $this->expectException(\Throwable::class);
         $this->buildLoader()->load(new \stdClass(), new Promise());
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testLoadBadPromise()
     {
+        $this->expectException(\Throwable::class);
         $this->buildLoader()->load('fooBar', new \stdClass());
     }
 
@@ -107,26 +103,22 @@ trait LoaderTestTrait
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testQueryBadQuery()
     {
+        $this->expectException(\Throwable::class);
         $this->buildLoader()->query(new \stdClass(), new Promise());
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testQueryBadPromise()
     {
+        $this->expectException(\Throwable::class);
         $this->buildLoader()->query($this->createMock(QueryInterface::class), new \stdClass());
     }
 
     public function testQuery()
     {
         /**
-         * @var \PHPUnit_Framework_MockObject_MockObject $promiseMock
+         * @var \PHPUnit\Framework\MockObject\MockObject $promiseMock
          *
          */
         $promiseMock = $this->createMock(Promise::class);

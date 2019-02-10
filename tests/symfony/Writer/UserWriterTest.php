@@ -78,11 +78,9 @@ class UserWriterTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnSaveWithBadPromise()
     {
+        $this->expectException(\TypeError::class);
         $this->buildWriter()->save(new \stdClass(), new \stdClass());
     }
 

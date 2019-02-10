@@ -57,19 +57,15 @@ trait RepositoryTestTrait
      */
     abstract public function buildRepository(): RepositoryInterface;
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testFindBadId()
     {
+        $this->expectException(\TypeError::class);
         $this->buildRepository()->find(new \stdClass(), $this->createMock(PromiseInterface::class));
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testFindBadPromise()
     {
+        $this->expectException(\TypeError::class);
         $this->buildRepository()->find('abc', new \stdClass());
     }
 
@@ -112,11 +108,9 @@ trait RepositoryTestTrait
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testFindAllBadPromise()
     {
+        $this->expectException(\TypeError::class);
         $this->buildRepository()->findAll(new \stdClass());
     }
 
@@ -138,19 +132,15 @@ trait RepositoryTestTrait
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testFindByBadCriteria()
     {
+        $this->expectException(\TypeError::class);
         $this->buildRepository()->findBy(new \stdClass(), $this->createMock(PromiseInterface::class));
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testFindByBadPromise()
     {
+        $this->expectException(\TypeError::class);
         $this->buildRepository()->findBy(['foo' => 'bar'], new \stdClass());
     }
 
@@ -205,11 +195,9 @@ trait RepositoryTestTrait
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testFindByBadOrder()
     {
+        $this->expectException(\TypeError::class);
         $this->buildRepository()->findBy(
             ['foo' => 'bar'],
             $this->createMock(PromiseInterface::class),
@@ -217,19 +205,15 @@ trait RepositoryTestTrait
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testFindOneByBadCriteria()
     {
+        $this->expectException(\TypeError::class);
         $this->buildRepository()->findOneBy(new \stdClass(), $this->createMock(PromiseInterface::class));
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testFindOneByBadPromise()
     {
+        $this->expectException(\TypeError::class);
         $this->buildRepository()->findOneBy(['foo' => 'bar'], new \stdClass());
     }
 

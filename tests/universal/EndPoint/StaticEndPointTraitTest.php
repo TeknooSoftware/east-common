@@ -56,19 +56,15 @@ class StaticEndPointTraitTest extends \PHPUnit\Framework\TestCase
         };
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testInvokeBadClient()
     {
+        $this->expectException(\TypeError::class);
         $this->buildEndPoint()(new \stdClass(), 'fooBar');
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testInvokeBadTemplate()
     {
+        $this->expectException(\TypeError::class);
         $this->buildEndPoint()(
             $this->createMock(ClientInterface::class),
             new \stdClass()

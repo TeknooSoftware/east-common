@@ -75,11 +75,9 @@ class ItemTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetNameExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setName(new \stdClass());
     }
 
@@ -105,11 +103,9 @@ class ItemTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetSlugExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setSlug(new \stdClass());
     }
 
@@ -145,11 +141,9 @@ class ItemTest extends \PHPUnit\Framework\TestCase
         self::assertEmpty($Object->getContent());
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetContentExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setContent(new \stdClass());
     }
 
@@ -175,11 +169,9 @@ class ItemTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetLocationExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setLocation(new \stdClass());
     }
 
@@ -245,11 +237,9 @@ class ItemTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetLocaleFieldExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setLocaleField(new \stdClass());
     }
 
@@ -275,11 +265,9 @@ class ItemTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetPositionExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setPosition(new \stdClass());
     }
     
@@ -315,11 +303,9 @@ class ItemTest extends \PHPUnit\Framework\TestCase
         self::assertEmpty($Object->getParent());
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetParentExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setParent(new \stdClass());
     }
 
@@ -345,16 +331,14 @@ class ItemTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetChildrenExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setChildren(new \stdClass());
     }
 
     public function testStatesListDeclaration()
     {
-        self::assertInternalType('array', Item::statesListDeclaration());
+        self::assertIsArray(Item::statesListDeclaration());
     }
 }

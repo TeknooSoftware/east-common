@@ -64,11 +64,9 @@ class LocaleMiddlewareTest extends \PHPUnit\Framework\TestCase
         return new LocaleMiddleware($this->getListenerTranslatable(), $locale);
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExecuteBadClient()
     {
+        $this->expectException(\TypeError::class);
         $this->buildMiddleware()->execute(
             new \stdClass(),
             $this->createMock(ServerRequestInterface::class),
@@ -76,11 +74,9 @@ class LocaleMiddlewareTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExecuteBadRequest()
     {
+        $this->expectException(\TypeError::class);
         $this->buildMiddleware()->execute(
             $this->createMock(ClientInterface::class),
             new \stdClass(),
@@ -88,11 +84,9 @@ class LocaleMiddlewareTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExecuteBadManager()
     {
+        $this->expectException(\TypeError::class);
         $this->buildMiddleware()->execute(
             $this->createMock(ClientInterface::class),
             $this->createMock(ServerRequestInterface::class),

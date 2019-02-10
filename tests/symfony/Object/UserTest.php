@@ -55,11 +55,9 @@ class UserTest extends \PHPUnit\Framework\TestCase
         return new User($this->getUser());
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionWithBadUser()
     {
+        $this->expectException(\TypeError::class);
         new User(new \stdClass());
     }
 
@@ -128,11 +126,9 @@ class UserTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnIsEqualToWithBadUser()
     {
+        $this->expectException(\TypeError::class);
         $this->buildObject()->isEqualTo(new \stdClass());
     }
 

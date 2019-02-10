@@ -74,11 +74,9 @@ class UserTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetFirstNameExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setFirstName(new \stdClass());
     }
 
@@ -104,11 +102,9 @@ class UserTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetLastNameExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setLastName(new \stdClass());
     }
 
@@ -142,11 +138,9 @@ class UserTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetEmailExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setEmail(new \stdClass());
     }
 
@@ -271,11 +265,9 @@ class UserTest extends \PHPUnit\Framework\TestCase
         self::assertTrue($object->hasUpdatedPassword());
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetPasswordExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setPassword(new \stdClass());
     }
 
@@ -301,11 +293,9 @@ class UserTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetSaltExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setSalt(new \stdClass());
     }
     
@@ -331,11 +321,9 @@ class UserTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetRolesExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setRoles(new \stdClass());
     }
 }

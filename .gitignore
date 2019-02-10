@@ -14,3 +14,4 @@
 /vendor/
 /web/bundles/
 composer.lock
+/.phpunit.result.cache

@@ -124,11 +124,9 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
             ->setViewPath('foo:bar.html.twig');
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnSetCurrentDateWithBadInstance()
     {
+        $this->expectException(\TypeError::class);
         $this->buildEndPoint()->setCurrentDate(new \stdClass());
     }
 
@@ -150,11 +148,9 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnInvokeWithBadRequest()
     {
+        $this->expectException(\TypeError::class);
         ($this->buildEndPoint())(
             new \stdClass(),
             $this->createMock(ClientInterface::class),
@@ -164,11 +160,9 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnInvokeWithBadClient()
     {
+        $this->expectException(\TypeError::class);
         ($this->buildEndPoint())(
             $this->createMock(ServerRequestInterface::class),
             new \stdClass(),
@@ -178,11 +172,9 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnInvokeWithBadId()
     {
+        $this->expectException(\TypeError::class);
         ($this->buildEndPoint())(
             $this->createMock(ServerRequestInterface::class),
             $this->createMock(ClientInterface::class),
@@ -192,11 +184,9 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnInvokeWithBadTranslatable()
     {
+        $this->expectException(\TypeError::class);
         ($this->buildEndPoint())(
             $this->createMock(ServerRequestInterface::class),
             $this->createMock(ClientInterface::class),
@@ -206,11 +196,9 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnInvokeWithBadRoute()
     {
+        $this->expectException(\TypeError::class);
         ($this->buildEndPoint())(
             $this->createMock(ServerRequestInterface::class),
             $this->createMock(ClientInterface::class),
@@ -220,11 +208,9 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \LogicException
-     */
     public function testExceptionOnSetFormClassWithBadName()
     {
+        $this->expectException(\LogicException::class);
         (new AdminEditEndPoint())->setFormClass('foo');
     }
 

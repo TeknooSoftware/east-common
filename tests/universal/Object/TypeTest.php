@@ -75,11 +75,9 @@ class TypeTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetNameExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setName(new \stdClass());
     }
 
@@ -106,11 +104,9 @@ class TypeTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetTemplateExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setTemplate(new \stdClass());
     }
 
@@ -137,11 +133,9 @@ class TypeTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetBlocksExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setBlocks(new \stdClass());
     }
 }

@@ -39,11 +39,9 @@ trait QueryTestTrait
      */
     abstract public function buildQuery(): QueryInterface;
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExecuteBadLoader()
     {
+        $this->expectException(\TypeError::class);
         $this->buildQuery()->execute(
             new \stdClass(),
             $this->createMock(RepositoryInterface::class),
@@ -51,11 +49,9 @@ trait QueryTestTrait
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExecuteBadRepository()
     {
+        $this->expectException(\TypeError::class);
         $this->buildQuery()->execute(
             $this->createMock(LoaderInterface::class),
             new \stdClass(),
@@ -63,11 +59,9 @@ trait QueryTestTrait
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExecuteBadPromise()
     {
+        $this->expectException(\TypeError::class);
         $this->buildQuery()->execute(
             $this->createMock(LoaderInterface::class),
             $this->createMock(RepositoryInterface::class),

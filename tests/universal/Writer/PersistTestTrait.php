@@ -129,11 +129,9 @@ trait PersistTestTrait
         self::assertInstanceOf(WriterInterface::class, $this->buildWriter()->save($object, $promise));
     }
 
-    /**
-     * @expectedException \Exception
-     */
     public function testSaveWithoutPromiseFailure()
     {
+        $this->expectException(\Exception::class);
         $object = $this->getObject();
 
         $this->getObjectManager()

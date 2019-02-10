@@ -81,11 +81,9 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
             ->setViewPath('foo:bar.html.twig');
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnInvokeWithBadRequest()
     {
+        $this->expectException(\TypeError::class);
         ($this->buildEndPoint())(
             new \stdClass(),
             $this->createMock(ClientInterface::class),
@@ -94,11 +92,9 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnInvokeWithBadClient()
     {
+        $this->expectException(\TypeError::class);
         ($this->buildEndPoint())(
             $this->createMock(ServerRequestInterface::class),
             new \stdClass(),
@@ -107,11 +103,9 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnInvokeWithBadId()
     {
+        $this->expectException(\TypeError::class);
         ($this->buildEndPoint())(
             $this->createMock(ServerRequestInterface::class),
             $this->createMock(ClientInterface::class),
@@ -120,11 +114,9 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnInvokeWithBadRoute()
     {
+        $this->expectException(\TypeError::class);
         ($this->buildEndPoint())(
             $this->createMock(ServerRequestInterface::class),
             $this->createMock(ClientInterface::class),
@@ -413,27 +405,21 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testSetOrderWithBadColumn()
     {
+        $this->expectException(\TypeError::class);
         $this->buildEndPoint()->setOrder(new \stdClass(), 'foo');
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testSetOrderWithBadDirectionType()
     {
+        $this->expectException(\TypeError::class);
         $this->buildEndPoint()->setOrder('foo', new \stdClass());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testSetOrderWithBadDirectionValue()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $this->buildEndPoint()->setOrder('foo', 'bar');
     }
 }

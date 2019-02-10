@@ -93,19 +93,15 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
         };
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testInvokeBadClient()
     {
+        $this->expectException(\TypeError::class);
         $this->buildEndPoint()(new \stdClass(), $this->createMock(ServerRequestInterface::class));
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testInvokeBadServerRequest()
     {
+        $this->expectException(\TypeError::class);
         $this->buildEndPoint()(
             $this->createMock(ClientInterface::class),
             new \stdClass()

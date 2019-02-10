@@ -61,11 +61,9 @@ trait PublishableTestTrait
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetPublishedAtExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setPublishedAt(new \stdClass());
     }
 }

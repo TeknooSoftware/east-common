@@ -72,11 +72,9 @@ class BlockTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetNameExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setName(new \stdClass());
     }
 
@@ -102,11 +100,9 @@ class BlockTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetTypeExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setType(new \stdClass());
     }
 }

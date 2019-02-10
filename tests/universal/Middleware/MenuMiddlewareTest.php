@@ -58,11 +58,9 @@ class MenuMiddlewareTest extends \PHPUnit\Framework\TestCase
         return new MenuMiddleware($this->getMenuGenerator());
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExecuteBadClient()
     {
+        $this->expectException(\TypeError::class);
         $this->buildMiddleware()->execute(
             new \stdClass(),
             $this->createMock(ServerRequestInterface::class),
@@ -70,11 +68,9 @@ class MenuMiddlewareTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExecuteBadRequest()
     {
+        $this->expectException(\TypeError::class);
         $this->buildMiddleware()->execute(
             $this->createMock(ClientInterface::class),
             new \stdClass(),
@@ -82,11 +78,9 @@ class MenuMiddlewareTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExecuteBadManager()
     {
+        $this->expectException(\TypeError::class);
         $this->buildMiddleware()->execute(
             $this->createMock(ClientInterface::class),
             $this->createMock(ServerRequestInterface::class),

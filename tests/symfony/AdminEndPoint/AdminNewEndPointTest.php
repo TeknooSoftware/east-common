@@ -124,11 +124,9 @@ class AdminNewEndPointTest extends \PHPUnit\Framework\TestCase
         ;
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnInvokeWithBadRequest()
     {
+        $this->expectException(\TypeError::class);
         ($this->buildEndPoint())(
             new \stdClass(),
             $this->createMock(ClientInterface::class),
@@ -138,11 +136,9 @@ class AdminNewEndPointTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnInvokeWithBadClient()
     {
+        $this->expectException(\TypeError::class);
         ($this->buildEndPoint())(
             $this->createMock(ServerRequestInterface::class),
             new \stdClass(),
@@ -152,11 +148,9 @@ class AdminNewEndPointTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnInvokeWithBadId()
     {
+        $this->expectException(\TypeError::class);
         ($this->buildEndPoint())(
             $this->createMock(ServerRequestInterface::class),
             $this->createMock(ClientInterface::class),
@@ -166,11 +160,9 @@ class AdminNewEndPointTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnInvokeWithBadTranslatable()
     {
+        $this->expectException(\TypeError::class);
         ($this->buildEndPoint())(
             $this->createMock(ServerRequestInterface::class),
             $this->createMock(ClientInterface::class),
@@ -180,11 +172,9 @@ class AdminNewEndPointTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnInvokeWithBadRoute()
     {
+        $this->expectException(\TypeError::class);
         ($this->buildEndPoint())(
             $this->createMock(ServerRequestInterface::class),
             $this->createMock(ClientInterface::class),
@@ -194,19 +184,15 @@ class AdminNewEndPointTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \LogicException
-     */
     public function testExceptionOnSetObjectClassWithBadName()
     {
+        $this->expectException(\LogicException::class);
         (new AdminNewEndPoint())->setObjectClass('foo');
     }
 
-    /**
-     * @expectedException \LogicException
-     */
     public function testExceptionOnSetFormClassWithBadName()
     {
+        $this->expectException(\LogicException::class);
         (new AdminNewEndPoint())->setFormClass('foo');
     }
 

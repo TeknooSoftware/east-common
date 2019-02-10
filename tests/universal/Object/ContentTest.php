@@ -78,11 +78,9 @@ class ContentTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetPartsExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setContent(new \stdClass());
     }
 
@@ -117,11 +115,9 @@ class ContentTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetDescriptionExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setDescription(new \stdClass());
     }
 
@@ -147,11 +143,9 @@ class ContentTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetSlugExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setSlug(new \stdClass());
     }
 
@@ -177,11 +171,9 @@ class ContentTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetSubtitleExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setSubtitle(new \stdClass());
     }
 
@@ -215,11 +207,9 @@ class ContentTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetTitleExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setTitle(new \stdClass());
     }
 
@@ -248,11 +238,9 @@ class ContentTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetAuthorExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setAuthor(new \stdClass());
     }
 
@@ -281,11 +269,9 @@ class ContentTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetTypeExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setType(new \stdClass());
     }
 
@@ -311,17 +297,15 @@ class ContentTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetTagsExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setTags(new \stdClass());
     }
 
     public function testStatesListDeclaration()
     {
-        self::assertInternalType('array', Content::statesListDeclaration());
+        self::assertIsArray(Content::statesListDeclaration());
     }
 
     public function testGetLocaleField()
@@ -368,11 +352,9 @@ class ContentTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetLocaleFieldExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setLocaleField(new \stdClass());
     }
 }

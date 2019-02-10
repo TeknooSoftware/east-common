@@ -101,19 +101,15 @@ class AdminDeleteEndPointTest extends \PHPUnit\Framework\TestCase
             ->setRouter($this->getRouter());
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnSetDeletingServiceWithBadInstance()
     {
+        $this->expectException(\TypeError::class);
         (new AdminDeleteEndPoint)->setDeletingService(new \stdClass());
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnInvokeWithBadRequest()
     {
+        $this->expectException(\TypeError::class);
         ($this->buildEndPoint())(
             new \stdClass(),
             $this->createMock(ClientInterface::class),
@@ -122,11 +118,9 @@ class AdminDeleteEndPointTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnInvokeWithBadClient()
     {
+        $this->expectException(\TypeError::class);
         ($this->buildEndPoint())(
             $this->createMock(ServerRequestInterface::class),
             new \stdClass(),
@@ -135,11 +129,9 @@ class AdminDeleteEndPointTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnInvokeWithBadId()
     {
+        $this->expectException(\TypeError::class);
         ($this->buildEndPoint())(
             $this->createMock(ServerRequestInterface::class),
             $this->createMock(ClientInterface::class),
@@ -148,11 +140,9 @@ class AdminDeleteEndPointTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnInvokeWithBadRoute()
     {
+        $this->expectException(\TypeError::class);
         ($this->buildEndPoint())(
             $this->createMock(ServerRequestInterface::class),
             $this->createMock(ClientInterface::class),

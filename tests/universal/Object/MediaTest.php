@@ -67,11 +67,9 @@ class MediaTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetNameExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setName(new \stdClass());
     }
     
@@ -97,11 +95,9 @@ class MediaTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetLengthExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setLength(new \stdClass());
     }
 
@@ -127,11 +123,9 @@ class MediaTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetMimeTypeExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setMimeType(new \stdClass());
     }
 
@@ -157,11 +151,9 @@ class MediaTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetAlternativeExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setAlternative(new \stdClass());
     }
 
@@ -209,20 +201,16 @@ class MediaTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testGetResourceNotAvailable()
     {
+        $this->expectException(\RuntimeException::class);
         $this->generateObjectPopulated(['file' => 'fooBar'])->getResource();
     }
 
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testGetResourceNotResource()
     {
+        $this->expectException(\RuntimeException::class);
         $file = $this->getMockBuilder('MongoGridFSFileMock')->setMethods(['getResource'])->getMock();
         $file->expects($this->any())->method('getResource')->willReturn('foobar');
 

@@ -1,5 +1,12 @@
 #Teknoo Software - Website - Change Log
 
+##[1.0.0] - 2019-02-10
+###Release
+- Remove support of PHP 7.1
+- Remove support of Symfony 4.0 and 4.1 (keep 3.4, LTS)
+- Switch to PHPUnit 8.0
+- First major stable release
+
 ##[0.0.15] - 2019-01-08
 ###Update
 - Need Teknoo East Foundation ^^0.0.11

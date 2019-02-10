@@ -52,11 +52,9 @@ trait ObjectTestTrait
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetIdExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setId(new \stdClass());
     }
 
@@ -103,11 +101,9 @@ trait ObjectTestTrait
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testSetDeletedAtExceptionOnBadArgument()
     {
+        $this->expectException(\Throwable::class);
         $this->buildObject()->setDeletedAt(new \stdClass());
     }
 }

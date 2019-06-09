@@ -1,5 +1,9 @@
 #Teknoo Software - Website - Change Log
 
+##[1.0.1] - 2019-06-09
+###Release
+- Maintenance release, upgrade composer dev requirement and libs
+
 ##[1.0.0] - 2019-02-10
 ###Release
 - Remove support of PHP 7.1

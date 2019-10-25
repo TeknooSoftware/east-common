@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
 namespace Teknoo\East\Website\Object;
 
 /**
@@ -32,62 +32,34 @@ class User implements ObjectInterface, DeletableInterface
 {
     use ObjectTrait;
 
-    /**
-     * @var string
-     */
-    private $firstName;
+    private string $firstName;
 
-    /**
-     * @var string
-     */
-    private $lastName;
+    private string $lastName;
 
     /**
      * @var string[]
      */
-    private $roles = [];
+    private array $roles = [];
 
-    /**
-     * @var string
-     */
-    private $email;
+    private string $email;
 
-    /**
-     * @var string
-     */
-    private $password;
+    private string $password;
 
-    /**
-     * @var string
-     */
-    private $originalPassword;
+    private string $originalPassword;
 
-    /**
-     * @var string
-     */
-    private $salt;
+    private string $salt;
 
-    /**
-     * User constructor.
-     */
     public function __construct()
     {
         //initialize for new user
         $this->salt = \sha1(\uniqid('', true));
     }
 
-    /**
-     * @return string
-     */
     public function getFirstName(): string
     {
         return (string) $this->firstName;
     }
 
-    /**
-     * @param string $firstName
-     * @return self
-     */
     public function setFirstName(string $firstName): User
     {
         $this->firstName = $firstName;
@@ -95,18 +67,11 @@ class User implements ObjectInterface, DeletableInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getLastName(): string
     {
         return (string) $this->lastName;
     }
 
-    /**
-     * @param string $lastName
-     * @return self
-     */
     public function setLastName(string $lastName): User
     {
         $this->lastName = $lastName;
@@ -114,26 +79,16 @@ class User implements ObjectInterface, DeletableInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function __toString()
     {
         return \trim($this->getFirstName().' '.$this->getLastName());
     }
 
-    /**
-     * @return \string[]
-     */
     public function getRoles(): array
     {
         return $this->roles;
     }
 
-    /**
-     * @param \string[] $roles
-     * @return self
-     */
     public function setRoles(array $roles): User
     {
         $this->roles = $roles;
@@ -141,18 +96,11 @@ class User implements ObjectInterface, DeletableInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getEmail(): string
     {
         return (string) $this->email;
     }
 
-    /**
-     * @param string $email
-     * @return self
-     */
     public function setEmail(string $email): User
     {
         $this->email = $email;
@@ -160,9 +108,6 @@ class User implements ObjectInterface, DeletableInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getPassword(): string
     {
         if (empty($this->originalPassword)) {
@@ -172,17 +117,11 @@ class User implements ObjectInterface, DeletableInterface
         return (string) $this->password;
     }
 
-    /**
-     * @return string
-     */
     public function getOriginalPassword(): string
     {
         return (string) $this->originalPassword;
     }
 
-    /**
-     * @return bool
-     */
     public function hasUpdatedPassword(): bool
     {
         $originalPwd = $this->getOriginalPassword();
@@ -191,11 +130,7 @@ class User implements ObjectInterface, DeletableInterface
         return empty($originalPwd) && !empty($pwd) || ($originalPwd != $pwd);
     }
 
-    /**
-     * @param string|null $password
-     * @return self
-     */
-    public function setPassword(string $password = null): User
+    public function setPassword(?string $password): User
     {
         if (empty($this->originalPassword)) {
             $this->originalPassword = $this->password;
@@ -206,18 +141,11 @@ class User implements ObjectInterface, DeletableInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getSalt(): string
     {
         return (string) $this->salt;
     }
 
-    /**
-     * @param string $salt
-     * @return self
-     */
     public function setSalt(string $salt): User
     {
         $this->salt = $salt;
@@ -225,18 +153,12 @@ class User implements ObjectInterface, DeletableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->getEmail();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function eraseCredentials()
+    public function eraseCredentials(): self
     {
         $this->password = '';
         $this->originalPassword = '';

@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -22,6 +20,9 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
+
 namespace Teknoo\East\Website\Object;
 
 use Doctrine\MongoDB\GridFSFile;
@@ -34,43 +35,21 @@ class Media implements ObjectInterface, DeletableInterface
 {
     use ObjectTrait;
 
-    /**
-     * @var string
-     */
-    private $name;
+    private string $name;
 
-    /**
-     * @var \MongoGridFSFile
-     */
-    private $file;
+    private \MongoGridFSFile $file;
 
-    /**
-     * @var int
-     */
-    private $length;
+    private int $length;
 
-    /**
-     * @var string
-     */
-    private $mimeType;
+    private string $mimeType;
 
-    /**
-     * @var string
-     */
-    private $alternative;
+    private string $alternative;
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return (string) $this->name;
     }
 
-    /**
-     * @param string $name
-     * @return self
-     */
     public function setName(string $name): Media
     {
         $this->name = $name;
@@ -101,18 +80,11 @@ class Media implements ObjectInterface, DeletableInterface
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getLength(): int
     {
         return (int) $this->length;
     }
 
-    /**
-     * @param int $length
-     * @return self
-     */
     public function setLength(int $length): Media
     {
         $this->length = $length;
@@ -120,18 +92,11 @@ class Media implements ObjectInterface, DeletableInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getMimeType(): string
     {
         return (string) $this->mimeType;
     }
 
-    /**
-     * @param string $mimeType
-     * @return self
-     */
     public function setMimeType(string $mimeType): Media
     {
         $this->mimeType = $mimeType;
@@ -139,18 +104,11 @@ class Media implements ObjectInterface, DeletableInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getAlternative(): string
     {
         return (string) $this->alternative;
     }
 
-    /**
-     * @param string $alternative
-     * @return self
-     */
     public function setAlternative(string $alternative): Media
     {
         $this->alternative = $alternative;
@@ -158,9 +116,6 @@ class Media implements ObjectInterface, DeletableInterface
         return $this;
     }
 
-    /**
-     * @return resource
-     */
     public function getResource()
     {
         $file = $this->file;

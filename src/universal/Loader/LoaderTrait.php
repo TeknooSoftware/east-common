@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
 namespace Teknoo\East\Website\Loader;
 
 use Teknoo\East\Foundation\Promise\PromiseInterface;
@@ -35,24 +35,13 @@ use Teknoo\East\Website\Query\QueryInterface;
  */
 trait LoaderTrait
 {
-    /**
-     * @var RepositoryInterface
-     */
-    protected $repository;
+    protected RepositoryInterface $repository;
 
-    /**
-     * @return RepositoryInterface
-     */
     protected function getRepository(): RepositoryInterface
     {
         return $this->repository;
     }
 
-    /**
-     * @param string $id
-     * @param PromiseInterface $promise
-     * @return LoaderInterface
-     */
     public function load(string $id, PromiseInterface $promise): LoaderInterface
     {
         $criteria = [
@@ -69,11 +58,6 @@ trait LoaderTrait
         return $this;
     }
 
-    /**
-     * @param QueryInterface $query
-     * @param PromiseInterface $promise
-     * @return LoaderInterface
-     */
     public function query(QueryInterface $query, PromiseInterface $promise): LoaderInterface
     {
         $query->execute($this, $this->getRepository(), $promise);

@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -21,6 +19,8 @@ declare(strict_types=1);
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
+
+declare(strict_types=1);
 
 namespace Teknoo\East\Website\Object;
 
@@ -53,53 +53,34 @@ class Content implements
         AutomatedTrait::updateStates insteadof StandardTrait;
     }
 
-    /**
-     * @var User
-     */
-    private $author;
+    private User $author;
 
-    /**
-     * @var string
-     */
-    private $title;
+    private string $title;
 
-    /**
-     * @var string
-     */
-    private $subtitle;
+    private string $subtitle;
 
-    /**
-     * @var string
-     */
-    private $slug;
+    private string $slug;
 
-    /**
-     * @var Type
-     */
-    private $type;
+    private Type $type;
 
     /**
      * @var string[]
      */
-    private $parts;
+    private array $parts;
 
     /**
      * @var string[]
      */
-    private $tags = [];
+    private array $tags = [];
+
+    private string $description;
 
     /**
      * @var string
      */
-    private $description;
+    private string $localeField;
 
     /**
-     * @var string
-     */
-    private $localeField;
-
-    /**
-     * Content constructor.
      * @throws \Exception
      */
     public function __construct()
@@ -130,103 +111,65 @@ class Content implements
         ];
     }
 
-    /**
-     * @return mixed
-     */
-    public function getAuthor()
+    public function getAuthor(): ?User
     {
         return $this->author;
     }
 
-    /**
-     * @param mixed $author
-     * @return self
-     */
-    public function setAuthor(User $author): Content
+    public function setAuthor(?User $author): Content
     {
         $this->author = $author;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string
     {
         return (string) $this->title;
     }
 
-    /**
-     * @param string $title
-     * @return self
-     */
-    public function setTitle(string $title): Content
+    public function setTitle(?string $title): Content
     {
-        $this->title = $title;
+        $this->title = (string) $title;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function __toString()
     {
         return $this->getTitle();
     }
 
-    /**
-     * @return string
-     */
     public function getSubtitle(): string
     {
         return (string) $this->subtitle;
     }
 
-    /**
-     * @param string $subtitle
-     * @return self
-     */
-    public function setSubtitle(string $subtitle = null): Content
+    public function setSubtitle(?string $subtitle = null): Content
     {
         $this->subtitle = (string) $subtitle;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getSlug(): string
     {
         return (string) $this->slug;
     }
 
-    /**
-     * @param string $slug
-     * @return self
-     */
-    public function setSlug(string $slug = null): Content
+    public function setSlug(?string $slug): Content
     {
         $this->slug = $slug;
 
         return $this;
     }
 
-    /**
-     * @return Type
-     */
-    public function getType()
+    public function getType(): ?Type
     {
         return $this->type;
     }
 
-    /**
-     * @param Type $type
-     * @return self
-     */
-    public function setType(Type $type): Content
+    public function setType(?Type $type): Content
     {
         $this->type = $type;
 
@@ -241,29 +184,18 @@ class Content implements
         return (array) \json_decode((string) $this->parts, true);
     }
 
-    /**
-     * @param string[]|null $parts
-     * @return self
-     */
-    public function setParts(array $parts = null): Content
+    public function setParts(?array $parts): Content
     {
-        $this->parts = \json_encode($parts);
+        $this->parts = \json_encode((array) $parts);
 
         return $this;
     }
 
-    /**
-     * @return \string[]
-     */
     public function getTags(): array
     {
         return $this->tags;
     }
 
-    /**
-     * @param \string[] $tags
-     * @return self
-     */
     public function setTags(array $tags): Content
     {
         $this->tags = $tags;
@@ -271,38 +203,23 @@ class Content implements
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getDescription(): string
     {
         return (string) $this->description;
     }
 
-    /**
-     * @param string|null $description
-     * @return self
-     */
-    public function setDescription(string $description = null): Content
+    public function setDescription(?string $description): Content
     {
         $this->description = $description;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getLocaleField(): string
     {
         return (string) $this->localeField;
     }
 
-    /**
-     * @param string $localeField
-     *
-     * @return self
-     */
     public function setLocaleField(string $localeField): Content
     {
         $this->localeField = $localeField;
@@ -310,26 +227,14 @@ class Content implements
         return $this;
     }
 
-    /**
-     * Sets translatable locale
-     *
-     * @param string $locale
-     *
-     * @return self
-     */
-    public function setTranslatableLocale($locale)
+    public function setTranslatableLocale(string $locale): self
     {
         $this->localeField = $locale;
 
         return $this;
     }
 
-    /**
-     * Sets translatable locale
-     *
-     * @return string
-     */
-    public function getTranslatableLocale()
+    public function getTranslatableLocale(): string
     {
         return (string) $this->localeField;
     }

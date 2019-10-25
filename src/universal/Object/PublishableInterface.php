@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -20,6 +20,8 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
 namespace Teknoo\East\Website\Object;
 
 /**
@@ -28,8 +30,5 @@ namespace Teknoo\East\Website\Object;
  */
 interface PublishableInterface
 {
-    /**
-     * @return \DateTimeInterface
-     */
     public function getPublishedAt(): ?\DateTimeInterface;
 }

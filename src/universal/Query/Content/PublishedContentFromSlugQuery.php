@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -21,6 +19,8 @@ declare(strict_types=1);
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
+
+declare(strict_types=1);
 
 namespace Teknoo\East\Website\Query\Content;
 
@@ -41,15 +41,8 @@ class PublishedContentFromSlugQuery implements QueryInterface, ImmutableInterfac
 {
     use ImmutableTrait;
 
-    /**
-     * @var string
-     */
-    private $slug;
+    private string $slug;
 
-    /**
-     * PublishedContentFromSlugQuery constructor.
-     * @param string $slug
-     */
     public function __construct(string $slug)
     {
         $this->uniqueConstructorCheck();

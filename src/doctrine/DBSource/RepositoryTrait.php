@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
 namespace Teknoo\East\Website\Doctrine\DBSource;
 
 use Doctrine\Common\Persistence\ObjectRepository;
@@ -35,15 +35,8 @@ use Teknoo\East\Website\DBSource\RepositoryInterface;
  */
 trait RepositoryTrait
 {
-    /**
-     * @var ObjectRepository|DocumentRepository
-     */
-    private $repository;
+    private ObjectRepository $repository;
 
-    /**
-     * RepositoryTrait constructor.
-     * @param ObjectRepository $repository
-     */
     public function __construct(ObjectRepository $repository)
     {
         $this->repository = $repository;

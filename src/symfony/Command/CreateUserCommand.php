@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
 namespace Teknoo\East\WebsiteBundle\Command;
 
 use Symfony\Component\Console\Command\Command;
@@ -39,21 +39,10 @@ use Teknoo\East\WebsiteBundle\Object\User;
  */
 class CreateUserCommand extends Command
 {
-    /**
-     * @var UserWriter
-     */
-    private $writer;
+    private UserWriter $writer;
 
-    /**
-     * @var EncoderFactoryInterface
-     */
-    private $encoderFactory;
+    private EncoderFactoryInterface $encoderFactory;
 
-    /**
-     * CreateUserCommand constructor.
-     * @param UserWriter $writer
-     * @param EncoderFactoryInterface $encoderFactory
-     */
     public function __construct(UserWriter $writer, EncoderFactoryInterface $encoderFactory)
     {
         $this->writer = $writer;

@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
 namespace Teknoo\East\WebsiteBundle\Provider;
 
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -37,15 +37,8 @@ use Teknoo\East\WebsiteBundle\Object\User;
  */
 class UserProvider implements UserProviderInterface
 {
-    /**
-     * @var UserLoader
-     */
-    private $loader;
+    private UserLoader $loader;
 
-    /**
-     * UserProvider constructor.
-     * @param UserLoader $loader
-     */
     public function __construct(UserLoader $loader)
     {
         $this->loader = $loader;

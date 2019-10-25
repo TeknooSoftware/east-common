@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
 namespace Teknoo\East\Website\EndPoint;
 
 use Psr\Http\Message\ServerRequestInterface;
@@ -38,45 +38,25 @@ use Teknoo\East\Website\Query\Content\PublishedContentFromSlugQuery;
  */
 trait ContentEndPointTrait
 {
-    /**
-     * @var ContentLoader
-     */
-    private $contentLoader;
+    private ContentLoader $contentLoader;
 
-    /**
-     * @var string
-     */
-    private $error404Template;
+    private string $error404Template;
 
-    /**
-     * ContentEndPointTrait constructor.
-     * @param ContentLoader $contentLoader
-     * @param string $error404Template
-     */
     public function __construct(ContentLoader $contentLoader, string $error404Template)
     {
         $this->contentLoader = $contentLoader;
         $this->error404Template = $error404Template;
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return string[]
-     */
     private function parseUrl(ServerRequestInterface $request): array
     {
         return \explode('/', \trim((string) $request->getUri()->getPath(), '/'));
     }
 
-    /**
-     * @param ClientInterface $client
-     * @param ServerRequestInterface $request
-     * @return self
-     */
     public function __invoke(
         ClientInterface $client,
         ServerRequestInterface $request
-    ) {
+    ): self {
         $urlParts = $this->parseUrl($request);
         $contentSlug = \array_pop($urlParts);
 

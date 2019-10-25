@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
 namespace Teknoo\East\Website\Writer;
 
 use Teknoo\East\Foundation\Promise\PromiseInterface;
@@ -32,10 +32,5 @@ use Teknoo\East\Foundation\Promise\PromiseInterface;
  */
 interface WriterInterface
 {
-    /**
-     * @param object $object
-     * @param PromiseInterface|null $promise
-     * @return WriterInterface
-     */
     public function save($object, PromiseInterface $promise = null): WriterInterface;
 }

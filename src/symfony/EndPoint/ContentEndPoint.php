@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
 namespace Teknoo\East\WebsiteBundle\EndPoint;
 
 use Psr\Http\Message\ServerRequestInterface;
@@ -38,10 +38,6 @@ class ContentEndPoint implements EndPointInterface
     use EastEndPointTrait,
         ContentEndPointTrait;
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return string[]
-     */
     protected function parseUrl(ServerRequestInterface $request): array
     {
         $path = (string) $request->getUri()->getPath();

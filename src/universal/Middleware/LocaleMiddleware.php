@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -21,6 +19,8 @@ declare(strict_types=1);
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
+
+declare(strict_types=1);
 
 namespace Teknoo\East\Website\Middleware;
 
@@ -41,32 +41,16 @@ class LocaleMiddleware implements MiddlewareInterface
     public const SESSION_KEY = 'locale';
     public const MIDDLEWARE_PRIORITY = 6;
 
-    /**
-     * @var TranslatableListener
-     */
-    private $listenerTranslatable;
+    private TranslatableListener $listenerTranslatable;
 
-    /**
-     * @var string
-     */
-    private $defaultLocale = 'en';
+    private string $defaultLocale = 'en';
 
-    /**
-     * LocaleRouter constructor.
-     * @param TranslatableListener $listenerTranslatable
-     * @param string $defaultLocale
-     */
     public function __construct(TranslatableListener $listenerTranslatable, string $defaultLocale = 'en')
     {
         $this->listenerTranslatable = $listenerTranslatable;
         $this->defaultLocale = $defaultLocale;
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @param string $locale
-     * @return LocaleMiddleware
-     */
     private function registerLocaleInSession(ServerRequestInterface $request, string $locale): LocaleMiddleware
     {
         $session = $request->getAttribute(SessionInterface::ATTRIBUTE_KEY);
@@ -77,10 +61,6 @@ class LocaleMiddleware implements MiddlewareInterface
         return $this;
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return string
-     */
     private function getLocaleFromSession(ServerRequestInterface &$request): string
     {
         $returnedLocale = $this->defaultLocale;
@@ -105,20 +85,11 @@ class LocaleMiddleware implements MiddlewareInterface
         return $returnedLocale;
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return array
-     */
     private function getViewParameters(ServerRequestInterface $request): array
     {
         return $request->getAttribute(ViewParameterInterface::REQUEST_PARAMETER_KEY, []);
     }
 
-    /**
-     * @param string $locale
-     * @param ServerRequestInterface $request
-     * @return ServerRequestInterface
-     */
     private function updateViewParameters(string $locale, ServerRequestInterface $request): ServerRequestInterface
     {
         $parameters = $this->getViewParameters($request);

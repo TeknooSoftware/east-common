@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
 namespace Teknoo\East\WebsiteBundle\Writer;
 
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
@@ -37,30 +37,16 @@ use Teknoo\East\WebsiteBundle\Object\User;
  */
 class UserWriter implements WriterInterface
 {
-    /**
-     * @var UniversalWriter
-     */
-    private $universalWriter;
+    private UniversalWriter $universalWriter;
 
-    /**
-     * @var EncoderFactoryInterface
-     */
-    private $encoderFactory;
+    private EncoderFactoryInterface $encoderFactory;
 
-    /**
-     * UserWriter constructor.
-     * @param UniversalWriter $universalWriter
-     * @param EncoderFactoryInterface $encoderFactory
-     */
     public function __construct(UniversalWriter $universalWriter, EncoderFactoryInterface $encoderFactory)
     {
         $this->universalWriter = $universalWriter;
         $this->encoderFactory = $encoderFactory;
     }
 
-    /**
-     * @param BaseUser $user
-     */
     private function encodePassword(BaseUser $user): void
     {
         if ($user->hasUpdatedPassword()) {
@@ -72,11 +58,6 @@ class UserWriter implements WriterInterface
         }
     }
 
-    /**
-     * @param BaseUser $object
-     * @param PromiseInterface|null $promise
-     * @return WriterInterface
-     */
     public function save($object, PromiseInterface $promise = null): WriterInterface
     {
         $this->encodePassword($object);

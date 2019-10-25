@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
 namespace Teknoo\East\Website\Object;
 
 /**
@@ -30,30 +30,16 @@ namespace Teknoo\East\Website\Object;
  */
 class Block
 {
-    /**
-     * @var string
-     */
-    private $name;
+    private string $name;
 
-    /**
-     * @var string
-     */
-    private $type;
+    private string $type;
 
-    /**
-     * Blocks constructor.
-     * @param string $name
-     * @param string $type
-     */
     public function __construct(string $name = '', string $type = '')
     {
         $this->name = $name;
         $this->type = $type;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return (string) $this->name;
@@ -67,10 +53,6 @@ class Block
         return $this->getName();
     }
 
-    /**
-     * @param string $name
-     * @return Block
-     */
     public function setName(string $name): Block
     {
         $this->name = $name;
@@ -78,18 +60,11 @@ class Block
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getType(): string
     {
         return (string) $this->type;
     }
 
-    /**
-     * @param string $type
-     * @return Block
-     */
     public function setType(string $type): Block
     {
         $this->type = $type;

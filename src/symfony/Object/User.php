@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
 namespace Teknoo\East\WebsiteBundle\Object;
 
 use Symfony\Component\Security\Core\User\EquatableInterface;
@@ -34,15 +34,8 @@ use Teknoo\East\Website\Object\User as BaseUser;
  */
 class User implements UserInterface, EquatableInterface
 {
-    /**
-     * @var BaseUser
-     */
-    private $user;
+    private BaseUser $user;
 
-    /**
-     * User constructor.
-     * @param BaseUser $user
-     */
     public function __construct(BaseUser $user)
     {
         $this->user = $user;

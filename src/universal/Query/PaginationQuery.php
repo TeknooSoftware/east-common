@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
 namespace Teknoo\East\Website\Query;
 
 use Teknoo\East\Foundation\Promise\PromiseInterface;
@@ -38,33 +38,14 @@ class PaginationQuery implements QueryInterface, ImmutableInterface
 {
     use ImmutableTrait;
 
-    /**
-     * @var array
-     */
-    private $criteria;
+    private array $criteria;
 
-    /**
-     * @var array
-     */
-    private $order;
+    private array $order;
 
-    /**
-     * @var int
-     */
-    private $limit;
+    private int $limit;
 
-    /**
-     * @var int
-     */
-    private $offset;
+    private int $offset;
 
-    /**
-     * PaginationQuery constructor.
-     * @param array $criteria
-     * @param array $order
-     * @param int $limit
-     * @param int $offset
-     */
     public function __construct(array $criteria, array $order, int $limit, int $offset)
     {
         $this->uniqueConstructorCheck();

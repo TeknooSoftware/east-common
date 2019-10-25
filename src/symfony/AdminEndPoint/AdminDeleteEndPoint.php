@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -21,6 +19,8 @@ declare(strict_types=1);
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
+
+declare(strict_types=1);
 
 namespace Teknoo\East\WebsiteBundle\AdminEndPoint;
 
@@ -41,15 +41,8 @@ class AdminDeleteEndPoint implements EndPointInterface
     use EastEndPointTrait,
         AdminEndPointTrait;
 
-    /**
-     * @var DeletingService
-     */
-    private $deletingService;
+    private DeletingService $deletingService;
 
-    /**
-     * @param DeletingService $deletingService
-     * @return AdminDeleteEndPoint
-     */
     public function setDeletingService(DeletingService $deletingService): AdminDeleteEndPoint
     {
         $this->deletingService = $deletingService;
@@ -57,13 +50,6 @@ class AdminDeleteEndPoint implements EndPointInterface
         return $this;
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @param ClientInterface $client
-     * @param string $id
-     * @param string $nextRoute
-     * @return self
-     */
     public function __invoke(
         ServerRequestInterface $request,
         ClientInterface $client,

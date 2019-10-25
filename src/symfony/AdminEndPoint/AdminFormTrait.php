@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
 namespace Teknoo\East\WebsiteBundle\AdminEndPoint;
 
 use Symfony\Component\Form\FormFactory;
@@ -33,20 +33,10 @@ use Symfony\Component\Form\FormInterface;
  */
 trait AdminFormTrait
 {
-    /**
-     * @var string
-     */
-    private $formClass;
+    private string $formClass;
 
-    /**
-     * @var FormFactory
-     */
-    private $formFactory;
+    private FormFactory $formFactory;
 
-    /**
-     * @param string $formClass
-     * @return self
-     */
     public function setFormClass(string $formClass): self
     {
         if (!\class_exists($formClass)) {
@@ -58,10 +48,6 @@ trait AdminFormTrait
         return $this;
     }
 
-    /**
-     * @param FormFactory $formFactory
-     * @return self
-     */
     public function setFormFactory(FormFactory $formFactory): self
     {
         $this->formFactory = $formFactory;
@@ -69,11 +55,6 @@ trait AdminFormTrait
         return $this;
     }
 
-    /**
-     * @param null|mixed $data
-     * @param array $options
-     * @return FormInterface
-     */
     private function createForm(
         $data = null,
         array $options = array()

@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
 namespace Teknoo\East\Website\Object;
 
 /**
@@ -32,14 +32,8 @@ trait PublishableTrait
 {
     use ObjectTrait;
 
-    /**
-     * @var \DateTimeInterface
-     */
-    private $publishedAt;
+    private \DateTimeInterface $publishedAt;
 
-    /**
-     * @return \DateTimeInterface
-     */
     public function getPublishedAt(): ?\DateTimeInterface
     {
         return $this->publishedAt;

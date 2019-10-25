@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
 namespace Teknoo\East\Website\Object;
 
 /**
@@ -32,33 +32,17 @@ class Type implements ObjectInterface, DeletableInterface
 {
     use ObjectTrait;
 
-    /**
-     * @var string
-     */
-    private $name;
+    private string $name;
 
-    /**
-     * @var string
-     */
-    private $template;
+    private string $template;
 
-    /**
-     * @var array
-     */
-    private $blocks = [];
+    private array $blocks = [];
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return (string) $this->name;
     }
 
-    /**
-     * @param string $name
-     * @return self
-     */
     public function setName(string $name): Type
     {
         $this->name = $name;
@@ -66,26 +50,16 @@ class Type implements ObjectInterface, DeletableInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function __toString()
     {
         return $this->getName();
     }
 
-    /**
-     * @return string
-     */
     public function getTemplate(): string
     {
         return (string) $this->template;
     }
 
-    /**
-     * @param string $template
-     * @return self
-     */
     public function setTemplate(string $template): Type
     {
         $this->template = $template;
@@ -93,9 +67,6 @@ class Type implements ObjectInterface, DeletableInterface
         return $this;
     }
 
-    /**
-     * @return array|Block[]
-     */
     public function getBlocks(): array
     {
         return \array_map(
@@ -107,10 +78,6 @@ class Type implements ObjectInterface, DeletableInterface
         );
     }
 
-    /**
-     * @param array|Block[] $blocks
-     * @return self
-     */
     public function setBlocks(array $blocks): Type
     {
         $this->blocks = [];

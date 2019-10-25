@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
 namespace Teknoo\East\Website\Query\Item;
 
 use Teknoo\East\Foundation\Promise\PromiseInterface;
@@ -39,15 +39,8 @@ class TopItemByLocationQuery implements QueryInterface, ImmutableInterface
 {
     use ImmutableTrait;
 
-    /**
-     * @var string
-     */
-    private $location;
+    private string $location;
 
-    /**
-     * TopItemByLocationQuery constructor.
-     * @param string $location
-     */
     public function __construct(string $location)
     {
         $this->uniqueConstructorCheck();

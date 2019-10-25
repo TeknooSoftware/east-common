@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -21,6 +19,8 @@ declare(strict_types=1);
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
+
+declare(strict_types=1);
 
 namespace Teknoo\East\WebsiteBundle\AdminEndPoint;
 
@@ -41,15 +41,8 @@ class AdminNewEndPoint implements EndPointInterface
         AdminEndPointTrait,
         AdminFormTrait;
 
-    /**
-     * @var string
-     */
-    private $objectClass;
+    private string $objectClass;
 
-    /**
-     * @param string $objectClass
-     * @return self
-     */
     public function setObjectClass(string $objectClass): self
     {
         if (!\class_exists($objectClass)) {
@@ -61,14 +54,6 @@ class AdminNewEndPoint implements EndPointInterface
         return $this;
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @param ClientInterface $client
-     * @param string $editRoute=null,
-     * @param bool $isTranslatable=false
-     * @param string|null $viewPath
-     * @return self
-     */
     public function __invoke(
         ServerRequestInterface $request,
         ClientInterface $client,

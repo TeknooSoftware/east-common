@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
 namespace Teknoo\East\Website\Query\User;
 
 use Teknoo\East\Foundation\Promise\PromiseInterface;
@@ -39,15 +39,8 @@ class UserByEmailQuery implements QueryInterface, ImmutableInterface
 {
     use ImmutableTrait;
 
-    /**
-     * @var string
-     */
-    private $email;
+    private string $email;
 
-    /**
-     * UserByEmailQuery constructor.
-     * @param string $email
-     */
     public function __construct(string $email)
     {
         $this->uniqueConstructorCheck();

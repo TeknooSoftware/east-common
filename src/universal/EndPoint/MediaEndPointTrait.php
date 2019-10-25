@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
 namespace Teknoo\East\Website\EndPoint;
 
 use Teknoo\East\Foundation\Http\ClientInterface;
@@ -37,26 +37,14 @@ use Zend\Diactoros\Stream;
  */
 trait MediaEndPointTrait
 {
-    /**
-     * @var MediaLoader
-     */
-    private $mediaLoader;
+    private MediaLoader $mediaLoader;
 
-    /**
-     * MediaEndPointTrait constructor.
-     * @param MediaLoader $mediaLoader
-     */
     public function __construct(MediaLoader $mediaLoader)
     {
         $this->mediaLoader = $mediaLoader;
     }
 
-    /**
-     * @param ClientInterface $client
-     * @param string $id
-     * @return self
-     */
-    public function __invoke(ClientInterface $client, string $id)
+    public function __invoke(ClientInterface $client, string $id): self
     {
         $this->mediaLoader->load(
             $id,

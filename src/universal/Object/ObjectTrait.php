@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
 namespace Teknoo\East\Website\Object;
 
 /**
@@ -30,38 +30,19 @@ namespace Teknoo\East\Website\Object;
  */
 trait ObjectTrait
 {
-    /**
-     * @var string
-     */
-    private $id;
+    private string $id;
 
-    /**
-     * @var \DateTimeInterface
-     */
-    private $createdAt;
+    private \DateTimeInterface $createdAt;
 
-    /**
-     * @var \DateTimeInterface
-     */
-    private $updatedAt;
+    private \DateTimeInterface $updatedAt;
 
-    /**
-     * @var \DateTimeInterface
-     */
-    private $deletedAt;
+    private \DateTimeInterface $deletedAt;
 
-    /**
-     * @return string
-     */
     public function getId(): string
     {
         return (string) $this->id;
     }
 
-    /**
-     * @param string $id
-     * @return $this
-     */
     public function setId(string $id): self
     {
         $this->id = $id;
@@ -69,34 +50,21 @@ trait ObjectTrait
         return $this;
     }
 
-    /**
-     * @return \DateTimeInterface
-     */
     public function createdAt(): \DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    /**
-     * @return \DateTimeInterface
-     */
     public function updatedAt(): \DateTimeInterface
     {
         return $this->updatedAt;
     }
 
-    /**
-     * @return \DateTimeInterface
-     */
     public function getDeletedAt(): ?\DateTimeInterface
     {
         return $this->deletedAt;
     }
 
-    /**
-     * @param \DateTimeInterface $deletedAt
-     * @return DeletableInterface
-     */
     public function setDeletedAt(\DateTimeInterface $deletedAt): DeletableInterface
     {
         $this->deletedAt = $deletedAt;

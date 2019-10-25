@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
 namespace Teknoo\East\WebsiteBundle\Form\Type;
 
 use Gedmo\Translatable\TranslatableListener;
@@ -34,21 +34,10 @@ use Symfony\Component\Form\FormBuilderInterface;
  */
 trait TranslatableTrait
 {
-    /**
-     * @var TranslatableListener
-     */
-    private $listenerTranslatable;
+    private TranslatableListener $listenerTranslatable;
 
-    /**
-     * @var string
-     */
-    private $locales;
+    private string $locales;
 
-    /**
-     * @param FormBuilderInterface $builder
-     *
-     * @return self
-     */
     protected function addTranslatableLocaleFieldHidden(FormBuilderInterface $builder): self
     {
         $builder->add(

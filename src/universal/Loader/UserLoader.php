@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
 namespace Teknoo\East\Website\Loader;
 
 use Teknoo\East\Website\DBSource\Repository\UserRepositoryInterface;
@@ -34,10 +34,6 @@ class UserLoader implements LoaderInterface
 {
     use LoaderTrait;
 
-    /**
-     * UserLoader constructor.
-     * @param UserRepositoryInterface $repository
-     */
     public function __construct(UserRepositoryInterface $repository)
     {
         $this->repository = $repository;

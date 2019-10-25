@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -21,6 +19,8 @@ declare(strict_types=1);
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
+
+declare(strict_types=1);
 
 namespace Teknoo\East\Website\Object;
 
@@ -46,55 +46,27 @@ class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, Trans
         AutomatedTrait::updateStates insteadof StandardTrait;
     }
 
-    /**
-     * @var string
-     */
-    private $name;
+    private string $name;
 
-    /**
-     * @var string
-     */
-    private $slug;
+    private string $slug;
 
-    /**
-     * @var Content
-     */
-    private $content;
-    
-    /**
-     * @var int
-     */
-    private $position;
+    private Content $content;
 
-    /**
-     * @var string
-     */
-    private $location;
+    private int $position;
 
-    /**
-     * @var bool
-     */
-    private $hidden=false;
+    private string $location;
 
-    /**
-     * @var Item|null
-     */
-    private $parent;
+    private bool $hidden=false;
+
+    private ?Item $parent;
 
     /**
      * @var Item[]
      */
     private $children;
 
-    /**
-     * @var string
-     */
-    private $localeField;
+    private string $localeField;
 
-    /**
-     * Item constructor.
-     * @throws \Exception
-     */
     public function __construct()
     {
         $this->children = [];
@@ -124,26 +96,16 @@ class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, Trans
         ];
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return (string) $this->name;
     }
 
-    /**
-     * @return string
-     */
     public function __toString()
     {
         return $this->getName();
     }
 
-    /**
-     * @param string $name
-     * @return self
-     */
     public function setName(string $name): Item
     {
         $this->name = $name;
@@ -151,75 +113,47 @@ class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, Trans
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getSlug(): string
     {
         return (string) $this->slug;
     }
 
-    /**
-     * @param string $slug
-     * @return self
-     */
-    public function setSlug(string $slug = null): Item
+    public function setSlug(?string $slug): Item
     {
         $this->slug = $slug;
 
         return $this;
     }
 
-    /**
-     * @return Content
-     */
     public function getContent(): ?Content
     {
         return $this->content;
     }
 
-    /**
-     * @param Content $content
-     * @return self
-     */
-    public function setContent(Content $content = null): Item
+    public function setContent(?Content $content): Item
     {
         $this->content = $content;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getLocation(): string
     {
         return (string) $this->location;
     }
 
-    /**
-     * @param string $location
-     * @return self
-     */
-    public function setLocation(string $location): Item
+    public function setLocation(?string $location): Item
     {
         $this->location = $location;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getPosition(): int
     {
         return (int) $this->position;
     }
 
-    /**
-     * @param int $position
-     * @return self
-     */
     public function setPosition(int $position): Item
     {
         $this->position = $position;
@@ -228,18 +162,11 @@ class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, Trans
     }
 
 
-    /**
-     * @return bool
-     */
     public function isHidden(): bool
     {
         return !empty($this->hidden);
     }
 
-    /**
-     * @param bool $isHidden
-     * @return self
-     */
     public function setHidden(bool $isHidden): Item
     {
         $this->hidden = $isHidden;
@@ -247,37 +174,23 @@ class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, Trans
         return $this;
     }
 
-    /**
-     * @return null|Item
-     */
-    public function getParent()
+    public function getParent(): ?Item
     {
         return $this->parent;
     }
 
-    /**
-     * @param null|Item $parent
-     * @return self
-     */
-    public function setParent(Item $parent = null): Item
+    public function setParent(?Item $parent): Item
     {
         $this->parent = $parent;
 
         return $this;
     }
 
-    /**
-     * @return Item[]
-     */
     public function getChildren()
     {
         return $this->children;
     }
 
-    /**
-     * @param Item[] $children
-     * @return self
-     */
     public function setChildren($children): Item
     {
         if (!\is_array($children) && !$children instanceof \Traversable) {
@@ -289,19 +202,11 @@ class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, Trans
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getLocaleField(): string
     {
         return (string) $this->localeField;
     }
 
-    /**
-     * @param string $localeField
-     *
-     * @return self
-     */
     public function setLocaleField(string $localeField): Item
     {
         $this->localeField = $localeField;
@@ -309,25 +214,13 @@ class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, Trans
         return $this;
     }
 
-    /**
-     * Sets translatable locale
-     *
-     * @param string $locale
-     *
-     * @return self
-     */
-    public function setTranslatableLocale($locale)
+    public function setTranslatableLocale(string $locale)
     {
         $this->localeField = $locale;
 
         return $this;
     }
 
-    /**
-     * Sets translatable locale
-     *
-     * @return string
-     */
     public function getTranslatableLocale(): string
     {
         return (string) $this->localeField;

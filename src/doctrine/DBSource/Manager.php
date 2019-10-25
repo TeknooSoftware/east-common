@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
 namespace Teknoo\East\Website\Doctrine\DBSource;
 
 use Doctrine\Common\Persistence\ObjectManager;
@@ -33,15 +33,8 @@ use Teknoo\East\Website\DBSource\ManagerInterface;
  */
 class Manager implements ManagerInterface
 {
-    /**
-     * @var ObjectManager
-     */
-    private $objectManager;
+    private ObjectManager $objectManager;
 
-    /**
-     * Manager constructor.
-     * @param ObjectManager $objectManager
-     */
     public function __construct(ObjectManager $objectManager)
     {
         $this->objectManager = $objectManager;

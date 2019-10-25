@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
 namespace Teknoo\East\Website\Object;
 
 /**
@@ -30,14 +30,7 @@ namespace Teknoo\East\Website\Object;
  */
 interface DeletableInterface
 {
-    /**
-     * @return \DateTimeInterface|null
-     */
     public function getDeletedAt(): ?\DateTimeInterface;
 
-    /**
-     * @param \DateTimeInterface $deletedAt
-     * @return self
-     */
     public function setDeletedAt(\DateTimeInterface $deletedAt): DeletableInterface;
 }

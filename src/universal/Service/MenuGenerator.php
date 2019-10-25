@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
 namespace Teknoo\East\Website\Service;
 
 use Teknoo\East\Foundation\Promise\Promise;
@@ -34,25 +34,14 @@ use Teknoo\East\Website\Query\Item\TopItemByLocationQuery;
  */
 class MenuGenerator
 {
-    /**
-     * @var ItemLoader
-     */
-    private $itemLoader;
+    private ItemLoader $itemLoader;
 
-    /**
-     * MenuGenerator constructor.
-     * @param ItemLoader $itemLoader
-     */
     public function __construct(ItemLoader $itemLoader)
     {
         $this->itemLoader = $itemLoader;
     }
 
-    /**
-     * @param string $location
-     * @return MenuGenerator
-     */
-    public function extract(string $location)
+    public function extract(string $location): self
     {
         $stacks = [];
         $promise = new Promise(function ($items) use (&$stacks) {

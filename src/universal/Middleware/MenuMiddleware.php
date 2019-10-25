@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
 namespace Teknoo\East\Website\Middleware;
 
 use Psr\Http\Message\ServerRequestInterface;
@@ -36,24 +36,13 @@ use Teknoo\East\Website\Service\MenuGenerator;
  */
 class MenuMiddleware implements ViewParameterInterface
 {
-    /**
-     * @var MenuGenerator
-     */
-    private $menuGenerator;
+    private MenuGenerator $menuGenerator;
 
-    /**
-     * MenuMiddleware constructor.
-     * @param MenuGenerator $menuGenerator
-     */
     public function __construct(MenuGenerator $menuGenerator)
     {
         $this->menuGenerator = $menuGenerator;
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return array
-     */
     private function getViewParameters(ServerRequestInterface $request): array
     {
         return $request->getAttribute(static::REQUEST_PARAMETER_KEY, []);

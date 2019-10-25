@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
 namespace Teknoo\East\Website\Writer;
 
 use Teknoo\East\Foundation\Promise\PromiseInterface;
@@ -33,27 +33,17 @@ use Teknoo\East\Website\DBSource\ManagerInterface;
  */
 trait PersistTrait
 {
-    /**
-     * @var ManagerInterface
-     */
-    private $manager;
+    private ManagerInterface $manager;
 
-    /**
-     * PersistTrait constructor.
-     * @param ManagerInterface $manager
-     */
     public function __construct(ManagerInterface $manager)
     {
         $this->manager = $manager;
     }
 
     /**
-     * @param object $object
-     * @param PromiseInterface|null $promise
-     * @return self
      * @throws \Throwable
      */
-    private function persist($object, PromiseInterface $promise = null): self
+    private function persist($object, ?PromiseInterface $promise = null): self
     {
         try {
             $this->manager->persist($object);

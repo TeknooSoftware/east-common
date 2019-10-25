@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
 namespace Teknoo\East\Website\Query;
 
 use Teknoo\East\Foundation\Promise\PromiseInterface;
@@ -34,12 +34,6 @@ use Teknoo\East\Website\Loader\LoaderInterface;
  */
 interface QueryInterface
 {
-    /**
-     * @param LoaderInterface $loader
-     * @param RepositoryInterface $repository
-     * @param PromiseInterface $promise
-     * @return QueryInterface
-     */
     public function execute(
         LoaderInterface $loader,
         RepositoryInterface $repository,

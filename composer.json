@@ -23,7 +23,7 @@
         }
     },
     "require": {
-        "php": ">=7.2",
+        "php": ">=7.4",
         "ext-json": "*",
         "doctrine/common": "~2.10",
         "doctrine/annotations": "~1.6",

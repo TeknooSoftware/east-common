@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -21,6 +19,8 @@ declare(strict_types=1);
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
+
+declare(strict_types=1);
 
 namespace Teknoo\East\WebsiteBundle\AdminEndPoint;
 
@@ -42,15 +42,8 @@ class AdminEditEndPoint implements EndPointInterface
         AdminEndPointTrait,
         AdminFormTrait;
 
-    /**
-     * @var \DateTimeImmutable
-     */
-    private $currentDate;
+    private \DateTimeImmutable $currentDate;
 
-    /**
-     * @param \DateTimeInterface $currentDate
-     * @return AdminEditEndPoint
-     */
     public function setCurrentDate(\DateTimeInterface $currentDate): AdminEditEndPoint
     {
         if ($currentDate instanceof \DateTime) {
@@ -62,10 +55,6 @@ class AdminEditEndPoint implements EndPointInterface
         return $this;
     }
 
-    /**
-     * @return \DateTimeImmutable
-     * @throws \Exception
-     */
     private function getCurrentDateTime(): \DateTimeImmutable
     {
         if (!$this->currentDate instanceof \DateTimeImmutable) {
@@ -75,14 +64,6 @@ class AdminEditEndPoint implements EndPointInterface
         return $this->currentDate;
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @param ClientInterface $client
-     * @param string $id
-     * @param bool $isTranslatable
-     * @param string|null $viewPath
-     * @return self
-     */
     public function __invoke(
         ServerRequestInterface $request,
         ClientInterface $client,

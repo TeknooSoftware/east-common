@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
 namespace Teknoo\East\Website\EndPoint;
 
 use Teknoo\East\Foundation\Http\ClientInterface;
@@ -32,12 +32,7 @@ use Teknoo\East\Foundation\Http\ClientInterface;
  */
 trait StaticEndPointTrait
 {
-    /**
-     * @param ClientInterface $client
-     * @param string $template
-     * @return self
-     */
-    public function __invoke(ClientInterface $client, string $template)
+    public function __invoke(ClientInterface $client, string $template): self
     {
         $this->render(
             $client,

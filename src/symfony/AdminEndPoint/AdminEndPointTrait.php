@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
 namespace Teknoo\East\WebsiteBundle\AdminEndPoint;
 
 use Teknoo\East\Website\Loader\LoaderInterface;
@@ -33,25 +33,12 @@ use Teknoo\East\Website\Writer\WriterInterface;
  */
 trait AdminEndPointTrait
 {
-    /**
-     * @var LoaderInterface
-     */
-    private $loader;
+    private LoaderInterface $loader;
 
-    /**
-     * @var WriterInterface
-     */
-    private $writer;
+    private WriterInterface $writer;
 
-    /**
-     * @var string
-     */
-    private $viewPath;
+    private string $viewPath;
 
-    /**
-     * @param string $viewPath
-     * @return self
-     */
     public function setViewPath(string $viewPath): self
     {
         $this->viewPath = $viewPath;
@@ -59,10 +46,6 @@ trait AdminEndPointTrait
         return $this;
     }
 
-    /**
-     * @param LoaderInterface $loader
-     * @return self
-     */
     public function setLoader(LoaderInterface $loader): self
     {
         $this->loader = $loader;
@@ -70,10 +53,6 @@ trait AdminEndPointTrait
         return $this;
     }
 
-    /**
-     * @param WriterInterface $writer
-     * @return self
-     */
     public function setWriter(WriterInterface $writer): self
     {
         $this->writer = $writer;

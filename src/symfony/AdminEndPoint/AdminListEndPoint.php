@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
 namespace Teknoo\East\WebsiteBundle\AdminEndPoint;
 
 use Psr\Http\Message\ServerRequestInterface;
@@ -40,20 +40,12 @@ class AdminListEndPoint implements EndPointInterface
     use EastEndPointTrait,
         AdminEndPointTrait;
 
-    private $itemsPerPage = 15;
+    private int $itemsPerPage = 15;
 
-    private $defaultOrderColumn;
+    private string $defaultOrderColumn;
 
-    /**
-     * @var string
-     */
-    private $defaultOrderDirection = 'ASC';
+    private string $defaultOrderDirection = 'ASC';
 
-    /**
-     * @param string $column
-     * @param string $direction
-     * @return AdminListEndPoint
-     */
     public function setOrder(string $column, string $direction): self
     {
         switch ($value = \strtoupper($direction)) {
@@ -71,10 +63,6 @@ class AdminListEndPoint implements EndPointInterface
         return $this;
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return array
-     */
     private function extractOrder(ServerRequestInterface $request): array
     {
         $order = [];
@@ -100,13 +88,6 @@ class AdminListEndPoint implements EndPointInterface
         return $order;
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @param ClientInterface $client
-     * @param string $page
-     * @param string|null $viewPath
-     * @return self
-     */
     public function __invoke(
         ServerRequestInterface $request,
         ClientInterface $client,

@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
 namespace Teknoo\East\Website\Service;
 
 use Teknoo\East\Website\Object\DeletableInterface;
@@ -33,39 +33,21 @@ use Teknoo\East\Website\Writer\WriterInterface;
  */
 class DeletingService
 {
-    /**
-     * @var \DateTime
-     */
-    private $currentDate;
+    private \DateTimeInterface $currentDate;
 
-    /**
-     * @var WriterInterface
-     */
-    private $writer;
+    private WriterInterface $writer;
 
-    /**
-     * DeleteService constructor.
-     * @param WriterInterface $writer
-     */
     public function __construct(WriterInterface $writer)
     {
         $this->writer = $writer;
     }
 
-    /**
-     * @param \DateTime $currentDate
-     * @return DeletingService
-     */
     public function setCurrentDate(\DateTime $currentDate): DeletingService
     {
         $this->currentDate = $currentDate;
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     * @throws \Exception
-     */
     private function getCurrentDate(): \DateTime
     {
         if ($this->currentDate instanceof \DateTime) {
@@ -75,11 +57,6 @@ class DeletingService
         return new \DateTime();
     }
 
-    /**
-     * @param DeletableInterface $object
-     * @return DeletingService
-     * @throws \Exception
-     */
     public function delete(DeletableInterface $object) : DeletingService
     {
         $object->setDeletedAt($this->getCurrentDate());

@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -21,6 +19,8 @@ declare(strict_types=1);
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
+
+declare(strict_types=1);
 
 namespace Teknoo\East\WebsiteBundle\Form\Type;
 
@@ -47,13 +47,6 @@ class ContentType extends AbstractType
 {
     use TranslatableTrait;
 
-    /**
-     * To configure this form and fields to display.
-     *
-     * @param FormBuilderInterface $builder
-     * @param array                $options
-     * @return self
-     */
     public function buildForm(FormBuilderInterface $builder, array $options): self
     {
         $builder->add(

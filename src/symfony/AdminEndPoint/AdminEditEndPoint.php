@@ -42,7 +42,7 @@ class AdminEditEndPoint implements EndPointInterface
         AdminEndPointTrait,
         AdminFormTrait;
 
-    private \DateTimeImmutable $currentDate;
+    private ?\DateTimeImmutable $currentDate = null;
 
     public function setCurrentDate(\DateTimeInterface $currentDate): AdminEditEndPoint
     {

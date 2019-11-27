@@ -50,7 +50,7 @@ class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, Trans
 
     private string $slug;
 
-    private Content $content;
+    private ?Content $content = null;
 
     private int $position;
 

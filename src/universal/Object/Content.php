@@ -63,21 +63,15 @@ class Content implements
 
     private Type $type;
 
-    /**
-     * @var string[]
-     */
-    private array $parts;
+    private string $parts;
 
     /**
      * @var string[]
      */
     private array $tags = [];
 
-    private string $description;
+    private ?string $description = null;
 
-    /**
-     * @var string
-     */
     private string $localeField;
 
     /**

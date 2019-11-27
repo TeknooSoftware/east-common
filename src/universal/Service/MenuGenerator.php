@@ -41,7 +41,7 @@ class MenuGenerator
         $this->itemLoader = $itemLoader;
     }
 
-    public function extract(string $location): self
+    public function extract(string $location): iterable
     {
         $stacks = [];
         $promise = new Promise(function ($items) use (&$stacks) {

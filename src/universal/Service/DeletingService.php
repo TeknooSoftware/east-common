@@ -33,7 +33,7 @@ use Teknoo\East\Website\Writer\WriterInterface;
  */
 class DeletingService
 {
-    private \DateTimeInterface $currentDate;
+    private ?\DateTimeInterface $currentDate = null;
 
     private WriterInterface $writer;
 

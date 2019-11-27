@@ -30,7 +30,7 @@ namespace Teknoo\East\Website\Object;
  */
 trait ObjectTrait
 {
-    private string $id;
+    private ?string $id = null;
 
     private \DateTimeInterface $createdAt;
 

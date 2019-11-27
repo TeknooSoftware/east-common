@@ -43,9 +43,9 @@ class User implements ObjectInterface, DeletableInterface
 
     private string $email;
 
-    private string $password;
+    private ?string $password = null;
 
-    private string $originalPassword;
+    private ?string $originalPassword = null;
 
     private string $salt;
 

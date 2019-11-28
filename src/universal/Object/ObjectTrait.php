@@ -32,11 +32,11 @@ trait ObjectTrait
 {
     private ?string $id = null;
 
-    private \DateTimeInterface $createdAt;
+    private ?\DateTimeInterface $createdAt = null;
 
-    private \DateTimeInterface $updatedAt;
+    private ?\DateTimeInterface $updatedAt = null;
 
-    private \DateTimeInterface $deletedAt;
+    private ?\DateTimeInterface $deletedAt = null;
 
     public function getId(): string
     {

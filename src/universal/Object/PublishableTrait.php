@@ -32,7 +32,7 @@ trait PublishableTrait
 {
     use ObjectTrait;
 
-    private \DateTimeInterface $publishedAt;
+    private ?\DateTimeInterface $publishedAt = null;
 
     public function getPublishedAt(): ?\DateTimeInterface
     {

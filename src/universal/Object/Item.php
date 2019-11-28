@@ -120,7 +120,7 @@ class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, Trans
 
     public function setSlug(?string $slug): Item
     {
-        $this->slug = $slug;
+        $this->slug = (string) $slug;
 
         return $this;
     }
@@ -214,9 +214,9 @@ class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, Trans
         return $this;
     }
 
-    public function setTranslatableLocale(string $locale)
+    public function setTranslatableLocale(?string $locale)
     {
-        $this->localeField = $locale;
+        $this->localeField = (string) $locale;
 
         return $this;
     }

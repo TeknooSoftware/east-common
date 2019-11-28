@@ -1,5 +1,9 @@
 #Teknoo Software - Website - Change Log
 
+##[2.0.0-beta3] - 2019-11-28
+###Change
+- Fix typed propoerty's default value for some objects  
+
 ##[2.0.0-beta2] - 2019-11-28
 ###Change
 - Set dependencies defined into PHP-DI used in Symfony as synthetic

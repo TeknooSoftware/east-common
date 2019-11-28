@@ -153,7 +153,7 @@ class Content implements
 
     public function setSlug(?string $slug): Content
     {
-        $this->slug = $slug;
+        $this->slug = (string) $slug;
 
         return $this;
     }
@@ -221,9 +221,9 @@ class Content implements
         return $this;
     }
 
-    public function setTranslatableLocale(string $locale): self
+    public function setTranslatableLocale(?string $locale): self
     {
-        $this->localeField = $locale;
+        $this->localeField = (string) $locale;
 
         return $this;
     }

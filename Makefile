@@ -15,7 +15,7 @@ depend:
 .PHONY: depend
 
 ### QA
-qa: lint phpmd phpcs phpcpd
+qa: lint phpmd phpstan phpcs phpcpd
 
 lint:
 	find ./src -name "*.php" -exec /usr/bin/env php -l {} \; | grep "Parse error" > /dev/null && exit 1 || exit 0
@@ -28,6 +28,9 @@ phpmd:
     ###False positive :
         #Exclude Provider (PSR11),
         #Task and RabbitMQReturnConsumerService (phpmd consider interfaces as classes....)
+
+phpstan:
+	vendor/bin/phpstan analyse src --level max
 
 phpcs:
 	vendor/bin/phpcs --standard=PSR2 --extensions=php src/

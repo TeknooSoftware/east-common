@@ -50,12 +50,12 @@ trait ObjectTrait
         return $this;
     }
 
-    public function createdAt(): \DateTimeInterface
+    public function createdAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function updatedAt(): \DateTimeInterface
+    public function updatedAt(): ?\DateTimeInterface
     {
         return $this->updatedAt;
     }
@@ -65,7 +65,7 @@ trait ObjectTrait
         return $this->deletedAt;
     }
 
-    public function setDeletedAt(\DateTimeInterface $deletedAt): DeletableInterface
+    public function setDeletedAt(?\DateTimeInterface $deletedAt): DeletableInterface
     {
         $this->deletedAt = $deletedAt;
 

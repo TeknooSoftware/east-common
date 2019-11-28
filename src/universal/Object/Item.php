@@ -61,7 +61,7 @@ class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, Trans
     private ?Item $parent = null;
 
     /**
-     * @var Item[]
+     * @var Item[]|\Traversable
      */
     private $children;
 
@@ -144,7 +144,7 @@ class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, Trans
 
     public function setLocation(?string $location): Item
     {
-        $this->location = $location;
+        $this->location = (string) $location;
 
         return $this;
     }

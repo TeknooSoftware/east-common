@@ -1,5 +1,9 @@
 #Teknoo Software - Website - Change Log
 
+##[2.0.0-beta4] - 2019-11-28
+###Change
+- Enable PHPStan in QA Tools
+
 ##[2.0.0-beta3] - 2019-11-28
 ###Change
 - Fix typed propoerty's default value for some objects  

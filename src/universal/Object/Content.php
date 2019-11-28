@@ -180,7 +180,7 @@ class Content implements
 
     public function setParts(?array $parts): Content
     {
-        $this->parts = \json_encode((array) $parts);
+        $this->parts = (string) \json_encode((array) $parts);
 
         return $this;
     }

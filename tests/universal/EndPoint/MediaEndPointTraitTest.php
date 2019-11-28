@@ -104,7 +104,12 @@ class MediaEndPointTraitTest extends \PHPUnit\Framework\TestCase
             ->with('fooBar')
             ->willReturnCallback(function ($id, PromiseInterface $promise) {
                 $media = new Media();
-                $media->setFile(new class {
+                $media->setFile(new class extends \MongoGridFSFile {
+                    public function getSize()
+                    {
+                        return 10;
+                    }
+
                     public function getResource()
                     {
                         $hf = fopen('php://memory', 'rw+');

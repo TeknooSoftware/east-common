@@ -1,5 +1,17 @@
 #Teknoo Software - Website - Change Log
 
+##[2.0.0-beta1] - 2019-11-28
+###Change
+- Most methods have been updated to include type hints where applicable. Please check your extension points to make sure the function signatures are correct.
+_ All files use strict typing. Please make sure to not rely on type coercion.
+- PHP 7.4 is the minimum required
+- Switch to typed properties
+- Remove some PHP useless DockBlocks
+- Replace array_merge by "..." operators
+
+###Info
+This version is not compatible with Doctrine ODM2.0 because Gedmo Extension does not support this version.
+
 ##[1.0.2] - 2019-10-24
 ###Release
 - Maintenance release, QA and update dev vendors requirements

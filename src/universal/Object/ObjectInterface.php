@@ -1,6 +1,7 @@
 <?php
 
 /*
+/*
  * East Website.
  *
  * LICENSE

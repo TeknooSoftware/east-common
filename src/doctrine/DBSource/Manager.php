@@ -55,7 +55,7 @@ class Manager implements ManagerInterface
      */
     public function flush($object = null): ManagerInterface
     {
-        $this->objectManager->flush();
+        $this->objectManager->flush($object);
 
         return $this;
     }

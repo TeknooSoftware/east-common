@@ -72,8 +72,8 @@ interface RepositoryInterface
         array $criteria,
         PromiseInterface $promise,
         array $orderBy = null,
-        $limit = null,
-        $offset = null
+        ?int $limit = null,
+        ?int $offset = null
     ): RepositoryInterface;
 
     /**

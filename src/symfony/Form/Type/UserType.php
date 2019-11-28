@@ -22,8 +22,6 @@
 
 declare(strict_types=1);
 
-declare(strict_types=1);
-
 namespace Teknoo\East\WebsiteBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;

@@ -22,7 +22,7 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\AdminEndPoint;
 
-use Doctrine\MongoDB\Iterator;
+use Doctrine\ODM\MongoDB\Iterator\Iterator;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Templating\EngineInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;

@@ -75,8 +75,8 @@ trait RepositoryTrait
         array $criteria,
         PromiseInterface $promise,
         array $orderBy = null,
-        $limit = null,
-        $offset = null
+        ?int $limit = null,
+        ?int $offset = null
     ): RepositoryInterface {
         if ($this->repository instanceof DocumentRepository) {
             $queryBuilder = $this->repository->createQueryBuilder();

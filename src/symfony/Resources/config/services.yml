@@ -57,6 +57,51 @@ parameters:
   teknoo.east.website.bundle.writer.user.class: 'Teknoo\East\WebsiteBundle\Writer\UserWriter'
 
 services:
+  Teknoo\East\Website\Loader\ContentLoader:
+    synthetic: true
+
+  Teknoo\East\Website\Writer\ContentWriter:
+    synthetic: true
+
+  teknoo.east.website.deleting.content:
+    synthetic: true
+
+  Teknoo\East\Website\Loader\MediaLoader:
+    synthetic: true
+
+  Teknoo\East\Website\Writer\MediaWriter:
+    synthetic: true
+
+  teknoo.east.website.deleting.media:
+    synthetic: true
+
+  Teknoo\East\Website\Loader\ItemLoader:
+    synthetic: true
+
+  Teknoo\East\Website\Writer\ItemWriter:
+    synthetic: true
+
+  teknoo.east.website.deleting.item:
+    synthetic: true
+
+  Teknoo\East\Website\Loader\TypeLoader:
+    synthetic: true
+
+  Teknoo\East\Website\Writer\TypeWriter:
+    synthetic: true
+
+  teknoo.east.website.deleting.type:
+    synthetic: true
+
+  Teknoo\East\Website\Loader\UserLoader:
+    synthetic: true
+
+  Teknoo\East\Website\Writer\UserWriter:
+    synthetic: true
+
+  teknoo.east.website.deleting.user:
+    synthetic: true
+
   #Front endpoints
   teknoo.east.website.endpoint.content:
     class: '%teknoo.east.website.endpoint.content.class%'

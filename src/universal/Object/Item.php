@@ -46,26 +46,26 @@ class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, Trans
         AutomatedTrait::updateStates insteadof StandardTrait;
     }
 
-    private string $name;
+    private string $name = '';
 
-    private string $slug;
+    private string $slug = '';
 
     private ?Content $content = null;
 
-    private int $position;
+    private ?int $position = null;
 
-    private string $location;
+    private string $location = '';
 
     private bool $hidden=false;
 
-    private ?Item $parent;
+    private ?Item $parent = null;
 
     /**
      * @var Item[]
      */
     private $children;
 
-    private string $localeField;
+    private ?string $localeField = null;
 
     public function __construct()
     {

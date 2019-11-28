@@ -32,22 +32,22 @@ class User implements ObjectInterface, DeletableInterface
 {
     use ObjectTrait;
 
-    private string $firstName;
+    private string $firstName = '';
 
-    private string $lastName;
+    private string $lastName = '';
 
     /**
      * @var string[]
      */
     private array $roles = [];
 
-    private string $email;
+    private string $email = '';
 
     private ?string $password = null;
 
     private ?string $originalPassword = null;
 
-    private string $salt;
+    private string $salt = '';
 
     public function __construct()
     {

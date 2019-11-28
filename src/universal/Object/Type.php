@@ -32,9 +32,9 @@ class Type implements ObjectInterface, DeletableInterface
 {
     use ObjectTrait;
 
-    private string $name;
+    private string $name = '';
 
-    private string $template;
+    private string $template = '';
 
     private array $blocks = [];
 

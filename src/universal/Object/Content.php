@@ -53,17 +53,17 @@ class Content implements
         AutomatedTrait::updateStates insteadof StandardTrait;
     }
 
-    private User $author;
+    private ?User $author = null;
 
-    private string $title;
+    private string $title = '';
 
-    private string $subtitle;
+    private string $subtitle = '';
 
-    private string $slug;
+    private string $slug = '';
 
-    private Type $type;
+    private ?Type $type = null;
 
-    private string $parts;
+    private string $parts = '{}';
 
     /**
      * @var string[]
@@ -72,7 +72,7 @@ class Content implements
 
     private ?string $description = null;
 
-    private string $localeField;
+    private ?string $localeField = null;
 
     /**
      * @throws \Exception

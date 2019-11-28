@@ -30,9 +30,9 @@ namespace Teknoo\East\Website\Object;
  */
 class Block
 {
-    private string $name;
+    private string $name = '';
 
-    private string $type;
+    private string $type = '';
 
     public function __construct(string $name = '', string $type = '')
     {

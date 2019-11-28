@@ -1,5 +1,11 @@
 #Teknoo Software - Website - Change Log
 
+##[2.0.0-beta2] - 2019-11-28
+###Change
+- Set dependencies defined into PHP-DI used in Symfony as synthetic
+  services into Symfony's services definitions to avoid compilation error with Symfony 4.4
+- Set default values for Objects.  
+
 ##[2.0.0-beta1] - 2019-11-28
 ###Change
 - Most methods have been updated to include type hints where applicable. Please check your extension points to make sure the function signatures are correct.

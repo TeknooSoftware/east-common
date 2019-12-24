@@ -42,17 +42,21 @@ class ItemType extends AbstractType
 {
     use TranslatableTrait;
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    /**
+     * @param FormBuilderInterface<Item> $builder
+     * @param array<string, mixed> $options
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options): self
     {
-        $builder->add('name', TextType::class, ['required'=>true]);
-        $builder->add('location', TextType::class, ['required'=>true]);
+        $builder->add('name', TextType::class, ['required' => true]);
+        $builder->add('location', TextType::class, ['required' => true]);
         $builder->add(
             'parent',
             DocumentType::class,
             [
                 'class' => Item::class,
-                'required'=>false,
-                'multiple'=>false,
+                'required' => false,
+                'multiple' => false,
                 'choice_label' => 'name',
                 'query_builder' => function (DocumentRepository $repository) {
                     return $repository->createQueryBuilder()
@@ -65,8 +69,8 @@ class ItemType extends AbstractType
             DocumentType::class,
             [
                 'class' => Content::class,
-                'required'=>false,
-                'multiple'=>false,
+                'required' => false,
+                'multiple' => false,
                 'choice_label' => 'title',
                 'query_builder' => function (DocumentRepository $repository) {
                     return $repository->createQueryBuilder()
@@ -74,10 +78,10 @@ class ItemType extends AbstractType
                 }
             ]
         );
-        $builder->add('slug', TextType::class, ['required'=>false]);
-        $builder->add('slug', TextType::class, ['required'=>false]);
-        $builder->add('hidden', CheckboxType::class, ['required'=>false]);
-        $builder->add('position', IntegerType::class, ['required'=>false]);
+        $builder->add('slug', TextType::class, ['required' => false]);
+        $builder->add('slug', TextType::class, ['required' => false]);
+        $builder->add('hidden', CheckboxType::class, ['required' => false]);
+        $builder->add('position', IntegerType::class, ['required' => false]);
 
         $this->addTranslatableLocaleFieldHidden($builder);
 

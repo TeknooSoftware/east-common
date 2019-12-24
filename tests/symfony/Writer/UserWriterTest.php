@@ -25,6 +25,7 @@ namespace Teknoo\Tests\East\WebsiteBundle\Writer;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
+use Teknoo\East\Website\Object\ObjectInterface;
 use Teknoo\East\WebsiteBundle\Writer\UserWriter;
 use Teknoo\East\Website\Writer\UserWriter as UniversalWriter;
 use Teknoo\East\Website\Object\User as BaseUser;
@@ -82,6 +83,24 @@ class UserWriterTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException(\TypeError::class);
         $this->buildWriter()->save(new \stdClass(), new \stdClass());
+    }
+
+    public function testSaveWithWrongObject()
+    {
+        $promise = $this->createMock(PromiseInterface::class);
+        $object = $this->createMock(ObjectInterface::class);
+
+        $this->getUniversalWriter()
+            ->expects(self::never())
+            ->method('save');
+
+        $promise->expects(self::once())
+            ->method('fail');
+
+        self::assertInstanceOf(
+            UserWriter::class,
+            $this->buildWriter()->save($object, $promise)
+        );
     }
 
     public function testSaveWithUserWithNoUpdatedPassword()

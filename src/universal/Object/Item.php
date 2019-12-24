@@ -25,8 +25,10 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Object;
 
 use Gedmo\Translatable\Translatable;
+use phpDocumentor\Reflection\Types\Iterable_;
 use Teknoo\East\Website\Object\Item\Hidden;
 use Teknoo\East\Website\Object\Item\Available;
+use Teknoo\States\Automated\Assertion\AssertionInterface;
 use Teknoo\States\Automated\Assertion\Property;
 use Teknoo\States\Automated\Assertion\Property\IsEqual;
 use Teknoo\States\Automated\AutomatedInterface;
@@ -40,9 +42,9 @@ use Teknoo\UniversalPackage\States\Document\StandardTrait;
  */
 class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, Translatable, DeletableInterface
 {
-    use StandardTrait,
-        AutomatedTrait,
-        ObjectTrait{
+    use StandardTrait;
+    use AutomatedTrait;
+    use ObjectTrait {
         AutomatedTrait::updateStates insteadof StandardTrait;
     }
 
@@ -56,14 +58,14 @@ class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, Trans
 
     private string $location = '';
 
-    private bool $hidden=false;
+    private bool $hidden = false;
 
     private ?Item $parent = null;
 
     /**
-     * @var Item[]|\Traversable
+     * @var iterable<Item>
      */
-    private $children;
+    private iterable $children = [];
 
     private ?string $localeField = null;
 
@@ -76,6 +78,7 @@ class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, Trans
 
     /**
      * {@inheritdoc}
+     * @return array<string>
      */
     public static function statesListDeclaration(): array
     {
@@ -87,6 +90,7 @@ class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, Trans
 
     /**
      * {@inheritdoc}
+     * @return array<AssertionInterface>
      */
     protected function listAssertions(): array
     {
@@ -186,17 +190,19 @@ class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, Trans
         return $this;
     }
 
-    public function getChildren()
+    /**
+     * @return iterable<Item>
+     */
+    public function getChildren(): iterable
     {
         return $this->children;
     }
 
-    public function setChildren($children): Item
+    /**
+     * @param iterable<Item> $children
+     */
+    public function setChildren(iterable $children): Item
     {
-        if (!\is_array($children) && !$children instanceof \Traversable) {
-            throw new \RuntimeException('Bad argument type for $children');
-        }
-        
         $this->children = $children;
 
         return $this;
@@ -214,7 +220,7 @@ class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, Trans
         return $this;
     }
 
-    public function setTranslatableLocale(?string $locale)
+    public function setTranslatableLocale(?string $locale): Item
     {
         $this->localeField = (string) $locale;
 

@@ -58,9 +58,9 @@ interface RepositoryInterface
      * an UnexpectedValueException if certain values of the sorting or limiting details are
      * not supported.
      *
-     * @param array      $criteria
+     * @param array<string, mixed> $criteria
      * @param PromiseInterface $promise
-     * @param array|null $orderBy
+     * @param array<string, mixed>|null $orderBy
      * @param int|null   $limit
      * @param int|null   $offset
      *
@@ -79,7 +79,7 @@ interface RepositoryInterface
     /**
      * Finds a single object by a set of criteria.
      *
-     * @param array $criteria The criteria.
+     * @param array<string, mixed> $criteria The criteria.
      * @param PromiseInterface $promise
      *
      * @return RepositoryInterface self

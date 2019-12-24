@@ -22,7 +22,6 @@
 
 declare(strict_types=1);
 
-
 namespace Teknoo\East\Website\Object;
 
 use Doctrine\MongoDB\GridFSFile;
@@ -60,11 +59,17 @@ class Media implements ObjectInterface, DeletableInterface
         return $this;
     }
 
+    /**
+     * @return GridFSFile|\MongoGridFS
+     */
     public function getFile()
     {
         return $this->file;
     }
 
+    /**
+     * @param GridFSFile|\MongoGridFS $file
+     */
     public function setFile($file): Media
     {
         $this->file = $file;

@@ -71,17 +71,19 @@ class CreateUserCommand extends Command
     {
         $user = new BaseUser();
 
-        $user->setEmail($input->getArgument('email'));
-        $user->setFirstName($input->getArgument('first_name'));
-        $user->setLastName($input->getArgument('last_name'));
+        $user->setEmail((string) $input->getArgument('email'));
+        $user->setFirstName((string) $input->getArgument('first_name'));
+        $user->setLastName((string) $input->getArgument('last_name'));
         $user->setRoles(['ROLE_USER', 'ROLE_ADMIN']);
 
         $encoder = $this->encoderFactory->getEncoder(new User($user));
         $salt = $user->getSalt();
-        $user->setPassword($encoder->encodePassword($input->getArgument('password'), $salt));
+        $user->setPassword((string) $encoder->encodePassword($input->getArgument('password'), $salt));
 
         $this->writer->save($user);
 
         $output->writeln('User created');
+
+        return 0;
     }
 }

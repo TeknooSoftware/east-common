@@ -70,6 +70,7 @@ class UserProvider implements UserProviderInterface
 
     /**
      * {@inheritdoc}
+     * @param class-string<User> $class
      * @throws \ReflectionException
      */
     public function supportsClass($class): bool

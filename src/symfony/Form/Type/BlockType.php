@@ -37,6 +37,10 @@ use Teknoo\East\Website\Object\Block;
  */
 class BlockType extends AbstractType
 {
+    /**
+     * @param FormBuilderInterface<Block> $builder
+     * @param array<string, mixed> $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): self
     {
         $builder->add('name', TextType::class, ['required' => true]);

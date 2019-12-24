@@ -23,6 +23,7 @@
 namespace Teknoo\Tests\East\Website\Service;
 
 use Teknoo\East\Website\Object\DeletableInterface;
+use Teknoo\East\Website\Object\ObjectInterface;
 use Teknoo\East\Website\Service\DeletingService;
 use Teknoo\East\Website\Writer\WriterInterface;
 
@@ -57,13 +58,17 @@ class DeletingServiceTest extends \PHPUnit\Framework\TestCase
 
     public function testDeleteWithNoDefinedDate()
     {
-        $object = $this->createMock(DeletableInterface::class);
-        $object->expects(self::once())
-            ->method('setDeletedAt')
-            ->with($this->callback(function ($date) {
-                return $date instanceof \DateTime;
-            }))
-            ->willReturnSelf();
+        $object = new class implements ObjectInterface, DeletableInterface{
+            private $date;
+            public function getDeletedAt(): ?\DateTimeInterface {
+                return $this->date;
+            }
+            public function setDeletedAt(\DateTimeInterface $deletedAt): DeletableInterface {
+                $this->date = $deletedAt;
+                return $this;
+            }
+            public function getId(): string {}
+        };
 
         $this->getWriterMock()
             ->expects(self::once())
@@ -75,17 +80,24 @@ class DeletingServiceTest extends \PHPUnit\Framework\TestCase
             DeletingService::class,
             $this->buildService()->delete($object)
         );
+        self::assertInstanceOf(\DateTimeInterface::class, $object->getDeletedAt());
     }
 
     public function testDeleteWithDefinedDate()
     {
         $date = new \DateTime('2017-01-01');
 
-        $object = $this->createMock(DeletableInterface::class);
-        $object->expects(self::once())
-            ->method('setDeletedAt')
-            ->with($date)
-            ->willReturnSelf();
+        $object = new class implements ObjectInterface, DeletableInterface{
+            private $date;
+            public function getDeletedAt(): ?\DateTimeInterface {
+                return $this->date;
+            }
+            public function setDeletedAt(\DateTimeInterface $deletedAt): DeletableInterface {
+                $this->date = $deletedAt;
+                return $this;
+            }
+            public function getId(): string {}
+        };
 
         $this->getWriterMock()
             ->expects(self::once())
@@ -104,5 +116,7 @@ class DeletingServiceTest extends \PHPUnit\Framework\TestCase
             DeletingService::class,
             $service->delete($object)
         );
+
+        self::assertEquals($date, $object->getDeletedAt());
     }
 }

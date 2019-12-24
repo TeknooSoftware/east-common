@@ -53,9 +53,9 @@ class Manager implements ManagerInterface
     /**
      * @inheritDoc
      */
-    public function flush($object = null): ManagerInterface
+    public function flush(): ManagerInterface
     {
-        $this->objectManager->flush($object);
+        $this->objectManager->flush();
 
         return $this;
     }

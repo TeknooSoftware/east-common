@@ -39,6 +39,10 @@ use Teknoo\East\Website\Object\Media;
  */
 class MediaType extends AbstractType
 {
+    /**
+     *@param FormBuilderInterface<Media> $builder
+     * @param array<string, mixed> $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): self
     {
         $builder->add('name', TextType::class, ['required' => true]);
@@ -52,8 +56,11 @@ class MediaType extends AbstractType
                 $data = $event->getData();
                 $contentObject = $form->getNormData();
 
-                if (!$contentObject instanceof Media || !isset($data['image'])
-                    || !$data['image'] instanceof UploadedFile) {
+                if (
+                    !$contentObject instanceof Media
+                    || !isset($data['image'])
+                    || !$data['image'] instanceof UploadedFile
+                ) {
                     return;
                 }
 

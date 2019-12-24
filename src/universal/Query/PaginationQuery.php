@@ -38,14 +38,24 @@ class PaginationQuery implements QueryInterface, ImmutableInterface
 {
     use ImmutableTrait;
 
+    /**
+     * @var array<string, mixed>
+     */
     private array $criteria;
 
+    /**
+     * @var array<string, string>
+     */
     private array $order;
 
     private int $limit;
 
     private int $offset;
 
+    /**
+     * @param array<string, mixed> $criteria
+     * @param array<string, string> $order
+     */
     public function __construct(array $criteria, array $order, int $limit, int $offset)
     {
         $this->uniqueConstructorCheck();

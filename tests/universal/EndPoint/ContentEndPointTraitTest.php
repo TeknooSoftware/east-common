@@ -196,6 +196,49 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
         );
     }
 
+    public function testInvokeFoundWrongType()
+    {
+        $client = $this->createMock(ClientInterface::class);
+        $client->expects(self::never())
+            ->method('acceptResponse');
+
+        $client->expects(self::once())
+            ->method('errorInRequest')
+            ->willReturnSelf();
+
+        $this->getContentLoader()
+            ->expects(self::any())
+            ->method('query')
+            ->with(new PublishedContentFromSlugQuery('foo-bar'))
+            ->willReturnCallback(function ($id, PromiseInterface $promise) {
+                $content = new Content();
+                $promise->success($content);
+
+                return $this->getContentLoader();
+            });
+
+        $uri = $this->createMock(UriInterface::class);
+        $uri->expects(self::any())
+            ->method('getPath')
+            ->willReturn('/item/sub/foo-bar');
+
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->expects(self::any())
+            ->method('getUri')
+            ->willReturn($uri);
+
+        $request->expects(self::any())
+            ->method('getAttribute')
+            ->willReturnMap([
+                [ViewParameterInterface::REQUEST_PARAMETER_KEY, [], ['foo'=>'bar']]
+            ]);
+
+        self::assertInstanceOf(
+            EndPointInterface::class,
+            $this->buildEndPoint()($client, $request)
+        );
+    }
+
     public function testInvokeFound()
     {
         $client = $this->createMock(ClientInterface::class);

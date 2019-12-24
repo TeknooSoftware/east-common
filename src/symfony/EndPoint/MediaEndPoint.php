@@ -34,6 +34,6 @@ use Teknoo\East\Website\EndPoint\MediaEndPointTrait;
  */
 class MediaEndPoint implements EndPointInterface
 {
-    use EastEndPointTrait,
-        MediaEndPointTrait;
+    use EastEndPointTrait;
+    use MediaEndPointTrait;
 }

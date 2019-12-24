@@ -38,8 +38,8 @@ use Teknoo\East\Website\Service\DeletingService;
  */
 class AdminDeleteEndPoint implements EndPointInterface
 {
-    use EastEndPointTrait,
-        AdminEndPointTrait;
+    use EastEndPointTrait;
+    use AdminEndPointTrait;
 
     private DeletingService $deletingService;
 
@@ -55,7 +55,7 @@ class AdminDeleteEndPoint implements EndPointInterface
         ClientInterface $client,
         string $id,
         string $nextRoute
-    ) {
+    ): self {
         $this->loader->load(
             $id,
             new Promise(

@@ -24,8 +24,6 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine;
 
-use function DI\get;
-use function DI\create;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Psr\Container\ContainerInterface;
@@ -46,6 +44,9 @@ use Teknoo\East\Website\Object\Item;
 use Teknoo\East\Website\Object\Media;
 use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Object\User;
+
+use function DI\get;
+use function DI\create;
 
 return [
     ManagerInterface::class => get(Manager::class),

@@ -34,6 +34,6 @@ use Teknoo\East\Website\EndPoint\StaticEndPointTrait;
  */
 class StaticEndPoint implements EndPointInterface
 {
-    use EastEndPointTrait,
-        StaticEndPointTrait;
+    use EastEndPointTrait;
+    use StaticEndPointTrait;
 }

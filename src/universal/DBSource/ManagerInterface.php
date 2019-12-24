@@ -46,9 +46,7 @@ interface ManagerInterface
      * This effectively synchronizes the in-memory state of managed objects with the
      * database.
      *
-     * @param object|null $object The instance to make managed and persistent.
-     *
      * @return ManagerInterface
      */
-    public function flush($object = null): ManagerInterface;
+    public function flush(): ManagerInterface;
 }

@@ -31,6 +31,7 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Teknoo\East\WebsiteBundle\Object\User;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -38,6 +39,10 @@ use Symfony\Component\Form\FormBuilderInterface;
  */
 class UserType extends AbstractType
 {
+    /**
+     * @param FormBuilderInterface<User> $builder
+     * @param array<string, mixed> $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): self
     {
         $builder->add('firstName', TextType::class, ['required' => true]);

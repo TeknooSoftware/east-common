@@ -24,9 +24,6 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website;
 
-use function DI\get;
-use function DI\decorate;
-use function DI\create;
 use Gedmo\Translatable\TranslatableListener;
 use Psr\Container\ContainerInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
@@ -50,6 +47,10 @@ use Teknoo\East\Website\Writer\ContentWriter;
 use Teknoo\East\Website\Writer\MediaWriter;
 use Teknoo\East\Website\Writer\TypeWriter;
 use Teknoo\East\Website\Writer\UserWriter;
+
+use function DI\get;
+use function DI\decorate;
+use function DI\create;
 
 return [
     //Loaders

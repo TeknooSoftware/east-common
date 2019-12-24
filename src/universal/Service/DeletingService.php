@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Service;
 
 use Teknoo\East\Website\Object\DeletableInterface;
+use Teknoo\East\Website\Object\ObjectInterface;
 use Teknoo\East\Website\Writer\WriterInterface;
 
 /**
@@ -57,11 +58,13 @@ class DeletingService
         return new \DateTime();
     }
 
-    public function delete(DeletableInterface $object) : DeletingService
+    public function delete(DeletableInterface $object): DeletingService
     {
         $object->setDeletedAt($this->getCurrentDate());
 
-        $this->writer->save($object);
+        if ($object instanceof ObjectInterface) {
+            $this->writer->save($object);
+        }
 
         return $this;
     }

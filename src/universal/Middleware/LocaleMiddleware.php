@@ -85,6 +85,9 @@ class LocaleMiddleware implements MiddlewareInterface
         return $returnedLocale;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function getViewParameters(ServerRequestInterface $request): array
     {
         return $request->getAttribute(ViewParameterInterface::REQUEST_PARAMETER_KEY, []);

@@ -48,6 +48,9 @@ trait ContentEndPointTrait
         $this->error404Template = $error404Template;
     }
 
+    /**
+     * @return array<int, string>
+     */
     private function parseUrl(ServerRequestInterface $request): array
     {
         return \explode('/', \trim((string) $request->getUri()->getPath(), '/'));
@@ -69,6 +72,12 @@ trait ContentEndPointTrait
             new Promise(
                 function (Content $content) use ($client, $request) {
                     $type = $content->getType();
+                    if (null === $type) {
+                        $client->errorInRequest(new \RuntimeException('Content type is not available'));
+
+                        return;
+                    }
+
                     $viewParameters = $request->getAttribute(ViewParameterInterface::REQUEST_PARAMETER_KEY, []);
                     $viewParameters = \array_merge($viewParameters, ['content' => $content]);
 

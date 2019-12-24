@@ -26,6 +26,7 @@ namespace Teknoo\East\WebsiteBundle\AdminEndPoint;
 
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
+use Teknoo\East\Website\Object\ObjectInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -55,10 +56,14 @@ trait AdminFormTrait
         return $this;
     }
 
+    /**
+     * @param array<string, mixed> $options
+     * @return FormInterface<mixed>
+     */
     private function createForm(
-        $data = null,
+        ?ObjectInterface $data = null,
         array $options = array()
-    ) : FormInterface {
+    ): FormInterface {
         return $this->formFactory->create($this->formClass, $data, $options);
     }
 }

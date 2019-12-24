@@ -26,6 +26,7 @@ namespace Teknoo\East\WebsiteBundle\Writer;
 
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
+use Teknoo\East\Website\Object\ObjectInterface;
 use Teknoo\East\Website\Object\User as BaseUser;
 use Teknoo\East\Website\Writer\WriterInterface;
 use Teknoo\East\Website\Writer\UserWriter as UniversalWriter;
@@ -52,14 +53,23 @@ class UserWriter implements WriterInterface
         if ($user->hasUpdatedPassword()) {
             $encoder = $this->encoderFactory->getEncoder(new User($user));
             $salt = $user->getSalt();
-            $user->setPassword($encoder->encodePassword($user->getPassword(), $salt));
+            $user->setPassword((string) $encoder->encodePassword($user->getPassword(), $salt));
         } else {
             $user->eraseCredentials();
         }
     }
 
-    public function save($object, PromiseInterface $promise = null): WriterInterface
+    public function save(ObjectInterface $object, PromiseInterface $promise = null): WriterInterface
     {
+        if (!$object instanceof BaseUser) {
+            if (null !== $promise) {
+                $class = \get_class($object);
+                $promise->fail(new \RuntimeException("The class $class is not managed by this writer"));
+            }
+
+            return $this;
+        }
+
         $this->encodePassword($object);
 
         $this->universalWriter->save($object, $promise);

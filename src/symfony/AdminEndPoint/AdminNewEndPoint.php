@@ -37,9 +37,9 @@ use Teknoo\East\Website\Object\ObjectInterface;
  */
 class AdminNewEndPoint implements EndPointInterface
 {
-    use EastEndPointTrait,
-        AdminEndPointTrait,
-        AdminFormTrait;
+    use EastEndPointTrait;
+    use AdminEndPointTrait;
+    use AdminFormTrait;
 
     private string $objectClass;
 
@@ -60,14 +60,14 @@ class AdminNewEndPoint implements EndPointInterface
         string $editRoute,
         bool $isTranslatable = false,
         string $viewPath = null
-    ) {
+    ): self {
         if (null === $viewPath) {
             $viewPath = $this->viewPath;
         }
 
         $class = $this->objectClass;
 
-        $object = new $class;
+        $object = new $class();
         $form = $this->createForm($object);
         $form->handleRequest($request->getAttribute('request'));
 

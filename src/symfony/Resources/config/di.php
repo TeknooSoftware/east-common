@@ -24,10 +24,11 @@ declare(strict_types=1);
 
 namespace Teknoo\East\WebsiteBundle\Resources\config;
 
-use function DI\decorate;
 use Psr\Container\ContainerInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
 use Teknoo\East\WebsiteBundle\Middleware\LocaleMiddleware;
+
+use function DI\decorate;
 
 return [
     //Middleware

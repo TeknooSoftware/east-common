@@ -160,7 +160,37 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
             ->method('query')
             ->willReturnCallback(function ($query, PromiseInterface $promise) {
                 self::assertEquals(new PaginationQuery([], [], 15, 15), $query);
-                $promise->success($this->createMock(Iterator::class));
+                $iterator = new class implements Iterator, \Countable{
+                    public function next() {}
+
+                    public function valid()
+                    {
+                        return true;
+                    }
+
+                    public function rewind() {}
+
+                    public function count()
+                    {
+                        return 1;
+                    }
+
+                    public function toArray(): array
+                    {
+                        return ['foo' => 'bar'];
+                    }
+
+                    public function current()
+                    {
+                        return 'bar';
+                    }
+
+                    public function key()
+                    {
+                        return 'foo';
+                    }
+                };
+                $promise->success($iterator);
 
                 return $this->getLoaderService();
             });

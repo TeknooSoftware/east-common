@@ -71,15 +71,13 @@ class ManagerTest extends TestCase
 
     public function testFlush()
     {
-        $object = new \stdClass();
         $this->getDoctrineObjectManagerMock()
             ->expects(self::once())
-            ->method('flush')
-            ->with($object);
+            ->method('flush');
 
         self::assertInstanceOf(
             Manager::class,
-            $this->buildManager()->flush($object)
+            $this->buildManager()->flush()
         );
     }
 }

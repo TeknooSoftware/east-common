@@ -26,6 +26,7 @@ namespace Teknoo\East\Website\Writer;
 
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\ManagerInterface;
+use Teknoo\East\Website\Object\ObjectInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -43,7 +44,7 @@ trait PersistTrait
     /**
      * @throws \Throwable
      */
-    private function persist($object, ?PromiseInterface $promise = null): self
+    private function persist(ObjectInterface $object, ?PromiseInterface $promise = null): self
     {
         try {
             $this->manager->persist($object);

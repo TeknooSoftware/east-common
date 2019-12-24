@@ -37,8 +37,8 @@ use Teknoo\East\Website\Query\PaginationQuery;
  */
 class AdminListEndPoint implements EndPointInterface
 {
-    use EastEndPointTrait,
-        AdminEndPointTrait;
+    use EastEndPointTrait;
+    use AdminEndPointTrait;
 
     private int $itemsPerPage = 15;
 
@@ -63,6 +63,9 @@ class AdminListEndPoint implements EndPointInterface
         return $this;
     }
 
+    /**
+     * @return array<string, string>
+     */
     private function extractOrder(ServerRequestInterface $request): array
     {
         $order = [];
@@ -80,9 +83,9 @@ class AdminListEndPoint implements EndPointInterface
         }
 
         if (!empty($queryParams['order'])) {
-            $order[$queryParams['order']] = $direction;
+            $order[(string) $queryParams['order']] = $direction;
         } elseif (!empty($this->defaultOrderColumn)) {
-            $order[$this->defaultOrderColumn] = $direction;
+            $order[(string) $this->defaultOrderColumn] = $direction;
         }
 
         return $order;
@@ -93,7 +96,7 @@ class AdminListEndPoint implements EndPointInterface
         ClientInterface $client,
         string $page = '1',
         string $viewPath = null
-    ) :AdminListEndPoint {
+    ): AdminListEndPoint {
         $page = (int) $page;
 
         if ($page < 1) {
@@ -113,11 +116,11 @@ class AdminListEndPoint implements EndPointInterface
         }
 
         $this->loader->query(
-            new PaginationQuery([], $order, $this->itemsPerPage, ($page-1)*$this->itemsPerPage),
+            new PaginationQuery([], $order, $this->itemsPerPage, ($page - 1) * $this->itemsPerPage),
             new Promise(function ($objects) use ($client, $page, $viewPath, $request) {
                 $pageCount = 1;
                 if ($objects instanceof \Countable) {
-                    $pageCount =  \ceil($objects->count()/$this->itemsPerPage);
+                    $pageCount =  \ceil($objects->count() / $this->itemsPerPage);
                 }
 
                 $this->render(

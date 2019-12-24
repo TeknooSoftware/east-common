@@ -81,14 +81,20 @@ class User implements ObjectInterface, DeletableInterface
 
     public function __toString()
     {
-        return \trim($this->getFirstName().' '.$this->getLastName());
+        return \trim($this->getFirstName() . ' ' . $this->getLastName());
     }
 
+    /**
+     * @return array<string>
+     */
     public function getRoles(): array
     {
         return $this->roles;
     }
 
+    /**
+     * @param array<string> $roles
+     */
     public function setRoles(array $roles): User
     {
         $this->roles = $roles;

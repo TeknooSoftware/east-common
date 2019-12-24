@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Writer;
 
 use Teknoo\East\Foundation\Promise\PromiseInterface;
+use Teknoo\East\Website\Object\ObjectInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -38,7 +39,7 @@ class TypeWriter implements WriterInterface
      * {@inheritdoc}
      * @throws \Throwable
      */
-    public function save($object, PromiseInterface $promise = null): WriterInterface
+    public function save(ObjectInterface $object, PromiseInterface $promise = null): WriterInterface
     {
         $this->persist($object, $promise);
 

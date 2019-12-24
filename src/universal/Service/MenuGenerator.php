@@ -26,6 +26,7 @@ namespace Teknoo\East\Website\Service;
 
 use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Website\Loader\ItemLoader;
+use Teknoo\East\Website\Object\Item;
 use Teknoo\East\Website\Query\Item\TopItemByLocationQuery;
 
 /**
@@ -41,6 +42,9 @@ class MenuGenerator
         $this->itemLoader = $itemLoader;
     }
 
+    /**
+     * @return iterable<Item>
+     */
     public function extract(string $location): iterable
     {
         $stacks = [];

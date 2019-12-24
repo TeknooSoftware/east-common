@@ -1,0 +1,23 @@
+parameters:
+    scopeClass: Teknoo\States\PHPStan\Analyser\Scope
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false
+    ignoreErrors:
+        -
+            message: '#Method [a-zA-Z0-9\\_]+::getCurrentDateTime\(\) should return DateTimeInterface but returns DateTimeInterface|null#'
+            path: src/symfony/AdminEndPoint/AdminEditEndPoint.php
+        -
+            message: '#Call to an undefined method [a-zA-Z0-9\\_]+&[a-zA-Z0-9\\_]+::setPublishedAt\(\)#'
+            path: src/symfony/AdminEndPoint/AdminEditEndPoint.php
+        -
+            message: '#Cannot cast array<string>|string|null to string.#'
+            path: src/symfony/Command/CreateUserCommand.php
+        -
+            message: '#Parameter \#1 $argument of class ReflectionClass constructor expects class-string<T of object>|T of object, string given.#'
+            path: src/symfony/Provider/UserProvider.php
+        - '#MongoGridFS#'
+services:
+	-
+		class: Teknoo\States\PHPStan\MethodsClassExtension
+		tags:
+			- phpstan.broker.methodsClassReflectionExtension

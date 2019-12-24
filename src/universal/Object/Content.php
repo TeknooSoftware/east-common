@@ -27,6 +27,7 @@ namespace Teknoo\East\Website\Object;
 use Gedmo\Translatable\Translatable;
 use Teknoo\East\Website\Object\Content\Draft;
 use Teknoo\East\Website\Object\Content\Published;
+use Teknoo\States\Automated\Assertion\AssertionInterface;
 use Teknoo\States\Automated\Assertion\Property;
 use Teknoo\States\Automated\Assertion\Property\IsInstanceOf;
 use Teknoo\States\Automated\Assertion\Property\IsNotInstanceOf;
@@ -47,9 +48,9 @@ class Content implements
     DeletableInterface,
     PublishableInterface
 {
-    use PublishableTrait,
-        StandardTrait,
-        AutomatedTrait {
+    use PublishableTrait;
+    use StandardTrait;
+    use AutomatedTrait {
         AutomatedTrait::updateStates insteadof StandardTrait;
     }
 
@@ -66,7 +67,7 @@ class Content implements
     private string $parts = '{}';
 
     /**
-     * @var string[]
+     * @var array<string>
      */
     private array $tags = [];
 
@@ -85,6 +86,7 @@ class Content implements
 
     /**
      * {@inheritdoc}
+     * @return array<string>
      */
     public static function statesListDeclaration(): array
     {
@@ -96,6 +98,7 @@ class Content implements
 
     /**
      * {@inheritdoc}
+     * @return array<AssertionInterface>
      */
     protected function listAssertions(): array
     {
@@ -171,13 +174,16 @@ class Content implements
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      */
     public function getParts(): array
     {
         return (array) \json_decode((string) $this->parts, true);
     }
 
+    /**
+     * @param array<mixed>|null $parts
+     */
     public function setParts(?array $parts): Content
     {
         $this->parts = (string) \json_encode((array) $parts);
@@ -185,11 +191,17 @@ class Content implements
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getTags(): array
     {
         return $this->tags;
     }
 
+    /**
+     * @param array<string> $tags
+     */
     public function setTags(array $tags): Content
     {
         $this->tags = $tags;

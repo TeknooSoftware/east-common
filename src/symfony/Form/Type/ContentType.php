@@ -47,6 +47,10 @@ class ContentType extends AbstractType
 {
     use TranslatableTrait;
 
+    /**
+     * @param FormBuilderInterface<Content> $builder
+     * @param array<string, mixed> $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): self
     {
         $builder->add(
@@ -77,10 +81,10 @@ class ContentType extends AbstractType
                 }
             ]
         );
-        $builder->add('title', TextType::class, ['required'=>true]);
-        $builder->add('subtitle', TextType::class, ['required'=>false]);
-        $builder->add('slug', TextType::class, ['required'=>false]);
-        $builder->add('description', TextareaType::class, ['required'=>false]);
+        $builder->add('title', TextType::class, ['required' => true]);
+        $builder->add('subtitle', TextType::class, ['required' => false]);
+        $builder->add('slug', TextType::class, ['required' => false]);
+        $builder->add('description', TextareaType::class, ['required' => false]);
         $builder->add(
             'publishedAt',
             DateTimeType::class,

@@ -36,6 +36,9 @@ class Type implements ObjectInterface, DeletableInterface
 
     private string $template = '';
 
+    /**
+     * @var array<string, string>
+     */
     private array $blocks = [];
 
     public function getName(): string
@@ -67,6 +70,9 @@ class Type implements ObjectInterface, DeletableInterface
         return $this;
     }
 
+    /**
+     * @return array<Block>
+     */
     public function getBlocks(): array
     {
         return \array_map(
@@ -78,6 +84,9 @@ class Type implements ObjectInterface, DeletableInterface
         );
     }
 
+    /**
+     * @param array<Block> $blocks
+     */
     public function setBlocks(array $blocks): Type
     {
         $this->blocks = [];

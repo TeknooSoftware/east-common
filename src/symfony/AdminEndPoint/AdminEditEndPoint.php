@@ -38,11 +38,11 @@ use Teknoo\East\Website\Object\PublishableInterface;
  */
 class AdminEditEndPoint implements EndPointInterface
 {
-    use EastEndPointTrait,
-        AdminEndPointTrait,
-        AdminFormTrait;
+    use EastEndPointTrait;
+    use AdminEndPointTrait;
+    use AdminFormTrait;
 
-    private ?\DateTimeImmutable $currentDate = null;
+    private ?\DateTimeInterface $currentDate = null;
 
     public function setCurrentDate(\DateTimeInterface $currentDate): AdminEditEndPoint
     {
@@ -55,9 +55,9 @@ class AdminEditEndPoint implements EndPointInterface
         return $this;
     }
 
-    private function getCurrentDateTime(): \DateTimeImmutable
+    private function getCurrentDateTime(): \DateTimeInterface
     {
-        if (!$this->currentDate instanceof \DateTimeImmutable) {
+        if (!$this->currentDate instanceof \DateTimeInterface) {
             $this->setCurrentDate(new \DateTime());
         }
 
@@ -70,7 +70,7 @@ class AdminEditEndPoint implements EndPointInterface
         string $id,
         bool $isTranslatable = false,
         string $viewPath = null
-    ) {
+    ): self {
         if (null === $viewPath) {
             $viewPath = $this->viewPath;
         }

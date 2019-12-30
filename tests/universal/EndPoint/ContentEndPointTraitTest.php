@@ -75,7 +75,7 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
             /**
              * {@inheritdoc}
              */
-            public function render(ClientInterface $client, string $view, array $parameters = array(), int $status = 200): EndPointInterface
+            public function render(ClientInterface $client, string $view, array $parameters = array(), int $status = 200, array $headers = []): EndPointInterface
             {
                 if ('error-404' != $view) {
                     if (!isset($parameters['content'])) {
@@ -84,6 +84,10 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
 
                     if (!isset($parameters['foo']) || 'bar' != $parameters['foo']) {
                         throw new \Exception('missing foo key in view parameters');
+                    }
+
+                    if (empty($headers['Last-Modified'])) {
+                        throw new \Exception('missing Last Modified in header');
                     }
                 }
 
@@ -212,6 +216,7 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
             ->with(new PublishedContentFromSlugQuery('foo-bar'))
             ->willReturnCallback(function ($id, PromiseInterface $promise) {
                 $content = new Content();
+                $content->setUpdatedAt(new \DateTime('2019-12-30'));
                 $promise->success($content);
 
                 return $this->getContentLoader();
@@ -267,6 +272,7 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
                 $type = new Type();
                 $type->setTemplate('fooBar');
                 $content->setType($type);
+                $content->setUpdatedAt(new \DateTime('2019-12-30'));
                 $promise->success($content);
 
                 return $this->getContentLoader();
@@ -321,6 +327,7 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
                 $type = new Type();
                 $type->setTemplate('fooBar');
                 $content->setType($type);
+                $content->setUpdatedAt(new \DateTime('2019-12-30'));
                 $promise->success($content);
 
                 return $this->getContentLoader();

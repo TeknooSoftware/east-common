@@ -1,5 +1,10 @@
 #Teknoo Software - Website - Change Log
 
+##[2.0.0-beta7] - 2019-12-30
+###Change
+- ContentEndPoint put Last-Modified date into Response header from last updated date of content object
+- Can update manually the UpdatedAt for class implementing ObjectTrait
+
 ##[2.0.0-beta6] - 2019-12-30
 ###Change
 - Update copyright

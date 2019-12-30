@@ -31,7 +31,7 @@
         "teknoo/immutable": "^2.0.0-beta5",
         "teknoo/states": "^4.0.0-beta5",
         "teknoo/recipe": "^2.0.0-beta4",
-        "teknoo/east-foundation": "^2.0.0-beta6",
+        "teknoo/east-foundation": "^2.0.0-beta8",
         "php-di/php-di": "~6.0"
     },
     "require-dev": {

@@ -81,10 +81,18 @@ trait ContentEndPointTrait
                     $viewParameters = $request->getAttribute(ViewParameterInterface::REQUEST_PARAMETER_KEY, []);
                     $viewParameters = \array_merge($viewParameters, ['content' => $content]);
 
+                    $headers = [];
+                    $updatedAt = $content->updatedAt();
+                    if (null !== $updatedAt) {
+                        $headers['Last-Modified'] = $updatedAt->format('D, d M Y H:i:s \G\M\T');
+                    }
+
                     $this->render(
                         $client,
                         $type->getTemplate(),
-                        $viewParameters
+                        $viewParameters,
+                        200,
+                        $headers
                     );
                 },
                 function (\Throwable $e) use ($client, $request) {

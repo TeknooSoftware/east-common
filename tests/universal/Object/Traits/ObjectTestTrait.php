@@ -106,4 +106,26 @@ trait ObjectTestTrait
         $this->expectException(\Throwable::class);
         $this->buildObject()->setDeletedAt(new \stdClass());
     }
+
+    public function testSetUpdatedAt()
+    {
+        $date = new \DateTime('2017-06-13');
+        
+        $Object = $this->buildObject();
+        self::assertInstanceOf(
+            \get_class($Object),
+            $Object->setUpdatedAt($date)
+        );
+
+        self::assertEquals(
+            $date,
+            $Object->updatedAt()
+        );
+    }
+
+    public function testSetUpdatedAtExceptionOnBadArgument()
+    {
+        $this->expectException(\Throwable::class);
+        $this->buildObject()->setUpdatedAt(new \stdClass());
+    }
 }

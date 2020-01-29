@@ -78,7 +78,7 @@ class CreateUserCommand extends Command
 
         $encoder = $this->encoderFactory->getEncoder(new User($user));
         $salt = $user->getSalt();
-        $user->setPassword((string) $encoder->encodePassword($input->getArgument('password'), $salt));
+        $user->setPassword((string) $encoder->encodePassword((string) $input->getArgument('password'), $salt));
 
         $this->writer->save($user);
 

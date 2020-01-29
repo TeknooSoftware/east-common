@@ -79,7 +79,8 @@ class AdminEditEndPoint implements EndPointInterface
             $id,
             new Promise(
                 function (ObjectInterface $object) use ($client, $request, $isTranslatable, $viewPath) {
-                    if ($object instanceof PublishableInterface && isset($request->getParsedBody()['publish'])) {
+                    $parsedBody = (array) $request->getParsedBody();
+                    if ($object instanceof PublishableInterface && isset($parsedBody['publish'])) {
                         $object->setPublishedAt($this->getCurrentDateTime());
                     }
 

@@ -22,28 +22,5 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\WebsiteBundle\Resources\config;
-
-use Psr\Container\ContainerInterface;
-use Teknoo\East\Foundation\Recipe\RecipeInterface;
-use Teknoo\East\WebsiteBundle\Middleware\LocaleMiddleware;
-
-use function DI\decorate;
-
-return [
-    //Middleware
-    LocaleMiddleware::class => function (ContainerInterface $container): LocaleMiddleware {
-        return new LocaleMiddleware($container->get('translator'));
-    },
-
-    RecipeInterface::class => decorate(function ($previous, ContainerInterface $container) {
-        if ($previous instanceof RecipeInterface) {
-            $previous = $previous->registerMiddleware(
-                $container->get(LocaleMiddleware::class),
-                LocaleMiddleware::MIDDLEWARE_PRIORITY
-            );
-        }
-
-        return $previous;
-    }),
-];
+//To avoid BC Breaks
+return include \dirname(__DIR__, 4) . '/infrastructures/symfony/Resources/config/di.php';

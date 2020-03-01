@@ -15,11 +15,11 @@
     "autoload": {
         "psr-4": {
             "Teknoo\\East\\Website\\": "src/universal",
-            "Teknoo\\East\\WebsiteBundle\\": "src/symfony",
-            "Teknoo\\East\\Website\\Doctrine\\": "src/doctrine",
+            "Teknoo\\East\\WebsiteBundle\\": "infrastructures/symfony",
+            "Teknoo\\East\\Website\\Doctrine\\": "infrastructures/doctrine",
             "Teknoo\\Tests\\East\\Website\\": "tests/universal",
-            "Teknoo\\Tests\\East\\WebsiteBundle\\": "tests/symfony",
-            "Teknoo\\Tests\\East\\Website\\Doctrine\\": "tests/doctrine"
+            "Teknoo\\Tests\\East\\WebsiteBundle\\": "tests/infrastructures/symfony",
+            "Teknoo\\Tests\\East\\Website\\Doctrine\\": "tests/infrastructures/doctrine"
         }
     },
     "require": {

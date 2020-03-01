@@ -49,9 +49,9 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
     protected function buildContainer() : Container
     {
         $containerDefinition = new ContainerBuilder();
-        $containerDefinition->addDefinitions(__DIR__.'/../../vendor/teknoo/east-foundation/src/universal/di.php');
-        $containerDefinition->addDefinitions(__DIR__.'/../../src/universal/di.php');
-        $containerDefinition->addDefinitions(__DIR__.'/../../src/symfony/Resources/config/di.php');
+        $containerDefinition->addDefinitions(__DIR__.'/../../../vendor/teknoo/east-foundation/src/universal/di.php');
+        $containerDefinition->addDefinitions(__DIR__.'/../../../src/universal/di.php');
+        $containerDefinition->addDefinitions(__DIR__.'/../../../infrastructures/symfony/Resources/config/di.php');
 
         return $containerDefinition->build();
     }

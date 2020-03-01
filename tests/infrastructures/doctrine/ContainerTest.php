@@ -57,7 +57,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
     protected function buildContainer() : Container
     {
         $containerDefinition = new ContainerBuilder();
-        $containerDefinition->addDefinitions(__DIR__.'/../../src/doctrine/di.php');
+        $containerDefinition->addDefinitions(__DIR__.'/../../../infrastructures/doctrine/di.php');
 
         return $containerDefinition->build();
     }

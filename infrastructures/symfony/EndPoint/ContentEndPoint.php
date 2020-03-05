@@ -28,7 +28,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
 use Teknoo\East\Website\EndPoint\ContentEndPointTrait;
-use Teknoo\East\Website\Object\Item;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License

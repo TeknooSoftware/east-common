@@ -26,12 +26,14 @@ use DI\Container;
 use DI\ContainerBuilder;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
+use Gedmo\Translatable\TranslatableListener;
 use Teknoo\East\Website\DBSource\ManagerInterface;
 use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
 use Teknoo\East\Website\DBSource\Repository\ItemRepositoryInterface;
 use Teknoo\East\Website\DBSource\Repository\MediaRepositoryInterface;
 use Teknoo\East\Website\DBSource\Repository\TypeRepositoryInterface;
 use Teknoo\East\Website\DBSource\Repository\UserRepositoryInterface;
+use Teknoo\East\Website\Middleware\LocaleMiddleware;
 use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Object\Item;
 use Teknoo\East\Website\Object\Media;
@@ -50,6 +52,17 @@ use Teknoo\East\Website\Object\User;
  */
 class ContainerTest extends \PHPUnit\Framework\TestCase
 {
+    public function testLegacyDIForward()
+    {
+        $di1 = include __DIR__.'/../../../src/doctrine/di.php';
+        $di2 = include __DIR__.'/../../../infrastructures/doctrine/di.php';
+
+        self::assertEquals(
+            $di1,
+            $di2
+        );
+    }
+
     /**
      * @return Container
      * @throws \Exception
@@ -153,5 +166,33 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException(\RuntimeException::class);
         $this->generateTestForRepositoryWithUnsupportedRepository(User::class, UserRepositoryInterface::class);
+    }
+
+    public function testLocaleMiddlewareWithSymfonyContext()
+    {
+        $container = $this->buildContainer();
+        $translatableListener = $this->createMock(TranslatableListener::class);
+
+        $container->set('stof_doctrine_extensions.listener.translatable', $translatableListener);
+        $loader = $container->get(LocaleMiddleware::class);
+
+        self::assertInstanceOf(
+            LocaleMiddleware::class,
+            $loader
+        );
+    }
+
+    public function testLocaleMiddlewareWithoutSymfonyContext()
+    {
+        $container = $this->buildContainer();
+        $translatableListener = $this->createMock(TranslatableListener::class);
+
+        $container->set(TranslatableListener::class, $translatableListener);
+        $loader = $container->get(LocaleMiddleware::class);
+
+        self::assertInstanceOf(
+            LocaleMiddleware::class,
+            $loader
+        );
     }
 }

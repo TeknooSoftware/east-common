@@ -20,15 +20,16 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\WebsiteBundle\Form\Type;
+namespace Teknoo\Tests\East\Website\Doctrine\Form\Type;
 
-use Teknoo\East\WebsiteBundle\Form\Type\ItemType;
+use Teknoo\East\Website\Doctrine\Form\Type\ItemType;
+use Teknoo\Tests\East\WebsiteBundle\Form\Type\FormTestTrait;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers      \Teknoo\East\WebsiteBundle\Form\Type\ItemType
- * @covers      \Teknoo\East\WebsiteBundle\Form\Type\TranslatableTrait
+ * @covers      \Teknoo\East\Website\Doctrine\Form\Type\ItemType
+ * @covers      \Teknoo\East\Website\Doctrine\Form\Type\TranslatableTrait
  */
 class ItemTypeTest extends \PHPUnit\Framework\TestCase
 {

@@ -96,23 +96,15 @@ return [
         ->constructor(get(MenuGenerator::class)),
 
     //Middleware
-    LocaleMiddleware::class => function (ContainerInterface $container): LocaleMiddleware {
-        $listener = null;
-        if ($container->has('stof_doctrine_extensions.listener.translatable')) {
-            $listener = $container->get('stof_doctrine_extensions.listener.translatable');
-        } else {
-            $listener = $container->get(TranslatableListener::class);
-        }
-
-        return new LocaleMiddleware($listener);
-    },
-
     RecipeInterface::class => decorate(function ($previous, ContainerInterface $container) {
         if ($previous instanceof RecipeInterface) {
-            $previous = $previous->registerMiddleware(
-                $container->get(LocaleMiddleware::class),
-                LocaleMiddleware::MIDDLEWARE_PRIORITY
-            );
+            if ($container->has(LocaleMiddleware::class)) {
+                $previous = $previous->registerMiddleware(
+                    $container->get(LocaleMiddleware::class),
+                    LocaleMiddleware::MIDDLEWARE_PRIORITY
+                );
+            }
+
             $previous = $previous->registerMiddleware(
                 $container->get(MenuMiddleware::class),
                 MenuMiddleware::MIDDLEWARE_PRIORITY

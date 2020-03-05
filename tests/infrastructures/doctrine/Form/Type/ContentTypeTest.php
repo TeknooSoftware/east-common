@@ -20,7 +20,7 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\WebsiteBundle\Form\Type;
+namespace Teknoo\Tests\East\Website\Doctrine\Form\Type;
 
 use Doctrine\Bundle\MongoDBBundle\Form\Type\DocumentType;
 use Doctrine\ODM\MongoDB\Query\Builder;
@@ -32,13 +32,13 @@ use Symfony\Component\Form\FormInterface;
 use Teknoo\East\Website\Object\Block;
 use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Object\Type;
-use Teknoo\East\WebsiteBundle\Form\Type\ContentType;
+use Teknoo\East\Website\Doctrine\Form\Type\ContentType;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers      \Teknoo\East\WebsiteBundle\Form\Type\ContentType
- * @covers      \Teknoo\East\WebsiteBundle\Form\Type\TranslatableTrait
+ * @covers      \Teknoo\East\Website\Doctrine\Form\Type\ContentType
+ * @covers      \Teknoo\East\Website\Doctrine\Form\Type\TranslatableTrait
  */
 class ContentTypeTest extends \PHPUnit\Framework\TestCase
 {

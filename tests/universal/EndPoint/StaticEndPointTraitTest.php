@@ -22,12 +22,15 @@
 
 namespace Teknoo\Tests\East\Website\EndPoint;
 
+use Laminas\Diactoros\Response\TextResponse;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\StreamInterface;
 use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
 use Teknoo\East\Website\EndPoint\StaticEndPointTrait;
-use Zend\Diactoros\Response;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -41,7 +44,18 @@ class StaticEndPointTraitTest extends \PHPUnit\Framework\TestCase
      */
     public function buildEndPoint(): EndPointInterface
     {
-        return new class implements EndPointInterface {
+        $response = $this->createMock(ResponseInterface::class);
+        $response->expects(self::any())->method('withHeader')->willReturnSelf();
+        $responseFactory = $this->createMock(ResponseFactoryInterface::class);
+        $responseFactory->expects(self::any())->method('createResponse')->willReturn($response);
+
+        $stream = $this->createMock(StreamInterface::class);
+        $streamFactory = $this->createMock(StreamFactoryInterface::class);
+        $streamFactory->expects(self::any())->method('createStream')->willReturn($stream);
+        $streamFactory->expects(self::any())->method('createStreamFromFile')->willReturn($stream);
+        $streamFactory->expects(self::any())->method('createStreamFromResource')->willReturn($stream);
+
+        $endPoint = new class implements EndPointInterface {
             use EastEndPointTrait;
             use StaticEndPointTrait;
 
@@ -50,10 +64,15 @@ class StaticEndPointTraitTest extends \PHPUnit\Framework\TestCase
              */
             public function render(ClientInterface $client, string $view, array $parameters = array(), int $status = 200, array $headers = []): EndPointInterface
             {
-                $client->acceptResponse(new Response\TextResponse($view.':executed'));
+                $client->acceptResponse(new TextResponse($view.':executed'));
                 return $this;
             }
         };
+
+        $endPoint->setResponseFactory($responseFactory);
+        $endPoint->setStreamFactory($streamFactory);
+
+        return $endPoint;
     }
 
     public function testInvokeBadClient()

@@ -22,7 +22,7 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\WebsiteBundle\Form\Type;
+namespace Teknoo\East\Website\Doctrine\Form\Type;
 
 use Gedmo\Translatable\TranslatableListener;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;

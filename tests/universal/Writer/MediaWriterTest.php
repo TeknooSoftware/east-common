@@ -43,6 +43,11 @@ class MediaWriterTest extends \PHPUnit\Framework\TestCase
 
     public function getObject()
     {
-        return new Media();
+        return new class extends Media {
+            public function getResource()
+            {
+                return null;
+            }
+        };
     }
 }

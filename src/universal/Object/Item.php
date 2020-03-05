@@ -24,8 +24,6 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Object;
 
-use Gedmo\Translatable\Translatable;
-use phpDocumentor\Reflection\Types\Iterable_;
 use Teknoo\East\Website\Object\Item\Hidden;
 use Teknoo\East\Website\Object\Item\Available;
 use Teknoo\States\Automated\Assertion\AssertionInterface;
@@ -34,19 +32,17 @@ use Teknoo\States\Automated\Assertion\Property\IsEqual;
 use Teknoo\States\Automated\AutomatedInterface;
 use Teknoo\States\Automated\AutomatedTrait;
 use Teknoo\States\Proxy\ProxyInterface;
-use Teknoo\UniversalPackage\States\Document\StandardTrait;
+use Teknoo\States\Proxy\ProxyTrait;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, Translatable, DeletableInterface
+class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, DeletableInterface
 {
-    use StandardTrait;
     use AutomatedTrait;
-    use ObjectTrait {
-        AutomatedTrait::updateStates insteadof StandardTrait;
-    }
+    use ObjectTrait;
+    use ProxyTrait;
 
     private string $name = '';
 
@@ -58,7 +54,7 @@ class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, Trans
 
     private string $location = '';
 
-    private bool $hidden = false;
+    protected bool $hidden = false;
 
     private ?Item $parent = null;
 
@@ -218,17 +214,5 @@ class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, Trans
         $this->localeField = $localeField;
 
         return $this;
-    }
-
-    public function setTranslatableLocale(?string $locale): Item
-    {
-        $this->localeField = (string) $locale;
-
-        return $this;
-    }
-
-    public function getTranslatableLocale(): string
-    {
-        return (string) $this->localeField;
     }
 }

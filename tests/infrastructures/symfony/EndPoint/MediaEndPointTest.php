@@ -22,6 +22,12 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\EndPoint;
 
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\StreamInterface;
+use Teknoo\East\Diactoros\CallbackStream;
+use Teknoo\East\Diactoros\CallbackStreamFactory;
 use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\WebsiteBundle\EndPoint\MediaEndPoint;
 use Teknoo\Tests\East\Website\EndPoint\MediaEndPointTraitTest;
@@ -35,6 +41,27 @@ class MediaEndPointTest extends MediaEndPointTraitTest
 {
     public function buildEndPoint(): EndPointInterface
     {
-        return new MediaEndPoint($this->getMediaLoader());
+        $response = $this->createMock(ResponseInterface::class);
+        $response->expects(self::any())->method('withHeader')->willReturnSelf();
+        $inStream = null;
+        $response->expects(self::any())->method('withBody')->willReturnCallback(
+            function ($value) use (&$inStream, $response) {
+                $inStream = $value;
+                return $response;
+            }
+        );
+        $response->expects(self::any())->method('getBody')->willReturnCallback(
+            function () use (&$inStream) {
+                return $inStream;
+            }
+        );
+        $responseFactory = $this->createMock(ResponseFactoryInterface::class);
+        $responseFactory->expects(self::any())->method('createResponse')->willReturn($response);
+
+        $endPoint = new MediaEndPoint($this->getMediaLoader());
+        $endPoint->setResponseFactory($responseFactory);
+        $endPoint->setStreamFactory(new CallbackStreamFactory());
+
+        return $endPoint;
     }
 }

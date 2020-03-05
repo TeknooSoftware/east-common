@@ -22,7 +22,6 @@
 
 namespace Teknoo\Tests\East\Website\Middleware;
 
-use Gedmo\Translatable\TranslatableListener;
 use Psr\Http\Message\ServerRequestInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
@@ -39,20 +38,22 @@ use Teknoo\East\Website\Middleware\ViewParameterInterface;
 class LocaleMiddlewareTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var TranslatableListener
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
-    private $listenerTranslatable;
+    private $translatableSetter;
 
     /**
-     * @return TranslatableListener|\PHPUnit\Framework\MockObject\MockObject
+     * @return callable|\PHPUnit\Framework\MockObject\MockObject
      */
-    public function getListenerTranslatable(): TranslatableListener
+    public function getTranslatableSetter(): callable
     {
-        if (!$this->listenerTranslatable instanceof TranslatableListener) {
-            $this->listenerTranslatable = $this->createMock(TranslatableListener::class);
+        if (!$this->translatableSetter) {
+            $this->translatableSetter = $this->getMockBuilder(\stdClass::class)
+                ->addMethods(['__invoke'])
+                ->getMock();
         }
 
-        return $this->listenerTranslatable;
+        return $this->translatableSetter;
     }
 
     /**
@@ -61,7 +62,7 @@ class LocaleMiddlewareTest extends \PHPUnit\Framework\TestCase
      */
     public function buildMiddleware($locale='en'): LocaleMiddleware
     {
-        return new LocaleMiddleware($this->getListenerTranslatable(), $locale);
+        return new LocaleMiddleware($this->getTranslatableSetter(), $locale);
     }
 
     public function testExecuteBadClient()
@@ -107,9 +108,9 @@ class LocaleMiddlewareTest extends \PHPUnit\Framework\TestCase
             ->with($client, $serverRequestFinal)
             ->willReturnSelf();
 
-        $this->getListenerTranslatable()
+        $this->getTranslatableSetter()
             ->expects(self::once())
-            ->method('setTranslatableLocale')
+            ->method('__invoke')
             ->with('en');
 
         $serverRequest->expects(self::once())
@@ -159,9 +160,9 @@ class LocaleMiddlewareTest extends \PHPUnit\Framework\TestCase
             ->with($client, $serverRequestFinal)
             ->willReturnSelf();
 
-        $this->getListenerTranslatable()
+        $this->getTranslatableSetter()
             ->expects(self::once())
-            ->method('setTranslatableLocale')
+            ->method('__invoke')
             ->with('fr');
 
         $serverRequest->expects(self::once())
@@ -211,9 +212,9 @@ class LocaleMiddlewareTest extends \PHPUnit\Framework\TestCase
             ->with($client, $serverRequestFinal)
             ->willReturnSelf();
 
-        $this->getListenerTranslatable()
+        $this->getTranslatableSetter()
             ->expects(self::once())
-            ->method('setTranslatableLocale')
+            ->method('__invoke')
             ->with('es');
 
         $serverRequest->expects(self::once())

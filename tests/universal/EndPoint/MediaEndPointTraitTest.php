@@ -22,7 +22,12 @@
 
 namespace Teknoo\Tests\East\Website\EndPoint;
 
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\StreamInterface;
+use Teknoo\East\Diactoros\CallbackStream;
+use Teknoo\East\Diactoros\CallbackStreamFactory;
 use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
@@ -61,10 +66,33 @@ class MediaEndPointTraitTest extends \PHPUnit\Framework\TestCase
     public function buildEndPoint(): EndPointInterface
     {
         $mediaLoader = $this->getMediaLoader();
-        return new class($mediaLoader) implements EndPointInterface {
+
+        $response = $this->createMock(ResponseInterface::class);
+        $response->expects(self::any())->method('withHeader')->willReturnSelf();
+        $inStream = null;
+        $response->expects(self::any())->method('withBody')->willReturnCallback(
+            function ($value) use (&$inStream, $response) {
+                $inStream = $value;
+                return $response;
+            }
+        );
+        $response->expects(self::any())->method('getBody')->willReturnCallback(
+            function () use (&$inStream) {
+                return $inStream;
+            }
+        );
+        $responseFactory = $this->createMock(ResponseFactoryInterface::class);
+        $responseFactory->expects(self::any())->method('createResponse')->willReturn($response);
+
+        $endPoint = new class($mediaLoader) implements EndPointInterface {
             use EastEndPointTrait;
             use MediaEndPointTrait;
         };
+
+        $endPoint->setResponseFactory($responseFactory);
+        $endPoint->setStreamFactory(new CallbackStreamFactory());
+
+        return $endPoint;
     }
 
     public function testInvokeBadClient()
@@ -89,7 +117,8 @@ class MediaEndPointTraitTest extends \PHPUnit\Framework\TestCase
             ->method('acceptResponse')
             ->with($this->callback(function ($value) {
                 if ($value instanceof ResponseInterface) {
-                    return 'fooBarContent' == (string) $value->getBody();
+                    $stream = $value->getBody();
+                    return 'fooBarContent' == (string) $stream;
                 }
 
                 return false;
@@ -103,7 +132,13 @@ class MediaEndPointTraitTest extends \PHPUnit\Framework\TestCase
             ->method('load')
             ->with('fooBar')
             ->willReturnCallback(function ($id, PromiseInterface $promise) {
-                $media = new Media();
+                $media = new class extends Media {
+                    public function getResource()
+                    {
+                        return $this->getFile()->getResource();
+                    }
+                };
+
                 $media->setFile(new class extends \MongoGridFSFile {
                     public function getSize()
                     {
@@ -114,6 +149,7 @@ class MediaEndPointTraitTest extends \PHPUnit\Framework\TestCase
                     {
                         $hf = fopen('php://memory', 'rw+');
                         fwrite($hf, 'fooBarContent');
+                        fseek($hf, 0);
                         return $hf;
                     }
                 });

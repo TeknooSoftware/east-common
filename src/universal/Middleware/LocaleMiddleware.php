@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Middleware;
 
-use Gedmo\Translatable\TranslatableListener;
 use Psr\Http\Message\ServerRequestInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
@@ -41,13 +40,16 @@ class LocaleMiddleware implements MiddlewareInterface
     public const SESSION_KEY = 'locale';
     public const MIDDLEWARE_PRIORITY = 6;
 
-    private TranslatableListener $listenerTranslatable;
+    /**
+     * @var callable|null
+     */
+    private $translatableSetter;
 
     private string $defaultLocale = 'en';
 
-    public function __construct(TranslatableListener $listenerTranslatable, string $defaultLocale = 'en')
+    public function __construct(?callable $translatableSetter = null, string $defaultLocale = 'en')
     {
-        $this->listenerTranslatable = $listenerTranslatable;
+        $this->translatableSetter = $translatableSetter;
         $this->defaultLocale = $defaultLocale;
     }
 
@@ -70,12 +72,16 @@ class LocaleMiddleware implements MiddlewareInterface
                 static::SESSION_KEY,
                 new Promise(
                     function (string $locale) use (&$request, &$returnedLocale) {
-                        $this->listenerTranslatable->setTranslatableLocale($locale);
+                        if (\is_callable($this->translatableSetter)) {
+                            ($this->translatableSetter)($locale);
+                        }
                         $request = $request->withAttribute('locale', $locale);
                         $returnedLocale = $locale;
                     },
                     function () use (&$request) {
-                        $this->listenerTranslatable->setTranslatableLocale($this->defaultLocale);
+                        if (\is_callable($this->translatableSetter)) {
+                            ($this->translatableSetter)($this->defaultLocale);
+                        }
                         $request = $request->withAttribute('locale', $this->defaultLocale);
                     }
                 )
@@ -112,7 +118,9 @@ class LocaleMiddleware implements MiddlewareInterface
         $queryParams = $request->getQueryParams();
         if (isset($queryParams['locale'])) {
             $locale = $queryParams['locale'];
-            $this->listenerTranslatable->setTranslatableLocale($locale);
+            if (\is_callable($this->translatableSetter)) {
+                ($this->translatableSetter)($locale);
+            }
             $this->registerLocaleInSession($request, $locale);
             $request = $request->withAttribute('locale', $locale);
         } else {

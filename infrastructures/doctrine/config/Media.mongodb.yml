@@ -1,5 +1,5 @@
 #src/universal/config/doctrine/Media.mongodb.yml
-Teknoo\East\Website\Object\Media:
+Teknoo\East\Website\Doctrine\Object\Media:
   type: 'documents'
   collection: 'media'
   gedmo:

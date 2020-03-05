@@ -22,7 +22,11 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\AdminEndPoint;
 
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\StreamInterface;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -51,7 +55,7 @@ class AdminNewEndPointTest extends \PHPUnit\Framework\TestCase
     /**
      * @var EngineInterface
      */
-    private $twig;
+    private $engine;
 
     /**
      * @var RouterInterface
@@ -78,13 +82,13 @@ class AdminNewEndPointTest extends \PHPUnit\Framework\TestCase
     /**
      * @return EngineInterface|\PHPUnit\Framework\MockObject\MockObject
      */
-    public function getTwig(): EngineInterface
+    public function getEngine(): EngineInterface
     {
-        if (!$this->twig instanceof EngineInterface) {
-            $this->twig = $this->createMock(EngineInterface::class);
+        if (!$this->engine instanceof EngineInterface) {
+            $this->engine = $this->createMock(EngineInterface::class);
         }
 
-        return $this->twig;
+        return $this->engine;
     }
 
     /**
@@ -113,14 +117,28 @@ class AdminNewEndPointTest extends \PHPUnit\Framework\TestCase
 
     public function buildEndPoint()
     {
+        $response = $this->createMock(ResponseInterface::class);
+        $response->expects(self::any())->method('withHeader')->willReturnSelf();
+        $response->expects(self::any())->method('withBody')->willReturnSelf();
+        $responseFactory = $this->createMock(ResponseFactoryInterface::class);
+        $responseFactory->expects(self::any())->method('createResponse')->willReturn($response);
+
+        $stream = $this->createMock(StreamInterface::class);
+        $streamFactory = $this->createMock(StreamFactoryInterface::class);
+        $streamFactory->expects(self::any())->method('createStream')->willReturn($stream);
+        $streamFactory->expects(self::any())->method('createStreamFromFile')->willReturn($stream);
+        $streamFactory->expects(self::any())->method('createStreamFromResource')->willReturn($stream);
+
         return (new AdminNewEndPoint())
             ->setWriter($this->getWriterService())
-            ->setTemplating($this->getTwig())
+            ->setTemplating($this->getEngine())
             ->setRouter($this->getRouter())
             ->setFormFactory($this->getFormFactory())
             ->setFormClass(TypeType::class)
             ->setObjectClass(Type::class)
-            ->setViewPath('foo:bar.html.twig');
+            ->setResponseFactory($responseFactory)
+            ->setStreamFactory($streamFactory)
+            ->setViewPath('foo:bar.html.engine');
         ;
     }
 
@@ -218,6 +236,11 @@ class AdminNewEndPointTest extends \PHPUnit\Framework\TestCase
         $this->getRouter()
             ->expects(self::never())
             ->method('generate');
+        
+        $this->getEngine()
+            ->expects(self::any())
+            ->method('render')
+            ->willReturn('foo');
 
         self::assertInstanceOf(
             AdminNewEndPoint::class,

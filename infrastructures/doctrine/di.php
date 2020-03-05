@@ -26,6 +26,7 @@ namespace Teknoo\East\Website\Doctrine;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
+use Gedmo\Translatable\TranslatableListener;
 use Psr\Container\ContainerInterface;
 use Teknoo\East\Website\DBSource\ManagerInterface;
 use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
@@ -39,6 +40,7 @@ use Teknoo\East\Website\Doctrine\DBSource\Manager;
 use Teknoo\East\Website\Doctrine\DBSource\MediaRepository;
 use Teknoo\East\Website\Doctrine\DBSource\TypeRepository;
 use Teknoo\East\Website\Doctrine\DBSource\UserRepository;
+use Teknoo\East\Website\Middleware\LocaleMiddleware;
 use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Object\Item;
 use Teknoo\East\Website\Object\Media;
@@ -116,5 +118,15 @@ return [
             "Error, repository of class %s are not currently managed",
             \get_class($repository)
         ));
+    },
+
+    LocaleMiddleware::class => function (ContainerInterface $container): LocaleMiddleware {
+        if ($container->has('stof_doctrine_extensions.listener.translatable')) {
+            $listener = $container->get('stof_doctrine_extensions.listener.translatable');
+        } else {
+            $listener = $container->get(TranslatableListener::class);
+        }
+
+        return new LocaleMiddleware([$listener, 'setTranslatableLocale']);
     },
 ];

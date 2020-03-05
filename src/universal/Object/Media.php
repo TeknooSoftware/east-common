@@ -24,20 +24,18 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Object;
 
-use Doctrine\MongoDB\GridFSFile;
-
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class Media implements ObjectInterface, DeletableInterface
+abstract class Media implements ObjectInterface, DeletableInterface
 {
     use ObjectTrait;
 
     private ?string $name = null;
 
     /**
-     * @var GridFSFile|\MongoGridFS
+     * @var mixed
      */
     private $file;
 
@@ -60,7 +58,7 @@ class Media implements ObjectInterface, DeletableInterface
     }
 
     /**
-     * @return GridFSFile|\MongoGridFS
+     * @return mixed
      */
     public function getFile()
     {
@@ -68,15 +66,11 @@ class Media implements ObjectInterface, DeletableInterface
     }
 
     /**
-     * @param GridFSFile|\MongoGridFS $file
+     * @param mixed $file
      */
     public function setFile($file): Media
     {
         $this->file = $file;
-
-        if ($this->file instanceof \MongoGridFSFile) {
-            $this->length = $this->file->getSize();
-        }
 
         return $this;
     }
@@ -120,22 +114,5 @@ class Media implements ObjectInterface, DeletableInterface
     /**
      * @return resource
      */
-    public function getResource()
-    {
-        $file = $this->file;
-
-        if ($file instanceof GridFSFile) {
-            $file = $file->getMongoGridFSFile();
-        }
-
-        if (\is_callable([$file, 'getResource'])) {
-            $resource = $file->getResource();
-
-            if (\is_resource($resource)) {
-                return $resource;
-            }
-        }
-
-        throw new \RuntimeException('Any resource are available for this media');
-    }
+    abstract public function getResource();
 }

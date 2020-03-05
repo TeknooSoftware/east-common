@@ -216,34 +216,6 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testLocaleMiddlewareWithSymfonyContext()
-    {
-        $container = $this->buildContainer();
-        $translatableListener = $this->createMock(TranslatableListener::class);
-
-        $container->set('stof_doctrine_extensions.listener.translatable', $translatableListener);
-        $loader = $container->get(LocaleMiddleware::class);
-
-        self::assertInstanceOf(
-            LocaleMiddleware::class,
-            $loader
-        );
-    }
-
-    public function testLocaleMiddlewareWithoutSymfonyContext()
-    {
-        $container = $this->buildContainer();
-        $translatableListener = $this->createMock(TranslatableListener::class);
-
-        $container->set(TranslatableListener::class, $translatableListener);
-        $loader = $container->get(LocaleMiddleware::class);
-
-        self::assertInstanceOf(
-            LocaleMiddleware::class,
-            $loader
-        );
-    }
-
     public function testEastManagerMiddlewareInjection()
     {
         $containerDefinition = new ContainerBuilder();

@@ -22,7 +22,6 @@
 
 namespace Teknoo\Tests\East\Website\Writer;
 
-use Doctrine\Common\Persistence\ObjectManager;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\ManagerInterface;
 use Teknoo\East\Website\Writer\WriterInterface;

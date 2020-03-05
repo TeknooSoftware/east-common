@@ -44,20 +44,20 @@ trait PublishableTestTrait
         $date = new \DateTime('2017-06-13');
         $date2 = new \DateTime('2017-06-14');
 
-        $Object = $this->buildObject();
+        $object = $this->buildObject();
         self::assertInstanceOf(
-            \get_class($Object),
-            $Object->setPublishedAt($date)
+            \get_class($object),
+            $object->setPublishedAt($date)
         );
 
         self::assertInstanceOf(
-            \get_class($Object),
-            $Object->setPublishedAt($date2)
+            \get_class($object),
+            $object->setPublishedAt($date2)
         );
 
         self::assertEquals(
             $date,
-            $Object->getPublishedAt()
+            $object->getPublishedAt()
         );
     }
 

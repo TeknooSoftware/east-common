@@ -22,8 +22,12 @@
 
 namespace Teknoo\Tests\East\Website\EndPoint;
 
+use Laminas\Diactoros\Response\TextResponse;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
@@ -35,7 +39,6 @@ use Teknoo\East\Website\Middleware\ViewParameterInterface;
 use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Query\Content\PublishedContentFromSlugQuery;
-use Zend\Diactoros\Response\TextResponse;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -68,7 +71,7 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
     {
         $contentLoader = $this->getContentLoader();
 
-        return new class($contentLoader, 'error-404') implements EndPointInterface {
+        $endPoint = new class($contentLoader, 'error-404') implements EndPointInterface {
             use EastEndPointTrait;
             use ContentEndPointTrait;
 
@@ -95,6 +98,23 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
                 return $this;
             }
         };
+        
+        $response = $this->createMock(ResponseInterface::class);
+        $response->expects(self::any())->method('withHeader')->willReturnSelf();
+        $response->expects(self::any())->method('withBody')->willReturnSelf();
+        $responseFactory = $this->createMock(ResponseFactoryInterface::class);
+        $responseFactory->expects(self::any())->method('createResponse')->willReturn($response);
+
+        $stream = $this->createMock(StreamInterface::class);
+        $streamFactory = $this->createMock(StreamFactoryInterface::class);
+        $streamFactory->expects(self::any())->method('createStream')->willReturn($stream);
+        $streamFactory->expects(self::any())->method('createStreamFromFile')->willReturn($stream);
+        $streamFactory->expects(self::any())->method('createStreamFromResource')->willReturn($stream);
+
+        $endPoint->setResponseFactory($responseFactory);
+        $endPoint->setStreamFactory($streamFactory);
+
+        return $endPoint;
     }
 
     public function testInvokeBadClient()

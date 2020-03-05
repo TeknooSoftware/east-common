@@ -23,7 +23,7 @@
 namespace Teknoo\Tests\East\WebsiteBundle\Middleware;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\WebsiteBundle\Middleware\LocaleMiddleware;
@@ -36,17 +36,17 @@ use Teknoo\East\WebsiteBundle\Middleware\LocaleMiddleware;
 class LocaleMiddlewareTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var TranslatorInterface
+     * @var LocaleAwareInterface
      */
     private $translator;
 
     /**
-     * @return TranslatorInterface|\PHPUnit\Framework\MockObject\MockObject
+     * @return LocaleAwareInterface|\PHPUnit\Framework\MockObject\MockObject
      */
-    public function getTranslator(): TranslatorInterface
+    public function getTranslator(): LocaleAwareInterface
     {
-        if (!$this->translator instanceof TranslatorInterface) {
-            $this->translator = $this->createMock(TranslatorInterface::class);
+        if (!$this->translator instanceof LocaleAwareInterface) {
+            $this->translator = $this->createMock(LocaleAwareInterface::class);
         }
 
         return $this->translator;

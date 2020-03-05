@@ -4,6 +4,9 @@ parameters:
     checkGenericClassInNonGenericObjectType: false
     ignoreErrors:
         -
+            message: '#Parameter \#1 \$translatableSetter of class [a-zA-Z0-9\\_]+ constructor expects \(callable\(\): mixed\)\|null#'
+            path: infrastructures/doctrine/di.php
+        -
             message: '#Method [a-zA-Z0-9\\_]+::getCurrentDateTime\(\) should return DateTimeInterface but returns DateTimeInterface\|null#'
             path: infrastructures/symfony/AdminEndPoint/AdminEditEndPoint.php
         -

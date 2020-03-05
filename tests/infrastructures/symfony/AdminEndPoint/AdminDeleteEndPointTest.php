@@ -22,6 +22,8 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\AdminEndPoint;
 
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
@@ -95,8 +97,14 @@ class AdminDeleteEndPointTest extends \PHPUnit\Framework\TestCase
      */
     public function buildEndPoint()
     {
+        $response = $this->createMock(ResponseInterface::class);
+        $response->expects(self::any())->method('withHeader')->willReturnSelf();
+        $responseFactory = $this->createMock(ResponseFactoryInterface::class);
+        $responseFactory->expects(self::any())->method('createResponse')->willReturn($response);
+
         return (new AdminDeleteEndPoint())
             ->setDeletingService($this->getDeletingService())
+            ->setResponseFactory($responseFactory)
             ->setLoader($this->getLoaderService())
             ->setRouter($this->getRouter());
     }
@@ -157,6 +165,11 @@ class AdminDeleteEndPointTest extends \PHPUnit\Framework\TestCase
         $client = $this->createMock(ClientInterface::class);
         $client->expects(self::never())->method('acceptResponse');
         $client->expects(self::once())->method('errorInRequest');
+
+        $response = $this->createMock(ResponseInterface::class);
+        $response->expects(self::any())->method('withHeader')->willReturnSelf();
+        $responseFactory = $this->createMock(ResponseFactoryInterface::class);
+        $responseFactory->expects(self::any())->method('createResponse')->willReturn($response);
 
         $this->getDeletingService()
             ->expects(self::never())

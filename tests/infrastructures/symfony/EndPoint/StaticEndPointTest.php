@@ -22,7 +22,12 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\EndPoint;
 
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\StreamInterface;
 use Symfony\Component\Templating\EngineInterface;
+use Teknoo\East\Diactoros\CallbackStream;
 use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\WebsiteBundle\EndPoint\StaticEndPoint;
 use Teknoo\Tests\East\Website\EndPoint\StaticEndPointTraitTest;
@@ -57,7 +62,32 @@ class StaticEndPointTest extends StaticEndPointTraitTest
 
     public function buildEndPoint(): EndPointInterface
     {
+        $response = $this->createMock(ResponseInterface::class);
+        $response->expects(self::any())->method('withHeader')->willReturnSelf();
+        $inStream = null;
+        $response->expects(self::any())->method('withBody')->willReturnCallback(
+            function ($value) use (&$inStream, $response) {
+                $inStream = $value;
+                return $response;
+            }
+        );
+        $response->expects(self::any())->method('getBody')->willReturnCallback(
+            function () use (&$inStream) {
+                return $inStream;
+            }
+        );
+        $responseFactory = $this->createMock(ResponseFactoryInterface::class);
+        $responseFactory->expects(self::any())->method('createResponse')->willReturn($response);
+
+        $stream = new CallbackStream(function () {});
+        $streamFactory = $this->createMock(StreamFactoryInterface::class);
+        $streamFactory->expects(self::any())->method('createStream')->willReturn($stream);
+        $streamFactory->expects(self::any())->method('createStreamFromFile')->willReturn($stream);
+        $streamFactory->expects(self::any())->method('createStreamFromResource')->willReturn($stream);
+
         return (new StaticEndPoint())
-            ->setTemplating($this->getTemplating());
+            ->setTemplating($this->getTemplating())
+            ->setResponseFactory($responseFactory)
+            ->setStreamFactory($streamFactory);
     }
 }

@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace Teknoo\East\WebsiteBundle\Middleware;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Middleware\MiddlewareInterface;
@@ -38,9 +38,9 @@ class LocaleMiddleware implements MiddlewareInterface
 {
     public const MIDDLEWARE_PRIORITY = 7;
 
-    private TranslatorInterface $translator;
+    private LocaleAwareInterface $translator;
 
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(LocaleAwareInterface $translator)
     {
         $this->translator = $translator;
     }

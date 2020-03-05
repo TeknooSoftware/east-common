@@ -22,7 +22,11 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\AdminEndPoint;
 
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\StreamInterface;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Templating\EngineInterface;
@@ -32,7 +36,7 @@ use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Writer\WriterInterface;
 use Teknoo\East\WebsiteBundle\AdminEndPoint\AdminEditEndPoint;
-use Teknoo\East\WebsiteBundle\Form\Type\ContentType;
+use Teknoo\East\Website\Doctrine\Form\Type\ContentType;
 use Teknoo\East\WebsiteBundle\Form\Type\TypeType;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
@@ -92,7 +96,7 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
     /**
      * @return EngineInterface|\PHPUnit\Framework\MockObject\MockObject
      */
-    public function getTwig(): EngineInterface
+    public function getEngine(): EngineInterface
     {
         if (!$this->twig instanceof EngineInterface) {
             $this->twig = $this->createMock(EngineInterface::class);
@@ -115,11 +119,25 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
 
     public function buildEndPoint($formClass = TypeType::class)
     {
+        $response = $this->createMock(ResponseInterface::class);
+        $response->expects(self::any())->method('withHeader')->willReturnSelf();
+        $response->expects(self::any())->method('withBody')->willReturnSelf();
+        $responseFactory = $this->createMock(ResponseFactoryInterface::class);
+        $responseFactory->expects(self::any())->method('createResponse')->willReturn($response);
+
+        $stream = $this->createMock(StreamInterface::class);
+        $streamFactory = $this->createMock(StreamFactoryInterface::class);
+        $streamFactory->expects(self::any())->method('createStream')->willReturn($stream);
+        $streamFactory->expects(self::any())->method('createStreamFromFile')->willReturn($stream);
+        $streamFactory->expects(self::any())->method('createStreamFromResource')->willReturn($stream);
+
         return (new AdminEditEndPoint())
             ->setWriter($this->getWriterService())
             ->setLoader($this->getLoaderService())
             ->setFormFactory($this->getFormFactory())
-            ->setTemplating($this->getTwig())
+            ->setTemplating($this->getEngine())
+            ->setResponseFactory($responseFactory)
+            ->setStreamFactory($streamFactory)
             ->setFormClass($formClass)
             ->setViewPath('foo:bar.html.twig');
     }
@@ -271,6 +289,11 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
             ->expects(self::never())
             ->method('save');
 
+        $this->getEngine()
+            ->expects(self::any())
+            ->method('render')
+            ->willReturn('foo');
+        
         self::assertInstanceOf(
             AdminEditEndPoint::class,
             ($this->buildEndPoint())($request, $client, 'foo')
@@ -359,6 +382,11 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
                 return $this->getWriterService();
             });
 
+        $this->getEngine()
+            ->expects(self::any())
+            ->method('render')
+            ->willReturn('foo');
+
         self::assertInstanceOf(
             AdminEditEndPoint::class,
             ($this->buildEndPoint())($request, $client, 'foo')
@@ -405,6 +433,11 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
 
                 return $this->getWriterService();
             });
+
+        $this->getEngine()
+            ->expects(self::any())
+            ->method('render')
+            ->willReturn('foo');
 
         $endPoint = $this->buildEndPoint(ContentType::class);
 
@@ -468,6 +501,11 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
                 return $this->getWriterService();
             });
 
+        $this->getEngine()
+            ->expects(self::any())
+            ->method('render')
+            ->willReturn('foo');
+
         $endPoint = $this->buildEndPoint(ContentType::class);
 
         self::assertInstanceOf(
@@ -529,6 +567,11 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
 
                 return $this->getWriterService();
             });
+
+        $this->getEngine()
+            ->expects(self::any())
+            ->method('render')
+            ->willReturn('foo');
 
         $endPoint = $this->buildEndPoint(ContentType::class);
 

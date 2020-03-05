@@ -28,8 +28,6 @@ use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Website\Loader\MediaLoader;
 use Teknoo\East\Website\Object\Media;
-use Zend\Diactoros\Response;
-use Zend\Diactoros\Stream;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -50,16 +48,14 @@ trait MediaEndPointTrait
             $id,
             new Promise(
                 function (Media $media) use ($client) {
-                    $client->acceptResponse(
-                        new Response(
-                            new Stream($media->getResource()),
-                            200,
-                            [
-                                'Content-Type' => $media->getMimeType(),
-                                'Content-Length' => $media->getLength()
-                            ]
-                        )
-                    );
+                    $stream = $this->streamFactory->createStreamFromResource($media->getResource());
+
+                    $response = $this->responseFactory->createResponse(200);
+                    $response = $response->withHeader('Content-Type', $media->getMimeType());
+                    $response = $response->withHeader('Content-Length', (string) $media->getLength());
+                    $response = $response->withBody($stream);
+
+                    $client->acceptResponse($response);
                 },
                 function () use ($client) {
                     $client->errorInRequest(

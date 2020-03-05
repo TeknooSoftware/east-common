@@ -1,5 +1,5 @@
 #src/universal/config/doctrine/Item.mongodb.yml
-Teknoo\East\Website\Object\Item:
+Teknoo\East\Website\Doctrine\Object\Item:
   type: 'documents'
   collection: 'items'
   gedmo:

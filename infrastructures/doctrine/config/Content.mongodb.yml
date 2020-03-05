@@ -1,5 +1,5 @@
 #src/universal/config/doctrine/Content.mongodb.yml
-Teknoo\East\Website\Object\Content:
+Teknoo\East\Website\Doctrine\Object\Content:
   type: 'documents'
   collection: 'contents'
   gedmo:

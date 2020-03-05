@@ -11,16 +11,16 @@ parameters:
   teknoo.east.website.endpoint.admin.new.class: 'Teknoo\East\WebsiteBundle\AdminEndPoint\AdminNewEndPoint'
 
   #Admin form types
-  teknoo.east.website.form_type.item.class: 'Teknoo\East\WebsiteBundle\Form\Type\ItemType'
-  teknoo.east.website.form_type.content.class: 'Teknoo\East\WebsiteBundle\Form\Type\ContentType'
+  teknoo.east.website.form_type.item.class: 'Teknoo\East\Website\Doctrine\Form\Type\ItemType'
+  teknoo.east.website.form_type.content.class: 'Teknoo\East\Website\Doctrine\Form\Type\ContentType'
   teknoo.east.website.form_type.media.class: 'Teknoo\East\WebsiteBundle\Form\Type\MediaType'
   teknoo.east.website.form_type.type.class: 'Teknoo\East\WebsiteBundle\Form\Type\TypeType'
   teknoo.east.website.form_type.user.class: 'Teknoo\East\WebsiteBundle\Form\Type\UserType'
 
   #Class
-  teknoo.east.website.item.class: 'Teknoo\East\Website\Object\Item'
-  teknoo.east.website.content.class: 'Teknoo\East\Website\Object\Content'
-  teknoo.east.website.media.class: 'Teknoo\East\Website\Object\Media'
+  teknoo.east.website.item.class: 'Teknoo\East\Website\Doctrine\Object\Item'
+  teknoo.east.website.content.class: 'Teknoo\East\Website\Doctrine\Object\Content'
+  teknoo.east.website.media.class: 'Teknoo\East\Website\Doctrine\Object\Media'
   teknoo.east.website.type.class: 'Teknoo\East\Website\Object\Type'
   teknoo.east.website.user.class: 'Teknoo\East\Website\Object\User'
 
@@ -110,12 +110,16 @@ services:
       - '%teknoo.east.website.view.404-error.file%'
     calls:
       - ['setTemplating', ['@templating.engine.twig']]
+      - ['setResponseFactory', ['@Psr\Http\Message\ResponseFactoryInterface']]
+      - ['setStreamFactory', ['@Psr\Http\Message\StreamFactoryInterface']]
     public: true
 
   teknoo.east.website.endpoint.media:
     class: '%teknoo.east.website.endpoint.media.class%'
     arguments:
       - '@Teknoo\East\Website\Loader\MediaLoader'
+      - '@Psr\Http\Message\ResponseFactoryInterface'
+      - '@Psr\Http\Message\StreamFactoryInterface'
     calls:
       - ['setTemplating', ['@templating.engine.twig']]
     public: true
@@ -124,27 +128,43 @@ services:
     class: '%teknoo.east.website.endpoint.static.class%'
     calls:
       - ['setTemplating', ['@templating.engine.twig']]
+      - ['setResponseFactory', ['@Psr\Http\Message\ResponseFactoryInterface']]
+      - ['setStreamFactory', ['@Psr\Http\Message\StreamFactoryInterface']]
     public: true
 
   #Admin endpoints
   teknoo.east.website.endpoint.admin.delete.abstract:
     class: '%teknoo.east.website.endpoint.admin.delete.class%'
+    calls:
+      - ['setResponseFactory', ['@Psr\Http\Message\ResponseFactoryInterface']]
+      - ['setRouter', ['@router']]
     public: true
 
   teknoo.east.website.endpoint.admin.edit.abstract:
     class: '%teknoo.east.website.endpoint.admin.edit.class%'
     calls:
       - ['setFormFactory', ['@form.factory']]
+      - ['setResponseFactory', ['@Psr\Http\Message\ResponseFactoryInterface']]
+      - ['setStreamFactory', ['@Psr\Http\Message\StreamFactoryInterface']]
+      - ['setTemplating', ['@templating.engine.twig']]
     public: true
 
   teknoo.east.website.endpoint.admin.list.abstract:
     class: '%teknoo.east.website.endpoint.admin.list.class%'
+    calls:
+      - ['setResponseFactory', ['@Psr\Http\Message\ResponseFactoryInterface']]
+      - ['setStreamFactory', ['@Psr\Http\Message\StreamFactoryInterface']]
+      - ['setTemplating', ['@templating.engine.twig']]
     public: true
 
   teknoo.east.website.endpoint.admin.new.abstract:
     class: '%teknoo.east.website.endpoint.admin.new.class%'
     calls:
       - ['setFormFactory', ['@form.factory']]
+      - ['setResponseFactory', ['@Psr\Http\Message\ResponseFactoryInterface']]
+      - ['setStreamFactory', ['@Psr\Http\Message\StreamFactoryInterface']]
+      - ['setTemplating', ['@templating.engine.twig']]
+      - ['setRouter', ['@router']]
     public: true
 
   #Items
@@ -153,7 +173,6 @@ services:
     calls:
       - ['setDeletingService', ['@teknoo.east.website.deleting.item']]
       - ['setLoader', ['@Teknoo\East\Website\Loader\ItemLoader']]
-      - ['setRouter', ['@router']]
     public: true
 
   teknoo.east.website.endpoint.admin.edit.item:
@@ -163,7 +182,6 @@ services:
       - ['setWriter', ['@Teknoo\East\Website\Writer\ItemWriter']]
       - ['setFormClass', ['%teknoo.east.website.form_type.item.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.item.edit.file%']]
-      - ['setTemplating', ['@templating.engine.twig']]
     public: true
 
   teknoo.east.website.endpoint.admin.list.item:
@@ -171,7 +189,6 @@ services:
     calls:
       - ['setLoader', ['@Teknoo\East\Website\Loader\ItemLoader']]
       - ['setViewPath', ['%teknoo.east.website.view.item.list.file%']]
-      - ['setTemplating', ['@templating.engine.twig']]
     public: true
 
   teknoo.east.website.endpoint.admin.new.item:
@@ -181,8 +198,6 @@ services:
       - ['setFormClass', ['%teknoo.east.website.form_type.item.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.item.new.file%']]
       - ['setObjectClass', ['%teknoo.east.website.item.class%']]
-      - ['setRouter', ['@router']]
-      - ['setTemplating', ['@templating.engine.twig']]
     public: true
 
   #Contents
@@ -191,7 +206,6 @@ services:
     calls:
       - ['setDeletingService', ['@teknoo.east.website.deleting.content']]
       - ['setLoader', ['@Teknoo\East\Website\Loader\ContentLoader']]
-      - ['setRouter', ['@router']]
     public: true
 
   teknoo.east.website.endpoint.admin.edit.content:
@@ -201,7 +215,6 @@ services:
       - ['setWriter', ['@Teknoo\East\Website\Writer\ContentWriter']]
       - ['setFormClass', ['%teknoo.east.website.form_type.content.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.content.edit.file%']]
-      - ['setTemplating', ['@templating.engine.twig']]
     public: true
 
   teknoo.east.website.endpoint.admin.list.content:
@@ -209,7 +222,6 @@ services:
     calls:
       - ['setLoader', ['@Teknoo\East\Website\Loader\ContentLoader']]
       - ['setViewPath', ['%teknoo.east.website.view.content.list.file%']]
-      - ['setTemplating', ['@templating.engine.twig']]
     public: true
 
   teknoo.east.website.endpoint.admin.new.content:
@@ -219,8 +231,6 @@ services:
       - ['setFormClass', ['%teknoo.east.website.form_type.content.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.content.new.file%']]
       - ['setObjectClass', ['%teknoo.east.website.content.class%']]
-      - ['setRouter', ['@router']]
-      - ['setTemplating', ['@templating.engine.twig']]
     public: true
 
   #Media
@@ -229,7 +239,6 @@ services:
     calls:
       - ['setDeletingService', ['@teknoo.east.website.deleting.media']]
       - ['setLoader', ['@Teknoo\East\Website\Loader\MediaLoader']]
-      - ['setRouter', ['@router']]
     public: true
 
   teknoo.east.website.endpoint.admin.list.media:
@@ -237,7 +246,6 @@ services:
     calls:
       - ['setLoader', ['@Teknoo\East\Website\Loader\MediaLoader']]
       - ['setViewPath', ['%teknoo.east.website.view.media.list.file%']]
-      - ['setTemplating', ['@templating.engine.twig']]
     public: true
 
   teknoo.east.website.endpoint.admin.new.media:
@@ -247,8 +255,6 @@ services:
       - ['setFormClass', ['%teknoo.east.website.form_type.media.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.media.new.file%']]
       - ['setObjectClass', ['%teknoo.east.website.media.class%']]
-      - ['setRouter', ['@router']]
-      - ['setTemplating', ['@templating.engine.twig']]
     public: true
 
   #Type
@@ -257,7 +263,6 @@ services:
     calls:
       - ['setDeletingService', ['@teknoo.east.website.deleting.type']]
       - ['setLoader', ['@Teknoo\East\Website\Loader\TypeLoader']]
-      - ['setRouter', ['@router']]
     public: true
 
   teknoo.east.website.endpoint.admin.edit.type:
@@ -267,7 +272,6 @@ services:
       - ['setWriter', ['@Teknoo\East\Website\Writer\TypeWriter']]
       - ['setFormClass', ['%teknoo.east.website.form_type.type.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.type.edit.file%']]
-      - ['setTemplating', ['@templating.engine.twig']]
     public: true
 
   teknoo.east.website.endpoint.admin.list.type:
@@ -275,7 +279,6 @@ services:
     calls:
       - ['setLoader', ['@Teknoo\East\Website\Loader\TypeLoader']]
       - ['setViewPath', ['%teknoo.east.website.view.type.list.file%']]
-      - ['setTemplating', ['@templating.engine.twig']]
     public: true
 
   teknoo.east.website.endpoint.admin.new.type:
@@ -285,8 +288,6 @@ services:
       - ['setFormClass', ['%teknoo.east.website.form_type.type.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.type.new.file%']]
       - ['setObjectClass', ['%teknoo.east.website.type.class%']]
-      - ['setRouter', ['@router']]
-      - ['setTemplating', ['@templating.engine.twig']]
     public: true
 
   #User
@@ -295,7 +296,6 @@ services:
     calls:
       - ['setDeletingService', ['@teknoo.east.website.deleting.user']]
       - ['setLoader', ['@Teknoo\East\Website\Loader\UserLoader']]
-      - ['setRouter', ['@router']]
     public: true
 
   teknoo.east.website.endpoint.admin.edit.user:
@@ -305,7 +305,6 @@ services:
       - ['setWriter', ['@teknoo.east.website.bundle.writer.user']]
       - ['setFormClass', ['%teknoo.east.website.form_type.user.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.user.edit.file%']]
-      - ['setTemplating', ['@templating.engine.twig']]
     public: true
 
   teknoo.east.website.endpoint.admin.list.user:
@@ -313,7 +312,6 @@ services:
     calls:
       - ['setLoader', ['@Teknoo\East\Website\Loader\UserLoader']]
       - ['setViewPath', ['%teknoo.east.website.view.user.list.file%']]
-      - ['setTemplating', ['@templating.engine.twig']]
     public: true
 
   teknoo.east.website.endpoint.admin.new.user:
@@ -323,8 +321,6 @@ services:
       - ['setFormClass', ['%teknoo.east.website.form_type.user.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.user.new.file%']]
       - ['setObjectClass', ['%teknoo.east.website.user.class%']]
-      - ['setRouter', ['@router']]
-      - ['setTemplating', ['@templating.engine.twig']]
     public: true
 
   #Provider

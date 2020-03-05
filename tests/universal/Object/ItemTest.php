@@ -29,7 +29,6 @@ use Teknoo\Tests\East\Website\Object\Traits\ObjectTestTrait;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Object\PublishableTrait
  * @covers \Teknoo\East\Website\Object\ObjectTrait
  * @covers \Teknoo\East\Website\Object\Item
  */
@@ -201,34 +200,12 @@ class ItemTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testGetTranslatableLocale()
-    {
-        self::assertEquals(
-            'fooBar',
-            $this->generateObjectPopulated(['localeField' => 'fooBar'])->getTranslatableLocale()
-        );
-    }
-
     public function testSetLocaleField()
     {
         $Object = $this->buildObject();
         self::assertInstanceOf(
             \get_class($Object),
             $Object->setLocaleField('fooBar')
-        );
-
-        self::assertEquals(
-            'fooBar',
-            $Object->getLocaleField()
-        );
-    }
-
-    public function testSetTranslatableLocale()
-    {
-        $Object = $this->buildObject();
-        self::assertInstanceOf(
-            \get_class($Object),
-            $Object->setTranslatableLocale('fooBar')
         );
 
         self::assertEquals(

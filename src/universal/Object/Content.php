@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Object;
 
-use Gedmo\Translatable\Translatable;
 use Teknoo\East\Website\Object\Content\Draft;
 use Teknoo\East\Website\Object\Content\Published;
 use Teknoo\States\Automated\Assertion\AssertionInterface;
@@ -34,7 +33,7 @@ use Teknoo\States\Automated\Assertion\Property\IsNotInstanceOf;
 use Teknoo\States\Automated\AutomatedInterface;
 use Teknoo\States\Automated\AutomatedTrait;
 use Teknoo\States\Proxy\ProxyInterface;
-use Teknoo\UniversalPackage\States\Document\StandardTrait;
+use Teknoo\States\Proxy\ProxyTrait;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -44,15 +43,12 @@ class Content implements
     ObjectInterface,
     ProxyInterface,
     AutomatedInterface,
-    Translatable,
     DeletableInterface,
     PublishableInterface
 {
     use PublishableTrait;
-    use StandardTrait;
-    use AutomatedTrait {
-        AutomatedTrait::updateStates insteadof StandardTrait;
-    }
+    use AutomatedTrait;
+    use ProxyTrait;
 
     private ?User $author = null;
 
@@ -231,17 +227,5 @@ class Content implements
         $this->localeField = $localeField;
 
         return $this;
-    }
-
-    public function setTranslatableLocale(?string $locale): self
-    {
-        $this->localeField = (string) $locale;
-
-        return $this;
-    }
-
-    public function getTranslatableLocale(): string
-    {
-        return (string) $this->localeField;
     }
 }

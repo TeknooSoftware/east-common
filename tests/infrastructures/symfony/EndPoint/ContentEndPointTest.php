@@ -22,7 +22,12 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\EndPoint;
 
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\StreamInterface;
 use Symfony\Component\Templating\EngineInterface;
+use Teknoo\East\Diactoros\CallbackStream;
 use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\WebsiteBundle\EndPoint\ContentEndPoint;
 use Teknoo\Tests\East\Website\EndPoint\ContentEndPointTraitTest;
@@ -40,9 +45,9 @@ class ContentEndPointTest extends ContentEndPointTraitTest
     protected $templating;
 
     /**
-     * @var \Twig_Environment
+     * @var EngineInterface
      */
-    protected $twig;
+    protected $engine;
 
     /**
      * @return EngineInterface|\PHPUnit\Framework\MockObject\MockObject
@@ -64,7 +69,35 @@ class ContentEndPointTest extends ContentEndPointTraitTest
 
     public function buildEndPoint(): EndPointInterface
     {
-        return (new ContentEndPoint($this->getContentLoader(), 'error-404'))
+        $endPoint = (new ContentEndPoint($this->getContentLoader(), 'error-404'))
             ->setTemplating($this->getTemplating());
+
+        $response = $this->createMock(ResponseInterface::class);
+        $response->expects(self::any())->method('withHeader')->willReturnSelf();
+        $inStream = null;
+        $response->expects(self::any())->method('withBody')->willReturnCallback(
+            function ($value) use (&$inStream, $response) {
+                $inStream = $value;
+                return $response;
+            }
+        );
+        $response->expects(self::any())->method('getBody')->willReturnCallback(
+            function () use (&$inStream) {
+                return $inStream;
+            }
+        );
+        $responseFactory = $this->createMock(ResponseFactoryInterface::class);
+        $responseFactory->expects(self::any())->method('createResponse')->willReturn($response);
+
+        $stream = new CallbackStream(function () {});
+        $streamFactory = $this->createMock(StreamFactoryInterface::class);
+        $streamFactory->expects(self::any())->method('createStream')->willReturn($stream);
+        $streamFactory->expects(self::any())->method('createStreamFromFile')->willReturn($stream);
+        $streamFactory->expects(self::any())->method('createStreamFromResource')->willReturn($stream);
+
+        $endPoint->setResponseFactory($responseFactory);
+        $endPoint->setStreamFactory($streamFactory);
+
+        return $endPoint;
     }
 }

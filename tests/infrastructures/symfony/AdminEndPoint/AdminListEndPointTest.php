@@ -23,7 +23,11 @@
 namespace Teknoo\Tests\East\WebsiteBundle\AdminEndPoint;
 
 use Doctrine\ODM\MongoDB\Iterator\Iterator;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\StreamInterface;
 use Symfony\Component\Templating\EngineInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
@@ -47,7 +51,7 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
     /**
      * @var EngineInterface
      */
-    private $twig;
+    private $engine;
 
     /**
      * @return LoaderInterface|\PHPUnit\Framework\MockObject\MockObject
@@ -64,21 +68,35 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
     /**
      * @return EngineInterface|\PHPUnit\Framework\MockObject\MockObject
      */
-    public function getTwig(): EngineInterface
+    public function getEngine(): EngineInterface
     {
-        if (!$this->twig instanceof EngineInterface) {
-            $this->twig = $this->createMock(EngineInterface::class);
+        if (!$this->engine instanceof EngineInterface) {
+            $this->engine = $this->createMock(EngineInterface::class);
         }
 
-        return $this->twig;
+        return $this->engine;
     }
 
     public function buildEndPoint()
     {
+        $response = $this->createMock(ResponseInterface::class);
+        $response->expects(self::any())->method('withHeader')->willReturnSelf();
+        $response->expects(self::any())->method('withBody')->willReturnSelf();
+        $responseFactory = $this->createMock(ResponseFactoryInterface::class);
+        $responseFactory->expects(self::any())->method('createResponse')->willReturn($response);
+
+        $stream = $this->createMock(StreamInterface::class);
+        $streamFactory = $this->createMock(StreamFactoryInterface::class);
+        $streamFactory->expects(self::any())->method('createStream')->willReturn($stream);
+        $streamFactory->expects(self::any())->method('createStreamFromFile')->willReturn($stream);
+        $streamFactory->expects(self::any())->method('createStreamFromResource')->willReturn($stream);
+
         return (new AdminListEndPoint())
             ->setLoader($this->getLoaderService())
-            ->setTemplating($this->getTwig())
-            ->setViewPath('foo:bar.html.twig');
+            ->setTemplating($this->getEngine())
+            ->setResponseFactory($responseFactory)
+            ->setStreamFactory($streamFactory)
+            ->setViewPath('foo:bar.html.engine');
     }
 
     public function testExceptionOnInvokeWithBadRequest()
@@ -195,6 +213,11 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
                 return $this->getLoaderService();
             });
 
+        $this->getEngine()
+            ->expects(self::any())
+            ->method('render')
+            ->willReturn('foo');
+
         self::assertInstanceOf(
             AdminListEndPoint::class,
             ($this->buildEndPoint())($request, $client, 2, 'bar')
@@ -222,6 +245,11 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
 
                 return $this->getLoaderService();
             });
+
+        $this->getEngine()
+            ->expects(self::any())
+            ->method('render')
+            ->willReturn('foo');
 
         self::assertInstanceOf(
             AdminListEndPoint::class,
@@ -251,6 +279,11 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
                 return $this->getLoaderService();
             });
 
+        $this->getEngine()
+            ->expects(self::any())
+            ->method('render')
+            ->willReturn('foo');
+
         self::assertInstanceOf(
             AdminListEndPoint::class,
             ($this->buildEndPoint())($request, $client, 2, 'bar')
@@ -278,6 +311,11 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
 
                 return $this->getLoaderService();
             });
+
+        $this->getEngine()
+            ->expects(self::any())
+            ->method('render')
+            ->willReturn('foo');
 
         self::assertInstanceOf(
             AdminListEndPoint::class,
@@ -329,6 +367,11 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
                 return $this->getLoaderService();
             });
 
+        $this->getEngine()
+            ->expects(self::any())
+            ->method('render')
+            ->willReturn('foo');
+
         self::assertInstanceOf(
             AdminListEndPoint::class,
             ($this->buildEndPoint()->setOrder('foo', 'ASC'))($request, $client, 2, 'bar')
@@ -357,6 +400,16 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
                 return $this->getLoaderService();
             });
 
+        $this->getEngine()
+            ->expects(self::any())
+            ->method('render')
+            ->willReturn('foo');
+
+        $this->getEngine()
+            ->expects(self::any())
+            ->method('render')
+            ->willReturn('foo');
+
         self::assertInstanceOf(
             AdminListEndPoint::class,
             ($this->buildEndPoint()->setOrder('foo', 'DESC'))($request, $client, 2, 'bar')
@@ -380,6 +433,11 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
 
                 return $this->getLoaderService();
             });
+
+        $this->getEngine()
+            ->expects(self::any())
+            ->method('render')
+            ->willReturn('foo');
 
         self::assertInstanceOf(
             AdminListEndPoint::class,
@@ -405,6 +463,11 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
                 return $this->getLoaderService();
             });
 
+        $this->getEngine()
+            ->expects(self::any())
+            ->method('render')
+            ->willReturn('foo');
+
         self::assertInstanceOf(
             AdminListEndPoint::class,
             ($this->buildEndPoint())($request, $client, -1, 'bar')
@@ -428,6 +491,11 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
 
                 return $this->getLoaderService();
             });
+
+        $this->getEngine()
+            ->expects(self::any())
+            ->method('render')
+            ->willReturn('foo');
 
         self::assertInstanceOf(
             AdminListEndPoint::class,

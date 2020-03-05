@@ -22,7 +22,6 @@
 
 namespace Teknoo\Tests\East\Website\Object;
 
-use Doctrine\MongoDB\GridFSFile;
 use Teknoo\Tests\East\Website\Object\Traits\ObjectTestTrait;
 use Teknoo\East\Website\Object\Media;
 
@@ -42,7 +41,12 @@ class MediaTest extends \PHPUnit\Framework\TestCase
      */
     public function buildObject(): Media
     {
-        return new Media();
+        return new class extends Media {
+            public function getResource()
+            {
+                return null;
+            }
+        };
     }
 
     public function testGetName()
@@ -177,72 +181,6 @@ class MediaTest extends \PHPUnit\Framework\TestCase
         self::assertEquals(
             $mock,
             $object->getFile()
-        );
-    }
-
-    public function testSetFileWithLength()
-    {
-        $mongoFile = $this->createMock(\MongoGridFSFile::class);
-        $mongoFile->expects($this->any())->method('getSize')->willReturn(123);
-
-        $object = $this->buildObject();
-        self::assertInstanceOf(
-            \get_class($object),
-            $object->setFile($mongoFile)
-        );
-
-        self::assertEquals(
-            $mongoFile,
-            $object->getFile()
-        );
-
-        self::assertEquals(
-            123,
-            $object->getLength()
-        );
-    }
-
-    public function testGetResourceNotAvailable()
-    {
-        $this->expectException(\RuntimeException::class);
-        $this->generateObjectPopulated(['file' => 'fooBar'])->getResource();
-    }
-
-
-    public function testGetResourceNotResource()
-    {
-        $this->expectException(\RuntimeException::class);
-        $file = $this->getMockBuilder('MongoGridFSFileMock')->setMethods(['getResource'])->getMock();
-        $file->expects($this->any())->method('getResource')->willReturn('foobar');
-
-        $this->generateObjectPopulated(['file' => $file])->getResource();
-    }
-
-    public function testGetResource()
-    {
-        $resource = \fopen('php://memory', 'r');
-        $file = $this->getMockBuilder('MongoGridFSFileMock')->setMethods(['getResource'])->getMock();
-        $file->expects($this->any())->method('getResource')->willReturn($resource);
-
-        self::assertEquals(
-            $resource,
-            $this->generateObjectPopulated(['file' => $file])->getResource()
-        );
-    }
-
-    public function testGetResourceFromMongo()
-    {
-        $resource = \fopen('php://memory', 'r');
-        $file = $this->getMockBuilder('MongoGridFSFileMock')->setMethods(['getResource'])->getMock();
-        $file->expects($this->any())->method('getResource')->willReturn($resource);
-
-
-        $mongoFile = $this->createMock(GridFSFile::class);
-        $mongoFile->expects($this->any())->method('getMongoGridFSFile')->willReturn($file);
-
-        self::assertEquals(
-            $resource,
-            $this->generateObjectPopulated(['file' => $mongoFile])->getResource()
         );
     }
 }

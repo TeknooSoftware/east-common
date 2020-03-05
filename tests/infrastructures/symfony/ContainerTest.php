@@ -25,7 +25,7 @@ namespace Teknoo\Tests\East\WebsiteBundle;
 use DI\Container;
 use DI\ContainerBuilder;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
 use Teknoo\East\Foundation\Router\RouterInterface;
 use Teknoo\East\Website\DBSource\Repository\ItemRepositoryInterface;
@@ -43,6 +43,17 @@ use Teknoo\East\WebsiteBundle\Middleware\LocaleMiddleware;
  */
 class ContainerTest extends \PHPUnit\Framework\TestCase
 {
+    public function testLegacyDIForward()
+    {
+        $di1 = include __DIR__.'/../../../src/symfony/Resources/config/di.php';
+        $di2 = include __DIR__.'/../../../infrastructures/symfony/Resources/config/di.php';
+
+        self::assertEquals(
+            $di1,
+            $di2
+        );
+    }
+
     /**
      * @return Container
      */
@@ -52,14 +63,15 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         $containerDefinition->addDefinitions(__DIR__.'/../../../vendor/teknoo/east-foundation/src/universal/di.php');
         $containerDefinition->addDefinitions(__DIR__.'/../../../src/universal/di.php');
         $containerDefinition->addDefinitions(__DIR__.'/../../../infrastructures/symfony/Resources/config/di.php');
-
+        $containerDefinition->useAutowiring(false);
+        
         return $containerDefinition->build();
     }
 
     public function testLocaleMiddleware()
     {
         $container = $this->buildContainer();
-        $translatableListener = $this->createMock(TranslatorInterface::class);
+        $translatableListener = $this->createMock(LocaleAwareInterface::class);
 
         $container->set('translator', $translatableListener);
         $loader = $container->get(LocaleMiddleware::class);
@@ -77,7 +89,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         $container->set(LoggerInterface::class, $this->createMock(LoggerInterface::class));
         $container->set(RouterInterface::class, $this->createMock(RouterInterface::class));
         $container->set(ItemRepositoryInterface::class, $this->createMock(ItemRepositoryInterface::class));
-        $container->set('translator', $this->createMock(TranslatorInterface::class));
+        $container->set('translator', $this->createMock(LocaleAwareInterface::class));
 
         self::assertInstanceOf(
             RecipeInterface::class,

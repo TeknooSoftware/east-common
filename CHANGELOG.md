@@ -1,6 +1,16 @@
 #Teknoo Software - Website - Change Log
 
-##[2.0.3-beta1] - 2020-03-01
+##[2.1.0-beta2] - 2020-03-05
+###Stable Release
+- Total switch to PSR7 and PSR17 and remove Zend Diactoros to manage PSR7 Request and Response
+- Switch to East CallbackStreamInterface instead of CallbackStream of Zend Diactoros
+- Remove all behaviors about translation in Universal object to migrate them to Doctrine+Gedmo implementation
+- Remove all Doctrine and MongoDb in Universal, migrate into Doctrine+Gedmo implementation
+- Update Doctrine mapping file based on the above changes
+- Remove LocaleMiddleware dependence to `Gedmo\Translatable\TranslatableListener` to be agnostic and manage directly a callable to pass the current locale
+- Adapt Symfony implementation to Symfony 4.4+ changes (interface `Symfony\Component\Translation\TranslatorInterface` to `Symfony\Contracts\Translation\LocaleAwareInterface`)
+
+##[2.1.0-beta1] - 2020-03-01
 ###Stable Release
 - Update dev tools, migrate to PHPUnit 9.0, phploc 6.0, phpcpd 5.0 
 - Migrate Symfony implementation to infrastructures

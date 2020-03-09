@@ -120,7 +120,6 @@ services:
       - '@Teknoo\East\Website\Loader\MediaLoader'
       - '@Psr\Http\Message\StreamFactoryInterface'
     calls:
-      - ['setTemplating', ['@templating.engine.twig']]
       - ['setResponseFactory', ['@Psr\Http\Message\ResponseFactoryInterface']]
     public: true
 

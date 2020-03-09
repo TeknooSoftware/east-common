@@ -1,5 +1,9 @@
 #Teknoo Software - Website - Change Log
 
+##[2.1.0-beta5] - 2020-03-09
+###Stable Release
+- Fix Symfony definitions
+
 ##[2.1.0-beta4] - 2020-03-09
 ###Stable Release
 - Fix Symfony definitions

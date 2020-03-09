@@ -118,10 +118,10 @@ services:
     class: '%teknoo.east.website.endpoint.media.class%'
     arguments:
       - '@Teknoo\East\Website\Loader\MediaLoader'
+      - '@Psr\Http\Message\StreamFactoryInterface'
     calls:
       - ['setTemplating', ['@templating.engine.twig']]
       - ['setResponseFactory', ['@Psr\Http\Message\ResponseFactoryInterface']]
-      - ['setStreamFactory', ['@Psr\Http\Message\StreamFactoryInterface']]
     public: true
 
   teknoo.east.website.endpoint.static:

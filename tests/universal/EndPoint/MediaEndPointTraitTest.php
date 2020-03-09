@@ -32,6 +32,7 @@ use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
+use Teknoo\East\FoundationBundle\EndPoint\ResponseFactoryTrait;
 use Teknoo\East\Website\EndPoint\MediaEndPointTrait;
 use Teknoo\East\Website\Loader\MediaLoader;
 use Teknoo\East\Website\Object\Media;
@@ -61,9 +62,9 @@ class MediaEndPointTraitTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @return EndPointInterface
+     * @return MediaEndPointTrait
      */
-    public function buildEndPoint(): EndPointInterface
+    public function buildEndPoint()
     {
         $mediaLoader = $this->getMediaLoader();
 
@@ -84,13 +85,12 @@ class MediaEndPointTraitTest extends \PHPUnit\Framework\TestCase
         $responseFactory = $this->createMock(ResponseFactoryInterface::class);
         $responseFactory->expects(self::any())->method('createResponse')->willReturn($response);
 
-        $endPoint = new class($mediaLoader) implements EndPointInterface {
-            use EastEndPointTrait;
+        $endPoint = new class($mediaLoader, new CallbackStreamFactory()) {
+            use ResponseFactoryTrait;
             use MediaEndPointTrait;
         };
 
         $endPoint->setResponseFactory($responseFactory);
-        $endPoint->setStreamFactory(new CallbackStreamFactory());
 
         return $endPoint;
     }
@@ -158,9 +158,11 @@ class MediaEndPointTraitTest extends \PHPUnit\Framework\TestCase
                 return $this->getMediaLoader();
             });
 
+        $endPoint = $this->buildEndPoint();
+        $class = \get_class($endPoint);
         self::assertInstanceOf(
-            EndPointInterface::class,
-            $this->buildEndPoint()($client, 'fooBar')
+            $class,
+            $endPoint($client, 'fooBar')
         );
     }
 
@@ -184,9 +186,11 @@ class MediaEndPointTraitTest extends \PHPUnit\Framework\TestCase
                 return $this->getMediaLoader();
             });
 
+        $endPoint = $this->buildEndPoint();
+        $class = \get_class($endPoint);
         self::assertInstanceOf(
-            EndPointInterface::class,
-            $this->buildEndPoint()($client, 'fooBar')
+            $class,
+            $endPoint($client, 'fooBar')
         );
     }
 }

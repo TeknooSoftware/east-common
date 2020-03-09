@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\EndPoint;
 
+use Psr\Http\Message\StreamFactoryInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Website\Loader\MediaLoader;
@@ -37,9 +38,12 @@ trait MediaEndPointTrait
 {
     private MediaLoader $mediaLoader;
 
-    public function __construct(MediaLoader $mediaLoader)
+    protected StreamFactoryInterface $streamFactory;
+
+    public function __construct(MediaLoader $mediaLoader, StreamFactoryInterface $streamFactory)
     {
         $this->mediaLoader = $mediaLoader;
+        $this->streamFactory = $streamFactory;
     }
 
     public function __invoke(ClientInterface $client, string $id): self

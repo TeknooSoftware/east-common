@@ -1,7 +1,7 @@
-#src/universal/config/doctrine/Item.mongodb.yml
-Teknoo\East\Website\Doctrine\Object\Item:
+#infrastructures/doctrine/config/doctrine/Content.mongodb.yml
+Teknoo\East\Website\Doctrine\Object\Content:
   type: 'documents'
-  collection: 'items'
+  collection: 'contents'
   gedmo:
     soft_deleteable:
       field_name: 'deletedAt'
@@ -13,7 +13,11 @@ Teknoo\East\Website\Doctrine\Object\Item:
       id: true
       type: 'string'
       strategy: 'UUID'
-    name:
+    title:
+      type: 'string'
+      gedmo:
+        - 'translatable'
+    subtitle:
       type: 'string'
       gedmo:
         - 'translatable'
@@ -26,46 +30,48 @@ Teknoo\East\Website\Doctrine\Object\Item:
           updatable: false
           separator: '-'
           fields:
-            - name
-    location:
+            - title
+    description:
       type: 'string'
-      index: true
-    position:
-      type: 'int'
-      index: true
-      order: true
-    hidden:
-      type: 'bool'
+      gedmo:
+        - 'translatable'
+    parts:
+      type: 'string'
+      gedmo:
+        - 'translatable'
+    tags:
+      type: 'collection'
       index: true
     createdAt:
       type: 'date'
       name: 'created_at'
+      index: true
       gedmo:
         timestampable:
           on: 'create'
     updatedAt:
       type: 'date'
       name: 'updated_at'
+      index: true
       gedmo:
         timestampable:
           on: 'update'
     deletedAt:
       type: 'date'
       name: 'deleted_at'
-      nullable: true
       index: true
+      nullable: true
+    publishedAt:
+      type: 'date'
+      name: 'published_at'
+      index: true
+      nullable: true
   referenceOne:
-    parent:
-      targetDocument: 'Teknoo\East\Website\Object\Item'
+    type:
+      targetDocument: 'Teknoo\East\Website\Object\Type'
       cascade: 'all'
-      inversedBy: 'children'
-    content:
-      targetDocument: 'Teknoo\East\Website\Object\Content'
-      cascade: 'none'
-  referenceMany:
-    children:
-      targetDocument:  'Teknoo\East\Website\Object\Item'
+    author:
+      targetDocument: 'Teknoo\East\Website\Object\User'
       cascade: 'all'
-      mappedBy: 'parent'
   lifecycleCallbacks:
     postLoad: ['postLoadDoctrine']

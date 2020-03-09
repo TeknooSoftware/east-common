@@ -1,5 +1,13 @@
 #Teknoo Software - Website - Change Log
 
+##[2.1.0-beta3] - 2020-03-09
+###Stable Release
+- Fix Doctrine definitions.
+- Use new interfaces about EndPoint provided by East Foundation.
+- Fix Symfony definitions
+- Provide default DI implemenation about PSR17 Factories.
+- Fix Object implementations to be able easily extended by any implementations.
+
 ##[2.1.0-beta2] - 2020-03-05
 ###Stable Release
 - Total switch to PSR7 and PSR17 and remove Zend Diactoros to manage PSR7 Request and Response

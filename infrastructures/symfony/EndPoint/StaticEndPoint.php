@@ -24,16 +24,16 @@ declare(strict_types=1);
 
 namespace Teknoo\East\WebsiteBundle\EndPoint;
 
-use Teknoo\East\Foundation\EndPoint\EndPointInterface;
-use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
+use Teknoo\East\Foundation\EndPoint\RenderingInterface;
+use Teknoo\East\FoundationBundle\EndPoint\TemplatingTrait;
 use Teknoo\East\Website\EndPoint\StaticEndPointTrait;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class StaticEndPoint implements EndPointInterface
+class StaticEndPoint implements RenderingInterface
 {
-    use EastEndPointTrait;
+    use TemplatingTrait;
     use StaticEndPointTrait;
 }

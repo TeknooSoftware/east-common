@@ -23,4 +23,7 @@
 declare(strict_types=1);
 
 //To avoid BC Breaks
-return include \dirname(__DIR__, 4) . '/infrastructures/symfony/Resources/config/di.php';
+return \array_merge(
+    include \dirname(__DIR__, 4) . '/infrastructures/symfony/Resources/config/di.php',
+    include \dirname(__DIR__, 4) . '/infrastructures/di.php',
+);

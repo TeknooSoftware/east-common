@@ -32,18 +32,18 @@ abstract class Media implements ObjectInterface, DeletableInterface
 {
     use ObjectTrait;
 
-    private ?string $name = null;
+    protected ?string $name = null;
 
     /**
      * @var mixed
      */
-    private $file;
+    protected $file;
 
-    private ?int $length = null;
+    protected ?int $length = null;
 
-    private ?string $mimeType = null;
+    protected ?string $mimeType = null;
 
-    private ?string $alternative = null;
+    protected ?string $alternative = null;
 
     public function getName(): string
     {

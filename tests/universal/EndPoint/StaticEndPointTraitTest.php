@@ -28,6 +28,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 use Teknoo\East\Foundation\EndPoint\EndPointInterface;
+use Teknoo\East\Foundation\EndPoint\RenderingInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
 use Teknoo\East\Website\EndPoint\StaticEndPointTrait;
@@ -39,10 +40,7 @@ use Teknoo\East\Website\EndPoint\StaticEndPointTrait;
  */
 class StaticEndPointTraitTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @return EndPointInterface
-     */
-    public function buildEndPoint(): EndPointInterface
+    public function buildEndPoint()
     {
         $response = $this->createMock(ResponseInterface::class);
         $response->expects(self::any())->method('withHeader')->willReturnSelf();
@@ -105,7 +103,7 @@ class StaticEndPointTraitTest extends \PHPUnit\Framework\TestCase
             ->willReturnSelf();
 
         self::assertInstanceOf(
-            EndPointInterface::class,
+            RenderingInterface::class,
             $this->buildEndPoint()($client, 'fooBar')
         );
     }

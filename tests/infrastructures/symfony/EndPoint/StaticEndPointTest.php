@@ -60,7 +60,7 @@ class StaticEndPointTest extends StaticEndPointTraitTest
         return $this->templating;
     }
 
-    public function buildEndPoint(): EndPointInterface
+    public function buildEndPoint(): StaticEndPoint
     {
         $response = $this->createMock(ResponseInterface::class);
         $response->expects(self::any())->method('withHeader')->willReturnSelf();

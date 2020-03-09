@@ -67,7 +67,7 @@ class ContentEndPointTest extends ContentEndPointTraitTest
         return $this->templating;
     }
 
-    public function buildEndPoint(): EndPointInterface
+    public function buildEndPoint(): ContentEndPoint
     {
         $endPoint = (new ContentEndPoint($this->getContentLoader(), 'error-404'))
             ->setTemplating($this->getTemplating());

@@ -1,7 +1,7 @@
-#src/universal/config/doctrine/Type.mongodb.yml
-Teknoo\East\Website\Object\Type:
+#infrastructures/doctrine/config/doctrine/Media.mongodb.yml
+Teknoo\East\Website\Doctrine\Object\Media:
   type: 'documents'
-  collection: 'types'
+  collection: 'media'
   gedmo:
     soft_deleteable:
       field_name: 'deletedAt'
@@ -13,10 +13,15 @@ Teknoo\East\Website\Object\Type:
       strategy: 'UUID'
     name:
       type: 'string'
-    template:
+    mimeType:
+      name: 'mime_type'
       type: 'string'
-    blocks:
-      type: 'hash'
+    file:
+      type: 'file'
+    length:
+      type: 'int'
+    alternative:
+      type: 'string'
     createdAt:
       type: 'date'
       name: 'created_at'

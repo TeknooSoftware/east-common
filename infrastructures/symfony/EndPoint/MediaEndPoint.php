@@ -24,16 +24,16 @@ declare(strict_types=1);
 
 namespace Teknoo\East\WebsiteBundle\EndPoint;
 
-use Teknoo\East\Foundation\EndPoint\EndPointInterface;
-use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
+use Psr\Http\Message\StreamFactoryInterface;
+use Teknoo\East\FoundationBundle\EndPoint\ResponseFactoryTrait;
 use Teknoo\East\Website\EndPoint\MediaEndPointTrait;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class MediaEndPoint implements EndPointInterface
+class MediaEndPoint
 {
-    use EastEndPointTrait;
+    use ResponseFactoryTrait;
     use MediaEndPointTrait;
 }

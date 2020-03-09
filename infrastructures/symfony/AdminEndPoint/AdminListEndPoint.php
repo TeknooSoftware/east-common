@@ -25,19 +25,21 @@ declare(strict_types=1);
 namespace Teknoo\East\WebsiteBundle\AdminEndPoint;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Teknoo\East\Foundation\EndPoint\EndPointInterface;
+use Teknoo\East\Foundation\EndPoint\RenderingInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Promise\Promise;
-use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
+use Teknoo\East\FoundationBundle\EndPoint\AuthenticationTrait;
+use Teknoo\East\FoundationBundle\EndPoint\TemplatingTrait;
 use Teknoo\East\Website\Query\PaginationQuery;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class AdminListEndPoint implements EndPointInterface
+class AdminListEndPoint implements RenderingInterface
 {
-    use EastEndPointTrait;
+    use AuthenticationTrait;
+    use TemplatingTrait;
     use AdminEndPointTrait;
 
     private int $itemsPerPage = 15;

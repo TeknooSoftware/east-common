@@ -44,30 +44,29 @@ class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, Delet
     use ObjectTrait;
     use ProxyTrait;
 
-    private string $name = '';
+    protected string $name = '';
 
-    private string $slug = '';
+    protected string $slug = '';
 
-    private ?Content $content = null;
+    protected ?Content $content = null;
 
-    private ?int $position = null;
+    protected ?int $position = null;
 
-    private string $location = '';
+    protected string $location = '';
 
     protected bool $hidden = false;
 
-    private ?Item $parent = null;
+    protected ?Item $parent = null;
 
     /**
      * @var iterable<Item>
      */
-    private iterable $children = [];
+    protected iterable $children = [];
 
-    private ?string $localeField = null;
+    protected ?string $localeField = null;
 
     public function __construct()
     {
-        $this->children = [];
         $this->initializeProxy();
         $this->updateStates();
     }

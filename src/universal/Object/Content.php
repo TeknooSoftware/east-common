@@ -50,26 +50,26 @@ class Content implements
     use AutomatedTrait;
     use ProxyTrait;
 
-    private ?User $author = null;
+    protected ?User $author = null;
 
-    private string $title = '';
+    protected string $title = '';
 
-    private string $subtitle = '';
+    protected string $subtitle = '';
 
-    private string $slug = '';
+    protected string $slug = '';
 
-    private ?Type $type = null;
+    protected ?Type $type = null;
 
-    private string $parts = '{}';
+    protected string $parts = '{}';
 
     /**
      * @var array<string>
      */
-    private array $tags = [];
+    protected array $tags = [];
 
-    private ?string $description = null;
+    protected ?string $description = null;
 
-    private ?string $localeField = null;
+    protected ?string $localeField = null;
 
     /**
      * @throws \Exception

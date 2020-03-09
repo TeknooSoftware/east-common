@@ -39,7 +39,7 @@ use Teknoo\Tests\East\Website\EndPoint\MediaEndPointTraitTest;
  */
 class MediaEndPointTest extends MediaEndPointTraitTest
 {
-    public function buildEndPoint(): EndPointInterface
+    public function buildEndPoint(): MediaEndPoint
     {
         $response = $this->createMock(ResponseInterface::class);
         $response->expects(self::any())->method('withHeader')->willReturnSelf();
@@ -58,9 +58,8 @@ class MediaEndPointTest extends MediaEndPointTraitTest
         $responseFactory = $this->createMock(ResponseFactoryInterface::class);
         $responseFactory->expects(self::any())->method('createResponse')->willReturn($response);
 
-        $endPoint = new MediaEndPoint($this->getMediaLoader());
+        $endPoint = new MediaEndPoint($this->getMediaLoader(), new CallbackStreamFactory());
         $endPoint->setResponseFactory($responseFactory);
-        $endPoint->setStreamFactory(new CallbackStreamFactory());
 
         return $endPoint;
     }

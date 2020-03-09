@@ -30,6 +30,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 use Teknoo\East\Foundation\EndPoint\EndPointInterface;
+use Teknoo\East\Foundation\EndPoint\RenderingInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
@@ -64,10 +65,7 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
         return $this->contentLoader;
     }
 
-    /**
-     * @return EndPointInterface
-     */
-    public function buildEndPoint(): EndPointInterface
+    public function buildEndPoint()
     {
         $contentLoader = $this->getContentLoader();
 
@@ -179,7 +177,7 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
 
 
         self::assertInstanceOf(
-            EndPointInterface::class,
+            RenderingInterface::class,
             $this->buildEndPoint()($client, $request)
         );
     }
@@ -215,7 +213,7 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
             ->willReturn($uri);
 
         self::assertInstanceOf(
-            EndPointInterface::class,
+            RenderingInterface::class,
             $this->buildEndPoint()($client, $request)
         );
     }
@@ -259,7 +257,7 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
             ]);
 
         self::assertInstanceOf(
-            EndPointInterface::class,
+            RenderingInterface::class,
             $this->buildEndPoint()($client, $request)
         );
     }
@@ -315,7 +313,7 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
             ]);
 
         self::assertInstanceOf(
-            EndPointInterface::class,
+            RenderingInterface::class,
             $this->buildEndPoint()($client, $request)
         );
     }
@@ -370,7 +368,7 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
             ]);
 
         self::assertInstanceOf(
-            EndPointInterface::class,
+            RenderingInterface::class,
             $this->buildEndPoint()($client, $request)
         );
     }

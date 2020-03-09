@@ -3,9 +3,13 @@
 use Behat\Behat\Context\Context;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\Common\Persistence\ObjectManager;
+use Laminas\Diactoros\ServerRequest;
+use Laminas\Diactoros\Uri;
 use PHPUnit\Framework\Assert;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Symfony\Component\Templating\EngineInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
 use Teknoo\East\Foundation\Router\RouterInterface;
@@ -26,7 +30,6 @@ use Teknoo\East\Website\Object\Media;
 use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Object\Block;
-use Zend\Diactoros\ServerRequest;
 
 /**
  * Defines application features from the specific context.
@@ -132,7 +135,10 @@ class FeatureContext implements Context
             include \dirname(\dirname(__DIR__)).'/src/universal/di.php'
         );
         $containerDefinition->addDefinitions(
-            include \dirname(\dirname(__DIR__)).'/src/doctrine/di.php'
+            include \dirname(\dirname(__DIR__)).'/infrastructures/doctrine/di.php'
+        );
+        $containerDefinition->addDefinitions(
+            include \dirname(\dirname(__DIR__)).'/infrastructures/di.php'
         );
 
         $this->container = $containerDefinition->build();
@@ -306,7 +312,10 @@ class FeatureContext implements Context
      */
     public function anAvailableImageCalled($arg1)
     {
-        $resource = new class() {
+        $media = new class extends Media {
+            /**
+             * @inheritDoc
+             */
             public function getResource()
             {
                 $hf = \fopen('php://memory', 'rw');
@@ -316,11 +325,11 @@ class FeatureContext implements Context
                 return $hf;
             }
         };
+
         $this->objectRepository->setObject(
             ['id' => $arg1],
-            (new Media())->setId($arg1)
+            $media->setId($arg1)
                 ->setName($arg1)
-                ->setFile($resource)
         );
     }
 
@@ -329,10 +338,12 @@ class FeatureContext implements Context
      */
     public function aEndpointAbleToServeResourceFromMongo()
     {
-        $this->mediaEndPoint = new class($this->mediaLoader) implements EndPointInterface {
+        $this->mediaEndPoint = new class($this->mediaLoader, $this->container->get(StreamFactoryInterface::class)) implements EndPointInterface {
             use EastEndPointTrait;
             use MediaEndPointTrait;
         };
+
+        $this->mediaEndPoint->setResponseFactory($this->container->get(ResponseFactoryInterface::class));
     }
 
     /**
@@ -483,7 +494,7 @@ class FeatureContext implements Context
         };
 
         $request = new ServerRequest();
-        $request = $request->withUri(new \Zend\Diactoros\Uri($arg1));
+        $request = $request->withUri(new Uri($arg1));
         $query = [];
         \parse_str($request->getUri()->getQuery(), $query);
         $request = $request->withQueryParams($query);
@@ -570,6 +581,9 @@ class FeatureContext implements Context
             use EastEndPointTrait;
             use ContentEndPointTrait;
         };
+
+        $this->contentEndPoint->setResponseFactory($this->container->get(ResponseFactoryInterface::class));
+        $this->contentEndPoint->setStreamFactory($this->container->get(StreamFactoryInterface::class));
     }
 
     /**
@@ -644,5 +658,8 @@ class FeatureContext implements Context
             use EastEndPointTrait;
             use StaticEndPointTrait;
         };
+
+        $this->staticEndPoint->setResponseFactory($this->container->get(ResponseFactoryInterface::class));
+        $this->staticEndPoint->setStreamFactory($this->container->get(StreamFactoryInterface::class));
     }
 }

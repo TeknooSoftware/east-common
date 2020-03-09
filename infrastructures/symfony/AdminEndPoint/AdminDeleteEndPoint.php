@@ -25,10 +25,10 @@ declare(strict_types=1);
 namespace Teknoo\East\WebsiteBundle\AdminEndPoint;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Teknoo\East\Foundation\EndPoint\EndPointInterface;
+use Teknoo\East\Foundation\EndPoint\RedirectingInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Promise\Promise;
-use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
+use Teknoo\East\FoundationBundle\EndPoint\RoutingTrait;
 use Teknoo\East\Website\Object\DeletableInterface;
 use Teknoo\East\Website\Service\DeletingService;
 
@@ -36,9 +36,9 @@ use Teknoo\East\Website\Service\DeletingService;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class AdminDeleteEndPoint implements EndPointInterface
+class AdminDeleteEndPoint implements RedirectingInterface
 {
-    use EastEndPointTrait;
+    use RoutingTrait;
     use AdminEndPointTrait;
 
     private DeletingService $deletingService;

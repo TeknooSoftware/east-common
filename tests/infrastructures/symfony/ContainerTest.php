@@ -47,10 +47,11 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
     {
         $di1 = include __DIR__.'/../../../src/symfony/Resources/config/di.php';
         $di2 = include __DIR__.'/../../../infrastructures/symfony/Resources/config/di.php';
+        $di3 = include __DIR__.'/../../../infrastructures//di.php';
 
         self::assertEquals(
             $di1,
-            $di2
+            $di2 + $di3
         );
     }
 

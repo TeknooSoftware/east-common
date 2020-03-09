@@ -40,10 +40,10 @@ use Teknoo\East\Website\Doctrine\DBSource\Manager;
 use Teknoo\East\Website\Doctrine\DBSource\MediaRepository;
 use Teknoo\East\Website\Doctrine\DBSource\TypeRepository;
 use Teknoo\East\Website\Doctrine\DBSource\UserRepository;
+use Teknoo\East\Website\Doctrine\Object\Content;
+use Teknoo\East\Website\Doctrine\Object\Item;
+use Teknoo\East\Website\Doctrine\Object\Media;
 use Teknoo\East\Website\Middleware\LocaleMiddleware;
-use Teknoo\East\Website\Object\Content;
-use Teknoo\East\Website\Object\Item;
-use Teknoo\East\Website\Object\Media;
 use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Object\User;
 

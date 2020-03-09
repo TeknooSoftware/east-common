@@ -30,13 +30,13 @@ namespace Teknoo\East\Website\Object;
  */
 trait ObjectTrait
 {
-    private ?string $id = null;
+    protected ?string $id = null;
 
-    private ?\DateTimeInterface $createdAt = null;
+    protected ?\DateTimeInterface $createdAt = null;
 
-    private ?\DateTimeInterface $updatedAt = null;
+    protected ?\DateTimeInterface $updatedAt = null;
 
-    private ?\DateTimeInterface $deletedAt = null;
+    protected ?\DateTimeInterface $deletedAt = null;
 
     public function getId(): string
     {

@@ -29,13 +29,14 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Teknoo\East\Diactoros\CallbackStreamFactory;
+
 use function DI\string;
 
 return [
-    ResponseFactoryInterface::class.':value' => string(DiactorosResponseFactory::class),
+    ResponseFactoryInterface::class . ':value' => string(DiactorosResponseFactory::class),
 
     ResponseFactoryInterface::class => function (ContainerInterface $container) {
-        $class = $container->get(ResponseFactoryInterface::class.':value');
+        $class = $container->get(ResponseFactoryInterface::class . ':value');
         if (\class_exists($class)) {
             return new $class();
         }
@@ -43,10 +44,10 @@ return [
         throw new \RuntimeException('Error, missing definition for a PSR 17 ResponseFactoryInterface');
     },
 
-    StreamFactoryInterface::class.':value' => string(CallbackStreamFactory::class),
+    StreamFactoryInterface::class . ':value' => string(CallbackStreamFactory::class),
 
     StreamFactoryInterface::class => function (ContainerInterface $container) {
-        $class = $container->get(StreamFactoryInterface::class.':value');
+        $class = $container->get(StreamFactoryInterface::class . ':value');
 
         if (\class_exists($class)) {
             return new $class();

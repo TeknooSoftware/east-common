@@ -30,7 +30,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormInterface;
 use Teknoo\East\Website\Object\Block;
-use Teknoo\East\Website\Object\Content;
+use Teknoo\East\Website\Doctrine\Object\Content;
 use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Doctrine\Form\Type\ContentType;
 

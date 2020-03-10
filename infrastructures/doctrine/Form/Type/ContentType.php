@@ -34,7 +34,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Teknoo\East\Website\Object\Content;
+use Teknoo\East\Website\Doctrine\Object\Content;
+use Teknoo\East\Website\Object\Content\Published;
 use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Object\User;
 
@@ -106,7 +107,7 @@ class ContentType extends AbstractType
                     return;
                 }
 
-                $data->isInState([Content\Published::class], function () use ($data, $form) {
+                $data->isInState([Published::class], function () use ($data, $form) {
                     $form->add(
                         'publishedAt',
                         DateTimeType::class,

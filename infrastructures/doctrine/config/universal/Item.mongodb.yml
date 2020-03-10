@@ -1,0 +1,70 @@
+#infrastructures/doctrine/config/universal/Item.mongodb.yml
+Teknoo\East\Website\Object\Item:
+  type: 'documents'
+  collection: 'items'
+  inheritanceType: 'COLLECTION_PER_CLASS'
+  gedmo:
+    soft_deleteable:
+      field_name: 'deletedAt'
+      time_aware: false
+    translation:
+      locale: 'localeField'
+  fields:
+    id:
+      id: true
+      type: 'string'
+      strategy: 'UUID'
+    name:
+      type: 'string'
+      gedmo:
+        - 'translatable'
+    slug:
+      type: 'string'
+      index: true
+      unique: true
+      gedmo:
+        slug:
+          updatable: false
+          separator: '-'
+          fields:
+            - name
+    location:
+      type: 'string'
+      index: true
+    position:
+      type: 'int'
+      index: true
+      order: true
+    hidden:
+      type: 'bool'
+      index: true
+    createdAt:
+      type: 'date'
+      name: 'created_at'
+      gedmo:
+        timestampable:
+          on: 'create'
+    updatedAt:
+      type: 'date'
+      name: 'updated_at'
+      gedmo:
+        timestampable:
+          on: 'update'
+    deletedAt:
+      type: 'date'
+      name: 'deleted_at'
+      nullable: true
+      index: true
+  referenceOne:
+    parent:
+      targetDocument: 'Teknoo\East\Website\Object\Item'
+      cascade: 'all'
+      inversedBy: 'children'
+    content:
+      targetDocument: 'Teknoo\East\Website\Object\Content'
+      cascade: 'none'
+  referenceMany:
+    children:
+      targetDocument:  'Teknoo\East\Website\Object\Item'
+      cascade: 'all'
+      mappedBy: 'parent'

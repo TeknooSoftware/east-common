@@ -62,7 +62,7 @@ class MediaTypeTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testBuildFormPopulatedDate()
+    public function testBuildFormPopulatedFileError()
     {
         $builder = $this->createMock(FormBuilderInterface::class);
         $builder->expects(self::once())
@@ -74,7 +74,35 @@ class MediaTypeTest extends \PHPUnit\Framework\TestCase
                 $form->expects(self::once())->method('getNormData')
                     ->willReturn($this->createMock(Media::class));
                 $image = $this->createMock(UploadedFile::class);
+                $image->expects(self::any())->method('getError')->willReturn(1);
+                $image->expects(self::never())->method('getSize')->willReturn(123);
+                $form->expects(self::once())->method('addError');
+
+                $event = new FormEvent($form, ['image' => $image]);
+                $callable($event);
+            });
+
+        self::assertInstanceOf(
+            AbstractType::class,
+            $this->buildForm()->buildForm($builder, [])
+        );
+    }
+
+    public function testBuildFormPopulatedFile()
+    {
+        $builder = $this->createMock(FormBuilderInterface::class);
+        $builder->expects(self::once())
+            ->method('addEventListener')
+            ->willReturnCallback(function ($name, $callable) {
+                self::assertEquals(FormEvents::PRE_SUBMIT, $name);
+
+                $form = $this->createMock(FormInterface::class);
+                $form->expects(self::once())->method('getNormData')
+                    ->willReturn($this->createMock(Media::class));
+                $image = $this->createMock(UploadedFile::class);
+                $image->expects(self::any())->method('getError')->willReturn(0);
                 $image->expects(self::any())->method('getSize')->willReturn(123);
+                $form->expects(self::never())->method('addError');
                 $event = new FormEvent($form, ['image' => $image]);
                 $callable($event);
             });

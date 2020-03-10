@@ -1,4 +1,4 @@
-#infrastructures/doctrine/config/Type.mongodb.yml
+#infrastructures/doctrine/config/universal/Type.mongodb.yml
 Teknoo\East\Website\Object\Type:
   type: 'documents'
   collection: 'types'

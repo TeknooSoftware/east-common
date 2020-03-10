@@ -28,6 +28,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -68,6 +69,12 @@ class MediaType extends AbstractType
                  * @var UploadedFile $image
                  */
                 $image = $data['image'];
+
+                if ($image->getError()) {
+                    $form->addError(new FormError($image->getErrorMessage()));
+                    return;
+                }
+
                 $contentObject->setFile($image->getPathname());
                 $contentObject->setLength($image->getSize());
                 $contentObject->setMimeType((string) $image->getClientMimeType());

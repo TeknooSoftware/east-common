@@ -46,7 +46,7 @@ class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, Delet
 
     protected string $name = '';
 
-    protected string $slug = '';
+    protected ?string $slug = null;
 
     protected ?Content $content = null;
 
@@ -112,14 +112,14 @@ class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, Delet
         return $this;
     }
 
-    public function getSlug(): string
+    public function getSlug(): ?string
     {
-        return (string) $this->slug;
+        return $this->slug;
     }
 
     public function setSlug(?string $slug): Item
     {
-        $this->slug = (string) $slug;
+        $this->slug = $slug;
 
         return $this;
     }

@@ -114,11 +114,14 @@ services:
       - ['setStreamFactory', ['@Psr\Http\Message\StreamFactoryInterface']]
     public: true
 
+  teknoo.east.website.endpoint.media.stream.factory:
+    alias: 'Psr\Http\Message\StreamFactoryInterface'
+
   teknoo.east.website.endpoint.media:
     class: '%teknoo.east.website.endpoint.media.class%'
     arguments:
       - '@Teknoo\East\Website\Loader\MediaLoader'
-      - '@Psr\Http\Message\StreamFactoryInterface'
+      - '@teknoo.east.website.endpoint.media.stream.factory'
     calls:
       - ['setResponseFactory', ['@Psr\Http\Message\ResponseFactoryInterface']]
     public: true

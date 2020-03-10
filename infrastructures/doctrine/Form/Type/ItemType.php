@@ -31,8 +31,8 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Teknoo\East\Website\Object\Content;
-use Teknoo\East\Website\Object\Item;
+use Teknoo\East\Website\Doctrine\Object\Content;
+use Teknoo\East\Website\Doctrine\Object\Item;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License

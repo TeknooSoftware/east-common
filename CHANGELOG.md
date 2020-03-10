@@ -1,15 +1,23 @@
 #Teknoo Software - Website - Change Log
 
+##[2.1.0-beta6] - 2020-03-11
+###Beta Release
+- Fix Doctrine definitions to avoid BC Breaks with old translation and keep use original full qualified document name
+- Fix Symfony Form Type dedicated to Content and Item to use Doctrine implementation instead of universal versions
+- Update Media Endpoit to allow developper to chose another StreamFactory instead the stream factory identified by `Psr\Http\Message\StreamFactoryInterface` by using `teknoo.east.website.endpoint.media.stream.factory`.  
+- Add management of error during uploading in Media Type
+- Slug in Content and Item are by default nullable fields and not empty string fields.
+
 ##[2.1.0-beta5] - 2020-03-09
-###Stable Release
+###Beta Release
 - Fix Symfony definitions
 
 ##[2.1.0-beta4] - 2020-03-09
-###Stable Release
+###Beta Release
 - Fix Symfony definitions
 
 ##[2.1.0-beta3] - 2020-03-09
-###Stable Release
+###Beta Release
 - Fix Doctrine definitions.
 - Use new interfaces about EndPoint provided by East Foundation.
 - Fix Symfony definitions
@@ -17,7 +25,7 @@
 - Fix Object implementations to be able easily extended by any implementations.
 
 ##[2.1.0-beta2] - 2020-03-05
-###Stable Release
+###Beta Release
 - Total switch to PSR7 and PSR17 and remove Zend Diactoros to manage PSR7 Request and Response
 - Switch to East CallbackStreamInterface instead of CallbackStream of Zend Diactoros
 - Remove all behaviors about translation in Universal object to migrate them to Doctrine+Gedmo implementation
@@ -27,7 +35,7 @@
 - Adapt Symfony implementation to Symfony 4.4+ changes (interface `Symfony\Component\Translation\TranslatorInterface` to `Symfony\Contracts\Translation\LocaleAwareInterface`)
 
 ##[2.1.0-beta1] - 2020-03-01
-###Stable Release
+###Beta Release
 - Update dev tools, migrate to PHPUnit 9.0, phploc 6.0, phpcpd 5.0 
 - Migrate Symfony implementation to infrastructures
 

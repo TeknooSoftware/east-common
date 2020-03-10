@@ -56,7 +56,7 @@ class Content implements
 
     protected string $subtitle = '';
 
-    protected string $slug = '';
+    protected ?string $slug = null;
 
     protected ?Type $type = null;
 
@@ -145,14 +145,14 @@ class Content implements
         return $this;
     }
 
-    public function getSlug(): string
+    public function getSlug(): ?string
     {
-        return (string) $this->slug;
+        return $this->slug;
     }
 
     public function setSlug(?string $slug): Content
     {
-        $this->slug = (string) $slug;
+        $this->slug = $slug;
 
         return $this;
     }

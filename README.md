@@ -42,10 +42,11 @@ Example with Symfony
             $appPath = __DIR__;
             $vendorPath = dirname($appPath).'/vendor';
             $builder->addDefinitions($vendorPath.'/teknoo/east-foundation/src/universal/di.php');
-            $builder->addDefinitions($vendorPath.'/teknoo/east-foundation/src/symfony/Resources/config/di.php');
+            $builder->addDefinitions($vendorPath.'/teknoo/east-foundation/infrastructures/symfony/Resources/config/di.php');
             $builder->addDefinitions($vendorPath.'/teknoo/east-website/src/universal/di.php');
-            $builder->addDefinitions($vendorPath.'/teknoo/east-website/src/doctrine/di.php');
-            $builder->addDefinitions($vendorPath.'/teknoo/east-website/src/symfony/Resources/config/di.php');
+            $builder->addDefinitions($vendorPath.'/teknoo/east-website/infrastructures/di.php');
+            $builder->addDefinitions($vendorPath.'/teknoo/east-website/infrastructures/doctrine/di.php');
+            $builder->addDefinitions($vendorPath.'/teknoo/east-website/infrastructures/symfony/Resources/config/di.php');
             $builder->addDefinitions([
                 ObjectManager::class => \DI\get('doctrine_mongodb.odm.default_document_manager'),
             ]);

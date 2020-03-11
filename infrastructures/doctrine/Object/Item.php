@@ -36,15 +36,6 @@ class Item extends OriginalItem implements Translatable
         AutomatedTrait::updateStates insteadof StandardTrait;
     }
 
-    /**
-     * {@inheritdoc}
-     * @return array<string>
-     */
-    public static function statesListDeclaration(): array
-    {
-        return [];
-    }
-
     public function setTranslatableLocale(?string $locale): self
     {
         $this->setLocaleField((string) $locale);

@@ -14,46 +14,59 @@ and implementing a basic CMS to display dynamics pages with different types and 
 Example with Symfony
 --------------------
 
+    //Kernel
     <?php
-
-    //In the AppKernel:
+    
+    declare(strict_types=1);
+    
     use DI\Bridge\Symfony\Kernel;
+    use Symfony\Component\Config\Loader\LoaderInterface;
     use DI\ContainerBuilder as DIContainerBuilder;
-    use Doctrine\Common\Persistence\ObjectManager;
-
+    
     class AppKernel extends Kernel
     {
         public function registerBundles()
         {
             $bundles = [
-                //..
+                /**/
                 new Teknoo\East\FoundationBundle\EastFoundationBundle(),
                 new Teknoo\East\WebsiteBundle\TeknooEastWebsiteBundle(),
+                /**/
             ];
-
-            //..
-
+    
+            /**/
+    
             return $bundles;
         }
-
+    
+        /**/
+    
         protected function buildPHPDIContainer(DIContainerBuilder $builder)
         {
             // Configure your container here
-            $appPath = __DIR__;
-            $vendorPath = dirname($appPath).'/vendor';
+            $appPath = /**/;
+    
             $builder->addDefinitions($vendorPath.'/teknoo/east-foundation/src/universal/di.php');
             $builder->addDefinitions($vendorPath.'/teknoo/east-foundation/infrastructures/symfony/Resources/config/di.php');
+    
             $builder->addDefinitions($vendorPath.'/teknoo/east-website/src/universal/di.php');
-            $builder->addDefinitions($vendorPath.'/teknoo/east-website/infrastructures/di.php');
             $builder->addDefinitions($vendorPath.'/teknoo/east-website/infrastructures/doctrine/di.php');
             $builder->addDefinitions($vendorPath.'/teknoo/east-website/infrastructures/symfony/Resources/config/di.php');
+            $builder->addDefinitions($vendorPath.'/teknoo/east-website/infrastructures/di.php');
+    
+            $builder->addDefinitions($appPath.'/config/di.php');
+    
+            /**/
             $builder->addDefinitions([
-                ObjectManager::class => \DI\get('doctrine_mongodb.odm.default_document_manager'),
+                'teknoo_website_hostname' => \DI\string($websiteName),
+                \Doctrine\Common\Persistence\ObjectManager::class => \DI\get('doctrine_mongodb.odm.default_document_manager'),
             ]);
+    
+            return $builder->build();
         }
     }
 
-    //In app/config.yml
+    //In doctrine config
     doctrine_mongodb:
       document_managers:
         default:
@@ -65,14 +78,14 @@ Example with Symfony
               is_bundle: false
               prefix: 'Teknoo\East\Website\Object'
 
-    //In app/security.yml
+    //In security.yml
     security:
       //..
       providers:
         main:
           id: 'teknoo.east.website.bundle.user_provider'
 
-    //In app/routing.yml
+    //In routing.yml
     website:
       resource: '@TeknooEastWebsiteBundle/Resources/config/routing.yml'
 

@@ -28,7 +28,6 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 use Symfony\Component\Templating\EngineInterface;
 use Teknoo\East\Diactoros\CallbackStream;
-use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\WebsiteBundle\EndPoint\ContentEndPoint;
 use Teknoo\Tests\East\Website\EndPoint\ContentEndPointTraitTest;
 
@@ -99,5 +98,35 @@ class ContentEndPointTest extends ContentEndPointTraitTest
         $endPoint->setStreamFactory($streamFactory);
 
         return $endPoint;
+    }
+
+    public function testInvokeFoundFromAppFile()
+    {
+        $this->testInvokeFound('/app.php');
+    }
+
+    public function testInvokeFoundFromAppDevFile()
+    {
+        $this->testInvokeFound('/app_dev.php');
+    }
+
+    public function testInvokeFoundFromIndexFile()
+    {
+        $this->testInvokeFound('/index.php');
+    }
+
+    public function testInvokeDefaultFromAppFile()
+    {
+        $this->testInvokeDefault('/app.php');
+    }
+
+    public function testInvokeDefaultFromAppDevFile()
+    {
+        $this->testInvokeDefault('/app_dev.php');
+    }
+
+    public function testInvokeDefaultFromIndexFile()
+    {
+        $this->testInvokeDefault('/index.php');
     }
 }

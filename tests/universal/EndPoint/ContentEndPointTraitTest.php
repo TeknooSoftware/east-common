@@ -262,7 +262,7 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testInvokeFound()
+    public function testInvokeFound($pathPrefix='')
     {
         $client = $this->createMock(ClientInterface::class);
         $client->expects(self::once())
@@ -299,7 +299,7 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
         $uri = $this->createMock(UriInterface::class);
         $uri->expects(self::any())
             ->method('getPath')
-            ->willReturn('/item/sub/foo-bar');
+            ->willReturn($pathPrefix . '/item/sub/foo-bar');
 
         $request = $this->createMock(ServerRequestInterface::class);
         $request->expects(self::any())
@@ -318,7 +318,7 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testInvokeDefault()
+    public function testInvokeDefault($pathPrefix='')
     {
         $client = $this->createMock(ClientInterface::class);
         $client->expects(self::once())
@@ -354,7 +354,7 @@ class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
         $uri = $this->createMock(UriInterface::class);
         $uri->expects(self::any())
             ->method('getPath')
-            ->willReturn('/');
+            ->willReturn($pathPrefix . '/');
 
         $request = $this->createMock(ServerRequestInterface::class);
         $request->expects(self::any())

@@ -44,7 +44,7 @@ class ContentEndPoint implements RenderingInterface
     protected function parseUrl(ServerRequestInterface $request): array
     {
         $path = (string) $request->getUri()->getPath();
-        $path = \str_replace(['app.php', 'app_dev.php'], '', $path);
+        $path = \str_replace(['app.php', 'app_dev.php', 'index.php'], '', $path);
         return \explode('/', \trim($path, '/'));
     }
 }

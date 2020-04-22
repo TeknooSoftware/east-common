@@ -1,5 +1,10 @@
 #Teknoo Software - Website - Change Log
 
+##[2.1.1] - 2020-04-22
+###Stable Release
+###Fix
+- In ContentEndPoint impletation for Symfony, manage also `index.php` as entry file.
+
 ##[2.1.0] - 2020-03-11
 ###Stable Release
 ###Change

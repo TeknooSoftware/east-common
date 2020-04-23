@@ -1,5 +1,11 @@
 #Teknoo Software - Website - Change Log
 
+##[2.1.2] - 2020-04-23
+###Stable Release
+###Change
+- Change Symfony routes keys to be prefixed by `_teknoo_website_`
+- Change route `_teknoo_website_content` to not interceptd by `_wdt`
+
 ##[2.1.1] - 2020-04-22
 ###Stable Release
 ###Fix

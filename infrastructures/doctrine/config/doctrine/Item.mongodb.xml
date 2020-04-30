@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--infrastructures/doctrine/config/doctrine/Content.mongodb.yml-->
+<doctrine-mongo-mapping xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"
+                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                        xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
+
+    <document name="Teknoo\East\Website\Doctrine\Object\Item" db="documents" collection="items">
+        <reference-one field="parent" target-document="Teknoo\East\Website\Doctrine\Object\Item" inversed-by="children">
+            <cascade>
+                <all/>
+            </cascade>
+        </reference-one>
+        <reference-one field="content" target-document="Teknoo\East\Website\Doctrine\Object\Content">
+            <cascade />
+        </reference-one>
+        <reference-many field="children" target-document="Teknoo\East\Website\Doctrine\Object\Item" mapped-by="parent">
+            <cascade>
+                <all/>
+            </cascade>
+        </reference-many>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="postLoad" method="postLoadDoctrine"/>
+        </lifecycle-callbacks>
+    </document>
+</doctrine-mongo-mapping>

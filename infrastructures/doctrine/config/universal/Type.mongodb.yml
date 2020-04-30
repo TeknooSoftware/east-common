@@ -2,10 +2,6 @@
 Teknoo\East\Website\Object\Type:
   type: 'documents'
   collection: 'types'
-  gedmo:
-    soft_deleteable:
-      field_name: 'deletedAt'
-      time_aware: false
   fields:
     id:
       id: true

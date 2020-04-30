@@ -4,9 +4,6 @@ Teknoo\East\Website\Object\Item:
   collection: 'items'
   inheritanceType: 'COLLECTION_PER_CLASS'
   gedmo:
-    soft_deleteable:
-      field_name: 'deletedAt'
-      time_aware: false
     translation:
       locale: 'localeField'
   fields:

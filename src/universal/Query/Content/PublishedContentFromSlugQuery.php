@@ -76,8 +76,8 @@ class PublishedContentFromSlugQuery implements QueryInterface, ImmutableInterfac
 
         $repository->findOneBy(
             [
-            'slug' => $this->slug,
-            'deletedAt' => null,
+                'slug' => $this->slug,
+                'deletedAt' => null,
             ],
             $fetchingPromise->next($promise)
         );

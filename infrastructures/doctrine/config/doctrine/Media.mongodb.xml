@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--infrastructures/doctrine/config/doctrine/Media.mongodb.yml-->
+<doctrine-mongo-mapping xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"
+                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                        xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping"
+                        xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
+
+    <document name="Teknoo\East\Website\Doctrine\Object\Media" db="documents" collection="media">
+        <id type="string" strategy="UUID"/>
+        <field field-name="name" type="string" />
+        <field field-name="mimeType" name="mime_type" type="string" />
+        <field field-name="file" type="file" />
+        <field field-name="length" type="int" />
+        <field field-name="alternative" type="string" />
+        <field field-name="createdAt" name="created_at" type="date">
+            <gedmo:timestampable on="create"/>
+        </field>
+        <field field-name="updatedAt" name="updated_at" type="date">
+            <gedmo:timestampable on="update"/>
+        </field>
+        <field field-name="deletedAt" name="deleted_at" type="date" nullable="true" index="true">
+            <gedmo:timestampable on="update"/>
+        </field>
+        <field field-name="publishedAt" name="published_at" type="date" nullable="true" index="true" />
+        <reference-one field="type" target-document="Teknoo\East\Website\Object\Type">
+            <cascade>
+                <all/>
+            </cascade>
+        </reference-one>
+        <reference-one field="author" target-document="Teknoo\East\Website\Object\User">
+            <cascade>
+                <all/>
+            </cascade>
+        </reference-one>
+    </document>
+</doctrine-mongo-mapping>

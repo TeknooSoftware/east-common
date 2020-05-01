@@ -24,13 +24,12 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\Object;
 
-use Doctrine\MongoDB\GridFSFile;
 use Teknoo\East\Website\Object\Media as OriginalMedia;
 
 class Media extends OriginalMedia
 {
     /**
-     * @return GridFSFile|\MongoGridFS
+     * @return StoredFile
      */
     public function getFile()
     {
@@ -38,7 +37,7 @@ class Media extends OriginalMedia
     }
 
     /**
-     * @param GridFSFile|\MongoGridFS $file
+     * @param StoredFile $file
      */
     public function setFile($file): self
     {
@@ -58,8 +57,8 @@ class Media extends OriginalMedia
     {
         $file = $this->getFile();
 
-        if ($file instanceof GridFSFile) {
-            $file = $file->getMongoGridFSFile();
+        if ($file instanceof StoredFile) {
+            $aa = 1;
         }
 
         if (\is_callable([$file, 'getResource'])) {

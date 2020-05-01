@@ -24,6 +24,7 @@ namespace Teknoo\Tests\East\Website\Doctrine\Object;
 
 use Doctrine\MongoDB\GridFSFile;
 use Teknoo\East\Website\Doctrine\Object\Media;
+use Teknoo\East\Website\Doctrine\Object\StoredFile;
 use Teknoo\Tests\East\Website\Object\MediaTest as OriginaTest;
 
 /**
@@ -102,8 +103,8 @@ class MediaTest extends OriginaTest
         $file->expects($this->any())->method('getResource')->willReturn($resource);
 
 
-        $mongoFile = $this->createMock(GridFSFile::class);
-        $mongoFile->expects($this->any())->method('getMongoGridFSFile')->willReturn($file);
+        $mongoFile = $this->createMock(StoredFile::class);
+        //$mongoFile->expects($this->any())->method('getMongoGridFSFile')->willReturn($file);
 
         self::assertEquals(
             $resource,

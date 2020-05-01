@@ -9,7 +9,6 @@
         <id type="string" strategy="UUID"/>
         <field field-name="name" type="string" />
         <field field-name="mimeType" name="mime_type" type="string" />
-        <field field-name="file" type="file" />
         <field field-name="length" type="int" />
         <field field-name="alternative" type="string" />
         <field field-name="createdAt" name="created_at" type="date">
@@ -22,6 +21,11 @@
             <gedmo:timestampable on="update"/>
         </field>
         <field field-name="publishedAt" name="published_at" type="date" nullable="true" index="true" />
+        <reference-one field="file" target-document="Teknoo\East\Website\Object\StoredFile">
+            <cascade>
+                <all/>
+            </cascade>
+        </reference-one>
         <reference-one field="type" target-document="Teknoo\East\Website\Object\Type">
             <cascade>
                 <all/>

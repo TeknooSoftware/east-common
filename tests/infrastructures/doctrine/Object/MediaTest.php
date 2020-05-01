@@ -25,6 +25,7 @@ namespace Teknoo\Tests\East\Website\Doctrine\Object;
 use Doctrine\MongoDB\GridFSFile;
 use Teknoo\East\Website\Doctrine\Object\Media;
 use Teknoo\Tests\East\Website\Object\MediaTest as OriginaTest;
+
 /**
  * @copyright   Copyright (c) 2009-2020 Richard Déloge (richarddeloge@gmail.com)
  *

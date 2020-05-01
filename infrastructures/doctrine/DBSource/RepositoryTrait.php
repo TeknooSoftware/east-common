@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Doctrine\DBSource;
 
 use Doctrine\Common\Persistence\ObjectRepository;
-use Doctrine\ODM\MongoDB\DocumentRepository;
+use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 
@@ -78,28 +78,30 @@ trait RepositoryTrait
         ?int $limit = null,
         ?int $offset = null
     ): RepositoryInterface {
-        if ($this->repository instanceof DocumentRepository) {
-            $queryBuilder = $this->repository->createQueryBuilder();
-
-            $queryBuilder->equals($criteria);
-            if (!empty($orderBy)) {
-                $queryBuilder->sort($orderBy);
-            }
-
-            if (!empty($limit)) {
-                $queryBuilder->limit($limit);
-            }
-
-            if (!empty($offset)) {
-                $queryBuilder->skip($offset);
-            }
-
-            $query = $queryBuilder->getQuery();
-
-            $promise->success($query->execute());
-        } else {
+        if (!$this->repository instanceof DocumentRepository) {
             $promise->success($this->repository->findBy($criteria, $orderBy, $limit, $offset));
+
+            return $this;
         }
+
+        $queryBuilder = $this->repository->createQueryBuilder();
+
+        $queryBuilder->equals($criteria);
+        if (!empty($orderBy)) {
+            $queryBuilder->sort($orderBy);
+        }
+
+        if (!empty($limit)) {
+            $queryBuilder->limit($limit);
+        }
+
+        if (!empty($offset)) {
+            $queryBuilder->skip($offset);
+        }
+
+        $query = $queryBuilder->getQuery();
+
+        $promise->success($query->execute());
 
         return $this;
     }

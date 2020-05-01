@@ -23,9 +23,9 @@
 namespace Teknoo\Tests\East\Website\Doctrine\DBSource;
 
 use Doctrine\Common\Persistence\ObjectRepository;
-use Doctrine\MongoDB\Query\Builder;
-use Doctrine\MongoDB\Query\Query;
-use Doctrine\ODM\MongoDB\DocumentRepository;
+use Doctrine\ODM\MongoDB\Query\Builder;
+use Doctrine\ODM\MongoDB\Query\Query;
+use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 

@@ -71,7 +71,7 @@ class MediaType extends AbstractType
                 $image = $data['image'];
 
                 if ($image->getError()) {
-                    $form->addError(new FormError($image->getErrorMessage()));
+                    $form->addError(new FormError((string) $image->getErrorMessage()));
                     return;
                 }
 

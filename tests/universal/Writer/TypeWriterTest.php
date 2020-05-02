@@ -38,7 +38,7 @@ class TypeWriterTest extends \PHPUnit\Framework\TestCase
 
     public function buildWriter(): WriterInterface
     {
-        return new TypeWriter($this->getObjectManager());
+        return new TypeWriter($this->getObjectManager(), $this->getDatesServiceMock());
     }
 
     public function getObject()

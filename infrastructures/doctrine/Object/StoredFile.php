@@ -58,7 +58,7 @@ class StoredFile
         return $this->length;
     }
 
-    public function getUploadDate(): \DateTimeInterface
+    public function getUploadDate(): ?\DateTimeInterface
     {
         return $this->uploadDate;
     }

@@ -38,7 +38,7 @@ use Teknoo\States\Proxy\ProxyTrait;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, DeletableInterface
+class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, DeletableInterface, TimestampableInterface
 {
     use AutomatedTrait;
     use ObjectTrait;

@@ -14,18 +14,12 @@
         <field field-name="name" type="string">
             <gedmo:translatable/>
         </field>
-        <field field-name="slug" type="string" index="true" unique="true">
-            <gedmo:slug unique="true" style="default" updatable="false" separator="-" fields="name" />
-        </field>
+        <field field-name="slug" type="string" index="true" unique="true" />
         <field field-name="location" type="string" index="true"/>
         <field field-name="position" type="int" index="true" order="true"/>
         <field field-name="hidden" type="boolean" index="true"/>
-        <field field-name="createdAt" name="created_at" type="date">
-            <gedmo:timestampable on="create"/>
-        </field>
-        <field field-name="updatedAt" name="updated_at" type="date">
-            <gedmo:timestampable on="update"/>
-        </field>
+        <field field-name="createdAt" name="created_at" type="date" />
+        <field field-name="updatedAt" name="updated_at" type="date" />
         <field field-name="deletedAt" name="deleted_at" type="date" nullable="true" index="true" />
         <reference-one
                 field="parent"

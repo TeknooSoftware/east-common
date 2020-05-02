@@ -44,7 +44,8 @@ class Content implements
     ProxyInterface,
     AutomatedInterface,
     DeletableInterface,
-    PublishableInterface
+    PublishableInterface,
+    TimestampableInterface
 {
     use PublishableTrait;
     use AutomatedTrait;

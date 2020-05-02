@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website;
 
-use Gedmo\Translatable\TranslatableListener;
 use Psr\Container\ContainerInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
 use Teknoo\East\Website\DBSource\ManagerInterface;
@@ -40,6 +39,7 @@ use Teknoo\East\Website\Loader\TypeLoader;
 use Teknoo\East\Website\Loader\UserLoader;
 use Teknoo\East\Website\Middleware\LocaleMiddleware;
 use Teknoo\East\Website\Middleware\MenuMiddleware;
+use Teknoo\East\Website\Service\DatesService;
 use Teknoo\East\Website\Service\DeletingService;
 use Teknoo\East\Website\Service\MenuGenerator;
 use Teknoo\East\Website\Writer\ItemWriter;
@@ -67,33 +67,36 @@ return [
 
     //Writer
     ItemWriter::class => create(ItemWriter::class)
-        ->constructor(get(ManagerInterface::class)),
+        ->constructor(get(ManagerInterface::class), get(DatesService::class)),
     ContentWriter::class => create(ContentWriter::class)
-        ->constructor(get(ManagerInterface::class)),
+        ->constructor(get(ManagerInterface::class), get(DatesService::class)),
     MediaWriter::class => create(MediaWriter::class)
-        ->constructor(get(ManagerInterface::class)),
+        ->constructor(get(ManagerInterface::class), get(DatesService::class)),
     TypeWriter::class => create(TypeWriter::class)
-        ->constructor(get(ManagerInterface::class)),
+        ->constructor(get(ManagerInterface::class), get(DatesService::class)),
     UserWriter::class => create(UserWriter::class)
-        ->constructor(get(ManagerInterface::class)),
+        ->constructor(get(ManagerInterface::class), get(DatesService::class)),
 
     //Deleting
     'teknoo.east.website.deleting.item' => create(DeletingService::class)
-        ->constructor(get(ItemWriter::class)),
+        ->constructor(get(ItemWriter::class), get(DatesService::class)),
     'teknoo.east.website.deleting.content' => create(DeletingService::class)
-        ->constructor(get(ContentWriter::class)),
+        ->constructor(get(ContentWriter::class), get(DatesService::class)),
     'teknoo.east.website.deleting.media' => create(DeletingService::class)
-        ->constructor(get(MediaWriter::class)),
+        ->constructor(get(MediaWriter::class), get(DatesService::class)),
     'teknoo.east.website.deleting.type' => create(DeletingService::class)
-        ->constructor(get(TypeWriter::class)),
+        ->constructor(get(TypeWriter::class), get(DatesService::class)),
     'teknoo.east.website.deleting.user' => create(DeletingService::class)
-        ->constructor(get(UserWriter::class)),
+        ->constructor(get(UserWriter::class), get(DatesService::class)),
 
     //Menu
     MenuGenerator::class => create(MenuGenerator::class)
         ->constructor(get(ItemLoader::class)),
     MenuMiddleware::class => create(MenuMiddleware::class)
         ->constructor(get(MenuGenerator::class)),
+
+    //Service
+    DatesService::class => create(DatesService::class),
 
     //Middleware
     RecipeInterface::class => decorate(function ($previous, ContainerInterface $container) {

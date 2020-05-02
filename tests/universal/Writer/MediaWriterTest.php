@@ -38,7 +38,7 @@ class MediaWriterTest extends \PHPUnit\Framework\TestCase
 
     public function buildWriter(): WriterInterface
     {
-        return new MediaWriter($this->getObjectManager());
+        return new MediaWriter($this->getObjectManager(), $this->getDatesServiceMock());
     }
 
     public function getObject()

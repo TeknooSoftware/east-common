@@ -24,6 +24,8 @@ namespace Teknoo\Tests\East\Website\Writer;
 
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\ManagerInterface;
+use Teknoo\East\Website\Object\TimestampableInterface;
+use Teknoo\East\Website\Service\DatesService;
 use Teknoo\East\Website\Writer\WriterInterface;
 
 /**
@@ -33,9 +35,14 @@ use Teknoo\East\Website\Writer\WriterInterface;
 trait PersistTestTrait
 {
     /**
-     * @var ObjectManager
+     * @var ManagerInterface
      */
     private $manager;
+
+    /**
+     * @var DatesService
+     */
+    private $datesService;
 
     /**
      * @return \PHPUnit\Framework\MockObject\MockObject|ManagerInterface
@@ -47,6 +54,18 @@ trait PersistTestTrait
         }
 
         return $this->manager;
+    }
+
+    /**
+     * @return DatesService|\PHPUnit\Framework\MockObject\MockObject
+     */
+    public function getDatesServiceMock(): DatesService
+    {
+        if (!$this->datesService instanceof DatesService) {
+            $this->datesService = $this->createMock(DatesService::class);
+        }
+
+        return $this->datesService;
     }
 
     /**
@@ -96,6 +115,25 @@ trait PersistTestTrait
 
         $promise->expects(self::never())
             ->method('fail');
+
+        $date = new \DateTime('2017-01-01');
+
+        if ($object instanceof TimestampableInterface) {
+            $this->getDatesServiceMock()
+                ->expects(self::any())
+                ->method('passMeTheDate')
+                ->willReturnCallback(
+                    function ($setter) use ($date) {
+                        $setter($date);
+
+                        return $this->getDatesServiceMock();
+                    }
+                );
+        } else {
+            $this->getDatesServiceMock()
+                ->expects(self::never())
+                ->method('passMeTheDate');
+        }
 
         self::assertInstanceOf(WriterInterface::class, $this->buildWriter()->save($object, $promise));
     }

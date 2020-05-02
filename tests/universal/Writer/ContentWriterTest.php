@@ -37,7 +37,7 @@ class ContentWriterTest extends \PHPUnit\Framework\TestCase
 
     public function buildWriter(): WriterInterface
     {
-        return new ContentWriter($this->getObjectManager());
+        return new ContentWriter($this->getObjectManager(), $this->getDatesServiceMock());
     }
 
     public function getObject()

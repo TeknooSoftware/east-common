@@ -38,7 +38,7 @@ class ItemWriterTest extends \PHPUnit\Framework\TestCase
 
     public function buildWriter(): WriterInterface
     {
-        return new ItemWriter($this->getObjectManager());
+        return new ItemWriter($this->getObjectManager(), $this->getDatesServiceMock());
     }
 
     public function getObject()

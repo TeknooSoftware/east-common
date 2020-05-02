@@ -1,6 +1,7 @@
 <?php
 
-/**
+/*
+/*
  * East Website.
  *
  * LICENSE
@@ -20,29 +21,21 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Writer;
+declare(strict_types=1);
 
-use Teknoo\East\Website\Object\User;
-use Teknoo\East\Website\Writer\UserWriter;
-use Teknoo\East\Website\Writer\WriterInterface;
+namespace Teknoo\East\Website\Object;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Writer\UserWriter
- * @covers \Teknoo\East\Website\Writer\PersistTrait
  */
-class UserWriterTest extends \PHPUnit\Framework\TestCase
+interface TimestampableInterface
 {
-    use PersistTestTrait;
-
-    public function buildWriter(): WriterInterface
-    {
-        return new UserWriter($this->getObjectManager(), $this->getDatesServiceMock());
-    }
-
-    public function getObject()
-    {
-        return new User();
-    }
+    /**
+     * To update the current  timestamp to kown when the object has ben updated
+     *
+     * @param \DateTimeInterface|null $updatedAt
+     * @return TimestampableInterface
+     */
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): TimestampableInterface;
 }

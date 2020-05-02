@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -20,29 +20,38 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Writer;
+declare(strict_types=1);
 
-use Teknoo\East\Website\Object\User;
-use Teknoo\East\Website\Writer\UserWriter;
-use Teknoo\East\Website\Writer\WriterInterface;
+namespace Teknoo\East\Website\Service;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Writer\UserWriter
- * @covers \Teknoo\East\Website\Writer\PersistTrait
  */
-class UserWriterTest extends \PHPUnit\Framework\TestCase
+class DatesService
 {
-    use PersistTestTrait;
+    private ?\DateTimeInterface $currentDate = null;
 
-    public function buildWriter(): WriterInterface
+    public function setCurrentDate(\DateTimeInterface $currentDate): DatesService
     {
-        return new UserWriter($this->getObjectManager(), $this->getDatesServiceMock());
+        $this->currentDate = $currentDate;
+
+        return $this;
     }
 
-    public function getObject()
+    private function getCurrentDate(): \DateTimeInterface
     {
-        return new User();
+        if ($this->currentDate instanceof \DateTimeInterface) {
+            return $this->currentDate;
+        }
+
+        return new \DateTime();
+    }
+
+    public function passMeTheDate(callable $setter): self
+    {
+        $setter($this->getCurrentDate());
+
+        return $this;
     }
 }

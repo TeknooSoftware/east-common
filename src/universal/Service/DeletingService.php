@@ -34,33 +34,19 @@ use Teknoo\East\Website\Writer\WriterInterface;
  */
 class DeletingService
 {
-    private ?\DateTimeInterface $currentDate = null;
+    private DatesService $datesService;
 
     private WriterInterface $writer;
 
-    public function __construct(WriterInterface $writer)
+    public function __construct(WriterInterface $writer, DatesService $datesService)
     {
         $this->writer = $writer;
-    }
-
-    public function setCurrentDate(\DateTime $currentDate): DeletingService
-    {
-        $this->currentDate = $currentDate;
-        return $this;
-    }
-
-    private function getCurrentDate(): \DateTime
-    {
-        if ($this->currentDate instanceof \DateTime) {
-            return $this->currentDate;
-        }
-
-        return new \DateTime();
+        $this->datesService = $datesService;
     }
 
     public function delete(DeletableInterface $object): DeletingService
     {
-        $object->setDeletedAt($this->getCurrentDate());
+        $this->datesService->passMeTheDate([$object, 'setDeletedAt']);
 
         if ($object instanceof ObjectInterface) {
             $this->writer->save($object);

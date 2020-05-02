@@ -27,6 +27,8 @@ namespace Teknoo\East\Website\Writer;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\ManagerInterface;
 use Teknoo\East\Website\Object\ObjectInterface;
+use Teknoo\East\Website\Object\TimestampableInterface;
+use Teknoo\East\Website\Service\DatesService;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -36,9 +38,12 @@ trait PersistTrait
 {
     private ManagerInterface $manager;
 
-    public function __construct(ManagerInterface $manager)
+    private ?DatesService $datesService;
+
+    public function __construct(ManagerInterface $manager, ?DatesService $datesService = null)
     {
         $this->manager = $manager;
+        $this->datesService = $datesService;
     }
 
     /**
@@ -47,6 +52,10 @@ trait PersistTrait
     private function persist(ObjectInterface $object, ?PromiseInterface $promise = null): self
     {
         try {
+            if ($object instanceof TimestampableInterface && $this->datesService instanceof DatesService) {
+                $this->datesService->passMeTheDate([$object, 'setUpdatedAt']);
+            }
+
             $this->manager->persist($object);
             $this->manager->flush();
 

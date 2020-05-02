@@ -28,7 +28,7 @@ namespace Teknoo\East\Website\Object;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class Type implements ObjectInterface, DeletableInterface
+class Type implements ObjectInterface, DeletableInterface, TimestampableInterface
 {
     use ObjectTrait;
 

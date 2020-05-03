@@ -25,7 +25,7 @@ namespace Teknoo\Tests\East\Website\Doctrine\Object;
 use Doctrine\MongoDB\GridFSFile;
 use Teknoo\East\Website\Doctrine\Object\Media;
 use Teknoo\East\Website\Doctrine\Object\StoredFile;
-use Teknoo\Tests\East\Website\Object\MediaTest as OriginaTest;
+use Teknoo\Tests\East\Website\Object\MediaTest as OriginalTest;
 
 /**
  * @copyright   Copyright (c) 2009-2020 Richard Déloge (richarddeloge@gmail.com)
@@ -40,7 +40,7 @@ use Teknoo\Tests\East\Website\Object\MediaTest as OriginaTest;
  * @covers \Teknoo\East\Website\Object\ObjectTrait
  * @covers \Teknoo\East\Website\Object\Media
  */
-class MediaTest extends OriginaTest
+class MediaTest extends OriginalTest
 {
     public function buildObject(): Media
     {

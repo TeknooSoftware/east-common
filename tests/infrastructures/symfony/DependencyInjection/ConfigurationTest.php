@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\DependencyInjection;
 
+use PHPUnit\Framework\TestCase;
 use Teknoo\East\WebsiteBundle\DependencyInjection\Configuration;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 
@@ -30,7 +31,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers      \Teknoo\East\WebsiteBundle\DependencyInjection\Configuration
  */
-class ConfigurationTest extends \PHPUnit\Framework\TestCase
+class ConfigurationTest extends TestCase
 {
     /**
      * @return Configuration

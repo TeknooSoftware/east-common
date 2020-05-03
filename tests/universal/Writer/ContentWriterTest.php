@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests\East\Website\Writer;
 
+use PHPUnit\Framework\TestCase;
 use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Writer\ContentWriter;
 use Teknoo\East\Website\Writer\WriterInterface;
@@ -31,7 +32,7 @@ use Teknoo\East\Website\Writer\WriterInterface;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers \Teknoo\East\Website\Writer\ContentWriter
  */
-class ContentWriterTest extends \PHPUnit\Framework\TestCase
+class ContentWriterTest extends TestCase
 {
     use PersistTestTrait;
 

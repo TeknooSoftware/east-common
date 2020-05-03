@@ -24,11 +24,7 @@ namespace Teknoo\Tests\East\WebsiteBundle\EndPoint;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamFactoryInterface;
-use Psr\Http\Message\StreamInterface;
-use Teknoo\East\Diactoros\CallbackStream;
 use Teknoo\East\Diactoros\CallbackStreamFactory;
-use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\WebsiteBundle\EndPoint\MediaEndPoint;
 use Teknoo\Tests\East\Website\EndPoint\MediaEndPointTraitTest;
 

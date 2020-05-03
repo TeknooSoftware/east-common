@@ -22,7 +22,6 @@
 
 namespace Teknoo\Tests\East\Website\Query;
 
-use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;

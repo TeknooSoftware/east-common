@@ -23,6 +23,7 @@
 namespace Teknoo\Tests\East\Website\Middleware;
 
 use Psr\Http\Message\ServerRequestInterface;
+use PHPUnit\Framework\TestCase;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Website\Middleware\MenuMiddleware;
@@ -34,7 +35,7 @@ use Teknoo\East\Website\Service\MenuGenerator;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers      \Teknoo\East\Website\Middleware\MenuMiddleware
  */
-class MenuMiddlewareTest extends \PHPUnit\Framework\TestCase
+class MenuMiddlewareTest extends TestCase
 {
     /**
      * @var MenuGenerator

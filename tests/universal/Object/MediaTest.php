@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests\East\Website\Object;
 
+use PHPUnit\Framework\TestCase;
 use Teknoo\Tests\East\Website\Object\Traits\ObjectTestTrait;
 use Teknoo\East\Website\Object\Media;
 
@@ -32,7 +33,7 @@ use Teknoo\East\Website\Object\Media;
  * @covers \Teknoo\East\Website\Object\ObjectTrait
  * @covers \Teknoo\East\Website\Object\Media
  */
-class MediaTest extends \PHPUnit\Framework\TestCase
+class MediaTest extends TestCase
 {
     use ObjectTestTrait;
 

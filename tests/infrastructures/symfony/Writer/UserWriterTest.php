@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\Writer;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
@@ -35,7 +36,7 @@ use Teknoo\East\Website\Object\User as BaseUser;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers      \Teknoo\East\WebsiteBundle\Writer\UserWriter
  */
-class UserWriterTest extends \PHPUnit\Framework\TestCase
+class UserWriterTest extends TestCase
 {
     /**
      * @var UniversalWriter

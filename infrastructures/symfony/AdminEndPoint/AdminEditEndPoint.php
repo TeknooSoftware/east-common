@@ -31,6 +31,9 @@ use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\FoundationBundle\EndPoint\TemplatingTrait;
 use Teknoo\East\Website\Object\ObjectInterface;
 use Teknoo\East\Website\Object\PublishableInterface;
+use Teknoo\East\Website\Object\SluggableInterface;
+use Teknoo\East\Website\Service\DatesService;
+use Teknoo\East\Website\Service\FindSlugService;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -42,26 +45,25 @@ class AdminEditEndPoint implements RenderingInterface
     use AdminEndPointTrait;
     use AdminFormTrait;
 
-    private ?\DateTimeInterface $currentDate = null;
+    private DatesService $datesService;
 
-    public function setCurrentDate(\DateTimeInterface $currentDate): AdminEditEndPoint
+    private FindSlugService $findSlugService;
+
+    private string $slugField;
+
+    public function setDatesService(DatesService $datesService): self
     {
-        if ($currentDate instanceof \DateTime) {
-            $this->currentDate = \DateTimeImmutable::createFromMutable($currentDate);
-        } else {
-            $this->currentDate = $currentDate;
-        }
+        $this->datesService = $datesService;
 
         return $this;
     }
 
-    private function getCurrentDateTime(): \DateTimeInterface
+    public function setFindSlugService(FindSlugService $findSlugService, string $slugField): AdminEditEndPoint
     {
-        if (!$this->currentDate instanceof \DateTimeInterface) {
-            $this->setCurrentDate(new \DateTime());
-        }
+        $this->findSlugService = $findSlugService;
+        $this->slugField = $slugField;
 
-        return $this->currentDate;
+        return $this;
     }
 
     public function __invoke(
@@ -80,8 +82,20 @@ class AdminEditEndPoint implements RenderingInterface
             new Promise(
                 function (ObjectInterface $object) use ($client, $request, $isTranslatable, $viewPath) {
                     $parsedBody = (array) $request->getParsedBody();
-                    if ($object instanceof PublishableInterface && isset($parsedBody['publish'])) {
-                        $object->setPublishedAt($this->getCurrentDateTime());
+                    if (
+                        $object instanceof PublishableInterface
+                        && isset($parsedBody['publish'])
+                        && \is_callable([$object, 'setPublishedAt'])
+                    ) {
+                        $this->datesService->passMeTheDate([$object, 'setPublishedAt']);
+                    }
+
+                    if ($object instanceof SluggableInterface) {
+                        $object->prepareSlugNear(
+                            $this->loader,
+                            $this->findSlugService,
+                            $this->slugField
+                        );
                     }
 
                     $form = $this->createForm($object);

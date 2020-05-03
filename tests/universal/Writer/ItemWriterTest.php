@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests\East\Website\Writer;
 
+use PHPUnit\Framework\TestCase;
 use Teknoo\East\Website\Object\Item;
 use Teknoo\East\Website\Writer\ItemWriter;
 use Teknoo\East\Website\Writer\WriterInterface;
@@ -32,7 +33,7 @@ use Teknoo\East\Website\Writer\WriterInterface;
  * @covers \Teknoo\East\Website\Writer\ItemWriter
  * @covers \Teknoo\East\Website\Writer\PersistTrait
  */
-class ItemWriterTest extends \PHPUnit\Framework\TestCase
+class ItemWriterTest extends TestCase
 {
     use PersistTestTrait;
 

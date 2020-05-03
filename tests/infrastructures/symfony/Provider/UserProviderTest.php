@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\Provider;
 
+use PHPUnit\Framework\TestCase;
 use Teknoo\East\Website\Loader\UserLoader;
 use Teknoo\East\Website\Query\User\UserByEmailQuery;
 use Teknoo\East\WebsiteBundle\Object\User;
@@ -34,7 +35,7 @@ use Teknoo\East\Website\Object\User as BaseUser;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers      \Teknoo\East\WebsiteBundle\Provider\UserProvider
  */
-class UserProviderTest extends \PHPUnit\Framework\TestCase
+class UserProviderTest extends TestCase
 {
     /**
      * @var UserLoader

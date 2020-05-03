@@ -149,6 +149,8 @@ services:
       - ['setResponseFactory', ['@Psr\Http\Message\ResponseFactoryInterface']]
       - ['setStreamFactory', ['@Psr\Http\Message\StreamFactoryInterface']]
       - ['setTemplating', ['@templating.engine.twig']]
+      - ['setDatesService', ['@Teknoo\East\Website\Service\DatesService']]
+      - ['setFindSlugService', ['@Teknoo\East\Website\Service\FindSlugService', 'slug']]
     public: true
 
   teknoo.east.website.endpoint.admin.list.abstract:

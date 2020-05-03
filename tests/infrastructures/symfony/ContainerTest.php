@@ -25,6 +25,7 @@ namespace Teknoo\Tests\East\WebsiteBundle;
 use DI\Container;
 use DI\ContainerBuilder;
 use Psr\Log\LoggerInterface;
+use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
 use Teknoo\East\Foundation\Router\RouterInterface;
@@ -41,7 +42,7 @@ use Teknoo\East\WebsiteBundle\Middleware\LocaleMiddleware;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class ContainerTest extends \PHPUnit\Framework\TestCase
+class ContainerTest extends TestCase
 {
     public function testLegacyDIForward()
     {

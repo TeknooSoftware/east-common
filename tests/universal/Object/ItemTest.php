@@ -22,8 +22,11 @@
 
 namespace Teknoo\Tests\East\Website\Object;
 
+use PHPUnit\Framework\TestCase;
+use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Object\Item;
+use Teknoo\East\Website\Service\FindSlugService;
 use Teknoo\Tests\East\Website\Object\Traits\ObjectTestTrait;
 
 /**
@@ -32,7 +35,7 @@ use Teknoo\Tests\East\Website\Object\Traits\ObjectTestTrait;
  * @covers \Teknoo\East\Website\Object\ObjectTrait
  * @covers \Teknoo\East\Website\Object\Item
  */
-class ItemTest extends \PHPUnit\Framework\TestCase
+class ItemTest extends TestCase
 {
     use ObjectTestTrait;
 
@@ -85,6 +88,23 @@ class ItemTest extends \PHPUnit\Framework\TestCase
         self::assertEquals(
             'fooBar',
             $this->generateObjectPopulated(['slug' => 'fooBar'])->getSlug()
+        );
+    }
+
+    public function testPrepareSlugNear()
+    {
+        $loader = $this->createMock(LoaderInterface::class);
+
+        $findSlugService = $this->createMock(FindSlugService::class);
+        $findSlugService->expects(self::once())->method('process');
+
+        self::assertInstanceOf(
+            Item::class,
+            $this->buildObject()->prepareSlugNear(
+                $loader,
+                $findSlugService,
+                'slug'
+            )
         );
     }
 

@@ -24,14 +24,10 @@ namespace Teknoo\Tests\East\Website\EndPoint;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamFactoryInterface;
-use Psr\Http\Message\StreamInterface;
-use Teknoo\East\Diactoros\CallbackStream;
+use PHPUnit\Framework\TestCase;
 use Teknoo\East\Diactoros\CallbackStreamFactory;
-use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
-use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
 use Teknoo\East\FoundationBundle\EndPoint\ResponseFactoryTrait;
 use Teknoo\East\Website\EndPoint\MediaEndPointTrait;
 use Teknoo\East\Website\Loader\MediaLoader;
@@ -42,7 +38,7 @@ use Teknoo\East\Website\Object\Media;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers      \Teknoo\East\Website\EndPoint\MediaEndPointTrait
  */
-class MediaEndPointTraitTest extends \PHPUnit\Framework\TestCase
+class MediaEndPointTraitTest extends TestCase
 {
     /**
      * @var MediaLoader

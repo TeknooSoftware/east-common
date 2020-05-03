@@ -27,6 +27,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -45,7 +46,7 @@ use Teknoo\Recipe\Promise\PromiseInterface;
  * @covers      \Teknoo\East\WebsiteBundle\AdminEndPoint\AdminEndPointTrait
  * @covers      \Teknoo\East\WebsiteBundle\AdminEndPoint\AdminFormTrait
  */
-class AdminNewEndPointTest extends \PHPUnit\Framework\TestCase
+class AdminNewEndPointTest extends TestCase
 {
     /**
      * @var WriterInterface

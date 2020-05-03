@@ -23,7 +23,8 @@
 namespace Teknoo\Tests\East\Website\Doctrine\Object;
 
 use Teknoo\East\Website\Doctrine\Object\Item;
-use Teknoo\Tests\East\Website\Object\ItemTest as OriginaTest;
+use Teknoo\Tests\East\Website\Object\ItemTest as OriginalTest;
+
 /**
  * @copyright   Copyright (c) 2009-2020 Richard Déloge (richarddeloge@gmail.com)
  *
@@ -37,7 +38,7 @@ use Teknoo\Tests\East\Website\Object\ItemTest as OriginaTest;
  * @covers \Teknoo\East\Website\Object\ObjectTrait
  * @covers \Teknoo\East\Website\Object\Item
  */
-class ItemTest extends OriginaTest
+class ItemTest extends OriginalTest
 {
     public function buildObject(): Item
     {
@@ -65,5 +66,4 @@ class ItemTest extends OriginaTest
             $Object->getLocaleField()
         );
     }
-
 }

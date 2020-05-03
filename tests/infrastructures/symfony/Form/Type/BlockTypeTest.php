@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\Form\Type;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Teknoo\East\WebsiteBundle\Form\Type\BlockType;
@@ -31,7 +32,7 @@ use Teknoo\East\WebsiteBundle\Form\Type\BlockType;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers      \Teknoo\East\WebsiteBundle\Form\Type\BlockType
  */
-class BlockTypeTest extends \PHPUnit\Framework\TestCase
+class BlockTypeTest extends TestCase
 {
     use FormTestTrait;
 

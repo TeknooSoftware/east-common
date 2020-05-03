@@ -25,6 +25,7 @@ namespace Teknoo\Tests\East\Website\Doctrine\Form\Type;
 use Doctrine\Bundle\MongoDBBundle\Form\Type\DocumentType;
 use Doctrine\ODM\MongoDB\Query\Builder;
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -40,7 +41,7 @@ use Teknoo\East\Website\Doctrine\Form\Type\ContentType;
  * @covers      \Teknoo\East\Website\Doctrine\Form\Type\ContentType
  * @covers      \Teknoo\East\Website\Doctrine\Form\Type\TranslatableTrait
  */
-class ContentTypeTest extends \PHPUnit\Framework\TestCase
+class ContentTypeTest extends TestCase
 {
     public function buildForm()
     {
@@ -94,7 +95,8 @@ class ContentTypeTest extends \PHPUnit\Framework\TestCase
                     }
 
                     return $this;
-                });
+                }
+            );
 
         self::assertInstanceOf(
             AbstractType::class,
@@ -149,7 +151,8 @@ class ContentTypeTest extends \PHPUnit\Framework\TestCase
                     }
 
                     return $this;
-                });
+                }
+            );
 
         self::assertInstanceOf(
             AbstractType::class,
@@ -199,7 +202,8 @@ class ContentTypeTest extends \PHPUnit\Framework\TestCase
                     }
 
                     return $this;
-                });
+                }
+            );
 
         self::assertInstanceOf(
             AbstractType::class,

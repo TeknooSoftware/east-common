@@ -27,6 +27,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Templating\EngineInterface;
@@ -34,6 +35,8 @@ use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Object\Type;
+use Teknoo\East\Website\Service\DatesService;
+use Teknoo\East\Website\Service\FindSlugService;
 use Teknoo\East\Website\Writer\WriterInterface;
 use Teknoo\East\WebsiteBundle\AdminEndPoint\AdminEditEndPoint;
 use Teknoo\East\Website\Doctrine\Form\Type\ContentType;
@@ -47,7 +50,7 @@ use Teknoo\Recipe\Promise\PromiseInterface;
  * @covers      \Teknoo\East\WebsiteBundle\AdminEndPoint\AdminEndPointTrait
  * @covers      \Teknoo\East\WebsiteBundle\AdminEndPoint\AdminFormTrait
  */
-class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
+class AdminEditEndPointTest extends TestCase
 {
     /**
      * @var LoaderInterface
@@ -68,6 +71,16 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
      * @var FormFactory
      */
     private $formFactory;
+
+    /**
+     * @var DatesService
+     */
+    private $datesService;
+
+    /**
+     * @var FindSlugService
+     */
+    private $findSlugService;
 
     /**
      * @return LoaderInterface|\PHPUnit\Framework\MockObject\MockObject
@@ -117,6 +130,30 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
         return $this->formFactory;
     }
 
+    /**
+     * @return DatesService|\PHPUnit\Framework\MockObject\MockObject
+     */
+    public function getDatesService(): DatesService
+    {
+        if (!$this->datesService instanceof DatesService) {
+            $this->datesService = $this->createMock(DatesService::class);
+        }
+
+        return $this->datesService;
+    }
+
+    /**
+     * @return FindSlugService|\PHPUnit\Framework\MockObject\MockObject
+     */
+    public function getFindSlugService(): FindSlugService
+    {
+        if (!$this->findSlugService instanceof FindSlugService) {
+            $this->findSlugService = $this->createMock(FindSlugService::class);
+        }
+
+        return $this->findSlugService;
+    }
+
     public function buildEndPoint($formClass = TypeType::class)
     {
         $response = $this->createMock(ResponseInterface::class);
@@ -139,30 +176,23 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
             ->setResponseFactory($responseFactory)
             ->setStreamFactory($streamFactory)
             ->setFormClass($formClass)
+            ->setDatesService($this->getDatesService())
+            ->setFindSlugService($this->getFindSlugService(), 'slug')
             ->setViewPath('foo:bar.html.twig');
     }
 
-    public function testExceptionOnSetCurrentDateWithBadInstance()
+    public function testExceptionOnSetDatesServiceWithBadInstance()
     {
         $this->expectException(\TypeError::class);
-        $this->buildEndPoint()->setCurrentDate(new \stdClass());
+        $this->buildEndPoint()->setDatesService(new \stdClass());
     }
 
-    public function testSetCurrentDateWithDateTime()
+    public function testSetDatesService()
     {
         self::assertInstanceOf(
             AdminEditEndPoint::class,
             $this->buildEndPoint()
-                ->setCurrentDate(new \DateTime('2017-11-01'))
-        );
-    }
-
-    public function testSetCurrentDateWithDateTimeImmutable()
-    {
-        self::assertInstanceOf(
-            AdminEditEndPoint::class,
-            $this->buildEndPoint()
-                ->setCurrentDate(new \DateTimeImmutable('2017-11-01'))
+                ->setDatesService($this->getDatesService())
         );
     }
 
@@ -441,11 +471,14 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
 
         $endPoint = $this->buildEndPoint(ContentType::class);
 
-        self::assertInstanceOf(
-            AdminEditEndPoint::class,
-            $endPoint
-                ->setCurrentDate(new \DateTimeImmutable('2017-11-01'))
-        );
+        $this->getDatesService()
+            ->expects(self::any())
+            ->method('passMeTheDate')
+            ->willReturnCallback(function ($callable) {
+                $callable(new \DateTimeImmutable('2017-11-01'));
+
+                return $this->getDatesService();
+            });
 
         self::assertInstanceOf(
             AdminEditEndPoint::class,
@@ -508,11 +541,15 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
 
         $endPoint = $this->buildEndPoint(ContentType::class);
 
-        self::assertInstanceOf(
-            AdminEditEndPoint::class,
-            $endPoint
-                ->setCurrentDate(new \DateTimeImmutable('2017-11-01'))
-        );
+
+        $this->getDatesService()
+            ->expects(self::any())
+            ->method('passMeTheDate')
+            ->willReturnCallback(function ($callable) {
+                $callable(new \DateTimeImmutable('2017-11-01'));
+
+                return $this->getDatesService();
+            });
 
         self::assertInstanceOf(
             AdminEditEndPoint::class,
@@ -574,6 +611,15 @@ class AdminEditEndPointTest extends \PHPUnit\Framework\TestCase
             ->willReturn('foo');
 
         $endPoint = $this->buildEndPoint(ContentType::class);
+
+        $this->getDatesService()
+            ->expects(self::any())
+            ->method('passMeTheDate')
+            ->willReturnCallback(function ($callable) {
+                $callable(new \DateTime());
+
+                return $this->getDatesService();
+            });
 
         self::assertInstanceOf(
             AdminEditEndPoint::class,

@@ -41,6 +41,7 @@ use Teknoo\East\Website\Middleware\LocaleMiddleware;
 use Teknoo\East\Website\Middleware\MenuMiddleware;
 use Teknoo\East\Website\Service\DatesService;
 use Teknoo\East\Website\Service\DeletingService;
+use Teknoo\East\Website\Service\FindSlugService;
 use Teknoo\East\Website\Service\MenuGenerator;
 use Teknoo\East\Website\Writer\ItemWriter;
 use Teknoo\East\Website\Writer\ContentWriter;
@@ -96,6 +97,7 @@ return [
         ->constructor(get(MenuGenerator::class)),
 
     //Service
+    FindSlugService::class => create(FindSlugService::class),
     DatesService::class => create(DatesService::class),
 
     //Middleware

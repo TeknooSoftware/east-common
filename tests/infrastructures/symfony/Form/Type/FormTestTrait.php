@@ -63,7 +63,8 @@ trait FormTestTrait
                     }
 
                     return $this;
-                });
+                }
+            );
 
         self::assertInstanceOf(
             AbstractType::class,

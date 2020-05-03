@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests\East\Website\Writer;
 
+use PHPUnit\Framework\TestCase;
 use Teknoo\East\Website\Object\Media;
 use Teknoo\East\Website\Writer\MediaWriter;
 use Teknoo\East\Website\Writer\WriterInterface;
@@ -32,7 +33,7 @@ use Teknoo\East\Website\Writer\WriterInterface;
  * @covers \Teknoo\East\Website\Writer\MediaWriter
  * @covers \Teknoo\East\Website\Writer\PersistTrait
  */
-class MediaWriterTest extends \PHPUnit\Framework\TestCase
+class MediaWriterTest extends TestCase
 {
     use PersistTestTrait;
 

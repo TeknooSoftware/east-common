@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\DependencyInjection;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Teknoo\East\WebsiteBundle\DependencyInjection\TeknooEastWebsiteExtension;
 
@@ -30,7 +31,7 @@ use Teknoo\East\WebsiteBundle\DependencyInjection\TeknooEastWebsiteExtension;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers      \Teknoo\East\WebsiteBundle\DependencyInjection\TeknooEastWebsiteExtension
  */
-class TeknooEastWebsiteExtensionTest extends \PHPUnit\Framework\TestCase
+class TeknooEastWebsiteExtensionTest extends TestCase
 {
     /**
      * @var ContainerBuilder

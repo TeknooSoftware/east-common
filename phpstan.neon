@@ -7,12 +7,6 @@ parameters:
             message: '#Parameter \#1 \$translatableSetter of class [a-zA-Z0-9\\_]+ constructor expects \(callable\(\): mixed\)\|null#'
             path: infrastructures/doctrine/di.php
         -
-            message: '#Method [a-zA-Z0-9\\_]+::getCurrentDateTime\(\) should return DateTimeInterface but returns DateTimeInterface\|null#'
-            path: infrastructures/symfony/AdminEndPoint/AdminEditEndPoint.php
-        -
-            message: '#Call to an undefined method [a-zA-Z0-9\\_]+&[a-zA-Z0-9\\_]+::setPublishedAt\(\)#'
-            path: infrastructures/symfony/AdminEndPoint/AdminEditEndPoint.php
-        -
             message: '#Cannot cast array<string>\|string\|null to string.#'
             path: infrastructures/symfony/Command/CreateUserCommand.php
         -

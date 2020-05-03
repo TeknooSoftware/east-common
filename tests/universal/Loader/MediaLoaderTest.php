@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests\East\Website\Loader;
 
+use PHPUnit\Framework\TestCase;
 use Teknoo\East\Website\DBSource\Repository\MediaRepositoryInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Object\Media;
@@ -34,7 +35,7 @@ use Teknoo\East\Website\Loader\MediaLoader;
  * @covers      \Teknoo\East\Website\Loader\MediaLoader
  * @covers      \Teknoo\East\Website\Loader\LoaderTrait
  */
-class MediaLoaderTest extends \PHPUnit\Framework\TestCase
+class MediaLoaderTest extends TestCase
 {
     use LoaderTestTrait;
 

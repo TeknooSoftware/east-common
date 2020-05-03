@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\Form\Type;
 
+use PHPUnit\Framework\TestCase;
 use Teknoo\East\WebsiteBundle\Form\Type\UserType;
 
 /**
@@ -29,7 +30,7 @@ use Teknoo\East\WebsiteBundle\Form\Type\UserType;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers      \Teknoo\East\WebsiteBundle\Form\Type\UserType
  */
-class UserTypeTest extends \PHPUnit\Framework\TestCase
+class UserTypeTest extends TestCase
 {
     use FormTestTrait;
 

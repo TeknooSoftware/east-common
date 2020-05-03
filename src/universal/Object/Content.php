@@ -24,8 +24,10 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Object;
 
+use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Object\Content\Draft;
 use Teknoo\East\Website\Object\Content\Published;
+use Teknoo\East\Website\Service\FindSlugService;
 use Teknoo\States\Automated\Assertion\AssertionInterface;
 use Teknoo\States\Automated\Assertion\Property;
 use Teknoo\States\Automated\Assertion\Property\IsInstanceOf;
@@ -45,7 +47,8 @@ class Content implements
     AutomatedInterface,
     DeletableInterface,
     PublishableInterface,
-    TimestampableInterface
+    TimestampableInterface,
+    SluggableInterface
 {
     use PublishableTrait;
     use AutomatedTrait;
@@ -149,6 +152,23 @@ class Content implements
     public function getSlug(): ?string
     {
         return $this->slug;
+    }
+
+    public function prepareSlugNear(
+        LoaderInterface $loader,
+        FindSlugService $findSlugService,
+        string $slugField
+    ): SluggableInterface {
+        $findSlugService->process(
+            $loader,
+            $slugField,
+            $this,
+            [
+                $this->getTitle()
+            ]
+        );
+
+        return $this;
     }
 
     public function setSlug(?string $slug): Content

@@ -24,8 +24,10 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Object;
 
+use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Object\Item\Hidden;
 use Teknoo\East\Website\Object\Item\Available;
+use Teknoo\East\Website\Service\FindSlugService;
 use Teknoo\States\Automated\Assertion\AssertionInterface;
 use Teknoo\States\Automated\Assertion\Property;
 use Teknoo\States\Automated\Assertion\Property\IsEqual;
@@ -38,7 +40,13 @@ use Teknoo\States\Proxy\ProxyTrait;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, DeletableInterface, TimestampableInterface
+class Item implements
+    ObjectInterface,
+    ProxyInterface,
+    AutomatedInterface,
+    DeletableInterface,
+    TimestampableInterface,
+    SluggableInterface
 {
     use AutomatedTrait;
     use ObjectTrait;
@@ -115,6 +123,23 @@ class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, Delet
     public function getSlug(): ?string
     {
         return $this->slug;
+    }
+
+    public function prepareSlugNear(
+        LoaderInterface $loader,
+        FindSlugService $findSlugService,
+        string $slugField
+    ): SluggableInterface {
+        $findSlugService->process(
+            $loader,
+            $slugField,
+            $this,
+            [
+                $this->getName()
+            ]
+        );
+
+        return $this;
     }
 
     public function setSlug(?string $slug): Item

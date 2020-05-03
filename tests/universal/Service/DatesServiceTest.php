@@ -22,7 +22,7 @@
 
 namespace Teknoo\Tests\East\Website\Service;
 
-use Teknoo\East\Website\Object\DeletableInterface;
+use PHPUnit\Framework\TestCase;
 use Teknoo\East\Website\Object\ObjectInterface;
 use Teknoo\East\Website\Service\DatesService;
 
@@ -31,7 +31,7 @@ use Teknoo\East\Website\Service\DatesService;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers \Teknoo\East\Website\Service\DatesService
  */
-class DatesServiceTest extends \PHPUnit\Framework\TestCase
+class DatesServiceTest extends TestCase
 {
     public function buildService()
     {
@@ -40,17 +40,21 @@ class DatesServiceTest extends \PHPUnit\Framework\TestCase
 
     public function testPassMeTheDateWithNoDefinedDate()
     {
-        $object = new class implements ObjectInterface{
+        $object = new class implements ObjectInterface {
             private $date;
-            public function getDate(): ?\DateTimeInterface {
+            public function getDate(): ?\DateTimeInterface
+            {
                 return $this->date;
             }
-            public function setDate(\DateTimeInterface $date): self {
+            public function setDate(\DateTimeInterface $date): self
+            {
                 $this->date = $date;
 
                 return $this;
             }
-            public function getId(): string {}
+            public function getId(): string
+            {
+            }
         };
 
         self::assertInstanceOf(
@@ -64,16 +68,20 @@ class DatesServiceTest extends \PHPUnit\Framework\TestCase
     {
         $date = new \DateTime('2017-01-01');
 
-        $object = new class implements ObjectInterface{
+        $object = new class implements ObjectInterface {
             private $date;
-            public function getDate(): ?\DateTimeInterface {
+            public function getDate(): ?\DateTimeInterface
+            {
                 return $this->date;
             }
-            public function setDate(\DateTimeInterface $date): self {
+            public function setDate(\DateTimeInterface $date): self
+            {
                 $this->date = $date;
                 return $this;
             }
-            public function getId(): string {}
+            public function getId(): string
+            {
+            }
         };
 
         $service = $this->buildService();

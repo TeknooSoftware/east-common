@@ -28,6 +28,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Templating\EngineInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
@@ -41,7 +42,7 @@ use Teknoo\Recipe\Promise\PromiseInterface;
  * @covers      \Teknoo\East\WebsiteBundle\AdminEndPoint\AdminListEndPoint
  * @covers      \Teknoo\East\WebsiteBundle\AdminEndPoint\AdminEndPointTrait
  */
-class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
+class AdminListEndPointTest extends TestCase
 {
     /**
      * @var LoaderInterface
@@ -178,15 +179,19 @@ class AdminListEndPointTest extends \PHPUnit\Framework\TestCase
             ->method('query')
             ->willReturnCallback(function ($query, PromiseInterface $promise) {
                 self::assertEquals(new PaginationQuery([], [], 15, 15), $query);
-                $iterator = new class implements Iterator, \Countable{
-                    public function next() {}
+                $iterator = new class implements Iterator, \Countable {
+                    public function next()
+                    {
+                    }
 
                     public function valid()
                     {
                         return true;
                     }
 
-                    public function rewind() {}
+                    public function rewind()
+                    {
+                    }
 
                     public function count()
                     {

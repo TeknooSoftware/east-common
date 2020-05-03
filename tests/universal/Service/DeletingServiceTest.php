@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests\East\Website\Service;
 
+use PHPUnit\Framework\TestCase;
 use Teknoo\East\Website\Object\DeletableInterface;
 use Teknoo\East\Website\Object\ObjectInterface;
 use Teknoo\East\Website\Service\DatesService;
@@ -33,7 +34,7 @@ use Teknoo\East\Website\Writer\WriterInterface;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers \Teknoo\East\Website\Service\DeletingService
  */
-class DeletingServiceTest extends \PHPUnit\Framework\TestCase
+class DeletingServiceTest extends TestCase
 {
     /**
      * @var WriterInterface
@@ -78,16 +79,20 @@ class DeletingServiceTest extends \PHPUnit\Framework\TestCase
     {
         $date = new \DateTime('2017-01-01');
 
-        $object = new class implements ObjectInterface, DeletableInterface{
+        $object = new class implements ObjectInterface, DeletableInterface {
             private $date;
-            public function getDeletedAt(): ?\DateTimeInterface {
+            public function getDeletedAt(): ?\DateTimeInterface
+            {
                 return $this->date;
             }
-            public function setDeletedAt(\DateTimeInterface $deletedAt): DeletableInterface {
+            public function setDeletedAt(\DateTimeInterface $deletedAt): DeletableInterface
+            {
                 $this->date = $deletedAt;
                 return $this;
             }
-            public function getId(): string {}
+            public function getId(): string
+            {
+            }
         };
 
         $this->getWriterMock()

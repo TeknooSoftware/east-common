@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests\East\Website\Service;
 
+use PHPUnit\Framework\TestCase;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\Loader\ItemLoader;
 use Teknoo\East\Website\Object\Item;
@@ -33,7 +34,7 @@ use Teknoo\East\Website\Service\MenuGenerator;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers \Teknoo\East\Website\Service\MenuGenerator
  */
-class MenuGeneratorTest extends \PHPUnit\Framework\TestCase
+class MenuGeneratorTest extends TestCase
 {
     /**
      * @var ItemLoader

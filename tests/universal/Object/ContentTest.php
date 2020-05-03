@@ -22,6 +22,9 @@
 
 namespace Teknoo\Tests\East\Website\Object;
 
+use PHPUnit\Framework\TestCase;
+use Teknoo\East\Website\Loader\LoaderInterface;
+use Teknoo\East\Website\Service\FindSlugService;
 use Teknoo\Tests\East\Website\Object\Traits\PublishableTestTrait;
 use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Object\Type;
@@ -36,7 +39,7 @@ use Teknoo\East\Website\Object\User;
  * @covers \Teknoo\East\Website\Object\Content\Draft
  * @covers \Teknoo\East\Website\Object\Content\Published
  */
-class ContentTest extends \PHPUnit\Framework\TestCase
+class ContentTest extends TestCase
 {
     use PublishableTestTrait;
 
@@ -126,6 +129,23 @@ class ContentTest extends \PHPUnit\Framework\TestCase
         self::assertEquals(
             'fooBar',
             $this->generateObjectPopulated(['slug' => 'fooBar'])->getSlug()
+        );
+    }
+
+    public function testPrepareSlugNear()
+    {
+        $loader = $this->createMock(LoaderInterface::class);
+
+        $findSlugService = $this->createMock(FindSlugService::class);
+        $findSlugService->expects(self::once())->method('process');
+
+        self::assertInstanceOf(
+            Content::class,
+            $this->buildObject()->prepareSlugNear(
+                $loader,
+                $findSlugService,
+                'slug'
+            )
         );
     }
 

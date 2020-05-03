@@ -27,6 +27,7 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
+use PHPUnit\Framework\TestCase;
 use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\Foundation\EndPoint\RenderingInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
@@ -38,7 +39,7 @@ use Teknoo\East\Website\EndPoint\StaticEndPointTrait;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers      \Teknoo\East\Website\EndPoint\StaticEndPointTrait
  */
-class StaticEndPointTraitTest extends \PHPUnit\Framework\TestCase
+class StaticEndPointTraitTest extends TestCase
 {
     public function buildEndPoint()
     {

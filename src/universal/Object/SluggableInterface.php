@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -20,24 +20,24 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Doctrine\Form\Type;
+declare(strict_types=1);
 
-use PHPUnit\Framework\TestCase;
-use Teknoo\East\Website\Doctrine\Form\Type\ItemType;
-use Teknoo\Tests\East\WebsiteBundle\Form\Type\FormTestTrait;
+namespace Teknoo\East\Website\Object;
+
+use Teknoo\East\Website\Loader\LoaderInterface;
+use Teknoo\East\Website\Service\FindSlugService;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers      \Teknoo\East\Website\Doctrine\Form\Type\ItemType
- * @covers      \Teknoo\East\Website\Doctrine\Form\Type\TranslatableTrait
  */
-class ItemTypeTest extends TestCase
+interface SluggableInterface
 {
-    use FormTestTrait;
+    public function prepareSlugNear(
+        LoaderInterface $loader,
+        FindSlugService $findSlugService,
+        string $slugField
+    ): SluggableInterface;
 
-    public function buildForm()
-    {
-        return new ItemType();
-    }
+    public function setSlug(string $slug): SluggableInterface;
 }

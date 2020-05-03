@@ -22,9 +22,9 @@
 
 namespace Teknoo\Tests\East\Website;
 
+use PHPUnit\Framework\TestCase;
 use DI\Container;
 use DI\ContainerBuilder;
-use Gedmo\Translatable\TranslatableListener;
 use Psr\Log\LoggerInterface;
 use Teknoo\East\Foundation\Manager\Manager;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
@@ -40,7 +40,6 @@ use Teknoo\East\Website\Loader\ContentLoader;
 use Teknoo\East\Website\Loader\MediaLoader;
 use Teknoo\East\Website\Loader\TypeLoader;
 use Teknoo\East\Website\Loader\UserLoader;
-use Teknoo\East\Website\Middleware\LocaleMiddleware;
 use Teknoo\East\Website\Middleware\MenuMiddleware;
 use Teknoo\East\Website\Service\DeletingService;
 use Teknoo\East\Website\Service\MenuGenerator;
@@ -60,7 +59,7 @@ use Teknoo\East\Website\Writer\UserWriter;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class ContainerTest extends \PHPUnit\Framework\TestCase
+class ContainerTest extends TestCase
 {
     /**
      * @return Container

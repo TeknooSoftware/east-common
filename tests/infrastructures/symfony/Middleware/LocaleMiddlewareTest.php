@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\Middleware;
 
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
@@ -33,7 +34,7 @@ use Teknoo\East\WebsiteBundle\Middleware\LocaleMiddleware;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers      \Teknoo\East\WebsiteBundle\Middleware\LocaleMiddleware
  */
-class LocaleMiddlewareTest extends \PHPUnit\Framework\TestCase
+class LocaleMiddlewareTest extends TestCase
 {
     /**
      * @var LocaleAwareInterface

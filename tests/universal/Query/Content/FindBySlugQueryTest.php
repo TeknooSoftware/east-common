@@ -20,21 +20,22 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Query;
+namespace Teknoo\Tests\East\Website\Query\Content;
 
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
-use Teknoo\East\Website\Query\PaginationQuery;
+use Teknoo\East\Website\Query\FindBySlugQuery;
 use Teknoo\East\Website\Query\QueryInterface;
+use Teknoo\Tests\East\Website\Query\QueryTestTrait;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Query\PaginationQuery
+ * @covers \Teknoo\East\Website\Query\FindBySlugQuery
  */
-class PaginationQueryTest extends TestCase
+class FindBySlugQueryTest extends TestCase
 {
     use QueryTestTrait;
 
@@ -43,7 +44,7 @@ class PaginationQueryTest extends TestCase
      */
     public function buildQuery(): QueryInterface
     {
-        return new PaginationQuery(['foo' => 'bar'], ['foo' => 'ASC'], 12, 20);
+        return new FindBySlugQuery('fooBarName', 'HelloWorld');
     }
 
     public function testExecute()
@@ -56,11 +57,36 @@ class PaginationQueryTest extends TestCase
         $promise->expects(self::never())->method('fail');
 
         $repository->expects(self::once())
-            ->method('findBy')
-            ->with(['foo' => 'bar', 'deletedAt' => null,], $promise, ['foo' => 'ASC'], 12, 20);
+            ->method('findOneBy')
+            ->with(['fooBarName' => 'HelloWorld', 'deletedAt' => null,], $this->callback(function ($pr) {
+                return $pr instanceof PromiseInterface;
+            }));
 
         self::assertInstanceOf(
-            PaginationQuery::class,
+            FindBySlugQuery::class,
+            $this->buildQuery()->execute($loader, $repository, $promise)
+        );
+    }
+
+    public function testExecuteFailing()
+    {
+        $loader = $this->createMock(LoaderInterface::class);
+        $repository = $this->createMock(RepositoryInterface::class);
+        $promise = $this->createMock(PromiseInterface::class);
+
+        $promise->expects(self::never())->method('success');
+        $promise->expects(self::once())->method('fail');
+
+        $repository->expects(self::once())
+            ->method('findOneBy')
+            ->willReturnCallback(function ($criteria, PromiseInterface $promise) use ($repository) {
+                $promise->fail(new \RuntimeException());
+
+                return $repository;
+            });
+
+        self::assertInstanceOf(
+            FindBySlugQuery::class,
             $this->buildQuery()->execute($loader, $repository, $promise)
         );
     }

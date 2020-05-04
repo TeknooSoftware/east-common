@@ -8,7 +8,7 @@
         <id type="string" strategy="UUID"/>
         <field field-name="firstName" name="first_name" type="string" />
         <field field-name="lastName" name="last_name" type="string" />
-        <field field-name="role" name="role" type="collection" />
+        <field field-name="roles" name="roles" type="collection" />
         <field field-name="email" type="string" unique="true" index="true" />
         <field field-name="password" type="string" />
         <field field-name="salt" type="string" />

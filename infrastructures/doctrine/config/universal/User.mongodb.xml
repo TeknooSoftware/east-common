@@ -6,8 +6,8 @@
 
     <document name="Teknoo\East\Website\Object\User" db="documents" collection="users">
         <id type="string" strategy="UUID"/>
-        <field field-name="first_name" name="firstName" type="string" />
-        <field field-name="last_name" name="lastName" type="string" />
+        <field field-name="firstName" name="first_name" type="string" />
+        <field field-name="lastName" name="last_name" type="string" />
         <field field-name="role" name="role" type="collection" />
         <field field-name="email" type="string" unique="true" index="true" />
         <field field-name="password" type="string" />

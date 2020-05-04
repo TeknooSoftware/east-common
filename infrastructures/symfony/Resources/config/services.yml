@@ -102,6 +102,12 @@ services:
   teknoo.east.website.deleting.user:
     synthetic: true
 
+  Teknoo\East\Website\Service\DatesService:
+    synthetic: true
+
+  Teknoo\East\Website\Service\FindSlugService:
+    synthetic: true
+
   #Front endpoints
   teknoo.east.website.endpoint.content:
     class: '%teknoo.east.website.endpoint.content.class%'

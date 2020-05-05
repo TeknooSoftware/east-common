@@ -49,8 +49,8 @@
         "doctrine/common": "~2.12",
         "gedmo/doctrine-extensions": "~2.4",
         "stof/doctrine-extensions-bundle": "~1.4",
-        "doctrine/mongodb-odm": "~2.0",
-        "doctrine/mongodb-odm-bundle": "~4.1"
+        "doctrine/mongodb-odm": "^2.0.5",
+        "doctrine/mongodb-odm-bundle": "^4.1.1"
     },
     "archive": {
         "exclude": ["features", "tests", "vendor", ".idea"]

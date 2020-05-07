@@ -121,11 +121,7 @@ return [
     },
 
     LocaleMiddleware::class => function (ContainerInterface $container): LocaleMiddleware {
-        if ($container->has('stof_doctrine_extensions.listener.translatable')) {
-            $listener = $container->get('stof_doctrine_extensions.listener.translatable');
-        } else {
-            $listener = $container->get(TranslatableListener::class);
-        }
+        $listener = $container->get(TranslatableListener::class);
 
         return new LocaleMiddleware([$listener, 'setTranslatableLocale']);
     },

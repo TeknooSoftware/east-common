@@ -57,7 +57,7 @@ class LocaleMiddleware implements MiddlewareInterface
     {
         $session = $request->getAttribute(SessionInterface::ATTRIBUTE_KEY);
         if ($session instanceof SessionInterface) {
-            $session->set(static::SESSION_KEY, $locale);
+            $session->set(self::SESSION_KEY, $locale);
         }
 
         return $this;
@@ -69,7 +69,7 @@ class LocaleMiddleware implements MiddlewareInterface
         $session = $request->getAttribute(SessionInterface::ATTRIBUTE_KEY);
         if ($session instanceof SessionInterface) {
             $session->get(
-                static::SESSION_KEY,
+                self::SESSION_KEY,
                 new Promise(
                     function (string $locale) use (&$request, &$returnedLocale) {
                         if (\is_callable($this->translatableSetter)) {

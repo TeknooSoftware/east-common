@@ -48,7 +48,7 @@ class MenuMiddleware implements ViewParameterInterface
      */
     private function getViewParameters(ServerRequestInterface $request): array
     {
-        return $request->getAttribute(static::REQUEST_PARAMETER_KEY, []);
+        return $request->getAttribute(self::REQUEST_PARAMETER_KEY, []);
     }
 
     /**
@@ -62,7 +62,7 @@ class MenuMiddleware implements ViewParameterInterface
         $parameters = $this->getViewParameters($request);
         $parameters['menuGenerator'] = $this->menuGenerator;
 
-        $request = $request->withAttribute(static::REQUEST_PARAMETER_KEY, $parameters);
+        $request = $request->withAttribute(self::REQUEST_PARAMETER_KEY, $parameters);
 
         $manager->continueExecution($client, $request);
 

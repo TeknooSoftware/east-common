@@ -28,7 +28,7 @@ class Xml extends BaseXml
         $xml = $this->_getMapping($meta->name);
         $xmlDoctrine = $xml;
 
-        $xml = $xml->children(self::Teknoo\East\Website\Gedmo_NAMESPACE_URI);
+        $xml = $xml->children(self::GEDMO_NAMESPACE_URI);
 
         if (($xmlDoctrine->getName() == 'entity' || $xmlDoctrine->getName() == 'mapped-superclass')) {
             if ($xml->count() && isset($xml->translation)) {
@@ -92,7 +92,7 @@ class Xml extends BaseXml
 
     private function buildFieldConfiguration($fieldName, \SimpleXMLElement $mapping, array &$config)
     {
-        $mapping = $mapping->children(self::Teknoo\East\Website\Gedmo_NAMESPACE_URI);
+        $mapping = $mapping->children(self::GEDMO_NAMESPACE_URI);
         if ($mapping->count() > 0 && isset($mapping->translatable)) {
             $config['fields'][] = $fieldName;
             /** @var \SimpleXmlElement $data */

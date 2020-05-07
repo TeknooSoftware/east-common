@@ -17,7 +17,7 @@
             "Teknoo\\East\\Website\\": "src/universal",
             "Teknoo\\East\\WebsiteBundle\\": "infrastructures/symfony",
             "Teknoo\\East\\Website\\Doctrine\\": "infrastructures/doctrine",
-            "Teknoo\\East\\Website\\Gedmo\\": "tests/infrastructures/gedmo",
+            "Teknoo\\East\\Website\\Gedmo\\": "infrastructures/gedmo",
             "Teknoo\\Tests\\East\\Website\\": "tests/universal",
             "Teknoo\\Tests\\East\\WebsiteBundle\\": "tests/infrastructures/symfony",
             "Teknoo\\Tests\\East\\Website\\Doctrine\\": "tests/infrastructures/doctrine"

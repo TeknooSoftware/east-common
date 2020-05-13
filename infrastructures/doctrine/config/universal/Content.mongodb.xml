@@ -2,11 +2,12 @@
 <!--infrastructures/doctrine/config/universal/Content.mongodb.yml-->
 <doctrine-mongo-mapping xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"
                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                        xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping"
-                        xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
+                        xmlns:gedmo="http://xml.teknoo.it/east-website-gedmo-mapping"
+                        xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd
+                                            http://xml.teknoo.it/east-website-gedmo-mapping http://xml.teknoo.it/east-website-gedmo-mapping.xsd">
 
     <document name="Teknoo\East\Website\Object\Content" db="documents" collection="contents" inheritance-type="COLLECTION_PER_CLASS">
-        <gedmo:translation entity="Gedmo\Translatable\Entity\Translation" locale="localeField"/>
+        <gedmo:translation document="Teknoo\East\Website\Gedmo\Translatable\Document\Translation" locale="localeField"/>
         <id type="string" strategy="UUID"/>
         <field field-name="title" type="string">
             <gedmo:translatable/>

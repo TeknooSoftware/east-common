@@ -29,17 +29,17 @@ class TranslatableListener extends MappedEventSubscriber
      * Query hint to override the fallback of translations
      * integer 1 for true, 0 false
      */
-    const HINT_FALLBACK = 'Teknoo\East\Website\Gedmo.translatable.fallback';
+    const HINT_FALLBACK = 'east.website.gedmo.translatable.fallback';
 
     /**
      * Query hint to override the fallback locale
      */
-    const HINT_TRANSLATABLE_LOCALE = 'Teknoo\East\Website\Gedmo.translatable.locale';
+    const HINT_TRANSLATABLE_LOCALE = 'east.website.gedmo.translatable.locale';
 
     /**
      * Query hint to use inner join strategy for translations
      */
-    const HINT_INNER_JOIN = 'Teknoo\East\Website\Gedmo.translatable.inner_join.translations';
+    const HINT_INNER_JOIN = 'east.website.gedmo.translatable.inner_join.translations';
 
     /**
      * Locale which is set on this listener.

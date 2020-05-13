@@ -48,7 +48,6 @@
         "symfony/security": "~4.4||~5.0",
         "laminas/laminas-diactoros": "~2.2",
         "doctrine/common": "~2.12",
-        "gedmo/doctrine-extensions": "~2.4",
         "doctrine/mongodb-odm": "^2.0.5",
         "doctrine/mongodb-odm-bundle": "^4.1.1"
     },

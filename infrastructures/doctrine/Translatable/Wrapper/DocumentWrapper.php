@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\Translatable\Wrapper;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use ProxyManager\Proxy\GhostObjectInterface;
 use Teknoo\East\Website\Doctrine\Translatable\TranslatableInterface;

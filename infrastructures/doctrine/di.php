@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectRepository;
 use Teknoo\East\Website\Doctrine\Translatable\TranslatableListener;
 use Psr\Container\ContainerInterface;
 use Teknoo\East\Website\DBSource\ManagerInterface;

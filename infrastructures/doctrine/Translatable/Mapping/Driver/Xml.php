@@ -26,8 +26,8 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\Translatable\Mapping\Driver;
 
-use Doctrine\Common\Persistence\Mapping\Driver\FileDriver;
-use Doctrine\Common\Persistence\Mapping\Driver\FileLocator;
+use Doctrine\Persistence\Mapping\Driver\FileDriver;
+use Doctrine\Persistence\Mapping\Driver\FileLocator;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Teknoo\East\Website\Doctrine\Object\Translation;
 use Teknoo\East\Website\Doctrine\Translatable\Mapping\Driver;
@@ -135,7 +135,7 @@ class Xml implements Driver
         $this->inspectElementsForTranslatableFields($xml, $config);
 
         if (!$meta->isMappedSuperclass && !empty($config)) {
-            if (is_array($meta->identifier) && count($meta->identifier) > 1) {
+            if (\is_array($meta->identifier) && 1 < \count($meta->identifier)) {
                 throw new InvalidMappingException(
                     "TranslatableInterface does not support composite identifiers in class - {$meta->name}"
                 );

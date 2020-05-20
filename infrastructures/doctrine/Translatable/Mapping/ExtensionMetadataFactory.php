@@ -1,90 +1,123 @@
 <?php
 
-namespace Teknoo\East\Website\Doctrine\Mapping;
+/*
+ * East Website.
+ *
+ * LICENSE
+ *
+ * This source file is subject to the MIT license and the version 3 of the GPL3
+ * license that are bundled with this package in the folder licences
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to richarddeloge@gmail.com so we can send you a copy immediately.
+ *
+ *
+ * @copyright   Copyright (c) 2009-2020 Richard Déloge (richarddeloge@gmail.com)
+ *
+ * @link        http://teknoo.software/east/website Project website
+ *
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ * @author      Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
+ */
 
-use Doctrine\Common\Persistence\Mapping\Driver\DefaultFileLocator;
-use Doctrine\Common\Persistence\Mapping\Driver\SymfonyFileLocator;
-use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
-use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Version as CommonLibVer;
-use Teknoo\East\Website\Doctrine\Mapping\Driver\File as FileDriver;
+declare(strict_types=1);
+
+namespace Teknoo\East\Website\Doctrine\Translatable\Mapping;
+
+use Doctrine\ODM\MongoDB\DocumentManager;
+use Doctrine\Persistence\Mapping\ClassMetadata;
+use Doctrine\Persistence\Mapping\Driver\FileDriver;
+use Doctrine\Persistence\Mapping\Driver\MappingDriver;
+use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
+use Doctrine\Persistence\ObjectManager;
+use Teknoo\East\Website\Doctrine\Exception\InvalidMappingException;
+use Teknoo\East\Website\Doctrine\Translatable\Mapping\Driver\Xml as XmlDriver;
 
 /**
  * The extension metadata factory is responsible for extension driver
  * initialization and fully reading the extension metadata
- *
- * @author Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
- * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 class ExtensionMetadataFactory
 {
-    /**
-     * Extension driver
-     * @var \Teknoo\East\Website\Doctrine\Mapping\Driver
-     */
-    protected $driver;
+    private XmlDriver $driver;
+
+    private ObjectManager $objectManager;
 
     /**
-     * Object manager, entity or document
-     * @var object
+     * @param ObjectManager|DocumentManager $objectManager
      */
-    protected $objectManager;
-
-    /**
-     * Extension namespace
-     *
-     * @var string
-     */
-    protected $extensionNamespace;
-
-    public function __construct(ObjectManager $objectManager, $extensionNamespace)
+    public function __construct(ObjectManager $objectManager)
     {
         $this->objectManager = $objectManager;
-        $this->extensionNamespace = $extensionNamespace;
-        $omDriver = $objectManager->getConfiguration()->getMetadataDriverImpl();
-        $this->driver = $this->getDriver($omDriver);
+        $mappingDriver = $objectManager->getConfiguration()->getMetadataDriverImpl();
+
+        //todo
+        if ($mappingDriver instanceof MappingDriver) {
+            throw new \RuntimeException('error');
+        }
+
+        $this->driver = $this->getDriver($mappingDriver);
     }
 
-    /**
-     * Reads extension metadata
-     *
-     * @param  object $meta
-     * @return array  - the metatada configuration
-     */
-    public function getExtensionMetadata($meta)
+    private function getDriver(MappingDriver $omDriver): XmlDriver
     {
-        if ($meta->isMappedSuperclass) {
-            return; // ignore mappedSuperclasses for now
-        }
-        $config = array();
-        $cmf = $this->objectManager->getMetadataFactory();
-        $useObjectName = $meta->name;
-        // collect metadata from inherited classes
-        if (null !== $meta->reflClass) {
-            foreach (array_reverse(class_parents($meta->name)) as $parentClass) {
-                // read only inherited mapped classes
-                if ($cmf->hasMetadataFor($parentClass)) {
-                    $class = $this->objectManager->getClassMetadata($parentClass);
-                    $this->driver->readExtendedMetadata($class, $config);
-                    $isBaseInheritanceLevel = !$class->isInheritanceTypeNone()
-                        && !$class->parentClasses
-                        && $config
-                    ;
-                    if ($isBaseInheritanceLevel) {
-                        $useObjectName = $class->name;
-                    }
+        if ($omDriver instanceof MappingDriverChain) {
+            $drivers = $omDriver->getDrivers();
+            foreach ($drivers as $namespace => $nestedOmDriver) {
+                if ($nestedOmDriver instanceof FileDriver) {
+                    $omDriver = $nestedOmDriver;
+
+                    break;
                 }
             }
-            $this->driver->readExtendedMetadata($meta, $config);
         }
-        if ($config) {
+
+        if (!$omDriver instanceof FileDriver) {
+            throw new InvalidMappingException('Driver not found');
+        }
+
+        //todo
+        return new XmlDriver($omDriver->getLocator(), $omDriver);
+    }
+
+    public function getExtensionMetadata(ClassMetadata $meta): array
+    {
+        if (!empty($meta->isMappedSuperclass)) {
+            return []; // ignore mappedSuperclasses for now
+        }
+
+        $config = [];
+        $cmf = $this->objectManager->getMetadataFactory();
+
+        $useObjectName = $meta->getName();
+
+        // collect metadata from inherited classes
+        foreach (\array_reverse(\class_parents($useObjectName)) as $parentClass) {
+            // read only inherited mapped classes
+            if ($cmf->hasMetadataFor($parentClass)) {
+                $parentMetaClass = $this->objectManager->getClassMetadata($parentClass);
+                $this->driver->readExtendedMetadata($parentMetaClass, $config);
+
+                if (
+                    empty($parentMetaClass->parentClasses)
+                    && !empty($config)
+                    && !$parentMetaClass->isInheritanceTypeNone()
+                ) {
+                    $useObjectName = $parentMetaClass->getName();
+                }
+            }
+        }
+
+        $this->driver->readExtendedMetadata($meta, $config);
+
+        if (!empty($config)) {
             $config['useObjectClass'] = $useObjectName;
         }
 
         // cache the metadata (even if it's empty)
         // caching empty metadata will prevent re-parsing non-existent annotations
-        $cacheId = self::getCacheId($meta->name, $this->extensionNamespace);
+        $cacheId = self::getCacheId($meta->name);
         if ($cacheDriver = $cmf->getCacheDriver()) {
             $cacheDriver->save($cacheId, $config, null);
         }
@@ -92,67 +125,8 @@ class ExtensionMetadataFactory
         return $config;
     }
 
-    /**
-     * Get the cache id
-     *
-     * @param  string $className
-     * @param  string $extensionNamespace
-     * @return string
-     */
-    public static function getCacheId($className, $extensionNamespace)
+    private static function getCacheId(string $className): string
     {
-        return $className.'\\$'.strtoupper(str_replace('\\', '_', $extensionNamespace)).'_CLASSMETADATA';
-    }
-
-    /**
-     * Get the extended driver instance which will
-     * read the metadata required by extension
-     *
-     * @param  object                            $omDriver
-     * @throws \Teknoo\East\Website\Doctrine\Exception\RuntimeException if driver was not found in extension
-     * @return \Teknoo\East\Website\Doctrine\Mapping\Driver
-     */
-    protected function getDriver($omDriver)
-    {
-        $driver = null;
-        $className = get_class($omDriver);
-        $driverName = substr($className, strrpos($className, '\\') + 1);
-        if ($omDriver instanceof MappingDriverChain || $driverName == 'DriverChain') {
-            $driver = new Driver\Chain();
-            foreach ($omDriver->getDrivers() as $namespace => $nestedOmDriver) {
-                $driver->addDriver($this->getDriver($nestedOmDriver), $namespace);
-            }
-            if (version_compare(CommonLibVer::VERSION, '2.3.0', '>=') && $omDriver->getDefaultDriver() !== null) {
-                $driver->setDefaultDriver($this->getDriver($omDriver->getDefaultDriver()));
-            }
-        } else {
-            $driverName = substr($driverName, 0, strpos($driverName, 'Driver'));
-            $isSimplified = false;
-            if (substr($driverName, 0, 10) === 'Simplified') {
-                // support for simplified file drivers
-                $driverName = substr($driverName, 10);
-                $isSimplified = true;
-            }
-            // create driver instance
-            $driverClassName = $this->extensionNamespace.'\Mapping\Driver\\'.$driverName;
-            if (!class_exists($driverClassName)) {
-                throw new \Teknoo\East\Website\Doctrine\Exception\RuntimeException("Failed to load driver: ({$driverClassName}), extension driver was not found.");
-            }
-            $driver = new $driverClassName();
-            $driver->setOriginalDriver($omDriver);
-            if ($driver instanceof FileDriver) {
-                /** @var $driver FileDriver */
-                if ($omDriver instanceof MappingDriver) {
-                    $driver->setLocator($omDriver->getLocator());
-                // BC for Doctrine 2.2
-                } elseif ($isSimplified) {
-                    $driver->setLocator(new SymfonyFileLocator($omDriver->getNamespacePrefixes(), $omDriver->getFileExtension()));
-                } else {
-                    $driver->setLocator(new DefaultFileLocator($omDriver->getPaths(), $omDriver->getFileExtension()));
-                }
-            }
-        }
-
-        return $driver;
+        return $className.'\\$_CLASSMETADATA';
     }
 }

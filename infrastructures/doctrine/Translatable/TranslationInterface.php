@@ -22,29 +22,27 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Doctrine\Object;
+namespace Teknoo\East\Website\Doctrine\Translatable;
 
-use Teknoo\East\Website\Doctrine\Translatable\TranslatableInterface;
-use Teknoo\East\Website\Object\Item as OriginalItem;
-use Teknoo\States\Automated\AutomatedTrait;
-use Teknoo\States\Doctrine\Document\StandardTrait;
-
-class Item extends OriginalItem implements TranslatableInterface
+interface TranslationInterface
 {
-    use AutomatedTrait;
-    use StandardTrait {
-        AutomatedTrait::updateStates insteadof StandardTrait;
-    }
+    public function setLocale(string $locale): self;
 
-    public function setTranslatableLocale(?string $locale): self
-    {
-        $this->setLocaleField((string) $locale);
+    public function getLocale(): string;
 
-        return $this;
-    }
+    public function setField(string $field): self;
 
-    public function getTranslatableLocale(): string
-    {
-        return $this->getLocaleField();
-    }
+    public function getField(): string;
+
+    public function setObjectClass(string $objectClass): self;
+
+    public function getObjectClass(): string;
+
+    public function setForeignKey(string $foreignKey): self;
+
+    public function getForeignKey(): string;
+
+    public function setContent(string $content): self;
+
+    public function getContent(): string;
 }

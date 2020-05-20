@@ -24,12 +24,12 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\Object;
 
-use Gedmo\Translatable\Translatable;
+use Teknoo\East\Website\Doctrine\Translatable\TranslatableInterface;
 use Teknoo\East\Website\Object\Content as OriginalContent;
 use Teknoo\States\Automated\AutomatedTrait;
 use Teknoo\States\Doctrine\Document\StandardTrait;
 
-class Content extends OriginalContent implements Translatable
+class Content extends OriginalContent implements TranslatableInterface
 {
     use AutomatedTrait;
     use StandardTrait {

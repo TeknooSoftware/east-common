@@ -22,29 +22,26 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Doctrine\Object;
+namespace Teknoo\East\Website\Doctrine\Translatable\Wrapper;
 
+use Doctrine\Persistence\Mapping\ClassMetadata;
 use Teknoo\East\Website\Doctrine\Translatable\TranslatableInterface;
-use Teknoo\East\Website\Object\Item as OriginalItem;
-use Teknoo\States\Automated\AutomatedTrait;
-use Teknoo\States\Doctrine\Document\StandardTrait;
 
-class Item extends OriginalItem implements TranslatableInterface
+interface WrapperInterface
 {
-    use AutomatedTrait;
-    use StandardTrait {
-        AutomatedTrait::updateStates insteadof StandardTrait;
-    }
+    public function getObject(): TranslatableInterface;
 
-    public function setTranslatableLocale(?string $locale): self
-    {
-        $this->setLocaleField((string) $locale);
+    /**
+     * @return mixed
+     */
+    public function getPropertyValue(string $property);
 
-        return $this;
-    }
+    public function setPropertyValue(string $property, $value): self;
 
-    public function getTranslatableLocale(): string
-    {
-        return $this->getLocaleField();
-    }
+    public function getMetadata(): ClassMetadata;
+
+    public function getIdentifier(bool $single = true): string;
+
+    public function getRootObjectName(): string;
+
 }

@@ -22,29 +22,29 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Doctrine\Object;
+namespace Teknoo\East\Website\Doctrine\Translatable\Event\Adapter;
 
+use Doctrine\Common\EventArgs;
+use Doctrine\ODM\MongoDB\DocumentManager;
+use Teknoo\East\Website\Doctrine\Translatable\Event\AdapterInterface;
 use Teknoo\East\Website\Doctrine\Translatable\TranslatableInterface;
-use Teknoo\East\Website\Object\Item as OriginalItem;
-use Teknoo\States\Automated\AutomatedTrait;
-use Teknoo\States\Doctrine\Document\StandardTrait;
 
-class Item extends OriginalItem implements TranslatableInterface
+class ODM implements AdapterInterface
 {
-    use AutomatedTrait;
-    use StandardTrait {
-        AutomatedTrait::updateStates insteadof StandardTrait;
+    private EventArgs $eventArgs;
+
+    public function __construct(EventArgs $eventArgs)
+    {
+        $this->eventArgs = $eventArgs;
     }
 
-    public function setTranslatableLocale(?string $locale): self
+    public function getObjectManager(): DocumentManager
     {
-        $this->setLocaleField((string) $locale);
-
-        return $this;
+        return $this->eventArgs->getObjectManager();
     }
 
-    public function getTranslatableLocale(): string
+    public function getObject(): TranslatableInterface
     {
-        return $this->getLocaleField();
+        return $this->eventArgs->getObject();
     }
 }

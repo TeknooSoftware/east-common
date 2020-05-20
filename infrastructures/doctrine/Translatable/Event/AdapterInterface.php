@@ -22,29 +22,17 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Doctrine\Object;
+namespace Teknoo\East\Website\Doctrine\Translatable\Event;
 
+use Doctrine\Common\EventArgs;
+use Doctrine\Persistence\ObjectManager;
 use Teknoo\East\Website\Doctrine\Translatable\TranslatableInterface;
-use Teknoo\East\Website\Object\Item as OriginalItem;
-use Teknoo\States\Automated\AutomatedTrait;
-use Teknoo\States\Doctrine\Document\StandardTrait;
 
-class Item extends OriginalItem implements TranslatableInterface
+interface AdapterInterface
 {
-    use AutomatedTrait;
-    use StandardTrait {
-        AutomatedTrait::updateStates insteadof StandardTrait;
-    }
+    public function __construct(EventArgs $eventArgs);
 
-    public function setTranslatableLocale(?string $locale): self
-    {
-        $this->setLocaleField((string) $locale);
+    public function getObjectManager(): ObjectManager;
 
-        return $this;
-    }
-
-    public function getTranslatableLocale(): string
-    {
-        return $this->getLocaleField();
-    }
+    public function getObject(): TranslatableInterface;
 }

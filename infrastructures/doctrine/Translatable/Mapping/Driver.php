@@ -18,33 +18,19 @@
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ * @author      Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
  */
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Doctrine\Object;
+namespace Teknoo\East\Website\Doctrine\Translatable\Mapping;
 
-use Teknoo\East\Website\Doctrine\Translatable\TranslatableInterface;
-use Teknoo\East\Website\Object\Item as OriginalItem;
-use Teknoo\States\Automated\AutomatedTrait;
-use Teknoo\States\Doctrine\Document\StandardTrait;
+use Doctrine\Persistence\Mapping\ClassMetadata;
 
-class Item extends OriginalItem implements TranslatableInterface
+interface Driver
 {
-    use AutomatedTrait;
-    use StandardTrait {
-        AutomatedTrait::updateStates insteadof StandardTrait;
-    }
-
-    public function setTranslatableLocale(?string $locale): self
-    {
-        $this->setLocaleField((string) $locale);
-
-        return $this;
-    }
-
-    public function getTranslatableLocale(): string
-    {
-        return $this->getLocaleField();
-    }
+    /**
+     * Read extended metadata configuration for a single mapped class
+     */
+    public function readExtendedMetadata(ClassMetadata $meta, array &$config): void;
 }

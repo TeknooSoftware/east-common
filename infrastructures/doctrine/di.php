@@ -26,7 +26,7 @@ namespace Teknoo\East\Website\Doctrine;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
-use Gedmo\Translatable\TranslatableListener;
+use Teknoo\East\Website\Doctrine\Translatable\TranslatableListener;
 use Psr\Container\ContainerInterface;
 use Teknoo\East\Website\DBSource\ManagerInterface;
 use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;

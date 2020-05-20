@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--infrastructures/doctrine/config/universal/Item.mongodb.yml-->
-<doctrine-mongo-mapping xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"
+<doctrine-mongo-mapping xmlns="http://xml.teknoo.it/schemas/odm/east-website-mapping"
                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                        xmlns:gedmo="http://xml.teknoo.it/east-website-gedmo-mapping"
-                        xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd
-                                            http://xml.teknoo.it/east-website-gedmo-mapping http://xml.teknoo.it/east-website-gedmo-mapping.xsd">
+                        xsi:schemaLocation="http://xml.teknoo.it/schemas/odm/east-website-mapping http://xml.teknoo.it/schemas/odm/east-website-mapping.xsd">
 
     <document name="Teknoo\East\Website\Object\Item"
               db="documents"
               collection="items"
               inheritance-type="COLLECTION_PER_CLASS">
-        <gedmo:translation document="Teknoo\East\Website\Gedmo\Translatable\Document\Translation" locale="localeField"/>
+        <translation class="Teknoo\East\Website\Doctrine\Object\Translation" locale="localeField"/>
         <id type="string" strategy="UUID"/>
         <field field-name="name" type="string">
-            <gedmo:translatable/>
+            <translatable/>
         </field>
         <field field-name="slug" type="string" index="true" unique="true" />
         <field field-name="location" type="string" index="true"/>

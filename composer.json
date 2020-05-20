@@ -17,7 +17,6 @@
             "Teknoo\\East\\Website\\": "src/universal",
             "Teknoo\\East\\WebsiteBundle\\": "infrastructures/symfony",
             "Teknoo\\East\\Website\\Doctrine\\": "infrastructures/doctrine",
-            "Teknoo\\East\\Website\\Gedmo\\": "infrastructures/gedmo",
             "Teknoo\\Tests\\East\\Website\\": "tests/universal",
             "Teknoo\\Tests\\East\\WebsiteBundle\\": "tests/infrastructures/symfony",
             "Teknoo\\Tests\\East\\Website\\Doctrine\\": "tests/infrastructures/doctrine"
@@ -47,6 +46,7 @@
         "symfony/templating": "~4.4||~5.0",
         "symfony/security": "~4.4||~5.0",
         "laminas/laminas-diactoros": "~2.2",
+        "ext-simplexml" : "*",
         "doctrine/common": "~2.12",
         "doctrine/mongodb-odm": "^2.0.5",
         "doctrine/mongodb-odm-bundle": "^4.1.1"

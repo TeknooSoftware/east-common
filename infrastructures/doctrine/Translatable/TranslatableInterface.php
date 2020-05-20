@@ -22,29 +22,13 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Doctrine\Object;
+namespace Teknoo\East\Website\Doctrine\Translatable;
 
-use Teknoo\East\Website\Doctrine\Translatable\TranslatableInterface;
-use Teknoo\East\Website\Object\Item as OriginalItem;
-use Teknoo\States\Automated\AutomatedTrait;
-use Teknoo\States\Doctrine\Document\StandardTrait;
-
-class Item extends OriginalItem implements TranslatableInterface
+/**
+ * This interface is not necessary but can be implemented for
+ * Entities which in some cases needs to be identified as
+ * TranslatableInterface
+ */
+interface TranslatableInterface
 {
-    use AutomatedTrait;
-    use StandardTrait {
-        AutomatedTrait::updateStates insteadof StandardTrait;
-    }
-
-    public function setTranslatableLocale(?string $locale): self
-    {
-        $this->setLocaleField((string) $locale);
-
-        return $this;
-    }
-
-    public function getTranslatableLocale(): string
-    {
-        return $this->getLocaleField();
-    }
 }

@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--infrastructures/doctrine/config/universal/Content.mongodb.yml-->
-<doctrine-mongo-mapping xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"
+<doctrine-mongo-mapping xmlns="http://xml.teknoo.it/schemas/odm/east-website-mapping"
                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                        xmlns:gedmo="http://xml.teknoo.it/east-website-gedmo-mapping"
-                        xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd
-                                            http://xml.teknoo.it/east-website-gedmo-mapping http://xml.teknoo.it/east-website-gedmo-mapping.xsd">
+                        xsi:schemaLocation="http://xml.teknoo.it/schemas/odm/east-website-mapping http://xml.teknoo.it/schemas/odm/east-website-mapping.xsd">
 
     <document name="Teknoo\East\Website\Object\Content" db="documents" collection="contents" inheritance-type="COLLECTION_PER_CLASS">
-        <gedmo:translation document="Teknoo\East\Website\Gedmo\Translatable\Document\Translation" locale="localeField"/>
+        <translation class="Teknoo\East\Website\Doctrine\Object\Translation" locale="localeField"/>
         <id type="string" strategy="UUID"/>
         <field field-name="title" type="string">
-            <gedmo:translatable/>
+            <translatable fallback="true"/>
         </field>
         <field field-name="subtitle" type="string">
-            <gedmo:translatable/>
+            <translatable/>
         </field>
         <field field-name="slug" type="string" index="true" unique="true" />
         <field field-name="description" type="string">
-            <gedmo:translatable/>
+            <translatable/>
         </field>
         <field field-name="parts" type="string">
-            <gedmo:translatable/>
+            <translatable/>
         </field>
         <field field-name="tags" type="collection" index="true"/>
         <field field-name="createdAt" name="created_at" type="date" />

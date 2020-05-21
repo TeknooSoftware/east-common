@@ -42,6 +42,11 @@ class ODM implements AdapterInterface
         $this->manager = $manager;
     }
 
+    public function getRootObject(): ObjectManager
+    {
+        return $this->manager;
+    }
+
     public function getClassMetadata(string $class): ClassMetadata
     {
         return $this->manager->getClassMetadata($class);

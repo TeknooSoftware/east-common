@@ -24,15 +24,17 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\Translatable\Event;
 
-use Doctrine\Common\EventArgs;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Doctrine\Persistence\ObjectManager;
 use Teknoo\East\Website\Doctrine\Translatable\TranslatableInterface;
 
 interface AdapterInterface
 {
-    public function __construct(EventArgs $eventArgs);
+    public function __construct(LifecycleEventArgs $eventArgs);
 
     public function getObjectManager(): ObjectManager;
 
     public function getObject(): TranslatableInterface;
+
+    public function getObjectClass(): string;
 }

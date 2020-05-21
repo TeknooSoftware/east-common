@@ -25,11 +25,9 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\Translatable\Mapping;
 
-use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\Mapping\Driver\FileDriver;
 use Doctrine\Persistence\Mapping\Driver\MappingDriver;
-use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\Persistence\ObjectManager;
 use Teknoo\East\Website\Doctrine\Exception\InvalidMappingException;
 use Teknoo\East\Website\Doctrine\Translatable\Mapping\Driver\Xml as XmlDriver;
@@ -40,36 +38,19 @@ use Teknoo\East\Website\Doctrine\Translatable\Mapping\Driver\Xml as XmlDriver;
  */
 class ExtensionMetadataFactory
 {
-    private XmlDriver $driver;
-
-    private ObjectManager $objectManager;
-
-    /**
-     * @param ObjectManager|DocumentManager $objectManager
-     */
-    public function __construct(ObjectManager $objectManager)
+    private function getDriver(ObjectManager $objectManager): XmlDriver
     {
-        $this->objectManager = $objectManager;
-        $mappingDriver = $objectManager->getConfiguration()->getMetadataDriverImpl();
-
-        //todo
-        if ($mappingDriver instanceof MappingDriver) {
+        $omDriver = $objectManager->getConfiguration()->getMetadataDriverImpl();
+        if ($omDriver instanceof MappingDriver) {
             throw new \RuntimeException('error');
         }
 
-        $this->driver = $this->getDriver($mappingDriver);
-    }
+        $drivers = $omDriver->getDrivers();
+        foreach ($drivers as $namespace => $nestedOmDriver) {
+            if ($nestedOmDriver instanceof FileDriver) {
+                $omDriver = $nestedOmDriver;
 
-    private function getDriver(MappingDriver $omDriver): XmlDriver
-    {
-        if ($omDriver instanceof MappingDriverChain) {
-            $drivers = $omDriver->getDrivers();
-            foreach ($drivers as $namespace => $nestedOmDriver) {
-                if ($nestedOmDriver instanceof FileDriver) {
-                    $omDriver = $nestedOmDriver;
-
-                    break;
-                }
+                break;
             }
         }
 
@@ -81,23 +62,31 @@ class ExtensionMetadataFactory
         return new XmlDriver($omDriver->getLocator(), $omDriver);
     }
 
-    public function getExtensionMetadata(ClassMetadata $meta): array
+    public function getExtensionMetadata(ObjectManager $objectManager, ClassMetadata $meta): array
     {
         if (!empty($meta->isMappedSuperclass)) {
             return []; // ignore mappedSuperclasses for now
         }
 
         $config = [];
-        $cmf = $this->objectManager->getMetadataFactory();
+        $cmf = $objectManager->getMetadataFactory();
 
+        $cacheId = self::getCacheId($meta->getName());
+        $cacheDriver = $cmf->getCacheDriver();
+
+        if (null !== $cacheDriver && $cacheDriver->contains($cacheId)) {
+            return $cacheDriver->fetch($cacheId);
+        }
+
+        $driver = $this->getDriver($objectManager);
         $useObjectName = $meta->getName();
 
         // collect metadata from inherited classes
         foreach (\array_reverse(\class_parents($useObjectName)) as $parentClass) {
             // read only inherited mapped classes
             if ($cmf->hasMetadataFor($parentClass)) {
-                $parentMetaClass = $this->objectManager->getClassMetadata($parentClass);
-                $this->driver->readExtendedMetadata($parentMetaClass, $config);
+                $parentMetaClass = $objectManager->getClassMetadata($parentClass);
+                $driver->readExtendedMetadata($parentMetaClass, $config);
 
                 if (
                     empty($parentMetaClass->parentClasses)
@@ -109,16 +98,13 @@ class ExtensionMetadataFactory
             }
         }
 
-        $this->driver->readExtendedMetadata($meta, $config);
+        $driver->readExtendedMetadata($meta, $config);
 
         if (!empty($config)) {
             $config['useObjectClass'] = $useObjectName;
         }
 
-        // cache the metadata (even if it's empty)
-        // caching empty metadata will prevent re-parsing non-existent annotations
-        $cacheId = self::getCacheId($meta->name);
-        if ($cacheDriver = $cmf->getCacheDriver()) {
+        if (null !== $cacheDriver) {
             $cacheDriver->save($cacheId, $config, null);
         }
 

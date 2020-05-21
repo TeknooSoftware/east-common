@@ -24,16 +24,16 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\Translatable\Event\Adapter;
 
-use Doctrine\Common\EventArgs;
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Teknoo\East\Website\Doctrine\Translatable\Event\AdapterInterface;
 use Teknoo\East\Website\Doctrine\Translatable\TranslatableInterface;
 
 class ODM implements AdapterInterface
 {
-    private EventArgs $eventArgs;
+    private LifecycleEventArgs $eventArgs;
 
-    public function __construct(EventArgs $eventArgs)
+    public function __construct(LifecycleEventArgs $eventArgs)
     {
         $this->eventArgs = $eventArgs;
     }
@@ -46,5 +46,12 @@ class ODM implements AdapterInterface
     public function getObject(): TranslatableInterface
     {
         return $this->eventArgs->getObject();
+    }
+
+    public function getObjectClass(): string
+    {
+        $object = $this->getObject();
+
+        return \get_class($object);
     }
 }

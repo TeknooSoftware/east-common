@@ -32,6 +32,8 @@ interface AdapterInterface
 {
     public function __construct(ObjectManager $manager);
 
+    public function getRootObject(): ObjectManager;
+
     public function getClassMetadata(string $class): ClassMetadata;
 
     public function tryGetById($id, ClassMetadata $class): ?TranslatableInterface;

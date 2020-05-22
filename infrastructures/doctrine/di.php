@@ -62,7 +62,6 @@ use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Object\User;
 
 use function DI\get;
-use function DI\create;
 
 return [
     ManagerInterface::class => get(Manager::class),

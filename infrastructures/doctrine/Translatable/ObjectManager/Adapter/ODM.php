@@ -28,47 +28,51 @@ use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\UnitOfWork;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
+use Teknoo\East\Website\DBSource\ManagerInterface;
 use Teknoo\East\Website\Doctrine\Translatable\ObjectManager\AdapterInterface;
 use Teknoo\East\Website\Doctrine\Translatable\TranslatableInterface;
 
 class ODM implements AdapterInterface
 {
-    private DocumentManager $manager;
+    private ManagerInterface $eastManager;
+
+    private DocumentManager $doctrineManager;
 
     private ?UnitOfWork $unitOfWork = null;
 
-    public function __construct(ObjectManager $manager)
+    public function __construct(ManagerInterface $eastManager, ObjectManager $doctrineManager)
     {
-        $this->manager = $manager;
+        $this->eastManager = $eastManager;
+        $this->doctrineManager = $doctrineManager;
+    }
+
+    public function persist($object): ManagerInterface
+    {
+        $this->eastManager->persist($object);
+    }
+
+    public function flush(): ManagerInterface
+    {
+        $this->eastManager->flush();
     }
 
     public function getRootObject(): ObjectManager
     {
-        return $this->manager;
+        return $this->doctrineManager;
     }
 
     public function getClassMetadata(string $class): ClassMetadata
     {
-        return $this->manager->getClassMetadata($class);
+        return $this->doctrineManager->getClassMetadata($class);
     }
 
     private function getUnitOfWork(): UnitOfWork
     {
         if (null === $this->unitOfWork) {
-            $this->unitOfWork = $this->manager->getUnitOfWork();
+            $this->unitOfWork = $this->doctrineManager->getUnitOfWork();
         }
 
         return $this->unitOfWork;
-    }
-
-    public function tryGetById($id, ClassMetadata $class): ?TranslatableInterface
-    {
-        return $this->getUnitOfWork()->tryGetById($id, $class);
-    }
-
-    public function scheduleForUpdate(TranslatableInterface $document): void
-    {
-        $this->getUnitOfWork()->scheduleForUpdate($document);
     }
 
     public function getObjectChangeSet(TranslatableInterface $object): array
@@ -99,11 +103,6 @@ class ODM implements AdapterInterface
     public function setOriginalObjectProperty(string $oid, string $property, $value): void
     {
         $this->getUnitOfWork()->setOriginalDocumentProperty($oid, $property, $value);
-    }
-
-    public function clearObjectChangeSet(string $oid): void
-    {
-        $this->getUnitOfWork()->clearDocumentChangeSet($oid);
     }
 
     public function computeChangeSet(ClassMetadata $class, object $object): void

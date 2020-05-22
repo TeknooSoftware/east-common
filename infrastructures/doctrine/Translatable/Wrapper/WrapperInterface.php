@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\Translatable\Wrapper;
 
-use Doctrine\Persistence\Mapping\ClassMetadata;
 use Teknoo\East\Website\Doctrine\Translatable\TranslatableInterface;
 
 interface WrapperInterface
@@ -41,5 +40,4 @@ interface WrapperInterface
     public function getIdentifier(bool $single = true): string;
 
     public function getRootObjectName(): string;
-
 }

@@ -30,6 +30,7 @@ use Doctrine\Persistence\Mapping\Driver\FileDriver;
 use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Persistence\ObjectManager;
 use Teknoo\East\Website\Doctrine\Exception\InvalidMappingException;
+use Teknoo\East\Website\Doctrine\Exception\RuntimeException;
 use Teknoo\East\Website\Doctrine\Translatable\Mapping\Driver\Xml as XmlDriver;
 
 /**
@@ -42,7 +43,8 @@ class ExtensionMetadataFactory
     {
         $omDriver = $objectManager->getConfiguration()->getMetadataDriverImpl();
         if ($omDriver instanceof MappingDriver) {
-            throw new \RuntimeException('error');
+            //todo
+            throw new RuntimeException('error');
         }
 
         $drivers = $omDriver->getDrivers();
@@ -60,6 +62,11 @@ class ExtensionMetadataFactory
 
         //todo
         return new XmlDriver($omDriver->getLocator(), $omDriver);
+    }
+
+    private static function getCacheId(string $className): string
+    {
+        return $className.'\\$_CLASSMETADATA';
     }
 
     public function getExtensionMetadata(ObjectManager $objectManager, ClassMetadata $meta): array
@@ -109,10 +116,5 @@ class ExtensionMetadataFactory
         }
 
         return $config;
-    }
-
-    private static function getCacheId(string $className): string
-    {
-        return $className.'\\$_CLASSMETADATA';
     }
 }

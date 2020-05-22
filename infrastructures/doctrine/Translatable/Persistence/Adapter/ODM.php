@@ -36,6 +36,11 @@ class ODM implements AdapterInterface
 {
     private DocumentManager $manager;
 
+    public function __construct(DocumentManager $manager)
+    {
+        $this->manager = $manager;
+    }
+
     public function loadTranslations(
         WrapperInterface $wrapped,
         string $locale,

@@ -58,5 +58,13 @@ interface AdapterInterface
      */
     public function getTranslationValue(WrapperInterface $wrapped, ClassMetadata $metadata, string $field);
 
-    public function setTranslationValue(WrapperInterface $wrapped, ClassMetadata $metadata, string $field, $value): void;
+    /**
+     * @param mixed $value
+     */
+    public function setTranslationValue(
+        WrapperInterface $wrapped,
+        ClassMetadata $metadata,
+        string $field,
+        $value
+    ): void;
 }

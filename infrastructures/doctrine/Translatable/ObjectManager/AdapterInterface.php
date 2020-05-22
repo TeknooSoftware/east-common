@@ -35,10 +35,6 @@ interface AdapterInterface extends ManagerInterface
 
     public function getClassMetadata(string $class): ClassMetadata;
 
-    public function tryGetById($id, ClassMetadata $class): ?TranslatableInterface;
-
-    public function scheduleForUpdate(TranslatableInterface $document) : void;
-
     public function getObjectChangeSet(TranslatableInterface $object): array;
 
     public function recomputeSingleObjectChangeSet(ClassMetadata $meta, TranslatableInterface $object): void;
@@ -50,8 +46,6 @@ interface AdapterInterface extends ManagerInterface
     public function getScheduledObjectDeletions(): array;
 
     public function setOriginalObjectProperty(string $oid, string $property, $value): void;
-
-    public function clearObjectChangeSet(string $oid): void;
 
     public function computeChangeSet(ClassMetadata $class, object $object) : void;
 }

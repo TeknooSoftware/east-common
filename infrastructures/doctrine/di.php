@@ -24,8 +24,19 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine;
 
+use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
+use Doctrine\Persistence\Mapping\Driver\FileDriver;
+use Doctrine\Persistence\Mapping\Driver\FileLocator;
+use Teknoo\East\Website\Doctrine\Translatable\Mapping\Driver\SimpleXmlFactoryInterface;
+use Teknoo\East\Website\Doctrine\Translatable\Mapping\Driver\Xml;
+use Teknoo\East\Website\Doctrine\Translatable\Mapping\DriverFactoryInterface;
+use Teknoo\East\Website\Doctrine\Translatable\Mapping\DriverInterface;
+use Teknoo\East\Website\Doctrine\Translatable\Mapping\ExtensionMetadataFactory;
+use Teknoo\East\Website\Doctrine\Translatable\ObjectManager\Adapter\ODM as ODMAdapter;
+use Teknoo\East\Website\Doctrine\Translatable\Persistence\Adapter\ODM as ODMPersistence;
+use Teknoo\East\Website\Doctrine\Translatable\TranslatableInterface;
 use Teknoo\East\Website\Doctrine\Translatable\TranslatableListener;
 use Psr\Container\ContainerInterface;
 use Teknoo\East\Website\DBSource\ManagerInterface;
@@ -43,6 +54,9 @@ use Teknoo\East\Website\Doctrine\DBSource\UserRepository;
 use Teknoo\East\Website\Doctrine\Object\Content;
 use Teknoo\East\Website\Doctrine\Object\Item;
 use Teknoo\East\Website\Doctrine\Object\Media;
+use Teknoo\East\Website\Doctrine\Translatable\Wrapper\DocumentWrapper;
+use Teknoo\East\Website\Doctrine\Translatable\Wrapper\FactoryInterface as WrapperFactory;
+use Teknoo\East\Website\Doctrine\Translatable\Wrapper\WrapperInterface;
 use Teknoo\East\Website\Middleware\LocaleMiddleware;
 use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Object\User;
@@ -52,8 +66,55 @@ use function DI\create;
 
 return [
     ManagerInterface::class => get(Manager::class),
-    Manager::class => create(Manager::class)
-        ->constructor(get(ObjectManager::class)),
+    Manager::class => function (ContainerInterface $container): Manager {
+        $objectManager = $container->get(ObjectManager::class);
+        $eastManager = new Manager($objectManager);
+
+        if ($objectManager instanceof DocumentManager) {
+            $eventManager = $objectManager->getEventManager();
+
+            $translatableManagerAdapter = new ODMAdapter(
+                $eastManager,
+                $objectManager
+            );
+
+            $persistence = new ODMPersistence($objectManager);
+
+            $extensionMetadataFactory = new ExtensionMetadataFactory(
+                new class implements DriverFactoryInterface {
+                    public function __invoke(FileLocator $locator, FileDriver $originalDriver): DriverInterface
+                    {
+                        return new Xml(
+                            $locator,
+                            $originalDriver,
+                            new class implements SimpleXmlFactoryInterface {
+                                public function __invoke(string $file): \SimpleXMLElement
+                                {
+                                    return new \SimpleXMLElement($file);
+                                }
+                            }
+                        );
+                    }
+                }
+            );
+
+            $translatableListener = new TranslatableListener(
+                $extensionMetadataFactory,
+                $translatableManagerAdapter,
+                $persistence,
+                new class implements WrapperFactory {
+                    public function __invoke(TranslatableInterface $object, ObjectManager $om): WrapperInterface
+                    {
+                        return new DocumentWrapper($object, $om);
+                    }
+                }
+            );
+
+            $eventManager->addEventSubscriber($translatableListener);
+        }
+
+        return $eastManager;
+    },
 
     ContentRepositoryInterface::class => get(ContentRepository::class),
     ContentRepository::class => function (ContainerInterface $container): ContentRepositoryInterface {

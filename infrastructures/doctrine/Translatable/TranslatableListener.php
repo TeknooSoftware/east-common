@@ -32,7 +32,6 @@ use Teknoo\East\Website\Doctrine\Exception\RuntimeException;
 use Teknoo\East\Website\Doctrine\Translatable\ObjectManager\AdapterInterface as ManagerAdapterInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Persistence\AdapterInterface as PersistenceAdapterInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Mapping\ExtensionMetadataFactory;
-use Teknoo\East\Website\Doctrine\Translatable\Wrapper\DocumentWrapper;
 use Teknoo\East\Website\Doctrine\Translatable\Wrapper\FactoryInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Wrapper\WrapperInterface;
 

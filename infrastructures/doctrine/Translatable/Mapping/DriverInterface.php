@@ -29,7 +29,7 @@ use Doctrine\Persistence\Mapping\ClassMetadata;
 
 interface DriverInterface
 {
-    /**
+    /*
      * Read extended metadata configuration for a single mapped class
      */
     public function readExtendedMetadata(ClassMetadata $meta, array &$config): void;

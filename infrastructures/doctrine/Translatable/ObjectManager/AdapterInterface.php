@@ -26,12 +26,11 @@ namespace Teknoo\East\Website\Doctrine\Translatable\ObjectManager;
 
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
+use Teknoo\East\Website\DBSource\ManagerInterface;
 use Teknoo\East\Website\Doctrine\Translatable\TranslatableInterface;
 
-interface AdapterInterface
+interface AdapterInterface extends ManagerInterface
 {
-    public function __construct(ObjectManager $manager);
-
     public function getRootObject(): ObjectManager;
 
     public function getClassMetadata(string $class): ClassMetadata;
@@ -53,4 +52,6 @@ interface AdapterInterface
     public function setOriginalObjectProperty(string $oid, string $property, $value): void;
 
     public function clearObjectChangeSet(string $oid): void;
+
+    public function computeChangeSet(ClassMetadata $class, object $object) : void;
 }

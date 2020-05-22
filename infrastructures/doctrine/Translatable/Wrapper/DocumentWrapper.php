@@ -93,9 +93,4 @@ class DocumentWrapper implements WrapperInterface
     {
         return $this->object;
     }
-
-    public function getMetadata(): ClassMetadata
-    {
-        return $this->meta;
-    }
 }

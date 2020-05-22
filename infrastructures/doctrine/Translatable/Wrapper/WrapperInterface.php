@@ -38,8 +38,6 @@ interface WrapperInterface
 
     public function setPropertyValue(string $property, $value): self;
 
-    public function getMetadata(): ClassMetadata;
-
     public function getIdentifier(bool $single = true): string;
 
     public function getRootObjectName(): string;

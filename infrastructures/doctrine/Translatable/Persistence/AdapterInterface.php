@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\Translatable\Persistence;
 
+use Doctrine\Persistence\Mapping\ClassMetadata;
 use Teknoo\East\Website\Doctrine\Translatable\TranslationInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Wrapper\WrapperInterface;
 
@@ -55,7 +56,7 @@ interface AdapterInterface
     /**
      * @return mixed
      */
-    public function getTranslationValue(WrapperInterface $wrapped, string $field);
+    public function getTranslationValue(WrapperInterface $wrapped, ClassMetadata $metadata, string $field);
 
-    public function setTranslationValue(WrapperInterface $wrapped, string $field, $value): void;
+    public function setTranslationValue(WrapperInterface $wrapped, ClassMetadata $metadata, string $field, $value): void;
 }

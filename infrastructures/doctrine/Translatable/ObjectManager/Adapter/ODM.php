@@ -105,4 +105,9 @@ class ODM implements AdapterInterface
     {
         $this->getUnitOfWork()->clearDocumentChangeSet($oid);
     }
+
+    public function computeChangeSet(ClassMetadata $class, object $object): void
+    {
+        $this->getUnitOfWork()->computeChangeSet($class, $object);
+    }
 }

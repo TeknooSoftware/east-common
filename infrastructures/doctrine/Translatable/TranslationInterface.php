@@ -26,6 +26,8 @@ namespace Teknoo\East\Website\Doctrine\Translatable;
 
 interface  TranslationInterface
 {
+    public function getIdentifier(): string;
+
     public function setLocale(string $locale): self;
 
     public function getLocale(): string;

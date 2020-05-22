@@ -24,11 +24,13 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\Translatable;
 
+use Teknoo\East\Website\Object\ObjectInterface;
+
 /**
  * This interface is not necessary but can be implemented for
  * Entities which in some cases needs to be identified as
  * TranslatableInterface
  */
-interface TranslatableInterface
+interface TranslatableInterface extends ObjectInterface
 {
 }

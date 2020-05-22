@@ -27,6 +27,7 @@ namespace Teknoo\East\Website\Doctrine\Translatable\Persistence\Adapter;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Types\Type;
+use Doctrine\Persistence\Mapping\ClassMetadata;
 use Teknoo\East\Website\Doctrine\Translatable\Persistence\AdapterInterface;
 use Teknoo\East\Website\Doctrine\Translatable\TranslationInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Wrapper\WrapperInterface;
@@ -96,10 +97,9 @@ class ODM implements AdapterInterface
     /**
      * @return mixed
      */
-    public function getTranslationValue(WrapperInterface $wrapped, string $field)
+    public function getTranslationValue(WrapperInterface $wrapped, ClassMetadata $metadata, string $field)
     {
-        $meta = $wrapped->getMetadata();
-        $mapping = $meta->getFieldMapping($field);
+        $mapping = $metadata->getFieldMapping($field);
 
         $type = $this->getType($mapping['type']);
         $value = $wrapped->getPropertyValue($field);
@@ -107,10 +107,9 @@ class ODM implements AdapterInterface
         return $type->convertToDatabaseValue($value);
     }
 
-    public function setTranslationValue(WrapperInterface $wrapped, string $field, $value): void
+    public function setTranslationValue(WrapperInterface $wrapped, ClassMetadata $metadata, string $field, $value): void
     {
-        $meta = $wrapped->getMetadata();
-        $mapping = $meta->getFieldMapping($field);
+        $mapping = $metadata->getFieldMapping($field);
         $type = $this->getType($mapping['type']);
 
         $value = $type->convertToPHPValue($value);

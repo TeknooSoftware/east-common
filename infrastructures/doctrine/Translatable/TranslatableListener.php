@@ -131,7 +131,6 @@ class TranslatableListener implements EventSubscriber
             'postLoad',
             'postPersist',
             'preFlush',
-
             'onFlush',
         ];
     }

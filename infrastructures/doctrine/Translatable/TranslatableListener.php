@@ -33,6 +33,7 @@ use Teknoo\East\Website\Doctrine\Translatable\ObjectManager\AdapterInterface as 
 use Teknoo\East\Website\Doctrine\Translatable\Persistence\AdapterInterface as PersistenceAdapterInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Mapping\ExtensionMetadataFactory;
 use Teknoo\East\Website\Doctrine\Translatable\Wrapper\DocumentWrapper;
+use Teknoo\East\Website\Doctrine\Translatable\Wrapper\FactoryInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Wrapper\WrapperInterface;
 
 /**
@@ -58,6 +59,8 @@ class TranslatableListener implements EventSubscriber
     private ManagerAdapterInterface $manager;
 
     private PersistenceAdapterInterface $persistence;
+
+    private FactoryInterface $wrapperFactory;
 
     /**
      * Locale which is set on this listener.
@@ -105,6 +108,7 @@ class TranslatableListener implements EventSubscriber
         ExtensionMetadataFactory $extensionMetadataFactory,
         ManagerAdapterInterface $manager,
         PersistenceAdapterInterface $persistence,
+        FactoryInterface $wrapperFactory,
         string $locale = 'en_US',
         string $defaultLocale = 'en_US',
         bool $translationFallback = true
@@ -112,6 +116,7 @@ class TranslatableListener implements EventSubscriber
         $this->extensionMetadataFactory = $extensionMetadataFactory;
         $this->manager = $manager;
         $this->persistence = $persistence;
+        $this->wrapperFactory = $wrapperFactory;
         $this->locale = $locale;
         $this->defaultLocale = $defaultLocale;
         $this->translationFallback = $translationFallback;
@@ -140,8 +145,7 @@ class TranslatableListener implements EventSubscriber
 
     private function wrap(TranslatableInterface $translatable): WrapperInterface
     {
-        //todo
-        return new DocumentWrapper($translatable, $this->manager->getRootObject());
+        return ($this->wrapperFactory)($translatable, $this->manager->getRootObject());
     }
 
     private function loadMetadataForObjectClass(ClassMetadata $metadata): array

@@ -31,7 +31,6 @@ use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Persistence\ObjectManager;
 use Teknoo\East\Website\Doctrine\Exception\InvalidMappingException;
 use Teknoo\East\Website\Doctrine\Exception\RuntimeException;
-use Teknoo\East\Website\Doctrine\Translatable\Mapping\Driver\Xml as XmlDriver;
 
 /**
  * The extension metadata factory is responsible for extension driver
@@ -39,7 +38,14 @@ use Teknoo\East\Website\Doctrine\Translatable\Mapping\Driver\Xml as XmlDriver;
  */
 class ExtensionMetadataFactory
 {
-    private function getDriver(ObjectManager $objectManager): XmlDriver
+    private DriverFactoryInterface $driverFactory;
+
+    public function __construct(DriverFactoryInterface $driverFactory)
+    {
+        $this->driverFactory = $driverFactory;
+    }
+
+    private function getDriver(ObjectManager $objectManager): DriverInterface
     {
         $omDriver = $objectManager->getConfiguration()->getMetadataDriverImpl();
         if ($omDriver instanceof MappingDriver) {
@@ -60,8 +66,7 @@ class ExtensionMetadataFactory
             throw new InvalidMappingException('Driver not found');
         }
 
-        //todo
-        return new XmlDriver($omDriver->getLocator(), $omDriver);
+        return ($this->driverFactory)($omDriver->getLocator(), $omDriver);
     }
 
     private static function getCacheId(string $className): string

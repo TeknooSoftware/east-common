@@ -18,19 +18,16 @@
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @author      Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
  */
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Doctrine\Translatable\Mapping;
+namespace Teknoo\East\Website\Doctrine\Translatable\Wrapper;
 
-use Doctrine\Persistence\Mapping\ClassMetadata;
+use Doctrine\Persistence\ObjectManager;
+use Teknoo\East\Website\Doctrine\Translatable\TranslatableInterface;
 
-interface Driver
+interface FactoryInterface
 {
-    /**
-     * Read extended metadata configuration for a single mapped class
-     */
-    public function readExtendedMetadata(ClassMetadata $meta, array &$config): void;
+    public function __invoke(TranslatableInterface $object, ObjectManager $om): WrapperInterface;
 }

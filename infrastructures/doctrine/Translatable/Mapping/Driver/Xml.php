@@ -30,10 +30,10 @@ use Doctrine\Persistence\Mapping\Driver\FileDriver;
 use Doctrine\Persistence\Mapping\Driver\FileLocator;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Teknoo\East\Website\Doctrine\Object\Translation;
-use Teknoo\East\Website\Doctrine\Translatable\Mapping\Driver;
+use Teknoo\East\Website\Doctrine\Translatable\Mapping\DriverInterface;
 use Teknoo\East\Website\Doctrine\Exception\InvalidMappingException;
 
-class Xml implements Driver
+class Xml implements DriverInterface
 {
     const DOCTRINE_NAMESPACE_URI = 'http://xml.teknoo.it/schemas/odm/east-website-mapping';
 
@@ -41,8 +41,13 @@ class Xml implements Driver
 
     private FileDriver $originalDriver;
 
-    public function __construct(FileLocator $locator, FileDriver $originalDriver)
-    {
+    private SimpleXmlFactoryInterface $simpleXmlFactory;
+
+    public function __construct(
+        FileLocator $locator,
+        FileDriver $originalDriver,
+        SimpleXmlFactoryInterface $simpleXmlFactory
+    ) {
         $this->locator = $locator;
         $this->originalDriver = $originalDriver;
     }
@@ -63,8 +68,7 @@ class Xml implements Driver
     private function loadMappingFile($file): array
     {
         $result = [];
-        //todo
-        $xmlElement = new \SimpleXMLElement($file);
+        $xmlElement = ($this->simpleXmlFactory)($file);
         $xmlElement = $xmlElement->children(self::DOCTRINE_NAMESPACE_URI);
 
         $extractFunction = function ($nodeName) use ($xmlElement, &$result) {

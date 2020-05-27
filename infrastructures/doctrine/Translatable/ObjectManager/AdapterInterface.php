@@ -45,6 +45,9 @@ interface AdapterInterface extends ManagerInterface
 
     public function getScheduledObjectDeletions(): array;
 
+    /**
+     * @param mixed $value
+     */
     public function setOriginalObjectProperty(string $oid, string $property, $value): void;
 
     public function computeChangeSet(ClassMetadata $class, object $object) : void;

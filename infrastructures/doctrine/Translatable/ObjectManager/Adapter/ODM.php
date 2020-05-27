@@ -26,7 +26,7 @@ namespace Teknoo\East\Website\Doctrine\Translatable\ObjectManager\Adapter;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\UnitOfWork;
-use Doctrine\Persistence\Mapping\ClassMetadata;
+use Doctrine\Persistence\Mapping\ClassMetadata as BaseClassMetadata;
 use Doctrine\Persistence\ObjectManager;
 use Teknoo\East\Website\DBSource\ManagerInterface;
 use Teknoo\East\Website\Doctrine\Translatable\ObjectManager\AdapterInterface;
@@ -40,7 +40,7 @@ class ODM implements AdapterInterface
 
     private ?UnitOfWork $unitOfWork = null;
 
-    public function __construct(ManagerInterface $eastManager, ObjectManager $doctrineManager)
+    public function __construct(ManagerInterface $eastManager, DocumentManager $doctrineManager)
     {
         $this->eastManager = $eastManager;
         $this->doctrineManager = $doctrineManager;
@@ -49,11 +49,15 @@ class ODM implements AdapterInterface
     public function persist($object): ManagerInterface
     {
         $this->eastManager->persist($object);
+
+        return $this;
     }
 
     public function flush(): ManagerInterface
     {
         $this->eastManager->flush();
+
+        return $this;
     }
 
     public function getRootObject(): ObjectManager
@@ -61,7 +65,7 @@ class ODM implements AdapterInterface
         return $this->doctrineManager;
     }
 
-    public function getClassMetadata(string $class): ClassMetadata
+    public function getClassMetadata(string $class): BaseClassMetadata
     {
         return $this->doctrineManager->getClassMetadata($class);
     }
@@ -80,7 +84,7 @@ class ODM implements AdapterInterface
         return $this->getUnitOfWork()->getDocumentChangeSet($object);
     }
 
-    public function recomputeSingleObjectChangeSet(ClassMetadata $meta, TranslatableInterface $object): void
+    public function recomputeSingleObjectChangeSet(BaseClassMetadata $meta, TranslatableInterface $object): void
     {
         $this->getUnitOfWork()->recomputeSingleDocumentChangeSet($meta, $object);
     }
@@ -100,12 +104,15 @@ class ODM implements AdapterInterface
         return $this->getUnitOfWork()->getScheduledDocumentDeletions();
     }
 
+    /**
+     * @param mixed $value
+     */
     public function setOriginalObjectProperty(string $oid, string $property, $value): void
     {
         $this->getUnitOfWork()->setOriginalDocumentProperty($oid, $property, $value);
     }
 
-    public function computeChangeSet(ClassMetadata $class, object $object): void
+    public function computeChangeSet(BaseClassMetadata $class, object $object): void
     {
         $this->getUnitOfWork()->computeChangeSet($class, $object);
     }

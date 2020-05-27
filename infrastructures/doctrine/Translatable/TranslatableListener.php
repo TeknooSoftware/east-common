@@ -136,7 +136,7 @@ class TranslatableListener implements EventSubscriber
         $object = $event->getObject();
 
         if ($object instanceof GhostObjectInterface) {
-            return \get_parent_class($object);
+            return (string) \get_parent_class($object);
         }
 
         return \get_class($object);
@@ -211,6 +211,10 @@ class TranslatableListener implements EventSubscriber
     public function postLoad(LifecycleEventArgs $event): void
     {
         $object = $event->getObject();
+        if (!$object instanceof TranslatableInterface) {
+            return;
+        }
+
         $metaData = $this->manager->getClassMetadata($this->getObjectClassName($event));
 
         $config = $this->getConfiguration($metaData);
@@ -281,6 +285,7 @@ class TranslatableListener implements EventSubscriber
 
         $translationClass = $config['translationClass'];
         $translationMetadata = $this->manager->getClassMetadata($translationClass);
+        $translationReflection = $translationMetadata->getReflectionClass();
 
         // check for the availability of the primary key
         $objectId = $wrapper->getIdentifier();
@@ -315,7 +320,7 @@ class TranslatableListener implements EventSubscriber
             // create new translation if translation not already created and locale is different from default
             // locale, otherwise, we have the date in the original record
             if (!$translation instanceof TranslationInterface && $locale !== $this->defaultLocale) {
-                $translation = $translationMetadata->newInstance();
+                $translation = $translationReflection->newInstance();
                 $translation->setLocale($locale);
                 $translation->setField($field);
                 $translation->setObjectClass($config['useObjectClass']);
@@ -360,6 +365,10 @@ class TranslatableListener implements EventSubscriber
     public function onFlush(LifecycleEventArgs $event): void
     {
         $handling = function ($object, $isInsert) use ($event) {
+            if (!$object instanceof TranslatableInterface) {
+                return;
+            }
+
             $metaData = $this->manager->getClassMetadata($this->getObjectClassName($event));
             $config = $this->getConfiguration($metaData);
 
@@ -380,6 +389,10 @@ class TranslatableListener implements EventSubscriber
 
         // check scheduled deletions for TranslatableInterface entities
         foreach ($this->manager->getScheduledObjectDeletions() as $object) {
+            if (!$object instanceof TranslatableInterface) {
+                return;
+            }
+
             $metaData = $this->manager->getClassMetadata($this->getObjectClassName($event));
             $config = $this->getConfiguration($metaData);
 
@@ -400,6 +413,10 @@ class TranslatableListener implements EventSubscriber
     public function postPersist(LifecycleEventArgs $event): void
     {
         $object = $event->getObject();
+
+        if (!$object instanceof TranslatableInterface) {
+            return;
+        }
 
         $oid = \spl_object_hash($object);
 

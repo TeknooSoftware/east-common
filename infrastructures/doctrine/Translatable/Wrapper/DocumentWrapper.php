@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\Translatable\Wrapper;
 
-use Doctrine\Persistence\ObjectManager;
-use Doctrine\Persistence\Mapping\ClassMetadata;
+use Doctrine\ODM\MongoDB\DocumentManager;
+use Doctrine\ODM\MongoDB\Mapping\ClassMetadata;
 use ProxyManager\Proxy\GhostObjectInterface;
 use Teknoo\East\Website\Doctrine\Translatable\TranslatableInterface;
 
@@ -37,9 +37,9 @@ class DocumentWrapper implements WrapperInterface
 
     private TranslatableInterface $object;
 
-    private ObjectManager $om;
+    private DocumentManager $om;
 
-    public function __construct(TranslatableInterface $object, ObjectManager $om)
+    public function __construct(TranslatableInterface $object, DocumentManager $om)
     {
         $this->om = $om;
         $this->object = $object;
@@ -66,7 +66,7 @@ class DocumentWrapper implements WrapperInterface
         return $this;
     }
 
-    public function getIdentifier(bool $single = true): string
+    public function getIdentifier(bool $single = true): ?string
     {
         if ($this->identifier) {
             return $this->identifier;

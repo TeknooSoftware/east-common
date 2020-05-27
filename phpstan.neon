@@ -9,10 +9,6 @@ parameters:
         -
             message: '#Cannot cast array<string>\|string\|null to string.#'
             path: infrastructures/symfony/Command/CreateUserCommand.php
-        -
-            message: '#Parameter \#1 \$argument of class ReflectionClass constructor expects class-string<T of object>\|T of object, string given.#'
-            path: infrastructures/symfony/Provider/UserProvider.php
-        - '#MongoGridFS#'
 services:
 	-
 		class: Teknoo\States\PHPStan\MethodsClassExtension

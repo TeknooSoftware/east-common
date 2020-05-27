@@ -50,6 +50,7 @@ class Xml implements DriverInterface
     ) {
         $this->locator = $locator;
         $this->originalDriver = $originalDriver;
+        $this->simpleXmlFactory = $simpleXmlFactory;
     }
 
     private function getMapping(string $className): \SimpleXMLElement

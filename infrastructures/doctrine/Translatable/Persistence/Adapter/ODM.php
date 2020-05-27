@@ -56,7 +56,13 @@ class ODM implements AdapterInterface
         $query = $queryBuilder->getQuery();
         $query->setHydrate(false);
 
-        return $query->execute();
+        $result = $query->execute();
+
+        if (empty($result)) {
+            return [];
+        }
+
+        return $result;
     }
 
     public function findTranslation(
@@ -74,7 +80,13 @@ class ODM implements AdapterInterface
         $queryBuilder->limit(1);
 
         $query = $queryBuilder->getQuery();
-        return $query->getSingleResult();
+        $result = $query->getSingleResult();
+
+        if (!$result instanceof TranslationInterface) {
+            return null;
+        }
+
+        return $result;
     }
 
     public function removeAssociatedTranslations(

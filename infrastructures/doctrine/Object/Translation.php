@@ -40,7 +40,7 @@ class Translation implements TranslationInterface
 
     private string $content;
 
-    public function getId(): string
+    public function getIdentifier(): string
     {
         return $this->id;
     }

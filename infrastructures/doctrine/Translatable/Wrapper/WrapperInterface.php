@@ -35,9 +35,12 @@ interface WrapperInterface
      */
     public function getPropertyValue(string $property);
 
+    /**
+     * @param mixed $value
+     */
     public function setPropertyValue(string $property, $value): self;
 
-    public function getIdentifier(bool $single = true): string;
+    public function getIdentifier(bool $single = true): ?string;
 
     public function getRootObjectName(): string;
 }

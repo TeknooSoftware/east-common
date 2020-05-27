@@ -50,7 +50,10 @@ class DocumentWrapper implements WrapperInterface
     {
         $this->initialize();
 
-        return $this->meta->getReflectionProperty($property)->getValue($this->object);
+        $properyReflection = $this->meta->getReflectionProperty($property);
+        $properyReflection->setAccessible(true);
+
+        return $properyReflection->getValue($this->object);
     }
 
     public function getRootObjectName(): string
@@ -61,7 +64,9 @@ class DocumentWrapper implements WrapperInterface
     public function setPropertyValue(string $property, $value): self
     {
         $this->initialize();
-        $this->meta->getReflectionProperty($property)->setValue($this->object, $value);
+        $properyReflection = $this->meta->getReflectionProperty($property);
+        $properyReflection->setAccessible(true);
+        $properyReflection->setValue($this->object, $value);
 
         return $this;
     }

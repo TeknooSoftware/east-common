@@ -66,7 +66,7 @@ class Xml implements DriverInterface
 
     private function loadMappingFile($file): \SimpleXMLElement
     {
-        $result = [];
+        $result = null;
         $xmlElement = ($this->simpleXmlFactory)($file);
         $xmlElement = $xmlElement->children(self::DOCTRINE_NAMESPACE_URI);
 
@@ -81,6 +81,10 @@ class Xml implements DriverInterface
         $extractFunction('entity');
         $extractFunction('document');
         $extractFunction('mapped-superclass');
+
+        if (null === $result) {
+            throw new \RuntimeException('error');
+        }
 
         return $result;
     }

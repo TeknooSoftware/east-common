@@ -2,9 +2,9 @@
 <!--infrastructures/doctrine/config/universal/User.mongodb.xml-->
 <doctrine-mongo-mapping xmlns="http://xml.teknoo.it/schemas/odm/east-website-mapping"
                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                        xsi:schemaLocation="http://xml.teknoo.it/schemas/odm/east-website-mapping http://xml.teknoo.it/schemas/odm/east-website-mapping.xsd">
+                        xsi:schemaLocation="http://xml.teknoo.it/schemas/odm/east-website-mapping http://xml.teknoo.it/schemas/odm/east-website-mapping.xml">
 
-    <document name="Teknoo\East\Website\Object\User" db="documents" collection="users">
+    <document name="Teknoo\East\Website\Object\User" collection="users">
         <id type="string" strategy="UUID"/>
         <field field-name="firstName" name="first_name" type="string" />
         <field field-name="lastName" name="last_name" type="string" />

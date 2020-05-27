@@ -243,8 +243,8 @@ class TranslatableListener implements EventSubscriber
 
         $result = $this->persistence->loadTranslations(
             $wrapper,
-            $translationClass,
             $locale,
+            $translationClass,
             $config['useObjectClass']
         );
 
@@ -254,7 +254,7 @@ class TranslatableListener implements EventSubscriber
         foreach ($config['fields'] as $field) {
             $translated = '';
             $isTranslated = false;
-            foreach ((array) $result as $entry) {
+            foreach ($result as $entry) {
                 if ($entry['field'] === $field) {
                     $translated = $entry['content'] ?? null;
                     $isTranslated = true;
@@ -267,12 +267,13 @@ class TranslatableListener implements EventSubscriber
                 $isTranslated
                 || (!$this->translationFallback && empty($config['fallback'][$field]))
             ) {
+                $orignalValue = $wrapper->getPropertyValue($field);
                 $this->persistence->setTranslationValue($wrapper, $metaData, $field, $translated);
                 // ensure clean changeset
                 $this->manager->setOriginalObjectProperty(
                     $oid,
                     $field,
-                    $reflectionClass->getProperty($field)->getValue($object)
+                    $orignalValue
                 );
             }
         }

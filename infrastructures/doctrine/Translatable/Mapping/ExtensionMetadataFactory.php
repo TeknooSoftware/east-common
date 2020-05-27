@@ -48,7 +48,7 @@ class ExtensionMetadataFactory
     private function getDriver(ObjectManager $objectManager): DriverInterface
     {
         $omDriver = $objectManager->getConfiguration()->getMetadataDriverImpl();
-        if ($omDriver instanceof MappingDriver) {
+        if (!$omDriver instanceof MappingDriver) {
             //todo
             throw new RuntimeException('error');
         }

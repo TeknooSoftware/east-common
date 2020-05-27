@@ -2,9 +2,9 @@
 <!--infrastructures/doctrine/config/doctrine/Media.mongodb.yml-->
 <doctrine-mongo-mapping xmlns="http://xml.teknoo.it/schemas/odm/east-website-mapping"
                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                        xsi:schemaLocation="http://xml.teknoo.it/schemas/odm/east-website-mapping http://xml.teknoo.it/schemas/odm/east-website-mapping.xsd">
+                        xsi:schemaLocation="http://xml.teknoo.it/schemas/odm/east-website-mapping http://xml.teknoo.it/schemas/odm/east-website-mapping.xml">
 
-    <document name="Teknoo\East\Website\Doctrine\Object\Translation" db="documents" collection="translation">
+    <document name="Teknoo\East\Website\Doctrine\Object\Translation" collection="translations">
         <id type="string" strategy="UUID"/>
         <field field-name="locale" type="string" />
         <field field-name="objectClass" name="object_class" type="string" />

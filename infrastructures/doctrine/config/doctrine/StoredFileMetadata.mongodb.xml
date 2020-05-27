@@ -2,7 +2,7 @@
 <!--infrastructures/doctrine/config/doctrine/Content.mongodb.yml-->
 <doctrine-mongo-mapping xmlns="http://xml.teknoo.it/schemas/odm/east-website-mapping"
                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                        xsi:schemaLocation="http://xml.teknoo.it/schemas/odm/east-website-mapping http://xml.teknoo.it/schemas/odm/east-website-mapping.xsd">
+                        xsi:schemaLocation="http://xml.teknoo.it/schemas/odm/east-website-mapping http://xml.teknoo.it/schemas/odm/east-website-mapping.xml">
 
     <embedded-document name="Teknoo\East\Website\Doctrine\Object\StoredFileMetadata">
         <field field-name="contentType" name="content_type" type="string" />

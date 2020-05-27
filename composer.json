@@ -26,8 +26,8 @@
         "php": ">=7.4",
         "ext-json": "*",
         "teknoo/immutable": "^2.0.0",
-        "teknoo/states": "^4.0.6",
-        "teknoo/recipe": "^2.0.0",
+        "teknoo/states": "^4.0.7",
+        "teknoo/recipe": "^2.0.3",
         "teknoo/east-foundation": "^2.1.0",
         "php-di/php-di": "~6.0"
     },

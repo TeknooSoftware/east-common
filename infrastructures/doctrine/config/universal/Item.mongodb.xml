@@ -2,10 +2,9 @@
 <!--infrastructures/doctrine/config/universal/Item.mongodb.yml-->
 <doctrine-mongo-mapping xmlns="http://xml.teknoo.it/schemas/odm/east-website-mapping"
                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                        xsi:schemaLocation="http://xml.teknoo.it/schemas/odm/east-website-mapping http://xml.teknoo.it/schemas/odm/east-website-mapping.xsd">
+                        xsi:schemaLocation="http://xml.teknoo.it/schemas/odm/east-website-mapping http://xml.teknoo.it/schemas/odm/east-website-mapping.xml">
 
     <document name="Teknoo\East\Website\Object\Item"
-              db="documents"
               collection="items"
               inheritance-type="COLLECTION_PER_CLASS">
         <translation class="Teknoo\East\Website\Doctrine\Object\Translation" locale="localeField"/>

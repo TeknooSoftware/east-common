@@ -2,9 +2,9 @@
 <!--infrastructures/doctrine/config/doctrine/Content.mongodb.yml-->
 <doctrine-mongo-mapping xmlns="http://xml.teknoo.it/schemas/odm/east-website-mapping"
                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                        xsi:schemaLocation="http://xml.teknoo.it/schemas/odm/east-website-mapping http://xml.teknoo.it/schemas/odm/east-website-mapping.xsd">
+                        xsi:schemaLocation="http://xml.teknoo.it/schemas/odm/east-website-mapping http://xml.teknoo.it/schemas/odm/east-website-mapping.xml">
 
-    <document name="Teknoo\East\Website\Doctrine\Object\Content" db="documents" collection="contents">
+    <document name="Teknoo\East\Website\Doctrine\Object\Content" collection="contents">
         <lifecycle-callbacks>
             <lifecycle-callback type="postLoad" method="postLoadDoctrine"/>
         </lifecycle-callbacks>

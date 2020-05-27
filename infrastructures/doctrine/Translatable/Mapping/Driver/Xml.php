@@ -61,26 +61,21 @@ class Xml implements DriverInterface
             return $this->originalDriver->getElement($className);
         }
 
-        $xml = $this->loadMappingFile($this->locator->findMappingFile($className));
-
-        return $xml[$className];
+        return $this->loadMappingFile($this->locator->findMappingFile($className));
     }
 
-    private function loadMappingFile($file): array
+    private function loadMappingFile($file): \SimpleXMLElement
     {
         $result = [];
         $xmlElement = ($this->simpleXmlFactory)($file);
         $xmlElement = $xmlElement->children(self::DOCTRINE_NAMESPACE_URI);
 
         $extractFunction = function ($nodeName) use ($xmlElement, &$result) {
-            if (!isset($xmlElement->$nodeName)) {
+            if (!isset($xmlElement->{$nodeName})) {
                 return;
             }
 
-            foreach ($xmlElement->{$nodeName} as $element) {
-                $className = $element->attributes()['name'];
-                $result[$className] = $element;
-            }
+            $result = $xmlElement->{$nodeName};
         };
 
         $extractFunction('entity');
@@ -100,7 +95,7 @@ class Xml implements DriverInterface
         }
 
         foreach ($xml->field as $mapping) {
-            $fieldName = $mapping->attributes()['name'];
+            $fieldName = (string) $mapping->attributes()['field-name'];
             if (null !== $prefix) {
                 $fieldName = $prefix . '.' . $fieldName;
             }
@@ -115,7 +110,7 @@ class Xml implements DriverInterface
         if ($mapping->count() > 0 && isset($mapping->translatable)) {
             $config['fields'][] = $fieldName;
 
-            $config['fallback'][$fieldName] = $mapping->translatable->attributes()['fallback'] ?? true;
+            $config['fallback'][$fieldName] = (bool) ($mapping->translatable->attributes()['fallback'] ?? true);
         }
     }
 
@@ -123,12 +118,12 @@ class Xml implements DriverInterface
     {
         $xml = $this->getMapping($meta->name);
 
-        if (\in_array($xml->getName(), 'entity', 'document', 'mapped-superclass')) {
+        if (\in_array($xml->getName(), ['entity', 'document', 'mapped-superclass'])) {
             if (isset($xml->translation)) {
                 $translationAttr = $xml->translation->attributes();
 
-                $config['locale'] = $translationAttr['locale'] ?? 'localeField';
-                $config['translationClass'] = $translationAttr['class'] ?? Translation::class;
+                $config['locale'] = (string) ($translationAttr['locale'] ?? 'localeField');
+                $config['translationClass'] = (string) ($translationAttr['class'] ?? Translation::class);
 
                 if (!\class_exists($config['translationClass'])) {
                     throw new InvalidMappingException(

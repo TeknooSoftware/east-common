@@ -64,55 +64,62 @@ use Teknoo\East\Website\Object\User;
 use function DI\get;
 
 return [
+    TranslatableListener::class => function (ContainerInterface $container): TranslatableListener {
+        $objectManager = $container->get(ObjectManager::class);
+        $eastManager = $container->get(ManagerInterface::class);
+
+        if (!$objectManager instanceof DocumentManager) {
+            throw new \RuntimeException('Sorry currently, this listner supports only ODM');
+        }
+
+        $eventManager = $objectManager->getEventManager();
+
+        $translatableManagerAdapter = new ODMAdapter(
+            $eastManager,
+            $objectManager
+        );
+
+        $persistence = new ODMPersistence($objectManager);
+
+        $extensionMetadataFactory = new ExtensionMetadataFactory(
+            new class implements DriverFactoryInterface {
+                public function __invoke(FileLocator $locator, FileDriver $originalDriver): DriverInterface
+                {
+                    return new Xml(
+                        $locator,
+                        $originalDriver,
+                        new class implements SimpleXmlFactoryInterface {
+                            public function __invoke(string $file): \SimpleXMLElement
+                            {
+                                return new \SimpleXMLElement($file);
+                            }
+                        }
+                    );
+                }
+            }
+        );
+
+        $translatableListener = new TranslatableListener(
+            $extensionMetadataFactory,
+            $translatableManagerAdapter,
+            $persistence,
+            new class implements WrapperFactory {
+                public function __invoke(TranslatableInterface $object, ObjectManager $om): WrapperInterface
+                {
+                    return new DocumentWrapper($object, $om);
+                }
+            }
+        );
+
+        $eventManager->addEventSubscriber($translatableListener);
+
+        return $translatableListener;
+    },
+
     ManagerInterface::class => get(Manager::class),
     Manager::class => function (ContainerInterface $container): Manager {
         $objectManager = $container->get(ObjectManager::class);
-        $eastManager = new Manager($objectManager);
-
-        if ($objectManager instanceof DocumentManager) {
-            $eventManager = $objectManager->getEventManager();
-
-            $translatableManagerAdapter = new ODMAdapter(
-                $eastManager,
-                $objectManager
-            );
-
-            $persistence = new ODMPersistence($objectManager);
-
-            $extensionMetadataFactory = new ExtensionMetadataFactory(
-                new class implements DriverFactoryInterface {
-                    public function __invoke(FileLocator $locator, FileDriver $originalDriver): DriverInterface
-                    {
-                        return new Xml(
-                            $locator,
-                            $originalDriver,
-                            new class implements SimpleXmlFactoryInterface {
-                                public function __invoke(string $file): \SimpleXMLElement
-                                {
-                                    return new \SimpleXMLElement($file);
-                                }
-                            }
-                        );
-                    }
-                }
-            );
-
-            $translatableListener = new TranslatableListener(
-                $extensionMetadataFactory,
-                $translatableManagerAdapter,
-                $persistence,
-                new class implements WrapperFactory {
-                    public function __invoke(TranslatableInterface $object, ObjectManager $om): WrapperInterface
-                    {
-                        return new DocumentWrapper($object, $om);
-                    }
-                }
-            );
-
-            $eventManager->addEventSubscriber($translatableListener);
-        }
-
-        return $eastManager;
+        return new Manager($objectManager);
     },
 
     ContentRepositoryInterface::class => get(ContentRepository::class),
@@ -183,6 +190,6 @@ return [
     LocaleMiddleware::class => function (ContainerInterface $container): LocaleMiddleware {
         $listener = $container->get(TranslatableListener::class);
 
-        return new LocaleMiddleware([$listener, 'setTranslatableLocale']);
+        return new LocaleMiddleware([$listener, 'setLocale']);
     },
 ];

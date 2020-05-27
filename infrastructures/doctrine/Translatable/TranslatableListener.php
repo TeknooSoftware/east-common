@@ -26,6 +26,7 @@ namespace Teknoo\East\Website\Doctrine\Translatable;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
+use Doctrine\Persistence\Event\LoadClassMetadataEventArgs;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use ProxyManager\Proxy\GhostObjectInterface;
 use Teknoo\East\Website\Doctrine\Exception\RuntimeException;
@@ -131,6 +132,12 @@ class TranslatableListener implements EventSubscriber
         ];
     }
 
+    public function setLocale(string $locale): TranslatableListener
+    {
+        $this->locale = $locale;
+        return $this;
+    }
+
     private function getObjectClassName(LifecycleEventArgs $event): string
     {
         $object = $event->getObject();
@@ -164,9 +171,9 @@ class TranslatableListener implements EventSubscriber
         return $this->configurations[$className];
     }
 
-    public function loadClassMetadata(LifecycleEventArgs $event): void
+    public function loadClassMetadata(LoadClassMetadataEventArgs $event): void
     {
-        $classMetaData = $this->manager->getClassMetadata($this->getObjectClassName($event));
+        $classMetaData = $event->getClassMetadata();
 
         $this->configurations[$classMetaData->getName()] =  $this->loadMetadataForObjectClass($classMetaData);
     }

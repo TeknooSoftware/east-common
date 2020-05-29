@@ -4,7 +4,7 @@
                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                         xsi:schemaLocation="http://xml.teknoo.it/schemas/odm/east-website-mapping http://xml.teknoo.it/schemas/odm/east-website-mapping.xml">
 
-    <document name="Teknoo\East\Website\Doctrine\Object\Media" collection="media">
+    <document name="Teknoo\East\Website\Doctrine\Object\Media" collection="media.files">
         <id type="string" strategy="UUID"/>
         <field field-name="name" type="string" />
         <field field-name="mimeType" name="mime_type" type="string" />

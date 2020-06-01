@@ -40,6 +40,8 @@ trait MediaEndPointTrait
 
     protected StreamFactoryInterface $streamFactory;
 
+    abstract protected function getStream(Media $media);
+
     public function __construct(MediaLoader $mediaLoader, StreamFactoryInterface $streamFactory)
     {
         $this->mediaLoader = $mediaLoader;
@@ -52,7 +54,8 @@ trait MediaEndPointTrait
             $id,
             new Promise(
                 function (Media $media) use ($client) {
-                    $stream = $this->streamFactory->createStreamFromResource($media->getResource());
+                    $resource = $this->getStream($media);
+                    $stream = $this->streamFactory->createStreamFromResource($resource);
 
                     $response = $this->responseFactory->createResponse(200);
                     $response = $response->withHeader('Content-Type', $media->getMimeType());

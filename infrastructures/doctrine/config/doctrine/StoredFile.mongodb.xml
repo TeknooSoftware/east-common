@@ -3,7 +3,7 @@
                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                         xsi:schemaLocation="http://xml.teknoo.it/schemas/odm/east-website-mapping http://xml.teknoo.it/schemas/odm/east-website-mapping.xml">
 
-    <gridfs-file name="Teknoo\East\Website\Doctrine\Object\StoredFile" bucket-name="fs">
+    <gridfs-file name="Teknoo\East\Website\Doctrine\Object\StoredFile" bucket-name="media.chunk">
         <id field-name="id"/>
         <length field-name="length"/>
         <chunk-size field-name="chunkSize"/>

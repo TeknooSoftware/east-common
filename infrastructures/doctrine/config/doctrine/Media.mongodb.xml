@@ -13,10 +13,10 @@
         <field field-name="createdAt" name="created_at" type="date" />
         <field field-name="updatedAt" name="updated_at" type="date" />
         <field field-name="deletedAt" name="deleted_at" type="date" nullable="true" index="true" />
-        <reference-one field="file" target-document="Teknoo\East\Website\Object\StoredFile">
+        <reference-many field="file" inversed-by="media" target-document="Teknoo\East\Website\Object\StoredFile">
             <cascade>
                 <all/>
             </cascade>
-        </reference-one>
+        </reference-many>
     </document>
 </doctrine-mongo-mapping>

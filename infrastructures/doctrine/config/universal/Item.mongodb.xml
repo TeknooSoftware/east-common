@@ -15,7 +15,7 @@
         <field field-name="slug" type="string" index="true" unique="true" />
         <field field-name="location" type="string" index="true"/>
         <field field-name="position" type="int" index="true" order="true"/>
-        <field field-name="hidden" type="boolean" index="true"/>
+        <field field-name="hidden" type="bool" index="true"/>
         <field field-name="createdAt" name="created_at" type="date" />
         <field field-name="updatedAt" name="updated_at" type="date" />
         <field field-name="deletedAt" name="deleted_at" type="date" nullable="true" index="true" />

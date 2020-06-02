@@ -4,19 +4,12 @@
                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                         xsi:schemaLocation="http://xml.teknoo.it/schemas/odm/east-website-mapping http://xml.teknoo.it/schemas/odm/east-website-mapping.xml">
 
-    <document name="Teknoo\East\Website\Doctrine\Object\Media" collection="media.files">
-        <id type="string" strategy="UUID"/>
-        <field field-name="name" type="string" />
-        <field field-name="mimeType" name="mime_type" type="string" />
-        <field field-name="length" type="int" />
-        <field field-name="alternative" type="string" />
-        <field field-name="createdAt" name="created_at" type="date" />
-        <field field-name="updatedAt" name="updated_at" type="date" />
-        <field field-name="deletedAt" name="deleted_at" type="date" nullable="true" index="true" />
-        <reference-many field="file" inversed-by="media" target-document="Teknoo\East\Website\Object\StoredFile">
-            <cascade>
-                <all/>
-            </cascade>
-        </reference-many>
-    </document>
+    <gridfs-file name="Teknoo\East\Website\Doctrine\Object\Media" bucket-name="media">
+        <id field-name="id"/>
+        <length field-name="length"/>
+        <chunk-size field-name="chunkSize"/>
+        <upload-date field-name="uploadDate"/>
+        <filename field-name="name" />
+        <metadata target-document="Teknoo\East\Website\Object\MediaMetadata" />
+    </gridfs-file>
 </doctrine-mongo-mapping>

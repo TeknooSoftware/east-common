@@ -28,22 +28,27 @@ namespace Teknoo\East\Website\Object;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-abstract class Media implements ObjectInterface, DeletableInterface, TimestampableInterface
+abstract class Media implements ObjectInterface
 {
-    use ObjectTrait;
+    protected ?string $id = null;
 
     protected ?string $name = null;
 
-    /**
-     * @var mixed
-     */
-    protected $file;
-
     protected ?int $length = null;
 
-    protected ?string $mimeType = null;
+    protected ?MediaMetadata $metadata = null;
 
-    protected ?string $alternative = null;
+    public function getId(): string
+    {
+        return (string) $this->id;
+    }
+
+    public function setId(string $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
 
     public function getName(): string
     {
@@ -53,24 +58,6 @@ abstract class Media implements ObjectInterface, DeletableInterface, Timestampab
     public function setName(string $name): Media
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFile()
-    {
-        return $this->file;
-    }
-
-    /**
-     * @param mixed $file
-     */
-    public function setFile($file): Media
-    {
-        $this->file = $file;
 
         return $this;
     }
@@ -87,32 +74,15 @@ abstract class Media implements ObjectInterface, DeletableInterface, Timestampab
         return $this;
     }
 
-    public function getMimeType(): string
+    public function getMetadata(): ?MediaMetadata
     {
-        return (string) $this->mimeType;
+        return $this->metadata;
     }
 
-    public function setMimeType(string $mimeType): Media
+    public function setMetadata(?MediaMetadata $metadata): self
     {
-        $this->mimeType = $mimeType;
+        $this->metadata = $metadata;
 
         return $this;
     }
-
-    public function getAlternative(): string
-    {
-        return (string) $this->alternative;
-    }
-
-    public function setAlternative(string $alternative): Media
-    {
-        $this->alternative = $alternative;
-
-        return $this;
-    }
-
-    /**
-     * @return resource
-     */
-    abstract public function getResource();
 }

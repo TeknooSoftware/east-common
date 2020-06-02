@@ -47,9 +47,9 @@
         "symfony/security": "~4.4||~5.0",
         "laminas/laminas-diactoros": "~2.2",
         "ext-simplexml" : "*",
-        "doctrine/common": "~2.12",
-        "doctrine/mongodb-odm": "^2.0.5",
-        "doctrine/mongodb-odm-bundle": "^4.1.1"
+        "doctrine/common": "~2.13",
+        "doctrine/mongodb-odm": "~2.1",
+        "doctrine/mongodb-odm-bundle": "~4.1"
     },
     "archive": {
         "exclude": ["features", "tests", "vendor", ".idea"]

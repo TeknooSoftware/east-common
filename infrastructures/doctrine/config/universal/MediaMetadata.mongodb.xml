@@ -4,7 +4,11 @@
                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                         xsi:schemaLocation="http://xml.teknoo.it/schemas/odm/east-website-mapping http://xml.teknoo.it/schemas/odm/east-website-mapping.xml">
 
-    <embedded-document name="Teknoo\East\Website\Doctrine\Object\StoredFileMetadata">
-        <field field-name="contentType" name="content_type" type="string" />
+    <embedded-document name="Teknoo\East\Website\Object\MediaMetadata">
+        <field field-name="mimeType" name="mime_type" type="string" />
+        <field field-name="alternative" type="string" />
+        <field field-name="createdAt" name="created_at" type="date" />
+        <field field-name="updatedAt" name="updated_at" type="date" />
+        <field field-name="deletedAt" name="deleted_at" type="date" nullable="true" index="true" />
     </embedded-document>
 </doctrine-mongo-mapping>

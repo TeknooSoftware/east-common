@@ -24,22 +24,23 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Object;
 
-class MediaMetadata implements DeletableInterface, TimestampableInterface
+use Teknoo\Immutable\ImmutableInterface;
+use Teknoo\Immutable\ImmutableTrait;
+
+class MediaMetadata implements ImmutableInterface
 {
+    use ImmutableTrait;
+
     private ?string $contentType = null;
 
     private ?string $mimeType = null;
 
     private ?string $alternative = null;
 
-    private ?\DateTimeInterface $createdAt = null;
-
-    private ?\DateTimeInterface $updatedAt = null;
-
-    private ?\DateTimeInterface $deletedAt = null;
-
     public function __construct(string $contentType)
     {
+        $this->uniqueConstructorCheck();
+
         $this->contentType = $contentType;
     }
 
@@ -68,39 +69,6 @@ class MediaMetadata implements DeletableInterface, TimestampableInterface
     public function setAlternative(string $alternative): self
     {
         $this->alternative = $alternative;
-
-        return $this;
-    }
-
-    public function createdAt(): ?\DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
-    public function updatedAt(): ?\DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
-    {
-        if (null === $this->createdAt) {
-            $this->createdAt = $updatedAt;
-        }
-
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    public function getDeletedAt(): ?\DateTimeInterface
-    {
-        return $this->deletedAt;
-    }
-
-    public function setDeletedAt(?\DateTimeInterface $deletedAt): DeletableInterface
-    {
-        $this->deletedAt = $deletedAt;
 
         return $this;
     }

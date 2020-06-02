@@ -53,17 +53,6 @@ use Teknoo\East\Website\Object\User;
  */
 class ContainerTest extends TestCase
 {
-    public function testLegacyDIForward()
-    {
-        $di1 = include __DIR__.'/../../../src/doctrine/di.php';
-        $di2 = include __DIR__.'/../../../infrastructures/doctrine/di.php';
-
-        self::assertEquals(
-            $di1,
-            $di2
-        );
-    }
-
     /**
      * @return Container
      * @throws \Exception

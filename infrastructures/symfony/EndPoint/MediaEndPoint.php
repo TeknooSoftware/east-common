@@ -26,11 +26,10 @@ namespace Teknoo\East\WebsiteBundle\EndPoint;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Repository\GridFSRepository;
-use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\StreamInterface;
 use Teknoo\East\FoundationBundle\EndPoint\ResponseFactoryTrait;
-use Teknoo\East\Website\Doctrine\Object\StoredFile;
 use Teknoo\East\Website\EndPoint\MediaEndPointTrait;
-use Teknoo\East\Website\Object\Media;
+use Teknoo\East\Website\Doctrine\Object\Media;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -45,15 +44,15 @@ class MediaEndPoint
 
     public function setRepostory(DocumentManager $manager): MediaEndPoint
     {
-        $repostory = $manager->getRepository(StoredFile::class);
-        $this->repostory = $repostory;
+        $this->repostory = $manager->getRepository(Media::class);
 
         return $this;
     }
 
-    protected function getStream(Media $media)
+    protected function getStream(Media $media): StreamInterface
     {
-        $t = $this->repostory->findOneBy(['file_id' => $media->getId()]);
-        return $this->repostory->openDownloadStream($t->getId());
+        $resource = $this->repostory->openDownloadStream($media->getId());
+
+        return $this->streamFactory->createStreamFromResource($resource);
     }
 }

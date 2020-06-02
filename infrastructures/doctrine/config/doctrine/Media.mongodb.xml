@@ -5,11 +5,11 @@
                         xsi:schemaLocation="http://xml.teknoo.it/schemas/odm/east-website-mapping http://xml.teknoo.it/schemas/odm/east-website-mapping.xml">
 
     <gridfs-file name="Teknoo\East\Website\Doctrine\Object\Media" bucket-name="media">
-        <id field-name="id"/>
+        <id field-name="id" type="string" strategy="UUID"/>
         <length field-name="length"/>
         <chunk-size field-name="chunkSize"/>
         <upload-date field-name="uploadDate"/>
         <filename field-name="name" />
-        <metadata target-document="Teknoo\East\Website\Object\MediaMetadata" />
+        <metadata field-name="metadata" target-document="Teknoo\East\Website\Object\MediaMetadata" />
     </gridfs-file>
 </doctrine-mongo-mapping>

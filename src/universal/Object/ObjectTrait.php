@@ -76,8 +76,12 @@ trait ObjectTrait
         return $this->deletedAt;
     }
 
-    public function setDeletedAt(?\DateTimeInterface $deletedAt): DeletableInterface
+    public function setDeletedAt(\DateTimeInterface $deletedAt): DeletableInterface
     {
+        if (null !== $this->deletedAt) {
+            throw new \RuntimeException('Error this object is already deleted');
+        }
+
         $this->deletedAt = $deletedAt;
 
         return $this;

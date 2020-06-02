@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\EndPoint;
 
 use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\StreamInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Website\Loader\MediaLoader;
@@ -40,7 +41,7 @@ trait MediaEndPointTrait
 
     protected StreamFactoryInterface $streamFactory;
 
-    abstract protected function getStream(Media $media);
+    abstract protected function getStream(Media $media): StreamInterface;
 
     public function __construct(MediaLoader $mediaLoader, StreamFactoryInterface $streamFactory)
     {
@@ -54,11 +55,13 @@ trait MediaEndPointTrait
             $id,
             new Promise(
                 function (Media $media) use ($client) {
-                    $resource = $this->getStream($media);
-                    $stream = $this->streamFactory->createStreamFromResource($resource);
+                    $stream = $this->getStream($media);
 
                     $response = $this->responseFactory->createResponse(200);
-                    $response = $response->withHeader('Content-Type', $media->getMimeType());
+                    $metadata = $media->getMetadata();
+                    if (null !== $metadata) {
+                        $response = $response->withHeader('Content-Type', $metadata->getMimeType());
+                    }
                     $response = $response->withHeader('Content-Length', (string) $media->getLength());
                     $response = $response->withBody($stream);
 

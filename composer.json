@@ -14,7 +14,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Teknoo\\East\\Website\\": "src/universal",
+            "Teknoo\\East\\Website\\": "src/",
             "Teknoo\\East\\WebsiteBundle\\": "infrastructures/symfony",
             "Teknoo\\East\\Website\\Doctrine\\": "infrastructures/doctrine",
             "Teknoo\\Tests\\East\\Website\\": "tests/universal",

@@ -69,7 +69,7 @@ class ContainerTest extends TestCase
     {
         $containerDefinition = new ContainerBuilder();
         $containerDefinition->addDefinitions(__DIR__.'/../../vendor/teknoo/east-foundation/src/universal/di.php');
-        $containerDefinition->addDefinitions(__DIR__.'/../../src/universal/di.php');
+        $containerDefinition->addDefinitions(__DIR__ . '/../../src/universal/di.php');
 
         return $containerDefinition->build();
     }
@@ -219,7 +219,7 @@ class ContainerTest extends TestCase
     {
         $containerDefinition = new ContainerBuilder();
         $containerDefinition->addDefinitions(__DIR__.'/../../vendor/teknoo/east-foundation/src/universal/di.php');
-        $containerDefinition->addDefinitions(__DIR__.'/../../src/universal/di.php');
+        $containerDefinition->addDefinitions(__DIR__ . '/../../src/universal/di.php');
 
         $container = $containerDefinition->build();
 

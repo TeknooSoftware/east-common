@@ -132,7 +132,7 @@ class FeatureContext implements Context
             include \dirname(\dirname(__DIR__)).'/vendor/teknoo/east-foundation/src/universal/di.php'
         );
         $containerDefinition->addDefinitions(
-            include \dirname(\dirname(__DIR__)).'/src/universal/di.php'
+            include \dirname(\dirname(__DIR__)) . '/src/universal/di.php'
         );
         $containerDefinition->addDefinitions(
             include \dirname(\dirname(__DIR__)).'/infrastructures/doctrine/di.php'

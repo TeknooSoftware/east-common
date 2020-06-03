@@ -22,9 +22,7 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Doctrine\Translatable;
-
-use Teknoo\East\Website\Object\ObjectInterface;
+namespace Teknoo\East\Website\Object;
 
 /**
  * This interface is not necessary but can be implemented for

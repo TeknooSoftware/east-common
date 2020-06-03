@@ -43,6 +43,7 @@ use Teknoo\States\Proxy\ProxyTrait;
  */
 class Content implements
     ObjectInterface,
+    TranslatableInterface,
     ProxyInterface,
     AutomatedInterface,
     DeletableInterface,

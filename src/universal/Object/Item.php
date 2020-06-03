@@ -42,6 +42,7 @@ use Teknoo\States\Proxy\ProxyTrait;
  */
 class Item implements
     ObjectInterface,
+    TranslatableInterface,
     ProxyInterface,
     AutomatedInterface,
     DeletableInterface,

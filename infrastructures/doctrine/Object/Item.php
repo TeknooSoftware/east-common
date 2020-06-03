@@ -24,12 +24,11 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\Object;
 
-use Teknoo\East\Website\Doctrine\Translatable\TranslatableInterface;
 use Teknoo\East\Website\Object\Item as OriginalItem;
 use Teknoo\States\Automated\AutomatedTrait;
 use Teknoo\States\Doctrine\Document\StandardTrait;
 
-class Item extends OriginalItem implements TranslatableInterface
+class Item extends OriginalItem
 {
     use AutomatedTrait;
     use StandardTrait {

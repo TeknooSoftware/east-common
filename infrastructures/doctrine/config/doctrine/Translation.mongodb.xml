@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--infrastructures/doctrine/config/doctrine/Media.mongodb.yml-->
-<doctrine-mongo-mapping xmlns="http://xml.teknoo.it/schemas/odm/east-website-mapping"
+<doctrine-mongo-mapping xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"
                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                        xsi:schemaLocation="http://xml.teknoo.it/schemas/odm/east-website-mapping http://xml.teknoo.it/schemas/odm/east-website-mapping.xml">
+                        xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
+                                            http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
 
     <document name="Teknoo\East\Website\Doctrine\Object\Translation" collection="translations">
         <id type="string" strategy="UUID"/>

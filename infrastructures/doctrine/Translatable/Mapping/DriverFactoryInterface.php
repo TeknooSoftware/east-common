@@ -29,5 +29,5 @@ use Doctrine\Persistence\Mapping\Driver\FileLocator;
 
 interface DriverFactoryInterface
 {
-    public function __invoke(FileLocator $locator, FileDriver $originalDriver): DriverInterface;
+    public function __invoke(FileLocator $locator): DriverInterface;
 }

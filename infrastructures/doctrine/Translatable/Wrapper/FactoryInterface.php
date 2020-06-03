@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Doctrine\Translatable\Wrapper;
 
 use Doctrine\Persistence\ObjectManager;
-use Teknoo\East\Website\Doctrine\Translatable\TranslatableInterface;
+use Teknoo\East\Website\Object\TranslatableInterface;
 
 interface FactoryInterface
 {

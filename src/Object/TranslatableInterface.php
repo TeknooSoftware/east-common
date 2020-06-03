@@ -31,4 +31,7 @@ namespace Teknoo\East\Website\Object;
  */
 interface TranslatableInterface extends ObjectInterface
 {
+    public function getLocaleField(): ?string;
+
+    public function setLocaleField(string $localeField): TranslatableInterface;
 }

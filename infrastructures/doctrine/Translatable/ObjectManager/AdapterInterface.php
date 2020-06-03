@@ -27,7 +27,7 @@ namespace Teknoo\East\Website\Doctrine\Translatable\ObjectManager;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
 use Teknoo\East\Website\DBSource\ManagerInterface;
-use Teknoo\East\Website\Doctrine\Translatable\TranslatableInterface;
+use Teknoo\East\Website\Object\TranslatableInterface;
 
 interface AdapterInterface extends ManagerInterface
 {

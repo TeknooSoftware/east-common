@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\Translatable\Wrapper;
 
-use Teknoo\East\Website\Doctrine\Translatable\TranslatableInterface;
+use Teknoo\East\Website\Object\TranslatableInterface;
 
 interface WrapperInterface
 {

@@ -6,7 +6,7 @@
                                               http://xml.teknoo.it/schemas/doctrine/east-website-translation.xsd">
 
     <object name="Teknoo\East\Website\Doctrine\Object\Item">
-        <locale name="localeField" />
+        <locale field-name="localeField" />
         <field field-name="name" />
     </object>
 </east-website-translation>

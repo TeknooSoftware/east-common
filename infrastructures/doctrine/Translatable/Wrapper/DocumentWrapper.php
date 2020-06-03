@@ -27,7 +27,7 @@ namespace Teknoo\East\Website\Doctrine\Translatable\Wrapper;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Mapping\ClassMetadata;
 use ProxyManager\Proxy\GhostObjectInterface;
-use Teknoo\East\Website\Doctrine\Translatable\TranslatableInterface;
+use Teknoo\East\Website\Object\TranslatableInterface;
 
 class DocumentWrapper implements WrapperInterface
 {

@@ -27,7 +27,6 @@ namespace Teknoo\East\Website\Doctrine;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
-use Doctrine\Persistence\Mapping\Driver\FileDriver;
 use Doctrine\Persistence\Mapping\Driver\FileLocator;
 use Teknoo\East\Website\Doctrine\Translatable\Mapping\Driver\SimpleXmlFactoryInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Mapping\Driver\Xml;
@@ -36,7 +35,7 @@ use Teknoo\East\Website\Doctrine\Translatable\Mapping\DriverInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Mapping\ExtensionMetadataFactory;
 use Teknoo\East\Website\Doctrine\Translatable\ObjectManager\Adapter\ODM as ODMAdapter;
 use Teknoo\East\Website\Doctrine\Translatable\Persistence\Adapter\ODM as ODMPersistence;
-use Teknoo\East\Website\Doctrine\Translatable\TranslatableInterface;
+use Teknoo\East\Website\Object\TranslatableInterface;
 use Teknoo\East\Website\Doctrine\Translatable\TranslatableListener;
 use Psr\Container\ContainerInterface;
 use Teknoo\East\Website\DBSource\ManagerInterface;
@@ -83,11 +82,10 @@ return [
 
         $extensionMetadataFactory = new ExtensionMetadataFactory(
             new class implements DriverFactoryInterface {
-                public function __invoke(FileLocator $locator, FileDriver $originalDriver): DriverInterface
+                public function __invoke(FileLocator $locator): DriverInterface
                 {
                     return new Xml(
                         $locator,
-                        $originalDriver,
                         new class implements SimpleXmlFactoryInterface {
                             public function __invoke(string $file): \SimpleXMLElement
                             {

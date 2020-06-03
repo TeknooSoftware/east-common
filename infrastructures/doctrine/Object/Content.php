@@ -34,16 +34,4 @@ class Content extends OriginalContent
     use StandardTrait {
         AutomatedTrait::updateStates insteadof StandardTrait;
     }
-
-    public function setTranslatableLocale(?string $locale): self
-    {
-        $this->setLocaleField((string) $locale);
-
-        return $this;
-    }
-
-    public function getTranslatableLocale(): string
-    {
-        return $this->getLocaleField();
-    }
 }

@@ -35,32 +35,22 @@ use Teknoo\East\Website\Doctrine\Exception\InvalidMappingException;
 
 class Xml implements DriverInterface
 {
-    const DOCTRINE_NAMESPACE_URI = 'http://xml.teknoo.it/schemas/odm/east-website-mapping';
+    const DOCTRINE_NAMESPACE_URI = 'http://xml.teknoo.it/schemas/doctrine/east-website-translation';
 
     private FileLocator $locator;
-
-    private FileDriver $originalDriver;
 
     private SimpleXmlFactoryInterface $simpleXmlFactory;
 
     public function __construct(
         FileLocator $locator,
-        FileDriver $originalDriver,
         SimpleXmlFactoryInterface $simpleXmlFactory
     ) {
         $this->locator = $locator;
-        $this->originalDriver = $originalDriver;
         $this->simpleXmlFactory = $simpleXmlFactory;
     }
 
     private function getMapping(string $className): \SimpleXMLElement
     {
-        //todo heuuu
-        $mapping = null;
-        if ($this->originalDriver instanceof FileDriver) {
-            return $this->originalDriver->getElement($className);
-        }
-
         return $this->loadMappingFile($this->locator->findMappingFile($className));
     }
 
@@ -70,81 +60,46 @@ class Xml implements DriverInterface
         $xmlElement = ($this->simpleXmlFactory)($file);
         $xmlElement = $xmlElement->children(self::DOCTRINE_NAMESPACE_URI);
 
-        $extractFunction = function ($nodeName) use ($xmlElement, &$result) {
-            if (!isset($xmlElement->{$nodeName})) {
-                return;
-            }
-
-            $result = $xmlElement->{$nodeName};
-        };
-
-        $extractFunction('entity');
-        $extractFunction('document');
-        $extractFunction('mapped-superclass');
-
-        if (null === $result) {
+        if (!isset($xmlElement->object)) {
             throw new \RuntimeException('error');
         }
 
-        return $result;
+        return $xmlElement->object;
     }
 
     private function inspectElementsForTranslatableFields(
         \SimpleXMLElement $xml,
-        array &$config,
-        ?string $prefix = null
+        array &$config
     ): void {
         if (!isset($xml->field)) {
             return;
         }
 
         foreach ($xml->field as $mapping) {
-            $fieldName = (string) $mapping->attributes()['field-name'];
-            if (null !== $prefix) {
-                $fieldName = $prefix . '.' . $fieldName;
-            }
+            $attributes = $mapping->attributes();
+            $fieldName = (string) $attributes['field-name'];
 
-            $this->buildFieldConfiguration($mapping, $fieldName, $config);
-        }
-    }
-
-    private function buildFieldConfiguration(\SimpleXMLElement $mapping, string $fieldName, array &$config): void
-    {
-        $mapping = $mapping->children();
-        if ($mapping->count() > 0 && isset($mapping->translatable)) {
             $config['fields'][] = $fieldName;
-
-            $config['fallback'][$fieldName] = (bool) ($mapping->translatable->attributes()['fallback'] ?? true);
+            $config['fallback'][$fieldName] = (bool) ($attributes['fallback'] ?? true);
         }
     }
 
     public function readExtendedMetadata(ClassMetadata $meta, array &$config): void
     {
-        $xml = $this->getMapping($meta->name);
+        $xml = $this->getMapping($meta->getName());
 
-        if (\in_array($xml->getName(), ['entity', 'document', 'mapped-superclass'])) {
-            if (isset($xml->translation)) {
-                $translationAttr = $xml->translation->attributes();
+        $config['translationClass'] = (string) ($xml->attributes()['translation-class'] ?? Translation::class);
 
-                $config['locale'] = (string) ($translationAttr['locale'] ?? 'localeField');
-                $config['translationClass'] = (string) ($translationAttr['class'] ?? Translation::class);
+        if (!\class_exists($config['translationClass'])) {
+            throw new InvalidMappingException(
+                "Translation entity class: {$config['translationClass']} does not exist."
+            );
+        }
 
-                if (!\class_exists($config['translationClass'])) {
-                    throw new InvalidMappingException(
-                        "Translation entity class: {$config['translationClass']} does not exist."
-                    );
-                }
-            }
+        if (isset($xml->locale)) {
+            $config['locale'] = (string) ($xml->locale->attributes()['field-name'] ?? 'localeField');
         }
 
         $this->inspectElementsForTranslatableFields($xml, $config);
-
-        if (!$meta->isMappedSuperclass && !empty($config)) {
-            if (\is_array($meta->identifier) && 1 < \count($meta->identifier)) {
-                throw new InvalidMappingException(
-                    "TranslatableInterface does not support composite identifiers in class - {$meta->name}"
-                );
-            }
-        }
     }
 }

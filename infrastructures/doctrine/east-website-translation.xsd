@@ -13,7 +13,7 @@
 
   <xs:element name="east-website-translation">
     <xs:complexType>
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:choice minOccurs="1" maxOccurs="1">
         <xs:element name="object" type="ewt:object" minOccurs="0" maxOccurs="unbounded" />
       </xs:choice>
     </xs:complexType>
@@ -26,10 +26,11 @@
     </xs:choice>
 
     <xs:attribute name="name" type="xs:string" />
+    <xs:attribute name="translation-class" type="xs:string" use="optional" />
   </xs:complexType>
 
   <xs:complexType name="locale">
-    <xs:attribute name="name" type="xs:NMTOKEN" />
+    <xs:attribute name="field-name" type="xs:NMTOKEN" />
   </xs:complexType>
 
   <xs:complexType name="field">

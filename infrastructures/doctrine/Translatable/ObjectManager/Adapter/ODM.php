@@ -30,7 +30,7 @@ use Doctrine\Persistence\Mapping\ClassMetadata as BaseClassMetadata;
 use Doctrine\Persistence\ObjectManager;
 use Teknoo\East\Website\DBSource\ManagerInterface;
 use Teknoo\East\Website\Doctrine\Translatable\ObjectManager\AdapterInterface;
-use Teknoo\East\Website\Doctrine\Translatable\TranslatableInterface;
+use Teknoo\East\Website\Object\TranslatableInterface;
 
 class ODM implements AdapterInterface
 {

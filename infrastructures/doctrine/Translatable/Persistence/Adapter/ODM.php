@@ -106,7 +106,7 @@ class ODM implements AdapterInterface
     public function insertTranslationRecord(TranslationInterface $translation): void
     {
         $meta = $this->manager->getClassMetadata(\get_class($translation));
-        $collection = $this->manager->getDocumentCollection($meta->name);
+        $collection = $this->manager->getDocumentCollection($meta->getName());
         $collection->insertOne($translation);
     }
 

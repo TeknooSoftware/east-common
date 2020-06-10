@@ -71,7 +71,7 @@ class ExtensionMetadataFactory
 
     private static function getCacheId(string $className): string
     {
-        return $className.'\\$_CLASSMETADATA';
+        return $className.'\\$_TRANSLATE_METADATA';
     }
 
     public function getExtensionMetadata(ObjectManager $objectManager, ClassMetadata $meta): array

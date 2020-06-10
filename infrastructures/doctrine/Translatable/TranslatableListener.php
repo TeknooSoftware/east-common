@@ -35,6 +35,7 @@ use Teknoo\East\Website\Doctrine\Translatable\Persistence\AdapterInterface as Pe
 use Teknoo\East\Website\Doctrine\Translatable\Mapping\ExtensionMetadataFactory;
 use Teknoo\East\Website\Doctrine\Translatable\Wrapper\FactoryInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Wrapper\WrapperInterface;
+use Teknoo\East\Website\Object\TranslatableInterface;
 
 /**
  * The translation listener handles the generation and

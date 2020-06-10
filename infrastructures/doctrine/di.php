@@ -89,7 +89,7 @@ return [
                         new class implements SimpleXmlFactoryInterface {
                             public function __invoke(string $file): \SimpleXMLElement
                             {
-                                return new \SimpleXMLElement($file);
+                                return new \SimpleXMLElement($file, 0, true);
                             }
                         }
                     );

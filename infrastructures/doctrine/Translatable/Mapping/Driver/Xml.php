@@ -49,10 +49,14 @@ class Xml implements DriverInterface
         $this->simpleXmlFactory = $simpleXmlFactory;
     }
 
-    private function getMapping(string $className): \SimpleXMLElement
+    private function getMapping(string $className): ?\SimpleXMLElement
     {
         $file = $this->locator->findMappingFile($className);
         $file = \str_replace('.xml', '.translate.xml', $file);
+
+        if (!\file_exists($file)) {
+            return null;
+        }
 
         return $this->loadMappingFile($file);
     }
@@ -90,6 +94,10 @@ class Xml implements DriverInterface
     public function readExtendedMetadata(ClassMetadata $meta, array &$config): void
     {
         $xml = $this->getMapping($meta->getName());
+
+        if (null === $xml) {
+            return;
+        }
 
         $config['translationClass'] = (string) ($xml->attributes()['translation-class'] ?? Translation::class);
 

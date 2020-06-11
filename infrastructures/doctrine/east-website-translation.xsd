@@ -21,16 +21,11 @@
 
   <xs:complexType name="object">
     <xs:choice minOccurs="0" maxOccurs="unbounded">
-      <xs:element name="locale" type="ewt:locale" minOccurs="0" />
       <xs:element name="field" type="ewt:field" minOccurs="0" maxOccurs="unbounded" />
     </xs:choice>
 
     <xs:attribute name="name" type="xs:string" />
     <xs:attribute name="translation-class" type="xs:string" use="optional" />
-  </xs:complexType>
-
-  <xs:complexType name="locale">
-    <xs:attribute name="field-name" type="xs:NMTOKEN" />
   </xs:complexType>
 
   <xs:complexType name="field">

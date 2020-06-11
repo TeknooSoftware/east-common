@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\Translatable;
 
+use Doctrine\Common\EventArgs;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Doctrine\Persistence\Event\LoadClassMetadataEventArgs;
@@ -110,8 +111,8 @@ class TranslatableListener implements EventSubscriber
         ManagerAdapterInterface $manager,
         PersistenceAdapterInterface $persistence,
         FactoryInterface $wrapperFactory,
-        string $locale = 'en_US',
-        string $defaultLocale = 'en_US',
+        string $locale = 'en',
+        string $defaultLocale = 'en',
         bool $translationFallback = true
     ) {
         $this->extensionMetadataFactory = $extensionMetadataFactory;
@@ -139,10 +140,8 @@ class TranslatableListener implements EventSubscriber
         return $this;
     }
 
-    private function getObjectClassName(LifecycleEventArgs $event): string
+    private function getObjectClassName(TranslatableInterface $object): string
     {
-        $object = $event->getObject();
-
         if ($object instanceof GhostObjectInterface) {
             return (string) \get_parent_class($object);
         }
@@ -184,33 +183,9 @@ class TranslatableListener implements EventSubscriber
      * defined locale first..
      */
     private function getTranslatableLocale(
-        ClassMetadata $metaData,
-        string $localePropertyName,
         TranslatableInterface $object
     ): string {
-        $locale = $this->locale;
-
-        $reflectionClass = $metaData->getReflectionClass();
-        $className = $metaData->getName();
-
-        try {
-            $reflectionProperty = $reflectionClass->getProperty($localePropertyName);
-        } catch (\Throwable $error) {
-            throw new RuntimeException(
-                "There is no locale or language property ({$localePropertyName}) found on object: {$className}",
-                0,
-                $error
-            );
-        }
-
-        $reflectionProperty->setAccessible(true);
-        $value = (string) $reflectionProperty->getValue($object);
-
-        if (!empty($value)) {
-            $locale = $value;
-        }
-
-        return $locale;
+        return $object->getLocaleField() ?? $this->locale;
     }
 
     /*
@@ -223,14 +198,14 @@ class TranslatableListener implements EventSubscriber
             return;
         }
 
-        $metaData = $this->manager->getClassMetadata($this->getObjectClassName($event));
+        $metaData = $this->manager->getClassMetadata($this->getObjectClassName($object));
 
         $config = $this->getConfiguration($metaData);
         if (!isset($config['fields'], $config['locale'])) {
             return;
         }
 
-        $locale = $this->getTranslatableLocale($metaData, $config['locale'], $object);
+        $locale = $this->getTranslatableLocale($object);
         $oid = \spl_object_hash($object);
         $this->translatedInLocale[$oid] = $locale;
 
@@ -250,7 +225,7 @@ class TranslatableListener implements EventSubscriber
         );
 
         $reflectionClass = $metaData->getReflectionClass();
-        
+
         // translate object's translatable properties
         foreach ($config['fields'] as $field) {
             $translated = '';
@@ -284,12 +259,11 @@ class TranslatableListener implements EventSubscriber
      * Creates and update the translation for object being flushed
      */
     private function handleTranslatableObjectChanges(
-        LifecycleEventArgs $event,
         TranslatableInterface $object,
         bool $isInsert
     ): void {
         $wrapper = $this->wrap($object);
-        $metaData = $this->manager->getClassMetadata($this->getObjectClassName($event));
+        $metaData = $this->manager->getClassMetadata($this->getObjectClassName($object));
         $config = $this->getConfiguration($metaData);
 
         $translationClass = $config['translationClass'];
@@ -301,7 +275,11 @@ class TranslatableListener implements EventSubscriber
         $oid = \spl_object_hash($object);
 
         // load the currently used locale
-        $locale = $this->getTranslatableLocale($metaData, $config['locale'], $object);
+        $locale = $this->getTranslatableLocale($object);
+
+        if ($locale === $this->defaultLocale) {
+            return;
+        }
 
         $changeSet = $this->manager->getObjectChangeSet($object);
 
@@ -360,6 +338,7 @@ class TranslatableListener implements EventSubscriber
             foreach ($changeSet as $field => $changes) {
                 if (isset($translatableFields[$field]) && $locale !== $this->defaultLocale) {
                     $this->manager->setOriginalObjectProperty($oid, $field, $changes[0]);
+                    $wrapper->setPropertyValue($field, $changes[0]);
                     unset($modifiedChangeSet[$field]);
                 }
             }
@@ -371,18 +350,18 @@ class TranslatableListener implements EventSubscriber
     /*
      * Looks for translatable objects being inserted or updated for further processing
      */
-    public function onFlush(LifecycleEventArgs $event): void
+    public function onFlush(EventArgs $event): void
     {
-        $handling = function ($object, $isInsert) use ($event) {
+        $handling = function ($object, $isInsert) {
             if (!$object instanceof TranslatableInterface) {
                 return;
             }
 
-            $metaData = $this->manager->getClassMetadata($this->getObjectClassName($event));
+            $metaData = $this->manager->getClassMetadata($this->getObjectClassName($object));
             $config = $this->getConfiguration($metaData);
 
             if (isset($config['fields'])) {
-                $this->handleTranslatableObjectChanges($event, $object, $isInsert);
+                $this->handleTranslatableObjectChanges($object, $isInsert);
             }
         };
 
@@ -402,7 +381,7 @@ class TranslatableListener implements EventSubscriber
                 return;
             }
 
-            $metaData = $this->manager->getClassMetadata($this->getObjectClassName($event));
+            $metaData = $this->manager->getClassMetadata($this->getObjectClassName($object));
             $config = $this->getConfiguration($metaData);
 
             if (isset($config['fields'])) {

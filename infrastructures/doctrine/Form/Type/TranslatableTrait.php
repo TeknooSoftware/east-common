@@ -45,7 +45,7 @@ trait TranslatableTrait
     protected function addTranslatableLocaleFieldHidden(FormBuilderInterface $builder): self
     {
         $builder->add(
-            'translatableLocale',
+            'localeField',
             HiddenType::class
         );
 

@@ -174,6 +174,10 @@ class Content implements
 
     public function setSlug(?string $slug): Content
     {
+        if (!empty($slug)) {
+            return $this;
+        }
+
         $this->slug = $slug;
 
         return $this;

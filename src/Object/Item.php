@@ -145,6 +145,10 @@ class Item implements
 
     public function setSlug(?string $slug): Item
     {
+        if (!empty($slug)) {
+            return $this;
+        }
+
         $this->slug = $slug;
 
         return $this;

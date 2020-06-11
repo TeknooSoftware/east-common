@@ -86,7 +86,9 @@ class ODM implements AdapterInterface
 
     public function recomputeSingleObjectChangeSet(BaseClassMetadata $meta, TranslatableInterface $object): void
     {
-        $this->getUnitOfWork()->recomputeSingleDocumentChangeSet($meta, $object);
+        $uow = $this->getUnitOfWork();
+        $uow->clearDocumentChangeSet(\spl_object_hash($object));
+        $uow->recomputeSingleDocumentChangeSet($meta, $object);
     }
 
     public function getScheduledObjectUpdates(): array

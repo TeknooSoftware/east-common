@@ -90,18 +90,18 @@ class AdminEditEndPoint implements RenderingInterface
                         $this->datesService->passMeTheDate([$object, 'setPublishedAt']);
                     }
 
-                    if ($object instanceof SluggableInterface) {
-                        $object->prepareSlugNear(
-                            $this->loader,
-                            $this->findSlugService,
-                            $this->slugField
-                        );
-                    }
-
                     $form = $this->createForm($object);
                     $form->handleRequest($request->getAttribute('request'));
 
                     if ($form->isSubmitted() && $form->isValid()) {
+                        if ($object instanceof SluggableInterface) {
+                            $object->prepareSlugNear(
+                                $this->loader,
+                                $this->findSlugService,
+                                $this->slugField
+                            );
+                        }
+
                         $this->writer->save($object, new Promise(
                             function (ObjectInterface $object) use (
                                 $client,

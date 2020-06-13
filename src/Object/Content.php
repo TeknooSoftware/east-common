@@ -174,7 +174,7 @@ class Content implements
 
     public function setSlug(?string $slug): Content
     {
-        if (!empty($slug)) {
+        if (!empty($this->slug)) {
             return $this;
         }
 

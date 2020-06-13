@@ -32,6 +32,8 @@ use Teknoo\East\FoundationBundle\EndPoint\AuthenticationTrait;
 use Teknoo\East\FoundationBundle\EndPoint\RoutingTrait;
 use Teknoo\East\FoundationBundle\EndPoint\TemplatingTrait;
 use Teknoo\East\Website\Object\ObjectInterface;
+use Teknoo\East\Website\Object\SluggableInterface;
+use Teknoo\East\Website\Service\FindSlugService;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -47,6 +49,10 @@ class AdminNewEndPoint implements EndPointInterface
 
     private string $objectClass;
 
+    private FindSlugService $findSlugService;
+
+    private string $slugField;
+
     public function setObjectClass(string $objectClass): self
     {
         if (!\class_exists($objectClass)) {
@@ -54,6 +60,14 @@ class AdminNewEndPoint implements EndPointInterface
         }
 
         $this->objectClass = $objectClass;
+
+        return $this;
+    }
+
+    public function setFindSlugService(FindSlugService $findSlugService, string $slugField): self
+    {
+        $this->findSlugService = $findSlugService;
+        $this->slugField = $slugField;
 
         return $this;
     }
@@ -76,6 +90,14 @@ class AdminNewEndPoint implements EndPointInterface
         $form->handleRequest($request->getAttribute('request'));
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($object instanceof SluggableInterface) {
+                $object->prepareSlugNear(
+                    $this->loader,
+                    $this->findSlugService,
+                    $this->slugField
+                );
+            }
+
             $this->writer->save($object, new Promise(
                 function (ObjectInterface $object) use ($client, $editRoute) {
                     $this->redirectToRoute($client, $editRoute, ['id' => $object->getId()]);

@@ -176,6 +176,7 @@ services:
       - ['setStreamFactory', ['@Psr\Http\Message\StreamFactoryInterface']]
       - ['setTemplating', ['@templating.engine.twig']]
       - ['setRouter', ['@router']]
+      - ['setFindSlugService', ['@Teknoo\East\Website\Service\FindSlugService', 'slug']]
     public: true
 
   #Items
@@ -205,6 +206,7 @@ services:
   teknoo.east.website.endpoint.admin.new.item:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
     calls:
+      - ['setLoader', ['@Teknoo\East\Website\Loader\ItemLoader']]
       - ['setWriter', ['@Teknoo\East\Website\Writer\ItemWriter']]
       - ['setFormClass', ['%teknoo.east.website.form_type.item.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.item.new.file%']]
@@ -238,6 +240,7 @@ services:
   teknoo.east.website.endpoint.admin.new.content:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
     calls:
+      - ['setLoader', ['@Teknoo\East\Website\Loader\ContentLoader']]
       - ['setWriter', ['@Teknoo\East\Website\Writer\ContentWriter']]
       - ['setFormClass', ['%teknoo.east.website.form_type.content.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.content.new.file%']]
@@ -262,6 +265,7 @@ services:
   teknoo.east.website.endpoint.admin.new.media:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
     calls:
+      - ['setLoader', ['@Teknoo\East\Website\Loader\MediaLoader']]
       - ['setWriter', ['@Teknoo\East\Website\Writer\MediaWriter']]
       - ['setFormClass', ['%teknoo.east.website.form_type.media.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.media.new.file%']]
@@ -295,6 +299,7 @@ services:
   teknoo.east.website.endpoint.admin.new.type:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
     calls:
+      - ['setLoader', ['@Teknoo\East\Website\Loader\TypeLoader']]
       - ['setWriter', ['@Teknoo\East\Website\Writer\TypeWriter']]
       - ['setFormClass', ['%teknoo.east.website.form_type.type.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.type.new.file%']]
@@ -328,6 +333,7 @@ services:
   teknoo.east.website.endpoint.admin.new.user:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
     calls:
+      - ['setLoader', ['@Teknoo\East\Website\Loader\UserLoader']]
       - ['setWriter', ['@teknoo.east.website.bundle.writer.user']]
       - ['setFormClass', ['%teknoo.east.website.form_type.user.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.user.new.file%']]

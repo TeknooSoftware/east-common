@@ -201,7 +201,7 @@ class TranslatableListener implements EventSubscriber
         $metaData = $this->manager->getClassMetadata($this->getObjectClassName($object));
 
         $config = $this->getConfiguration($metaData);
-        if (!isset($config['fields'], $config['locale'])) {
+        if (!isset($config['fields'])) {
             return;
         }
 
@@ -319,13 +319,12 @@ class TranslatableListener implements EventSubscriber
                 $content = $this->persistence->getTranslationValue($wrapper, $metaData, $field);
                 $translation->setContent($content);
 
-                if ($isInsert && empty($objectId)) {
+                if ($isInsert) {
                     // if we do not have the primary key yet available
                     // keep this translation in memory to insert it later with foreign key
                     $this->pendingTranslationInserts[$oid][] = $translation;
                 } else {
-                    $this->manager->persist($translation);
-                    $this->manager->computeChangeSet($translationMetadata, $translation);
+                    $this->persistence->insertTranslationRecord($translation);
                 }
             }
         }

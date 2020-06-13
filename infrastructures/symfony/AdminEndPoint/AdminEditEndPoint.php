@@ -58,7 +58,7 @@ class AdminEditEndPoint implements RenderingInterface
         return $this;
     }
 
-    public function setFindSlugService(FindSlugService $findSlugService, string $slugField): AdminEditEndPoint
+    public function setFindSlugService(FindSlugService $findSlugService, string $slugField): self
     {
         $this->findSlugService = $findSlugService;
         $this->slugField = $slugField;

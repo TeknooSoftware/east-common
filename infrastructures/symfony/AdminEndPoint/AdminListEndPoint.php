@@ -117,6 +117,7 @@ class AdminListEndPoint implements RenderingInterface
             return $this;
         }
 
+        $this->itemsPerPage = 50;
         $this->loader->query(
             new PaginationQuery([], $order, $this->itemsPerPage, ($page - 1) * $this->itemsPerPage),
             new Promise(function ($objects) use ($client, $page, $viewPath, $request) {

@@ -24,7 +24,9 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\Translatable\Persistence\Adapter;
 
+use Doctrine\ODM\MongoDB\Mapping\ClassMetadata as OdmClassMetadata;
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Doctrine\ODM\MongoDB\Mapping\Annotations\File\Metadata;
 use Doctrine\ODM\MongoDB\Types\Type;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Teknoo\East\Website\Doctrine\Translatable\Persistence\AdapterInterface;
@@ -103,11 +105,47 @@ class ODM implements AdapterInterface
         $query->execute();
     }
 
+    private function prepareId(ClassMetadata $metadata, TranslationInterface $translation)
+    {
+        if (
+            OdmClassMetadata::GENERATOR_TYPE_NONE === $metadata->generatorType
+            || !empty($translation->getIdentifier())
+            || null === $metadata->idGenerator
+        ) {
+            return;
+        }
+
+        $idValue = $metadata->idGenerator->generate($this->manager, $translation);
+        $idValue = $metadata->getPHPIdentifierValue($metadata->getDatabaseIdentifierValue($idValue));
+        $metadata->setIdentifierValue($translation, $idValue);
+    }
+
+    private function generateInsertionArray(OdmClassMetadata $metadata, TranslationInterface $translation): array
+    {
+        $final = [];
+        foreach ($metadata->getFieldNames() as $fieldName) {
+            $fm = $metadata->getFieldMapping($fieldName);
+            $final[$fm['name'] ?? $fm['fieldName']] = $metadata->getFieldValue($translation, $fieldName);
+        }
+
+        return $final;
+    }
+
     public function insertTranslationRecord(TranslationInterface $translation): void
     {
         $meta = $this->manager->getClassMetadata(\get_class($translation));
-        $collection = $this->manager->getDocumentCollection($meta->getName());
-        $collection->insertOne($translation);
+
+        $className = $meta->getName();
+        $collection = $this->manager->getDocumentCollection($className);
+        if (empty($translation->getIdentifier())) {
+            $this->prepareId($meta, $translation);
+            $collection->insertOne($this->generateInsertionArray($meta, $translation));
+        } else {
+            $collection->updateOne(
+                ['_id' => $translation->getIdentifier()],
+                ['$set' => $this->generateInsertionArray($meta, $translation)]
+            );
+        }
     }
 
     /**

@@ -42,6 +42,15 @@ interface ManagerInterface
     public function persist($object): ManagerInterface;
 
     /**
+     * Tells the Manager to remove an instance managed
+     *
+     * @param object $object The instance to make managed and persistent.
+     *
+     * @return ManagerInterface
+     */
+    public function remove($object): ManagerInterface;
+
+    /**
      * Flushes all changes to objects that have been queued up to now to the database.
      * This effectively synchronizes the in-memory state of managed objects with the
      * database.

@@ -107,10 +107,6 @@ class Xml implements DriverInterface
             );
         }
 
-        if (isset($xml->locale)) {
-            $config['locale'] = (string) ($xml->locale->attributes()['field-name'] ?? 'localeField');
-        }
-
         $this->inspectElementsForTranslatableFields($xml, $config);
     }
 }

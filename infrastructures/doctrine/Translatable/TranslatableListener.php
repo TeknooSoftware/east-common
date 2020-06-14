@@ -103,7 +103,7 @@ class TranslatableListener implements EventSubscriber
      * Tracks objects to reload after flush
      * @var array<int, array<WrapperInterface, string, array<string, string, ClassMetadata>>
      */
-    private array $objetsToTranslate = [];
+    private array $objectsToTranslate = [];
 
     /**
      * Static List of cached object configurations
@@ -299,7 +299,7 @@ class TranslatableListener implements EventSubscriber
             return;
         }
 
-        $this->objetsToTranslate[$locale][] = [$wrapper, $translationClass, $config, $metaData];
+        $this->objectsToTranslate[$locale][] = [$wrapper, $translationClass, $config, $metaData];
 
         $changeSet = $this->manager->getObjectChangeSet($object);
 
@@ -370,7 +370,7 @@ class TranslatableListener implements EventSubscriber
      */
     public function onFlush(EventArgs $event): void
     {
-        $this->objetsToTranslate = [];
+        $this->objectsToTranslate = [];
 
         $handling = function ($object, $isInsert) {
             if (!$object instanceof TranslatableInterface) {
@@ -417,13 +417,13 @@ class TranslatableListener implements EventSubscriber
 
     public function postFlush(EventArgs $event): void
     {
-        foreach ($this->objetsToTranslate as $local => &$objects) {
+        foreach ($this->objectsToTranslate as $local => &$objects) {
             foreach ($objects as &$object) {
                 $this->loadTranslations($object[0], $local, $object[1], $object[2], $object[3]);
             }
         }
 
-        $this->objetsToTranslate = [];
+        $this->objectsToTranslate = [];
     }
 
     /*

@@ -100,6 +100,12 @@ class TranslatableListener implements EventSubscriber
     private array $translatedInLocale = [];
 
     /**
+     * Tracks objects to reload after flush
+     * @var array<int, array<WrapperInterface, string, array<string, string, ClassMetadata>>
+     */
+    private array $objetsToTranslate = [];
+
+    /**
      * Static List of cached object configurations
      * leaving it static for reasons to look into
      * other listener configuration
@@ -131,6 +137,7 @@ class TranslatableListener implements EventSubscriber
             'postLoad',
             'onFlush',
             'postPersist',
+            'postFlush',
         ];
     }
 
@@ -188,35 +195,13 @@ class TranslatableListener implements EventSubscriber
         return $object->getLocaleField() ?? $this->locale;
     }
 
-    /*
-     * After object is loaded, listener updates the translations by currently used locale
-     */
-    public function postLoad(LifecycleEventArgs $event): void
-    {
-        $object = $event->getObject();
-        if (!$object instanceof TranslatableInterface) {
-            return;
-        }
-
-        $metaData = $this->manager->getClassMetadata($this->getObjectClassName($object));
-
-        $config = $this->getConfiguration($metaData);
-        if (!isset($config['fields'])) {
-            return;
-        }
-
-        $locale = $this->getTranslatableLocale($object);
-        $oid = \spl_object_hash($object);
-        $this->translatedInLocale[$oid] = $locale;
-
-        if ($locale === $this->defaultLocale) {
-            return;
-        }
-
-        // fetch translations
-        $translationClass = $config['translationClass'];
-        $wrapper = $this->wrap($object);
-
+    private function loadTranslations(
+        WrapperInterface $wrapper,
+        string $locale,
+        string $translationClass,
+        array $config,
+        ClassMetadata $metaData
+    ): void {
         $result = $this->persistence->loadTranslations(
             $wrapper,
             $locale,
@@ -247,12 +232,45 @@ class TranslatableListener implements EventSubscriber
                 $this->persistence->setTranslationValue($wrapper, $metaData, $field, $translated);
                 // ensure clean changeset
                 $this->manager->setOriginalObjectProperty(
-                    $oid,
+                    \spl_object_hash($wrapper->getObject()),
                     $field,
                     $orignalValue
                 );
             }
         }
+    }
+
+    /*
+     * After object is loaded, listener updates the translations by currently used locale
+     */
+    public function postLoad(LifecycleEventArgs $event): void
+    {
+        $object = $event->getObject();
+
+        if (!$object instanceof TranslatableInterface) {
+            return;
+        }
+
+        $metaData = $this->manager->getClassMetadata($this->getObjectClassName($object));
+
+        $config = $this->getConfiguration($metaData);
+        if (!isset($config['fields'])) {
+            return;
+        }
+
+        $locale = $this->getTranslatableLocale($object);
+        $oid = \spl_object_hash($object);
+        $this->translatedInLocale[$oid] = $locale;
+
+        if ($locale === $this->defaultLocale) {
+            return;
+        }
+
+        // fetch translations
+        $translationClass = $config['translationClass'];
+        $wrapper = $this->wrap($object);
+
+        $this->loadTranslations($wrapper, $locale, $translationClass, $config, $metaData);
     }
 
     /*
@@ -280,6 +298,8 @@ class TranslatableListener implements EventSubscriber
         if ($locale === $this->defaultLocale) {
             return;
         }
+
+        $this->objetsToTranslate[$locale][] = [$wrapper, $translationClass, $config, $metaData];
 
         $changeSet = $this->manager->getObjectChangeSet($object);
 
@@ -350,6 +370,8 @@ class TranslatableListener implements EventSubscriber
      */
     public function onFlush(EventArgs $event): void
     {
+        $this->objetsToTranslate = [];
+
         $handling = function ($object, $isInsert) {
             if (!$object instanceof TranslatableInterface) {
                 return;
@@ -391,6 +413,17 @@ class TranslatableListener implements EventSubscriber
                 );
             }
         }
+    }
+
+    public function postFlush(EventArgs $event): void
+    {
+        foreach ($this->objetsToTranslate as $local => &$objects) {
+            foreach ($objects as &$object) {
+                $this->loadTranslations($object[0], $local, $object[1], $object[2], $object[3]);
+            }
+        }
+
+        $this->objetsToTranslate = [];
     }
 
     /*

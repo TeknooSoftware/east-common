@@ -335,10 +335,9 @@ class TranslatableListener implements EventSubscriber
         if (!$isInsert) {
             $modifiedChangeSet = $changeSet;
             foreach ($changeSet as $field => $changes) {
+                $this->manager->setOriginalObjectProperty($oid, $field, $changes[0]);
                 if (isset($translatableFields[$field]) && $locale !== $this->defaultLocale) {
-                    $this->manager->setOriginalObjectProperty($oid, $field, $changes[0]);
                     $wrapper->setPropertyValue($field, $changes[0]);
-                    unset($modifiedChangeSet[$field]);
                 }
             }
 

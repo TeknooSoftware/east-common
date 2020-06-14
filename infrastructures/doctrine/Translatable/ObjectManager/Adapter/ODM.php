@@ -53,6 +53,13 @@ class ODM implements AdapterInterface
         return $this;
     }
 
+    public function remove($object): ManagerInterface
+    {
+        $this->eastManager->remove($object);
+
+        return $this;
+    }
+
     public function flush(): ManagerInterface
     {
         $this->eastManager->flush();

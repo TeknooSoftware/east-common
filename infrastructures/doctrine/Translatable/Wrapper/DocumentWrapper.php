@@ -37,53 +37,10 @@ class DocumentWrapper implements WrapperInterface
 
     private TranslatableInterface $object;
 
-    private DocumentManager $om;
-
     public function __construct(TranslatableInterface $object, DocumentManager $om)
     {
-        $this->om = $om;
         $this->object = $object;
         $this->meta = $om->getClassMetadata(\get_class($this->object));
-    }
-
-    public function getPropertyValue(string $property)
-    {
-        $this->initialize();
-
-        $properyReflection = $this->meta->getReflectionProperty($property);
-        $properyReflection->setAccessible(true);
-
-        return $properyReflection->getValue($this->object);
-    }
-
-    public function getRootObjectName(): string
-    {
-        return $this->meta->rootDocumentName;
-    }
-
-    public function setPropertyValue(string $property, $value): self
-    {
-        $this->initialize();
-        $properyReflection = $this->meta->getReflectionProperty($property);
-        $properyReflection->setAccessible(true);
-        $properyReflection->setValue($this->object, $value);
-
-        return $this;
-    }
-
-    public function getIdentifier(bool $single = true): ?string
-    {
-        if ($this->identifier) {
-            return $this->identifier;
-        }
-
-        if ($this->object instanceof GhostObjectInterface && !$this->object->isProxyInitialized()) {
-            $this->object->initializeProxy();
-        }
-
-        $this->identifier = (string) $this->getPropertyValue($this->meta->identifier);
-
-        return $this->identifier;
     }
 
     private function initialize(): void
@@ -96,5 +53,41 @@ class DocumentWrapper implements WrapperInterface
     public function getObject(): TranslatableInterface
     {
         return $this->object;
+    }
+
+    public function getPropertyValue(string $name)
+    {
+        $this->initialize();
+
+        $propertyReflection = $this->meta->getReflectionProperty($name);
+        $propertyReflection->setAccessible(true);
+
+        return $propertyReflection->getValue($this->object);
+    }
+
+    public function setPropertyValue(string $name, $value): self
+    {
+        $this->initialize();
+
+        $propertyReflection = $this->meta->getReflectionProperty($name);
+        $propertyReflection->setAccessible(true);
+        $propertyReflection->setValue($this->object, $value);
+
+        return $this;
+    }
+
+    public function getIdentifier(): ?string
+    {
+        if ($this->identifier) {
+            return $this->identifier;
+        }
+
+        if ($this->object instanceof GhostObjectInterface && !$this->object->isProxyInitialized()) {
+            $this->object->initializeProxy();
+        }
+
+        $this->identifier = (string) $this->getPropertyValue($this->meta->identifier);
+
+        return $this->identifier;
     }
 }

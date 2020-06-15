@@ -26,7 +26,6 @@ namespace Teknoo\East\Website\Doctrine\Translatable\Persistence\Adapter;
 
 use Doctrine\ODM\MongoDB\Mapping\ClassMetadata as OdmClassMetadata;
 use Doctrine\ODM\MongoDB\DocumentManager;
-use Doctrine\ODM\MongoDB\Mapping\Annotations\File\Metadata;
 use Doctrine\ODM\MongoDB\Types\Type;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Teknoo\East\Website\Doctrine\Translatable\Persistence\AdapterInterface;
@@ -46,10 +45,10 @@ class ODM implements AdapterInterface
         WrapperInterface $wrapped,
         string $locale,
         string $translationClass,
-        string $objectClass
-    ): iterable {
-        // load translated content for all translatable fields
-        // construct query
+        string $objectClass,
+        callable $callback
+    ): AdapterInterface {
+        // load translated content for all translatable fields construct query
         $queryBuilder = $this->manager->createQueryBuilder($translationClass);
         $queryBuilder->field('foreignKey')->equals($wrapped->getIdentifier());
         $queryBuilder->field('locale')->equals($locale);
@@ -60,11 +59,9 @@ class ODM implements AdapterInterface
 
         $result = $query->execute();
 
-        if (empty($result)) {
-            return [];
-        }
+        $callback($result);
 
-        return $result;
+        return $this;
     }
 
     public function findTranslation(
@@ -72,30 +69,32 @@ class ODM implements AdapterInterface
         string $locale,
         string $field,
         string $translationClass,
-        string $objectClass
-    ): ?TranslationInterface {
+        string $objectClass,
+        callable $callback
+    ): AdapterInterface {
         $queryBuilder = $this->manager->createQueryBuilder($translationClass);
         $queryBuilder->field('locale')->equals($locale);
         $queryBuilder->field('field')->equals($field);
         $queryBuilder->field('foreignKey')->equals($wrapped->getIdentifier());
         $queryBuilder->field('objectClass')->equals($objectClass);
+
         $queryBuilder->limit(1);
 
         $query = $queryBuilder->getQuery();
         $result = $query->getSingleResult();
 
         if (!$result instanceof TranslationInterface) {
-            return null;
+            $callback($result);
         }
 
-        return $result;
+        return $this;
     }
 
     public function removeAssociatedTranslations(
         WrapperInterface $wrapped,
         string $translationClass,
         string $objectClass
-    ): void {
+    ): AdapterInterface {
         $queryBuilder = $this->manager->createQueryBuilder($translationClass);
         $queryBuilder->remove();
         $queryBuilder->field('foreignKey')->equals($wrapped->getIdentifier());
@@ -103,14 +102,16 @@ class ODM implements AdapterInterface
 
         $query = $queryBuilder->getQuery();
         $query->execute();
+
+        return $this;
     }
 
-    private function prepareId(ClassMetadata $metadata, TranslationInterface $translation)
+    private function prepareId(OdmClassMetadata $metadata, TranslationInterface $translation)
     {
         if (
-            OdmClassMetadata::GENERATOR_TYPE_NONE === $metadata->generatorType
+            null === $metadata->idGenerator
+            || OdmClassMetadata::GENERATOR_TYPE_NONE === $metadata->generatorType
             || !empty($translation->getIdentifier())
-            || null === $metadata->idGenerator
         ) {
             return;
         }
@@ -131,7 +132,7 @@ class ODM implements AdapterInterface
         return $final;
     }
 
-    public function insertTranslationRecord(TranslationInterface $translation): void
+    public function insertTranslationRecord(TranslationInterface $translation): AdapterInterface
     {
         $meta = $this->manager->getClassMetadata(\get_class($translation));
 
@@ -146,32 +147,43 @@ class ODM implements AdapterInterface
                 ['$set' => $this->generateInsertionArray($meta, $translation)]
             );
         }
-    }
 
-    /**
-     * @return mixed
-     */
-    public function getTranslationValue(WrapperInterface $wrapped, ClassMetadata $metadata, string $field)
-    {
-        $mapping = $metadata->getFieldMapping($field);
-
-        $type = $this->getType($mapping['type']);
-        $value = $wrapped->getPropertyValue($field);
-
-        return $type->convertToDatabaseValue($value);
-    }
-
-    public function setTranslationValue(WrapperInterface $wrapped, ClassMetadata $metadata, string $field, $value): void
-    {
-        $mapping = $metadata->getFieldMapping($field);
-        $type = $this->getType($mapping['type']);
-
-        $value = $type->convertToPHPValue($value);
-        $wrapped->setPropertyValue($field, $value);
+        return $this;
     }
 
     private function getType(string $type): Type
     {
         return Type::getType($type);
+    }
+
+    public function updateTranslationRecord(
+        WrapperInterface $wrapped,
+        ClassMetadata $metadata,
+        string $field,
+        TranslationInterface $translation
+    ): AdapterInterface {
+        $mapping = $metadata->getFieldMapping($field);
+
+        $type = $this->getType($mapping['type']);
+        $value = $wrapped->getPropertyValue($field);
+
+        $translation->setContent($type->convertToDatabaseValue($value));
+
+        return $this;
+    }
+
+    public function setTranslationValue(
+        WrapperInterface $wrapped,
+        ClassMetadata $metadata,
+        string $field,
+        $value
+    ): AdapterInterface {
+        $mapping = $metadata->getFieldMapping($field);
+        $type = $this->getType($mapping['type']);
+
+        $value = $type->convertToPHPValue($value);
+        $wrapped->setPropertyValue($field, $value);
+
+        return $this;
     }
 }

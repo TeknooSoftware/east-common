@@ -37,18 +37,19 @@ interface AdapterInterface extends ManagerInterface
 
     public function getObjectChangeSet(TranslatableInterface $object): array;
 
-    public function recomputeSingleObjectChangeSet(ClassMetadata $meta, TranslatableInterface $object): void;
+    public function foreachScheduledObjectInsertions(callable $callback): AdapterInterface;
 
-    public function getScheduledObjectUpdates(): array;
+    public function foreachScheduledObjectUpdates(callable $callback): AdapterInterface;
 
-    public function getScheduledObjectInsertions(): array;
+    public function foreachScheduledObjectDeletions(callable $callback): AdapterInterface;
 
-    public function getScheduledObjectDeletions(): array;
+    public function recomputeSingleObjectChangeSet(
+        ClassMetadata $meta,
+        TranslatableInterface $object
+    ): AdapterInterface;
 
     /**
      * @param mixed $value
      */
-    public function setOriginalObjectProperty(string $oid, string $property, $value): void;
-
-    public function computeChangeSet(ClassMetadata $class, object $object) : void;
+    public function setOriginalObjectProperty(string $oid, string $property, $value): AdapterInterface;
 }

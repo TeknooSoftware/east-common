@@ -91,12 +91,12 @@ class Xml implements DriverInterface
         }
     }
 
-    public function readExtendedMetadata(ClassMetadata $meta, array &$config): void
+    public function readExtendedMetadata(ClassMetadata $meta, array &$config): self
     {
         $xml = $this->getMapping($meta->getName());
 
         if (null === $xml) {
-            return;
+            return $this;
         }
 
         $config['translationClass'] = (string) ($xml->attributes()['translation-class'] ?? Translation::class);
@@ -108,5 +108,7 @@ class Xml implements DriverInterface
         }
 
         $this->inspectElementsForTranslatableFields($xml, $config);
+
+        return $this;
     }
 }

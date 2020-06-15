@@ -31,6 +31,7 @@ use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Persistence\ObjectManager;
 use Teknoo\East\Website\Doctrine\Exception\InvalidMappingException;
 use Teknoo\East\Website\Doctrine\Exception\RuntimeException;
+use Teknoo\East\Website\Doctrine\Translatable\TranslatableListener;
 
 /**
  * The extension metadata factory is responsible for extension driver
@@ -74,24 +75,29 @@ class ExtensionMetadataFactory
         return $className.'\\$_TRANSLATE_METADATA';
     }
 
-    public function getExtensionMetadata(ObjectManager $objectManager, ClassMetadata $meta): array
-    {
-        if (!empty($meta->isMappedSuperclass)) {
-            return []; // ignore mappedSuperclasses for now
+    public function getExtensionMetadata(
+        ObjectManager $objectManager,
+        ClassMetadata $metaData,
+        TranslatableListener $listener
+    ): self {
+        if (!empty($metaData->isMappedSuperclass)) {
+            return $this;
         }
 
         $config = [];
         $cmf = $objectManager->getMetadataFactory();
 
-        $cacheId = self::getCacheId($meta->getName());
+        $cacheId = self::getCacheId($metaData->getName());
         $cacheDriver = $cmf->getCacheDriver();
 
         if (null !== $cacheDriver && $cacheDriver->contains($cacheId)) {
-            return $cacheDriver->fetch($cacheId);
+            $listener->injectConfiguration($metaData, $cacheDriver->fetch($cacheId));
+
+            return $this;
         }
 
         $driver = $this->getDriver($objectManager);
-        $useObjectName = $meta->getName();
+        $useObjectName = $metaData->getName();
 
         // collect metadata from inherited classes
         foreach (\array_reverse(\class_parents($useObjectName)) as $parentClass) {
@@ -110,7 +116,7 @@ class ExtensionMetadataFactory
             }
         }
 
-        $driver->readExtendedMetadata($meta, $config);
+        $driver->readExtendedMetadata($metaData, $config);
 
         if (!empty($config)) {
             $config['useObjectClass'] = $useObjectName;
@@ -119,7 +125,9 @@ class ExtensionMetadataFactory
         if (null !== $cacheDriver) {
             $cacheDriver->save($cacheId, $config, null);
         }
+        
+        $listener->injectConfiguration($metaData, $config);
 
-        return $config;
+        return $this;
     }
 }

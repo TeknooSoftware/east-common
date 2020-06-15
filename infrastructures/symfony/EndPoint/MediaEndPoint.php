@@ -42,7 +42,7 @@ class MediaEndPoint
 
     private GridFSRepository $repostory;
 
-    public function setRepostory(DocumentManager $manager): MediaEndPoint
+    public function setRepostory(DocumentManager $manager): self
     {
         $this->repostory = $manager->getRepository(Media::class);
 

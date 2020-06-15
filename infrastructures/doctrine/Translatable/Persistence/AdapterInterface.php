@@ -34,29 +34,33 @@ interface AdapterInterface
         WrapperInterface $wrapped,
         string $locale,
         string $translationClass,
-        string $objectClass
-    ): iterable;
+        string $objectClass,
+        callable $callback
+    ): AdapterInterface;
 
     public function findTranslation(
         WrapperInterface $wrapped,
         string $locale,
         string $field,
         string $translationClass,
-        string $objectClass
-    ): ?TranslationInterface;
+        string $objectClass,
+        callable $callback
+    ): AdapterInterface;
 
     public function removeAssociatedTranslations(
         WrapperInterface $wrapped,
         string $translationClass,
         string $objectClass
-    ): void;
+    ): AdapterInterface;
 
-    public function insertTranslationRecord(TranslationInterface $translation): void;
+    public function insertTranslationRecord(TranslationInterface $translation): AdapterInterface;
 
-    /**
-     * @return mixed
-     */
-    public function getTranslationValue(WrapperInterface $wrapped, ClassMetadata $metadata, string $field);
+    public function updateTranslationRecord(
+        WrapperInterface $wrapped,
+        ClassMetadata $metadata,
+        string $field,
+        TranslationInterface $translation
+    ): AdapterInterface;
 
     /**
      * @param mixed $value
@@ -66,5 +70,5 @@ interface AdapterInterface
         ClassMetadata $metadata,
         string $field,
         $value
-    ): void;
+    ): AdapterInterface;
 }

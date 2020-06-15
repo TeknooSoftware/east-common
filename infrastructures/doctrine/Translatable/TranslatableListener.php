@@ -30,8 +30,8 @@ use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Doctrine\Persistence\Event\LoadClassMetadataEventArgs;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use ProxyManager\Proxy\GhostObjectInterface;
-use Teknoo\East\Website\Doctrine\Exception\RuntimeException;
 use Teknoo\East\Website\Doctrine\Translatable\ObjectManager\AdapterInterface as ManagerAdapterInterface;
+use Teknoo\East\Website\Doctrine\Translatable\Persistence\AdapterInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Persistence\AdapterInterface as PersistenceAdapterInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Mapping\ExtensionMetadataFactory;
 use Teknoo\East\Website\Doctrine\Translatable\Wrapper\FactoryInterface;
@@ -141,9 +141,10 @@ class TranslatableListener implements EventSubscriber
         ];
     }
 
-    public function setLocale(string $locale): TranslatableListener
+    public function setLocale(string $locale): self
     {
         $this->locale = $locale;
+
         return $this;
     }
 
@@ -161,28 +162,40 @@ class TranslatableListener implements EventSubscriber
         return ($this->wrapperFactory)($translatable, $this->manager->getRootObject());
     }
 
-    private function loadMetadataForObjectClass(ClassMetadata $metadata): array
+    private function loadMetadataForObjectClass(ClassMetadata $metadata): void
     {
-        return $this->extensionMetadataFactory->getExtensionMetadata($this->manager->getRootObject(), $metadata);
+        $this->extensionMetadataFactory->getExtensionMetadata($this->manager->getRootObject(), $metadata, $this);
     }
 
-    private function getConfiguration(ClassMetadata $meta): array
+    public function injectConfiguration(ClassMetadata $metadata, array &$config): self
     {
-        $className = $meta->getName();
+        $className = $metadata->getName();
+
+        $this->configurations[$className] = $config;
+
+        return $this;
+    }
+
+    private function getConfiguration(ClassMetadata $metadata): array
+    {
+        $className = $metadata->getName();
         if (isset($this->configurations[$className])) {
             return $this->configurations[$className];
         }
 
-        $this->configurations[$className] = $this->loadMetadataForObjectClass($meta);
+        $this->configurations[$className] = [];
+        $this->loadMetadataForObjectClass($metadata);
 
         return $this->configurations[$className];
     }
 
-    public function loadClassMetadata(LoadClassMetadataEventArgs $event): void
+    public function loadClassMetadata(LoadClassMetadataEventArgs $event): self
     {
-        $classMetaData = $event->getClassMetadata();
+        $metadata = $event->getClassMetadata();
 
-        $this->configurations[$classMetaData->getName()] =  $this->loadMetadataForObjectClass($classMetaData);
+        $this->loadMetadataForObjectClass($metadata);
+
+        return $this;
     }
 
     /*
@@ -201,61 +214,64 @@ class TranslatableListener implements EventSubscriber
         string $translationClass,
         array $config,
         ClassMetadata $metaData
-    ): void {
-        $result = $this->persistence->loadTranslations(
+    ): AdapterInterface {
+        $this->persistence->loadTranslations(
             $wrapper,
             $locale,
             $translationClass,
-            $config['useObjectClass']
-        );
+            $config['useObjectClass'],
+            function (iterable $result) use ($wrapper, $config, $metaData) {
+                if (empty($result)) {
+                    return;
+                }
 
-        $reflectionClass = $metaData->getReflectionClass();
+                // translate object's translatable properties
+                foreach ($config['fields'] as $field) {
+                    $translated = '';
+                    $isTranslated = false;
+                    foreach ($result as $entry) {
+                        if ($entry['field'] === $field) {
+                            $translated = $entry['content'] ?? null;
+                            $isTranslated = true;
+                            break;
+                        }
+                    }
 
-        // translate object's translatable properties
-        foreach ($config['fields'] as $field) {
-            $translated = '';
-            $isTranslated = false;
-            foreach ($result as $entry) {
-                if ($entry['field'] === $field) {
-                    $translated = $entry['content'] ?? null;
-                    $isTranslated = true;
-                    break;
+                    // update translation
+                    if (
+                        $isTranslated
+                        || (!$this->translationFallback && empty($config['fallback'][$field]))
+                    ) {
+                        $originalValue = $wrapper->getPropertyValue($field);
+                        $this->persistence->setTranslationValue($wrapper, $metaData, $field, $translated);
+                        // ensure clean changeset
+                        $this->manager->setOriginalObjectProperty(
+                            \spl_object_hash($wrapper->getObject()),
+                            $field,
+                            $originalValue
+                        );
+                    }
                 }
             }
-
-            // update translation
-            if (
-                $isTranslated
-                || (!$this->translationFallback && empty($config['fallback'][$field]))
-            ) {
-                $orignalValue = $wrapper->getPropertyValue($field);
-                $this->persistence->setTranslationValue($wrapper, $metaData, $field, $translated);
-                // ensure clean changeset
-                $this->manager->setOriginalObjectProperty(
-                    \spl_object_hash($wrapper->getObject()),
-                    $field,
-                    $orignalValue
-                );
-            }
-        }
+        );
     }
 
     /*
      * After object is loaded, listener updates the translations by currently used locale
      */
-    public function postLoad(LifecycleEventArgs $event): void
+    public function postLoad(LifecycleEventArgs $event): self
     {
         $object = $event->getObject();
 
         if (!$object instanceof TranslatableInterface) {
-            return;
+            return $this;
         }
 
         $metaData = $this->manager->getClassMetadata($this->getObjectClassName($object));
 
         $config = $this->getConfiguration($metaData);
         if (!isset($config['fields'])) {
-            return;
+            return $this;
         }
 
         $locale = $this->getTranslatableLocale($object);
@@ -263,7 +279,7 @@ class TranslatableListener implements EventSubscriber
         $this->translatedInLocale[$oid] = $locale;
 
         if ($locale === $this->defaultLocale) {
-            return;
+            return $this;
         }
 
         // fetch translations
@@ -271,6 +287,8 @@ class TranslatableListener implements EventSubscriber
         $wrapper = $this->wrap($object);
 
         $this->loadTranslations($wrapper, $locale, $translationClass, $config, $metaData);
+
+        return $this;
     }
 
     /*
@@ -304,7 +322,7 @@ class TranslatableListener implements EventSubscriber
         $changeSet = $this->manager->getObjectChangeSet($object);
 
         $translatableFields = \array_flip($config['fields']);
-        foreach ($translatableFields as $field=>$notUsed) {
+        foreach ($translatableFields as $field => $notUsed) {
             if (
                 isset($this->translatedInLocale[$oid])
                 && $locale === $this->translatedInLocale[$oid]
@@ -315,12 +333,15 @@ class TranslatableListener implements EventSubscriber
 
             $translation = null;
             if (!$isInsert) {
-                $translation = $this->persistence->findTranslation(
+                $this->persistence->findTranslation(
                     $wrapper,
                     $locale,
                     $field,
                     $translationClass,
-                    $config['useObjectClass']
+                    $config['useObjectClass'],
+                    function (TranslationInterface $result) use (&$translation) {
+                        $translation = $result;
+                    }
                 );
             }
 
@@ -336,8 +357,7 @@ class TranslatableListener implements EventSubscriber
 
             if ($translation instanceof TranslationInterface) {
                 // set the translated field, take value using reflection
-                $content = $this->persistence->getTranslationValue($wrapper, $metaData, $field);
-                $translation->setContent($content);
+                $this->persistence->updateTranslationRecord($wrapper, $metaData, $field, $translation);
 
                 if ($isInsert) {
                     // if we do not have the primary key yet available
@@ -368,7 +388,7 @@ class TranslatableListener implements EventSubscriber
     /*
      * Looks for translatable objects being inserted or updated for further processing
      */
-    public function onFlush(EventArgs $event): void
+    public function onFlush(EventArgs $event): self
     {
         $this->objectsToTranslate = [];
 
@@ -386,19 +406,17 @@ class TranslatableListener implements EventSubscriber
         };
 
         // check all scheduled inserts for TranslatableInterface objects
-        foreach ($this->manager->getScheduledObjectInsertions() as $object) {
+        $this->manager->foreachScheduledObjectInsertions(static function ($object) use ($handling) {
             $handling($object, true);
-        }
+        });
 
-        // check all scheduled updates for TranslatableInterface entities
-        foreach ($this->manager->getScheduledObjectUpdates() as $object) {
+        $this->manager->foreachScheduledObjectUpdates(static function ($object) use ($handling) {
             $handling($object, false);
-        }
+        });
 
-        // check scheduled deletions for TranslatableInterface entities
-        foreach ($this->manager->getScheduledObjectDeletions() as $object) {
+        $this->manager->foreachScheduledObjectDeletions(function ($object) {
             if (!$object instanceof TranslatableInterface) {
-                return;
+                return $this;
             }
 
             $metaData = $this->manager->getClassMetadata($this->getObjectClassName($object));
@@ -412,35 +430,42 @@ class TranslatableListener implements EventSubscriber
                     $config['useObjectClass']
                 );
             }
-        }
+        });
+
+        return $this;
     }
 
-    public function postFlush(EventArgs $event): void
+    public function postFlush(EventArgs $event): self
     {
         foreach ($this->objectsToTranslate as $local => &$objects) {
             foreach ($objects as &$object) {
                 $this->loadTranslations($object[0], $local, $object[1], $object[2], $object[3]);
             }
+            unset($object);
         }
 
+        unset($objects);
+
         $this->objectsToTranslate = [];
+
+        return $this;
     }
 
     /*
      * Checks for inserted object to update their translation foreign keys
      */
-    public function postPersist(LifecycleEventArgs $event): void
+    public function postPersist(LifecycleEventArgs $event): self
     {
         $object = $event->getObject();
 
         if (!$object instanceof TranslatableInterface) {
-            return;
+            return $this;
         }
 
         $oid = \spl_object_hash($object);
 
         if (!isset($this->pendingTranslationInserts[$oid])) {
-            return;
+            return $this;
         }
 
         $wrapper = $this->wrap($object);
@@ -450,6 +475,9 @@ class TranslatableListener implements EventSubscriber
             $translation->setForeignKey($objectId);
             $this->persistence->insertTranslationRecord($translation);
         }
+
         unset($this->pendingTranslationInserts[$oid]);
+
+        return $this;
     }
 }

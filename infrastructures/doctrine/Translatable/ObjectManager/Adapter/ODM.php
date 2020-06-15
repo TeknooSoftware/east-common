@@ -91,38 +91,47 @@ class ODM implements AdapterInterface
         return $this->getUnitOfWork()->getDocumentChangeSet($object);
     }
 
-    public function recomputeSingleObjectChangeSet(BaseClassMetadata $meta, TranslatableInterface $object): void
-    {
+    public function recomputeSingleObjectChangeSet(
+        BaseClassMetadata $metadata,
+        TranslatableInterface $object
+    ): AdapterInterface {
         $uow = $this->getUnitOfWork();
         $uow->clearDocumentChangeSet(\spl_object_hash($object));
-        $uow->recomputeSingleDocumentChangeSet($meta, $object);
+        $uow->recomputeSingleDocumentChangeSet($metadata, $object);
     }
 
-    public function getScheduledObjectUpdates(): array
+    public function foreachScheduledObjectInsertions(callable $callback): AdapterInterface
     {
-        return $this->getUnitOfWork()->getScheduledDocumentUpdates();
+        foreach ($this->getUnitOfWork()->getScheduledDocumentInsertions() as $document) {
+            $callback($document);
+        }
+
+        return $this;
     }
 
-    public function getScheduledObjectInsertions(): array
+    public function foreachScheduledObjectUpdates(callable $callback): AdapterInterface
     {
-        return $this->getUnitOfWork()->getScheduledDocumentInsertions();
+        foreach ($this->getUnitOfWork()->getScheduledDocumentUpdates() as $document) {
+            $callback($document);
+        }
+
+        return $this;
     }
 
-    public function getScheduledObjectDeletions(): array
+    public function foreachScheduledObjectDeletions(callable $callback): AdapterInterface
     {
-        return $this->getUnitOfWork()->getScheduledDocumentDeletions();
+        foreach ($this->getUnitOfWork()->getScheduledDocumentDeletions() as $document) {
+            $callback($document);
+        }
+
+        return $this;
     }
 
     /**
      * @param mixed $value
      */
-    public function setOriginalObjectProperty(string $oid, string $property, $value): void
+    public function setOriginalObjectProperty(string $oid, string $property, $value): AdapterInterface
     {
         $this->getUnitOfWork()->setOriginalDocumentProperty($oid, $property, $value);
-    }
-
-    public function computeChangeSet(BaseClassMetadata $class, object $object): void
-    {
-        $this->getUnitOfWork()->computeChangeSet($class, $object);
     }
 }

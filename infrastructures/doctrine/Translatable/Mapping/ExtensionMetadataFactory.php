@@ -74,7 +74,7 @@ class ExtensionMetadataFactory
         return $className.'\\$_TRANSLATE_METADATA';
     }
 
-    public function getExtensionMetadata(
+    public function loadExtensionMetadata(
         ObjectManager $objectManager,
         ClassMetadata $metaData,
         TranslatableListener $listener

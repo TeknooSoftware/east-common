@@ -164,7 +164,7 @@ class TranslatableListener implements EventSubscriber
 
     private function loadMetadataForObjectClass(ClassMetadata $metadata): void
     {
-        $this->extensionMetadataFactory->getExtensionMetadata($this->manager->getRootObject(), $metadata, $this);
+        $this->extensionMetadataFactory->loadExtensionMetadata($this->manager->getRootObject(), $metadata, $this);
     }
 
     public function injectConfiguration(ClassMetadata $metadata, array &$config): self
@@ -215,8 +215,8 @@ class TranslatableListener implements EventSubscriber
         array $config,
         ClassMetadata $metaData
     ): AdapterInterface {
-        $this->persistence->loadTranslations(
-            $wrapper,
+        $wrapper->loadTranslations(
+            $this->persistence,
             $locale,
             $translationClass,
             $config['useObjectClass'],
@@ -297,11 +297,6 @@ class TranslatableListener implements EventSubscriber
         $config = $this->getConfiguration($metaData);
 
         $translationClass = $config['translationClass'];
-        $translationMetadata = $this->manager->getClassMetadata($translationClass);
-        $translationReflection = $translationMetadata->getReflectionClass();
-
-        // check for the availability of the primary key
-        $oid = \spl_object_hash($object);
 
         // load the currently used locale
         $locale = $this->getTranslatableLocale($object);
@@ -312,70 +307,86 @@ class TranslatableListener implements EventSubscriber
 
         $this->objectsToTranslate[$locale][] = [$wrapper, $translationClass, $config, $metaData];
 
-        $changeSet = $this->manager->getObjectChangeSet($object);
-
-        $translatableFields = \array_flip($config['fields']);
-        foreach ($translatableFields as $field => $notUsed) {
-            if (
-                isset($this->translatedInLocale[$oid])
-                && $locale === $this->translatedInLocale[$oid]
-                && !isset($changeSet[$field])
+        $this->manager->ifObjectHasChangeSet(
+            $object,
+            function (array $changeSet) use (
+                &$config,
+                $object,
+                &$locale,
+                &$isInsert,
+                $wrapper,
+                &$translationClass,
+                $metaData
             ) {
-                continue; // locale is same and nothing changed
-            }
+                // check for the availability of the primary key
+                $oid = \spl_object_hash($object);
 
-            $translation = null;
-            if (!$isInsert) {
-                $this->persistence->findTranslation(
-                    $wrapper,
-                    $locale,
-                    $field,
-                    $translationClass,
-                    $config['useObjectClass'],
-                    function (TranslationInterface $result) use (&$translation) {
-                        $translation = $result;
+                $translationMetadata = $this->manager->getClassMetadata($translationClass);
+                $translationReflection = $translationMetadata->getReflectionClass();
+
+                $translatableFields = \array_flip($config['fields']);
+                foreach ($translatableFields as $field => $notUsed) {
+                    if (
+                        isset($this->translatedInLocale[$oid])
+                        && $locale === $this->translatedInLocale[$oid]
+                        && !isset($changeSet[$field])
+                    ) {
+                        continue; // locale is same and nothing changed
                     }
-                );
-            }
 
-            // create new translation if translation not already created and locale is different from default
-            // locale, otherwise, we have the date in the original record
-            if (!$translation instanceof TranslationInterface && $locale !== $this->defaultLocale) {
-                $translation = $translationReflection->newInstance();
-                $translation->setLocale($locale);
-                $translation->setField($field);
-                $translation->setObjectClass($config['useObjectClass']);
-                $wrapper->linkTranslationRecord($translation);
-            }
+                    $translation = null;
+                    if (!$isInsert) {
+                        $wrapper->findTranslation(
+                            $this->persistence,
+                            $locale,
+                            $field,
+                            $translationClass,
+                            $config['useObjectClass'],
+                            static function (TranslationInterface $result) use (&$translation) {
+                                $translation = $result;
+                            }
+                        );
+                    }
 
-            if ($translation instanceof TranslationInterface) {
-                // set the translated field, take value using reflection
-                $this->persistence->updateTranslationRecord($wrapper, $metaData, $field, $translation);
+                    // create new translation if translation not already created and locale is different from default
+                    // locale, otherwise, we have the date in the original record
+                    if (!$translation instanceof TranslationInterface && $locale !== $this->defaultLocale) {
+                        $translation = $translationReflection->newInstance();
+                        $translation->setLocale($locale);
+                        $translation->setField($field);
+                        $translation->setObjectClass($config['useObjectClass']);
+                        $wrapper->linkTranslationRecord($translation);
+                    }
 
-                if ($isInsert) {
-                    // if we do not have the primary key yet available
-                    // keep this translation in memory to insert it later with foreign key
-                    $this->pendingTranslationInserts[$oid][] = $translation;
-                } else {
-                    $this->persistence->insertTranslationRecord($translation);
+                    if ($translation instanceof TranslationInterface) {
+                        // set the translated field, take value using reflection
+                        $this->persistence->updateTranslationRecord($wrapper, $metaData, $field, $translation);
+
+                        if ($isInsert) {
+                            // if we do not have the primary key yet available
+                            // keep this translation in memory to insert it later with foreign key
+                            $this->pendingTranslationInserts[$oid][] = $translation;
+                        } else {
+                            $this->persistence->insertTranslationRecord($translation);
+                        }
+                    }
+                }
+
+                $this->translatedInLocale[$oid] = $locale;
+
+                // check if we have default translation and need to reset the translation
+                if (!$isInsert) {
+                    foreach ($changeSet as $field => $changes) {
+                        $this->manager->setOriginalObjectProperty($oid, $field, $changes[0]);
+                        if (isset($translatableFields[$field]) && $locale !== $this->defaultLocale) {
+                            $wrapper->setPropertyValue($field, $changes[0]);
+                        }
+                    }
+
+                    $this->manager->recomputeSingleObjectChangeset($metaData, $object);
                 }
             }
-        }
-
-        $this->translatedInLocale[$oid] = $locale;
-
-        // check if we have default translation and need to reset the translation
-        if (!$isInsert) {
-            $modifiedChangeSet = $changeSet;
-            foreach ($changeSet as $field => $changes) {
-                $this->manager->setOriginalObjectProperty($oid, $field, $changes[0]);
-                if (isset($translatableFields[$field]) && $locale !== $this->defaultLocale) {
-                    $wrapper->setPropertyValue($field, $changes[0]);
-                }
-            }
-
-            $this->manager->recomputeSingleObjectChangeset($metaData, $object);
-        }
+        );
     }
 
     /*
@@ -417,8 +428,8 @@ class TranslatableListener implements EventSubscriber
 
             if (isset($config['fields'])) {
                 $wrapper = $this->wrap($object, $metaData);
-                $this->persistence->removeAssociatedTranslations(
-                    $wrapper,
+                $wrapper->removeAssociatedTranslations(
+                    $this->persistence,
                     $config['translationClass'],
                     $config['useObjectClass']
                 );

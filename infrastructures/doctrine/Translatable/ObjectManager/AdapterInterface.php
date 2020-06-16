@@ -35,7 +35,7 @@ interface AdapterInterface extends ManagerInterface
 
     public function getClassMetadata(string $class): ClassMetadata;
 
-    public function getObjectChangeSet(TranslatableInterface $object): array;
+    public function ifObjectHasChangeSet(TranslatableInterface $object, callable $callback): AdapterInterface;
 
     public function foreachScheduledObjectInsertions(callable $callback): AdapterInterface;
 

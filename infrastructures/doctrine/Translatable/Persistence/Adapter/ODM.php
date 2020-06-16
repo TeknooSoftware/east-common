@@ -42,15 +42,15 @@ class ODM implements AdapterInterface
     }
 
     public function loadTranslations(
-        WrapperInterface $wrapped,
         string $locale,
+        string $identifier,
         string $translationClass,
         string $objectClass,
         callable $callback
     ): AdapterInterface {
         // load translated content for all translatable fields construct query
         $queryBuilder = $this->manager->createQueryBuilder($translationClass);
-        $queryBuilder->field('foreignKey')->equals($wrapped->getIdentifier());
+        $queryBuilder->field('foreignKey')->equals($identifier);
         $queryBuilder->field('locale')->equals($locale);
         $queryBuilder->field('objectClass')->equals($objectClass);
 
@@ -65,9 +65,9 @@ class ODM implements AdapterInterface
     }
 
     public function findTranslation(
-        WrapperInterface $wrapped,
         string $locale,
         string $field,
+        string $identifier,
         string $translationClass,
         string $objectClass,
         callable $callback
@@ -75,7 +75,7 @@ class ODM implements AdapterInterface
         $queryBuilder = $this->manager->createQueryBuilder($translationClass);
         $queryBuilder->field('locale')->equals($locale);
         $queryBuilder->field('field')->equals($field);
-        $queryBuilder->field('foreignKey')->equals($wrapped->getIdentifier());
+        $queryBuilder->field('foreignKey')->equals($identifier);
         $queryBuilder->field('objectClass')->equals($objectClass);
 
         $queryBuilder->limit(1);
@@ -91,13 +91,13 @@ class ODM implements AdapterInterface
     }
 
     public function removeAssociatedTranslations(
-        WrapperInterface $wrapped,
+        string $identifier,
         string $translationClass,
         string $objectClass
     ): AdapterInterface {
         $queryBuilder = $this->manager->createQueryBuilder($translationClass);
         $queryBuilder->remove();
-        $queryBuilder->field('foreignKey')->equals($wrapped->getIdentifier());
+        $queryBuilder->field('foreignKey')->equals($identifier);
         $queryBuilder->field('objectClass')->equals($objectClass);
 
         $query = $queryBuilder->getQuery();

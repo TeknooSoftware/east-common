@@ -31,24 +31,24 @@ use Teknoo\East\Website\Doctrine\Translatable\Wrapper\WrapperInterface;
 interface AdapterInterface
 {
     public function loadTranslations(
-        WrapperInterface $wrapped,
         string $locale,
+        string $identifier,
         string $translationClass,
         string $objectClass,
         callable $callback
     ): AdapterInterface;
 
     public function findTranslation(
-        WrapperInterface $wrapped,
         string $locale,
         string $field,
+        string $identifier,
         string $translationClass,
         string $objectClass,
         callable $callback
     ): AdapterInterface;
 
     public function removeAssociatedTranslations(
-        WrapperInterface $wrapped,
+        string $identifier,
         string $translationClass,
         string $objectClass
     ): AdapterInterface;

@@ -86,9 +86,15 @@ class ODM implements AdapterInterface
         return $this->unitOfWork;
     }
 
-    public function getObjectChangeSet(TranslatableInterface $object): array
+    public function ifObjectHasChangeSet(TranslatableInterface $object, callable $callback): AdapterInterface
     {
-        return $this->getUnitOfWork()->getDocumentChangeSet($object);
+        $changeSet = $this->getUnitOfWork()->getDocumentChangeSet($object);
+
+        if (!empty($changeSet)) {
+            $callback($changeSet);
+        }
+
+        return $this;
     }
 
     public function recomputeSingleObjectChangeSet(

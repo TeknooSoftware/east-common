@@ -26,6 +26,7 @@ namespace Teknoo\East\Website\Doctrine\Translatable\Wrapper;
 
 use Doctrine\ODM\MongoDB\Types\Type;
 use Teknoo\East\Website\Doctrine\Translatable\ObjectManager\AdapterInterface as ManagerAdapterInterface;
+use Teknoo\East\Website\Doctrine\Translatable\Persistence\AdapterInterface;
 use Teknoo\East\Website\Doctrine\Translatable\TranslationInterface;
 
 interface WrapperInterface
@@ -44,4 +45,27 @@ interface WrapperInterface
     ): WrapperInterface;
 
     public function linkTranslationRecord(TranslationInterface $translation): WrapperInterface;
+
+    public function loadTranslations(
+        AdapterInterface $adapter,
+        string $locale,
+        string $translationClass,
+        string $objectClass,
+        callable $callback
+    ): AdapterInterface;
+
+    public function findTranslation(
+        AdapterInterface $adapter,
+        string $locale,
+        string $field,
+        string $translationClass,
+        string $objectClass,
+        callable $callback
+    ): AdapterInterface;
+
+    public function removeAssociatedTranslations(
+        AdapterInterface $adapter,
+        string $translationClass,
+        string $objectClass
+    ): AdapterInterface;
 }

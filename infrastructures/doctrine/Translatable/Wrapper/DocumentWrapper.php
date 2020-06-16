@@ -28,6 +28,7 @@ use Doctrine\ODM\MongoDB\Mapping\ClassMetadata;
 use Doctrine\ODM\MongoDB\Types\Type;
 use ProxyManager\Proxy\GhostObjectInterface;
 use Teknoo\East\Website\Doctrine\Translatable\ObjectManager\AdapterInterface as ManagerAdapterInterface;
+use Teknoo\East\Website\Doctrine\Translatable\Persistence\AdapterInterface;
 use Teknoo\East\Website\Doctrine\Translatable\TranslationInterface;
 use Teknoo\East\Website\Object\TranslatableInterface;
 
@@ -123,5 +124,59 @@ class DocumentWrapper implements WrapperInterface
     public function linkTranslationRecord(TranslationInterface $translation): WrapperInterface
     {
         $translation->setForeignKey($this->getIdentifier());
+
+        return $this;
+    }
+
+    public function loadTranslations(
+        AdapterInterface $adapter,
+        string $locale,
+        string $translationClass,
+        string $objectClass,
+        callable $callback
+    ): WrapperInterface {
+        $adapter->loadTranslations(
+            $locale,
+            $this->getIdentifier(),
+            $translationClass,
+            $objectClass,
+            $callback
+        );
+
+        return $this;
+    }
+
+    public function findTranslation(
+        AdapterInterface $adapter,
+        string $locale,
+        string $field,
+        string $translationClass,
+        string $objectClass,
+        callable $callback
+    ): WrapperInterface {
+        $adapter->findTranslation(
+            $locale,
+            $field,
+            $this->getIdentifier(),
+            $translationClass,
+            $objectClass,
+            $callback
+        );
+
+        return $this;
+    }
+
+    public function removeAssociatedTranslations(
+        AdapterInterface $adapter,
+        string $translationClass,
+        string $objectClass
+    ): WrapperInterface {
+        $adapter->removeAssociatedTranslations(
+            $this->getIdentifier(),
+            $translationClass,
+            $objectClass
+        );
+
+        return $this;
     }
 }

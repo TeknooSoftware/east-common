@@ -76,7 +76,7 @@ class Type implements ObjectInterface, DeletableInterface, TimestampableInterfac
     public function getBlocks(): array
     {
         return \array_map(
-            function ($key, $value) {
+            static function ($key, $value) {
                 return new Block($key, $value);
             },
             \array_keys($this->blocks),

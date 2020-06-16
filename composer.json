@@ -32,6 +32,7 @@
         "php-di/php-di": "~6.0"
     },
     "require-dev": {
+        "ext-simplexml" : "*",
         "phpunit/phpunit": "~9.1",
         "squizlabs/php_codesniffer": "~3.5",
         "pdepend/pdepend": "~2.7",
@@ -46,7 +47,6 @@
         "symfony/templating": "~4.4||~5.0",
         "symfony/security": "~4.4||~5.0",
         "laminas/laminas-diactoros": "~2.2",
-        "ext-simplexml" : "*",
         "doctrine/common": "~2.13",
         "doctrine/mongodb-odm": "~2.1",
         "doctrine/mongodb-odm-bundle": "~4.1"

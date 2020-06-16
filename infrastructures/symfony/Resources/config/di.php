@@ -32,11 +32,11 @@ use function DI\decorate;
 
 return [
     //Middleware
-    LocaleMiddleware::class => function (ContainerInterface $container): LocaleMiddleware {
+    LocaleMiddleware::class => static function (ContainerInterface $container): LocaleMiddleware {
         return new LocaleMiddleware($container->get('translator'));
     },
 
-    RecipeInterface::class => decorate(function ($previous, ContainerInterface $container) {
+    RecipeInterface::class => decorate(static function ($previous, ContainerInterface $container) {
         if ($previous instanceof RecipeInterface) {
             $previous = $previous->registerMiddleware(
                 $container->get(LocaleMiddleware::class),

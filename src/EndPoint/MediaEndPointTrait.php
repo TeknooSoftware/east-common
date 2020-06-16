@@ -67,7 +67,7 @@ trait MediaEndPointTrait
 
                     $client->acceptResponse($response);
                 },
-                function () use ($client) {
+                static function () use ($client) {
                     $client->errorInRequest(
                         new \Exception('Media is not available', 404)
                     );

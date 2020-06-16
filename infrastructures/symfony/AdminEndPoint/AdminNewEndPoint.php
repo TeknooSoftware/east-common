@@ -102,7 +102,7 @@ class AdminNewEndPoint implements EndPointInterface
                 function (ObjectInterface $object) use ($client, $editRoute) {
                     $this->redirectToRoute($client, $editRoute, ['id' => $object->getId()]);
                 },
-                function ($error) use ($client) {
+                static function ($error) use ($client) {
                     $client->errorInRequest($error);
                 }
             ));

@@ -26,7 +26,6 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\Translatable\Mapping\Driver;
 
-use Doctrine\Persistence\Mapping\Driver\FileDriver;
 use Doctrine\Persistence\Mapping\Driver\FileLocator;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Teknoo\East\Website\Doctrine\Object\Translation;

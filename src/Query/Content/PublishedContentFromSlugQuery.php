@@ -59,7 +59,7 @@ class PublishedContentFromSlugQuery implements QueryInterface, ImmutableInterfac
         PromiseInterface $promise
     ): QueryInterface {
         $fetchingPromise = new Promise(
-            function ($object, PromiseInterface $next) {
+            static function ($object, PromiseInterface $next) {
                 if (
                     $object instanceof PublishableInterface
                     && $object->getPublishedAt() instanceof \DateTimeInterface
@@ -69,7 +69,7 @@ class PublishedContentFromSlugQuery implements QueryInterface, ImmutableInterfac
                     $next->fail(new \DomainException('Object not found'));
                 }
             },
-            function (\Throwable $e, PromiseInterface $next) {
+            static function (\Throwable $e, PromiseInterface $next) {
                 $next->fail($e);
             }
         );

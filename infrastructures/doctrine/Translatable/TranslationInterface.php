@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\Translatable;
 
-interface  TranslationInterface
+interface TranslationInterface
 {
     public function getIdentifier(): string;
 

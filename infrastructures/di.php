@@ -35,7 +35,7 @@ use function DI\string;
 return [
     ResponseFactoryInterface::class . ':value' => string(DiactorosResponseFactory::class),
 
-    ResponseFactoryInterface::class => function (ContainerInterface $container) {
+    ResponseFactoryInterface::class => static function (ContainerInterface $container) {
         $class = $container->get(ResponseFactoryInterface::class . ':value');
         if (\class_exists($class)) {
             return new $class();
@@ -46,7 +46,7 @@ return [
 
     StreamFactoryInterface::class . ':value' => string(CallbackStreamFactory::class),
 
-    StreamFactoryInterface::class => function (ContainerInterface $container) {
+    StreamFactoryInterface::class => static function (ContainerInterface $container) {
         $class = $container->get(StreamFactoryInterface::class . ':value');
 
         if (\class_exists($class)) {

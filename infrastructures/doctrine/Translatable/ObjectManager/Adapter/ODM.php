@@ -104,6 +104,8 @@ class ODM implements AdapterInterface
         $uow = $this->getUnitOfWork();
         $uow->clearDocumentChangeSet(\spl_object_hash($object));
         $uow->recomputeSingleDocumentChangeSet($metadata, $object);
+
+        return $this;
     }
 
     public function foreachScheduledObjectInsertions(callable $callback): AdapterInterface
@@ -139,5 +141,7 @@ class ODM implements AdapterInterface
     public function setOriginalObjectProperty(string $oid, string $property, $value): AdapterInterface
     {
         $this->getUnitOfWork()->setOriginalDocumentProperty($oid, $property, $value);
+
+        return $this;
     }
 }

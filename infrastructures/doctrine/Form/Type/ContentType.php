@@ -62,7 +62,7 @@ class ContentType extends AbstractType
                 'required' => true,
                 'multiple' => false,
                 'choice_label' => 'username',
-                'query_builder' => function (DocumentRepository $repository) {
+                'query_builder' => static function (DocumentRepository $repository) {
                     return $repository->createQueryBuilder()
                         ->field('deletedAt')->equals(null);
                 }
@@ -76,7 +76,7 @@ class ContentType extends AbstractType
                 'required' => true,
                 'multiple' => false,
                 'choice_label' => 'name',
-                'query_builder' => function (DocumentRepository $repository) {
+                'query_builder' => static function (DocumentRepository $repository) {
                     return $repository->createQueryBuilder()
                         ->field('deletedAt')->equals(null);
                 }
@@ -99,7 +99,7 @@ class ContentType extends AbstractType
 
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
-            function (FormEvent $event) {
+            static function (FormEvent $event) {
                 $data = $event->getData();
                 $form = $event->getForm();
 
@@ -107,7 +107,7 @@ class ContentType extends AbstractType
                     return;
                 }
 
-                $data->isInState([Published::class], function () use ($data, $form) {
+                $data->isInState([Published::class], static function () use ($data, $form) {
                     $form->add(
                         'publishedAt',
                         DateTimeType::class,
@@ -161,7 +161,7 @@ class ContentType extends AbstractType
 
         $builder->addEventListener(
             FormEvents::PRE_SUBMIT,
-            function (FormEvent $event) {
+            static function (FormEvent $event) {
                 $form = $event->getForm();
                 $data = $event->getData();
                 $contentObject = $form->getNormData();

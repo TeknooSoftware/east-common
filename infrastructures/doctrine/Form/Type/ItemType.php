@@ -58,7 +58,7 @@ class ItemType extends AbstractType
                 'required' => false,
                 'multiple' => false,
                 'choice_label' => 'name',
-                'query_builder' => function (DocumentRepository $repository) {
+                'query_builder' => static function (DocumentRepository $repository) {
                     return $repository->createQueryBuilder()
                         ->field('deletedAt')->equals(null);
                 }
@@ -72,7 +72,7 @@ class ItemType extends AbstractType
                 'required' => false,
                 'multiple' => false,
                 'choice_label' => 'title',
-                'query_builder' => function (DocumentRepository $repository) {
+                'query_builder' => static function (DocumentRepository $repository) {
                     return $repository->createQueryBuilder()
                         ->field('deletedAt')->equals(null);
                 }

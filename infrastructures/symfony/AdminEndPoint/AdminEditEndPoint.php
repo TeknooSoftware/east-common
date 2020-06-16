@@ -143,7 +143,7 @@ class AdminEditEndPoint implements RenderingInterface
                         ]
                     );
                 },
-                function ($error) use ($client) {
+                static function ($error) use ($client) {
                     $client->errorInRequest($error);
                 }
             )

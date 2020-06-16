@@ -52,7 +52,7 @@ interface WrapperInterface
         string $translationClass,
         string $objectClass,
         callable $callback
-    ): AdapterInterface;
+    ): WrapperInterface;
 
     public function findTranslation(
         AdapterInterface $adapter,
@@ -61,11 +61,11 @@ interface WrapperInterface
         string $translationClass,
         string $objectClass,
         callable $callback
-    ): AdapterInterface;
+    ): WrapperInterface;
 
     public function removeAssociatedTranslations(
         AdapterInterface $adapter,
         string $translationClass,
         string $objectClass
-    ): AdapterInterface;
+    ): WrapperInterface;
 }

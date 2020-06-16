@@ -120,25 +120,28 @@ class AdminListEndPoint implements RenderingInterface
         $this->itemsPerPage = 50;
         $this->loader->query(
             new PaginationQuery([], $order, $this->itemsPerPage, ($page - 1) * $this->itemsPerPage),
-            new Promise(function ($objects) use ($client, $page, $viewPath, $request) {
-                $pageCount = 1;
-                if ($objects instanceof \Countable) {
-                    $pageCount =  \ceil($objects->count() / $this->itemsPerPage);
-                }
+            new Promise(
+                function ($objects) use ($client, $page, $viewPath, $request) {
+                    $pageCount = 1;
+                    if ($objects instanceof \Countable) {
+                        $pageCount =  \ceil($objects->count() / $this->itemsPerPage);
+                    }
 
-                $this->render(
-                    $client,
-                    $viewPath,
-                    [
-                        'objectsCollection' => $objects,
-                        'page' => $page,
-                        'pageCount' => $pageCount,
-                        'queryParams' => $request->getQueryParams()
-                    ]
-                );
-            }, function ($error) use ($client) {
-                $client->errorInRequest($error);
-            })
+                    $this->render(
+                        $client,
+                        $viewPath,
+                        [
+                            'objectsCollection' => $objects,
+                            'page' => $page,
+                            'pageCount' => $pageCount,
+                            'queryParams' => $request->getQueryParams()
+                        ]
+                    );
+                },
+                static function ($error) use ($client) {
+                    $client->errorInRequest($error);
+                }
+            )
         );
 
         return $this;

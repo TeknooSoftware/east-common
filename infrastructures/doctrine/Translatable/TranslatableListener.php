@@ -214,7 +214,7 @@ class TranslatableListener implements EventSubscriber
         string $translationClass,
         array $config,
         ClassMetadata $metaData
-    ): AdapterInterface {
+    ): self {
         $wrapper->loadTranslations(
             $this->persistence,
             $locale,
@@ -248,6 +248,9 @@ class TranslatableListener implements EventSubscriber
                 }
             }
         );
+
+
+        return $this;
     }
 
     /*
@@ -392,7 +395,7 @@ class TranslatableListener implements EventSubscriber
     /*
      * Looks for translatable objects being inserted or updated for further processing
      */
-    public function onFlush(EventArgs $event): self
+    public function onFlush(): self
     {
         $this->objectsToTranslate = [];
 
@@ -439,7 +442,7 @@ class TranslatableListener implements EventSubscriber
         return $this;
     }
 
-    public function postFlush(EventArgs $event): self
+    public function postFlush(): self
     {
         foreach ($this->objectsToTranslate as $local => &$objects) {
             foreach ($objects as &$object) {

@@ -64,7 +64,7 @@ class AdminDeleteEndPoint implements RedirectingInterface
 
                     $this->redirectToRoute($client, $nextRoute);
                 },
-                function ($throwable) use ($client) {
+                static function ($throwable) use ($client) {
                     $client->errorInRequest($throwable);
                 }
             )

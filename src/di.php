@@ -101,7 +101,7 @@ return [
     DatesService::class => create(DatesService::class),
 
     //Middleware
-    RecipeInterface::class => decorate(function ($previous, ContainerInterface $container) {
+    RecipeInterface::class => decorate(static function ($previous, ContainerInterface $container) {
         if ($previous instanceof RecipeInterface) {
             if ($container->has(LocaleMiddleware::class)) {
                 $previous = $previous->registerMiddleware(

@@ -65,7 +65,7 @@ use Teknoo\East\Website\Object\User;
 use function DI\get;
 
 return [
-    TranslatableListener::class => function (ContainerInterface $container): TranslatableListener {
+    TranslatableListener::class => static function (ContainerInterface $container): TranslatableListener {
         $objectManager = $container->get(ObjectManager::class);
         $eastManager = $container->get(ManagerInterface::class);
 
@@ -121,13 +121,13 @@ return [
     },
 
     ManagerInterface::class => get(Manager::class),
-    Manager::class => function (ContainerInterface $container): Manager {
+    Manager::class => static function (ContainerInterface $container): Manager {
         $objectManager = $container->get(ObjectManager::class);
         return new Manager($objectManager);
     },
 
     ContentRepositoryInterface::class => get(ContentRepository::class),
-    ContentRepository::class => function (ContainerInterface $container): ContentRepositoryInterface {
+    ContentRepository::class => static function (ContainerInterface $container): ContentRepositoryInterface {
         $repository = $container->get(ObjectManager::class)->getRepository(Content::class);
         if ($repository instanceof ObjectRepository) {
             return new ContentRepository($repository);
@@ -140,7 +140,7 @@ return [
     },
 
     ItemRepositoryInterface::class => get(ItemRepository::class),
-    ItemRepository::class => function (ContainerInterface $container): ItemRepositoryInterface {
+    ItemRepository::class => static function (ContainerInterface $container): ItemRepositoryInterface {
         $repository = $container->get(ObjectManager::class)->getRepository(Item::class);
         if ($repository instanceof ObjectRepository) {
             return new ItemRepository($repository);
@@ -153,7 +153,7 @@ return [
     },
 
     MediaRepositoryInterface::class => get(MediaRepository::class),
-    MediaRepository::class => function (ContainerInterface $container): MediaRepositoryInterface {
+    MediaRepository::class => static function (ContainerInterface $container): MediaRepositoryInterface {
         $repository = $container->get(ObjectManager::class)->getRepository(Media::class);
         if ($repository instanceof ObjectRepository) {
             return new MediaRepository($repository);
@@ -166,7 +166,7 @@ return [
     },
 
     TypeRepositoryInterface::class => get(TypeRepository::class),
-    TypeRepository::class => function (ContainerInterface $container): TypeRepositoryInterface {
+    TypeRepository::class => static function (ContainerInterface $container): TypeRepositoryInterface {
         $repository = $container->get(ObjectManager::class)->getRepository(Type::class);
         if ($repository instanceof ObjectRepository) {
             return new TypeRepository($repository);
@@ -179,7 +179,7 @@ return [
     },
 
     UserRepositoryInterface::class => get(UserRepository::class),
-    UserRepository::class => function (ContainerInterface $container): UserRepositoryInterface {
+    UserRepository::class => static function (ContainerInterface $container): UserRepositoryInterface {
         $repository = $container->get(ObjectManager::class)->getRepository(User::class);
         if ($repository instanceof ObjectRepository) {
             return new UserRepository($repository);
@@ -191,7 +191,7 @@ return [
         ));
     },
 
-    LocaleMiddleware::class => function (ContainerInterface $container): LocaleMiddleware {
+    LocaleMiddleware::class => static function (ContainerInterface $container): LocaleMiddleware {
         $listener = $container->get(TranslatableListener::class);
 
         return new LocaleMiddleware([$listener, 'setLocale']);

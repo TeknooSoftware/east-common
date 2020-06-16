@@ -50,7 +50,6 @@ class ExtensionMetadataFactory
     {
         $omDriver = $objectManager->getConfiguration()->getMetadataDriverImpl();
         if (!$omDriver instanceof MappingDriver) {
-            //todo
             throw new RuntimeException('error');
         }
 
@@ -67,7 +66,7 @@ class ExtensionMetadataFactory
             throw new InvalidMappingException('Driver not found');
         }
 
-        return ($this->driverFactory)($omDriver->getLocator(), $omDriver);
+        return ($this->driverFactory)($omDriver->getLocator());
     }
 
     private static function getCacheId(string $className): string

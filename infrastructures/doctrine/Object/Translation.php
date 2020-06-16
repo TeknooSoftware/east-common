@@ -52,21 +52,11 @@ class Translation implements TranslationInterface
         return $this;
     }
 
-    public function getLocale(): string
-    {
-        return $this->locale;
-    }
-
     public function setField(string $field): self
     {
         $this->field = $field;
 
         return $this;
-    }
-
-    public function getField(): string
-    {
-        return $this->field;
     }
 
     public function setObjectClass(string $objectClass): self
@@ -76,11 +66,6 @@ class Translation implements TranslationInterface
         return $this;
     }
 
-    public function getObjectClass(): string
-    {
-        return $this->objectClass;
-    }
-
     public function setForeignKey(string $foreignKey): self
     {
         $this->foreignKey = $foreignKey;
@@ -88,20 +73,10 @@ class Translation implements TranslationInterface
         return $this;
     }
 
-    public function getForeignKey(): string
-    {
-        return $this->foreignKey;
-    }
-
     public function setContent(string $content): self
     {
         $this->content = $content;
 
         return $this;
-    }
-
-    public function getContent(): string
-    {
-        return $this->content;
     }
 }

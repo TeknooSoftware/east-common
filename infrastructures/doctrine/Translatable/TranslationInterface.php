@@ -30,21 +30,11 @@ interface  TranslationInterface
 
     public function setLocale(string $locale): self;
 
-    public function getLocale(): string;
-
     public function setField(string $field): self;
-
-    public function getField(): string;
 
     public function setObjectClass(string $objectClass): self;
 
-    public function getObjectClass(): string;
-
     public function setForeignKey(string $foreignKey): self;
 
-    public function getForeignKey(): string;
-
     public function setContent(string $content): self;
-
-    public function getContent(): string;
 }

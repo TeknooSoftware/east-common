@@ -24,21 +24,24 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\Translatable\Wrapper;
 
-use Teknoo\East\Website\Object\TranslatableInterface;
+use Doctrine\ODM\MongoDB\Types\Type;
+use Teknoo\East\Website\Doctrine\Translatable\ObjectManager\AdapterInterface as ManagerAdapterInterface;
+use Teknoo\East\Website\Doctrine\Translatable\TranslationInterface;
 
 interface WrapperInterface
 {
-    public function getObject(): TranslatableInterface;
-
-    /**
-     * @return mixed
-     */
-    public function getPropertyValue(string $name);
-
     /**
      * @param mixed $value
      */
-    public function setPropertyValue(string $name, $value): self;
+    public function setPropertyValue(string $name, $value): WrapperInterface;
 
-    public function getIdentifier(): ?string;
+    public function setOriginalObjectProperty(ManagerAdapterInterface $manager, string $name): WrapperInterface;
+
+    public function updateTranslationRecord(
+        TranslationInterface $translation,
+        string $name,
+        Type $type
+    ): WrapperInterface;
+
+    public function linkTranslationRecord(TranslationInterface $translation): WrapperInterface;
 }

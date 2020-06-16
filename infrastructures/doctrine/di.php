@@ -25,6 +25,8 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Doctrine;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Doctrine\ODM\MongoDB\Mapping\ClassMetadata as OdmClassMetadata;
+use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
 use Doctrine\Persistence\Mapping\Driver\FileLocator;
@@ -102,9 +104,13 @@ return [
             $translatableManagerAdapter,
             $persistence,
             new class implements WrapperFactory {
-                public function __invoke(TranslatableInterface $object, ObjectManager $om): WrapperInterface
+                public function __invoke(TranslatableInterface $object, ClassMetadata $metadata): WrapperInterface
                 {
-                    return new DocumentWrapper($object, $om);
+                    if (!$metadata instanceof OdmClassMetadata) {
+                        throw new \RuntimeException('Error wrapper support only '.OdmClassMetadata::class);
+                    }
+
+                    return new DocumentWrapper($object, $metadata);
                 }
             }
         );

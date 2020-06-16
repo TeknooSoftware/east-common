@@ -165,9 +165,8 @@ class ODM implements AdapterInterface
         $mapping = $metadata->getFieldMapping($field);
 
         $type = $this->getType($mapping['type']);
-        $value = $wrapped->getPropertyValue($field);
 
-        $translation->setContent($type->convertToDatabaseValue($value));
+        $wrapped->updateTranslationRecord($translation, $field, $type);
 
         return $this;
     }

@@ -24,9 +24,11 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\Translatable\Wrapper;
 
-use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Mapping\ClassMetadata;
+use Doctrine\ODM\MongoDB\Types\Type;
 use ProxyManager\Proxy\GhostObjectInterface;
+use Teknoo\East\Website\Doctrine\Translatable\ObjectManager\AdapterInterface as ManagerAdapterInterface;
+use Teknoo\East\Website\Doctrine\Translatable\TranslationInterface;
 use Teknoo\East\Website\Object\TranslatableInterface;
 
 class DocumentWrapper implements WrapperInterface
@@ -37,10 +39,10 @@ class DocumentWrapper implements WrapperInterface
 
     private TranslatableInterface $object;
 
-    public function __construct(TranslatableInterface $object, DocumentManager $om)
+    public function __construct(TranslatableInterface $object, ClassMetadata $meta)
     {
         $this->object = $object;
-        $this->meta = $om->getClassMetadata(\get_class($this->object));
+        $this->meta = $meta;
     }
 
     private function initialize(): void
@@ -50,12 +52,15 @@ class DocumentWrapper implements WrapperInterface
         }
     }
 
-    public function getObject(): TranslatableInterface
+    private function getObject(): TranslatableInterface
     {
         return $this->object;
     }
 
-    public function getPropertyValue(string $name)
+    /**
+     * @return mixed
+     */
+    private function getPropertyValue(string $name)
     {
         $this->initialize();
 
@@ -65,7 +70,31 @@ class DocumentWrapper implements WrapperInterface
         return $propertyReflection->getValue($this->object);
     }
 
-    public function setPropertyValue(string $name, $value): self
+    public function setOriginalObjectProperty(ManagerAdapterInterface $manager, string $name): WrapperInterface
+    {
+        // ensure clean changeset
+        $manager->setOriginalObjectProperty(
+            \spl_object_hash($this->getObject()),
+            $name,
+            $this->getPropertyValue($name)
+        );
+
+        return $this;
+    }
+
+    public function updateTranslationRecord(
+        TranslationInterface $translation,
+        string $name,
+        Type $type
+    ): WrapperInterface {
+        $value = $this->getPropertyValue($name);
+
+        $translation->setContent($type->convertToDatabaseValue($value));
+
+        return $this;
+    }
+
+    public function setPropertyValue(string $name, $value): WrapperInterface
     {
         $this->initialize();
 
@@ -76,7 +105,7 @@ class DocumentWrapper implements WrapperInterface
         return $this;
     }
 
-    public function getIdentifier(): ?string
+    private function getIdentifier(): ?string
     {
         if ($this->identifier) {
             return $this->identifier;
@@ -89,5 +118,10 @@ class DocumentWrapper implements WrapperInterface
         $this->identifier = (string) $this->getPropertyValue($this->meta->identifier);
 
         return $this->identifier;
+    }
+
+    public function linkTranslationRecord(TranslationInterface $translation): WrapperInterface
+    {
+        $translation->setForeignKey($this->getIdentifier());
     }
 }

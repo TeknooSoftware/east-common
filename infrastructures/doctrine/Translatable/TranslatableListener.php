@@ -157,9 +157,9 @@ class TranslatableListener implements EventSubscriber
         return \get_class($object);
     }
 
-    private function wrap(TranslatableInterface $translatable): WrapperInterface
+    private function wrap(TranslatableInterface $translatable, ClassMetadata $metadata): WrapperInterface
     {
-        return ($this->wrapperFactory)($translatable, $this->manager->getRootObject());
+        return ($this->wrapperFactory)($translatable, $metadata);
     }
 
     private function loadMetadataForObjectClass(ClassMetadata $metadata): void
@@ -242,14 +242,8 @@ class TranslatableListener implements EventSubscriber
                         $isTranslated
                         || (!$this->translationFallback && empty($config['fallback'][$field]))
                     ) {
-                        $originalValue = $wrapper->getPropertyValue($field);
                         $this->persistence->setTranslationValue($wrapper, $metaData, $field, $translated);
-                        // ensure clean changeset
-                        $this->manager->setOriginalObjectProperty(
-                            \spl_object_hash($wrapper->getObject()),
-                            $field,
-                            $originalValue
-                        );
+                        $wrapper->setOriginalObjectProperty($this->manager, $field);
                     }
                 }
             }
@@ -284,7 +278,7 @@ class TranslatableListener implements EventSubscriber
 
         // fetch translations
         $translationClass = $config['translationClass'];
-        $wrapper = $this->wrap($object);
+        $wrapper = $this->wrap($object, $metaData);
 
         $this->loadTranslations($wrapper, $locale, $translationClass, $config, $metaData);
 
@@ -298,8 +292,8 @@ class TranslatableListener implements EventSubscriber
         TranslatableInterface $object,
         bool $isInsert
     ): void {
-        $wrapper = $this->wrap($object);
         $metaData = $this->manager->getClassMetadata($this->getObjectClassName($object));
+        $wrapper = $this->wrap($object, $metaData);
         $config = $this->getConfiguration($metaData);
 
         $translationClass = $config['translationClass'];
@@ -307,7 +301,6 @@ class TranslatableListener implements EventSubscriber
         $translationReflection = $translationMetadata->getReflectionClass();
 
         // check for the availability of the primary key
-        $objectId = $wrapper->getIdentifier();
         $oid = \spl_object_hash($object);
 
         // load the currently used locale
@@ -352,7 +345,7 @@ class TranslatableListener implements EventSubscriber
                 $translation->setLocale($locale);
                 $translation->setField($field);
                 $translation->setObjectClass($config['useObjectClass']);
-                $translation->setForeignKey($objectId);
+                $wrapper->linkTranslationRecord($translation);
             }
 
             if ($translation instanceof TranslationInterface) {
@@ -423,7 +416,7 @@ class TranslatableListener implements EventSubscriber
             $config = $this->getConfiguration($metaData);
 
             if (isset($config['fields'])) {
-                $wrapper = $this->wrap($object);
+                $wrapper = $this->wrap($object, $metaData);
                 $this->persistence->removeAssociatedTranslations(
                     $wrapper,
                     $config['translationClass'],
@@ -468,11 +461,11 @@ class TranslatableListener implements EventSubscriber
             return $this;
         }
 
-        $wrapper = $this->wrap($object);
+        $metaData = $this->manager->getClassMetadata($this->getObjectClassName($object));
+        $wrapper = $this->wrap($object, $metaData);
         // load the pending translations without key
-        $objectId = $wrapper->getIdentifier();
         foreach ($this->pendingTranslationInserts[$oid] as $translation) {
-            $translation->setForeignKey($objectId);
+            $wrapper->linkTranslationRecord($translation);
             $this->persistence->insertTranslationRecord($translation);
         }
 

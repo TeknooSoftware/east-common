@@ -24,10 +24,10 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\Translatable\Wrapper;
 
-use Doctrine\Persistence\ObjectManager;
+use Doctrine\Persistence\Mapping\ClassMetadata;
 use Teknoo\East\Website\Object\TranslatableInterface;
 
 interface FactoryInterface
 {
-    public function __invoke(TranslatableInterface $object, ObjectManager $om): WrapperInterface;
+    public function __invoke(TranslatableInterface $object, ClassMetadata $metadata): WrapperInterface;
 }

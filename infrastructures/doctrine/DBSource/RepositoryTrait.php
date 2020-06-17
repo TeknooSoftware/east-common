@@ -109,6 +109,23 @@ trait RepositoryTrait
     /**
      * {@inheritdoc}
      */
+    public function count(array $criteria, PromiseInterface $promise): RepositoryInterface {
+        $queryBuilder = $this->repository->createQueryBuilder();
+
+        $queryBuilder->equals($criteria);
+
+        $queryBuilder->count();
+
+        $query = $queryBuilder->getQuery();
+
+        $promise->success($query->execute());
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function findOneBy(array $criteria, PromiseInterface $promise): RepositoryInterface
     {
         try {

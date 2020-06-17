@@ -77,6 +77,15 @@ interface RepositoryInterface
     ): RepositoryInterface;
 
     /**
+     * Count objects with criteria compatible
+     *
+     * @param array<string, mixed> $criteria The criteria.
+     * @param PromiseInterface $promise
+     * @return RepositoryInterface
+     */
+    public function count(array $criteria, PromiseInterface $promise): RepositoryInterface;
+
+    /**
      * Finds a single object by a set of criteria.
      *
      * @param array<string, mixed> $criteria The criteria.

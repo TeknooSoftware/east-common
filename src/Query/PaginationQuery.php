@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Query;
 
+use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
@@ -76,7 +77,52 @@ class PaginationQuery implements QueryInterface, ImmutableInterface
     ): QueryInterface {
         $criteria = $this->criteria;
         $criteria['deletedAt'] = null;
-        $repository->findBy($criteria, $promise, $this->order, $this->limit, $this->offset);
+        $repository->findBy(
+            $criteria,
+            new Promise(
+                static function ($result) use ($criteria, $promise, $repository) {
+                    $repository->count(
+                        $criteria,
+                        new Promise(
+                            static function ($count) use ($promise, $result) {
+                                $iterator = new class($count, $result) implements \Countable, \IteratorAggregate {
+                                    private int $count;
+
+                                    private \Traversable $iterator;
+
+                                    public function __construct(int $count, \Traversable $iterator)
+                                    {
+                                        $this->count = $count;
+                                        $this->iterator = $iterator;
+                                    }
+
+                                    public function getIterator()
+                                    {
+                                        return $this->iterator;
+                                    }
+
+                                    public function count()
+                                    {
+                                        return $this->count;
+                                    }
+                                };
+
+                                $promise->success($iterator);
+                            },
+                            static function (\Throwable $error) use ($promise) {
+                                $promise->fail($error);
+                            }
+                        )
+                    );
+                },
+                static function (\Throwable $error) use ($promise) {
+                    $promise->fail($error);
+                }
+            ),
+            $this->order,
+            $this->limit,
+            $this->offset
+        );
 
         return $this;
     }

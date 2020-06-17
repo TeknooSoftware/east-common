@@ -7,6 +7,7 @@
 
     <embedded-document name="Teknoo\East\Website\Object\MediaMetadata">
         <field field-name="contentType" name="mime_type" type="string" />
+        <field field-name="fileName" name="file_name" type="string" />
         <field field-name="alternative" type="string" />
     </embedded-document>
 </doctrine-mongo-mapping>

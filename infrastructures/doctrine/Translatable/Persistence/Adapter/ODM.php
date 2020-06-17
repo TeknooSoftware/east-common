@@ -110,7 +110,7 @@ class ODM implements AdapterInterface
         return $this;
     }
 
-    private function prepareId(OdmClassMetadata $metadata, TranslationInterface $translation)
+    private function prepareId(OdmClassMetadata $metadata, TranslationInterface $translation): void
     {
         if (
             null === $metadata->idGenerator
@@ -166,6 +166,10 @@ class ODM implements AdapterInterface
         string $field,
         TranslationInterface $translation
     ): AdapterInterface {
+        if (!$metadata instanceof OdmClassMetadata) {
+            throw new \RuntimeException("Error this classMetadata is not compatible with this adapter");
+        }
+
         $mapping = $metadata->getFieldMapping($field);
 
         $type = $this->getType($mapping['type']);
@@ -181,6 +185,10 @@ class ODM implements AdapterInterface
         string $field,
         $value
     ): AdapterInterface {
+        if (!$metadata instanceof OdmClassMetadata) {
+            throw new \RuntimeException("Error this classMetadata is not compatible with this adapter");
+        }
+
         $mapping = $metadata->getFieldMapping($field);
         $type = $this->getType($mapping['type']);
 

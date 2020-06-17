@@ -40,7 +40,7 @@ use Teknoo\East\Website\Doctrine\Exception\InvalidMappingException;
  */
 class Xml implements DriverInterface
 {
-    const DOCTRINE_NAMESPACE_URI = 'http://xml.teknoo.it/schemas/doctrine/east-website-translation';
+    private const DOCTRINE_NAMESPACE_URI = 'http://xml.teknoo.it/schemas/doctrine/east-website-translation';
 
     private FileLocator $locator;
 
@@ -66,7 +66,7 @@ class Xml implements DriverInterface
         return $this->loadMappingFile($file);
     }
 
-    private function loadMappingFile($file): \SimpleXMLElement
+    private function loadMappingFile(string $file): \SimpleXMLElement
     {
         $result = null;
         $xmlElement = ($this->simpleXmlFactory)($file);

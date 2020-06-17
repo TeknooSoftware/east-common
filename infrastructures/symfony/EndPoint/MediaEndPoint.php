@@ -30,6 +30,7 @@ use Psr\Http\Message\StreamInterface;
 use Teknoo\East\FoundationBundle\EndPoint\ResponseFactoryTrait;
 use Teknoo\East\Website\EndPoint\MediaEndPointTrait;
 use Teknoo\East\Website\Doctrine\Object\Media;
+use Teknoo\East\Website\Object\Media as BaseMedia;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -42,15 +43,27 @@ class MediaEndPoint
 
     private GridFSRepository $repostory;
 
-    public function setRepostory(DocumentManager $manager): self
+    public function registerRepostory(DocumentManager $manager): self
     {
-        $this->repostory = $manager->getRepository(Media::class);
+        $repository = $manager->getRepository(Media::class);
+
+        if (!$repository instanceof GridFSRepository) {
+            throw new \RuntimeException(
+                'Error, the Media repository is not a implementation of GridFSRepository'
+            );
+        }
+
+        $this->repostory = $repository;
 
         return $this;
     }
 
-    protected function getStream(Media $media): StreamInterface
+    protected function getStream(BaseMedia $media): StreamInterface
     {
+        if (!$media instanceof Media) {
+            throw new \RuntimeException('Error this media is not compatible with this endpoint');
+        }
+
         $resource = $this->repostory->openDownloadStream($media->getId());
 
         return $this->streamFactory->createStreamFromResource($resource);

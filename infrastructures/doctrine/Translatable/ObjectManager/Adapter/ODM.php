@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Doctrine\Translatable\ObjectManager\Adapter;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Doctrine\ODM\MongoDB\Mapping\ClassMetadata;
 use Doctrine\ODM\MongoDB\UnitOfWork;
 use Doctrine\Persistence\Mapping\ClassMetadata as BaseClassMetadata;
 use Teknoo\East\Website\DBSource\ManagerInterface;
@@ -100,6 +101,10 @@ class ODM implements AdapterInterface
         BaseClassMetadata $metadata,
         TranslatableInterface $object
     ): AdapterInterface {
+        if (!$metadata instanceof ClassMetadata) {
+            throw new \RuntimeException("Error this classMetada is not compatible with the document manager");
+        }
+
         $uow = $this->getUnitOfWork();
         $uow->clearDocumentChangeSet(\spl_object_hash($object));
         $uow->recomputeSingleDocumentChangeSet($metadata, $object);

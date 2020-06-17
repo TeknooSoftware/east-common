@@ -82,10 +82,15 @@ return [
 
         $persistence = new ODMPersistence($objectManager);
 
+        $mappingDriver = $objectManager->getConfiguration()->getMetadataDriverImpl();
+        if (null === $mappingDriver) {
+            throw new \RuntimeException('The Mapping Driver is not available from the Doctrine manager');
+        }
+
         $extensionMetadataFactory = new ExtensionMetadataFactory(
             $objectManager,
             $objectManager->getMetadataFactory(),
-            $objectManager->getConfiguration()->getMetadataDriverImpl(),
+            $mappingDriver,
             new class implements DriverFactoryInterface {
                 public function __invoke(FileLocator $locator): DriverInterface
                 {
@@ -110,7 +115,7 @@ return [
                 public function __invoke(TranslatableInterface $object, ClassMetadata $metadata): WrapperInterface
                 {
                     if (!$metadata instanceof OdmClassMetadata) {
-                        throw new \RuntimeException('Error wrapper support only '.OdmClassMetadata::class);
+                        throw new \RuntimeException('Error wrapper support only ' . OdmClassMetadata::class);
                     }
 
                     return new DocumentWrapper($object, $metadata);

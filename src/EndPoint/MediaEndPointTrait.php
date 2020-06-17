@@ -60,7 +60,11 @@ trait MediaEndPointTrait
                     $response = $this->responseFactory->createResponse(200);
                     $metadata = $media->getMetadata();
                     if (null !== $metadata) {
-                        $response = $response->withHeader('Content-Type', $metadata->getMimeType());
+                        $response = $response->withHeader('Content-Type', (string) $metadata->getContentType());
+                        $response = $response->withHeader(
+                            'Content-Disposition',
+                            'attachment; filename="' . $metadata->getFileName() . '"'
+                        );
                     }
                     $response = $response->withHeader('Content-Length', (string) $media->getLength());
                     $response = $response->withBody($stream);

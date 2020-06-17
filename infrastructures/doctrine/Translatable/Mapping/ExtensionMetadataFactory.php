@@ -25,10 +25,11 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\Translatable\Mapping;
 
+use Doctrine\Persistence\Mapping\AbstractClassMetadataFactory;
 use Doctrine\Persistence\Mapping\ClassMetadata;
-use Doctrine\Persistence\Mapping\ClassMetadataFactory;
 use Doctrine\Persistence\Mapping\Driver\FileDriver;
 use Doctrine\Persistence\Mapping\Driver\MappingDriver;
+use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\Persistence\ObjectManager;
 use Teknoo\East\Website\Doctrine\Exception\InvalidMappingException;
 use Teknoo\East\Website\Doctrine\Exception\RuntimeException;
@@ -47,7 +48,7 @@ class ExtensionMetadataFactory
 {
     private ObjectManager $objectManager;
 
-    private ClassMetadataFactory $classMetadataFactory;
+    private AbstractClassMetadataFactory $classMetadataFactory;
 
     private MappingDriver $mappingDriver;
 
@@ -55,7 +56,7 @@ class ExtensionMetadataFactory
 
     public function __construct(
         ObjectManager $objectManager,
-        ClassMetadataFactory $classMetadataFactory,
+        AbstractClassMetadataFactory $classMetadataFactory,
         MappingDriver $mappingDriver,
         DriverFactoryInterface $driverFactory
     ) {
@@ -72,12 +73,14 @@ class ExtensionMetadataFactory
             throw new RuntimeException('error');
         }
 
-        $drivers = $omDriver->getDrivers();
-        foreach ($drivers as $namespace => $nestedOmDriver) {
-            if ($nestedOmDriver instanceof FileDriver) {
-                $omDriver = $nestedOmDriver;
+        if ($omDriver instanceof MappingDriverChain) {
+            $drivers = $omDriver->getDrivers();
+            foreach ($drivers as $namespace => $nestedOmDriver) {
+                if ($nestedOmDriver instanceof FileDriver) {
+                    $omDriver = $nestedOmDriver;
 
-                break;
+                    break;
+                }
             }
         }
 
@@ -90,7 +93,7 @@ class ExtensionMetadataFactory
 
     private static function getCacheId(string $className): string
     {
-        return $className.'\\$_TRANSLATE_METADATA';
+        return $className . '\\$_TRANSLATE_METADATA';
     }
 
     public function loadExtensionMetadata(
@@ -125,7 +128,10 @@ class ExtensionMetadataFactory
                 if (
                     empty($parentMetaClass->parentClasses)
                     && !empty($config)
-                    && !$parentMetaClass->isInheritanceTypeNone()
+                    && (
+                        !\is_callable([$parentMetaClass, 'isInheritanceTypeNone'])
+                        || !$parentMetaClass->isInheritanceTypeNone()
+                    )
                 ) {
                     $useObjectName = $parentMetaClass->getName();
                 }
@@ -139,7 +145,7 @@ class ExtensionMetadataFactory
         }
 
         if (null !== $cacheDriver) {
-            $cacheDriver->save($cacheId, $config, null);
+            $cacheDriver->save($cacheId, $config);
         }
         
         $listener->injectConfiguration($metaData, $config);

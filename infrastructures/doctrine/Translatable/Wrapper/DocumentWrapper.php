@@ -110,14 +110,18 @@ class DocumentWrapper implements WrapperInterface
         return $this;
     }
 
-    private function getIdentifier(): ?string
+    private function getIdentifier(): string
     {
-        if ($this->identifier) {
+        if (null !== $this->identifier) {
             return $this->identifier;
         }
 
         if ($this->object instanceof GhostObjectInterface && !$this->object->isProxyInitialized()) {
             $this->object->initializeProxy();
+        }
+
+        if (null === $this->meta->identifier) {
+            throw new \RuntimeException('No identifier available in class MetaData');
         }
 
         $this->identifier = (string) $this->getPropertyValue($this->meta->identifier);

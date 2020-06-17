@@ -31,45 +31,33 @@ class MediaMetadata implements ImmutableInterface
 {
     use ImmutableTrait;
 
-    private ?string $contentType = null;
+    private ?string $contentType = '';
 
-    private ?string $mimeType = null;
+    private ?string $fileName = '';
 
-    private ?string $alternative = null;
+    private ?string $alternative = '';
 
-    public function __construct(string $contentType)
+    public function __construct(string $contentType, string $fileName = '', string $alternative = '')
     {
         $this->uniqueConstructorCheck();
 
         $this->contentType = $contentType;
+        $this->fileName = $fileName;
+        $this->alternative = $alternative;
     }
 
-    public function getContentType(): ?string
+    public function getContentType(): string
     {
-        return $this->contentType;
+        return (string) $this->contentType;
     }
 
-    public function getMimeType(): string
+    public function getFileName(): string
     {
-        return (string) $this->mimeType;
-    }
-
-    public function setMimeType(string $mimeType): self
-    {
-        $this->mimeType = $mimeType;
-
-        return $this;
+        return (string) $this->fileName;
     }
 
     public function getAlternative(): string
     {
         return (string) $this->alternative;
-    }
-
-    public function setAlternative(string $alternative): self
-    {
-        $this->alternative = $alternative;
-
-        return $this;
     }
 }

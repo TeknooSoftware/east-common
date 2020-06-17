@@ -95,13 +95,13 @@ class TranslatableListener implements EventSubscriber
      * List of translations which do not have the foreign
      * key generated yet - MySQL case. These translations
      * will be updated with new keys on postPersist event
-     * @var array<string, array<int TranslationInterface>>
+     * @var array<string, array<int, TranslationInterface>>
      */
     private array $pendingTranslationInserts = [];
 
     /**
      * Tracks objects to reload after flush
-     * @var array<int, array<WrapperInterface, string, array<string, string, ClassMetadata>>
+     * @var array<string, array<WrapperInterface, string, array<string, string, ClassMetadata>>>
      */
     private array $objectsToTranslate = [];
 
@@ -195,7 +195,7 @@ class TranslatableListener implements EventSubscriber
         $this->extensionMetadataFactory->loadExtensionMetadata($metadata, $this);
     }
 
-    public function injectConfiguration(ClassMetadata $metadata, array &$config): self
+    public function injectConfiguration(ClassMetadata $metadata, array $config): self
     {
         $className = $metadata->getName();
 
@@ -302,8 +302,6 @@ class TranslatableListener implements EventSubscriber
         }
 
         $locale = $this->getTranslatableLocale($object);
-        $oid = \spl_object_hash($object);
-        $this->translatedInLocale[$oid] = $locale;
 
         if ($locale === $this->defaultLocale) {
             return $this;
@@ -381,6 +379,12 @@ class TranslatableListener implements EventSubscriber
                     // locale, otherwise, we have the date in the original record
                     if (!$translation instanceof TranslationInterface && $locale !== $this->defaultLocale) {
                         $translation = $translationReflection->newInstance();
+                        if (!$translation instanceof TranslationInterface) {
+                            throw new \RuntimeException(
+                                'Error the translation object does not implement the interface'
+                            );
+                        }
+
                         $translation->setLocale($locale);
                         $translation->setField($field);
                         $translation->setObjectClass($config['useObjectClass']);

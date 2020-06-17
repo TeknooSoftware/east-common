@@ -29,6 +29,10 @@ use Teknoo\East\Website\Doctrine\Translatable\ObjectManager\AdapterInterface as 
 use Teknoo\East\Website\Doctrine\Translatable\Persistence\AdapterInterface;
 use Teknoo\East\Website\Doctrine\Translatable\TranslationInterface;
 
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 interface WrapperInterface
 {
     /**

@@ -83,6 +83,9 @@ return [
         $persistence = new ODMPersistence($objectManager);
 
         $extensionMetadataFactory = new ExtensionMetadataFactory(
+            $objectManager,
+            $objectManager->getMetadataFactory(),
+            $objectManager->getConfiguration()->getMetadataDriverImpl(),
             new class implements DriverFactoryInterface {
                 public function __invoke(FileLocator $locator): DriverInterface
                 {

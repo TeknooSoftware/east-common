@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Doctrine\Translatable\Mapping;
 
 use Doctrine\Persistence\Mapping\ClassMetadata;
+use Doctrine\Persistence\Mapping\ClassMetadataFactory;
 use Doctrine\Persistence\Mapping\Driver\FileDriver;
 use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Persistence\ObjectManager;
@@ -33,22 +34,40 @@ use Teknoo\East\Website\Doctrine\Exception\InvalidMappingException;
 use Teknoo\East\Website\Doctrine\Exception\RuntimeException;
 use Teknoo\East\Website\Doctrine\Translatable\TranslatableListener;
 
-/**
+/*
  * The extension metadata factory is responsible for extension driver
  * initialization and fully reading the extension metadata
  */
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ * @author      Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
+ */
 class ExtensionMetadataFactory
 {
+    private ObjectManager $objectManager;
+
+    private ClassMetadataFactory $classMetadataFactory;
+
+    private MappingDriver $mappingDriver;
+
     private DriverFactoryInterface $driverFactory;
 
-    public function __construct(DriverFactoryInterface $driverFactory)
-    {
+    public function __construct(
+        ObjectManager $objectManager,
+        ClassMetadataFactory $classMetadataFactory,
+        MappingDriver $mappingDriver,
+        DriverFactoryInterface $driverFactory
+    ) {
+        $this->objectManager = $objectManager;
+        $this->classMetadataFactory = $classMetadataFactory;
+        $this->mappingDriver = $mappingDriver;
         $this->driverFactory = $driverFactory;
     }
 
-    private function getDriver(ObjectManager $objectManager): DriverInterface
+    private function getDriver(): DriverInterface
     {
-        $omDriver = $objectManager->getConfiguration()->getMetadataDriverImpl();
+        $omDriver = $this->mappingDriver;
         if (!$omDriver instanceof MappingDriver) {
             throw new RuntimeException('error');
         }
@@ -75,7 +94,6 @@ class ExtensionMetadataFactory
     }
 
     public function loadExtensionMetadata(
-        ObjectManager $objectManager,
         ClassMetadata $metaData,
         TranslatableListener $listener
     ): self {
@@ -84,10 +102,9 @@ class ExtensionMetadataFactory
         }
 
         $config = [];
-        $cmf = $objectManager->getMetadataFactory();
 
         $cacheId = self::getCacheId($metaData->getName());
-        $cacheDriver = $cmf->getCacheDriver();
+        $cacheDriver = $this->classMetadataFactory->getCacheDriver();
 
         if (null !== $cacheDriver && $cacheDriver->contains($cacheId)) {
             $listener->injectConfiguration($metaData, $cacheDriver->fetch($cacheId));
@@ -95,14 +112,14 @@ class ExtensionMetadataFactory
             return $this;
         }
 
-        $driver = $this->getDriver($objectManager);
+        $driver = $this->getDriver();
         $useObjectName = $metaData->getName();
 
         // collect metadata from inherited classes
         foreach (\array_reverse(\class_parents($useObjectName)) as $parentClass) {
             // read only inherited mapped classes
-            if ($cmf->hasMetadataFor($parentClass)) {
-                $parentMetaClass = $objectManager->getClassMetadata($parentClass);
+            if ($this->classMetadataFactory->hasMetadataFor($parentClass)) {
+                $parentMetaClass = $this->objectManager->getClassMetadata($parentClass);
                 $driver->readExtendedMetadata($parentMetaClass, $config);
 
                 if (

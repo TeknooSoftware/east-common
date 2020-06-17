@@ -24,6 +24,10 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\Translatable;
 
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 interface TranslationInterface
 {
     public function getIdentifier(): string;

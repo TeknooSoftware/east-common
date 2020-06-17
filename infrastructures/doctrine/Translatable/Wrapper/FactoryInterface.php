@@ -27,6 +27,10 @@ namespace Teknoo\East\Website\Doctrine\Translatable\Wrapper;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Teknoo\East\Website\Object\TranslatableInterface;
 
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 interface FactoryInterface
 {
     public function __invoke(TranslatableInterface $object, ClassMetadata $metadata): WrapperInterface;

@@ -32,6 +32,12 @@ use Teknoo\East\Website\Doctrine\Object\Translation;
 use Teknoo\East\Website\Doctrine\Translatable\Mapping\DriverInterface;
 use Teknoo\East\Website\Doctrine\Exception\InvalidMappingException;
 
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ * @author      Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
+ * @author      Miha Vrhovnik <miha.vrhovnik@gmail.com>
+ */
 class Xml implements DriverInterface
 {
     const DOCTRINE_NAMESPACE_URI = 'http://xml.teknoo.it/schemas/doctrine/east-website-translation';

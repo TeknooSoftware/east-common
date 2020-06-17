@@ -18,20 +18,19 @@
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ * @author      Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
  */
 
 declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\Translatable;
 
-use Doctrine\Common\EventArgs;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Doctrine\Persistence\Event\LoadClassMetadataEventArgs;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use ProxyManager\Proxy\GhostObjectInterface;
 use Teknoo\East\Website\Doctrine\Translatable\ObjectManager\AdapterInterface as ManagerAdapterInterface;
-use Teknoo\East\Website\Doctrine\Translatable\Persistence\AdapterInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Persistence\AdapterInterface as PersistenceAdapterInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Mapping\ExtensionMetadataFactory;
 use Teknoo\East\Website\Doctrine\Translatable\Wrapper\FactoryInterface;
@@ -49,6 +48,11 @@ use Teknoo\East\Website\Object\TranslatableInterface;
  * Nevertheless the annotation metadata is properly cached and
  * it is not a big overhead to lookup all entity annotations since
  * the caching is activated for metadata
+ */
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ * @author      Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
  */
 class TranslatableListener implements EventSubscriber
 {
@@ -91,13 +95,9 @@ class TranslatableListener implements EventSubscriber
      * List of translations which do not have the foreign
      * key generated yet - MySQL case. These translations
      * will be updated with new keys on postPersist event
+     * @var array<string, array<int TranslationInterface>>
      */
     private array $pendingTranslationInserts = [];
-
-    /**
-     * Tracks locale the objects currently translated in
-     */
-    private array $translatedInLocale = [];
 
     /**
      * Tracks objects to reload after flush
@@ -106,11 +106,17 @@ class TranslatableListener implements EventSubscriber
     private array $objectsToTranslate = [];
 
     /**
-     * Static List of cached object configurations
-     * leaving it static for reasons to look into
-     * other listener configuration
+     * List of cached object configurations leaving it static for reasons to look into
+     * other listener configuration.
+     * @var array<string, mixed>
      */
     private array $configurations = array();
+
+    /**
+     * List of cached class metadata from doctrine manager
+     * @var array<string, ClassMetadata>
+     */
+    private array $classMetadata = [];
 
     public function __construct(
         ExtensionMetadataFactory $extensionMetadataFactory,
@@ -141,6 +147,28 @@ class TranslatableListener implements EventSubscriber
         ];
     }
 
+    private function getClassMetadata(string $className): ClassMetadata
+    {
+        if (isset($this->classMetadata[$className])) {
+            return $this->classMetadata[$className];
+        }
+
+        $this->manager->findClassMetadata($className, $this);
+
+        if (isset($this->classMetadata[$className])) {
+            return $this->classMetadata[$className];
+        }
+
+        throw new \RuntimeException("Error no classmeta data available for $className");
+    }
+
+    public function registerClassMetadata(string $className, ClassMetadata $classMetadata): self
+    {
+        $this->classMetadata[$className] = $classMetadata;
+
+        return $this;
+    }
+
     public function setLocale(string $locale): self
     {
         $this->locale = $locale;
@@ -164,7 +192,7 @@ class TranslatableListener implements EventSubscriber
 
     private function loadMetadataForObjectClass(ClassMetadata $metadata): void
     {
-        $this->extensionMetadataFactory->loadExtensionMetadata($this->manager->getRootObject(), $metadata, $this);
+        $this->extensionMetadataFactory->loadExtensionMetadata($metadata, $this);
     }
 
     public function injectConfiguration(ClassMetadata $metadata, array &$config): self
@@ -192,6 +220,8 @@ class TranslatableListener implements EventSubscriber
     public function loadClassMetadata(LoadClassMetadataEventArgs $event): self
     {
         $metadata = $event->getClassMetadata();
+
+        $this->classMetadata[$metadata->getName()] = $metadata;
 
         $this->loadMetadataForObjectClass($metadata);
 
@@ -264,7 +294,7 @@ class TranslatableListener implements EventSubscriber
             return $this;
         }
 
-        $metaData = $this->manager->getClassMetadata($this->getObjectClassName($object));
+        $metaData = $this->getClassMetadata($this->getObjectClassName($object));
 
         $config = $this->getConfiguration($metaData);
         if (!isset($config['fields'])) {
@@ -295,7 +325,7 @@ class TranslatableListener implements EventSubscriber
         TranslatableInterface $object,
         bool $isInsert
     ): void {
-        $metaData = $this->manager->getClassMetadata($this->getObjectClassName($object));
+        $metaData = $this->getClassMetadata($this->getObjectClassName($object));
         $wrapper = $this->wrap($object, $metaData);
         $config = $this->getConfiguration($metaData);
 
@@ -324,16 +354,12 @@ class TranslatableListener implements EventSubscriber
                 // check for the availability of the primary key
                 $oid = \spl_object_hash($object);
 
-                $translationMetadata = $this->manager->getClassMetadata($translationClass);
+                $translationMetadata = $this->getClassMetadata($translationClass);
                 $translationReflection = $translationMetadata->getReflectionClass();
 
                 $translatableFields = \array_flip($config['fields']);
                 foreach ($translatableFields as $field => $notUsed) {
-                    if (
-                        isset($this->translatedInLocale[$oid])
-                        && $locale === $this->translatedInLocale[$oid]
-                        && !isset($changeSet[$field])
-                    ) {
+                    if (!isset($changeSet[$field])) {
                         continue; // locale is same and nothing changed
                     }
 
@@ -375,8 +401,6 @@ class TranslatableListener implements EventSubscriber
                     }
                 }
 
-                $this->translatedInLocale[$oid] = $locale;
-
                 // check if we have default translation and need to reset the translation
                 if (!$isInsert) {
                     foreach ($changeSet as $field => $changes) {
@@ -404,7 +428,7 @@ class TranslatableListener implements EventSubscriber
                 return;
             }
 
-            $metaData = $this->manager->getClassMetadata($this->getObjectClassName($object));
+            $metaData = $this->getClassMetadata($this->getObjectClassName($object));
             $config = $this->getConfiguration($metaData);
 
             if (isset($config['fields'])) {
@@ -426,7 +450,7 @@ class TranslatableListener implements EventSubscriber
                 return $this;
             }
 
-            $metaData = $this->manager->getClassMetadata($this->getObjectClassName($object));
+            $metaData = $this->getClassMetadata($this->getObjectClassName($object));
             $config = $this->getConfiguration($metaData);
 
             if (isset($config['fields'])) {
@@ -475,7 +499,7 @@ class TranslatableListener implements EventSubscriber
             return $this;
         }
 
-        $metaData = $this->manager->getClassMetadata($this->getObjectClassName($object));
+        $metaData = $this->getClassMetadata($this->getObjectClassName($object));
         $wrapper = $this->wrap($object, $metaData);
         // load the pending translations without key
         foreach ($this->pendingTranslationInserts[$oid] as $translation) {

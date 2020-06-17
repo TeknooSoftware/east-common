@@ -27,11 +27,15 @@ namespace Teknoo\East\Website\Doctrine\Translatable\ObjectManager\Adapter;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\UnitOfWork;
 use Doctrine\Persistence\Mapping\ClassMetadata as BaseClassMetadata;
-use Doctrine\Persistence\ObjectManager;
 use Teknoo\East\Website\DBSource\ManagerInterface;
 use Teknoo\East\Website\Doctrine\Translatable\ObjectManager\AdapterInterface;
+use Teknoo\East\Website\Doctrine\Translatable\TranslatableListener;
 use Teknoo\East\Website\Object\TranslatableInterface;
 
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 class ODM implements AdapterInterface
 {
     private ManagerInterface $eastManager;
@@ -67,12 +71,7 @@ class ODM implements AdapterInterface
         return $this;
     }
 
-    public function getRootObject(): ObjectManager
-    {
-        return $this->doctrineManager;
-    }
-
-    public function getClassMetadata(string $class): BaseClassMetadata
+    public function findClassMetadata(string $class, TranslatableListener $listener): BaseClassMetadata
     {
         return $this->doctrineManager->getClassMetadata($class);
     }

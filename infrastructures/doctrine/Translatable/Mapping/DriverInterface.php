@@ -27,6 +27,11 @@ namespace Teknoo\East\Website\Doctrine\Translatable\Mapping;
 
 use Doctrine\Persistence\Mapping\ClassMetadata;
 
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ * @author      Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
+ */
 interface DriverInterface
 {
     /*

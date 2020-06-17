@@ -25,6 +25,11 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\Exception;
 
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ * @author      Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
+ */
 class RuntimeException extends \RuntimeException
 {
 }

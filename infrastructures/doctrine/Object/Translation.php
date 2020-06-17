@@ -26,6 +26,10 @@ namespace Teknoo\East\Website\Doctrine\Object;
 
 use Teknoo\East\Website\Doctrine\Translatable\TranslationInterface;
 
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 class Translation implements TranslationInterface
 {
     private string $id = '';

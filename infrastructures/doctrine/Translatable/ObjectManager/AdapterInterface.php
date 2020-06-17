@@ -25,15 +25,17 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Doctrine\Translatable\ObjectManager;
 
 use Doctrine\Persistence\Mapping\ClassMetadata;
-use Doctrine\Persistence\ObjectManager;
 use Teknoo\East\Website\DBSource\ManagerInterface;
+use Teknoo\East\Website\Doctrine\Translatable\TranslatableListener;
 use Teknoo\East\Website\Object\TranslatableInterface;
 
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 interface AdapterInterface extends ManagerInterface
 {
-    public function getRootObject(): ObjectManager;
-
-    public function getClassMetadata(string $class): ClassMetadata;
+    public function findClassMetadata(string $class, TranslatableListener $listener): ClassMetadata;
 
     public function ifObjectHasChangeSet(TranslatableInterface $object, callable $callback): AdapterInterface;
 

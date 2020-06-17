@@ -24,9 +24,12 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\Translatable\Mapping;
 
-use Doctrine\Persistence\Mapping\Driver\FileDriver;
 use Doctrine\Persistence\Mapping\Driver\FileLocator;
 
+/**
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 interface DriverFactoryInterface
 {
     public function __invoke(FileLocator $locator): DriverInterface;

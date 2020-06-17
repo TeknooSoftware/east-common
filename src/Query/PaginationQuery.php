@@ -77,15 +77,20 @@ class PaginationQuery implements QueryInterface, ImmutableInterface
     ): QueryInterface {
         $criteria = $this->criteria;
         $criteria['deletedAt'] = null;
+
+        $failClosure = static function (\Throwable $error) use ($promise) {
+            $promise->fail($error);
+        };
+
         $repository->findBy(
             $criteria,
             new Promise(
-                static function ($result) use ($criteria, $promise, $repository) {
+                static function ($result) use ($criteria, $promise, $repository, $failClosure) {
                     $repository->count(
                         $criteria,
                         new Promise(
                             static function ($count) use ($promise, $result) {
-                                $iterator = new class($count, $result) implements \Countable, \IteratorAggregate {
+                                $iterator = new class ($count, $result) implements \Countable, \IteratorAggregate {
                                     private int $count;
 
                                     private \Traversable $iterator;
@@ -109,15 +114,11 @@ class PaginationQuery implements QueryInterface, ImmutableInterface
 
                                 $promise->success($iterator);
                             },
-                            static function (\Throwable $error) use ($promise) {
-                                $promise->fail($error);
-                            }
+                            $failClosure
                         )
                     );
                 },
-                static function (\Throwable $error) use ($promise) {
-                    $promise->fail($error);
-                }
+                $failClosure
             ),
             $this->order,
             $this->limit,

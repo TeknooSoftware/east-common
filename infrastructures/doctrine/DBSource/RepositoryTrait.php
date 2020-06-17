@@ -109,7 +109,12 @@ trait RepositoryTrait
     /**
      * {@inheritdoc}
      */
-    public function count(array $criteria, PromiseInterface $promise): RepositoryInterface {
+    public function count(array $criteria, PromiseInterface $promise): RepositoryInterface
+    {
+        if (!$this->repository instanceof DocumentRepository) {
+            throw new \RuntimeException('Error, this method is not available with this repository');
+        }
+
         $queryBuilder = $this->repository->createQueryBuilder();
 
         $queryBuilder->equals($criteria);

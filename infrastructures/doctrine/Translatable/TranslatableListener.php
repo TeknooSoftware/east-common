@@ -302,6 +302,7 @@ class TranslatableListener implements EventSubscriber
         }
 
         $locale = $this->getTranslatableLocale($object);
+        $object->setLocaleField($locale);
 
         if ($locale === $this->defaultLocale) {
             return $this;

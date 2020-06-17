@@ -87,7 +87,7 @@ class ODM implements AdapterInterface
         $query = $queryBuilder->getQuery();
         $result = $query->getSingleResult();
 
-        if (!$result instanceof TranslationInterface) {
+        if ($result instanceof TranslationInterface) {
             $callback($result);
         }
 

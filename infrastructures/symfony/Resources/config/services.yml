@@ -130,7 +130,7 @@ services:
       - '@teknoo.east.website.endpoint.media.stream.factory'
     calls:
       - ['setResponseFactory', ['@Psr\Http\Message\ResponseFactoryInterface']]
-      - ['registerRepostory', ['@doctrine_mongodb.odm.default_document_manager']]
+      - ['registerRepository', ['@doctrine_mongodb.odm.default_document_manager']]
     public: true
 
   teknoo.east.website.endpoint.static:

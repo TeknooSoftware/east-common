@@ -25,13 +25,14 @@ namespace Teknoo\Tests\East\Website\EndPoint;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\StreamInterface;
 use Teknoo\East\Diactoros\CallbackStreamFactory;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\FoundationBundle\EndPoint\ResponseFactoryTrait;
 use Teknoo\East\Website\EndPoint\MediaEndPointTrait;
 use Teknoo\East\Website\Loader\MediaLoader;
-use Teknoo\East\Website\Object\Media;
+use Teknoo\East\Website\Doctrine\Object\Media;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -84,7 +85,24 @@ class MediaEndPointTraitTest extends TestCase
         $endPoint = new class($mediaLoader, new CallbackStreamFactory()) {
             use ResponseFactoryTrait;
             use MediaEndPointTrait;
+
+            private $stream;
+
+            public function setStream(StreamInterface $stream): self
+            {
+                $this->stream = $stream;
+
+                return $this;
+            }
+
+            protected function getStream(Media $media): StreamInterface
+            {
+                return $this->stream;
+            }
         };
+
+        $endPoint->setStream($stream = $this->createMock(StreamInterface::class));
+        $stream->expects(self::any())->method('__toString')->willReturn('fooBarContent');
 
         $endPoint->setResponseFactory($responseFactory);
 
@@ -128,33 +146,15 @@ class MediaEndPointTraitTest extends TestCase
             ->method('load')
             ->with('fooBar')
             ->willReturnCallback(function ($id, PromiseInterface $promise) {
-                $media = new class extends Media {
-                    public function getResource()
-                    {
-                        return $this->getFile()->getResource();
-                    }
-                };
+                $media = new Media();
 
-                $media->setFile(new class extends \MongoGridFSFile {
-                    public function getSize()
-                    {
-                        return 10;
-                    }
-
-                    public function getResource()
-                    {
-                        $hf = fopen('php://memory', 'rw+');
-                        fwrite($hf, 'fooBarContent');
-                        fseek($hf, 0);
-                        return $hf;
-                    }
-                });
                 $promise->success($media);
 
                 return $this->getMediaLoader();
             });
 
         $endPoint = $this->buildEndPoint();
+
         $class = \get_class($endPoint);
         self::assertInstanceOf(
             $class,

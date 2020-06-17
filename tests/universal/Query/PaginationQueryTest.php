@@ -57,7 +57,15 @@ class PaginationQueryTest extends TestCase
 
         $repository->expects(self::once())
             ->method('findBy')
-            ->with(['foo' => 'bar', 'deletedAt' => null,], $promise, ['foo' => 'ASC'], 12, 20);
+            ->with(
+                ['foo' => 'bar', 'deletedAt' => null,],
+                self::callback(
+                    function ($p) { return $p instanceof PromiseInterface;}
+                ),
+                ['foo' => 'ASC'],
+                12,
+                20
+            );
 
         self::assertInstanceOf(
             PaginationQuery::class,

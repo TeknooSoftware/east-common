@@ -41,9 +41,9 @@ class MediaEndPoint
     use ResponseFactoryTrait;
     use MediaEndPointTrait;
 
-    private GridFSRepository $repostory;
+    private GridFSRepository $repository;
 
-    public function registerRepostory(DocumentManager $manager): self
+    public function registerRepository(DocumentManager $manager): self
     {
         $repository = $manager->getRepository(Media::class);
 
@@ -53,7 +53,7 @@ class MediaEndPoint
             );
         }
 
-        $this->repostory = $repository;
+        $this->repository = $repository;
 
         return $this;
     }
@@ -64,7 +64,7 @@ class MediaEndPoint
             throw new \RuntimeException('Error this media is not compatible with this endpoint');
         }
 
-        $resource = $this->repostory->openDownloadStream($media->getId());
+        $resource = $this->repository->openDownloadStream($media->getId());
 
         return $this->streamFactory->createStreamFromResource($resource);
     }

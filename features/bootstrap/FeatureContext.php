@@ -1,14 +1,15 @@
 <?php
 
 use Behat\Behat\Context\Context;
-use Doctrine\Common\Persistence\ObjectRepository;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectRepository;
+use Doctrine\Persistence\ObjectManager;
 use Laminas\Diactoros\ServerRequest;
 use Laminas\Diactoros\Uri;
 use PHPUnit\Framework\Assert;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Symfony\Component\Templating\EngineInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
@@ -132,11 +133,11 @@ class FeatureContext implements Context
             include \dirname(\dirname(__DIR__)).'/vendor/teknoo/east-foundation/src/universal/di.php'
         );
         $containerDefinition->addDefinitions(
-            include \dirname(\dirname(__DIR__)) . '/src/universal/di.php'
+            include \dirname(\dirname(__DIR__)) . '/src/di.php'
         );
-        $containerDefinition->addDefinitions(
+        /*$containerDefinition->addDefinitions(
             include \dirname(\dirname(__DIR__)).'/infrastructures/doctrine/di.php'
-        );
+        );*/
         $containerDefinition->addDefinitions(
             include \dirname(\dirname(__DIR__)).'/infrastructures/di.php'
         );
@@ -338,9 +339,21 @@ class FeatureContext implements Context
      */
     public function aEndpointAbleToServeResourceFromMongo()
     {
-        $this->mediaEndPoint = new class($this->mediaLoader, $this->container->get(StreamFactoryInterface::class)) implements EndPointInterface {
+        $this->mediaEndPoint = new class(
+            $this->mediaLoader,
+            $this->container->get(StreamFactoryInterface::class)
+        ) implements EndPointInterface {
             use EastEndPointTrait;
             use MediaEndPointTrait;
+
+            protected function getStream(Media $media): StreamInterface
+            {
+                $hf = fopen('php://memory', 'rw+');
+                fwrite($hf, 'fooBarContent');
+                fseek($hf, 0);
+
+                $this->streamFactory->createStreamFromResource($hf);
+            }
         };
 
         $this->mediaEndPoint->setResponseFactory($this->container->get(ResponseFactoryInterface::class));

@@ -24,8 +24,8 @@ namespace Teknoo\Tests\East\Website\Doctrine;
 
 use DI\Container;
 use DI\ContainerBuilder;
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectRepository;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Website\DBSource\ManagerInterface;
 use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
@@ -163,7 +163,10 @@ class ContainerTest extends TestCase
         $container = $this->buildContainer();
         $translatableListener = $this->createMock(TranslatableListener::class);
 
-        $container->set('stof_doctrine_extensions.listener.translatable', $translatableListener);
+        $objectManager = $this->createMock(ObjectManager::class);
+        $container->set(ObjectManager::class, $objectManager);
+
+        $container->set(TranslatableListener::class, $translatableListener);
         $loader = $container->get(LocaleMiddleware::class);
 
         self::assertInstanceOf(

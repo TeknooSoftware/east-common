@@ -47,20 +47,20 @@ class ContentTest extends OriginalTest
         return new Content();
     }
 
-    public function testGetTranslatableLocale()
+    public function testGetLocaleField()
     {
         self::assertEquals(
             'fooBar',
-            $this->generateObjectPopulated(['localeField' => 'fooBar'])->getTranslatableLocale()
+            $this->generateObjectPopulated(['localeField' => 'fooBar'])->getLocaleField()
         );
     }
 
-    public function testSetTranslatableLocale()
+    public function testSetLocaleField()
     {
         $Object = $this->buildObject();
         self::assertInstanceOf(
             \get_class($Object),
-            $Object->setTranslatableLocale('fooBar')
+            $Object->setLocaleField('fooBar')
         );
 
         self::assertEquals(

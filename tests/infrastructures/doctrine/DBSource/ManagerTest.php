@@ -22,7 +22,7 @@
 
 namespace Teknoo\Tests\East\Website\Doctrine\DBSource;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Website\Doctrine\DBSource\Manager;
 

@@ -22,6 +22,8 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\EndPoint;
 
+use Doctrine\ODM\MongoDB\DocumentManager;
+use Doctrine\ODM\MongoDB\Repository\GridFSRepository;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Teknoo\East\Diactoros\CallbackStreamFactory;
@@ -56,6 +58,21 @@ class MediaEndPointTest extends MediaEndPointTraitTest
 
         $endPoint = new MediaEndPoint($this->getMediaLoader(), new CallbackStreamFactory());
         $endPoint->setResponseFactory($responseFactory);
+
+        $repository = $this->createMock(GridFSRepository::class);
+        $repository->expects(self::any())->method('openDownloadStream')
+            ->willReturnCallback(
+                static function () {
+                    $hf = fopen('php://memory', 'rw+');
+                    fwrite($hf, 'fooBarContent');
+                    fseek($hf, 0);
+                    return $hf;
+                }
+            );
+
+        $dm = $this->createMock(DocumentManager::class);
+        $dm->expects(self::any())->method('getRepository')->willReturn($repository);
+        $endPoint->registerRepository($dm);
 
         return $endPoint;
     }

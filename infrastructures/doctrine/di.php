@@ -70,7 +70,7 @@ return [
         $eastManager = $container->get(ManagerInterface::class);
 
         if (!$objectManager instanceof DocumentManager) {
-            throw new \RuntimeException('Sorry currently, this listner supports only ODM');
+            throw new \RuntimeException('Sorry currently, this listener supports only ODM');
         }
 
         $eventManager = $objectManager->getEventManager();

@@ -33,6 +33,7 @@ use Teknoo\East\FoundationBundle\EndPoint\ResponseFactoryTrait;
 use Teknoo\East\Website\EndPoint\MediaEndPointTrait;
 use Teknoo\East\Website\Loader\MediaLoader;
 use Teknoo\East\Website\Doctrine\Object\Media;
+use Teknoo\East\Website\Object\MediaMetadata;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -124,7 +125,7 @@ class MediaEndPointTraitTest extends TestCase
         );
     }
 
-    public function testInvokeFound()
+    public function testInvokeFoundWithoutMetadata()
     {
         $client = $this->createMock(ClientInterface::class);
         $client->expects(self::once())
@@ -147,6 +148,45 @@ class MediaEndPointTraitTest extends TestCase
             ->with('fooBar')
             ->willReturnCallback(function ($id, PromiseInterface $promise) {
                 $media = new Media();
+
+                $promise->success($media);
+
+                return $this->getMediaLoader();
+            });
+
+        $endPoint = $this->buildEndPoint();
+
+        $class = \get_class($endPoint);
+        self::assertInstanceOf(
+            $class,
+            $endPoint($client, 'fooBar')
+        );
+    }
+
+    public function testInvokeFoundWithMetadata()
+    {
+        $client = $this->createMock(ClientInterface::class);
+        $client->expects(self::once())
+            ->method('acceptResponse')
+            ->with($this->callback(function ($value) {
+                if ($value instanceof ResponseInterface) {
+                    $stream = $value->getBody();
+                    return 'fooBarContent' == (string) $stream;
+                }
+
+                return false;
+            }))
+            ->willReturnSelf();
+
+        $client->expects(self::never())->method('errorInRequest');
+
+        $this->getMediaLoader()
+            ->expects(self::any())
+            ->method('load')
+            ->with('fooBar')
+            ->willReturnCallback(function ($id, PromiseInterface $promise) {
+                $media = new Media();
+                $media->setMetadata(new MediaMetadata('contentType', 'fileName', 'alternative'));
 
                 $promise->success($media);
 

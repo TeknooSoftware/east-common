@@ -23,19 +23,19 @@
 namespace Teknoo\Tests\East\Website\Object;
 
 use PHPUnit\Framework\TestCase;
+use Teknoo\East\Website\Object\MediaMetadata;
 use Teknoo\Tests\East\Website\Object\Traits\ObjectTestTrait;
 use Teknoo\East\Website\Object\Media;
+use Teknoo\Tests\East\Website\Object\Traits\PopulateObjectTrait;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Object\PublishableTrait
- * @covers \Teknoo\East\Website\Object\ObjectTrait
  * @covers \Teknoo\East\Website\Object\Media
  */
 class MediaTest extends TestCase
 {
-    use ObjectTestTrait;
+    use PopulateObjectTrait;
 
     /**
      * @return Media
@@ -48,6 +48,34 @@ class MediaTest extends TestCase
                 return null;
             }
         };
+    }
+
+    public function testGetId()
+    {
+        self::assertEquals(
+            123,
+            $this->generateObjectPopulated(['id' => 123])->getId()
+        );
+    }
+
+    public function testSetId()
+    {
+        $Object = $this->buildObject();
+        self::assertInstanceOf(
+            \get_class($Object),
+            $Object->setId('fooBar')
+        );
+
+        self::assertEquals(
+            'fooBar',
+            $Object->getId()
+        );
+    }
+
+    public function testSetIdExceptionOnBadArgument()
+    {
+        $this->expectException(\Throwable::class);
+        $this->buildObject()->setId(new \stdClass());
     }
 
     public function testGetName()
@@ -104,5 +132,30 @@ class MediaTest extends TestCase
     {
         $this->expectException(\Throwable::class);
         $this->buildObject()->setLength(new \stdClass());
+    }
+
+    public function testGetMetadata()
+    {
+        $object = new MediaMetadata('foo', 'bar', 'world');
+        self::assertEquals(
+            $object,
+            $this->generateObjectPopulated(['metadata' => $object])->getMetadata()
+        );
+    }
+
+    public function testSetMetadata()
+    {
+        $object = new MediaMetadata('foo', 'bar', 'world');
+
+        $Object = $this->buildObject();
+        self::assertInstanceOf(
+            Media::class,
+            $Object->setMetadata($object)
+        );
+
+        self::assertEquals(
+            $object,
+            $Object->getMetadata()
+        );
     }
 }

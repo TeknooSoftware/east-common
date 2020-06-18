@@ -57,4 +57,75 @@ trait ObjectTestTrait
         $this->expectException(\Throwable::class);
         $this->buildObject()->setId(new \stdClass());
     }
+
+    public function testCreatedAt()
+    {
+        $date = new \DateTime('2017-06-13');
+        self::assertEquals(
+            $date,
+            $this->generateObjectPopulated(['createdAt' => $date])->createdAt()
+        );
+    }
+
+    public function testUpdatedAt()
+    {
+        $date = new \DateTime('2017-06-13');
+        self::assertEquals(
+            $date,
+            $this->generateObjectPopulated(['updatedAt' => $date])->updatedAt()
+        );
+    }
+
+    public function testSetUpdatedAt()
+    {
+        $date = new \DateTime('2017-06-13');
+
+        $object = $this->buildObject();
+        self::assertInstanceOf(
+            \get_class($object),
+            $object->setUpdatedAt($date)
+        );
+
+        self::assertEquals(
+            $date,
+            $object->updatedAt()
+        );
+    }
+
+    public function testSetUpdatedAtExceptionOnBadArgument()
+    {
+        $this->expectException(\Throwable::class);
+        $this->buildObject()->setUpdatedAt(new \stdClass());
+    }
+
+    public function testDeletedAt()
+    {
+        $date = new \DateTime('2017-06-13');
+        self::assertEquals(
+            $date,
+            $this->generateObjectPopulated(['deletedAt' => $date])->getDeletedAt()
+        );
+    }
+
+    public function testSetDeletedAt()
+    {
+        $date = new \DateTime('2017-06-13');
+
+        $object = $this->buildObject();
+        self::assertInstanceOf(
+            \get_class($object),
+            $object->setDeletedAt($date)
+        );
+
+        self::assertEquals(
+            $date,
+            $object->getDeletedAt()
+        );
+    }
+
+    public function testSetDeletedAtExceptionOnBadArgument()
+    {
+        $this->expectException(\Throwable::class);
+        $this->buildObject()->setDeletedAt(new \stdClass());
+    }
 }

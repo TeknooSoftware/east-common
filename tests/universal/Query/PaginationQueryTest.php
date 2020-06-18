@@ -52,8 +52,33 @@ class PaginationQueryTest extends TestCase
         $repository = $this->createMock(RepositoryInterface::class);
         $promise = $this->createMock(PromiseInterface::class);
 
-        $promise->expects(self::never())->method('success');
+        $promise->expects(self::once())
+            ->method('success')
+            ->with(
+                self::callback(
+                    function ($r) {
+                        return $r instanceof \Countable
+                            && $r instanceof \IteratorAggregate
+                            && 20 === $r->count()
+                            && $r->getIterator() instanceof \Iterator;
+                    }
+                )
+            );
         $promise->expects(self::never())->method('fail');
+
+        $repository->expects(self::once())
+            ->method('count')
+            ->with(
+                ['foo' => 'bar', 'deletedAt' => null,],
+                self::callback(
+                    function ($p) { return $p instanceof PromiseInterface;}
+                )
+            )->willReturnCallback(function (array $criteria, PromiseInterface $promise) use ($repository) {
+                $promise->success(20);
+
+                return $repository;
+            }
+            );
 
         $repository->expects(self::once())
             ->method('findBy')
@@ -65,6 +90,103 @@ class PaginationQueryTest extends TestCase
                 ['foo' => 'ASC'],
                 12,
                 20
+            )->willReturnCallback(function (array $criteria, PromiseInterface $promise) use ($repository) {
+                    $promise->success($this->createMock(\Iterator::class));
+
+                    return $repository;
+                }
+            );
+
+        self::assertInstanceOf(
+            PaginationQuery::class,
+            $this->buildQuery()->execute($loader, $repository, $promise)
+        );
+    }
+
+    public function testExecuteErrorOnCount()
+    {
+        $loader = $this->createMock(LoaderInterface::class);
+        $repository = $this->createMock(RepositoryInterface::class);
+        $promise = $this->createMock(PromiseInterface::class);
+
+        $promise->expects(self::never())->method('success');
+        $promise->expects(self::once())->method('fail');
+
+        $repository->expects(self::once())
+            ->method('count')
+            ->with(
+                ['foo' => 'bar', 'deletedAt' => null,],
+                self::callback(
+                    function ($p) { return $p instanceof PromiseInterface;}
+                )
+            )->willReturnCallback(function (array $criteria, PromiseInterface $promise) use ($repository) {
+                $promise->fail(new \Exception());
+
+                return $repository;
+            }
+            );
+
+        $repository->expects(self::once())
+            ->method('findBy')
+            ->with(
+                ['foo' => 'bar', 'deletedAt' => null,],
+                self::callback(
+                    function ($p) { return $p instanceof PromiseInterface;}
+                ),
+                ['foo' => 'ASC'],
+                12,
+                20
+            )->willReturnCallback(function (array $criteria, PromiseInterface $promise) use ($repository) {
+                    $promise->success($this->createMock(\Iterator::class));
+
+                    return $repository;
+                }
+            );
+
+        self::assertInstanceOf(
+            PaginationQuery::class,
+            $this->buildQuery()->execute($loader, $repository, $promise)
+        );
+    }
+
+    public function testExecuteErrorOnFin()
+    {
+        $loader = $this->createMock(LoaderInterface::class);
+        $repository = $this->createMock(RepositoryInterface::class);
+        $promise = $this->createMock(PromiseInterface::class);
+
+        $promise->expects(self::never())->method('success');
+        $promise->expects(self::once())->method('fail');
+
+        $repository->expects(self::any())
+            ->method('count')
+            ->with(
+                ['foo' => 'bar', 'deletedAt' => null,],
+                self::callback(
+                    function ($p) { return $p instanceof PromiseInterface;}
+                )
+            )->willReturnCallback(function (array $criteria, PromiseInterface $promise) use ($repository) {
+                $promise->fail(new \Exception());
+
+                return $repository;
+            }
+            );
+
+        $repository->expects(self::once())
+            ->method('findBy')
+            ->with(
+                ['foo' => 'bar', 'deletedAt' => null,],
+                self::callback(
+                    function ($p) { return $p instanceof PromiseInterface;}
+                ),
+                ['foo' => 'ASC'],
+                12,
+                20
+            )->willReturnCallback(function (array $criteria, PromiseInterface $promise) use ($repository) {
+                    $promise->fail(new \Exception());
+
+                    return $repository;
+                }
             );
 
         self::assertInstanceOf(

@@ -161,6 +161,16 @@ class ContentTest extends TestCase
             'fooBar',
             $Object->getSlug()
         );
+
+        self::assertInstanceOf(
+            \get_class($Object),
+            $Object->setSlug('helloWorld')
+        );
+
+        self::assertEquals(
+            'fooBar',
+            $Object->getSlug()
+        );
     }
 
     public function testSetSlugExceptionOnBadArgument()

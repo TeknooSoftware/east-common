@@ -135,9 +135,9 @@ class FeatureContext implements Context
         $containerDefinition->addDefinitions(
             include \dirname(\dirname(__DIR__)) . '/src/di.php'
         );
-        /*$containerDefinition->addDefinitions(
+        $containerDefinition->addDefinitions(
             include \dirname(\dirname(__DIR__)).'/infrastructures/doctrine/di.php'
-        );*/
+        );
         $containerDefinition->addDefinitions(
             include \dirname(\dirname(__DIR__)).'/infrastructures/di.php'
         );
@@ -349,10 +349,10 @@ class FeatureContext implements Context
             protected function getStream(Media $media): StreamInterface
             {
                 $hf = fopen('php://memory', 'rw+');
-                fwrite($hf, 'fooBarContent');
+                fwrite($hf, 'fooBar');
                 fseek($hf, 0);
 
-                $this->streamFactory->createStreamFromResource($hf);
+                return $this->streamFactory->createStreamFromResource($hf);
             }
         };
 

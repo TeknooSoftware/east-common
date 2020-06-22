@@ -33,7 +33,11 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Templating\EngineInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
+use Teknoo\East\Website\Doctrine\Form\Type\ContentType;
+use Teknoo\East\Website\Loader\LoaderInterface;
+use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Object\Type;
+use Teknoo\East\Website\Service\FindSlugService;
 use Teknoo\East\Website\Writer\WriterInterface;
 use Teknoo\East\WebsiteBundle\AdminEndPoint\AdminNewEndPoint;
 use Teknoo\East\WebsiteBundle\Form\Type\TypeType;
@@ -116,7 +120,7 @@ class AdminNewEndPointTest extends TestCase
         return $this->formFactory;
     }
 
-    public function buildEndPoint()
+    public function buildEndPoint(string $formClass = TypeType::class, string $objectClass = Type::class)
     {
         $response = $this->createMock(ResponseInterface::class);
         $response->expects(self::any())->method('withHeader')->willReturnSelf();
@@ -135,10 +139,12 @@ class AdminNewEndPointTest extends TestCase
             ->setTemplating($this->getEngine())
             ->setRouter($this->getRouter())
             ->setFormFactory($this->getFormFactory())
-            ->setFormClass(TypeType::class)
-            ->setObjectClass(Type::class)
+            ->setFormClass($formClass)
+            ->setObjectClass($objectClass)
             ->setResponseFactory($responseFactory)
             ->setStreamFactory($streamFactory)
+            ->setLoader($this->createMock(LoaderInterface::class))
+            ->setFindSlugService($this->createMock(FindSlugService::class), 'slug')
             ->setViewPath('foo:bar.html.engine');
         ;
     }
@@ -324,6 +330,46 @@ class AdminNewEndPointTest extends TestCase
         self::assertInstanceOf(
             AdminNewEndPoint::class,
             ($this->buildEndPoint())($request, $client, 'foo')
+        );
+    }
+
+    public function testInvokeSubmittedSuccessWithSluggableObject()
+    {
+        $request = $this->createMock(ServerRequestInterface::class);
+        $client = $this->createMock(ClientInterface::class);
+
+        $client->expects(self::once())->method('acceptResponse');
+        $client->expects(self::never())->method('errorInRequest');
+
+        $form = $this->createMock(FormInterface::class);
+        $form->expects(self::any())->method('isSubmitted')->willReturn(true);
+        $form->expects(self::any())->method('isValid')->willReturn(true);
+
+        $this->getFormFactory()
+            ->expects(self::once())
+            ->method('create')
+            ->with(ContentType::class)
+            ->willReturn($form);
+
+        $this->getWriterService()
+            ->expects(self::once())
+            ->method('save')
+            ->willReturnCallback(function ($object, PromiseInterface $promise) {
+                self::assertInstanceOf(Content::class, $object);
+                $promise->success($object);
+
+                return $this->getWriterService();
+            });
+
+        $this->getRouter()
+            ->expects(self::once())
+            ->method('generate')
+            ->with('foo')
+            ->willReturn('bar');
+
+        self::assertInstanceOf(
+            AdminNewEndPoint::class,
+            ($this->buildEndPoint(ContentType::class, Content::class))($request, $client, 'foo')
         );
     }
 }

@@ -22,9 +22,7 @@
 
 namespace Teknoo\Tests\East\Website\Doctrine\Object;
 
-use Doctrine\MongoDB\GridFSFile;
 use Teknoo\East\Website\Doctrine\Object\Media;
-use Teknoo\East\Website\Doctrine\Object\StoredFile;
 use Teknoo\Tests\East\Website\Object\MediaTest as OriginalTest;
 
 /**
@@ -45,5 +43,20 @@ class MediaTest extends OriginalTest
     public function buildObject(): Media
     {
         return new Media();
+    }
+
+    public function testGetChunkSize()
+    {
+        self::assertNull($this->generateObjectPopulated()->getChunkSize());
+        self::assertIsInt($this->generateObjectPopulated(['chunkSize' => 124])->getChunkSize());
+    }
+
+    public function testGetUploadDate()
+    {
+        self::assertNull($this->generateObjectPopulated()->getUploadDate());
+        self::assertInstanceOf(
+            \DateTimeInterface::class,
+            $this->generateObjectPopulated(['uploadDate' => (new \DateTime('2020-08-01'))])->getUploadDate()
+        );
     }
 }

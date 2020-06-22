@@ -2,6 +2,8 @@
 
 namespace Doctrine\ODM\MongoDB\Query;
 
+use phpDocumentor\Reflection\Types\Iterable_;
+
 if (!\class_exists(Query::class, false)) {
     class Query
     {
@@ -19,7 +21,10 @@ if (!\class_exists(Query::class, false)) {
         public const HINT_READ_PREFERENCE = 3;
         public const HINT_READ_ONLY       = 5;
 
-        public function execute(): iterable
+        /**
+         * @var iterable|int
+         */
+        public function execute()
         {
             return [];
         }

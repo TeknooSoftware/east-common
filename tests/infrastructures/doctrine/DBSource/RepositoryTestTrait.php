@@ -205,6 +205,50 @@ trait RepositoryTestTrait
         );
     }
 
+    public function testCountNotImplemented()
+    {
+        $promise = $this->createMock(PromiseInterface::class);
+        $promise->expects(self::never())->method('success');
+        $promise->expects(self::once())->method('fail');
+
+        self::assertInstanceOf(
+            RepositoryInterface::class,
+            $this->buildRepository()->count(['foo' => 'bar'], $promise)
+        );
+    }
+
+    public function testCountForMongo()
+    {
+        $this->objectRepository = $this->createMock(DocumentRepository::class);
+
+        $count = 123;
+        $promise = $this->createMock(PromiseInterface::class);
+        $promise->expects(self::once())->method('success')->with($count);
+        $promise->expects(self::never())->method('fail');
+
+        $this->objectRepository
+            ->expects(self::never())
+            ->method('findBy');
+
+        $query = $this->createMock(Query::class);
+        $query->expects(self::once())->method('execute')->willReturn($count);
+
+        $queryBuilderMock = $this->createMock(Builder::class);
+        $queryBuilderMock->expects(self::any())
+            ->method('getQuery')
+            ->willReturn($query);
+
+        $this->objectRepository
+            ->expects(self::once())
+            ->method('createQueryBuilder')
+            ->willReturn($queryBuilderMock);
+
+        self::assertInstanceOf(
+            RepositoryInterface::class,
+            $this->buildRepository()->count(['foo' => 'bar'], $promise)
+        );
+    }
+
     public function testFindOneByBadCriteria()
     {
         $this->expectException(\TypeError::class);

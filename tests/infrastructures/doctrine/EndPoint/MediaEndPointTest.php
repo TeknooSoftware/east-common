@@ -20,20 +20,23 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\WebsiteBundle\EndPoint;
+namespace Teknoo\Tests\East\Website\Doctrine\EndPoint;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 use Doctrine\ODM\MongoDB\Repository\GridFSRepository;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Teknoo\East\Diactoros\CallbackStreamFactory;
-use Teknoo\East\WebsiteBundle\EndPoint\MediaEndPoint;
+use Teknoo\East\Foundation\Promise\PromiseInterface;
+use Teknoo\East\Website\Object\Media as BaseMedia;
+use Teknoo\East\Website\Doctrine\EndPoint\MediaEndPoint;
 use Teknoo\Tests\East\Website\EndPoint\MediaEndPointTraitTest;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers      \Teknoo\East\WebsiteBundle\EndPoint\MediaEndPoint
+ * @covers      \Teknoo\East\Website\Doctrine\EndPoint\MediaEndPoint
  */
 class MediaEndPointTest extends MediaEndPointTraitTest
 {
@@ -75,5 +78,39 @@ class MediaEndPointTest extends MediaEndPointTraitTest
         $endPoint->registerRepository($dm);
 
         return $endPoint;
+    }
+
+    public function testRegisterRepositoryWithNonGridFSRepository()
+    {
+        $this->expectException(\RuntimeException::class);
+
+        $repository = $this->createMock(DocumentRepository::class);
+
+        $dm = $this->createMock(DocumentManager::class);
+        $dm->expects(self::any())->method('getRepository')->willReturn($repository);
+
+        $endPoint = $this->buildEndPoint();
+        $endPoint->registerRepository($dm);
+    }
+
+    public function testGetSourceWithNonGridFSMedia()
+    {
+        $this->expectException(\RuntimeException::class);
+
+        $this->getMediaLoader()
+            ->expects(self::any())
+            ->method('load')
+            ->with('fooBar')
+            ->willReturnCallback(function ($id, PromiseInterface $promise) {
+                $media = new class extends BaseMedia {
+
+                };
+
+                $promise->success($media);
+
+                return $this->getMediaLoader();
+            });
+
+        $this->testInvokeFoundWithoutMetadata();
     }
 }

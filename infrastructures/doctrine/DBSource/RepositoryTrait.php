@@ -112,7 +112,9 @@ trait RepositoryTrait
     public function count(array $criteria, PromiseInterface $promise): RepositoryInterface
     {
         if (!$this->repository instanceof DocumentRepository) {
-            throw new \RuntimeException('Error, this method is not available with this repository');
+            $promise->fail(new \RuntimeException('Error, this method is not available with this repository'));
+
+            return $this;
         }
 
         $queryBuilder = $this->repository->createQueryBuilder();

@@ -200,12 +200,14 @@ return [
     },
 
     LocaleMiddleware::class => static function (ContainerInterface $container): LocaleMiddleware {
-        if ($container->has(ObjectManager::class)
-            && ($container->get(ObjectManager::class)) instanceof DocumentManager) {
+        if (
+            $container->has(ObjectManager::class)
+            && ($container->get(ObjectManager::class)) instanceof DocumentManager
+        ) {
             $listener = $container->get(TranslatableListener::class);
             $callback = [$listener, 'setLocale'];
         } else {
-            $callback = static function (){
+            $callback = static function () {
                 //do nothing
             };
         }

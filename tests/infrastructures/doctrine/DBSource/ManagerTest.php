@@ -69,6 +69,20 @@ class ManagerTest extends TestCase
         );
     }
 
+    public function testRemove()
+    {
+        $object = new \stdClass();
+        $this->getDoctrineObjectManagerMock()
+            ->expects(self::once())
+            ->method('remove')
+            ->with($object);
+
+        self::assertInstanceOf(
+            Manager::class,
+            $this->buildManager()->remove($object)
+        );
+    }
+
     public function testFlush()
     {
         $this->getDoctrineObjectManagerMock()

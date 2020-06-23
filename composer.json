@@ -28,10 +28,10 @@
         "doctrine/common": "~2.12",
         "doctrine/annotations": "~1.8",
         "gedmo/doctrine-extensions": "~2.4",
-        "teknoo/immutable": "^2.0.0",
-        "teknoo/states": "^4.0.6",
-        "teknoo/recipe": "^2.0.0",
-        "teknoo/east-foundation": "^2.1.0",
+        "teknoo/immutable": "^2.0.1",
+        "teknoo/states": "^4.0.9",
+        "teknoo/recipe": "^2.0.5",
+        "teknoo/east-foundation": "^2.1.4",
         "php-di/php-di": "~6.0"
     },
     "require-dev": {

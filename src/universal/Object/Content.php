@@ -76,7 +76,7 @@ class Content implements
      */
     public function __construct()
     {
-        $this->initializeProxy();
+        $this->initializeStateProxy();
         $this->updateStates();
     }
 

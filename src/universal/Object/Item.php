@@ -67,7 +67,7 @@ class Item implements ObjectInterface, ProxyInterface, AutomatedInterface, Delet
 
     public function __construct()
     {
-        $this->initializeProxy();
+        $this->initializeStateProxy();
         $this->updateStates();
     }
 

@@ -401,7 +401,7 @@ class TranslatableListener implements EventSubscriber
                             // keep this translation in memory to insert it later with foreign key
                             $this->pendingTranslationInserts[$oid][] = $translation;
                         } else {
-                            $this->persistence->insertTranslationRecord($translation);
+                            $this->persistence->persistTranslationRecord($translation);
                         }
                     }
                 }
@@ -509,7 +509,7 @@ class TranslatableListener implements EventSubscriber
         // load the pending translations without key
         foreach ($this->pendingTranslationInserts[$oid] as $translation) {
             $wrapper->linkTranslationRecord($translation);
-            $this->persistence->insertTranslationRecord($translation);
+            $this->persistence->persistTranslationRecord($translation);
         }
 
         unset($this->pendingTranslationInserts[$oid]);

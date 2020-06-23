@@ -35,7 +35,7 @@ use Teknoo\East\Website\Object\TranslatableInterface;
  */
 interface AdapterInterface extends ManagerInterface
 {
-    public function findClassMetadata(string $class, TranslatableListener $listener): ClassMetadata;
+    public function findClassMetadata(string $class, TranslatableListener $listener): AdapterInterface;
 
     public function ifObjectHasChangeSet(TranslatableInterface $object, callable $callback): AdapterInterface;
 

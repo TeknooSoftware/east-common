@@ -57,7 +57,7 @@ interface AdapterInterface
         string $objectClass
     ): AdapterInterface;
 
-    public function insertTranslationRecord(TranslationInterface $translation): AdapterInterface;
+    public function persistTranslationRecord(TranslationInterface $translation): AdapterInterface;
 
     public function updateTranslationRecord(
         WrapperInterface $wrapped,

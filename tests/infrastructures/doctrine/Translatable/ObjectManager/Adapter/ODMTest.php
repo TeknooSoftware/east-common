@@ -29,7 +29,6 @@ use Doctrine\Persistence\Mapping\ClassMetadata as BaseClassMetadata;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Website\DBSource\ManagerInterface;
 use Teknoo\East\Website\Doctrine\Translatable\ObjectManager\Adapter\ODM;
-use Teknoo\East\Website\Doctrine\Translatable\ObjectManager\AdapterInterface;
 use Teknoo\East\Website\Doctrine\Translatable\TranslatableListener;
 use Teknoo\East\Website\Object\TranslatableInterface;
 
@@ -45,9 +44,9 @@ use Teknoo\East\Website\Object\TranslatableInterface;
  */
 class ODMTest extends TestCase
 {
-    private ManagerInterface $eastManager;
+    private ?ManagerInterface $eastManager = null;
 
-    private DocumentManager $doctrineManager;
+    private ?DocumentManager $doctrineManager = null;
 
     /**
      * @return ManagerInterface|\PHPUnit\Framework\MockObject\MockObject
@@ -102,12 +101,11 @@ class ODMTest extends TestCase
 
     public function testFlush()
     {
-        $object = new \stdClass();
-        $this->getEastManager()->expects(self::once())->method('flush')->with($object);
+        $this->getEastManager()->expects(self::once())->method('flush')->with();
 
         self::assertInstanceOf(
             ODM::class,
-            $this->build()->flush($object)
+            $this->build()->flush()
         );
     }
 
@@ -135,8 +133,6 @@ class ODMTest extends TestCase
     {
         $object = $this->createMock(TranslatableInterface::class);
 
-        $changset = [];
-
         $uow = $this->createMock(UnitOfWork::class);
         $this->getDoctrineManager()
             ->expects(self::any())
@@ -146,6 +142,8 @@ class ODMTest extends TestCase
         $neverCallback = function () {
             self::fail('must not be called');
         };
+
+        $uow->expects(self::any())->method('getDocumentChangeSet')->willReturn([]);
 
         self::assertInstanceOf(
             ODM::class,
@@ -157,32 +155,152 @@ class ODMTest extends TestCase
     {
         $object = $this->createMock(TranslatableInterface::class);
 
-        $changset = ['foo' => ['bar', 'baba']];
+        $changset = ['foo1' => ['bar', 'baba'], 'foo2' => ['bar', 'baba']];
 
         $uow = $this->createMock(UnitOfWork::class);
         $this->getDoctrineManager()
             ->expects(self::any())
             ->method('getUnitOfWork')
             ->willReturn($uow);
+
+        $uow->expects(self::any())->method('getDocumentChangeSet')->willReturn($changset);
+
+        $called = false;
+
+        self::assertInstanceOf(
+            ODM::class,
+            $this->build()->ifObjectHasChangeSet($object, function () use (&$called) {
+                $called = true;
+            })
+        );
+
+        self::assertTrue($called);
+    }
+
+    public function testRecomputeSingleObjectChangeSetWithGenericClassMetaData()
+    {
+        $this->expectException(\RuntimeException::class);
+
+        $meta = $this->createMock(BaseClassMetadata::class);
+        $object = $this->createMock(TranslatableInterface::class);
+
+        $uow = $this->createMock(UnitOfWork::class);
+        $uow->expects(self::never())->method('clearDocumentChangeSet');
+        $uow->expects(self::never())->method('recomputeSingleDocumentChangeSet');
+
+        $this->getDoctrineManager()
+            ->expects(self::any())
+            ->method('getUnitOfWork')
+            ->willReturn($uow);
+
+        $this->build()->recomputeSingleObjectChangeSet($meta, $object);
     }
 
     public function testRecomputeSingleObjectChangeSet()
     {
+        $meta = $this->createMock(ClassMetadata::class);
+        $object = $this->createMock(TranslatableInterface::class);
+
+        $uow = $this->createMock(UnitOfWork::class);
+        $uow->expects(self::once())->method('clearDocumentChangeSet');
+        $uow->expects(self::once())->method('recomputeSingleDocumentChangeSet');
+
+        $this->getDoctrineManager()
+            ->expects(self::any())
+            ->method('getUnitOfWork')
+            ->willReturn($uow);
+
+        self::assertInstanceOf(
+            ODM::class,
+            $this->build()->recomputeSingleObjectChangeSet($meta, $object)
+        );
     }
 
     public function testForeachScheduledObjectInsertions()
     {
+        $list = [new \stdClass(), new \stdClass()];
+
+        $uow = $this->createMock(UnitOfWork::class);
+        $this->getDoctrineManager()
+            ->expects(self::any())
+            ->method('getUnitOfWork')
+            ->willReturn($uow);
+
+        $uow->expects(self::any())->method('getScheduledDocumentInsertions')->willReturn($list);
+
+        $counter = 0;
+
+        self::assertInstanceOf(
+            ODM::class,
+            $this->build()->foreachScheduledObjectInsertions(function () use (&$counter) {
+                $counter++;
+            })
+        );
+
+        self::assertEquals(2, $counter);
     }
 
     public function testForeachScheduledObjectUpdates()
     {
+        $list = [new \stdClass(), new \stdClass()];
+
+        $uow = $this->createMock(UnitOfWork::class);
+        $this->getDoctrineManager()
+            ->expects(self::any())
+            ->method('getUnitOfWork')
+            ->willReturn($uow);
+
+        $uow->expects(self::any())->method('getScheduledDocumentUpdates')->willReturn($list);
+
+        $counter = 0;
+
+        self::assertInstanceOf(
+            ODM::class,
+            $this->build()->foreachScheduledObjectUpdates(function () use (&$counter) {
+                $counter++;
+            })
+        );
+
+        self::assertEquals(2, $counter);
     }
 
     public function testForeachScheduledObjectDeletions()
     {
+        $list = [new \stdClass(), new \stdClass()];
+
+        $uow = $this->createMock(UnitOfWork::class);
+        $this->getDoctrineManager()
+            ->expects(self::any())
+            ->method('getUnitOfWork')
+            ->willReturn($uow);
+
+        $uow->expects(self::any())->method('getScheduledDocumentDeletions')->willReturn($list);
+
+        $counter = 0;
+
+        self::assertInstanceOf(
+            ODM::class,
+            $this->build()->foreachScheduledObjectDeletions(function () use (&$counter) {
+                $counter++;
+            })
+        );
+
+        self::assertEquals(2, $counter);
     }
 
     public function testSetOriginalObjectProperty()
     {
+        $uow = $this->createMock(UnitOfWork::class);
+        $uow->expects(self::once())->method('setOriginalDocumentProperty');
+
+        $this->getDoctrineManager()
+            ->expects(self::any())
+            ->method('getUnitOfWork')
+            ->willReturn($uow);
+
+        self::assertInstanceOf(
+            ODM::class,
+            $this->build()->setOriginalObjectProperty('foo', 'bar', 'hello')
+        );
     }
 }

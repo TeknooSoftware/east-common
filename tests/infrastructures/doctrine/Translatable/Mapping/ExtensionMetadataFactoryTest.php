@@ -41,13 +41,13 @@ use Teknoo\East\Website\Doctrine\Translatable\Mapping\ExtensionMetadataFactory;
  */
 class ExtensionMetadataFactoryTest extends TestCase
 {
-    private ObjectManager $objectManager;
+    private ?ObjectManager $objectManager = null;
 
-    private AbstractClassMetadataFactory $classMetadataFactory;
+    private ?AbstractClassMetadataFactory $classMetadataFactory = null;
 
-    private MappingDriver $mappingDriver;
+    private ?MappingDriver $mappingDriver = null;
 
-    private DriverFactoryInterface $driverFactory;
+    private ?DriverFactoryInterface $driverFactory = null;
 
     /**
      * @return ObjectManager|\PHPUnit\Framework\MockObject\MockObject

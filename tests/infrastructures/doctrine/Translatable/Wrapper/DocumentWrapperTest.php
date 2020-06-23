@@ -44,9 +44,9 @@ use Teknoo\East\Website\Object\TranslatableInterface;
  */
 class DocumentWrapperTest extends TestCase
 {
-    private TranslatableInterface $object;
+    private ?TranslatableInterface $object = null;
 
-    private ClassMetadata $meta;
+    private ?ClassMetadata $meta = null;
 
     /**
      * @return TranslatableInterface|\PHPUnit\Framework\MockObject\MockObject

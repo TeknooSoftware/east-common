@@ -136,7 +136,7 @@ class ODM implements AdapterInterface
         return $final;
     }
 
-    public function insertTranslationRecord(TranslationInterface $translation): AdapterInterface
+    public function persistTranslationRecord(TranslationInterface $translation): AdapterInterface
     {
         $meta = $this->manager->getClassMetadata(\get_class($translation));
 

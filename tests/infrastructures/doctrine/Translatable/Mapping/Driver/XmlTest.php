@@ -41,9 +41,9 @@ use Teknoo\East\Website\Doctrine\Translatable\Mapping\Driver\Xml;
  */
 class XmlTest extends TestCase
 {
-    private FileLocator $locator;
+    private ?FileLocator $locator = null;
 
-    private SimpleXmlFactoryInterface $simpleXmlFactory;
+    private ?SimpleXmlFactoryInterface $simpleXmlFactory = null;
 
     /**
      * @return FileLocator|\PHPUnit\Framework\MockObject\MockObject
@@ -64,6 +64,10 @@ class XmlTest extends TestCase
     {
         if (!$this->simpleXmlFactory instanceof SimpleXmlFactoryInterface) {
             $this->simpleXmlFactory = $this->createMock(SimpleXmlFactoryInterface::class);
+
+            $this->simpleXmlFactory->expects(self::any())
+                ->method('__invoke')
+                ->willReturnCallback(fn ($file) => new \SimpleXMLElement($file, 0, true));
         }
 
         return $this->simpleXmlFactory;

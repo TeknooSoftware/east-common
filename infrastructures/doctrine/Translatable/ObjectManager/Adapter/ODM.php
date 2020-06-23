@@ -72,12 +72,14 @@ class ODM implements AdapterInterface
         return $this;
     }
 
-    public function findClassMetadata(string $class, TranslatableListener $listener): BaseClassMetadata
+    public function findClassMetadata(string $class, TranslatableListener $listener): AdapterInterface
     {
         $listener->registerClassMetadata(
             $class,
             $this->doctrineManager->getClassMetadata($class)
         );
+
+        return $this;
     }
 
     private function getUnitOfWork(): UnitOfWork

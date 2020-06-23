@@ -48,13 +48,13 @@ use Teknoo\East\Website\Object\TranslatableInterface;
  */
 class TranslatableListenerTest extends TestCase
 {
-    private ExtensionMetadataFactory $extensionMetadataFactory;
+    private ?ExtensionMetadataFactory $extensionMetadataFactory = null;
 
-    private ManagerAdapterInterface $manager;
+    private ?ManagerAdapterInterface $manager = null;
 
-    private PersistenceAdapterInterface $persistence;
+    private ?PersistenceAdapterInterface $persistence = null;
 
-    private FactoryInterface $wrapperFactory;
+    private ?FactoryInterface $wrapperFactory = null;
 
     /**
      * @return ExtensionMetadataFactory|\PHPUnit\Framework\MockObject\MockObject

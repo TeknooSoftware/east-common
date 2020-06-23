@@ -90,7 +90,7 @@ class DocumentWrapper implements WrapperInterface
     public function updateTranslationRecord(
         TranslationInterface $translation,
         string $name,
-        Type $type
+        $type
     ): WrapperInterface {
         $value = $this->getPropertyValue($name);
 

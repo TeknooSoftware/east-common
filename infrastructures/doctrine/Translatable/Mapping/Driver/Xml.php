@@ -56,7 +56,7 @@ class Xml implements DriverInterface
 
     private function getMapping(string $className): ?\SimpleXMLElement
     {
-        $file = $this->locator->findMappingFile($className);
+        $file = (string) $this->locator->findMappingFile($className);
         $file = \str_replace('.xml', '.translate.xml', $file);
 
         if (!\file_exists($file)) {

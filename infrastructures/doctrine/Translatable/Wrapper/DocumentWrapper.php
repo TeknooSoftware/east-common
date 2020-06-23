@@ -40,9 +40,9 @@ class DocumentWrapper implements WrapperInterface
 {
     private ?string $identifier = null;
 
-    private ClassMetadata $meta;
-
     private TranslatableInterface $object;
+
+    private ClassMetadata $meta;
 
     public function __construct(TranslatableInterface $object, ClassMetadata $meta)
     {

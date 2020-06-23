@@ -79,12 +79,21 @@ class DocumentWrapperTest extends TestCase
 
     public function testSetPropertyValue()
     {
-
+        self::assertInstanceOf(
+            WrapperInterface::class,
+            $this->build()->setPropertyValue('foo', 'bar')
+        );
     }
 
     public function testSetOriginalObjectProperty()
     {
+        $manager = $this->createMock(ManagerAdapterInterface::class);
+        $manager->expects(self::once())->method('setOriginalObjectProperty');
 
+        self::assertInstanceOf(
+            WrapperInterface::class,
+            $this->build()->setOriginalObjectProperty('foo', 'bar')
+        );
     }
 
     public function testUpdateTranslationRecord()

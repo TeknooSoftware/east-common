@@ -69,10 +69,6 @@ class ExtensionMetadataFactory
     private function getDriver(): DriverInterface
     {
         $omDriver = $this->mappingDriver;
-        if (!$omDriver instanceof MappingDriver) {
-            throw new RuntimeException('error');
-        }
-
         if ($omDriver instanceof MappingDriverChain) {
             $drivers = $omDriver->getDrivers();
             foreach ($drivers as $namespace => $nestedOmDriver) {

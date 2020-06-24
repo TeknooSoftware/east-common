@@ -22,12 +22,20 @@
 
 namespace Teknoo\Tests\East\Website\Doctrine\Translatable\Mapping;
 
+use Doctrine\Common\Cache\Cache;
 use Doctrine\Persistence\Mapping\AbstractClassMetadataFactory;
+use Doctrine\Persistence\Mapping\ClassMetadata;
+use Doctrine\Persistence\Mapping\Driver\FileDriver;
+use Doctrine\Persistence\Mapping\Driver\FileLocator;
 use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
+use Teknoo\East\Website\Doctrine\Exception\InvalidMappingException;
+use Teknoo\East\Website\Doctrine\Object\Content as DoctrineContent;
+use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Doctrine\Translatable\Mapping\DriverFactoryInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Mapping\ExtensionMetadataFactory;
+use Teknoo\East\Website\Doctrine\Translatable\TranslatableListener;
 
 /**
  * @copyright   Copyright (c) 2009-2020 Richard Déloge (richarddeloge@gmail.com)
@@ -109,16 +117,121 @@ class ExtensionMetadataFactoryTest extends TestCase
 
     public function testLoadExtensionMetadataSuperClass()
     {
+        $meta = $this->createMock(ClassMetadata::class);
+        $meta->isMappedSuperclass = true;
 
+        $listener = $this->createMock(TranslatableListener::class);
+        $listener->expects(self::never())->method('injectConfiguration');
+
+        self::assertInstanceOf(
+            ExtensionMetadataFactory::class,
+            $this->build()->loadExtensionMetadata($meta, $listener)
+        );
     }
 
-    public function testLoadExtensionMetadata()
+    public function testLoadExtensionMetadataMissingDriver()
     {
+        $this->expectException(InvalidMappingException::class);
 
+        $meta = $this->createMock(ClassMetadata::class);
+        $meta->isMappedSuperclass = false;
+        $meta->expects(self::any())->method('getName')->willReturn(Content::class);
+
+        $listener = $this->createMock(TranslatableListener::class);
+        $listener->expects(self::never())->method('injectConfiguration');
+
+        self::assertInstanceOf(
+            ExtensionMetadataFactory::class,
+            $this->build()->loadExtensionMetadata($meta, $listener)
+        );
     }
 
-    public function testLoadExtensionMetadataWitchCache()
+    public function testLoadExtensionMetadataWithFileDriver()
     {
+        $meta = $this->createMock(ClassMetadata::class);
+        $meta->isMappedSuperclass = false;
+        $meta->expects(self::any())->method('getName')->willReturn(Content::class);
 
+        $this->mappingDriver = $this->createMock(FileDriver::class);
+
+        $locator = $this->createMock(FileLocator::class);
+        $this->mappingDriver->expects(self::any())->method('getLocator')->willReturn($locator);
+
+        $listener = $this->createMock(TranslatableListener::class);
+        $listener->expects(self::once())->method('injectConfiguration');
+
+        self::assertInstanceOf(
+            ExtensionMetadataFactory::class,
+            $this->build()->loadExtensionMetadata($meta, $listener)
+        );
+    }
+
+    public function testLoadExtensionMetadataWithFileDriverWithParent()
+    {
+        $meta = $this->createMock(ClassMetadata::class);
+        $meta->isMappedSuperclass = false;
+        $meta->expects(self::any())->method('getName')->willReturn(DoctrineContent::class);
+
+        $this->mappingDriver = $this->createMock(FileDriver::class);
+
+        $locator = $this->createMock(FileLocator::class);
+        $this->mappingDriver->expects(self::any())->method('getLocator')->willReturn($locator);
+
+        $listener = $this->createMock(TranslatableListener::class);
+        $listener->expects(self::once())->method('injectConfiguration');
+
+        self::assertInstanceOf(
+            ExtensionMetadataFactory::class,
+            $this->build()->loadExtensionMetadata($meta, $listener)
+        );
+    }
+
+    public function testLoadExtensionMetadataWitchCacheEmpty()
+    {
+        $meta = $this->createMock(ClassMetadata::class);
+        $meta->isMappedSuperclass = false;
+        $meta->expects(self::any())->method('getName')->willReturn(DoctrineContent::class);
+
+        $this->mappingDriver = $this->createMock(FileDriver::class);
+
+        $locator = $this->createMock(FileLocator::class);
+        $this->mappingDriver->expects(self::any())->method('getLocator')->willReturn($locator);
+
+        $listener = $this->createMock(TranslatableListener::class);
+        $listener->expects(self::once())->method('injectConfiguration');
+
+        $cache = $this->createMock(Cache::class);
+        $cache->expects(self::any())->method('contains')->willReturn(false);
+        $this->getClassMetadataFactory()->expects(self::any())->method('getCacheDriver')->willReturn($cache);
+
+        self::assertInstanceOf(
+            ExtensionMetadataFactory::class,
+            $this->build()->loadExtensionMetadata($meta, $listener)
+        );
+    }
+
+    public function testLoadExtensionMetadataWitchCacheotEmpty()
+    {
+        $meta = $this->createMock(ClassMetadata::class);
+        $meta->isMappedSuperclass = false;
+        $meta->expects(self::any())->method('getName')->willReturn(DoctrineContent::class);
+
+        $this->mappingDriver = $this->createMock(FileDriver::class);
+
+        $locator = $this->createMock(FileLocator::class);
+        $this->mappingDriver->expects(self::never())->method('getLocator')->willReturn($locator);
+
+        $listener = $this->createMock(TranslatableListener::class);
+        $listener->expects(self::once())->method('injectConfiguration');
+
+        $cache = $this->createMock(Cache::class);
+        $cache->expects(self::any())->method('contains')->willReturn(true);
+        $cache->expects(self::any())->method('fetch')->willReturn([]);
+        $this->getClassMetadataFactory()->expects(self::any())->method('getCacheDriver')->willReturn($cache);
+
+        self::assertInstanceOf(
+            ExtensionMetadataFactory::class,
+            $this->build()->loadExtensionMetadata($meta, $listener)
+        );
     }
 }

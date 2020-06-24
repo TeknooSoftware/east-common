@@ -32,12 +32,13 @@ if (!\class_exists(UnitOfWork::class, false)) {
         {
         }
 
-        public function getScheduledDocumentUpserts() : array
+        public function getScheduledDocumentUpdates() : array
         {
         }
 
-        public function getScheduledDocumentUpdates() : array
+        public function getScheduledDocumentDeletions() : array
         {
+
         }
     }
 }

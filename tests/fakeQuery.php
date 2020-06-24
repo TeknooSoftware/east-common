@@ -28,5 +28,18 @@ if (!\class_exists(Query::class, false)) {
         {
             return [];
         }
+
+        /**
+         * @return array|object|null
+         */
+        public function getSingleResult()
+        {
+
+        }
+
+        public function setHydrate(bool $hydrate) : void
+        {
+
+        }
     }
 }

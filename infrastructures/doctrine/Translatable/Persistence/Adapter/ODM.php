@@ -113,11 +113,14 @@ class ODM implements AdapterInterface
     private function prepareId(OdmClassMetadata $metadata, TranslationInterface $translation): void
     {
         if (
-            null === $metadata->idGenerator
-            || OdmClassMetadata::GENERATOR_TYPE_NONE === $metadata->generatorType
+            OdmClassMetadata::GENERATOR_TYPE_NONE === $metadata->generatorType
             || !empty($translation->getIdentifier())
         ) {
             return;
+        }
+
+        if (null === $metadata->idGenerator) {
+            throw new \RuntimeException('Missing Id Generator');
         }
 
         $idValue = $metadata->idGenerator->generate($this->manager, $translation);

@@ -97,6 +97,8 @@ class XmlTest extends TestCase
 
     public function testReadExtendedMetadataFileInvalid()
     {
+        $this->expectException(\RuntimeException::class);
+
         $classMeta = $this->createMock(ClassMetadata::class);
         $classMeta->expects(self::any())->method('getName')->willReturn('Foo');
 
@@ -116,7 +118,7 @@ class XmlTest extends TestCase
 
     public function testReadExtendedMetadataWrongTranslationClass()
     {
-        $this->expectException(\InvalidMappingException::class);
+        $this->expectException(InvalidMappingException::class);
 
         $classMeta = $this->createMock(ClassMetadata::class);
         $classMeta->expects(self::any())->method('getName')->willReturn('Foo');
@@ -151,6 +153,26 @@ class XmlTest extends TestCase
             $this->build()->readExtendedMetadata($classMeta, $result)
         );
 
-        self::assertEmpty($result);
+        self::assertNotEmpty($result);
+    }
+
+    public function testReadExtendedMetadataWithoutField()
+    {
+        $classMeta = $this->createMock(ClassMetadata::class);
+        $classMeta->expects(self::any())->method('getName')->willReturn('Foo');
+
+        $this->getLocator()->expects(self::any())->method('findMappingFile')->willReturn(
+            __DIR__.'/support/valid-without-field.xml'
+        );
+
+        $result = [];
+
+        self::assertInstanceOf(
+            Xml::class,
+            $this->build()->readExtendedMetadata($classMeta, $result)
+        );
+
+        self::assertNotEmpty($result);
+        self::assertEmpty($result['fields']);
     }
 }

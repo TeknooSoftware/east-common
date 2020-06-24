@@ -20,7 +20,7 @@
   </xs:element>
 
   <xs:complexType name="object">
-    <xs:choice minOccurs="0" maxOccurs="unbounded">
+    <xs:choice minOccurs="1" maxOccurs="unbounded">
       <xs:element name="field" type="ewt:field" minOccurs="0" maxOccurs="unbounded" />
     </xs:choice>
 

@@ -83,6 +83,9 @@ class Xml implements DriverInterface
         \SimpleXMLElement $xml,
         array &$config
     ): void {
+        $config['fields'] = [];
+        $config['fallback'] = [];
+
         if (!isset($xml->field)) {
             return;
         }

@@ -25,6 +25,7 @@ namespace Teknoo\Tests\East\Website\Doctrine\Translatable\Wrapper;
 use Doctrine\ODM\MongoDB\Mapping\ClassMetadata;
 use Doctrine\ODM\MongoDB\Types\Type;
 use PHPUnit\Framework\TestCase;
+use ProxyManager\Proxy\GhostObjectInterface;
 use Teknoo\East\Website\Doctrine\Translatable\ObjectManager\AdapterInterface as ManagerAdapterInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Persistence\AdapterInterface;
 use Teknoo\East\Website\Doctrine\Translatable\TranslationInterface;
@@ -85,6 +86,89 @@ class DocumentWrapperTest extends TestCase
         );
     }
 
+    public function testSetPropertyValueWithProxy()
+    {
+        $this->object = new class implements TranslatableInterface, GhostObjectInterface {
+            public function setProxyInitializer(?\Closure $initializer = null)
+            {
+            }
+
+            public function getProxyInitializer(): ?\Closure
+            {
+            }
+
+            public function initializeProxy(): bool
+            {
+                return true;
+            }
+
+            public function isProxyInitialized(): bool
+            {
+                return false;
+            }
+
+            public function getId(): string
+            {
+            }
+
+            public function getLocaleField(): ?string
+            {
+            }
+
+            public function setLocaleField(string $localeField): TranslatableInterface
+            {
+            }
+        };
+
+        self::assertInstanceOf(
+            WrapperInterface::class,
+            $this->build()->setPropertyValue('foo', 'bar')
+        );
+    }
+
+    public function testSetOriginalObjectPropertyWithProxy()
+    {
+        $manager = $this->createMock(ManagerAdapterInterface::class);
+        $manager->expects(self::once())->method('setOriginalObjectProperty');
+
+        $this->object = new class implements TranslatableInterface, GhostObjectInterface {
+            public function setProxyInitializer(?\Closure $initializer = null)
+            {
+            }
+
+            public function getProxyInitializer(): ?\Closure
+            {
+            }
+
+            public function initializeProxy(): bool
+            {
+                return true;
+            }
+
+            public function isProxyInitialized(): bool
+            {
+                return false;
+            }
+
+            public function getId(): string
+            {
+            }
+
+            public function getLocaleField(): ?string
+            {
+            }
+
+            public function setLocaleField(string $localeField): TranslatableInterface
+            {
+            }
+        };
+
+        self::assertInstanceOf(
+            WrapperInterface::class,
+            $this->build()->setOriginalObjectProperty($manager, 'bar')
+        );
+    }
+
     public function testSetOriginalObjectProperty()
     {
         $manager = $this->createMock(ManagerAdapterInterface::class);
@@ -92,32 +176,82 @@ class DocumentWrapperTest extends TestCase
 
         self::assertInstanceOf(
             WrapperInterface::class,
-            $this->build()->setOriginalObjectProperty('foo', 'bar')
+            $this->build()->setOriginalObjectProperty($manager, 'bar')
         );
     }
 
     public function testUpdateTranslationRecord()
     {
+        $translation = $this->createMock(TranslationInterface::class);
+        $type = $this->createMock(Type::class);
 
+        $translation->expects(self::once())->method('setContent');
+
+        self::assertInstanceOf(
+            WrapperInterface::class,
+            $this->build()->updateTranslationRecord($translation, 'foo', $type)
+        );
     }
 
     public function testLinkTranslationRecord()
     {
+        $translation = $this->createMock(TranslationInterface::class);
 
+        $translation->expects(self::once())->method('setForeignKey');
+
+        self::assertInstanceOf(
+            WrapperInterface::class,
+            $this->build()->linkTranslationRecord($translation)
+        );
     }
 
     public function testLoadTranslations()
     {
+        $adapter = $this->createMock(AdapterInterface::class);
+        $adapter->expects(self::once())->method('loadTranslations');
 
+        self::assertInstanceOf(
+            WrapperInterface::class,
+            $this->build()->loadTranslations(
+                $adapter,
+                'fr',
+                'fooClass',
+                'barClass',
+                function() {}
+            )
+        );
     }
 
     public function testFindTranslation()
     {
+        $adapter = $this->createMock(AdapterInterface::class);
+        $adapter->expects(self::once())->method('findTranslation');
 
+        self::assertInstanceOf(
+            WrapperInterface::class,
+            $this->build()->findTranslation(
+                $adapter,
+                'fr',
+                'field',
+                'fooClass',
+                'barClass',
+                function() {}
+            )
+        );
     }
 
     public function testRemoveAssociatedTranslations()
     {
+        $adapter = $this->createMock(AdapterInterface::class);
+        $adapter->expects(self::once())->method('removeAssociatedTranslations');
 
+        self::assertInstanceOf(
+            WrapperInterface::class,
+            $this->build()->removeAssociatedTranslations(
+                $adapter,
+                'fooClass',
+                'barClass'
+            )
+        );
     }
 }

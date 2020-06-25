@@ -27,14 +27,18 @@ use Doctrine\Persistence\Event\LoadClassMetadataEventArgs;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use PHPUnit\Framework\TestCase;
 use ProxyManager\Proxy\GhostObjectInterface;
+use Teknoo\East\Website\Doctrine\Object\Content;
+use Teknoo\East\Website\Doctrine\Object\Translation;
 use Teknoo\East\Website\Doctrine\Translatable\Mapping\ExtensionMetadataFactory;
 use Teknoo\East\Website\Doctrine\Translatable\ObjectManager\AdapterInterface as ManagerAdapterInterface;
+use Teknoo\East\Website\Doctrine\Translatable\Persistence\AdapterInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Persistence\AdapterInterface as PersistenceAdapterInterface;
 use Teknoo\East\Website\Doctrine\Translatable\TranslatableListener;
 use Teknoo\East\Website\Doctrine\Translatable\TranslationInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Wrapper\FactoryInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Wrapper\WrapperInterface;
 use Teknoo\East\Website\Object\TranslatableInterface;
+use Teknoo\East\Website\Object\Type;
 
 /**
  * @copyright   Copyright (c) 2009-2020 Richard Déloge (richarddeloge@gmail.com)
@@ -119,26 +123,341 @@ class TranslatableListenerTest extends TestCase
 
     public function testGetSubscribedEvents()
     {
+        self::assertIsArray(
+            $this->build()->getSubscribedEvents()
+        );
     }
 
     public function testRegisterClassMetadata()
     {
+        self::assertInstanceOf(
+            TranslatableListener::class,
+            $this->build()->registerClassMetadata(
+                'foo',
+                $this->createMock(ClassMetadata::class)
+            )
+        );
     }
 
     public function testSetLocale()
     {
+        self::assertInstanceOf(
+            TranslatableListener::class,
+            $this->build()->setLocale(
+                'fr'
+            )
+        );
     }
 
-    public function testInjectConfiguration(ClassMetadata $metadata, array $config)
+    public function testInjectConfiguration()
     {
+        self::assertInstanceOf(
+            TranslatableListener::class,
+            $this->build()->injectConfiguration(
+                $this->createMock(ClassMetadata::class),
+                ['fields' => ['foo', 'bar']]
+            )
+        );
     }
 
     public function testLoadClassMetadata()
     {
+        $classMeta = $this->createMock(ClassMetadata::class);
+        $classMeta->expects(self::any())->method('getName')->willReturn(Content::class);
+
+        $event = $this->createMock(LoadClassMetadataEventArgs::class);
+        $event->expects(self::any())->method('getClassMetadata')->willReturn($classMeta);
+
+        $this->getExtensionMetadataFactory()
+            ->expects(self::any())
+            ->method('loadExtensionMetadata')
+            ->willReturnCallback(
+                function (ClassMetadata $metaData, TranslatableListener $listener) {
+                    $listener->injectConfiguration(
+                        $metaData,
+                        ['fields' => ['title'], 'fallback' => []]
+                    );
+
+                    return $this->getExtensionMetadataFactory();
+                }
+            );
+
+        self::assertInstanceOf(
+            TranslatableListener::class,
+            $this->build()->loadClassMetadata(
+                $event
+            )
+        );
     }
 
-    public function testPostLoad()
+    public function testPostLoadNonTranslatable()
     {
+        $object = $this->createMock(Type::class);
+
+        $event = $this->createMock(LifecycleEventArgs::class);
+        $event->expects(self::any())->method('getObject')->willReturn($object);
+
+        $this->getManager()
+            ->expects(self::never())
+            ->method('findClassMetadata');
+
+        self::assertInstanceOf(
+            TranslatableListener::class,
+            $this->build()->postLoad(
+                $event
+            )
+        );
+    }
+
+    public function testPostLoadWithNoTranslationConfig()
+    {
+        $object = $this->createMock(Content::class);
+
+        $event = $this->createMock(LifecycleEventArgs::class);
+        $event->expects(self::any())->method('getObject')->willReturn($object);
+
+        $classMeta = $this->createMock(ClassMetadata::class);
+
+        $this->getManager()
+            ->expects(self::any())
+            ->method('findClassMetadata')
+            ->willReturnCallback(
+                function (string $class, TranslatableListener $listener) use ($classMeta) {
+                    $listener->registerClassMetadata(
+                        $class,
+                        $classMeta
+                    );
+
+                    return $this->getManager();
+                }
+            );
+
+        $this->getExtensionMetadataFactory()
+            ->expects(self::any())
+            ->method('loadExtensionMetadata')
+            ->willReturnCallback(
+                function (ClassMetadata $metaData, TranslatableListener $listener) {
+                    $listener->injectConfiguration(
+                        $metaData,
+                        ['fields' => [], 'fallback' => []]
+                    );
+
+                    return $this->getExtensionMetadataFactory();
+                }
+            );
+
+        $wrapper = $this->createMock(WrapperInterface::class);
+        $wrapper->expects(self::never())
+            ->method('loadTranslations');
+
+        $this->getWrapperFactory()
+            ->expects(self::never())
+            ->method('__invoke');
+
+        self::assertInstanceOf(
+            TranslatableListener::class,
+            $this->build()->postLoad(
+                $event
+            )
+        );
+    }
+
+    public function testPostLoadWithDefaultLocale()
+    {
+        $object = $this->createMock(Content::class);
+
+        $event = $this->createMock(LifecycleEventArgs::class);
+        $event->expects(self::any())->method('getObject')->willReturn($object);
+
+        $classMeta = $this->createMock(ClassMetadata::class);
+
+        $this->getManager()
+            ->expects(self::any())
+            ->method('findClassMetadata')
+            ->willReturnCallback(
+                function (string $class, TranslatableListener $listener) use ($classMeta) {
+                    $listener->registerClassMetadata(
+                        $class,
+                        $classMeta
+                    );
+
+                    return $this->getManager();
+                }
+            );
+
+        $this->getExtensionMetadataFactory()
+            ->expects(self::any())
+            ->method('loadExtensionMetadata')
+            ->willReturnCallback(
+                function (ClassMetadata $metaData, TranslatableListener $listener) {
+                    $listener->injectConfiguration(
+                        $metaData,
+                        ['fields' => ['title'], 'fallback' => [], 'translationClass' => Translation::class, 'useObjectClass' => Content::class]
+                    );
+
+                    return $this->getExtensionMetadataFactory();
+                }
+            );
+
+        $wrapper = $this->createMock(WrapperInterface::class);
+        $wrapper->expects(self::never())
+            ->method('loadTranslations');
+
+        $this->getWrapperFactory()
+            ->expects(self::never())
+            ->method('__invoke');
+
+        self::assertInstanceOf(
+            TranslatableListener::class,
+            $this->build()->postLoad(
+                $event
+            )
+        );
+    }
+
+    public function testPostLoadWithNoTranslationFound()
+    {
+        $object = $this->createMock(Content::class);
+
+        $event = $this->createMock(LifecycleEventArgs::class);
+        $event->expects(self::any())->method('getObject')->willReturn($object);
+
+        $classMeta = $this->createMock(ClassMetadata::class);
+
+        $this->getManager()
+            ->expects(self::any())
+            ->method('findClassMetadata')
+            ->willReturnCallback(
+                function (string $class, TranslatableListener $listener) use ($classMeta) {
+                    $listener->registerClassMetadata(
+                        $class,
+                        $classMeta
+                    );
+
+                    return $this->getManager();
+                }
+            );
+
+        $this->getExtensionMetadataFactory()
+            ->expects(self::any())
+            ->method('loadExtensionMetadata')
+            ->willReturnCallback(
+                function (ClassMetadata $metaData, TranslatableListener $listener) {
+                    $listener->injectConfiguration(
+                        $metaData,
+                        ['fields' => ['title'], 'fallback' => [], 'translationClass' => Translation::class, 'useObjectClass' => Content::class]
+                    );
+
+                    return $this->getExtensionMetadataFactory();
+                }
+            );
+
+        $wrapper = $this->createMock(WrapperInterface::class);
+        $wrapper->expects(self::any())
+            ->method('loadTranslations')
+            ->willReturnCallback(
+                function (
+                    AdapterInterface $adapter,
+                    string $locale,
+                    string $translationClass,
+                    string $objectClass,
+                    callable $callback
+                ) use ($wrapper) {
+                    $callback([]);
+
+                    return $wrapper;
+                }
+            );
+
+        $this->getWrapperFactory()
+            ->expects(self::any())
+            ->method('__invoke')
+            ->willReturnCallback(
+                function (TranslatableInterface $object, ClassMetadata $metadata) use ($wrapper) {
+                    return $wrapper;
+                }
+            );
+
+        self::assertInstanceOf(
+            TranslatableListener::class,
+            $this->build()->setLocale('fr')->postLoad(
+                $event
+            )
+        );
+    }
+
+    public function testPostLoadWitoTranslationFound()
+    {
+        $object = $this->createMock(Content::class);
+
+        $event = $this->createMock(LifecycleEventArgs::class);
+        $event->expects(self::any())->method('getObject')->willReturn($object);
+
+        $classMeta = $this->createMock(ClassMetadata::class);
+
+        $this->getManager()
+            ->expects(self::any())
+            ->method('findClassMetadata')
+            ->willReturnCallback(
+                function (string $class, TranslatableListener $listener) use ($classMeta) {
+                    $listener->registerClassMetadata(
+                        $class,
+                        $classMeta
+                    );
+
+                    return $this->getManager();
+                }
+            );
+
+        $this->getExtensionMetadataFactory()
+            ->expects(self::any())
+            ->method('loadExtensionMetadata')
+            ->willReturnCallback(
+                function (ClassMetadata $metaData, TranslatableListener $listener) {
+                    $listener->injectConfiguration(
+                        $metaData,
+                        ['fields' => ['title', 'subtitle'], 'fallback' => [], 'translationClass' => Translation::class, 'useObjectClass' => Content::class]
+                    );
+
+                    return $this->getExtensionMetadataFactory();
+                }
+            );
+
+        $wrapper = $this->createMock(WrapperInterface::class);
+        $wrapper->expects(self::any())
+            ->method('loadTranslations')
+            ->willReturnCallback(
+                function (
+                    AdapterInterface $adapter,
+                    string $locale,
+                    string $translationClass,
+                    string $objectClass,
+                    callable $callback
+                ) use ($wrapper) {
+                    $callback([
+                        ['field' => 'title', 'content' => 'foo'],
+                        ['field' => 'subtitle', 'content' => 'bar'],
+                    ]);
+
+                    return $wrapper;
+                }
+            );
+
+        $this->getWrapperFactory()
+            ->expects(self::any())
+            ->method('__invoke')
+            ->willReturnCallback(
+                function (TranslatableInterface $object, ClassMetadata $metadata) use ($wrapper) {
+                    return $wrapper;
+                }
+            );
+
+        self::assertInstanceOf(
+            TranslatableListener::class,
+            $this->build()->setLocale('fr')->postLoad(
+                $event
+            )
+        );
     }
 
     public function testOnFlush()

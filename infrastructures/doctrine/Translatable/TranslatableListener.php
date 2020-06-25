@@ -297,7 +297,7 @@ class TranslatableListener implements EventSubscriber
         $metaData = $this->getClassMetadata($this->getObjectClassName($object));
 
         $config = $this->getConfiguration($metaData);
-        if (!isset($config['fields'])) {
+        if (empty($config['fields'])) {
             return $this;
         }
 

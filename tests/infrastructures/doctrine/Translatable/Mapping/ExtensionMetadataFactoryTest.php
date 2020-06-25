@@ -28,10 +28,12 @@ use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\Mapping\Driver\FileDriver;
 use Doctrine\Persistence\Mapping\Driver\FileLocator;
 use Doctrine\Persistence\Mapping\Driver\MappingDriver;
+use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Website\Doctrine\Exception\InvalidMappingException;
 use Teknoo\East\Website\Doctrine\Object\Content as DoctrineContent;
+use Teknoo\East\Website\Doctrine\Translatable\Mapping\DriverInterface;
 use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Doctrine\Translatable\Mapping\DriverFactoryInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Mapping\ExtensionMetadataFactory;
@@ -100,6 +102,24 @@ class ExtensionMetadataFactoryTest extends TestCase
     {
         if (!$this->driverFactory instanceof DriverFactoryInterface) {
             $this->driverFactory = $this->createMock(DriverFactoryInterface::class);
+
+            $this->driverFactory->expects(self::any())
+                ->method('__invoke')
+                ->willReturnCallback(function () {
+                    $driver = $this->createMock(DriverInterface::class);
+                    $driver->expects(self::any())
+                        ->method('readExtendedMetadata')
+                        ->willReturnCallback(
+                            function (ClassMetadata $meta, array &$config) use ($driver) {
+                                $config['fields'] = ['foo', 'bar'];
+                                $config['fallbacks'] = ['foo', 'bar'];
+
+                                return $driver;
+                            }
+                        );
+
+                    return $driver;
+                });
         }
 
         return $this->driverFactory;
@@ -166,6 +186,33 @@ class ExtensionMetadataFactoryTest extends TestCase
         );
     }
 
+    public function testLoadExtensionMetadataWithMappingDriverChain()
+    {
+        $meta = $this->createMock(ClassMetadata::class);
+        $meta->isMappedSuperclass = false;
+        $meta->expects(self::any())->method('getName')->willReturn(Content::class);
+
+        $this->mappingDriver = $this->createMock(MappingDriverChain::class);
+        $fileDriver = $this->createMock(FileDriver::class);
+
+        $this->mappingDriver->expects(self::any())->method('getDrivers')->willReturn([
+            $this->createMock(MappingDriver::class),
+            $this->createMock(MappingDriver::class),
+            $fileDriver
+        ]);
+
+        $locator = $this->createMock(FileLocator::class);
+        $fileDriver->expects(self::any())->method('getLocator')->willReturn($locator);
+
+        $listener = $this->createMock(TranslatableListener::class);
+        $listener->expects(self::once())->method('injectConfiguration');
+
+        self::assertInstanceOf(
+            ExtensionMetadataFactory::class,
+            $this->build()->loadExtensionMetadata($meta, $listener)
+        );
+    }
+
     public function testLoadExtensionMetadataWithFileDriverWithParent()
     {
         $meta = $this->createMock(ClassMetadata::class);
@@ -179,6 +226,16 @@ class ExtensionMetadataFactoryTest extends TestCase
 
         $listener = $this->createMock(TranslatableListener::class);
         $listener->expects(self::once())->method('injectConfiguration');
+
+        $this->getClassMetadataFactory()
+            ->expects(self::any())
+            ->method('hasMetadataFor')
+            ->willReturn(true);
+
+        $this->getObjectManager()
+            ->expects(self::any())
+            ->method('getClassMetadata')
+            ->willReturn($this->createMock(ClassMetadata::class));
 
         self::assertInstanceOf(
             ExtensionMetadataFactory::class,
@@ -210,7 +267,7 @@ class ExtensionMetadataFactoryTest extends TestCase
         );
     }
 
-    public function testLoadExtensionMetadataWitchCacheotEmpty()
+    public function testLoadExtensionMetadataWitchCacheNotEmpty()
     {
         $meta = $this->createMock(ClassMetadata::class);
         $meta->isMappedSuperclass = false;

@@ -24,6 +24,10 @@ namespace Teknoo\Tests\East\Website\Doctrine;
 
 use DI\Container;
 use DI\ContainerBuilder;
+use Doctrine\ODM\MongoDB\Configuration;
+use Doctrine\ODM\MongoDB\DocumentManager;
+use Doctrine\Persistence\Mapping\AbstractClassMetadataFactory;
+use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
 use PHPUnit\Framework\TestCase;
@@ -158,12 +162,12 @@ class ContainerTest extends TestCase
         $this->generateTestForRepositoryWithUnsupportedRepository(User::class, UserRepositoryInterface::class);
     }
 
-    public function testLocaleMiddlewareWithSymfonyContext()
+    public function testLocaleMiddlewareWithDocumentManager()
     {
         $container = $this->buildContainer();
         $translatableListener = $this->createMock(TranslatableListener::class);
 
-        $objectManager = $this->createMock(ObjectManager::class);
+        $objectManager = $this->createMock(DocumentManager::class);
         $container->set(ObjectManager::class, $objectManager);
 
         $container->set(TranslatableListener::class, $translatableListener);
@@ -175,7 +179,7 @@ class ContainerTest extends TestCase
         );
     }
 
-    public function testLocaleMiddlewareWithoutSymfonyContext()
+    public function testLocaleMiddlewareWithoutDocumentManager()
     {
         $container = $this->buildContainer();
         $translatableListener = $this->createMock(TranslatableListener::class);
@@ -187,5 +191,55 @@ class ContainerTest extends TestCase
             LocaleMiddleware::class,
             $loader
         );
+    }
+
+    public function testTranslationListenerWithDocumentManagerWithoutMappingDriver()
+    {
+        $container = $this->buildContainer();
+        $objectManager = $this->createMock(DocumentManager::class);
+        $container->set(ObjectManager::class, $objectManager);
+
+        $this->expectException(\RuntimeException::class);
+        $listener = $container->get(TranslatableListener::class);
+
+        self::assertInstanceOf(
+            TranslatableListener::class,
+            $listener
+        );
+    }
+
+    public function testTranslationListenerWithDocumentManager()
+    {
+        $container = $this->buildContainer();
+
+        $driver = $this->createMock(MappingDriver::class);
+
+        $configuration = $this->createMock(Configuration::class);
+        $configuration->expects(self::any())->method('getMetadataDriverImpl')->willReturn($driver);
+
+        $mappingFactory = $this->createMock(AbstractClassMetadataFactory::class);
+
+        $objectManager = $this->createMock(DocumentManager::class);
+        $objectManager->expects(self::any())->method('getConfiguration')->willReturn($configuration);
+        $objectManager->expects(self::any())->method('getMetadataFactory')->willReturn($mappingFactory);
+
+        $container->set(ObjectManager::class, $objectManager);
+
+        $listener = $container->get(TranslatableListener::class);
+
+        self::assertInstanceOf(
+            TranslatableListener::class,
+            $listener
+        );
+    }
+
+    public function testTranslationListenerWithWithoutDocumentManager()
+    {
+        $container = $this->buildContainer();
+
+        $container->set(ObjectManager::class, $this->createMock(ObjectManager::class));
+
+        $this->expectException(\RuntimeException::class);
+        $container->get(TranslatableListener::class);
     }
 }

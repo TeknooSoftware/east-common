@@ -159,7 +159,7 @@ class TranslatableListener implements EventSubscriber
             return $this->classMetadata[$className];
         }
 
-        throw new \RuntimeException("Error no classmeta data available for $className");
+        throw new \DomainException("Error no classmeta data available for $className");
     }
 
     public function registerClassMetadata(string $className, ClassMetadata $classMetadata): self

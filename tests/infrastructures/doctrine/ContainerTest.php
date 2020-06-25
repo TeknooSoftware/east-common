@@ -26,7 +26,10 @@ use DI\Container;
 use DI\ContainerBuilder;
 use Doctrine\ODM\MongoDB\Configuration;
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Doctrine\ODM\MongoDB\Mapping\ClassMetadata;
+use Doctrine\Persistence\Mapping\ClassMetadata as BaseClassMetadata;
 use Doctrine\Persistence\Mapping\AbstractClassMetadataFactory;
+use Doctrine\Persistence\Mapping\Driver\FileLocator;
 use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
@@ -37,7 +40,9 @@ use Teknoo\East\Website\DBSource\Repository\ItemRepositoryInterface;
 use Teknoo\East\Website\DBSource\Repository\MediaRepositoryInterface;
 use Teknoo\East\Website\DBSource\Repository\TypeRepositoryInterface;
 use Teknoo\East\Website\DBSource\Repository\UserRepositoryInterface;
+use Teknoo\East\Website\Doctrine\Translatable\Mapping\DriverInterface;
 use Teknoo\East\Website\Doctrine\Translatable\TranslatableListener;
+use Teknoo\East\Website\Doctrine\Translatable\Wrapper\WrapperInterface;
 use Teknoo\East\Website\Middleware\LocaleMiddleware;
 use Teknoo\East\Website\Doctrine\Object\Content;
 use Teknoo\East\Website\Doctrine\Object\Item;
@@ -230,6 +235,53 @@ class ContainerTest extends TestCase
         self::assertInstanceOf(
             TranslatableListener::class,
             $listener
+        );
+
+        $rf = new \ReflectionObject($listener);
+        $rpw = $rf->getProperty('wrapperFactory');
+
+        $rpw->setAccessible(true);
+        $closure = $rpw->getValue($listener);
+
+        self::assertInstanceOf(
+            WrapperInterface::class,
+            $closure(new Content(), $this->createMock(ClassMetadata::class))
+        );
+
+        $error = false;
+        try {
+            $closure(new Content(), $this->createMock(BaseClassMetadata::class));
+        } catch (\RuntimeException $error) {
+            $error = true;
+        }
+        self::assertTrue($error);
+
+        $rpe = $rf->getProperty('extensionMetadataFactory');
+        $rpe->setAccessible(true);
+        $extensionMetadataFactory = $rpe->getValue($listener);
+
+        $rf = new \ReflectionObject($extensionMetadataFactory);
+
+        $rpe = $rf->getProperty('driverFactory');
+        $rpe->setAccessible(true);
+        $driverFactory = $rpe->getValue($extensionMetadataFactory);
+
+        $driver = $driverFactory($this->createMock(FileLocator::class));
+        self::assertInstanceOf(
+            DriverInterface::class,
+            $driver
+        );
+
+        $rf = new \ReflectionObject($driver);
+
+        $rps = $rf->getProperty('simpleXmlFactory');
+        $rps->setAccessible(true);
+        $simpleXmlFactory = $rps->getValue($driver);
+
+        $simpleXml = $simpleXmlFactory(__DIR__.'/Translatable/Mapping/Driver/support/valid.translate.xml');
+        self::assertInstanceOf(
+            \SimpleXMLElement::class,
+            $simpleXml
         );
     }
 

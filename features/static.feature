@@ -8,7 +8,6 @@ Feature: Rendering and return a rendered static content via an HTTP response
     And a Endpoint able to render and serve this template.
     And a templating engine
     And a template "Acme:MyBundle:template.html.twig" with "fooBar"
-    And I register a router
     And The router can process the request "#/static/foo#" to controller "staticEndPoint"
     When The server will receive the request "https://foo.com/static/foo"
     Then The client must accept a response

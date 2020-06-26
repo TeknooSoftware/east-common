@@ -1,6 +1,7 @@
 <?php
 
 use Behat\Behat\Context\Context;
+use DI\Container;
 use Doctrine\Persistence\ObjectRepository;
 use Doctrine\Persistence\ObjectManager;
 use Laminas\Diactoros\ServerRequest;
@@ -11,6 +12,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Templating\EngineInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
 use Teknoo\East\Foundation\Router\RouterInterface;
@@ -23,6 +25,11 @@ use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
 use Teknoo\East\Website\Loader\MediaLoader;
 use Teknoo\East\Website\Loader\ContentLoader;
+use Teknoo\East\Website\Loader\ItemLoader;
+use Teknoo\East\Website\Loader\TypeLoader;
+use Teknoo\East\Website\Writer\ContentWriter;
+use Teknoo\East\Website\Writer\ItemWriter;
+use Teknoo\East\Website\Writer\TypeWriter;
 use Teknoo\East\Website\EndPoint\MediaEndPointTrait;
 use Teknoo\East\Website\EndPoint\ContentEndPointTrait;
 use Teknoo\East\Website\EndPoint\StaticEndPointTrait;
@@ -31,86 +38,86 @@ use Teknoo\East\Website\Object\Media;
 use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Object\Block;
-
+use Teknoo\East\Website\Service\FindSlugService;
+use Teknoo\East\WebsiteBundle\AdminEndPoint\AdminNewEndPoint;
+use Teknoo\East\WebsiteBundle\AdminEndPoint\AdminEditEndPoint;
+use Teknoo\East\WebsiteBundle\AdminEndPoint\AdminDeleteEndPoint;
+use Teknoo\East\WebsiteBundle\Form\Type\TypeType;
+use Teknoo\East\Website\Doctrine\Form\Type\ContentType;
+use Teknoo\East\Website\Doctrine\Form\Type\ItemType;
+use Teknoo\East\Website\Doctrine\Object\Content as ContentDoctrine;
+use Teknoo\East\Website\Doctrine\Object\Item as ItemDoctrine;
 /**
  * Defines application features from the specific context.
  */
 class FeatureContext implements Context
 {
-    /**
-     * @var \DI\Container
-     */
-    private $container;
+    private ?Container $container = null;
 
-    /**
-     * @var RouterInterface
-     */
-    private $router;
+    private ?RouterInterface $router = null;
 
-    /**
-     * @var ClientInterface
-     */
-    private $client;
+    private ?ClientInterface $client = null;
 
-    /**
-     * @var MediaLoader
-     */
-    private $mediaLoader;
+    private ?ObjectRepository $objectRepository = null;
 
-    /**
-     * @var ObjectRepository
-     */
-    private $objectRepository;
+    private ?MediaLoader $mediaLoader = null;
 
-    /**
-     * @var ContentLoader
-     */
-    private $contentLoader;
+    private ?ContentLoader $contentLoader = null;
+
+    private ?ItemLoader $itemLoader = null;
+
+    private ?TypeLoader $typeLoader = null;
+
+    private ?ContentWriter $contentWriter = null;
+
+    private ?ItemWriter $itemWriter = null;
+
+    private ?TypeWriter $typeWriter = null;
 
     /**
      * @var MediaEndPointTrait|EndPointInterface
      */
-    private $mediaEndPoint;
+    private ?EndPointInterface $mediaEndPoint = null;
 
     /**
      * @var ContentEndPointTrait|EndPointInterface
      */
-    private $contentEndPoint;
+    private ?EndPointInterface $contentEndPoint = null;
 
     /**
      * @var StaticEndPointTrait|EndPointInterface
      */
-    private $staticEndPoint;
+    private ?EndPointInterface $staticEndPoint = null;
 
-    /**
-     * @var Type
-     */
-    private $type;
+    private ?AdminNewEndPoint $newContentEndPoint = null;
 
-    /**
-     * @var EngineInterface
-     */
-    private $templating;
+    private ?AdminEditEndPoint $updateContentEndPoint = null;
 
-    /**
-     * @var string
-     */
-    public $templateToCall;
+    private ?AdminDeleteEndPoint $deleteContentEndPoint = null;
 
-    /**
-     * @var string
-     */
-    public $templateContent;
+    private ?AdminNewEndPoint $newItemEndPoint = null;
 
-    /**
-     * @var ResponseInterface
-     */
-    public $response;
+    private ?AdminEditEndPoint $updateItemEndPoint = null;
 
-    /**
-     * @va \Throwable
-     */
-    public $error;
+    private ?AdminDeleteEndPoint $deleteItemEndPoint = null;
+
+    private ?AdminNewEndPoint $newTypeEndPoint = null;
+
+    private ?AdminEditEndPoint $updateTypeEndPoint = null;
+
+    private ?AdminDeleteEndPoint $deleteTypeEndPoint = null;
+
+    private ?Type $type = null;
+
+    private ?EngineInterface $templating = null;
+
+    public ?string $templateToCall = null;
+
+    public ?string $templateContent = null;
+
+    public ?ResponseInterface $response = null;
+
+    public ?\Throwable $error = null;
 
     /**
      * Initializes context.
@@ -137,6 +144,33 @@ class FeatureContext implements Context
         );
         $containerDefinition->addDefinitions(
             include \dirname(\dirname(__DIR__)).'/infrastructures/doctrine/di.php'
+        );
+        $containerDefinition->addDefinitions(
+            include \dirname(\dirname(__DIR__)).'/infrastructures/di.php'
+        );
+
+        $this->container = $containerDefinition->build();
+
+        $this->container->set(ObjectManager::class, $this->buildObjectManager());
+    }
+
+    /**
+     * @Given I have DI With Symfony initialized
+     */
+    public function iHaveDiWithSymfonyInitialized()
+    {
+        $containerDefinition = new \DI\ContainerBuilder();
+        $containerDefinition->addDefinitions(
+            include \dirname(\dirname(__DIR__)).'/vendor/teknoo/east-foundation/src/universal/di.php'
+        );
+        $containerDefinition->addDefinitions(
+            include \dirname(\dirname(__DIR__)) . '/src/di.php'
+        );
+        $containerDefinition->addDefinitions(
+            include \dirname(\dirname(__DIR__)).'/infrastructures/doctrine/di.php'
+        );
+        $containerDefinition->addDefinitions(
+            include \dirname(\dirname(__DIR__)).'/infrastructures/symfony/Resources/config/di.php'
         );
         $containerDefinition->addDefinitions(
             include \dirname(\dirname(__DIR__)).'/infrastructures/di.php'
@@ -307,11 +341,51 @@ class FeatureContext implements Context
     {
         $this->mediaLoader = $this->container->get(MediaLoader::class);
     }
+    
+    /**
+     * @Given a Item Loader
+     */
+    public function aItemLoader()
+    {
+        $this->itemLoader = $this->container->get(ItemLoader::class);
+    }
 
     /**
-     * @Given an available image called :arg1
+     * @Given a Item Writer
      */
-    public function anAvailableImageCalled($arg1)
+    public function aItemWriter()
+    {
+        $this->itemWriter = $this->container->get(ItemWriter::class);
+    }
+
+    /**
+     * @Given a Content Writer
+     */
+    public function aContentWriter()
+    {
+        $this->contentWriter = $this->container->get(ContentWriter::class);
+    }
+
+    /**
+     * @Given a Type Loader
+     */
+    public function aTypeLoader()
+    {
+        $this->typeLoader = $this->container->get(TypeLoader::class);
+    }
+
+    /**
+     * @Given a Type Writer
+     */
+    public function aTypeWriter()
+    {
+        $this->typeWriter = $this->container->get(TypeWriter::class);
+    }
+
+    /**
+     * @Given an available image called :name
+     */
+    public function anAvailableImageCalled($name)
     {
         $media = new class extends Media {
             /**
@@ -328,16 +402,16 @@ class FeatureContext implements Context
         };
 
         $this->objectRepository->setObject(
-            ['id' => $arg1],
-            $media->setId($arg1)
-                ->setName($arg1)
+            ['id' => $name],
+            $media->setId($name)
+                ->setName($name)
         );
     }
 
     /**
-     * @Given a Endpoint able to serve resource from Mongo.
+     * @Given a Endpoint able to serve resource from database.
      */
-    public function aEndpointAbleToServeResourceFromMongo()
+    public function aEndpointAbleToServeResourceFromDatabase()
     {
         $this->mediaEndPoint = new class(
             $this->mediaLoader,
@@ -418,30 +492,30 @@ class FeatureContext implements Context
     }
 
     /**
-     * @Given The router can process the request :arg1 to controller :arg2
+     * @Given The router can process the request :url to controller :controller
      */
-    public function theRouterCanProcessTheRequestToController($arg1, $arg2)
+    public function theRouterCanProcessTheRequestToController($url, $controller)
     {
-        switch ($arg2) {
+        switch ($controller) {
             case 'contentEndPoint':
                 $controller = $this->contentEndPoint;
-                $this->router->registerRoute($arg1, $controller);
+                $this->router->registerRoute($url, $controller);
                 break;
             case 'staticEndPoint':
                 $controller = $this->staticEndPoint;
-                $this->router->registerRoute($arg1, $controller, ['template' => 'Acme:MyBundle:template.html.twig']);
+                $this->router->registerRoute($url, $controller, ['template' => 'Acme:MyBundle:template.html.twig']);
                 break;
             case 'mediaEndPoint':
                 $controller = $this->mediaEndPoint;
-                $this->router->registerRoute($arg1, $controller);
+                $this->router->registerRoute($url, $controller);
                 break;
         }
     }
 
     /**
-     * @When The server will receive the request :arg1
+     * @When The server will receive the request :url
      */
-    public function theServerWillReceiveTheRequest($arg1)
+    public function theServerWillReceiveTheRequest($url)
     {
         $manager = new Manager($this->container->get(RecipeInterface::class));
 
@@ -507,7 +581,8 @@ class FeatureContext implements Context
         };
 
         $request = new ServerRequest();
-        $request = $request->withUri(new Uri($arg1));
+        $request = $request->withMethod('GET');
+        $request = $request->withUri(new Uri($url));
         $query = [];
         \parse_str($request->getUri()->getQuery(), $query);
         $request = $request->withQueryParams($query);
@@ -528,11 +603,11 @@ class FeatureContext implements Context
     }
 
     /**
-     * @Then I should get :arg1
+     * @Then I should get :body
      */
-    public function iShouldGet($arg1)
+    public function iShouldGet($body)
     {
-        Assert::assertEquals($arg1, (string) $this->response->getBody());
+        Assert::assertEquals($body, (string) $this->response->getBody());
     }
 
     /**
@@ -555,30 +630,30 @@ class FeatureContext implements Context
     }
 
     /**
-     * @Given a type of page, called :arg1 with :arg2 blocks :arg3 and template :arg4 with :arg5
+     * @Given a type of page, called :name with :blockNumber blocks :blocks and template :template with :config
      */
-    public function aTypeOfPageCalledWithBlocksAndTemplateWith($arg1, $arg2, $arg3, $arg4, $arg5)
+    public function aTypeOfPageCalledWithBlocksAndTemplateWith($name, $blockNumber, $blocks, $template, $config)
     {
         $this->type = new Type();
-        $this->type->setName($arg1);
-        $blocks = [];
-        foreach (\explode(',', $arg3) as $name) {
-            $blocks[] = new Block($name, 'text');
+        $this->type->setName($name);
+        $blocksList = [];
+        foreach (\explode(',', $blocks) as $blockName) {
+            $blocksList[] = new Block($blockName, 'text');
         }
-        $this->type->setBlocks($blocks);
-        $this->type->setTemplate($arg4);
-        $this->templateToCall = $arg4;
-        $this->templateContent = $arg5;
+        $this->type->setBlocks($blocksList);
+        $this->type->setTemplate($template);
+        $this->templateToCall = $template;
+        $this->templateContent = $config;
     }
 
     /**
-     * @Given an available page with the slug :arg1 of type :arg2
+     * @Given an available page with the slug :slug of type :type
      */
-    public function anAvailablePageWithTheSlugOfType($arg1, $arg2)
+    public function anAvailablePageWithTheSlugOfType($slug, $type)
     {
         $this->objectRepository->setObject(
-            ['slug' => $arg1],
-            (new Content())->setSlug($arg1)
+            ['slug' => $slug],
+            (new Content())->setSlug($type)
                 ->setType($this->type)
                 ->setParts(['block1' => 'hello', 'block2' => 'world'])
                 ->setPublishedAt(new \DateTime(2017-11-25))
@@ -597,6 +672,149 @@ class FeatureContext implements Context
 
         $this->contentEndPoint->setResponseFactory($this->container->get(ResponseFactoryInterface::class));
         $this->contentEndPoint->setStreamFactory($this->container->get(StreamFactoryInterface::class));
+    }
+
+    /**
+     * @Given a Endpoint able to render form and create a type
+     */
+    public function aEndpointAbleToRenderFormAndCreateAType()
+    {
+        $this->newTypeEndPoint = new AdminNewEndPoint();
+        $this->newTypeEndPoint->setFormFactory($this->container->get(FormFactory::class));
+        $this->newTypeEndPoint->setResponseFactory($this->container->get(ResponseFactoryInterface::class));
+        $this->newTypeEndPoint->setStreamFactory($this->container->get(StreamFactoryInterface::class));
+        $this->newTypeEndPoint->setTemplating($this->templating);
+        $this->newTypeEndPoint->setRouter($this->router);
+        $this->newTypeEndPoint->setLoader($this->typeLoader);
+        $this->newTypeEndPoint->setWriter($this->typeWriter);
+        $this->newTypeEndPoint->setFormClass(TypeType::class);
+        $this->newTypeEndPoint->setViewPath('file');
+        $this->newTypeEndPoint->setObjectClass(Type::class);
+    }
+
+    /**
+     * @Given a Endpoint able to render form and create a content
+     */
+    public function aEndpointAbleToRenderFormAndCreateAContent()
+    {
+        $this->newContentEndPoint = new AdminNewEndPoint();
+        $this->newContentEndPoint->setFormFactory($this->container->get(FormFactory::class));
+        $this->newContentEndPoint->setResponseFactory($this->container->get(ResponseFactoryInterface::class));
+        $this->newContentEndPoint->setStreamFactory($this->container->get(StreamFactoryInterface::class));
+        $this->newContentEndPoint->setTemplating($this->templating);
+        $this->newContentEndPoint->setRouter($this->router);
+        $this->newContentEndPoint->setStreamFactory($this->container->get(FindSlugService::class), 'slug');
+        $this->newContentEndPoint->setLoader($this->contentLoader);
+        $this->newContentEndPoint->setWriter($this->contentWriter);
+        $this->newContentEndPoint->setFormClass(ContentType::class);
+        $this->newContentEndPoint->setViewPath('file');
+        $this->newContentEndPoint->setObjectClass(ContentDoctrine::class);
+    }
+
+    /**
+     * @Given a Endpoint able to render form and create a item
+     */
+    public function aEndpointAbleToRenderFormAndCreateAItem()
+    {
+        $this->newItemEndPoint = new AdminNewEndPoint();
+        $this->newItemEndPoint->setFormFactory($this->container->get(FormFactory::class));
+        $this->newItemEndPoint->setResponseFactory($this->container->get(ResponseFactoryInterface::class));
+        $this->newItemEndPoint->setStreamFactory($this->container->get(StreamFactoryInterface::class));
+        $this->newItemEndPoint->setTemplating($this->templating);
+        $this->newItemEndPoint->setRouter($this->router);
+        $this->newItemEndPoint->setStreamFactory($this->container->get(FindSlugService::class), 'slug');
+        $this->newItemEndPoint->setLoader($this->itemLoader);
+        $this->newItemEndPoint->setWriter($this->itemWriter);
+        $this->newItemEndPoint->setFormClass(ItemType::class);
+        $this->newItemEndPoint->setViewPath('file');
+        $this->newItemEndPoint->setObjectClass(ItemDoctrine::class);
+    }
+
+    /**
+     * @Given a Endpoint able to render form and delete a type
+     */
+    public function aEndpointAbleToRenderFormAndDeleteAType()
+    {
+        $this->deleteTypeEndPoint = new AdminDeleteEndPoint();
+        $this->deleteTypeEndPoint->setResponseFactory($this->container->get(ResponseFactoryInterface::class));
+        $this->deleteTypeEndPoint->setRouter($this->router);
+        $this->deleteTypeEndPoint->setDeletingService($this->container->get('teknoo.east.website.deleting.item'));
+        $this->deleteTypeEndPoint->setLoader($this->typeLoader);
+    }
+
+    /**
+     * @Given a Endpoint able to render form and delete a content
+     */
+    public function aEndpointAbleToRenderFormAndDeleteAContent()
+    {
+        $this->deleteContentEndPoint = new AdminDeleteEndPoint();
+        $this->deleteContentEndPoint->setResponseFactory($this->container->get(ResponseFactoryInterface::class));
+        $this->deleteContentEndPoint->setRouter($this->router);
+        $this->deleteContentEndPoint->setDeletingService($this->container->get('teknoo.east.website.deleting.content'));
+        $this->deleteContentEndPoint->setLoader($this->contentLoader);
+    }
+
+    /**
+     * @Given a Endpoint able to render form and delete a item
+     */
+    public function aEndpointAbleToRenderFormAndDeleteAItem()
+    {
+        $this->deleteItemEndPoint = new AdminDeleteEndPoint();
+        $this->deleteItemEndPoint->setResponseFactory($this->container->get(ResponseFactoryInterface::class));
+        $this->deleteItemEndPoint->setRouter($this->router);
+        $this->deleteItemEndPoint->setDeletingService($this->container->get('teknoo.east.website.deleting.content'));
+        $this->deleteItemEndPoint->setLoader($this->itemLoader);
+    }
+
+    /**
+     * @Given a Endpoint able to render form and update a type
+     */
+    public function aEndpointAbleToRenderFormAndUpdateAType()
+    {
+        $this->updateTypeEndPoint = new AdminEditEndPoint();
+        $this->updateTypeEndPoint->setFormFactory($this->container->get(FormFactory::class));
+        $this->updateTypeEndPoint->setResponseFactory($this->container->get(ResponseFactoryInterface::class));
+        $this->updateTypeEndPoint->setStreamFactory($this->container->get(StreamFactoryInterface::class));
+        $this->updateTypeEndPoint->setTemplating($this->templating);
+        $this->updateTypeEndPoint->setLoader($this->typeLoader);
+        $this->updateTypeEndPoint->setWriter($this->typeWriter);
+        $this->updateTypeEndPoint->setFormClass(TypeType::class);
+        $this->updateTypeEndPoint->setViewPath('file');
+    }
+
+    /**
+     * @Given a Endpoint able to render form and update a content
+     */
+    public function aEndpointAbleToRenderFormAndUpdateAContent()
+    {
+        $this->updateContentEndPoint = new AdminEditEndPoint();
+        $this->newContentEndPoint->setFormFactory($this->container->get(FormFactory::class));
+        $this->newContentEndPoint->setResponseFactory($this->container->get(ResponseFactoryInterface::class));
+        $this->newContentEndPoint->setStreamFactory($this->container->get(StreamFactoryInterface::class));
+        $this->newContentEndPoint->setTemplating($this->templating);
+        $this->newContentEndPoint->setStreamFactory($this->container->get(FindSlugService::class), 'slug');
+        $this->newContentEndPoint->setLoader($this->contentLoader);
+        $this->newContentEndPoint->setWriter($this->contentWriter);
+        $this->newContentEndPoint->setFormClass(ContentType::class);
+        $this->newContentEndPoint->setViewPath('file');
+        $this->newContentEndPoint->setObjectClass(ContentDoctrine::class);
+    }
+
+    /**
+     * @Given a Endpoint able to render form and update a item
+     */
+    public function aEndpointAbleToRenderFormAndUpdateAItem()
+    {
+        $this->updateItemEndPoint = new AdminEditEndPoint();
+        $this->updateItemEndPoint->setFormFactory($this->container->get(FormFactory::class));
+        $this->updateItemEndPoint->setResponseFactory($this->container->get(ResponseFactoryInterface::class));
+        $this->updateItemEndPoint->setStreamFactory($this->container->get(StreamFactoryInterface::class));
+        $this->updateItemEndPoint->setTemplating($this->templating);
+        $this->updateItemEndPoint->setStreamFactory($this->container->get(FindSlugService::class), 'slug');
+        $this->updateItemEndPoint->setLoader($this->itemLoader);
+        $this->updateItemEndPoint->setWriter($this->itemWriter);
+        $this->updateItemEndPoint->setFormClass(ItemType::class);
+        $this->updateItemEndPoint->setViewPath('file');
     }
 
     /**
@@ -626,8 +844,8 @@ class FeatureContext implements Context
                 $keys = [];
                 $values = [];
                 if (isset($parameters['content']) && $parameters['content'] instanceof Content) {
-                    foreach ($parameters['content']->getParts() as $name=>$value) {
-                        $keys[] = '{'.$name.'}';
+                    foreach ($parameters['content']->getParts() as $key=>$value) {
+                        $keys[] = '{'.$key.'}';
                         $values[] = $value;
                     }
                 }
@@ -654,12 +872,12 @@ class FeatureContext implements Context
     }
 
     /**
-     * @Given a template :arg1 with :arg2
+     * @Given a template :template with :content
      */
-    public function aTemplateWith($arg1, $arg2)
+    public function aTemplateWith($template, $content)
     {
-        $this->templateToCall = $arg1;
-        $this->templateContent = $arg2;
+        $this->templateToCall = $template;
+        $this->templateContent = $content;
     }
 
     /**
@@ -674,5 +892,184 @@ class FeatureContext implements Context
 
         $this->staticEndPoint->setResponseFactory($this->container->get(ResponseFactoryInterface::class));
         $this->staticEndPoint->setStreamFactory($this->container->get(StreamFactoryInterface::class));
+    }
+
+    /**
+     * @When The server will receive the POST request :url with :body
+     */
+    public function theServerWillReceiveThePostRequestWith($url, $body)
+    {
+        $manager = new Manager($this->container->get(RecipeInterface::class));
+
+        $this->response = null;
+        $this->error = null;
+
+        $this->client = new class($this) implements ClientInterface {
+            /**
+             * @var FeatureContext
+             */
+            private $context;
+
+            /**
+             *  constructor.
+             * @param FeatureContext $context
+             */
+            public function __construct(FeatureContext $context)
+            {
+                $this->context = $context;
+            }
+
+            /**
+             * @inheritDoc
+             */
+            public function updateResponse(callable $modifier): ClientInterface
+            {
+                $modifier($this, $this->context->response);
+
+                return $this;
+            }
+
+            /**
+             * @inheritDoc
+             */
+            public function acceptResponse(ResponseInterface $response): ClientInterface
+            {
+                $this->context->response = $response;
+
+                return $this;
+            }
+
+            /**
+             * @inheritDoc
+             */
+            public function sendResponse(ResponseInterface $response = null, bool $silently = false): ClientInterface
+            {
+                if (!empty($response)) {
+                    $this->context->response = $response;
+                }
+
+                return $this;
+            }
+
+            /**
+             * @inheritDoc
+             */
+            public function errorInRequest(\Throwable $throwable): ClientInterface
+            {
+                $this->context->error = $throwable;
+
+                return $this;
+            }
+        };
+
+        $request = new ServerRequest();
+        $request = $request->withMethod('POST');
+        $request = $request->withUri(new Uri($url));
+        $query = [];
+        \parse_str($request->getUri()->getQuery(), $query);
+        $request = $request->withQueryParams($query);
+        $parsedBody = [];
+        \parse_str($request->getUri()->getQuery(), $parsedBody);
+        $request = $request->withParsedBody($parsedBody);
+
+        $manager->receiveRequest(
+            $this->client,
+            $request
+        );
+    }
+
+    /**
+     * @Then I should get in the form :body
+     */
+    public function iShouldGetInTheForm($body)
+    {
+        $expectedBody = [];
+        \parse_str($body, $expectedBody);
+
+        $actualBody = [];
+        \parse_str((string) $this->response->getBody(), $actualBody);
+
+        Assert::assertEquals($expectedBody, $actualBody);
+    }
+
+    /**
+     * @When The server will receive the DELETE request :url
+     */
+    public function theServerWillReceiveTheDeleteRequest($url)
+    {
+        $manager = new Manager($this->container->get(RecipeInterface::class));
+
+        $this->response = null;
+        $this->error = null;
+
+        $this->client = new class($this) implements ClientInterface {
+            /**
+             * @var FeatureContext
+             */
+            private $context;
+
+            /**
+             *  constructor.
+             * @param FeatureContext $context
+             */
+            public function __construct(FeatureContext $context)
+            {
+                $this->context = $context;
+            }
+
+            /**
+             * @inheritDoc
+             */
+            public function updateResponse(callable $modifier): ClientInterface
+            {
+                $modifier($this, $this->context->response);
+
+                return $this;
+            }
+
+            /**
+             * @inheritDoc
+             */
+            public function acceptResponse(ResponseInterface $response): ClientInterface
+            {
+                $this->context->response = $response;
+
+                return $this;
+            }
+
+            /**
+             * @inheritDoc
+             */
+            public function sendResponse(ResponseInterface $response = null, bool $silently = false): ClientInterface
+            {
+                if (!empty($response)) {
+                    $this->context->response = $response;
+                }
+
+                return $this;
+            }
+
+            /**
+             * @inheritDoc
+             */
+            public function errorInRequest(\Throwable $throwable): ClientInterface
+            {
+                $this->context->error = $throwable;
+
+                return $this;
+            }
+        };
+
+        $request = new ServerRequest();
+        $request = $request->withMethod('DELETE');
+        $request = $request->withUri(new Uri($url));
+        $query = [];
+        \parse_str($request->getUri()->getQuery(), $query);
+        $request = $request->withQueryParams($query);
+
+        $manager->receiveRequest(
+            $this->client,
+            $request
+        );
     }
 }

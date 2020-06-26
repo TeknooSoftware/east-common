@@ -9,6 +9,7 @@ install:
   - composer self-update
 
 before_script:
+  - phpenv config-add mongodb.ini
   - make
 
 script:

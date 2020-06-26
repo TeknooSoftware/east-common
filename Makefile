@@ -10,7 +10,7 @@ all: clean depend
 
 ### Dependencies
 depend:
-	${COMPOSER} update --prefer-source --no-interaction --ignore-platform-reqs
+	${COMPOSER} update --prefer-source --no-interaction --ignore-platform-reqs --dev
 
 .PHONY: depend
 

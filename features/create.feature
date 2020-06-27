@@ -5,6 +5,7 @@ Feature: Create an element, with slug or not stored into a the dbms server via a
     And I register a router
     And a Type Loader
     And a Type Writer
+    And a templating engine
     And a Endpoint able to render form and create a type
     And The router can process the request "#/admin/type/new#is" to controller "newTypeEndPoint"
     When The server will receive the POST request "https://foo.com/admin/type/new" with "foo:bar,bar:foo"
@@ -16,6 +17,7 @@ Feature: Create an element, with slug or not stored into a the dbms server via a
     And I register a router
     And a Content Loader
     And a Content Writer
+    And a templating engine
     And a Endpoint able to render form and create a content
     And The router can process the request "#/admin/content/new#is" to controller "newContentEndPoint"
     When The server will receive the POST request "https://foo.com/admin/type/new" with "foo:bar,bar:foo"
@@ -26,6 +28,7 @@ Feature: Create an element, with slug or not stored into a the dbms server via a
     And I register a router
     And a Item Loader
     And a Item Writer
+    And a templating engine
     And a Endpoint able to render form and create a item
     And The router can process the request "#/admin/item/new#is" to controller "newItemEndPoint"
     When The server will receive the POST request "https://foo.com/admin/type/new" with "foo:bar,bar:foo"

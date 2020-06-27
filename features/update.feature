@@ -5,6 +5,7 @@ Feature: Update an element, with slug or not stored into a the dbms server via a
     And I register a router
     And a Type Loader
     And a Type Writer
+    And a templating engine
     And a Endpoint able to render form and update a type
     And The router can process the request "#/admin/type/update/(?P<slug>[a-zA-Z0-9\.]+)#is" to controller "updateTypeEndPoint"
     When The server will receive the POST request "https://foo.com/admin/type/update/foo" with "foo:bar,bar:foo"
@@ -16,6 +17,7 @@ Feature: Update an element, with slug or not stored into a the dbms server via a
     And I register a router
     And a Content Loader
     And a Content Writer
+    And a templating engine
     And a Endpoint able to render form and update a content
     And The router can process the request "#/admin/content/update/(?P<slug>[a-zA-Z0-9\.]+)#is" to controller "updateContentEndPoint"
     When The server will receive the POST request "https://foo.com/admin/type/update/foo" with "foo:bar,bar:foo"
@@ -26,6 +28,7 @@ Feature: Update an element, with slug or not stored into a the dbms server via a
     And I register a router
     And a Item Loader
     And a Item Writer
+    And a templating engine
     And a Endpoint able to render form and update a item
     And The router can process the request "#/admin/item/update/(?P<slug>[a-zA-Z0-9\.]+)#is" to controller "updateItemEndPoint"
     When The server will receive the POST request "https://foo.com/admin/type/update/foo" with "foo:bar,bar:foo"

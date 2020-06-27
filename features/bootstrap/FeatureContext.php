@@ -13,6 +13,7 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Form\FormRegistryInterface;
 use Symfony\Component\Templating\EngineInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
 use Teknoo\East\Foundation\Router\RouterInterface;
@@ -691,18 +692,53 @@ class FeatureContext implements Context
         $this->contentEndPoint->setStreamFactory($this->container->get(StreamFactoryInterface::class));
     }
 
+    private function buildFormRegistry(): void
+    {
+        $registry = new class implements FormRegistryInterface {
+            private $types = [];
+
+            public function getType(string $name)
+            {
+                if (isset($this->types[$name])) {
+                    return $this->types[$name];
+                }
+
+                throw new \InvalidArgumentException();
+            }
+
+            public function hasType(string $name)
+            {
+                return isset($this->types[$name]);
+            }
+
+            public function getTypeGuesser()
+            {
+                return null;
+            }
+
+            public function getExtensions()
+            {
+                return [];
+            }
+        };
+
+        $this->container->set(FormRegistryInterface::class, $registry);
+    }
+
     private function buildAdminNewEndPoint(
         LoaderInterface $loader,
         WriterInterface $writer,
         string $formClass,
         string $objectClass
     ): AdminNewEndPoint {
+        $this->buildFormRegistry();
+
         $endPoint = new AdminNewEndPoint();
         $endPoint->setFormFactory($this->container->get(FormFactory::class));
         $endPoint->setResponseFactory($this->container->get(ResponseFactoryInterface::class));
         $endPoint->setStreamFactory($this->container->get(StreamFactoryInterface::class));
         $endPoint->setTemplating($this->templating);
-        $endPoint->setRouter($this->router);
+        $endPoint->setRouter($this->container->get(''));
         $endPoint->setLoader($loader);
         $endPoint->setWriter($writer);
         $endPoint->setFormClass($formClass);

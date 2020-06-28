@@ -12,15 +12,10 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\StreamFactoryInterface;
-use Symfony\Component\Form\Extension\DataCollector\FormDataCollectorInterface;
 use Symfony\Component\Form\Extension\DataCollector\Proxy\ResolvedTypeDataCollectorProxy;
-use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormRegistryInterface;
 use Symfony\Component\Form\ResolvedFormType;
-use Symfony\Component\Routing\RequestContext;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Templating\EngineInterface;
-use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
 use Teknoo\East\Foundation\Router\RouterInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
@@ -34,11 +29,6 @@ use Teknoo\East\Website\Loader\MediaLoader;
 use Teknoo\East\Website\Loader\ContentLoader;
 use Teknoo\East\Website\Loader\ItemLoader;
 use Teknoo\East\Website\Loader\TypeLoader;
-use Teknoo\East\Website\Loader\LoaderInterface;
-use Teknoo\East\Website\Writer\ContentWriter;
-use Teknoo\East\Website\Writer\ItemWriter;
-use Teknoo\East\Website\Writer\TypeWriter;
-use Teknoo\East\Website\Writer\WriterInterface;
 use Teknoo\East\Website\EndPoint\MediaEndPointTrait;
 use Teknoo\East\Website\EndPoint\ContentEndPointTrait;
 use Teknoo\East\Website\EndPoint\StaticEndPointTrait;
@@ -47,15 +37,7 @@ use Teknoo\East\Website\Object\Media;
 use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Object\Block;
-use Teknoo\East\Website\Service\FindSlugService;
-use Teknoo\East\WebsiteBundle\AdminEndPoint\AdminNewEndPoint;
-use Teknoo\East\WebsiteBundle\AdminEndPoint\AdminEditEndPoint;
-use Teknoo\East\WebsiteBundle\AdminEndPoint\AdminDeleteEndPoint;
-use Teknoo\East\WebsiteBundle\Form\Type\TypeType;
-use Teknoo\East\Website\Doctrine\Form\Type\ContentType;
-use Teknoo\East\Website\Doctrine\Form\Type\ItemType;
-use Teknoo\East\Website\Doctrine\Object\Content as ContentDoctrine;
-use Teknoo\East\Website\Doctrine\Object\Item as ItemDoctrine;
+
 /**
  * Defines application features from the specific context.
  */
@@ -64,10 +46,6 @@ class FeatureContext implements Context
     private ?Container $container = null;
 
     private ?RouterInterface $router = null;
-
-    private ?UrlGeneratorInterface $generator = null;
-
-    private ?LocaleAwareInterface $localeAware;
 
     public string $locale = 'en';
 
@@ -83,12 +61,6 @@ class FeatureContext implements Context
 
     private ?TypeLoader $typeLoader = null;
 
-    private ?ContentWriter $contentWriter = null;
-
-    private ?ItemWriter $itemWriter = null;
-
-    private ?TypeWriter $typeWriter = null;
-
     /**
      * @var MediaEndPointTrait|EndPointInterface
      */
@@ -103,24 +75,6 @@ class FeatureContext implements Context
      * @var StaticEndPointTrait|EndPointInterface
      */
     private ?EndPointInterface $staticEndPoint = null;
-
-    private ?AdminNewEndPoint $newContentEndPoint = null;
-
-    private ?AdminEditEndPoint $updateContentEndPoint = null;
-
-    private ?AdminDeleteEndPoint $deleteContentEndPoint = null;
-
-    private ?AdminNewEndPoint $newItemEndPoint = null;
-
-    private ?AdminEditEndPoint $updateItemEndPoint = null;
-
-    private ?AdminDeleteEndPoint $deleteItemEndPoint = null;
-
-    private ?AdminNewEndPoint $newTypeEndPoint = null;
-
-    private ?AdminEditEndPoint $updateTypeEndPoint = null;
-
-    private ?AdminDeleteEndPoint $deleteTypeEndPoint = null;
 
     private ?Type $type = null;
 
@@ -362,35 +316,11 @@ class FeatureContext implements Context
     }
 
     /**
-     * @Given a Item Writer
-     */
-    public function aItemWriter(): void
-    {
-        $this->itemWriter = $this->container->get(ItemWriter::class);
-    }
-
-    /**
-     * @Given a Content Writer
-     */
-    public function aContentWriter(): void
-    {
-        $this->contentWriter = $this->container->get(ContentWriter::class);
-    }
-
-    /**
      * @Given a Type Loader
      */
     public function aTypeLoader(): void
     {
         $this->typeLoader = $this->container->get(TypeLoader::class);
-    }
-
-    /**
-     * @Given a Type Writer
-     */
-    public function aTypeWriter(): void
-    {
-        $this->typeWriter = $this->container->get(TypeWriter::class);
     }
 
     /**
@@ -503,56 +433,6 @@ class FeatureContext implements Context
     }
 
     /**
-     * @Given a symfony url generator
-     */
-    public function aSymfonyUrlGenerator()
-    {
-        $this->generator = new class implements UrlGeneratorInterface {
-            public function setContext(RequestContext $context)
-            {
-
-            }
-
-            public function getContext()
-            {
-
-            }
-
-            public function generate(string $name, array $parameters = [], int $referenceType = self::ABSOLUTE_PATH)
-            {
-                return 'newUrl';
-            }
-        };
-    }
-
-    /**
-     * @Given a symfony locator
-     */
-    public function aSymfonyLocator()
-    {
-        $this->localeAware = new class ($this) implements LocaleAwareInterface {
-            private FeatureContext $context;
-
-            public function __construct(FeatureContext $context)
-            {
-                $this->context = $context;
-            }
-
-            public function setLocale(string $locale)
-            {
-                $this->context->locale = $locale;
-            }
-
-            public function getLocale()
-            {
-                return $this->context->locale;
-            }
-        };
-
-        $this->container->set('translator', $this->localeAware);
-    }
-
-    /**
      * @Given The router can process the request :url to controller :controllerName
      */
     public function theRouterCanProcessTheRequestToController(string $url, string $controllerName): void
@@ -569,42 +449,6 @@ class FeatureContext implements Context
                 break;
             case 'mediaEndPoint':
                 $controller = $this->mediaEndPoint;
-                break;
-            case 'newTypeEndPoint':
-                $controller = $this->newTypeEndPoint;
-                $params = ['editRoute' => 'editRouteType', 'isTranslatable' =>  false];
-                break;
-            case 'newContentEndPoint':
-                $controller = $this->newContentEndPoint;
-                $params = ['editRoute' => 'editRouteContent', 'isTranslatable' =>  true];
-                break;
-            case 'newItemEndPoint':
-                $controller = $this->newItemEndPoint;
-                $params = ['editRoute' => 'editRouteItem', 'isTranslatable' =>  true];
-                break;
-            case 'updateTypeEndPoint':
-                $controller = $this->updateTypeEndPoint;
-                $params = ['isTranslatable' =>  false];
-                break;
-            case 'updateContentEndPoint':
-                $controller = $this->updateContentEndPoint;
-                $params = ['isTranslatable' =>  true];
-                break;
-            case 'updateItemEndPoint':
-                $controller = $this->updateItemEndPoint;
-                $params = ['isTranslatable' =>  true];
-                break;
-            case 'deleteTypeEndPoint':
-                $controller = $this->deleteTypeEndPoint;
-                $params = ['nextRoute' => 'nextRouteType'];
-                break;
-            case 'deleteContentEndPoint':
-                $controller = $this->deleteContentEndPoint;
-                $params = ['nextRoute' => 'nextRouteContent'];
-                break;
-            case 'deleteItemEndPoint':
-                $controller = $this->deleteItemEndPoint;
-                $params = ['nextRoute' => 'nextRouteItem'];
                 break;
         }
 
@@ -836,175 +680,6 @@ class FeatureContext implements Context
         };
 
         $this->container->set(FormRegistryInterface::class, $registry);
-    }
-
-
-    private function buildAdminNewEndPoint(
-        LoaderInterface $loader,
-        WriterInterface $writer,
-        string $formClass,
-        string $objectClass
-    ): AdminNewEndPoint {
-        $this->buildFormRegistry();
-
-        $endPoint = new AdminNewEndPoint();
-        $endPoint->setFormFactory($this->container->get(FormFactory::class));
-        $endPoint->setResponseFactory($this->container->get(ResponseFactoryInterface::class));
-        $endPoint->setStreamFactory($this->container->get(StreamFactoryInterface::class));
-        $endPoint->setTemplating($this->templating);
-        $endPoint->setRouter($this->generator);
-        $endPoint->setLoader($loader);
-        $endPoint->setWriter($writer);
-        $endPoint->setFormClass($formClass);
-        $endPoint->setViewPath('file');
-        $endPoint->setObjectClass($objectClass);
-
-        return $endPoint;
-    }
-
-    /**
-     * @Given a Endpoint able to render form and create a type
-     */
-    public function aEndpointAbleToRenderFormAndCreateAType(): void
-    {
-        $this->newTypeEndPoint = $this->buildAdminNewEndPoint(
-            $this->typeLoader,
-            $this->typeWriter,
-            TypeType::class,
-            Type::class
-        );
-    }
-
-    /**
-     * @Given a Endpoint able to render form and create a content
-     */
-    public function aEndpointAbleToRenderFormAndCreateAContent(): void
-    {
-        $this->newContentEndPoint = $this->buildAdminNewEndPoint(
-            $this->contentLoader,
-            $this->contentWriter,
-            ContentType::class,
-            ContentDoctrine::class
-        );
-
-        $this->newContentEndPoint->setFindSlugService($this->container->get(FindSlugService::class), 'slug');
-    }
-
-    /**
-     * @Given a Endpoint able to render form and create a item
-     */
-    public function aEndpointAbleToRenderFormAndCreateAItem(): void
-    {
-        $this->newItemEndPoint = $this->buildAdminNewEndPoint(
-            $this->itemLoader,
-            $this->itemWriter,
-            ItemType::class,
-            ItemDoctrine::class
-        );
-
-        $this->newItemEndPoint->setFindSlugService($this->container->get(FindSlugService::class), 'slug');
-    }
-
-    private function buildAdminDeleteEndPoint(LoaderInterface $loader, string $deleteService): AdminDeleteEndPoint
-    {
-        $endPoint = new AdminDeleteEndPoint();
-        $endPoint->setResponseFactory($this->container->get(ResponseFactoryInterface::class));
-        $endPoint->setRouter($this->generator);
-        $endPoint->setDeletingService($this->container->get($deleteService));
-        $endPoint->setLoader($loader);
-
-        return $endPoint;
-    }
-
-    /**
-     * @Given a Endpoint able to render form and delete a type
-     */
-    public function aEndpointAbleToRenderFormAndDeleteAType(): void
-    {
-        $this->deleteTypeEndPoint = $this->buildAdminDeleteEndPoint(
-            $this->typeLoader,
-            'teknoo.east.website.deleting.type'
-        );
-    }
-
-    /**
-     * @Given a Endpoint able to render form and delete a content
-     */
-    public function aEndpointAbleToRenderFormAndDeleteAContent(): void
-    {
-        $this->deleteContentEndPoint = $this->buildAdminDeleteEndPoint(
-            $this->contentLoader,
-            'teknoo.east.website.deleting.content'
-        );
-    }
-
-    /**
-     * @Given a Endpoint able to render form and delete a item
-     */
-    public function aEndpointAbleToRenderFormAndDeleteAItem(): void
-    {
-        $this->deleteContentEndPoint = $this->buildAdminDeleteEndPoint(
-            $this->itemLoader,
-            'teknoo.east.website.deleting.content'
-        );
-    }
-
-    private function buildAdminEditEndPoint(
-        LoaderInterface $loader,
-        WriterInterface $writer,
-        string $formClass
-    ): AdminEditEndPoint {
-        $endPoint = new AdminEditEndPoint();
-        $endPoint->setFormFactory($this->container->get(FormFactory::class));
-        $endPoint->setResponseFactory($this->container->get(ResponseFactoryInterface::class));
-        $endPoint->setStreamFactory($this->container->get(StreamFactoryInterface::class));
-        $endPoint->setTemplating($this->templating);
-        $endPoint->setLoader($loader);
-        $endPoint->setWriter($writer);
-        $endPoint->setFormClass($formClass);
-        $endPoint->setViewPath('file');
-
-        return $endPoint;
-    }
-
-    /**
-     * @Given a Endpoint able to render form and update a type
-     */
-    public function aEndpointAbleToRenderFormAndUpdateAType(): void
-    {
-        $this->updateTypeEndPoint = $this->buildAdminEditEndPoint(
-            $this->typeLoader,
-            $this->typeWriter,
-            TypeType::class
-        );
-    }
-
-    /**
-     * @Given a Endpoint able to render form and update a content
-     */
-    public function aEndpointAbleToRenderFormAndUpdateAContent(): void
-    {
-        $this->updateContentEndPoint = $this->buildAdminEditEndPoint(
-            $this->contentLoader,
-            $this->contentWriter,
-            ContentType::class
-        );
-
-        $this->updateContentEndPoint->setFindSlugService($this->container->get(FindSlugService::class), 'slug');
-    }
-
-    /**
-     * @Given a Endpoint able to render form and update a item
-     */
-    public function aEndpointAbleToRenderFormAndUpdateAItem(): void
-    {
-        $this->updateItemEndPoint = $this->buildAdminEditEndPoint(
-            $this->itemLoader,
-            $this->itemWriter,
-            ItemType::class
-        );
-
-        $this->updateItemEndPoint->setFindSlugService($this->container->get(FindSlugService::class), 'slug');
     }
 
     /**

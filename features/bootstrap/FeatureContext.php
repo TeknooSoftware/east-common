@@ -12,9 +12,15 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Symfony\Component\Form\Extension\DataCollector\FormDataCollectorInterface;
+use Symfony\Component\Form\Extension\DataCollector\Proxy\ResolvedTypeDataCollectorProxy;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormRegistryInterface;
+use Symfony\Component\Form\ResolvedFormType;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Templating\EngineInterface;
+use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
 use Teknoo\East\Foundation\Router\RouterInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
@@ -58,6 +64,12 @@ class FeatureContext implements Context
     private ?Container $container = null;
 
     private ?RouterInterface $router = null;
+
+    private ?UrlGeneratorInterface $generator = null;
+
+    private ?LocaleAwareInterface $localeAware;
+
+    public string $locale = 'en';
 
     private ?ClientInterface $client = null;
 
@@ -491,23 +503,113 @@ class FeatureContext implements Context
     }
 
     /**
-     * @Given The router can process the request :url to controller :controller
+     * @Given a symfony url generator
      */
-    public function theRouterCanProcessTheRequestToController(string $url, string $controller): void
+    public function aSymfonyUrlGenerator()
     {
-        switch ($controller) {
+        $this->generator = new class implements UrlGeneratorInterface {
+            public function setContext(RequestContext $context)
+            {
+
+            }
+
+            public function getContext()
+            {
+
+            }
+
+            public function generate(string $name, array $parameters = [], int $referenceType = self::ABSOLUTE_PATH)
+            {
+                return 'newUrl';
+            }
+        };
+    }
+
+    /**
+     * @Given a symfony locator
+     */
+    public function aSymfonyLocator()
+    {
+        $this->localeAware = new class ($this) implements LocaleAwareInterface {
+            private FeatureContext $context;
+
+            public function __construct(FeatureContext $context)
+            {
+                $this->context = $context;
+            }
+
+            public function setLocale(string $locale)
+            {
+                $this->context->locale = $locale;
+            }
+
+            public function getLocale()
+            {
+                return $this->context->locale;
+            }
+        };
+
+        $this->container->set('translator', $this->localeAware);
+    }
+
+    /**
+     * @Given The router can process the request :url to controller :controllerName
+     */
+    public function theRouterCanProcessTheRequestToController(string $url, string $controllerName): void
+    {
+        $controller = null;
+        $params = [];
+        switch ($controllerName) {
             case 'contentEndPoint':
                 $controller = $this->contentEndPoint;
-                $this->router->registerRoute($url, $controller);
                 break;
             case 'staticEndPoint':
+                $params = ['template' => 'Acme:MyBundle:template.html.twig'];
                 $controller = $this->staticEndPoint;
-                $this->router->registerRoute($url, $controller, ['template' => 'Acme:MyBundle:template.html.twig']);
                 break;
             case 'mediaEndPoint':
                 $controller = $this->mediaEndPoint;
-                $this->router->registerRoute($url, $controller);
                 break;
+            case 'newTypeEndPoint':
+                $controller = $this->newTypeEndPoint;
+                $params = ['editRoute' => 'editRouteType', 'isTranslatable' =>  false];
+                break;
+            case 'newContentEndPoint':
+                $controller = $this->newContentEndPoint;
+                $params = ['editRoute' => 'editRouteContent', 'isTranslatable' =>  true];
+                break;
+            case 'newItemEndPoint':
+                $controller = $this->newItemEndPoint;
+                $params = ['editRoute' => 'editRouteItem', 'isTranslatable' =>  true];
+                break;
+            case 'updateTypeEndPoint':
+                $controller = $this->updateTypeEndPoint;
+                $params = ['isTranslatable' =>  false];
+                break;
+            case 'updateContentEndPoint':
+                $controller = $this->updateContentEndPoint;
+                $params = ['isTranslatable' =>  true];
+                break;
+            case 'updateItemEndPoint':
+                $controller = $this->updateItemEndPoint;
+                $params = ['isTranslatable' =>  true];
+                break;
+            case 'deleteTypeEndPoint':
+                $controller = $this->deleteTypeEndPoint;
+                $params = ['nextRoute' => 'nextRouteType'];
+                break;
+            case 'deleteContentEndPoint':
+                $controller = $this->deleteContentEndPoint;
+                $params = ['nextRoute' => 'nextRouteContent'];
+                break;
+            case 'deleteItemEndPoint':
+                $controller = $this->deleteItemEndPoint;
+                $params = ['nextRoute' => 'nextRouteItem'];
+                break;
+        }
+
+        if (null !== $controller) {
+            $this->router->registerRoute($url, $controller, $params);
         }
     }
 
@@ -703,12 +805,23 @@ class FeatureContext implements Context
                     return $this->types[$name];
                 }
 
-                throw new \InvalidArgumentException();
+                if (\class_exists($name)) {
+                    $type = new $name;
+                    $parent = $type->getParent();
+                    return $this->types[$name] = new ResolvedTypeDataCollectorProxy(
+                        new ResolvedFormType($type, [], new ResolvedFormType(new $parent)),
+                        new \Symfony\Component\Form\Extension\DataCollector\FormDataCollector(
+                            new \Symfony\Component\Form\Extension\DataCollector\FormDataExtractor()
+                        )
+                    );
+                }
+
+                throw new \InvalidArgumentException("No form type found for $name");
             }
 
             public function hasType(string $name)
             {
-                return isset($this->types[$name]);
+                return \class_exists($name) || isset($this->types[$name]);
             }
 
             public function getTypeGuesser()
@@ -725,6 +838,7 @@ class FeatureContext implements Context
         $this->container->set(FormRegistryInterface::class, $registry);
     }
 
+
     private function buildAdminNewEndPoint(
         LoaderInterface $loader,
         WriterInterface $writer,
@@ -738,7 +852,7 @@ class FeatureContext implements Context
         $endPoint->setResponseFactory($this->container->get(ResponseFactoryInterface::class));
         $endPoint->setStreamFactory($this->container->get(StreamFactoryInterface::class));
         $endPoint->setTemplating($this->templating);
-        $endPoint->setRouter($this->container->get(''));
+        $endPoint->setRouter($this->generator);
         $endPoint->setLoader($loader);
         $endPoint->setWriter($writer);
         $endPoint->setFormClass($formClass);
@@ -795,7 +909,7 @@ class FeatureContext implements Context
     {
         $endPoint = new AdminDeleteEndPoint();
         $endPoint->setResponseFactory($this->container->get(ResponseFactoryInterface::class));
-        $endPoint->setRouter($this->router);
+        $endPoint->setRouter($this->generator);
         $endPoint->setDeletingService($this->container->get($deleteService));
         $endPoint->setLoader($loader);
 
@@ -984,6 +1098,12 @@ class FeatureContext implements Context
         $parsedBody = [];
         \parse_str($request->getUri()->getQuery(), $parsedBody);
         $request = $request->withParsedBody($parsedBody);
+        $sfRequest = \Symfony\Component\HttpFoundation\Request::create(
+            $url,
+            'POST',
+            $parsedBody,
+        );
+        $request = $request->withAttribute('request', $sfRequest);
 
         $this->buildManager($request);
     }

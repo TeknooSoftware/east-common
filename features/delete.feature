@@ -2,6 +2,8 @@ Feature: Delete an element, from the dbms server via an HTTP request
   Scenario: Delete a type
     Given I have DI With Symfony initialized
     And I register a router
+    And a symfony url generator
+    And a symfony locator
     And a Type Loader
     And a Type Writer
     And a Endpoint able to render form and delete a type
@@ -12,6 +14,8 @@ Feature: Delete an element, from the dbms server via an HTTP request
   Scenario: Delete a content
     Given I have DI With Symfony initialized
     And I register a router
+    And a symfony url generator
+    And a symfony locator
     And a Content Loader
     And a Content Writer
     And a Endpoint able to render form and delete a content
@@ -22,6 +26,8 @@ Feature: Delete an element, from the dbms server via an HTTP request
   Scenario: Delete an item
     Given I have DI With Symfony initialized
     And I register a router
+    And a symfony url generator
+    And a symfony locator
     And a Item Loader
     And a Item Writer
     And a Endpoint able to render form and delete a item

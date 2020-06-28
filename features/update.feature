@@ -3,6 +3,7 @@ Feature: Update an element, with slug or not stored into a the dbms server via a
   Scenario: Update a type
     Given I have DI With Symfony initialized
     And I register a router
+    And a symfony locator
     And a Type Loader
     And a Type Writer
     And a templating engine
@@ -15,6 +16,7 @@ Feature: Update an element, with slug or not stored into a the dbms server via a
   Scenario: Update a content
     Given I have DI With Symfony initialized
     And I register a router
+    And a symfony locator
     And a Content Loader
     And a Content Writer
     And a templating engine
@@ -26,6 +28,7 @@ Feature: Update an element, with slug or not stored into a the dbms server via a
   Scenario: Update an item
     Given I have DI With Symfony initialized
     And I register a router
+    And a symfony locator
     And a Item Loader
     And a Item Writer
     And a templating engine

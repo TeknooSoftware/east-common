@@ -1,0 +1,40 @@
+# Learn more about services, parameters and containers at
+# http://symfony.com/doc/current/service_container.html
+parameters:
+  locale: 'en'
+  router.request_context.host: 'teknoo.software'
+  router.request_context.scheme: 'https'
+
+services:
+  Doctrine\Persistence\ObjectRepository:
+    synthetic: true
+
+  doctrine_mongodb.odm.default_document_manager:
+    synthetic: true
+
+  security.encoder_factory:
+    synthetic: true
+
+  Psr\Log\LoggerInterface:
+    alias: 'logger'
+
+  Teknoo\East\Website\Service\MenuGenerator:
+    synthetic: true
+
+  Psr\Http\Message\ServerRequestFactoryInterface:
+    class: 'Laminas\Diactoros\ServerRequestFactory'
+
+  Psr\Http\Message\UploadedFileFactoryInterface:
+    class: 'Laminas\Diactoros\UploadedFileFactory'
+
+  Psr\Http\Message\ResponseFactoryInterface:
+    synthetic: true
+
+  Psr\Http\Message\StreamFactoryInterface:
+    synthetic: true
+
+  teknoo.east.website.endpoint.media.stream.factory:
+    class: 'Laminas\Diactoros\StreamFactory'
+
+  templating.engine.twig:
+    synthetic: true

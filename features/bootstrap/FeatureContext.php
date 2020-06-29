@@ -1,5 +1,7 @@
 <?php
 
+use DI\Bridge\Symfony\Kernel as BaseKernel;
+use DI\ContainerBuilder as DIContainerBuilder;
 use Behat\Behat\Context\Context;
 use DI\Container;
 use Doctrine\Persistence\ObjectRepository;
@@ -12,9 +14,14 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Form\Extension\DataCollector\Proxy\ResolvedTypeDataCollectorProxy;
 use Symfony\Component\Form\FormRegistryInterface;
 use Symfony\Component\Form\ResolvedFormType;
+use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder as SfContainerBuilder;
+use Symfony\Component\HttpFoundation\Request as SfRequest;
+use Symfony\Component\Routing\RouteCollectionBuilder;
 use Symfony\Component\Templating\EngineInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
 use Teknoo\East\Foundation\Router\RouterInterface;
@@ -43,7 +50,9 @@ use Teknoo\East\Website\Object\Block;
  */
 class FeatureContext implements Context
 {
-    private ?Container $container = null;
+    public ?Container $container = null;
+
+    private ?BaseKernel $symfonyKernel = null;
 
     private ?RouterInterface $router = null;
 
@@ -105,17 +114,18 @@ class FeatureContext implements Context
     public function iHaveDiInitialized(): void
     {
         $containerDefinition = new \DI\ContainerBuilder();
+        $rootDir = \dirname(__DIR__, 2);
         $containerDefinition->addDefinitions(
-            include \dirname(\dirname(__DIR__)).'/vendor/teknoo/east-foundation/src/universal/di.php'
+            include $rootDir.'/vendor/teknoo/east-foundation/src/universal/di.php'
         );
         $containerDefinition->addDefinitions(
-            include \dirname(\dirname(__DIR__)) . '/src/di.php'
+            include $rootDir . '/src/di.php'
         );
         $containerDefinition->addDefinitions(
-            include \dirname(\dirname(__DIR__)).'/infrastructures/doctrine/di.php'
+            include $rootDir.'/infrastructures/doctrine/di.php'
         );
         $containerDefinition->addDefinitions(
-            include \dirname(\dirname(__DIR__)).'/infrastructures/di.php'
+            include $rootDir.'/infrastructures/di.php'
         );
 
         $this->container = $containerDefinition->build();
@@ -129,25 +139,76 @@ class FeatureContext implements Context
     public function iHaveDiWithSymfonyInitialized(): void
     {
         $containerDefinition = new \DI\ContainerBuilder();
+        $rootDir = \dirname(__DIR__, 2);
         $containerDefinition->addDefinitions(
-            include \dirname(\dirname(__DIR__)).'/vendor/teknoo/east-foundation/src/universal/di.php'
+            include $rootDir.'/vendor/teknoo/east-foundation/src/universal/di.php'
         );
         $containerDefinition->addDefinitions(
-            include \dirname(\dirname(__DIR__)) . '/src/di.php'
+            include $rootDir . '/src/di.php'
         );
         $containerDefinition->addDefinitions(
-            include \dirname(\dirname(__DIR__)).'/infrastructures/doctrine/di.php'
+            include $rootDir.'/infrastructures/symfony/Resources/config/di.php'
         );
         $containerDefinition->addDefinitions(
-            include \dirname(\dirname(__DIR__)).'/infrastructures/symfony/Resources/config/di.php'
+            include $rootDir.'/infrastructures/doctrine/di.php'
         );
         $containerDefinition->addDefinitions(
-            include \dirname(\dirname(__DIR__)).'/infrastructures/di.php'
+            include $rootDir.'/infrastructures/di.php'
         );
 
         $this->container = $containerDefinition->build();
-
         $this->container->set(ObjectManager::class, $this->buildObjectManager());
+
+        $this->symfonyKernel = new class($this, 'test') extends BaseKernel
+        {
+            use MicroKernelTrait;
+
+            private FeatureContext $context;
+
+            public function __construct(FeatureContext $context, $environment)
+            {
+                $this->context = $context;
+
+                parent::__construct($environment, false);
+            }
+
+            public function getCacheDir()
+            {
+                return \dirname(__DIR__, 2).'/tests/var/cache';
+            }
+
+            public function getLogDir()
+            {
+                return \dirname(__DIR__, 2).'/tests/var/logs';
+            }
+
+            public function registerBundles()
+            {
+                yield new \Symfony\Bundle\FrameworkBundle\FrameworkBundle();
+                //todo ?yield new \Doctrine\Bundle\MongoDBBundle\DoctrineMongoDBBundle();
+                yield new \Teknoo\East\FoundationBundle\EastFoundationBundle();
+                yield new \Teknoo\East\WebsiteBundle\TeknooEastWebsiteBundle();
+            }
+
+            protected function buildPHPDIContainer(DIContainerBuilder $builder)
+            {
+                return $this->context->container;
+            }
+
+            protected function configureContainer(SfContainerBuilder $container, LoaderInterface $loader)
+            {
+                $loader->load(__DIR__.'/config/services.yaml');
+                $container->setParameter('container.autowiring.strict_mode', true);
+                $container->setParameter('container.dumper.inline_class_loader', true);
+            }
+
+            protected function configureRoutes(RouteCollectionBuilder $routes)
+            {
+                $rootDir = \dirname(__DIR__, 2);
+                $routes->import( $rootDir.'/infrastructures/symfony/Resources/config/routing.yml', '/', 'glob');
+                $routes->import( $rootDir.'/infrastructures/symfony/Resources/config/admin_routing.yml', '/', 'glob');
+            }
+        };
     }
 
     private function buildObjectManager(): ObjectManager
@@ -760,30 +821,6 @@ class FeatureContext implements Context
     }
 
     /**
-     * @When The server will receive the POST request :url with :body
-     */
-    public function theServerWillReceiveThePostRequestWith(string $url, string $body): void
-    {
-        $request = new ServerRequest();
-        $request = $request->withMethod('POST');
-        $request = $request->withUri(new Uri($url));
-        $query = [];
-        \parse_str($request->getUri()->getQuery(), $query);
-        $request = $request->withQueryParams($query);
-        $parsedBody = [];
-        \parse_str($request->getUri()->getQuery(), $parsedBody);
-        $request = $request->withParsedBody($parsedBody);
-        $sfRequest = \Symfony\Component\HttpFoundation\Request::create(
-            $url,
-            'POST',
-            $parsedBody,
-        );
-        $request = $request->withAttribute('request', $sfRequest);
-
-        $this->buildManager($request);
-    }
-
-    /**
      * @Then I should get in the form :body
      */
     public function iShouldGetInTheForm(string $body): void
@@ -798,17 +835,33 @@ class FeatureContext implements Context
     }
 
     /**
-     * @When The server will receive the DELETE request :url
+     * @When Symfony will receive the POST request :url with :body
      */
-    public function theServerWillReceiveTheDeleteRequest(string $url): void
+    public function symfonyWillReceiveThePostRequestWith($url, $body)
     {
-        $request = new ServerRequest();
-        $request = $request->withMethod('DELETE');
-        $request = $request->withUri(new Uri($url));
-        $query = [];
-        \parse_str($request->getUri()->getQuery(), $query);
-        $request = $request->withQueryParams($query);
+        $expectedBody = [];
+        \parse_str($body, $expectedBody);
+        $serverRequest = SfRequest::create($url, 'POST', $expectedBody);
 
-        $this->buildManager($request);
+        $response = $this->symfonyKernel->handle($serverRequest);
+
+        $psrFactory = new \Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory(
+            new \Laminas\Diactoros\ServerRequestFactory(),
+            new \Laminas\Diactoros\StreamFactory(),
+            new \Laminas\Diactoros\UploadedFileFactory(),
+            new \Laminas\Diactoros\ResponseFactory()
+        );
+
+        $this->response = $psrFactory->createResponse($response);
+
+        $this->symfonyKernel->terminate($serverRequest, $response);
+    }
+
+    /**
+     * @When Symfony will receive the DELETE request :url
+     */
+    public function symfonyWillReceiveTheDeleteRequest($url)
+    {
+        $serverRequest = SfRequest::create($url, 'DELETE', []);
     }
 }

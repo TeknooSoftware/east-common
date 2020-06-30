@@ -206,7 +206,7 @@ class FeatureContext implements Context
             {
                 $rootDir = \dirname(__DIR__, 2);
                 $routes->import( $rootDir.'/infrastructures/symfony/Resources/config/routing.yml', '/', 'glob');
-                $routes->import( $rootDir.'/infrastructures/symfony/Resources/config/admin_routing.yml', '/', 'glob');
+                $routes->import( $rootDir.'/infrastructures/symfony/Resources/config/admin_routing.yml', '/admin', 'glob');
             }
         };
     }

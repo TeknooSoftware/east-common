@@ -8,10 +8,10 @@ Feature: Create an element, with slug or not stored into a the dbms server via a
 
   Scenario: Create a content
     Given I have DI With Symfony initialized
-    When Symfony will receive the POST request "https://foo.com/admin/type/new" with "foo:bar,bar:foo"
+    When Symfony will receive the POST request "https://foo.com/admin/content/new" with "foo:bar,bar:foo"
     And I should get in the form "foo:bar,bar:foo"
 
   Scenario: Create an item
     Given I have DI With Symfony initialized
-    When Symfony will receive the POST request "https://foo.com/admin/type/new" with "foo:bar,bar:foo"
+    When Symfony will receive the POST request "https://foo.com/admin/item/new" with "foo:bar,bar:foo"
     And I should get in the form "foo:bar,bar:foo"

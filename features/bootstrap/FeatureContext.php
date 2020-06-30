@@ -138,27 +138,6 @@ class FeatureContext implements Context
      */
     public function iHaveDiWithSymfonyInitialized(): void
     {
-        $containerDefinition = new \DI\ContainerBuilder();
-        $rootDir = \dirname(__DIR__, 2);
-        $containerDefinition->addDefinitions(
-            include $rootDir.'/vendor/teknoo/east-foundation/src/universal/di.php'
-        );
-        $containerDefinition->addDefinitions(
-            include $rootDir . '/src/di.php'
-        );
-        $containerDefinition->addDefinitions(
-            include $rootDir.'/infrastructures/symfony/Resources/config/di.php'
-        );
-        $containerDefinition->addDefinitions(
-            include $rootDir.'/infrastructures/doctrine/di.php'
-        );
-        $containerDefinition->addDefinitions(
-            include $rootDir.'/infrastructures/di.php'
-        );
-
-        $this->container = $containerDefinition->build();
-        $this->container->set(ObjectManager::class, $this->buildObjectManager());
-
         $this->symfonyKernel = new class($this, 'test') extends BaseKernel
         {
             use MicroKernelTrait;
@@ -192,6 +171,29 @@ class FeatureContext implements Context
 
             protected function buildPHPDIContainer(DIContainerBuilder $builder)
             {
+                $rootDir = \dirname(__DIR__, 2);
+                $builder->addDefinitions(
+                    include $rootDir.'/vendor/teknoo/east-foundation/src/universal/di.php'
+                );
+                $builder->addDefinitions(
+                    include $rootDir.'/vendor/teknoo/east-foundation/infrastructures/symfony/Resources/config/di.php'
+                );
+                $builder->addDefinitions(
+                    include $rootDir.'/src/di.php'
+                );
+                $builder->addDefinitions(
+                    include $rootDir.'/infrastructures/doctrine/di.php'
+                );
+                $builder->addDefinitions(
+                    include $rootDir.'/infrastructures/symfony/Resources/config/di.php'
+                );
+                $builder->addDefinitions(
+                    include $rootDir.'/infrastructures/di.php'
+                );
+
+                $this->context->container = $builder->build();
+                $this->context->container->set(ObjectManager::class, $this->context->buildObjectManager());
+
                 return $this->context->container;
             }
 
@@ -205,13 +207,13 @@ class FeatureContext implements Context
             protected function configureRoutes(RouteCollectionBuilder $routes)
             {
                 $rootDir = \dirname(__DIR__, 2);
-                $routes->import( $rootDir.'/infrastructures/symfony/Resources/config/routing.yml', '/', 'glob');
-                $routes->import( $rootDir.'/infrastructures/symfony/Resources/config/admin_routing.yml', '/admin', 'glob');
+                $routes->import( $rootDir.'/infrastructures/symfony/Resources/config/r*.yml', '/', 'glob');
+                $routes->import( $rootDir.'/infrastructures/symfony/Resources/config/admin_*.yml', '/admin', 'glob');
             }
         };
     }
 
-    private function buildObjectManager(): ObjectManager
+    public function buildObjectManager(): ObjectManager
     {
         return new class($this) implements ObjectManager {
             private $featureContext;

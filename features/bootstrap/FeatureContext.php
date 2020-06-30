@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use DI\Bridge\Symfony\Kernel as BaseKernel;
 use DI\ContainerBuilder as DIContainerBuilder;
 use Behat\Behat\Context\Context;
@@ -199,6 +201,7 @@ class FeatureContext implements Context
 
             protected function configureContainer(SfContainerBuilder $container, LoaderInterface $loader)
             {
+                $loader->load(__DIR__.'/config/packages/*.yaml', 'glob');
                 $loader->load(__DIR__.'/config/services.yaml');
                 $container->setParameter('container.autowiring.strict_mode', true);
                 $container->setParameter('container.dumper.inline_class_loader', true);
@@ -844,6 +847,7 @@ class FeatureContext implements Context
         $expectedBody = [];
         \parse_str($body, $expectedBody);
         $serverRequest = SfRequest::create($url, 'POST', $expectedBody);
+
 
         $response = $this->symfonyKernel->handle($serverRequest);
 

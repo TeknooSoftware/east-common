@@ -89,7 +89,7 @@ class FeatureContext implements Context
 
     private ?Type $type = null;
 
-    private ?EngineInterface $templating = null;
+    public ?EngineInterface $templating = null;
 
     public ?string $templateToCall = null;
 
@@ -98,6 +98,10 @@ class FeatureContext implements Context
     public ?ResponseInterface $response = null;
 
     public ?\Throwable $error = null;
+
+    public $createdObjects = [];
+
+    public $updatedObjects = [];
 
     /**
      * Initializes context.
@@ -195,6 +199,7 @@ class FeatureContext implements Context
 
                 $this->context->container = $builder->build();
                 $this->context->container->set(ObjectManager::class, $this->context->buildObjectManager());
+                $this->container->set('templating.engine.twig', $this->context->templating);
 
                 return $this->context->container;
             }
@@ -234,8 +239,18 @@ class FeatureContext implements Context
             {
             }
 
+            /**
+             * @param \Teknoo\East\Website\Object\ObjectInterface $object
+             */
             public function persist($object)
             {
+                if ($id = $object->getId()) {
+                    $this->featureContext->updatedObjects[$id] = $object;
+                } else {
+                    $object->setId(\uniqid());
+                    $class = \explode('\\', \get_class($object));
+                    $this->featureContext->createdObjects[\array_pop($class)][] = $object;
+                }
             }
 
             public function remove($object)
@@ -823,6 +838,65 @@ class FeatureContext implements Context
 
         $this->staticEndPoint->setResponseFactory($this->container->get(ResponseFactoryInterface::class));
         $this->staticEndPoint->setStreamFactory($this->container->get(StreamFactoryInterface::class));
+    }
+
+    /**
+     * @Then An object :class must be persisted
+     */
+    public function anObjectMustBePersisted(string $class)
+    {
+        Assert::assertNotEmpty($this->createdObjects[$class]);
+    }
+
+    /**
+     * @When the client follows the redirection
+     */
+    public function theClientfollowsTheRedirection()
+    {
+        $url = \current($this->response->getHeader('location'));
+        $serverRequest = SfRequest::create($url, 'GET');
+
+
+        $response = $this->symfonyKernel->handle($serverRequest);
+
+        $psrFactory = new \Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory(
+            new \Laminas\Diactoros\ServerRequestFactory(),
+            new \Laminas\Diactoros\StreamFactory(),
+            new \Laminas\Diactoros\UploadedFileFactory(),
+            new \Laminas\Diactoros\ResponseFactory()
+        );
+
+        $this->response = $psrFactory->createResponse($response);
+
+        $this->symfonyKernel->terminate($serverRequest, $response);
+    }
+
+    /**
+     * @Then the last object updated must be deleted
+     */
+    public function theLastObjectUpdatedMustBeDeleted()
+    {
+        Assert::assertNotEmpty(\current($this->updatedObjects)->getIsDeleted());
+    }
+
+    /**
+     * @Then An object :id must be updated
+     */
+    public function anObjectMustBeUpdated(string $id)
+    {
+        Assert::assertNotEmpty($this->updatedObjects[$id]);
+    }
+
+    /**
+     * @Then It is redirect to :url
+     */
+    public function itIsRedirectTo($url)
+    {
+        Assert::assertInstanceOf(ResponseInterface::class, $this->response);
+        Assert::assertEquals(302, $this->response->getStatusCode());
+        $location = \current($this->response->getHeader('location'));
+
+        Assert::assertGreaterThan(0, \preg_match("#$url#i", $location));
     }
 
     /**

@@ -5,3 +5,5 @@ framework:
   session:
     storage_id: session.storage.mock_file
   http_method_override: true
+  csrf_protection:
+    enabled: false

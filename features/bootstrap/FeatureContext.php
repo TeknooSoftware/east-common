@@ -17,9 +17,6 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
-use Symfony\Component\Form\Extension\DataCollector\Proxy\ResolvedTypeDataCollectorProxy;
-use Symfony\Component\Form\FormRegistryInterface;
-use Symfony\Component\Form\ResolvedFormType;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder as SfContainerBuilder;
 use Symfony\Component\HttpFoundation\Request as SfRequest;
@@ -43,7 +40,7 @@ use Teknoo\East\Website\EndPoint\ContentEndPointTrait;
 use Teknoo\East\Website\EndPoint\StaticEndPointTrait;
 use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
 use Teknoo\East\Website\Object\Media;
-use Teknoo\East\Website\Object\Content;
+use Teknoo\East\Website\Doctrine\Object\Content;
 use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Object\Block;
 
@@ -62,7 +59,7 @@ class FeatureContext implements Context
 
     private ?ClientInterface $client = null;
 
-    private ?ObjectRepository $objectRepository = null;
+    public array $objectRepository = [];
 
     private ?MediaLoader $mediaLoader = null;
 
@@ -215,8 +212,8 @@ class FeatureContext implements Context
             protected function configureRoutes(RouteCollectionBuilder $routes)
             {
                 $rootDir = \dirname(__DIR__, 2);
-                $routes->import( $rootDir.'/infrastructures/symfony/Resources/config/r*.yml', '/', 'glob');
                 $routes->import( $rootDir.'/infrastructures/symfony/Resources/config/admin_*.yml', '/admin', 'glob');
+                $routes->import( $rootDir.'/infrastructures/symfony/Resources/config/r*.yml', '/', 'glob');
             }
         };
     }
@@ -250,6 +247,8 @@ class FeatureContext implements Context
                     $object->setId(\uniqid());
                     $class = \explode('\\', \get_class($object));
                     $this->featureContext->createdObjects[\array_pop($class)][] = $object;
+
+                    $this->featureContext->getObjectRepository(\get_class($object))->setObject(['id' => $object->getId()], $object);
                 }
             }
 
@@ -279,7 +278,7 @@ class FeatureContext implements Context
 
             public function getRepository($className)
             {
-                return $this->featureContext->buildObjectRepository($className);
+                return $this->featureContext->getObjectRepository($className);
             }
 
             public function getClassMetadata($className)
@@ -300,28 +299,18 @@ class FeatureContext implements Context
         };
     }
 
-    public function buildObjectRepository(string $className): ObjectRepository
+    public function getObjectRepository(string $className): ObjectRepository
     {
-        $this->objectRepository = new class($className) implements ObjectRepository {
-            /**
-             * @var string
-             */
-            private $className;
+        return $this->objectRepository[$className] ?? $this->objectRepository[$className] = new class($className) implements ObjectRepository {
+            private string $className;
 
             /**
              * @var object
              */
             private $object;
 
-            /**
-             * @var array
-             */
-            private $criteria;
+            private array $criteria;
 
-            /**
-             *  constructor.
-             * @param string $className
-             */
             public function __construct(string $className)
             {
                 $this->className = $className;
@@ -376,8 +365,6 @@ class FeatureContext implements Context
                 return $this->className;
             }
         };
-
-        return $this->objectRepository;
     }
 
     /**
@@ -423,7 +410,7 @@ class FeatureContext implements Context
             }
         };
 
-        $this->objectRepository->setObject(
+        \current($this->objectRepository)->setObject(
             ['id' => $name],
             $media->setId($name)
                 ->setName($name)
@@ -696,12 +683,12 @@ class FeatureContext implements Context
      */
     public function anAvailablePageWithTheSlugOfType(string $slug, string $type): void
     {
-        $this->objectRepository->setObject(
+        $this->getObjectRepository(Content::class)->setObject(
             ['slug' => $slug],
             (new Content())->setSlug($type)
                 ->setType($this->type)
                 ->setParts(['block1' => 'hello', 'block2' => 'world'])
-                ->setPublishedAt(new \DateTime(2017-11-25))
+                ->setPublishedAt(new \DateTime('2017-11-25'))
         );
     }
 
@@ -717,50 +704,6 @@ class FeatureContext implements Context
 
         $this->contentEndPoint->setResponseFactory($this->container->get(ResponseFactoryInterface::class));
         $this->contentEndPoint->setStreamFactory($this->container->get(StreamFactoryInterface::class));
-    }
-
-    private function buildFormRegistry(): void
-    {
-        $registry = new class implements FormRegistryInterface {
-            private $types = [];
-
-            public function getType(string $name)
-            {
-                if (isset($this->types[$name])) {
-                    return $this->types[$name];
-                }
-
-                if (\class_exists($name)) {
-                    $type = new $name;
-                    $parent = $type->getParent();
-                    return $this->types[$name] = new ResolvedTypeDataCollectorProxy(
-                        new ResolvedFormType($type, [], new ResolvedFormType(new $parent)),
-                        new \Symfony\Component\Form\Extension\DataCollector\FormDataCollector(
-                            new \Symfony\Component\Form\Extension\DataCollector\FormDataExtractor()
-                        )
-                    );
-                }
-
-                throw new \InvalidArgumentException("No form type found for $name");
-            }
-
-            public function hasType(string $name)
-            {
-                return \class_exists($name) || isset($this->types[$name]);
-            }
-
-            public function getTypeGuesser()
-            {
-                return null;
-            }
-
-            public function getExtensions()
-            {
-                return [];
-            }
-        };
-
-        $this->container->set(FormRegistryInterface::class, $registry);
     }
 
     /**
@@ -783,6 +726,25 @@ class FeatureContext implements Context
             {
                 if ('404-error' === $name) {
                     return 'Error 404';
+                }
+
+                if (
+                    empty($this->context->templateToCall)
+                    && isset($parameters['objectInstance'])
+                ) {
+                    //To avoid to manage templating view for crud
+                    $final = [];
+                    $ro = new \ReflectionObject($object = $parameters['objectInstance']);
+                    foreach ($ro->getProperties() as $rp) {
+                        if (\in_array($rp->getName(), ['id', 'createdAt', 'updatedAt', 'deletedAt'])) {
+                            continue;
+                        }
+
+                        $rp->setAccessible(true);
+                        $final[$rp->getName()] = $rp->getValue($object);
+                    }
+
+                    return \json_encode($final);
                 }
                 
                 Assert::assertEquals($this->context->templateToCall, $name);
@@ -876,7 +838,7 @@ class FeatureContext implements Context
      */
     public function theLastObjectUpdatedMustBeDeleted()
     {
-        Assert::assertNotEmpty(\current($this->updatedObjects)->getIsDeleted());
+        Assert::assertNotEmpty(\current($this->updatedObjects)->getDeletedAt());
     }
 
     /**
@@ -904,11 +866,9 @@ class FeatureContext implements Context
      */
     public function iShouldGetInTheForm(string $body): void
     {
-        $expectedBody = [];
-        \parse_str($body, $expectedBody);
+        $expectedBody = \json_decode($body, true);
 
-        $actualBody = [];
-        \parse_str((string) $this->response->getBody(), $actualBody);
+        $actualBody = \json_decode((string) $this->response->getBody(), true);
 
         Assert::assertEquals($expectedBody, $actualBody);
     }
@@ -921,7 +881,6 @@ class FeatureContext implements Context
         $expectedBody = [];
         \parse_str($body, $expectedBody);
         $serverRequest = SfRequest::create($url, 'POST', $expectedBody);
-
 
         $response = $this->symfonyKernel->handle($serverRequest);
 
@@ -943,5 +902,29 @@ class FeatureContext implements Context
     public function symfonyWillReceiveTheDeleteRequest($url)
     {
         $serverRequest = SfRequest::create($url, 'DELETE', []);
+
+        $response = $this->symfonyKernel->handle($serverRequest);
+
+        $psrFactory = new \Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory(
+            new \Laminas\Diactoros\ServerRequestFactory(),
+            new \Laminas\Diactoros\StreamFactory(),
+            new \Laminas\Diactoros\UploadedFileFactory(),
+            new \Laminas\Diactoros\ResponseFactory()
+        );
+
+        $this->response = $psrFactory->createResponse($response);
+
+        $this->symfonyKernel->terminate($serverRequest, $response);
+    }
+
+    /**
+     * @Given a object of type :class with id :id
+     */
+    public function aObjectOfTypeWithId($class, $id)
+    {
+        $object = new $class;
+        $object->setId($id);
+
+        $this->getObjectRepository($class)->setObject(['id' => $id], $object);
     }
 }

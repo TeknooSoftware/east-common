@@ -3,7 +3,7 @@ Feature: Rendering and return an HTML dynamic page stored into a database server
   contents, stored into a database server or cluster. And serve it via a HTTP response.
   A dynamic page can host several contents, in different blocks, according to the type of the page
 
-  Scenario: Render and Serve a hosted image
+  Scenario: Render and Serve a content
     Given I have DI initialized
     And I register a router
     And a Content Loader

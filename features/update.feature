@@ -2,6 +2,7 @@ Feature: Update an element, with slug or not stored into a the dbms server via a
   
   Scenario: Update a type
     Given I have DI With Symfony initialized
+    And a object of type "Teknoo\East\Website\Object\Type" with id "foo"
     And a templating engine
     When Symfony will receive the POST request "https://foo.com/admin/type/update/foo" with "foo:bar,bar:foo"
     Then The client must accept a response
@@ -10,6 +11,7 @@ Feature: Update an element, with slug or not stored into a the dbms server via a
 
   Scenario: Update a content
     Given I have DI With Symfony initialized
+    And a object of type "Teknoo\East\Website\Doctrine\Object\Content" with id "foo"
     And a templating engine
     When Symfony will receive the POST request "https://foo.com/admin/content/update/foo" with "foo:bar,bar:foo"
     Then The client must accept a response
@@ -18,6 +20,7 @@ Feature: Update an element, with slug or not stored into a the dbms server via a
 
   Scenario: Update an item
     Given I have DI With Symfony initialized
+    And a object of type "Teknoo\East\Website\Doctrine\Object\Item" with id "foo"
     And a templating engine
     When Symfony will receive the POST request "https://foo.com/admin/item/update/foo" with "foo:bar,bar:foo"
     Then The client must accept a response

@@ -68,7 +68,7 @@ trait FormTestTrait
 
         self::assertInstanceOf(
             AbstractType::class,
-            $this->buildForm()->buildForm($builder, [])
+            $this->buildForm()->buildForm($builder, ['doctrine_type' => DocumentType::class])
         );
     }
 }

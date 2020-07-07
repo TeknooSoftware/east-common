@@ -16,6 +16,7 @@ parameters:
   teknoo.east.website.form_type.media.class: 'Teknoo\East\WebsiteBundle\Form\Type\MediaType'
   teknoo.east.website.form_type.type.class: 'Teknoo\East\WebsiteBundle\Form\Type\TypeType'
   teknoo.east.website.form_type.user.class: 'Teknoo\East\WebsiteBundle\Form\Type\UserType'
+  teknoo.east.website.form_type.doctrine.class: 'Doctrine\Bundle\MongoDBBundle\Form\Type\DocumentType'
 
   #Class
   teknoo.east.website.item.class: 'Teknoo\East\Website\Doctrine\Object\Item'
@@ -194,6 +195,7 @@ services:
       - ['setWriter', ['@Teknoo\East\Website\Writer\ItemWriter']]
       - ['setFormClass', ['%teknoo.east.website.form_type.item.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.item.edit.file%']]
+      - ['setFormOptions', [{ "doctrine_type": "%teknoo.east.website.form_type.doctrine.class%"}]]
     public: true
 
   teknoo.east.website.endpoint.admin.list.item:
@@ -211,6 +213,7 @@ services:
       - ['setFormClass', ['%teknoo.east.website.form_type.item.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.item.new.file%']]
       - ['setObjectClass', ['%teknoo.east.website.item.class%']]
+      - ['setFormOptions', [{ "doctrine_type": "%teknoo.east.website.form_type.doctrine.class%"}]]
     public: true
 
   #Contents
@@ -228,6 +231,7 @@ services:
       - ['setWriter', ['@Teknoo\East\Website\Writer\ContentWriter']]
       - ['setFormClass', ['%teknoo.east.website.form_type.content.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.content.edit.file%']]
+      - ['setFormOptions', [{ "doctrine_type": "%teknoo.east.website.form_type.doctrine.class%"}]]
     public: true
 
   teknoo.east.website.endpoint.admin.list.content:
@@ -245,6 +249,7 @@ services:
       - ['setFormClass', ['%teknoo.east.website.form_type.content.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.content.new.file%']]
       - ['setObjectClass', ['%teknoo.east.website.content.class%']]
+      - ['setFormOptions', [{ "doctrine_type": "%teknoo.east.website.form_type.doctrine.class%"}]]
     public: true
 
   #Media

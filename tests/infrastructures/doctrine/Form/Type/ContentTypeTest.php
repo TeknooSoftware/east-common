@@ -27,9 +27,11 @@ use Doctrine\ODM\MongoDB\Query\Builder;
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Teknoo\East\Website\Object\Block;
 use Teknoo\East\Website\Doctrine\Object\Content;
 use Teknoo\East\Website\Object\Type;
@@ -100,7 +102,7 @@ class ContentTypeTest extends TestCase
 
         self::assertInstanceOf(
             AbstractType::class,
-            $this->buildForm()->buildForm($builder, [])
+            $this->buildForm()->buildForm($builder, ['doctrine_type' => ChoiceType::class])
         );
     }
 
@@ -156,7 +158,7 @@ class ContentTypeTest extends TestCase
 
         self::assertInstanceOf(
             AbstractType::class,
-            $this->buildForm()->buildForm($builder, [])
+            $this->buildForm()->buildForm($builder, ['doctrine_type' => ChoiceType::class])
         );
     }
 
@@ -207,7 +209,17 @@ class ContentTypeTest extends TestCase
 
         self::assertInstanceOf(
             AbstractType::class,
-            $this->buildForm()->buildForm($builder, [])
+            $this->buildForm()->buildForm($builder, ['doctrine_type' => DocumentType::class])
+        );
+    }
+
+    public function testConfigureOptions()
+    {
+        self::assertInstanceOf(
+            AbstractType::class,
+            $this->buildForm()->configureOptions(
+                $this->createMock(OptionsResolver::class)
+            )
         );
     }
 }

@@ -53,6 +53,8 @@ class AdminNewEndPoint implements EndPointInterface
 
     private string $slugField;
 
+    private array $formOptions = [];
+
     public function setObjectClass(string $objectClass): self
     {
         if (!\class_exists($objectClass)) {
@@ -72,6 +74,13 @@ class AdminNewEndPoint implements EndPointInterface
         return $this;
     }
 
+    public function setFormOptions(array $formOptions): self
+    {
+        $this->formOptions = $formOptions;
+
+        return $this;
+    }
+
     public function __invoke(
         ServerRequestInterface $request,
         ClientInterface $client,
@@ -86,7 +95,7 @@ class AdminNewEndPoint implements EndPointInterface
         $class = $this->objectClass;
 
         $object = new $class();
-        $form = $this->createForm($object);
+        $form = $this->createForm($object, $this->formOptions);
         $form->handleRequest($request->getAttribute('request'));
 
         if ($form->isSubmitted() && $form->isValid()) {

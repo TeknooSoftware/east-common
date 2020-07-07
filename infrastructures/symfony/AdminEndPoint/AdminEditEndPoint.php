@@ -51,6 +51,8 @@ class AdminEditEndPoint implements RenderingInterface
 
     private string $slugField;
 
+    private array $formOptions = [];
+
     public function setDatesService(DatesService $datesService): self
     {
         $this->datesService = $datesService;
@@ -62,6 +64,13 @@ class AdminEditEndPoint implements RenderingInterface
     {
         $this->findSlugService = $findSlugService;
         $this->slugField = $slugField;
+
+        return $this;
+    }
+
+    public function setFormOptions(array $formOptions): self
+    {
+        $this->formOptions = $formOptions;
 
         return $this;
     }
@@ -90,7 +99,7 @@ class AdminEditEndPoint implements RenderingInterface
                         $this->datesService->passMeTheDate([$object, 'setPublishedAt']);
                     }
 
-                    $form = $this->createForm($object);
+                    $form = $this->createForm($object, $this->formOptions);
                     $form->handleRequest($request->getAttribute('request'));
 
                     if ($form->isSubmitted() && $form->isValid()) {
@@ -111,7 +120,7 @@ class AdminEditEndPoint implements RenderingInterface
                                 $viewPath
                             ) {
                                 //Recreate form to avoid error on dynamic form according to object.
-                                $form = $this->createForm($object);
+                                $form = $this->createForm($object, $this->formOptions);
 
                                 $this->render(
                                     $client,

@@ -24,13 +24,13 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\Form\Type;
 
-use Doctrine\Bundle\MongoDBBundle\Form\Type\DocumentType;
-use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
+use Doctrine\Persistence\ObjectRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Teknoo\East\Website\Doctrine\Object\Content;
 use Teknoo\East\Website\Doctrine\Object\Item;
 
@@ -52,13 +52,13 @@ class ItemType extends AbstractType
         $builder->add('location', TextType::class, ['required' => true]);
         $builder->add(
             'parent',
-            DocumentType::class,
+            $options['doctrine_type'],
             [
                 'class' => Item::class,
                 'required' => false,
                 'multiple' => false,
                 'choice_label' => 'name',
-                'query_builder' => static function (DocumentRepository $repository) {
+                'query_builder' => static function (ObjectRepository $repository) {
                     return $repository->createQueryBuilder()
                         ->field('deletedAt')->equals(null);
                 }
@@ -66,13 +66,13 @@ class ItemType extends AbstractType
         );
         $builder->add(
             'content',
-            DocumentType::class,
+            $options['doctrine_type'],
             [
                 'class' => Content::class,
                 'required' => false,
                 'multiple' => false,
                 'choice_label' => 'title',
-                'query_builder' => static function (DocumentRepository $repository) {
+                'query_builder' => static function (ObjectRepository $repository) {
                     return $repository->createQueryBuilder()
                         ->field('deletedAt')->equals(null);
                 }
@@ -84,6 +84,17 @@ class ItemType extends AbstractType
         $builder->add('position', IntegerType::class, ['required' => false]);
 
         $this->addTranslatableLocaleFieldHidden($builder);
+
+        return $this;
+    }
+
+    public function configureOptions(OptionsResolver $resolver): self
+    {
+        parent::configureOptions($resolver);
+
+        $resolver->setDefaults(array(
+            'doctrine_type' => '',
+        ));
 
         return $this;
     }

@@ -28,6 +28,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -147,6 +148,15 @@ class AdminNewEndPointTest extends TestCase
             ->setFindSlugService($this->createMock(FindSlugService::class), 'slug')
             ->setViewPath('foo:bar.html.engine');
         ;
+    }
+
+    public function testSetFormOptions()
+    {
+        self::assertInstanceOf(
+            AdminNewEndPoint::class,
+            $this->buildEndPoint()
+                ->setFormOptions(['doctrine_type' => ChoiceType::class])
+        );
     }
 
     public function testExceptionOnInvokeWithBadRequest()

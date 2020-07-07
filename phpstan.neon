@@ -9,6 +9,9 @@ parameters:
         -
             message: '#Cannot cast array<string>\|string\|null to string.#'
             path: infrastructures/symfony/Command/CreateUserCommand.php
+        -
+            message: '#Call to an undefined method [a-zA-Z0-9\\_]+::createQueryBuilder\(\)#'
+            path: infrastructures/doctrine/Form/Type/*
 services:
 	-
 		class: Teknoo\States\PHPStan\MethodsClassExtension

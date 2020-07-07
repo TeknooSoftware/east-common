@@ -23,6 +23,8 @@
 namespace Teknoo\Tests\East\Website\Doctrine\Form\Type;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Teknoo\East\Website\Doctrine\Form\Type\ItemType;
 use Teknoo\Tests\East\WebsiteBundle\Form\Type\FormTestTrait;
 
@@ -39,5 +41,15 @@ class ItemTypeTest extends TestCase
     public function buildForm()
     {
         return new ItemType();
+    }
+
+    public function testConfigureOptions()
+    {
+        self::assertInstanceOf(
+            AbstractType::class,
+            $this->buildForm()->configureOptions(
+                $this->createMock(OptionsResolver::class)
+            )
+        );
     }
 }

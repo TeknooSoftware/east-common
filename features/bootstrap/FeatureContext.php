@@ -349,7 +349,7 @@ class FeatureContext implements Context
                     unset($criteria['deletedAt']);
                 }
                 
-                if (isset($criteria['slug']) && 'page-with-error' == $criteria['slug']) {
+                if (isset($criteria['slug']) && 'page-with-error' === $criteria['slug']) {
                     throw new \Exception('Error');
                 }
 
@@ -736,7 +736,7 @@ class FeatureContext implements Context
                     $final = [];
                     $ro = new \ReflectionObject($object = $parameters['objectInstance']);
                     foreach ($ro->getProperties() as $rp) {
-                        if (\in_array($rp->getName(), ['id', 'createdAt', 'updatedAt', 'deletedAt'])) {
+                        if (\in_array($rp->getName(), ['id', 'createdAt', 'updatedAt', 'deletedAt', 'states', 'activesStates', 'classesByStates', 'statesAliasesList', 'callerStatedClassesStack', 'localeField', 'publishedAt'])) {
                             continue;
                         }
 
@@ -810,15 +810,8 @@ class FeatureContext implements Context
         Assert::assertNotEmpty($this->createdObjects[$class]);
     }
 
-    /**
-     * @When the client follows the redirection
-     */
-    public function theClientfollowsTheRedirection()
+    private function runSymfony(SFRequest $serverRequest)
     {
-        $url = \current($this->response->getHeader('location'));
-        $serverRequest = SfRequest::create($url, 'GET');
-
-
         $response = $this->symfonyKernel->handle($serverRequest);
 
         $psrFactory = new \Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory(
@@ -831,6 +824,17 @@ class FeatureContext implements Context
         $this->response = $psrFactory->createResponse($response);
 
         $this->symfonyKernel->terminate($serverRequest, $response);
+    }
+
+    /**
+     * @When the client follows the redirection
+     */
+    public function theClientfollowsTheRedirection()
+    {
+        $url = \current($this->response->getHeader('location'));
+        $serverRequest = SfRequest::create($url, 'GET');
+
+        $this->runSymfony($serverRequest);
     }
 
     /**
@@ -882,18 +886,7 @@ class FeatureContext implements Context
         \parse_str($body, $expectedBody);
         $serverRequest = SfRequest::create($url, 'POST', $expectedBody);
 
-        $response = $this->symfonyKernel->handle($serverRequest);
-
-        $psrFactory = new \Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory(
-            new \Laminas\Diactoros\ServerRequestFactory(),
-            new \Laminas\Diactoros\StreamFactory(),
-            new \Laminas\Diactoros\UploadedFileFactory(),
-            new \Laminas\Diactoros\ResponseFactory()
-        );
-
-        $this->response = $psrFactory->createResponse($response);
-
-        $this->symfonyKernel->terminate($serverRequest, $response);
+        $this->runSymfony($serverRequest);
     }
 
     /**
@@ -903,18 +896,7 @@ class FeatureContext implements Context
     {
         $serverRequest = SfRequest::create($url, 'DELETE', []);
 
-        $response = $this->symfonyKernel->handle($serverRequest);
-
-        $psrFactory = new \Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory(
-            new \Laminas\Diactoros\ServerRequestFactory(),
-            new \Laminas\Diactoros\StreamFactory(),
-            new \Laminas\Diactoros\UploadedFileFactory(),
-            new \Laminas\Diactoros\ResponseFactory()
-        );
-
-        $this->response = $psrFactory->createResponse($response);
-
-        $this->symfonyKernel->terminate($serverRequest, $response);
+        $this->runSymfony($serverRequest);
     }
 
     /**

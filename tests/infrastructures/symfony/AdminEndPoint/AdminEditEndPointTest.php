@@ -28,6 +28,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Templating\EngineInterface;
@@ -193,6 +194,15 @@ class AdminEditEndPointTest extends TestCase
             AdminEditEndPoint::class,
             $this->buildEndPoint()
                 ->setDatesService($this->getDatesService())
+        );
+    }
+
+    public function testSetFormOptions()
+    {
+        self::assertInstanceOf(
+            AdminEditEndPoint::class,
+            $this->buildEndPoint()
+                ->setFormOptions(['doctrine_type' => ChoiceType::class])
         );
     }
 

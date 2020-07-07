@@ -927,4 +927,29 @@ class FeatureContext implements Context
 
         $this->getObjectRepository($class)->setObject(['id' => $id], $object);
     }
+
+    /**
+     * @Given a object of type :class with id :id and :properties
+     */
+    public function aObjectOfTypeWithIdAnd($class, $id, $properties)
+    {
+        $object = new $class;
+        $object->setId($id);
+
+        $ro = new \ReflectionObject($object);
+        foreach (\json_decode($properties, true) as $name=>$value) {
+            if (!$ro->hasProperty($name)) {
+                continue;
+            }
+
+            $rp = $ro->getProperty($name);
+            $isAccessible = !($rp->isPrivate() || $rp->isProtected());
+            $rp->setAccessible(true);
+            $rp->setValue($object, $value);
+            $rp->setAccessible($isAccessible);
+        }
+
+        $this->getObjectRepository($class)->setObject(['id' => $id], $object);
+    }
+
 }

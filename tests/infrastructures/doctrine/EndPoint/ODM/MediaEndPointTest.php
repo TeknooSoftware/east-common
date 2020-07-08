@@ -20,7 +20,7 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Doctrine\EndPoint;
+namespace Teknoo\Tests\East\Website\Doctrine\EndPoint\ODM;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
@@ -30,13 +30,13 @@ use Psr\Http\Message\ResponseInterface;
 use Teknoo\East\Diactoros\CallbackStreamFactory;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\Object\Media as BaseMedia;
-use Teknoo\East\Website\Doctrine\EndPoint\MediaEndPoint;
+use Teknoo\East\Website\Doctrine\EndPoint\ODM\MediaEndPoint;
 use Teknoo\Tests\East\Website\EndPoint\MediaEndPointTraitTest;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers      \Teknoo\East\Website\Doctrine\EndPoint\MediaEndPoint
+ * @covers      \Teknoo\East\Website\Doctrine\EndPoint\ODM\MediaEndPoint
  */
 class MediaEndPointTest extends MediaEndPointTraitTest
 {

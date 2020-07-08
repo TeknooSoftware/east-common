@@ -22,7 +22,7 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Doctrine\EndPoint;
+namespace Teknoo\East\Website\Doctrine\EndPoint\ODM;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Repository\GridFSRepository;

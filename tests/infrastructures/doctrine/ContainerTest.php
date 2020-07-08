@@ -33,6 +33,7 @@ use Doctrine\Persistence\Mapping\AbstractClassMetadataFactory;
 use Doctrine\Persistence\Mapping\Driver\FileLocator;
 use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectRepository;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Website\DBSource\ManagerInterface;
 use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
@@ -83,12 +84,12 @@ class ContainerTest extends TestCase
         self::assertInstanceOf(ManagerInterface::class, $container->get(ManagerInterface::class));
     }
 
-    private function generateTestForRepository(string $objectClass, string $repositoryClass)
+    private function generateTestForRepository(string $objectClass, string $repositoryClass, string $repositoryType)
     {
         $container = $this->buildContainer();
         $objectManager = $this->createMock(ObjectManager::class);
         $objectManager->expects(self::any())->method('getRepository')->with($objectClass)->willReturn(
-            $this->createMock(DocumentRepository::class)
+            $this->createMock($repositoryType)
         );
 
         $container->set(ObjectManager::class, $objectManager);
@@ -112,29 +113,54 @@ class ContainerTest extends TestCase
         $container->get($repositoryClass);
     }
 
-    public function testItemRepository()
+    public function testItemRepositoryWithObjectRepository()
     {
-        $this->generateTestForRepository(Item::class, ItemRepositoryInterface::class);
+        $this->generateTestForRepository(Item::class, ItemRepositoryInterface::class, ObjectRepository::class);
     }
 
-    public function testContentRepository()
+    public function testContentRepositoryWithObjectRepository()
     {
-        $this->generateTestForRepository(Content::class, ContentRepositoryInterface::class);
+        $this->generateTestForRepository(Content::class, ContentRepositoryInterface::class, ObjectRepository::class);
     }
 
-    public function testMediaRepository()
+    public function testMediaRepositoryWithObjectRepository()
     {
-        $this->generateTestForRepository(Media::class, MediaRepositoryInterface::class);
+        $this->generateTestForRepository(Media::class, MediaRepositoryInterface::class, ObjectRepository::class);
     }
 
-    public function testTypeRepository()
+    public function testTypeRepositoryWithObjectRepository()
     {
-        $this->generateTestForRepository(Type::class, TypeRepositoryInterface::class);
+        $this->generateTestForRepository(Type::class, TypeRepositoryInterface::class, ObjectRepository::class);
     }
 
-    public function testUserRepository()
+    public function testUserRepositoryWithObjectRepository()
     {
-        $this->generateTestForRepository(User::class, UserRepositoryInterface::class);
+        $this->generateTestForRepository(User::class, UserRepositoryInterface::class, ObjectRepository::class);
+    }
+
+    public function testItemRepositoryWithDocumentRepository()
+    {
+        $this->generateTestForRepository(Item::class, ItemRepositoryInterface::class, DocumentRepository::class);
+    }
+
+    public function testContentRepositoryWithDocumentRepository()
+    {
+        $this->generateTestForRepository(Content::class, ContentRepositoryInterface::class, DocumentRepository::class);
+    }
+
+    public function testMediaRepositoryWithDocumentRepository()
+    {
+        $this->generateTestForRepository(Media::class, MediaRepositoryInterface::class, DocumentRepository::class);
+    }
+
+    public function testTypeRepositoryWithDocumentRepository()
+    {
+        $this->generateTestForRepository(Type::class, TypeRepositoryInterface::class, DocumentRepository::class);
+    }
+
+    public function testUserRepositoryWithDocumentRepository()
+    {
+        $this->generateTestForRepository(User::class, UserRepositoryInterface::class, DocumentRepository::class);
     }
 
     public function testItemRepositoryWithUnsupportedRepository()

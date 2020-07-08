@@ -22,32 +22,15 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Doctrine\DBSource\ODM;
+namespace Teknoo\East\Website\Doctrine\DBSource\Common;
 
-use Teknoo\East\Website\Query\Expr\ExprInterface;
-use Teknoo\East\Website\Query\Expr\In;
+use Teknoo\East\Website\DBSource\Repository\TypeRepositoryInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-trait ExprConversionTrait
+class TypeRepository implements TypeRepositoryInterface
 {
-    private function convert(array &$values): array
-    {
-        $final = [];
-        foreach ($values as $key => $value) {
-            if (!$value instanceof ExprInterface) {
-                $final[$key] = $value;
-
-                continue;
-            }
-
-            if ($value instanceof In) {
-                $final[$key] = ['$in' => $value->getValues()];
-            }
-        }
-
-        return $final;
-    }
+    use RepositoryTrait;
 }

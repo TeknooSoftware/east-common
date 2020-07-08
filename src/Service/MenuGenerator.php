@@ -55,9 +55,6 @@ class MenuGenerator
         $itemsStacks = [];
         $contentsStacks = [];
 
-        /**
-         * @var Item[] $items
-         */
         $itemsSorting = function (iterable $items) use (&$itemsStacks, &$contentsStacks) {
             foreach ($items as $item) {
                 //To fetch all contents in a second query, in agnostic of DBMS

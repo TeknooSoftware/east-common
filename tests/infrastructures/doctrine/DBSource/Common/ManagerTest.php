@@ -24,12 +24,12 @@ namespace Teknoo\Tests\East\Website\Doctrine\DBSource\ODM;
 
 use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
-use Teknoo\East\Website\Doctrine\DBSource\ODM\Manager;
+use Teknoo\East\Website\Doctrine\DBSource\Common\Manager;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Doctrine\DBSource\ODM\Manager
+ * @covers \Teknoo\East\Website\Doctrine\DBSource\Common\Manager
  */
 class ManagerTest extends TestCase
 {

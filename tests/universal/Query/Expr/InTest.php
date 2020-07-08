@@ -20,35 +20,21 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Doctrine\DBSource\ODM;
+namespace Teknoo\Tests\East\Website\Query\Expr;
 
-use Doctrine\Persistence\ObjectRepository;
 use PHPUnit\Framework\TestCase;
-use Teknoo\East\Website\DBSource\RepositoryInterface;
-use Teknoo\East\Website\Doctrine\DBSource\ODM\TypeRepository;
+use Teknoo\East\Website\Query\Expr\In;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Doctrine\DBSource\ODM\TypeRepository
- * @covers \Teknoo\East\Website\Doctrine\DBSource\ODM\RepositoryTrait
- * @covers \Teknoo\East\Website\Doctrine\DBSource\ODM\ExprConversionTrait
+ * @covers \Teknoo\East\Website\Query\Expr\In
  */
-class TypeRepositoryTest extends TestCase
+class InTest extends TestCase
 {
-    use RepositoryTestTrait;
-
-    /**
-     * @inheritDoc
-     */
-    public function buildRepository(): RepositoryInterface
+ public function testExecute()
     {
-        return new TypeRepository($this->getDoctrineObjectRepositoryMock());
-    }
-
-    public function testWithNonSupportedRepository()
-    {
-        $this->expectException(\RuntimeException::class);
-        new TypeRepository($this->createMock(ObjectRepository::class));
+        $in = new In(['foo']);
+        self::assertEquals(['foo'], $in->getValues());
     }
 }

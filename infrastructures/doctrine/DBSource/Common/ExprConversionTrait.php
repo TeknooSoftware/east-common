@@ -22,51 +22,32 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Doctrine\DBSource\ODM;
+namespace Teknoo\East\Website\Doctrine\DBSource\Common;
 
-use Doctrine\Persistence\ObjectManager;
-use Teknoo\East\Website\DBSource\ManagerInterface;
+use Teknoo\East\Website\Query\Expr\ExprInterface;
+use Teknoo\East\Website\Query\Expr\In;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class Manager implements ManagerInterface
+trait ExprConversionTrait
 {
-    private ObjectManager $objectManager;
-
-    public function __construct(ObjectManager $objectManager)
+    private function convert(array &$values): array
     {
-        $this->objectManager = $objectManager;
-    }
+        $final = [];
+        foreach ($values as $key => $value) {
+            if (!$value instanceof ExprInterface) {
+                $final[$key] = $value;
 
-    /**
-     * @inheritDoc
-     */
-    public function persist($object): ManagerInterface
-    {
-        $this->objectManager->persist($object);
+                continue;
+            }
 
-        return $this;
-    }
+            if ($value instanceof In) {
+                $final[$key] = $value->getValues();
+            }
+        }
 
-    /**
-     * @inheritDoc
-     */
-    public function remove($object): ManagerInterface
-    {
-        $this->objectManager->remove($object);
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function flush(): ManagerInterface
-    {
-        $this->objectManager->flush();
-
-        return $this;
+        return $final;
     }
 }

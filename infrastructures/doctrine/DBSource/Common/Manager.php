@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -20,35 +20,53 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Doctrine\DBSource\ODM;
+declare(strict_types=1);
 
-use Doctrine\Persistence\ObjectRepository;
-use PHPUnit\Framework\TestCase;
-use Teknoo\East\Website\DBSource\RepositoryInterface;
-use Teknoo\East\Website\Doctrine\DBSource\ODM\TypeRepository;
+namespace Teknoo\East\Website\Doctrine\DBSource\Common;
+
+use Doctrine\Persistence\ObjectManager;
+use Teknoo\East\Website\DBSource\ManagerInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Doctrine\DBSource\ODM\TypeRepository
- * @covers \Teknoo\East\Website\Doctrine\DBSource\ODM\RepositoryTrait
- * @covers \Teknoo\East\Website\Doctrine\DBSource\ODM\ExprConversionTrait
  */
-class TypeRepositoryTest extends TestCase
+class Manager implements ManagerInterface
 {
-    use RepositoryTestTrait;
+    private ObjectManager $objectManager;
+
+    public function __construct(ObjectManager $objectManager)
+    {
+        $this->objectManager = $objectManager;
+    }
 
     /**
      * @inheritDoc
      */
-    public function buildRepository(): RepositoryInterface
+    public function persist($object): ManagerInterface
     {
-        return new TypeRepository($this->getDoctrineObjectRepositoryMock());
+        $this->objectManager->persist($object);
+
+        return $this;
     }
 
-    public function testWithNonSupportedRepository()
+    /**
+     * @inheritDoc
+     */
+    public function remove($object): ManagerInterface
     {
-        $this->expectException(\RuntimeException::class);
-        new TypeRepository($this->createMock(ObjectRepository::class));
+        $this->objectManager->remove($object);
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function flush(): ManagerInterface
+    {
+        $this->objectManager->flush();
+
+        return $this;
     }
 }

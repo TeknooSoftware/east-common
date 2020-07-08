@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests\East\Website\Doctrine\DBSource\ODM;
 
+use Doctrine\Persistence\ObjectRepository;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Doctrine\DBSource\ODM\ContentRepository;
@@ -31,6 +32,7 @@ use Teknoo\East\Website\Doctrine\DBSource\ODM\ContentRepository;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers \Teknoo\East\Website\Doctrine\DBSource\ODM\ContentRepository
  * @covers \Teknoo\East\Website\Doctrine\DBSource\ODM\RepositoryTrait
+ * @covers \Teknoo\East\Website\Doctrine\DBSource\ODM\ExprConversionTrait
  */
 class ContentRepositoryTest extends TestCase
 {
@@ -42,5 +44,11 @@ class ContentRepositoryTest extends TestCase
     public function buildRepository(): RepositoryInterface
     {
         return new ContentRepository($this->getDoctrineObjectRepositoryMock());
+    }
+
+    public function testWithNonSupportedRepository()
+    {
+        $this->expectException(\RuntimeException::class);
+        new ContentRepository($this->createMock(ObjectRepository::class));
     }
 }

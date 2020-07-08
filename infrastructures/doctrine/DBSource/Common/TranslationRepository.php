@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -20,35 +20,17 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Doctrine\DBSource\ODM;
+declare(strict_types=1);
 
-use Doctrine\Persistence\ObjectRepository;
-use PHPUnit\Framework\TestCase;
+namespace Teknoo\East\Website\Doctrine\DBSource\Common;
+
 use Teknoo\East\Website\DBSource\RepositoryInterface;
-use Teknoo\East\Website\Doctrine\DBSource\ODM\TypeRepository;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Doctrine\DBSource\ODM\TypeRepository
- * @covers \Teknoo\East\Website\Doctrine\DBSource\ODM\RepositoryTrait
- * @covers \Teknoo\East\Website\Doctrine\DBSource\ODM\ExprConversionTrait
  */
-class TypeRepositoryTest extends TestCase
+class TranslationRepository implements RepositoryInterface
 {
-    use RepositoryTestTrait;
-
-    /**
-     * @inheritDoc
-     */
-    public function buildRepository(): RepositoryInterface
-    {
-        return new TypeRepository($this->getDoctrineObjectRepositoryMock());
-    }
-
-    public function testWithNonSupportedRepository()
-    {
-        $this->expectException(\RuntimeException::class);
-        new TypeRepository($this->createMock(ObjectRepository::class));
-    }
+    use RepositoryTrait;
 }

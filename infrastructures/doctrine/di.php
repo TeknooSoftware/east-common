@@ -26,6 +26,7 @@ namespace Teknoo\East\Website\Doctrine;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Mapping\ClassMetadata as OdmClassMetadata;
+use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
@@ -46,12 +47,17 @@ use Teknoo\East\Website\DBSource\Repository\ItemRepositoryInterface;
 use Teknoo\East\Website\DBSource\Repository\MediaRepositoryInterface;
 use Teknoo\East\Website\DBSource\Repository\TypeRepositoryInterface;
 use Teknoo\East\Website\DBSource\Repository\UserRepositoryInterface;
-use Teknoo\East\Website\Doctrine\DBSource\ODM\ContentRepository;
-use Teknoo\East\Website\Doctrine\DBSource\ODM\ItemRepository;
-use Teknoo\East\Website\Doctrine\DBSource\ODM\Manager;
-use Teknoo\East\Website\Doctrine\DBSource\ODM\MediaRepository;
-use Teknoo\East\Website\Doctrine\DBSource\ODM\TypeRepository;
-use Teknoo\East\Website\Doctrine\DBSource\ODM\UserRepository;
+use Teknoo\East\Website\Doctrine\DBSource\Common\Manager;
+use Teknoo\East\Website\Doctrine\DBSource\ODM\ContentRepository as OdmContentRepository;
+use Teknoo\East\Website\Doctrine\DBSource\ODM\ItemRepository as OdmItemRepository;
+use Teknoo\East\Website\Doctrine\DBSource\ODM\MediaRepository as OdmMediaRepository;
+use Teknoo\East\Website\Doctrine\DBSource\ODM\TypeRepository as OdmTypeRepository;
+use Teknoo\East\Website\Doctrine\DBSource\ODM\UserRepository as OdmUserRepository;
+use Teknoo\East\Website\Doctrine\DBSource\Common\ContentRepository;
+use Teknoo\East\Website\Doctrine\DBSource\Common\ItemRepository;
+use Teknoo\East\Website\Doctrine\DBSource\Common\MediaRepository;
+use Teknoo\East\Website\Doctrine\DBSource\Common\TypeRepository;
+use Teknoo\East\Website\Doctrine\DBSource\Common\UserRepository;
 use Teknoo\East\Website\Doctrine\Object\Content;
 use Teknoo\East\Website\Doctrine\Object\Item;
 use Teknoo\East\Website\Doctrine\Object\Media;
@@ -134,8 +140,12 @@ return [
         return new Manager($objectManager);
     },
 
-    ContentRepositoryInterface::class => get(ContentRepository::class),
-    ContentRepository::class => static function (ContainerInterface $container): ContentRepositoryInterface {
+    ContentRepositoryInterface::class => static function (ContainerInterface $container): ContentRepositoryInterface {
+        $repository = $container->get(ObjectManager::class)->getRepository(Content::class);
+        if ($repository instanceof DocumentRepository) {
+            return new OdmContentRepository($repository);
+        }
+
         $repository = $container->get(ObjectManager::class)->getRepository(Content::class);
         if ($repository instanceof ObjectRepository) {
             return new ContentRepository($repository);
@@ -147,9 +157,12 @@ return [
         ));
     },
 
-    ItemRepositoryInterface::class => get(ItemRepository::class),
-    ItemRepository::class => static function (ContainerInterface $container): ItemRepositoryInterface {
+    ItemRepositoryInterface::class => static function (ContainerInterface $container): ItemRepositoryInterface {
         $repository = $container->get(ObjectManager::class)->getRepository(Item::class);
+        if ($repository instanceof DocumentRepository) {
+            return new OdmItemRepository($repository);
+        }
+
         if ($repository instanceof ObjectRepository) {
             return new ItemRepository($repository);
         }
@@ -160,9 +173,12 @@ return [
         ));
     },
 
-    MediaRepositoryInterface::class => get(MediaRepository::class),
-    MediaRepository::class => static function (ContainerInterface $container): MediaRepositoryInterface {
+    MediaRepositoryInterface::class => static function (ContainerInterface $container): MediaRepositoryInterface {
         $repository = $container->get(ObjectManager::class)->getRepository(Media::class);
+        if ($repository instanceof DocumentRepository) {
+            return new OdmMediaRepository($repository);
+        }
+
         if ($repository instanceof ObjectRepository) {
             return new MediaRepository($repository);
         }
@@ -173,9 +189,12 @@ return [
         ));
     },
 
-    TypeRepositoryInterface::class => get(TypeRepository::class),
-    TypeRepository::class => static function (ContainerInterface $container): TypeRepositoryInterface {
+    TypeRepositoryInterface::class => static function (ContainerInterface $container): TypeRepositoryInterface {
         $repository = $container->get(ObjectManager::class)->getRepository(Type::class);
+        if ($repository instanceof DocumentRepository) {
+            return new OdmTypeRepository($repository);
+        }
+
         if ($repository instanceof ObjectRepository) {
             return new TypeRepository($repository);
         }
@@ -186,9 +205,12 @@ return [
         ));
     },
 
-    UserRepositoryInterface::class => get(UserRepository::class),
-    UserRepository::class => static function (ContainerInterface $container): UserRepositoryInterface {
+    UserRepositoryInterface::class => static function (ContainerInterface $container): UserRepositoryInterface {
         $repository = $container->get(ObjectManager::class)->getRepository(User::class);
+        if ($repository instanceof DocumentRepository) {
+            return new OdmUserRepository($repository);
+        }
+
         if ($repository instanceof ObjectRepository) {
             return new UserRepository($repository);
         }

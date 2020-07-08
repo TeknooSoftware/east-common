@@ -43,6 +43,7 @@ use Teknoo\East\Website\Service\DatesService;
 use Teknoo\East\Website\Service\DeletingService;
 use Teknoo\East\Website\Service\FindSlugService;
 use Teknoo\East\Website\Service\MenuGenerator;
+use Teknoo\East\Website\Service\ProxyDetectorInterface;
 use Teknoo\East\Website\Writer\ItemWriter;
 use Teknoo\East\Website\Writer\ContentWriter;
 use Teknoo\East\Website\Writer\MediaWriter;
@@ -91,8 +92,14 @@ return [
         ->constructor(get(UserWriter::class), get(DatesService::class)),
 
     //Menu
-    MenuGenerator::class => create(MenuGenerator::class)
-        ->constructor(get(ItemLoader::class), get(ContentLoader::class)),
+    MenuGenerator::class => static function (ContainerInterface $container): MenuGenerator {
+        return new MenuGenerator(
+            $container->get(ItemLoader::class),
+            $container->get(ContentLoader::class),
+            $container->has(ProxyDetectorInterface::class) ? $container->get(ProxyDetectorInterface::class) : null
+        );
+    },
+
     MenuMiddleware::class => create(MenuMiddleware::class)
         ->constructor(get(MenuGenerator::class)),
 

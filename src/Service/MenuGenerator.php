@@ -41,10 +41,16 @@ class MenuGenerator
 
     private ContentLoader $contentLoader;
 
-    public function __construct(ItemLoader $itemLoader, ContentLoader $contentLoader)
-    {
+    private ?ProxyDetectorInterface $proxyDetector = null;
+
+    public function __construct(
+        ItemLoader $itemLoader,
+        ContentLoader $contentLoader,
+        ?ProxyDetectorInterface $proxyDetector = null
+    ) {
         $this->itemLoader = $itemLoader;
         $this->contentLoader = $contentLoader;
+        $this->proxyDetector = $proxyDetector;
     }
 
     /**
@@ -57,9 +63,13 @@ class MenuGenerator
 
         $itemsSorting = function (iterable $items) use (&$itemsStacks, &$contentsStacks) {
             foreach ($items as $item) {
-                //To fetch all contents in a second query, in agnostic of DBMS
-                if (null !== ($content = $item->getContent())) {
-                    $contentsStacks[$content->getId()] = $item;
+                if (null !== $this->proxyDetector && null !== ($content = $item->getContent())) {
+                    $this->proxyDetector->checkIfInstanceBehindProxy(
+                        $content,
+                        new Promise(function ($content) use (&$contentsStacks, $item) {
+                            $contentsStacks[$content->getId()] = $item;
+                        })
+                    );
                 }
 
                 if (!($parent = $item->getParent())) {

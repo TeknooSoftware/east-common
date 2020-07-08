@@ -31,6 +31,9 @@ use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
 use Doctrine\Persistence\Mapping\Driver\FileLocator;
+use Psr\Container\ContainerInterface;
+use ProxyManager\Proxy\GhostObjectInterface;
+use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Mapping\Driver\SimpleXmlFactoryInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Mapping\Driver\Xml;
 use Teknoo\East\Website\Doctrine\Translatable\Mapping\DriverFactoryInterface;
@@ -40,7 +43,6 @@ use Teknoo\East\Website\Doctrine\Translatable\ObjectManager\Adapter\ODM as ODMAd
 use Teknoo\East\Website\Doctrine\Translatable\Persistence\Adapter\ODM as ODMPersistence;
 use Teknoo\East\Website\Object\TranslatableInterface;
 use Teknoo\East\Website\Doctrine\Translatable\TranslatableListener;
-use Psr\Container\ContainerInterface;
 use Teknoo\East\Website\DBSource\ManagerInterface;
 use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
 use Teknoo\East\Website\DBSource\Repository\ItemRepositoryInterface;
@@ -68,6 +70,7 @@ use Teknoo\East\Website\Middleware\LocaleMiddleware;
 use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Object\User;
 
+use Teknoo\East\Website\Service\ProxyDetectorInterface;
 use function DI\get;
 
 return [
@@ -235,5 +238,24 @@ return [
         }
 
         return new LocaleMiddleware($callback);
+    },
+
+    ProxyDetectorInterface::class => static function (): ProxyDetectorInterface {
+        return new class implements ProxyDetectorInterface {
+            public function checkIfInstanceBehindProxy(object $object, PromiseInterface $promise): ProxyDetectorInterface
+            {
+                if (!$object instanceof GhostObjectInterface) {
+                    $promise->fail(new \Exception('Object is not behind a proxy'));
+                }
+
+                if ($object->isProxyInitialized()) {
+                    $promise->fail(new \Exception('Proxy is already initialized'));
+                }
+
+                $promise->success($object);
+
+                return $this;
+            }
+        };
     },
 ];

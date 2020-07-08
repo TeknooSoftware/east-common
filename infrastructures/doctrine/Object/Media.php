@@ -24,52 +24,21 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\Object;
 
-use Doctrine\MongoDB\GridFSFile;
 use Teknoo\East\Website\Object\Media as OriginalMedia;
 
 class Media extends OriginalMedia
 {
-    /**
-     * @return GridFSFile|\MongoGridFS
-     */
-    public function getFile()
+    private ?\DateTimeInterface $uploadDate = null;
+
+    private ?int $chunkSize = null;
+
+    public function getChunkSize(): ?int
     {
-        return parent::getFile();
+        return $this->chunkSize;
     }
 
-    /**
-     * @param GridFSFile|\MongoGridFS $file
-     */
-    public function setFile($file): self
+    public function getUploadDate(): ?\DateTimeInterface
     {
-        parent::setFile($file);
-
-        if ($file instanceof \MongoGridFSFile) {
-            $this->setLength((int) $file->getSize());
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return resource
-     */
-    public function getResource()
-    {
-        $file = $this->getFile();
-
-        if ($file instanceof GridFSFile) {
-            $file = $file->getMongoGridFSFile();
-        }
-
-        if (\is_callable([$file, 'getResource'])) {
-            $resource = $file->getResource();
-
-            if (\is_resource($resource)) {
-                return $resource;
-            }
-        }
-
-        throw new \RuntimeException('Any resource are available for this media');
+        return $this->uploadDate;
     }
 }

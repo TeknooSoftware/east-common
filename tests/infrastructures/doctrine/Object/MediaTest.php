@@ -22,9 +22,9 @@
 
 namespace Teknoo\Tests\East\Website\Doctrine\Object;
 
-use Doctrine\MongoDB\GridFSFile;
 use Teknoo\East\Website\Doctrine\Object\Media;
-use Teknoo\Tests\East\Website\Object\MediaTest as OriginaTest;
+use Teknoo\Tests\East\Website\Object\MediaTest as OriginalTest;
+
 /**
  * @copyright   Copyright (c) 2009-2020 Richard Déloge (richarddeloge@gmail.com)
  *
@@ -38,75 +38,25 @@ use Teknoo\Tests\East\Website\Object\MediaTest as OriginaTest;
  * @covers \Teknoo\East\Website\Object\ObjectTrait
  * @covers \Teknoo\East\Website\Object\Media
  */
-class MediaTest extends OriginaTest
+class MediaTest extends OriginalTest
 {
     public function buildObject(): Media
     {
         return new Media();
     }
-    
-    public function testSetFileWithLength()
-    {
-        $mongoFile = $this->createMock(\MongoGridFSFile::class);
-        $mongoFile->expects($this->any())->method('getSize')->willReturn(123);
 
-        $object = $this->buildObject();
+    public function testGetChunkSize()
+    {
+        self::assertNull($this->generateObjectPopulated()->getChunkSize());
+        self::assertIsInt($this->generateObjectPopulated(['chunkSize' => 124])->getChunkSize());
+    }
+
+    public function testGetUploadDate()
+    {
+        self::assertNull($this->generateObjectPopulated()->getUploadDate());
         self::assertInstanceOf(
-            \get_class($object),
-            $object->setFile($mongoFile)
-        );
-
-        self::assertEquals(
-            $mongoFile,
-            $object->getFile()
-        );
-
-        self::assertEquals(
-            123,
-            $object->getLength()
-        );
-    }
-
-    public function testGetResourceNotAvailable()
-    {
-        $this->expectException(\RuntimeException::class);
-        $this->generateObjectPopulated(['file' => 'fooBar'])->getResource();
-    }
-
-    public function testGetResourceNotResource()
-    {
-        $this->expectException(\RuntimeException::class);
-        $file = $this->getMockBuilder('MongoGridFSFileMock')->setMethods(['getResource'])->getMock();
-        $file->expects($this->any())->method('getResource')->willReturn('foobar');
-
-        $this->generateObjectPopulated(['file' => $file])->getResource();
-    }
-
-    public function testGetResource()
-    {
-        $resource = \fopen('php://memory', 'r');
-        $file = $this->getMockBuilder('MongoGridFSFileMock')->setMethods(['getResource'])->getMock();
-        $file->expects($this->any())->method('getResource')->willReturn($resource);
-
-        self::assertEquals(
-            $resource,
-            $this->generateObjectPopulated(['file' => $file])->getResource()
-        );
-    }
-
-    public function testGetResourceFromMongo()
-    {
-        $resource = \fopen('php://memory', 'r');
-        $file = $this->getMockBuilder('MongoGridFSFileMock')->setMethods(['getResource'])->getMock();
-        $file->expects($this->any())->method('getResource')->willReturn($resource);
-
-
-        $mongoFile = $this->createMock(GridFSFile::class);
-        $mongoFile->expects($this->any())->method('getMongoGridFSFile')->willReturn($file);
-
-        self::assertEquals(
-            $resource,
-            $this->generateObjectPopulated(['file' => $mongoFile])->getResource()
+            \DateTimeInterface::class,
+            $this->generateObjectPopulated(['uploadDate' => (new \DateTime('2020-08-01'))])->getUploadDate()
         );
     }
 }

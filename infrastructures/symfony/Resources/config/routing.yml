@@ -8,7 +8,7 @@ _teknoo_website_content:
   methods:  ['GET']
   defaults: { _controller: 'teknoo.east.website.endpoint.content' }
   requirements:
-    slug: ((?!_wdt).).+
+    slug: ((?!_wdt|_profiler).).+
 
 _teknoo_website_home:
   path: '/'

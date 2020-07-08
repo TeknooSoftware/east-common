@@ -25,6 +25,7 @@ namespace Teknoo\Tests\East\WebsiteBundle\AdminEndPoint;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\RouterInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
@@ -39,7 +40,7 @@ use Teknoo\Recipe\Promise\PromiseInterface;
  * @covers      \Teknoo\East\WebsiteBundle\AdminEndPoint\AdminDeleteEndPoint
  * @covers      \Teknoo\East\WebsiteBundle\AdminEndPoint\AdminEndPointTrait
  */
-class AdminDeleteEndPointTest extends \PHPUnit\Framework\TestCase
+class AdminDeleteEndPointTest extends TestCase
 {
     /**
      * @var DeletingService

@@ -22,19 +22,20 @@
 
 namespace Teknoo\Tests\East\Website\Object;
 
+use PHPUnit\Framework\TestCase;
+use Teknoo\East\Website\Object\MediaMetadata;
 use Teknoo\Tests\East\Website\Object\Traits\ObjectTestTrait;
 use Teknoo\East\Website\Object\Media;
+use Teknoo\Tests\East\Website\Object\Traits\PopulateObjectTrait;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Object\PublishableTrait
- * @covers \Teknoo\East\Website\Object\ObjectTrait
  * @covers \Teknoo\East\Website\Object\Media
  */
-class MediaTest extends \PHPUnit\Framework\TestCase
+class MediaTest extends TestCase
 {
-    use ObjectTestTrait;
+    use PopulateObjectTrait;
 
     /**
      * @return Media
@@ -47,6 +48,34 @@ class MediaTest extends \PHPUnit\Framework\TestCase
                 return null;
             }
         };
+    }
+
+    public function testGetId()
+    {
+        self::assertEquals(
+            123,
+            $this->generateObjectPopulated(['id' => 123])->getId()
+        );
+    }
+
+    public function testSetId()
+    {
+        $Object = $this->buildObject();
+        self::assertInstanceOf(
+            \get_class($Object),
+            $Object->setId('fooBar')
+        );
+
+        self::assertEquals(
+            'fooBar',
+            $Object->getId()
+        );
+    }
+
+    public function testSetIdExceptionOnBadArgument()
+    {
+        $this->expectException(\Throwable::class);
+        $this->buildObject()->setId(new \stdClass());
     }
 
     public function testGetName()
@@ -105,82 +134,28 @@ class MediaTest extends \PHPUnit\Framework\TestCase
         $this->buildObject()->setLength(new \stdClass());
     }
 
-    public function testGetMimeType()
+    public function testGetMetadata()
     {
+        $object = new MediaMetadata('foo', 'bar', 'world');
         self::assertEquals(
-            'fooBar',
-            $this->generateObjectPopulated(['mimeType' => 'fooBar'])->getMimeType()
+            $object,
+            $this->generateObjectPopulated(['metadata' => $object])->getMetadata()
         );
     }
 
-    public function testSetMimeType()
+    public function testSetMetadata()
     {
-        $object = $this->buildObject();
+        $object = new MediaMetadata('foo', 'bar', 'world');
+
+        $Object = $this->buildObject();
         self::assertInstanceOf(
-            \get_class($object),
-            $object->setMimeType('fooBar')
+            Media::class,
+            $Object->setMetadata($object)
         );
 
         self::assertEquals(
-            'fooBar',
-            $object->getMimeType()
-        );
-    }
-
-    public function testSetMimeTypeExceptionOnBadArgument()
-    {
-        $this->expectException(\Throwable::class);
-        $this->buildObject()->setMimeType(new \stdClass());
-    }
-
-    public function testGetAlternative()
-    {
-        self::assertEquals(
-            'fooBar',
-            $this->generateObjectPopulated(['alternative' => 'fooBar'])->getAlternative()
-        );
-    }
-
-    public function testSetAlternative()
-    {
-        $object = $this->buildObject();
-        self::assertInstanceOf(
-            \get_class($object),
-            $object->setAlternative('fooBar')
-        );
-
-        self::assertEquals(
-            'fooBar',
-            $object->getAlternative()
-        );
-    }
-
-    public function testSetAlternativeExceptionOnBadArgument()
-    {
-        $this->expectException(\Throwable::class);
-        $this->buildObject()->setAlternative(new \stdClass());
-    }
-    public function testGetFile()
-    {
-        $mock = $this->createMock(\MongoGridFSFile::class);
-        self::assertEquals(
-            $mock,
-            $this->generateObjectPopulated(['file' => $mock])->getFile()
-        );
-    }
-
-    public function testSetFile()
-    {
-        $object = $this->buildObject();
-        $mock = $this->createMock(\MongoGridFSFile::class);
-        self::assertInstanceOf(
-            \get_class($object),
-            $object->setFile($mock)
-        );
-
-        self::assertEquals(
-            $mock,
-            $object->getFile()
+            $object,
+            $Object->getMetadata()
         );
     }
 }

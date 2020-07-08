@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests\East\Website\Object;
 
+use PHPUnit\Framework\TestCase;
 use Teknoo\Tests\East\Website\Object\Traits\ObjectTestTrait;
 use Teknoo\East\Website\Object\User;
 
@@ -32,7 +33,7 @@ use Teknoo\East\Website\Object\User;
  * @covers \Teknoo\East\Website\Object\ObjectTrait
  * @covers \Teknoo\East\Website\Object\User
  */
-class UserTest extends \PHPUnit\Framework\TestCase
+class UserTest extends TestCase
 {
     use ObjectTestTrait;
 

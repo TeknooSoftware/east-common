@@ -1,15 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
+use DI\Bridge\Symfony\Kernel as BaseKernel;
+use DI\ContainerBuilder as DIContainerBuilder;
 use Behat\Behat\Context\Context;
-use Doctrine\Common\Persistence\ObjectRepository;
-use Doctrine\Common\Persistence\ObjectManager;
+use DI\Container;
+use Doctrine\Persistence\ObjectRepository;
+use Doctrine\Persistence\ObjectManager;
 use Laminas\Diactoros\ServerRequest;
 use Laminas\Diactoros\Uri;
 use PHPUnit\Framework\Assert;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
+use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder as SfContainerBuilder;
+use Symfony\Component\HttpFoundation\Request as SfRequest;
+use Symfony\Component\Routing\RouteCollectionBuilder;
 use Symfony\Component\Templating\EngineInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
 use Teknoo\East\Foundation\Router\RouterInterface;
@@ -22,12 +33,14 @@ use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
 use Teknoo\East\Website\Loader\MediaLoader;
 use Teknoo\East\Website\Loader\ContentLoader;
+use Teknoo\East\Website\Loader\ItemLoader;
+use Teknoo\East\Website\Loader\TypeLoader;
 use Teknoo\East\Website\EndPoint\MediaEndPointTrait;
 use Teknoo\East\Website\EndPoint\ContentEndPointTrait;
 use Teknoo\East\Website\EndPoint\StaticEndPointTrait;
 use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
 use Teknoo\East\Website\Object\Media;
-use Teknoo\East\Website\Object\Content;
+use Teknoo\East\Website\Doctrine\Object\Content;
 use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Object\Block;
 
@@ -36,80 +49,56 @@ use Teknoo\East\Website\Object\Block;
  */
 class FeatureContext implements Context
 {
-    /**
-     * @var \DI\Container
-     */
-    private $container;
+    public ?Container $container = null;
 
-    /**
-     * @var RouterInterface
-     */
-    private $router;
+    private ?BaseKernel $symfonyKernel = null;
 
-    /**
-     * @var ClientInterface
-     */
-    private $client;
+    private ?RouterInterface $router = null;
 
-    /**
-     * @var MediaLoader
-     */
-    private $mediaLoader;
+    public string $locale = 'en';
 
-    /**
-     * @var ObjectRepository
-     */
-    private $objectRepository;
+    private ?ClientInterface $client = null;
 
-    /**
-     * @var ContentLoader
-     */
-    private $contentLoader;
+    public array $objectRepository = [];
+
+    private ?MediaLoader $mediaLoader = null;
+
+    private ?ContentLoader $contentLoader = null;
+
+    private ?ItemLoader $itemLoader = null;
+
+    private ?TypeLoader $typeLoader = null;
 
     /**
      * @var MediaEndPointTrait|EndPointInterface
      */
-    private $mediaEndPoint;
+    private ?EndPointInterface $mediaEndPoint = null;
 
     /**
      * @var ContentEndPointTrait|EndPointInterface
      */
-    private $contentEndPoint;
+    private ?EndPointInterface $contentEndPoint = null;
 
     /**
      * @var StaticEndPointTrait|EndPointInterface
      */
-    private $staticEndPoint;
+    private ?EndPointInterface $staticEndPoint = null;
 
-    /**
-     * @var Type
-     */
-    private $type;
+    private ?Type $type = null;
 
-    /**
-     * @var EngineInterface
-     */
-    private $templating;
+    public ?EngineInterface $templating = null;
 
-    /**
-     * @var string
-     */
-    public $templateToCall;
+    public ?string $templateToCall = null;
 
-    /**
-     * @var string
-     */
-    public $templateContent;
+    public ?string $templateContent = null;
 
-    /**
-     * @var ResponseInterface
-     */
-    public $response;
+    public ?ResponseInterface $response = null;
 
-    /**
-     * @va \Throwable
-     */
-    public $error;
+    public ?\Throwable $error = null;
+
+    public $createdObjects = [];
+
+    public $updatedObjects = [];
 
     /**
      * Initializes context.
@@ -125,25 +114,108 @@ class FeatureContext implements Context
     /**
      * @Given I have DI initialized
      */
-    public function iHaveDiInitialized()
+    public function iHaveDiInitialized(): void
     {
         $containerDefinition = new \DI\ContainerBuilder();
+        $rootDir = \dirname(__DIR__, 2);
         $containerDefinition->addDefinitions(
-            include \dirname(\dirname(__DIR__)).'/vendor/teknoo/east-foundation/src/universal/di.php'
+            include $rootDir.'/vendor/teknoo/east-foundation/src/universal/di.php'
         );
         $containerDefinition->addDefinitions(
-            include \dirname(\dirname(__DIR__)).'/src/universal/di.php'
+            include $rootDir . '/src/di.php'
         );
         $containerDefinition->addDefinitions(
-            include \dirname(\dirname(__DIR__)).'/infrastructures/doctrine/di.php'
+            include $rootDir.'/infrastructures/doctrine/di.php'
         );
         $containerDefinition->addDefinitions(
-            include \dirname(\dirname(__DIR__)).'/infrastructures/di.php'
+            include $rootDir.'/infrastructures/di.php'
         );
 
         $this->container = $containerDefinition->build();
 
         $this->container->set(ObjectManager::class, $this->buildObjectManager());
+    }
+
+    /**
+     * @Given I have DI With Symfony initialized
+     */
+    public function iHaveDiWithSymfonyInitialized(): void
+    {
+        $this->symfonyKernel = new class($this, 'test') extends BaseKernel
+        {
+            use MicroKernelTrait;
+
+            private FeatureContext $context;
+
+            public function __construct(FeatureContext $context, $environment)
+            {
+                $this->context = $context;
+
+                parent::__construct($environment, false);
+            }
+
+            public function getCacheDir()
+            {
+                return \dirname(__DIR__, 2).'/tests/var/cache';
+            }
+
+            public function getLogDir()
+            {
+                return \dirname(__DIR__, 2).'/tests/var/logs';
+            }
+
+            public function registerBundles()
+            {
+                yield new \Symfony\Bundle\FrameworkBundle\FrameworkBundle();
+                //todo ?yield new \Doctrine\Bundle\MongoDBBundle\DoctrineMongoDBBundle();
+                yield new \Teknoo\East\FoundationBundle\EastFoundationBundle();
+                yield new \Teknoo\East\WebsiteBundle\TeknooEastWebsiteBundle();
+            }
+
+            protected function buildPHPDIContainer(DIContainerBuilder $builder)
+            {
+                $rootDir = \dirname(__DIR__, 2);
+                $builder->addDefinitions(
+                    include $rootDir.'/vendor/teknoo/east-foundation/src/universal/di.php'
+                );
+                $builder->addDefinitions(
+                    include $rootDir.'/vendor/teknoo/east-foundation/infrastructures/symfony/Resources/config/di.php'
+                );
+                $builder->addDefinitions(
+                    include $rootDir.'/src/di.php'
+                );
+                $builder->addDefinitions(
+                    include $rootDir.'/infrastructures/doctrine/di.php'
+                );
+                $builder->addDefinitions(
+                    include $rootDir.'/infrastructures/symfony/Resources/config/di.php'
+                );
+                $builder->addDefinitions(
+                    include $rootDir.'/infrastructures/di.php'
+                );
+
+                $this->context->container = $builder->build();
+                $this->context->container->set(ObjectManager::class, $this->context->buildObjectManager());
+                $this->container->set('templating.engine.twig', $this->context->templating);
+
+                return $this->context->container;
+            }
+
+            protected function configureContainer(SfContainerBuilder $container, LoaderInterface $loader)
+            {
+                $loader->load(__DIR__.'/config/packages/*.yaml', 'glob');
+                $loader->load(__DIR__.'/config/services.yaml');
+                $container->setParameter('container.autowiring.strict_mode', true);
+                $container->setParameter('container.dumper.inline_class_loader', true);
+            }
+
+            protected function configureRoutes(RouteCollectionBuilder $routes)
+            {
+                $rootDir = \dirname(__DIR__, 2);
+                $routes->import( $rootDir.'/infrastructures/symfony/Resources/config/admin_*.yml', '/admin', 'glob');
+                $routes->import( $rootDir.'/infrastructures/symfony/Resources/config/r*.yml', '/', 'glob');
+            }
+        };
     }
 
     public function buildObjectManager(): ObjectManager
@@ -164,8 +236,20 @@ class FeatureContext implements Context
             {
             }
 
+            /**
+             * @param \Teknoo\East\Website\Object\ObjectInterface $object
+             */
             public function persist($object)
             {
+                if ($id = $object->getId()) {
+                    $this->featureContext->updatedObjects[$id] = $object;
+                } else {
+                    $object->setId(\uniqid());
+                    $class = \explode('\\', \get_class($object));
+                    $this->featureContext->createdObjects[\array_pop($class)][] = $object;
+
+                    $this->featureContext->getObjectRepository(\get_class($object))->setObject(['id' => $object->getId()], $object);
+                }
             }
 
             public function remove($object)
@@ -194,7 +278,7 @@ class FeatureContext implements Context
 
             public function getRepository($className)
             {
-                return $this->featureContext->buildObjectRepository($className);
+                return $this->featureContext->getObjectRepository($className);
             }
 
             public function getClassMetadata($className)
@@ -215,32 +299,18 @@ class FeatureContext implements Context
         };
     }
 
-    /**
-     * @param string $className
-     * @return ObjectRepository
-     */
-    public function buildObjectRepository(string $className): ObjectRepository
+    public function getObjectRepository(string $className): ObjectRepository
     {
-        $this->objectRepository = new class($className) implements ObjectRepository {
-            /**
-             * @var string
-             */
-            private $className;
+        return $this->objectRepository[$className] ?? $this->objectRepository[$className] = new class($className) implements ObjectRepository {
+            private string $className;
 
             /**
              * @var object
              */
             private $object;
 
-            /**
-             * @var array
-             */
-            private $criteria;
+            private array $criteria;
 
-            /**
-             *  constructor.
-             * @param string $className
-             */
             public function __construct(string $className)
             {
                 $this->className = $className;
@@ -279,7 +349,7 @@ class FeatureContext implements Context
                     unset($criteria['deletedAt']);
                 }
                 
-                if (isset($criteria['slug']) && 'page-with-error' == $criteria['slug']) {
+                if (isset($criteria['slug']) && 'page-with-error' === $criteria['slug']) {
                     throw new \Exception('Error');
                 }
 
@@ -295,22 +365,36 @@ class FeatureContext implements Context
                 return $this->className;
             }
         };
-
-        return $this->objectRepository;
     }
 
     /**
      * @Given a Media Loader
      */
-    public function aMediaLoader()
+    public function aMediaLoader(): void
     {
         $this->mediaLoader = $this->container->get(MediaLoader::class);
     }
+    
+    /**
+     * @Given a Item Loader
+     */
+    public function aItemLoader(): void
+    {
+        $this->itemLoader = $this->container->get(ItemLoader::class);
+    }
 
     /**
-     * @Given an available image called :arg1
+     * @Given a Type Loader
      */
-    public function anAvailableImageCalled($arg1)
+    public function aTypeLoader(): void
+    {
+        $this->typeLoader = $this->container->get(TypeLoader::class);
+    }
+
+    /**
+     * @Given an available image called :name
+     */
+    public function anAvailableImageCalled(string $name): void
     {
         $media = new class extends Media {
             /**
@@ -326,21 +410,33 @@ class FeatureContext implements Context
             }
         };
 
-        $this->objectRepository->setObject(
-            ['id' => $arg1],
-            $media->setId($arg1)
-                ->setName($arg1)
+        \current($this->objectRepository)->setObject(
+            ['id' => $name],
+            $media->setId($name)
+                ->setName($name)
         );
     }
 
     /**
-     * @Given a Endpoint able to serve resource from Mongo.
+     * @Given a Endpoint able to serve resource from database.
      */
-    public function aEndpointAbleToServeResourceFromMongo()
+    public function aEndpointAbleToServeResourceFromDatabase(): void
     {
-        $this->mediaEndPoint = new class($this->mediaLoader, $this->container->get(StreamFactoryInterface::class)) implements EndPointInterface {
+        $this->mediaEndPoint = new class(
+            $this->mediaLoader,
+            $this->container->get(StreamFactoryInterface::class)
+        ) implements EndPointInterface {
             use EastEndPointTrait;
             use MediaEndPointTrait;
+
+            protected function getStream(Media $media): StreamInterface
+            {
+                $hf = fopen('php://memory', 'rw+');
+                fwrite($hf, 'fooBar');
+                fseek($hf, 0);
+
+                return $this->streamFactory->createStreamFromResource($hf);
+            }
         };
 
         $this->mediaEndPoint->setResponseFactory($this->container->get(ResponseFactoryInterface::class));
@@ -349,7 +445,7 @@ class FeatureContext implements Context
     /**
      * @Given I register a router
      */
-    public function iRegisterARouter()
+    public function iRegisterARouter(): void
     {
         $this->router = new class implements RouterInterface {
             private $routes = [];
@@ -405,36 +501,32 @@ class FeatureContext implements Context
     }
 
     /**
-     * @Given The router can process the request :arg1 to controller :arg2
+     * @Given The router can process the request :url to controller :controllerName
      */
-    public function theRouterCanProcessTheRequestToController($arg1, $arg2)
+    public function theRouterCanProcessTheRequestToController(string $url, string $controllerName): void
     {
-        switch ($arg2) {
+        $controller = null;
+        $params = [];
+        switch ($controllerName) {
             case 'contentEndPoint':
                 $controller = $this->contentEndPoint;
-                $this->router->registerRoute($arg1, $controller);
                 break;
             case 'staticEndPoint':
+                $params = ['template' => 'Acme:MyBundle:template.html.twig'];
                 $controller = $this->staticEndPoint;
-                $this->router->registerRoute($arg1, $controller, ['template' => 'Acme:MyBundle:template.html.twig']);
                 break;
             case 'mediaEndPoint':
                 $controller = $this->mediaEndPoint;
-                $this->router->registerRoute($arg1, $controller);
                 break;
+        }
+
+        if (null !== $controller) {
+            $this->router->registerRoute($url, $controller, $params);
         }
     }
 
-    /**
-     * @When The server will receive the request :arg1
-     */
-    public function theServerWillReceiveTheRequest($arg1)
+    private function buildClient(): ClientInterface
     {
-        $manager = new Manager($this->container->get(RecipeInterface::class));
-
-        $this->response = null;
-        $this->error = null;
-
         $this->client = new class($this) implements ClientInterface {
             /**
              * @var FeatureContext
@@ -493,39 +585,62 @@ class FeatureContext implements Context
             }
         };
 
-        $request = new ServerRequest();
-        $request = $request->withUri(new Uri($arg1));
-        $query = [];
-        \parse_str($request->getUri()->getQuery(), $query);
-        $request = $request->withQueryParams($query);
+        return $this->client;
+    }
+
+    private function buildManager(ServerRequest $request): Manager
+    {
+        $manager = new Manager($this->container->get(RecipeInterface::class));
+
+        $this->response = null;
+        $this->error = null;
+
+        $this->buildClient();
 
         $manager->receiveRequest(
             $this->client,
             $request
         );
+
+        return $manager;
+    }
+
+    /**
+     * @When The server will receive the request :url
+     */
+    public function theServerWillReceiveTheRequest(string $url): void
+    {
+        $request = new ServerRequest();
+        $request = $request->withMethod('GET');
+        $request = $request->withUri(new Uri($url));
+        $query = [];
+        \parse_str($request->getUri()->getQuery(), $query);
+        $request = $request->withQueryParams($query);
+
+        $this->buildManager($request);
     }
 
     /**
      * @Then The client must accept a response
      */
-    public function theClientMustAcceptAResponse()
+    public function theClientMustAcceptAResponse(): void
     {
         Assert::assertInstanceOf(ResponseInterface::class, $this->response);
         Assert::assertNull($this->error);
     }
 
     /**
-     * @Then I should get :arg1
+     * @Then I should get :body
      */
-    public function iShouldGet($arg1)
+    public function iShouldGet(string $body): void
     {
-        Assert::assertEquals($arg1, (string) $this->response->getBody());
+        Assert::assertEquals($body, (string) $this->response->getBody());
     }
 
     /**
      * @Then The client must accept an error
      */
-    public function theClientMustAcceptAnError()
+    public function theClientMustAcceptAnError(): void
     {
         Assert::assertNull($this->response);
         Assert::assertInstanceOf(\Throwable::class, $this->error);
@@ -534,7 +649,7 @@ class FeatureContext implements Context
     /**
      * @Given a Content Loader
      */
-    public function aContentLoader()
+    public function aContentLoader(): void
     {
         $this->contentLoader = new ContentLoader(
             $this->container->get(ContentRepositoryInterface::class)
@@ -542,40 +657,45 @@ class FeatureContext implements Context
     }
 
     /**
-     * @Given a type of page, called :arg1 with :arg2 blocks :arg3 and template :arg4 with :arg5
+     * @Given a type of page, called :name with :blockNumber blocks :blocks and template :template with :config
      */
-    public function aTypeOfPageCalledWithBlocksAndTemplateWith($arg1, $arg2, $arg3, $arg4, $arg5)
-    {
+    public function aTypeOfPageCalledWithBlocksAndTemplateWith(
+        string $name,
+        int $blockNumber,
+        string $blocks,
+        string $template,
+        string $config
+    ) :void {
         $this->type = new Type();
-        $this->type->setName($arg1);
-        $blocks = [];
-        foreach (\explode(',', $arg3) as $name) {
-            $blocks[] = new Block($name, 'text');
+        $this->type->setName($name);
+        $blocksList = [];
+        foreach (\explode(',', $blocks) as $blockName) {
+            $blocksList[] = new Block($blockName, 'text');
         }
-        $this->type->setBlocks($blocks);
-        $this->type->setTemplate($arg4);
-        $this->templateToCall = $arg4;
-        $this->templateContent = $arg5;
+        $this->type->setBlocks($blocksList);
+        $this->type->setTemplate($template);
+        $this->templateToCall = $template;
+        $this->templateContent = $config;
     }
 
     /**
-     * @Given an available page with the slug :arg1 of type :arg2
+     * @Given an available page with the slug :slug of type :type
      */
-    public function anAvailablePageWithTheSlugOfType($arg1, $arg2)
+    public function anAvailablePageWithTheSlugOfType(string $slug, string $type): void
     {
-        $this->objectRepository->setObject(
-            ['slug' => $arg1],
-            (new Content())->setSlug($arg1)
+        $this->getObjectRepository(Content::class)->setObject(
+            ['slug' => $slug],
+            (new Content())->setSlug($type)
                 ->setType($this->type)
                 ->setParts(['block1' => 'hello', 'block2' => 'world'])
-                ->setPublishedAt(new \DateTime(2017-11-25))
+                ->setPublishedAt(new \DateTime('2017-11-25'))
         );
     }
 
     /**
      * @Given a Endpoint able to render and serve page.
      */
-    public function aEndpointAbleToRenderAndServePage()
+    public function aEndpointAbleToRenderAndServePage(): void
     {
         $this->contentEndPoint = new class($this->contentLoader, '404-error') implements EndPointInterface {
             use EastEndPointTrait;
@@ -589,7 +709,7 @@ class FeatureContext implements Context
     /**
      * @Given a templating engine
      */
-    public function aTemplatingEngine()
+    public function aTemplatingEngine(): void
     {
         $this->templating = new class($this) implements EngineInterface {
             private $context;
@@ -607,14 +727,33 @@ class FeatureContext implements Context
                 if ('404-error' === $name) {
                     return 'Error 404';
                 }
+
+                if (
+                    empty($this->context->templateToCall)
+                    && isset($parameters['objectInstance'])
+                ) {
+                    //To avoid to manage templating view for crud
+                    $final = [];
+                    $ro = new \ReflectionObject($object = $parameters['objectInstance']);
+                    foreach ($ro->getProperties() as $rp) {
+                        if (\in_array($rp->getName(), ['id', 'createdAt', 'updatedAt', 'deletedAt', 'states', 'activesStates', 'classesByStates', 'statesAliasesList', 'callerStatedClassesStack', 'localeField', 'publishedAt'])) {
+                            continue;
+                        }
+
+                        $rp->setAccessible(true);
+                        $final[$rp->getName()] = $rp->getValue($object);
+                    }
+
+                    return \json_encode($final);
+                }
                 
                 Assert::assertEquals($this->context->templateToCall, $name);
 
                 $keys = [];
                 $values = [];
                 if (isset($parameters['content']) && $parameters['content'] instanceof Content) {
-                    foreach ($parameters['content']->getParts() as $name=>$value) {
-                        $keys[] = '{'.$name.'}';
+                    foreach ($parameters['content']->getParts() as $key=>$value) {
+                        $keys[] = '{'.$key.'}';
                         $values[] = $value;
                     }
                 }
@@ -641,18 +780,18 @@ class FeatureContext implements Context
     }
 
     /**
-     * @Given a template :arg1 with :arg2
+     * @Given a template :template with :content
      */
-    public function aTemplateWith($arg1, $arg2)
+    public function aTemplateWith(string $template, string $content): void
     {
-        $this->templateToCall = $arg1;
-        $this->templateContent = $arg2;
+        $this->templateToCall = $template;
+        $this->templateContent = $content;
     }
 
     /**
      * @Given a Endpoint able to render and serve this template.
      */
-    public function aEndpointAbleToRenderAndServeThisTemplate()
+    public function aEndpointAbleToRenderAndServeThisTemplate(): void
     {
         $this->staticEndPoint = new class implements EndPointInterface {
             use EastEndPointTrait;
@@ -662,4 +801,137 @@ class FeatureContext implements Context
         $this->staticEndPoint->setResponseFactory($this->container->get(ResponseFactoryInterface::class));
         $this->staticEndPoint->setStreamFactory($this->container->get(StreamFactoryInterface::class));
     }
+
+    /**
+     * @Then An object :class must be persisted
+     */
+    public function anObjectMustBePersisted(string $class)
+    {
+        Assert::assertNotEmpty($this->createdObjects[$class]);
+    }
+
+    private function runSymfony(SFRequest $serverRequest)
+    {
+        $response = $this->symfonyKernel->handle($serverRequest);
+
+        $psrFactory = new \Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory(
+            new \Laminas\Diactoros\ServerRequestFactory(),
+            new \Laminas\Diactoros\StreamFactory(),
+            new \Laminas\Diactoros\UploadedFileFactory(),
+            new \Laminas\Diactoros\ResponseFactory()
+        );
+
+        $this->response = $psrFactory->createResponse($response);
+
+        $this->symfonyKernel->terminate($serverRequest, $response);
+    }
+
+    /**
+     * @When the client follows the redirection
+     */
+    public function theClientfollowsTheRedirection()
+    {
+        $url = \current($this->response->getHeader('location'));
+        $serverRequest = SfRequest::create($url, 'GET');
+
+        $this->runSymfony($serverRequest);
+    }
+
+    /**
+     * @Then the last object updated must be deleted
+     */
+    public function theLastObjectUpdatedMustBeDeleted()
+    {
+        Assert::assertNotEmpty(\current($this->updatedObjects)->getDeletedAt());
+    }
+
+    /**
+     * @Then An object :id must be updated
+     */
+    public function anObjectMustBeUpdated(string $id)
+    {
+        Assert::assertNotEmpty($this->updatedObjects[$id]);
+    }
+
+    /**
+     * @Then It is redirect to :url
+     */
+    public function itIsRedirectTo($url)
+    {
+        Assert::assertInstanceOf(ResponseInterface::class, $this->response);
+        Assert::assertEquals(302, $this->response->getStatusCode());
+        $location = \current($this->response->getHeader('location'));
+
+        Assert::assertGreaterThan(0, \preg_match("#$url#i", $location));
+    }
+
+    /**
+     * @Then I should get in the form :body
+     */
+    public function iShouldGetInTheForm(string $body): void
+    {
+        $expectedBody = \json_decode($body, true);
+
+        $actualBody = \json_decode((string) $this->response->getBody(), true);
+
+        Assert::assertEquals($expectedBody, $actualBody);
+    }
+
+    /**
+     * @When Symfony will receive the POST request :url with :body
+     */
+    public function symfonyWillReceiveThePostRequestWith($url, $body)
+    {
+        $expectedBody = [];
+        \parse_str($body, $expectedBody);
+        $serverRequest = SfRequest::create($url, 'POST', $expectedBody);
+
+        $this->runSymfony($serverRequest);
+    }
+
+    /**
+     * @When Symfony will receive the DELETE request :url
+     */
+    public function symfonyWillReceiveTheDeleteRequest($url)
+    {
+        $serverRequest = SfRequest::create($url, 'DELETE', []);
+
+        $this->runSymfony($serverRequest);
+    }
+
+    /**
+     * @Given a object of type :class with id :id
+     */
+    public function aObjectOfTypeWithId($class, $id)
+    {
+        $object = new $class;
+        $object->setId($id);
+
+        $this->getObjectRepository($class)->setObject(['id' => $id], $object);
+    }
+
+    /**
+     * @Given a object of type :class with id :id and :properties
+     */
+    public function aObjectOfTypeWithIdAnd($class, $id, $properties)
+    {
+        $object = new $class;
+        $object->setId($id);
+
+        $ro = new \ReflectionObject($object);
+        foreach (\json_decode($properties, true) as $name=>$value) {
+            if (!$ro->hasProperty($name)) {
+                continue;
+            }
+
+            $rp = $ro->getProperty($name);
+            $isAccessible = !($rp->isPrivate() || $rp->isProtected());
+            $rp->setAccessible(true);
+            $rp->setValue($object, $value);
+            $rp->setAccessible($isAccessible);
+        }
+
+        $this->getObjectRepository($class)->setObject(['id' => $id], $object);
+    }
+
 }

@@ -14,7 +14,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Teknoo\\East\\Website\\": "src/universal",
+            "Teknoo\\East\\Website\\": "src/",
             "Teknoo\\East\\WebsiteBundle\\": "infrastructures/symfony",
             "Teknoo\\East\\Website\\Doctrine\\": "infrastructures/doctrine",
             "Teknoo\\Tests\\East\\Website\\": "tests/universal",
@@ -25,33 +25,34 @@
     "require": {
         "php": ">=7.4",
         "ext-json": "*",
-        "doctrine/common": "~2.12",
-        "doctrine/annotations": "~1.8",
-        "gedmo/doctrine-extensions": "~2.4",
         "teknoo/immutable": "^2.0.1",
         "teknoo/states": "^4.0.9",
         "teknoo/recipe": "^2.0.5",
-        "teknoo/east-foundation": "^2.1.4",
+        "teknoo/east-foundation": "^2.1.5",
         "php-di/php-di": "~6.0"
     },
     "require-dev": {
+        "ext-simplexml" : "*",
+        "ext-mongodb" : "*",
         "phpunit/phpunit": "~9.1",
         "squizlabs/php_codesniffer": "~3.5",
         "pdepend/pdepend": "~2.7",
         "sebastian/phpcpd": "~5.0",
         "phploc/phploc": "~6.0",
-        "phpstan/phpstan": "^0.12.19",
-        "behat/behat": "~3.6",
+        "phpstan/phpstan": "^0.12.26",
+        "behat/behat": "~3.7",
         "behat/transliterator": "~1.3",
+        "php-di/symfony-bridge": "~3.0",
         "symfony/console": "~4.4||~5.0",
         "symfony/yaml": "~4.4||~5.0",
         "symfony/form": "~4.4||~5.0",
         "symfony/templating": "~4.4||~5.0",
         "symfony/security": "~4.4||~5.0",
+        "symfony/psr-http-message-bridge": "~2.0",
         "laminas/laminas-diactoros": "~2.2",
-        "stof/doctrine-extensions-bundle": "~1.3",
-        "doctrine/mongodb-odm": "~1.3",
-        "doctrine/mongodb-odm-bundle": "~3.6"
+        "doctrine/common": "~2.13",
+        "doctrine/mongodb-odm": "~2.1",
+        "doctrine/mongodb-odm-bundle": "~4.1"
     },
     "archive": {
         "exclude": ["features", "tests", "vendor", ".idea"]

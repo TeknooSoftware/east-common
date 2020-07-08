@@ -24,25 +24,11 @@ namespace Teknoo\Tests\East\Website\Infrastructure;
 
 use DI\Container;
 use DI\ContainerBuilder;
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Persistence\ObjectRepository;
-use Gedmo\Translatable\TranslatableListener;
 use Laminas\Diactoros\ResponseFactory;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use PHPUnit\Framework\TestCase;
 use Teknoo\East\Diactoros\CallbackStreamFactory;
-use Teknoo\East\Website\DBSource\ManagerInterface;
-use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
-use Teknoo\East\Website\DBSource\Repository\ItemRepositoryInterface;
-use Teknoo\East\Website\DBSource\Repository\MediaRepositoryInterface;
-use Teknoo\East\Website\DBSource\Repository\TypeRepositoryInterface;
-use Teknoo\East\Website\DBSource\Repository\UserRepositoryInterface;
-use Teknoo\East\Website\Middleware\LocaleMiddleware;
-use Teknoo\East\Website\Doctrine\Object\Content;
-use Teknoo\East\Website\Doctrine\Object\Item;
-use Teknoo\East\Website\Doctrine\Object\Media;
-use Teknoo\East\Website\Object\Type;
-use Teknoo\East\Website\Object\User;
 use function DI\string;
 
 /**
@@ -55,7 +41,7 @@ use function DI\string;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class ContainerTest extends \PHPUnit\Framework\TestCase
+class ContainerTest extends TestCase
 {
     /**
      * @return Container

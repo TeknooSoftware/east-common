@@ -33,6 +33,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Teknoo\East\Website\Object\Media;
+use Teknoo\East\Website\Object\MediaMetadata;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -52,13 +53,13 @@ class MediaType extends AbstractType
 
         $builder->addEventListener(
             FormEvents::PRE_SUBMIT,
-            function (FormEvent $event) {
+            static function (FormEvent $event) {
                 $form = $event->getForm();
                 $data = $event->getData();
-                $contentObject = $form->getNormData();
+                $mediaObject = $form->getNormData();
 
                 if (
-                    !$contentObject instanceof Media
+                    !$mediaObject instanceof Media
                     || !isset($data['image'])
                     || !$data['image'] instanceof UploadedFile
                 ) {
@@ -71,13 +72,17 @@ class MediaType extends AbstractType
                 $image = $data['image'];
 
                 if ($image->getError()) {
-                    $form->addError(new FormError($image->getErrorMessage()));
+                    $form->addError(new FormError((string) $image->getErrorMessage()));
                     return;
                 }
 
-                $contentObject->setFile($image->getPathname());
-                $contentObject->setLength($image->getSize());
-                $contentObject->setMimeType((string) $image->getClientMimeType());
+                $mediaObject->setLength($image->getSize());
+                $meta = new MediaMetadata(
+                    (string) $image->getClientMimeType(),
+                    (string) $image->getPathname(),
+                    (string) ($data['alternative'] ?? '')
+                );
+                $mediaObject->setMetadata($meta);
             }
         );
 

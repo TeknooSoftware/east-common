@@ -29,6 +29,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
+use PHPUnit\Framework\TestCase;
 use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\Foundation\EndPoint\RenderingInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
@@ -46,7 +47,7 @@ use Teknoo\East\Website\Query\Content\PublishedContentFromSlugQuery;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers      \Teknoo\East\Website\EndPoint\ContentEndPointTrait
  */
-class ContentEndPointTraitTest extends \PHPUnit\Framework\TestCase
+class ContentEndPointTraitTest extends TestCase
 {
     /**
      * @var ContentLoader

@@ -58,7 +58,7 @@ class TopItemByLocationQueryTest extends TestCase
 
         $repository->expects(self::once())
             ->method('findBy')
-            ->with(['location' => 'fooBar', 'parent' => null, 'deletedAt' => null,], $promise);
+            ->with(['location' => 'fooBar', 'deletedAt' => null,], $promise);
 
         self::assertInstanceOf(
             TopItemByLocationQuery::class,

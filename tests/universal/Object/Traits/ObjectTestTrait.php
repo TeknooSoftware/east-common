@@ -67,7 +67,7 @@ trait ObjectTestTrait
         );
     }
 
-    public function testGetUpdatedAt()
+    public function testUpdatedAt()
     {
         $date = new \DateTime('2017-06-13');
         self::assertEquals(
@@ -76,7 +76,29 @@ trait ObjectTestTrait
         );
     }
 
-    public function testGetDeletedAt()
+    public function testSetUpdatedAt()
+    {
+        $date = new \DateTime('2017-06-13');
+
+        $object = $this->buildObject();
+        self::assertInstanceOf(
+            \get_class($object),
+            $object->setUpdatedAt($date)
+        );
+
+        self::assertEquals(
+            $date,
+            $object->updatedAt()
+        );
+    }
+
+    public function testSetUpdatedAtExceptionOnBadArgument()
+    {
+        $this->expectException(\Throwable::class);
+        $this->buildObject()->setUpdatedAt(new \stdClass());
+    }
+
+    public function testDeletedAt()
     {
         $date = new \DateTime('2017-06-13');
         self::assertEquals(
@@ -88,16 +110,16 @@ trait ObjectTestTrait
     public function testSetDeletedAt()
     {
         $date = new \DateTime('2017-06-13');
-        
-        $Object = $this->buildObject();
+
+        $object = $this->buildObject();
         self::assertInstanceOf(
-            \get_class($Object),
-            $Object->setDeletedAt($date)
+            \get_class($object),
+            $object->setDeletedAt($date)
         );
 
         self::assertEquals(
             $date,
-            $Object->getDeletedAt()
+            $object->getDeletedAt()
         );
     }
 
@@ -105,27 +127,5 @@ trait ObjectTestTrait
     {
         $this->expectException(\Throwable::class);
         $this->buildObject()->setDeletedAt(new \stdClass());
-    }
-
-    public function testSetUpdatedAt()
-    {
-        $date = new \DateTime('2017-06-13');
-        
-        $Object = $this->buildObject();
-        self::assertInstanceOf(
-            \get_class($Object),
-            $Object->setUpdatedAt($date)
-        );
-
-        self::assertEquals(
-            $date,
-            $Object->updatedAt()
-        );
-    }
-
-    public function testSetUpdatedAtExceptionOnBadArgument()
-    {
-        $this->expectException(\Throwable::class);
-        $this->buildObject()->setUpdatedAt(new \stdClass());
     }
 }

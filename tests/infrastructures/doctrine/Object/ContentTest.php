@@ -23,7 +23,8 @@
 namespace Teknoo\Tests\East\Website\Doctrine\Object;
 
 use Teknoo\East\Website\Doctrine\Object\Content;
-use Teknoo\Tests\East\Website\Object\ContentTest as OriginaTest;
+use Teknoo\Tests\East\Website\Object\ContentTest as OriginalTest;
+
 /**
  * @copyright   Copyright (c) 2009-2020 Richard Déloge (richarddeloge@gmail.com)
  *
@@ -39,27 +40,27 @@ use Teknoo\Tests\East\Website\Object\ContentTest as OriginaTest;
  * @covers \Teknoo\East\Website\Object\Content\Draft
  * @covers \Teknoo\East\Website\Object\Content\Published
  */
-class ContentTest extends OriginaTest
+class ContentTest extends OriginalTest
 {
     public function buildObject(): Content
     {
         return new Content();
     }
 
-    public function testGetTranslatableLocale()
+    public function testGetLocaleField()
     {
         self::assertEquals(
             'fooBar',
-            $this->generateObjectPopulated(['localeField' => 'fooBar'])->getTranslatableLocale()
+            $this->generateObjectPopulated(['localeField' => 'fooBar'])->getLocaleField()
         );
     }
 
-    public function testSetTranslatableLocale()
+    public function testSetLocaleField()
     {
         $Object = $this->buildObject();
         self::assertInstanceOf(
             \get_class($Object),
-            $Object->setTranslatableLocale('fooBar')
+            $Object->setLocaleField('fooBar')
         );
 
         self::assertEquals(
@@ -67,5 +68,4 @@ class ContentTest extends OriginaTest
             $Object->getLocaleField()
         );
     }
-
 }

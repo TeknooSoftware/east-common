@@ -24,25 +24,23 @@ namespace Teknoo\Tests\East\Website\EndPoint;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamFactoryInterface;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\StreamInterface;
-use Teknoo\East\Diactoros\CallbackStream;
 use Teknoo\East\Diactoros\CallbackStreamFactory;
-use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
-use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
 use Teknoo\East\FoundationBundle\EndPoint\ResponseFactoryTrait;
 use Teknoo\East\Website\EndPoint\MediaEndPointTrait;
 use Teknoo\East\Website\Loader\MediaLoader;
-use Teknoo\East\Website\Object\Media;
+use Teknoo\East\Website\Doctrine\Object\Media;
+use Teknoo\East\Website\Object\MediaMetadata;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers      \Teknoo\East\Website\EndPoint\MediaEndPointTrait
  */
-class MediaEndPointTraitTest extends \PHPUnit\Framework\TestCase
+class MediaEndPointTraitTest extends TestCase
 {
     /**
      * @var MediaLoader
@@ -88,7 +86,24 @@ class MediaEndPointTraitTest extends \PHPUnit\Framework\TestCase
         $endPoint = new class($mediaLoader, new CallbackStreamFactory()) {
             use ResponseFactoryTrait;
             use MediaEndPointTrait;
+
+            private $stream;
+
+            public function setStream(StreamInterface $stream): self
+            {
+                $this->stream = $stream;
+
+                return $this;
+            }
+
+            protected function getStream(Media $media): StreamInterface
+            {
+                return $this->stream;
+            }
         };
+
+        $endPoint->setStream($stream = $this->createMock(StreamInterface::class));
+        $stream->expects(self::any())->method('__toString')->willReturn('fooBarContent');
 
         $endPoint->setResponseFactory($responseFactory);
 
@@ -110,7 +125,7 @@ class MediaEndPointTraitTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testInvokeFound()
+    public function testInvokeFoundWithoutMetadata()
     {
         $client = $this->createMock(ClientInterface::class);
         $client->expects(self::once())
@@ -132,33 +147,54 @@ class MediaEndPointTraitTest extends \PHPUnit\Framework\TestCase
             ->method('load')
             ->with('fooBar')
             ->willReturnCallback(function ($id, PromiseInterface $promise) {
-                $media = new class extends Media {
-                    public function getResource()
-                    {
-                        return $this->getFile()->getResource();
-                    }
-                };
+                $media = new Media();
 
-                $media->setFile(new class extends \MongoGridFSFile {
-                    public function getSize()
-                    {
-                        return 10;
-                    }
-
-                    public function getResource()
-                    {
-                        $hf = fopen('php://memory', 'rw+');
-                        fwrite($hf, 'fooBarContent');
-                        fseek($hf, 0);
-                        return $hf;
-                    }
-                });
                 $promise->success($media);
 
                 return $this->getMediaLoader();
             });
 
         $endPoint = $this->buildEndPoint();
+
+        $class = \get_class($endPoint);
+        self::assertInstanceOf(
+            $class,
+            $endPoint($client, 'fooBar')
+        );
+    }
+
+    public function testInvokeFoundWithMetadata()
+    {
+        $client = $this->createMock(ClientInterface::class);
+        $client->expects(self::once())
+            ->method('acceptResponse')
+            ->with($this->callback(function ($value) {
+                if ($value instanceof ResponseInterface) {
+                    $stream = $value->getBody();
+                    return 'fooBarContent' == (string) $stream;
+                }
+
+                return false;
+            }))
+            ->willReturnSelf();
+
+        $client->expects(self::never())->method('errorInRequest');
+
+        $this->getMediaLoader()
+            ->expects(self::any())
+            ->method('load')
+            ->with('fooBar')
+            ->willReturnCallback(function ($id, PromiseInterface $promise) {
+                $media = new Media();
+                $media->setMetadata(new MediaMetadata('contentType', 'fileName', 'alternative'));
+
+                $promise->success($media);
+
+                return $this->getMediaLoader();
+            });
+
+        $endPoint = $this->buildEndPoint();
+
         $class = \get_class($endPoint);
         self::assertInstanceOf(
             $class,

@@ -20,7 +20,7 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\WebsiteBundle\AdminEndPoint;
+namespace Teknoo\Tests\East\WebsiteBundle\Command;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\InputInterface;

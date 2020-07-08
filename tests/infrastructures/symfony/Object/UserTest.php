@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\Object;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Teknoo\East\WebsiteBundle\Object\User;
 use Teknoo\East\Website\Object\User as BaseUser;
@@ -31,7 +32,7 @@ use Teknoo\East\Website\Object\User as BaseUser;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers      \Teknoo\East\WebsiteBundle\Object\User
  */
-class UserTest extends \PHPUnit\Framework\TestCase
+class UserTest extends TestCase
 {
     /**
      * @var BaseUser

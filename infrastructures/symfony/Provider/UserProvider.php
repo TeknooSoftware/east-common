@@ -52,7 +52,7 @@ class UserProvider implements UserProviderInterface
         $loadedUser = null;
         $this->loader->query(
             new UserByEmailQuery($username),
-            new Promise(function ($user) use (&$loadedUser) {
+            new Promise(static function ($user) use (&$loadedUser) {
                 $loadedUser = new User($user);
             })
         );

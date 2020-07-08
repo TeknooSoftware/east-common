@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests\East\Website\Object;
 
+use PHPUnit\Framework\TestCase;
 use Teknoo\East\Website\Object\Block;
 use Teknoo\Tests\East\Website\Object\Traits\PopulateObjectTrait;
 
@@ -30,7 +31,7 @@ use Teknoo\Tests\East\Website\Object\Traits\PopulateObjectTrait;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers \Teknoo\East\Website\Object\Block
  */
-class BlockTest extends \PHPUnit\Framework\TestCase
+class BlockTest extends TestCase
 {
     use PopulateObjectTrait;
 

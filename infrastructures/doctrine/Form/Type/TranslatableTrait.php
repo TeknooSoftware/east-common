@@ -24,9 +24,9 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\Form\Type;
 
-use Gedmo\Translatable\TranslatableListener;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Teknoo\East\Website\Doctrine\Translatable\TranslatableListener;
 use Teknoo\East\Website\Object\ObjectInterface;
 
 /**
@@ -45,7 +45,7 @@ trait TranslatableTrait
     protected function addTranslatableLocaleFieldHidden(FormBuilderInterface $builder): self
     {
         $builder->add(
-            'translatableLocale',
+            'localeField',
             HiddenType::class
         );
 

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--infrastructures/doctrine/config/translate/Item.mongodb.yml-->
+<east-website-translation xmlns="http://xml.teknoo.it/schemas/doctrine/east-website-translation"
+                          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                          xsi:schemaLocation="http://xml.teknoo.it/schemas/doctrine/east-website-translation
+                                              http://xml.teknoo.it/schemas/doctrine/east-website-translation.xsd">
+
+    <object name="Teknoo\East\Website\Doctrine\Object\Item">
+        <field field-name="name" />
+    </object>
+</east-website-translation>

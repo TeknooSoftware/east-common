@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\Form\Type;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -36,7 +37,7 @@ use Teknoo\East\WebsiteBundle\Form\Type\MediaType;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers      \Teknoo\East\WebsiteBundle\Form\Type\MediaType
  */
-class MediaTypeTest extends \PHPUnit\Framework\TestCase
+class MediaTypeTest extends TestCase
 {
     public function buildForm()
     {

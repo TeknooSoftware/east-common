@@ -24,27 +24,14 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\Object;
 
-use Gedmo\Translatable\Translatable;
 use Teknoo\East\Website\Object\Item as OriginalItem;
 use Teknoo\States\Automated\AutomatedTrait;
 use Teknoo\States\Doctrine\Document\StandardTrait;
 
-class Item extends OriginalItem implements Translatable
+class Item extends OriginalItem
 {
     use AutomatedTrait;
     use StandardTrait {
         AutomatedTrait::updateStates insteadof StandardTrait;
-    }
-
-    public function setTranslatableLocale(?string $locale): self
-    {
-        $this->setLocaleField((string) $locale);
-
-        return $this;
-    }
-
-    public function getTranslatableLocale(): string
-    {
-        return $this->getLocaleField();
     }
 }

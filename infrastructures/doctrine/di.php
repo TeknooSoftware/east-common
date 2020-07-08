@@ -24,39 +24,131 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Persistence\ObjectRepository;
-use Gedmo\Translatable\TranslatableListener;
+use Doctrine\ODM\MongoDB\DocumentManager;
+use Doctrine\ODM\MongoDB\Mapping\ClassMetadata as OdmClassMetadata;
+use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
+use Doctrine\Persistence\Mapping\ClassMetadata;
+use Doctrine\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectRepository;
+use Doctrine\Persistence\Mapping\Driver\FileLocator;
 use Psr\Container\ContainerInterface;
+use ProxyManager\Proxy\GhostObjectInterface;
+use Teknoo\East\Foundation\Promise\PromiseInterface;
+use Teknoo\East\Website\Doctrine\Translatable\Mapping\Driver\SimpleXmlFactoryInterface;
+use Teknoo\East\Website\Doctrine\Translatable\Mapping\Driver\Xml;
+use Teknoo\East\Website\Doctrine\Translatable\Mapping\DriverFactoryInterface;
+use Teknoo\East\Website\Doctrine\Translatable\Mapping\DriverInterface;
+use Teknoo\East\Website\Doctrine\Translatable\Mapping\ExtensionMetadataFactory;
+use Teknoo\East\Website\Doctrine\Translatable\ObjectManager\Adapter\ODM as ODMAdapter;
+use Teknoo\East\Website\Doctrine\Translatable\Persistence\Adapter\ODM as ODMPersistence;
+use Teknoo\East\Website\Object\TranslatableInterface;
+use Teknoo\East\Website\Doctrine\Translatable\TranslatableListener;
 use Teknoo\East\Website\DBSource\ManagerInterface;
 use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
 use Teknoo\East\Website\DBSource\Repository\ItemRepositoryInterface;
 use Teknoo\East\Website\DBSource\Repository\MediaRepositoryInterface;
 use Teknoo\East\Website\DBSource\Repository\TypeRepositoryInterface;
 use Teknoo\East\Website\DBSource\Repository\UserRepositoryInterface;
-use Teknoo\East\Website\Doctrine\DBSource\ContentRepository;
-use Teknoo\East\Website\Doctrine\DBSource\ItemRepository;
-use Teknoo\East\Website\Doctrine\DBSource\Manager;
-use Teknoo\East\Website\Doctrine\DBSource\MediaRepository;
-use Teknoo\East\Website\Doctrine\DBSource\TypeRepository;
-use Teknoo\East\Website\Doctrine\DBSource\UserRepository;
+use Teknoo\East\Website\Doctrine\DBSource\Common\Manager;
+use Teknoo\East\Website\Doctrine\DBSource\ODM\ContentRepository as OdmContentRepository;
+use Teknoo\East\Website\Doctrine\DBSource\ODM\ItemRepository as OdmItemRepository;
+use Teknoo\East\Website\Doctrine\DBSource\ODM\MediaRepository as OdmMediaRepository;
+use Teknoo\East\Website\Doctrine\DBSource\ODM\TypeRepository as OdmTypeRepository;
+use Teknoo\East\Website\Doctrine\DBSource\ODM\UserRepository as OdmUserRepository;
+use Teknoo\East\Website\Doctrine\DBSource\Common\ContentRepository;
+use Teknoo\East\Website\Doctrine\DBSource\Common\ItemRepository;
+use Teknoo\East\Website\Doctrine\DBSource\Common\MediaRepository;
+use Teknoo\East\Website\Doctrine\DBSource\Common\TypeRepository;
+use Teknoo\East\Website\Doctrine\DBSource\Common\UserRepository;
 use Teknoo\East\Website\Doctrine\Object\Content;
 use Teknoo\East\Website\Doctrine\Object\Item;
 use Teknoo\East\Website\Doctrine\Object\Media;
+use Teknoo\East\Website\Doctrine\Translatable\Wrapper\DocumentWrapper;
+use Teknoo\East\Website\Doctrine\Translatable\Wrapper\FactoryInterface as WrapperFactory;
+use Teknoo\East\Website\Doctrine\Translatable\Wrapper\WrapperInterface;
 use Teknoo\East\Website\Middleware\LocaleMiddleware;
 use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Object\User;
+use Teknoo\East\Website\Service\ProxyDetectorInterface;
 
 use function DI\get;
-use function DI\create;
 
 return [
-    ManagerInterface::class => get(Manager::class),
-    Manager::class => create(Manager::class)
-        ->constructor(get(ObjectManager::class)),
+    TranslatableListener::class => static function (ContainerInterface $container): TranslatableListener {
+        $objectManager = $container->get(ObjectManager::class);
+        $eastManager = $container->get(ManagerInterface::class);
 
-    ContentRepositoryInterface::class => get(ContentRepository::class),
-    ContentRepository::class => function (ContainerInterface $container): ContentRepositoryInterface {
+        if (!$objectManager instanceof DocumentManager) {
+            throw new \RuntimeException('Sorry currently, this listener supports only ODM');
+        }
+
+        $eventManager = $objectManager->getEventManager();
+
+        $translatableManagerAdapter = new ODMAdapter(
+            $eastManager,
+            $objectManager
+        );
+
+        $persistence = new ODMPersistence($objectManager);
+
+        $mappingDriver = $objectManager->getConfiguration()->getMetadataDriverImpl();
+        if (null === $mappingDriver) {
+            throw new \RuntimeException('The Mapping Driver is not available from the Doctrine manager');
+        }
+
+        $extensionMetadataFactory = new ExtensionMetadataFactory(
+            $objectManager,
+            $objectManager->getMetadataFactory(),
+            $mappingDriver,
+            new class implements DriverFactoryInterface {
+                public function __invoke(FileLocator $locator): DriverInterface
+                {
+                    return new Xml(
+                        $locator,
+                        new class implements SimpleXmlFactoryInterface {
+                            public function __invoke(string $file): \SimpleXMLElement
+                            {
+                                return new \SimpleXMLElement($file, 0, true);
+                            }
+                        }
+                    );
+                }
+            }
+        );
+
+        $translatableListener = new TranslatableListener(
+            $extensionMetadataFactory,
+            $translatableManagerAdapter,
+            $persistence,
+            new class implements WrapperFactory {
+                public function __invoke(TranslatableInterface $object, ClassMetadata $metadata): WrapperInterface
+                {
+                    if (!$metadata instanceof OdmClassMetadata) {
+                        throw new \RuntimeException('Error wrapper support only ' . OdmClassMetadata::class);
+                    }
+
+                    return new DocumentWrapper($object, $metadata);
+                }
+            }
+        );
+
+        $eventManager->addEventSubscriber($translatableListener);
+
+        return $translatableListener;
+    },
+
+    ManagerInterface::class => get(Manager::class),
+    Manager::class => static function (ContainerInterface $container): Manager {
+        $objectManager = $container->get(ObjectManager::class);
+        return new Manager($objectManager);
+    },
+
+    ContentRepositoryInterface::class => static function (ContainerInterface $container): ContentRepositoryInterface {
+        $repository = $container->get(ObjectManager::class)->getRepository(Content::class);
+        if ($repository instanceof DocumentRepository) {
+            return new OdmContentRepository($repository);
+        }
+
         $repository = $container->get(ObjectManager::class)->getRepository(Content::class);
         if ($repository instanceof ObjectRepository) {
             return new ContentRepository($repository);
@@ -68,9 +160,12 @@ return [
         ));
     },
 
-    ItemRepositoryInterface::class => get(ItemRepository::class),
-    ItemRepository::class => function (ContainerInterface $container): ItemRepositoryInterface {
+    ItemRepositoryInterface::class => static function (ContainerInterface $container): ItemRepositoryInterface {
         $repository = $container->get(ObjectManager::class)->getRepository(Item::class);
+        if ($repository instanceof DocumentRepository) {
+            return new OdmItemRepository($repository);
+        }
+
         if ($repository instanceof ObjectRepository) {
             return new ItemRepository($repository);
         }
@@ -81,9 +176,12 @@ return [
         ));
     },
 
-    MediaRepositoryInterface::class => get(MediaRepository::class),
-    MediaRepository::class => function (ContainerInterface $container): MediaRepositoryInterface {
+    MediaRepositoryInterface::class => static function (ContainerInterface $container): MediaRepositoryInterface {
         $repository = $container->get(ObjectManager::class)->getRepository(Media::class);
+        if ($repository instanceof DocumentRepository) {
+            return new OdmMediaRepository($repository);
+        }
+
         if ($repository instanceof ObjectRepository) {
             return new MediaRepository($repository);
         }
@@ -94,9 +192,12 @@ return [
         ));
     },
 
-    TypeRepositoryInterface::class => get(TypeRepository::class),
-    TypeRepository::class => function (ContainerInterface $container): TypeRepositoryInterface {
+    TypeRepositoryInterface::class => static function (ContainerInterface $container): TypeRepositoryInterface {
         $repository = $container->get(ObjectManager::class)->getRepository(Type::class);
+        if ($repository instanceof DocumentRepository) {
+            return new OdmTypeRepository($repository);
+        }
+
         if ($repository instanceof ObjectRepository) {
             return new TypeRepository($repository);
         }
@@ -107,9 +208,12 @@ return [
         ));
     },
 
-    UserRepositoryInterface::class => get(UserRepository::class),
-    UserRepository::class => function (ContainerInterface $container): UserRepositoryInterface {
+    UserRepositoryInterface::class => static function (ContainerInterface $container): UserRepositoryInterface {
         $repository = $container->get(ObjectManager::class)->getRepository(User::class);
+        if ($repository instanceof DocumentRepository) {
+            return new OdmUserRepository($repository);
+        }
+
         if ($repository instanceof ObjectRepository) {
             return new UserRepository($repository);
         }
@@ -120,13 +224,44 @@ return [
         ));
     },
 
-    LocaleMiddleware::class => function (ContainerInterface $container): LocaleMiddleware {
-        if ($container->has('stof_doctrine_extensions.listener.translatable')) {
-            $listener = $container->get('stof_doctrine_extensions.listener.translatable');
-        } else {
+    LocaleMiddleware::class => static function (ContainerInterface $container): LocaleMiddleware {
+        if (
+            $container->has(ObjectManager::class)
+            && ($container->get(ObjectManager::class)) instanceof DocumentManager
+        ) {
             $listener = $container->get(TranslatableListener::class);
+            $callback = [$listener, 'setLocale'];
+        } else {
+            $callback = static function () {
+                //do nothing
+            };
         }
 
-        return new LocaleMiddleware([$listener, 'setTranslatableLocale']);
+        return new LocaleMiddleware($callback);
+    },
+
+    ProxyDetectorInterface::class => static function (): ProxyDetectorInterface {
+        return new class implements ProxyDetectorInterface {
+            public function checkIfInstanceBehindProxy(
+                object $object,
+                PromiseInterface $promise
+            ): ProxyDetectorInterface {
+                if (!$object instanceof GhostObjectInterface) {
+                    $promise->fail(new \Exception('Object is not behind a proxy'));
+
+                    return $this;
+                }
+
+                if ($object->isProxyInitialized()) {
+                    $promise->fail(new \Exception('Proxy is already initialized'));
+
+                    return $this;
+                }
+
+                $promise->success($object);
+
+                return $this;
+            }
+        };
     },
 ];

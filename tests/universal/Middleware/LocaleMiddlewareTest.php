@@ -23,6 +23,7 @@
 namespace Teknoo\Tests\East\Website\Middleware;
 
 use Psr\Http\Message\ServerRequestInterface;
+use PHPUnit\Framework\TestCase;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
@@ -35,7 +36,7 @@ use Teknoo\East\Website\Middleware\ViewParameterInterface;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers      \Teknoo\East\Website\Middleware\LocaleMiddleware
  */
-class LocaleMiddlewareTest extends \PHPUnit\Framework\TestCase
+class LocaleMiddlewareTest extends TestCase
 {
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject

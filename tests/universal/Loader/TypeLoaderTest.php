@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests\East\Website\Loader;
 
+use PHPUnit\Framework\TestCase;
 use Teknoo\East\Website\DBSource\Repository\TypeRepositoryInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Object\Type;
@@ -34,7 +35,7 @@ use Teknoo\East\Website\Loader\TypeLoader;
  * @covers      \Teknoo\East\Website\Loader\TypeLoader
  * @covers      \Teknoo\East\Website\Loader\LoaderTrait
  */
-class TypeLoaderTest extends \PHPUnit\Framework\TestCase
+class TypeLoaderTest extends TestCase
 {
     use LoaderTestTrait;
 

@@ -1,6 +1,0 @@
-#infrastructures/doctrine/config/doctrine/Content.mongodb.yml
-Teknoo\East\Website\Doctrine\Object\Content:
-  type: 'documents'
-  collection: 'contents'
-  lifecycleCallbacks:
-    postLoad: ['postLoadDoctrine']

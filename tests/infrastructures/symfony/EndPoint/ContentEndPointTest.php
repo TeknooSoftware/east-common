@@ -25,7 +25,6 @@ namespace Teknoo\Tests\East\WebsiteBundle\EndPoint;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
-use Psr\Http\Message\StreamInterface;
 use Symfony\Component\Templating\EngineInterface;
 use Teknoo\East\Diactoros\CallbackStream;
 use Teknoo\East\WebsiteBundle\EndPoint\ContentEndPoint;
@@ -88,7 +87,8 @@ class ContentEndPointTest extends ContentEndPointTraitTest
         $responseFactory = $this->createMock(ResponseFactoryInterface::class);
         $responseFactory->expects(self::any())->method('createResponse')->willReturn($response);
 
-        $stream = new CallbackStream(function () {});
+        $stream = new CallbackStream(function () {
+        });
         $streamFactory = $this->createMock(StreamFactoryInterface::class);
         $streamFactory->expects(self::any())->method('createStream')->willReturn($stream);
         $streamFactory->expects(self::any())->method('createStreamFromFile')->willReturn($stream);

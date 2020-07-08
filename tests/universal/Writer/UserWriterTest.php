@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests\East\Website\Writer;
 
+use PHPUnit\Framework\TestCase;
 use Teknoo\East\Website\Object\User;
 use Teknoo\East\Website\Writer\UserWriter;
 use Teknoo\East\Website\Writer\WriterInterface;
@@ -32,13 +33,13 @@ use Teknoo\East\Website\Writer\WriterInterface;
  * @covers \Teknoo\East\Website\Writer\UserWriter
  * @covers \Teknoo\East\Website\Writer\PersistTrait
  */
-class UserWriterTest extends \PHPUnit\Framework\TestCase
+class UserWriterTest extends TestCase
 {
     use PersistTestTrait;
 
     public function buildWriter(): WriterInterface
     {
-        return new UserWriter($this->getObjectManager());
+        return new UserWriter($this->getObjectManager(), $this->getDatesServiceMock());
     }
 
     public function getObject()

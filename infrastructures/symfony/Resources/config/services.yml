@@ -1,7 +1,7 @@
 parameters:
   #Front endpoints
   teknoo.east.website.endpoint.content.class: 'Teknoo\East\WebsiteBundle\EndPoint\ContentEndPoint'
-  teknoo.east.website.endpoint.media.class: 'Teknoo\East\WebsiteBundle\EndPoint\MediaEndPoint'
+  teknoo.east.website.endpoint.media.class: 'Teknoo\East\Website\Doctrine\EndPoint\ODM\MediaEndPoint'
   teknoo.east.website.endpoint.static.class: 'Teknoo\East\WebsiteBundle\EndPoint\StaticEndPoint'
 
   #Admin endpoints
@@ -16,6 +16,7 @@ parameters:
   teknoo.east.website.form_type.media.class: 'Teknoo\East\WebsiteBundle\Form\Type\MediaType'
   teknoo.east.website.form_type.type.class: 'Teknoo\East\WebsiteBundle\Form\Type\TypeType'
   teknoo.east.website.form_type.user.class: 'Teknoo\East\WebsiteBundle\Form\Type\UserType'
+  teknoo.east.website.form_type.doctrine.class: 'Doctrine\Bundle\MongoDBBundle\Form\Type\DocumentType'
 
   #Class
   teknoo.east.website.item.class: 'Teknoo\East\Website\Doctrine\Object\Item'
@@ -102,6 +103,12 @@ services:
   teknoo.east.website.deleting.user:
     synthetic: true
 
+  Teknoo\East\Website\Service\DatesService:
+    synthetic: true
+
+  Teknoo\East\Website\Service\FindSlugService:
+    synthetic: true
+
   #Front endpoints
   teknoo.east.website.endpoint.content:
     class: '%teknoo.east.website.endpoint.content.class%'
@@ -124,6 +131,7 @@ services:
       - '@teknoo.east.website.endpoint.media.stream.factory'
     calls:
       - ['setResponseFactory', ['@Psr\Http\Message\ResponseFactoryInterface']]
+      - ['registerRepository', ['@doctrine_mongodb.odm.default_document_manager']]
     public: true
 
   teknoo.east.website.endpoint.static:
@@ -149,6 +157,8 @@ services:
       - ['setResponseFactory', ['@Psr\Http\Message\ResponseFactoryInterface']]
       - ['setStreamFactory', ['@Psr\Http\Message\StreamFactoryInterface']]
       - ['setTemplating', ['@templating.engine.twig']]
+      - ['setDatesService', ['@Teknoo\East\Website\Service\DatesService']]
+      - ['setFindSlugService', ['@Teknoo\East\Website\Service\FindSlugService', 'slug']]
     public: true
 
   teknoo.east.website.endpoint.admin.list.abstract:
@@ -167,6 +177,7 @@ services:
       - ['setStreamFactory', ['@Psr\Http\Message\StreamFactoryInterface']]
       - ['setTemplating', ['@templating.engine.twig']]
       - ['setRouter', ['@router']]
+      - ['setFindSlugService', ['@Teknoo\East\Website\Service\FindSlugService', 'slug']]
     public: true
 
   #Items
@@ -184,6 +195,7 @@ services:
       - ['setWriter', ['@Teknoo\East\Website\Writer\ItemWriter']]
       - ['setFormClass', ['%teknoo.east.website.form_type.item.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.item.edit.file%']]
+      - ['setFormOptions', [{ "doctrine_type": "%teknoo.east.website.form_type.doctrine.class%"}]]
     public: true
 
   teknoo.east.website.endpoint.admin.list.item:
@@ -196,10 +208,12 @@ services:
   teknoo.east.website.endpoint.admin.new.item:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
     calls:
+      - ['setLoader', ['@Teknoo\East\Website\Loader\ItemLoader']]
       - ['setWriter', ['@Teknoo\East\Website\Writer\ItemWriter']]
       - ['setFormClass', ['%teknoo.east.website.form_type.item.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.item.new.file%']]
       - ['setObjectClass', ['%teknoo.east.website.item.class%']]
+      - ['setFormOptions', [{ "doctrine_type": "%teknoo.east.website.form_type.doctrine.class%"}]]
     public: true
 
   #Contents
@@ -217,6 +231,7 @@ services:
       - ['setWriter', ['@Teknoo\East\Website\Writer\ContentWriter']]
       - ['setFormClass', ['%teknoo.east.website.form_type.content.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.content.edit.file%']]
+      - ['setFormOptions', [{ "doctrine_type": "%teknoo.east.website.form_type.doctrine.class%"}]]
     public: true
 
   teknoo.east.website.endpoint.admin.list.content:
@@ -229,10 +244,12 @@ services:
   teknoo.east.website.endpoint.admin.new.content:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
     calls:
+      - ['setLoader', ['@Teknoo\East\Website\Loader\ContentLoader']]
       - ['setWriter', ['@Teknoo\East\Website\Writer\ContentWriter']]
       - ['setFormClass', ['%teknoo.east.website.form_type.content.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.content.new.file%']]
       - ['setObjectClass', ['%teknoo.east.website.content.class%']]
+      - ['setFormOptions', [{ "doctrine_type": "%teknoo.east.website.form_type.doctrine.class%"}]]
     public: true
 
   #Media
@@ -253,6 +270,7 @@ services:
   teknoo.east.website.endpoint.admin.new.media:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
     calls:
+      - ['setLoader', ['@Teknoo\East\Website\Loader\MediaLoader']]
       - ['setWriter', ['@Teknoo\East\Website\Writer\MediaWriter']]
       - ['setFormClass', ['%teknoo.east.website.form_type.media.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.media.new.file%']]
@@ -286,6 +304,7 @@ services:
   teknoo.east.website.endpoint.admin.new.type:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
     calls:
+      - ['setLoader', ['@Teknoo\East\Website\Loader\TypeLoader']]
       - ['setWriter', ['@Teknoo\East\Website\Writer\TypeWriter']]
       - ['setFormClass', ['%teknoo.east.website.form_type.type.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.type.new.file%']]
@@ -319,6 +338,7 @@ services:
   teknoo.east.website.endpoint.admin.new.user:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
     calls:
+      - ['setLoader', ['@Teknoo\East\Website\Loader\UserLoader']]
       - ['setWriter', ['@teknoo.east.website.bundle.writer.user']]
       - ['setFormClass', ['%teknoo.east.website.form_type.user.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.user.new.file%']]

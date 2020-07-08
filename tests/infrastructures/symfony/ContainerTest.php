@@ -29,6 +29,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
 use Teknoo\East\Foundation\Router\RouterInterface;
+use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
 use Teknoo\East\Website\DBSource\Repository\ItemRepositoryInterface;
 use Teknoo\East\WebsiteBundle\Middleware\LocaleMiddleware;
 
@@ -79,6 +80,7 @@ class ContainerTest extends TestCase
         $container->set(LoggerInterface::class, $this->createMock(LoggerInterface::class));
         $container->set(RouterInterface::class, $this->createMock(RouterInterface::class));
         $container->set(ItemRepositoryInterface::class, $this->createMock(ItemRepositoryInterface::class));
+        $container->set(ContentRepositoryInterface::class, $this->createMock(ContentRepositoryInterface::class));
         $container->set('translator', $this->createMock(LocaleAwareInterface::class));
 
         self::assertInstanceOf(

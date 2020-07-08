@@ -22,15 +22,15 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Doctrine\DBSource;
+namespace Teknoo\East\Website\Doctrine\DBSource\ODM;
 
-use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
+use Teknoo\East\Website\DBSource\RepositoryInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class ContentRepository implements ContentRepositoryInterface
+class TranslationRepository implements RepositoryInterface
 {
     use RepositoryTrait;
 }

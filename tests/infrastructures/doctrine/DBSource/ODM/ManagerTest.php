@@ -20,16 +20,16 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Doctrine\DBSource;
+namespace Teknoo\Tests\East\Website\Doctrine\DBSource\ODM;
 
 use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
-use Teknoo\East\Website\Doctrine\DBSource\Manager;
+use Teknoo\East\Website\Doctrine\DBSource\ODM\Manager;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Doctrine\DBSource\Manager
+ * @covers \Teknoo\East\Website\Doctrine\DBSource\ODM\Manager
  */
 class ManagerTest extends TestCase
 {

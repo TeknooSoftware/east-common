@@ -62,7 +62,10 @@ class TopItemByLocationQuery implements QueryInterface, ImmutableInterface
                 'deletedAt' => null,
             ],
             $promise,
-            ['parent' => 'ASC', 'position' => 'ASC']
+            [
+                'parent' => 'ASC',
+                'position' => 'ASC'
+            ]
         );
 
         return $this;

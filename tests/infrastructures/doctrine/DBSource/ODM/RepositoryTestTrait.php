@@ -20,7 +20,7 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Doctrine\DBSource;
+namespace Teknoo\Tests\East\Website\Doctrine\DBSource\ODM;
 
 use Doctrine\Persistence\ObjectRepository;
 use Doctrine\ODM\MongoDB\Query\Builder;

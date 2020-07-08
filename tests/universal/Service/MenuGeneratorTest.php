@@ -24,6 +24,7 @@ namespace Teknoo\Tests\East\Website\Service;
 
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
+use Teknoo\East\Website\Loader\ContentLoader;
 use Teknoo\East\Website\Loader\ItemLoader;
 use Teknoo\East\Website\Object\Item;
 use Teknoo\East\Website\Query\Item\TopItemByLocationQuery;
@@ -42,6 +43,11 @@ class MenuGeneratorTest extends TestCase
     private $itemLoader;
 
     /**
+     * @var ContentLoader
+     */
+    private $contentLoader;
+
+    /**
      * @return ItemLoader|\PHPUnit\Framework\MockObject\MockObject
      */
     public function getItemLoader(): ItemLoader
@@ -54,11 +60,23 @@ class MenuGeneratorTest extends TestCase
     }
 
     /**
+     * @return ContentLoader|\PHPUnit\Framework\MockObject\MockObject
+     */
+    public function getContentLoader(): ContentLoader
+    {
+        if (!$this->contentLoader instanceof ItemLoader) {
+            $this->contentLoader = $this->createMock(ContentLoader::class);
+        }
+
+        return $this->contentLoader;
+    }
+
+    /**
      * @return MenuGenerator
      */
     public function buildService()
     {
-        return new MenuGenerator($this->getItemLoader());
+        return new MenuGenerator($this->getItemLoader(), $this->getContentLoader());
     }
 
     public function testExtract()

@@ -20,19 +20,19 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Doctrine\DBSource;
+namespace Teknoo\Tests\East\Website\Doctrine\DBSource\ODM;
 
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
-use Teknoo\East\Website\Doctrine\DBSource\TypeRepository;
+use Teknoo\East\Website\Doctrine\DBSource\ODM\MediaRepository;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Doctrine\DBSource\TypeRepository
- * @covers \Teknoo\East\Website\Doctrine\DBSource\RepositoryTrait
+ * @covers \Teknoo\East\Website\Doctrine\DBSource\ODM\MediaRepository
+ * @covers \Teknoo\East\Website\Doctrine\DBSource\ODM\RepositoryTrait
  */
-class TypeRepositoryTest extends TestCase
+class MediaRepositoryTest extends TestCase
 {
     use RepositoryTestTrait;
 
@@ -41,6 +41,6 @@ class TypeRepositoryTest extends TestCase
      */
     public function buildRepository(): RepositoryInterface
     {
-        return new TypeRepository($this->getDoctrineObjectRepositoryMock());
+        return new MediaRepository($this->getDoctrineObjectRepositoryMock());
     }
 }

@@ -92,7 +92,7 @@ return [
 
     //Menu
     MenuGenerator::class => create(MenuGenerator::class)
-        ->constructor(get(ItemLoader::class)),
+        ->constructor(get(ItemLoader::class), get(ContentLoader::class)),
     MenuMiddleware::class => create(MenuMiddleware::class)
         ->constructor(get(MenuGenerator::class)),
 

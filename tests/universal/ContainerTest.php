@@ -195,6 +195,7 @@ class ContainerTest extends TestCase
     {
         $container = $this->buildContainer();
         $container->set(ItemRepositoryInterface::class, $this->createMock(ItemRepositoryInterface::class));
+        $container->set(ContentRepositoryInterface::class, $this->createMock(ContentRepositoryInterface::class));
         $loader = $container->get(MenuGenerator::class);
 
         self::assertInstanceOf(
@@ -207,6 +208,7 @@ class ContainerTest extends TestCase
     {
         $container = $this->buildContainer();
         $container->set(ItemRepositoryInterface::class, $this->createMock(ItemRepositoryInterface::class));
+        $container->set(ContentRepositoryInterface::class, $this->createMock(ContentRepositoryInterface::class));
         $loader = $container->get(MenuMiddleware::class);
 
         self::assertInstanceOf(
@@ -226,6 +228,7 @@ class ContainerTest extends TestCase
         $container->set(LoggerInterface::class, $this->createMock(LoggerInterface::class));
         $container->set(RouterInterface::class, $this->createMock(RouterInterface::class));
         $container->set(ItemRepositoryInterface::class, $this->createMock(ItemRepositoryInterface::class));
+        $container->set(ContentRepositoryInterface::class, $this->createMock(ContentRepositoryInterface::class));
 
         $manager1 = $container->get(Manager::class);
         $manager2 = $container->get(ManagerInterface::class);

@@ -22,11 +22,13 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Query\User;
+namespace Teknoo\East\Website\Query\Content;
 
+use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
+use Teknoo\East\Website\Object\PublishableInterface;
 use Teknoo\East\Website\Query\QueryInterface;
 use Teknoo\Immutable\ImmutableInterface;
 use Teknoo\Immutable\ImmutableTrait;
@@ -35,17 +37,17 @@ use Teknoo\Immutable\ImmutableTrait;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class UserByEmailQuery implements QueryInterface, ImmutableInterface
+class PublishedContentFromIdsQuery implements QueryInterface, ImmutableInterface
 {
     use ImmutableTrait;
 
-    private string $email;
+    private array $ids;
 
-    public function __construct(string $email)
+    public function __construct(array $ids)
     {
         $this->uniqueConstructorCheck();
 
-        $this->email = $email;
+        $this->ids = $ids;
     }
 
     /**
@@ -56,10 +58,10 @@ class UserByEmailQuery implements QueryInterface, ImmutableInterface
         RepositoryInterface $repository,
         PromiseInterface $promise
     ): QueryInterface {
-        $repository->findOneBy(
+        $repository->findBy(
             [
-                'email' => $this->email,
-                'deletedAt' => null
+                'id' => ['$in' => $this->ids],
+                'deletedAt' => null,
             ],
             $promise
         );

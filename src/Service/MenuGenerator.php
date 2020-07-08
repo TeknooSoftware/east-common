@@ -25,8 +25,10 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Service;
 
 use Teknoo\East\Foundation\Promise\Promise;
+use Teknoo\East\Website\Loader\ContentLoader;
 use Teknoo\East\Website\Loader\ItemLoader;
 use Teknoo\East\Website\Object\Item;
+use Teknoo\East\Website\Query\Content\PublishedContentFromIdsQuery;
 use Teknoo\East\Website\Query\Item\TopItemByLocationQuery;
 
 /**
@@ -37,9 +39,12 @@ class MenuGenerator
 {
     private ItemLoader $itemLoader;
 
-    public function __construct(ItemLoader $itemLoader)
+    private ContentLoader $contentLoader;
+
+    public function __construct(ItemLoader $itemLoader, ContentLoader $contentLoader)
     {
         $this->itemLoader = $itemLoader;
+        $this->contentLoader = $contentLoader;
     }
 
     /**
@@ -47,28 +52,58 @@ class MenuGenerator
      */
     public function extract(string $location): iterable
     {
-        $stacks = [];
+        $itemsStacks = [];
+        $contentsStacks = [];
 
-        $promise = new Promise(function ($items) use (&$stacks) {
+        /**
+         * @var Item[] $items
+         */
+        $itemsSorting = function (iterable $items) use (&$itemsStacks, &$contentsStacks) {
             foreach ($items as $item) {
+                //To fetch all contents in a second query, in agnostic of DBMS
+                if (null !== ($content = $item->getContent())) {
+                    $contentsStacks[$content->getId()] = $item;
+                }
+
                 if (!($parent = $item->getParent())) {
-                    $stacks['top'][] = $item;
+                    $itemsStacks['top'][] = $item;
 
                     continue;
                 }
 
-                $stacks[$parent->getId()][] = $item;
+                $itemsStacks[$parent->getId()][] = $item;
             }
-        });
+
+            if (empty($contentsStacks)) {
+                return;
+            }
+
+            $this->contentLoader->query(
+                new PublishedContentFromIdsQuery(\array_keys($contentsStacks)),
+                new Promise(function (iterable $contents) use (&$contentsStacks) {
+                    foreach ($contents as $content) {
+                        $cId = $content->getId();
+
+                        if (!isset($contentsStacks[$cId])) {
+                            continue;
+                        }
+
+                        $contentsStacks[$cId]->setContent($content);
+                    }
+                })
+            );
+        };
+
+        $promise = new Promise($itemsSorting);
 
         $this->itemLoader->query(new TopItemByLocationQuery($location), $promise);
 
-        foreach ($stacks['top'] as $element) {
-            $haveChildren = !empty($stacks[$id = $element->getId()]);
+        foreach ($itemsStacks['top'] as $element) {
+            $haveChildren = !empty($itemsStacks[$id = $element->getId()]);
 
             if ($haveChildren) {
                 yield 'parent' => $element;
-                foreach ($stacks[$id] as $child) {
+                foreach ($itemsStacks[$id] as $child) {
                     yield $id => $child;
                 }
             } else {

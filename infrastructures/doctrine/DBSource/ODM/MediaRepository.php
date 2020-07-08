@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * East Website.
  *
  * LICENSE
@@ -20,27 +20,17 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Doctrine\DBSource;
+declare(strict_types=1);
 
-use PHPUnit\Framework\TestCase;
-use Teknoo\East\Website\DBSource\RepositoryInterface;
-use Teknoo\East\Website\Doctrine\DBSource\ItemRepository;
+namespace Teknoo\East\Website\Doctrine\DBSource\ODM;
+
+use Teknoo\East\Website\DBSource\Repository\MediaRepositoryInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Doctrine\DBSource\ItemRepository
- * @covers \Teknoo\East\Website\Doctrine\DBSource\RepositoryTrait
  */
-class ItemRepositoryTest extends TestCase
+class MediaRepository implements MediaRepositoryInterface
 {
-    use RepositoryTestTrait;
-
-    /**
-     * @inheritDoc
-     */
-    public function buildRepository(): RepositoryInterface
-    {
-        return new ItemRepository($this->getDoctrineObjectRepositoryMock());
-    }
+    use RepositoryTrait;
 }

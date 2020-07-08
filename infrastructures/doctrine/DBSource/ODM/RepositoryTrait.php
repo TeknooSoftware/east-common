@@ -22,7 +22,7 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Doctrine\DBSource;
+namespace Teknoo\East\Website\Doctrine\DBSource\ODM;
 
 use Doctrine\Persistence\ObjectRepository;
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;

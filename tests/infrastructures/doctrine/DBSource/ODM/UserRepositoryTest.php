@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * East Website.
  *
  * LICENSE
@@ -20,17 +20,27 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-declare(strict_types=1);
+namespace Teknoo\Tests\East\Website\Doctrine\DBSource\ODM;
 
-namespace Teknoo\East\Website\Doctrine\DBSource;
-
-use Teknoo\East\Website\DBSource\Repository\TypeRepositoryInterface;
+use PHPUnit\Framework\TestCase;
+use Teknoo\East\Website\DBSource\RepositoryInterface;
+use Teknoo\East\Website\Doctrine\DBSource\ODM\UserRepository;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ * @covers \Teknoo\East\Website\Doctrine\DBSource\ODM\UserRepository
+ * @covers \Teknoo\East\Website\Doctrine\DBSource\ODM\RepositoryTrait
  */
-class TypeRepository implements TypeRepositoryInterface
+class UserRepositoryTest extends TestCase
 {
-    use RepositoryTrait;
+    use RepositoryTestTrait;
+
+    /**
+     * @inheritDoc
+     */
+    public function buildRepository(): RepositoryInterface
+    {
+        return new UserRepository($this->getDoctrineObjectRepositoryMock());
+    }
 }

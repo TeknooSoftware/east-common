@@ -44,7 +44,7 @@ trait ExprConversionTrait
             }
 
             if ($value instanceof In) {
-                $final[$key] = ['$in' => $value];
+                $final[$key] = ['$in' => $value->getValues()];
             }
         }
 

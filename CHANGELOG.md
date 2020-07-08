@@ -1,5 +1,29 @@
 #Teknoo Software - Website - Change Log
 
+##[3.0.0-beta1] - 2020-07-08
+###Beta Release
+###Change
+- Migrate to Doctrine ODM 2
+- Migrate to new GridFS Repository
+- Migrate Gedmo's Timestamp to intern function and service
+- Migrate Gedmo's Slug to intern function and service
+- Migrate to Doctrine XML Mapping
+- Reworking Translation : Fork Gedmo Translation, clean, simplify, rework, in East philosophy
+- Remove Gedmo
+- Create new Translation configuration
+- Migrate Universal into src root
+- Pagination Query support countable
+- Update Composer libs
+- Add full symfony stack in behat test for crud, like in real
+- ContentType and ItemType are not hardcoded to use DocumentType, but a Type passed in options via the EndPoint
+- Optimize menu to limit requests
+- Expr In Agnostic support 
+- Change Doctrine Repository behavior to create classes dedicated to ODM
+- Create Common repository for non ODM with fallback feature
+- Autoselect Good Repository in DI
+- Migrate MediaEndPoint into ODM namespace
+- Add ProxyDetectorInterface and a snippet into DI to detect if an object is behind a proxy agnosticaly
+
 ##[2.1.2] - 2020-04-23
 ###Stable Release
 ###Change

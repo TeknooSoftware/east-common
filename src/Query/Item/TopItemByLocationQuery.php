@@ -59,11 +59,10 @@ class TopItemByLocationQuery implements QueryInterface, ImmutableInterface
         $repository->findBy(
             [
                 'location' => $this->location,
-                'parent' => null,
                 'deletedAt' => null,
             ],
             $promise,
-            [ 'position' => 'ASC', ]
+            ['parent' => 'ASC', 'position' => 'ASC']
         );
 
         return $this;

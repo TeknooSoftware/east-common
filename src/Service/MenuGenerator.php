@@ -48,14 +48,35 @@ class MenuGenerator
     public function extract(string $location): iterable
     {
         $stacks = [];
+
+        /**
+         * @var array<int, Item> $items
+         */
         $promise = new Promise(function ($items) use (&$stacks) {
-            $stacks = $items;
+            foreach ($items as $item) {
+                if (!($parent = $item->getParent())) {
+                    $stacks['top'][] = $item;
+
+                    continue;
+                }
+
+                $stacks[$parent->getId()][] = $item;
+            }
         });
 
         $this->itemLoader->query(new TopItemByLocationQuery($location), $promise);
 
-        foreach ($stacks as $element) {
-            yield $element;
+        foreach ($stacks['top'] as $element) {
+            $haveChildren = !empty($stacks[$id = $element->getId()]);
+
+            if ($haveChildren) {
+                yield 'parent' => $element;
+                foreach ($stacks[$id] as $child) {
+                    yield $id => $child;
+                }
+            } else {
+                yield 'top' => $element;
+            }
         }
 
         return $this;

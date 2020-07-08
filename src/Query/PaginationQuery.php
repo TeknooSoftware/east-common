@@ -90,7 +90,7 @@ class PaginationQuery implements QueryInterface, ImmutableInterface
                         $criteria,
                         new Promise(
                             static function ($count) use ($promise, $result) {
-                                $iterator = new class ($count, $result) implements \Countable, \IteratorAggregate {
+                                $iterator = new class($count, $result) implements \Countable, \IteratorAggregate {
                                     private int $count;
 
                                     private \Traversable $iterator;

@@ -20,7 +20,8 @@
         <reference-one
                 field="parent"
                 target-document="Teknoo\East\Website\Object\Item"
-                inversed-by="children">
+                inversed-by="children"
+                orphan-removal="true">
             <cascade>
                 <all/>
             </cascade>

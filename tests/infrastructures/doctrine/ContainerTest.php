@@ -27,12 +27,12 @@ use DI\ContainerBuilder;
 use Doctrine\ODM\MongoDB\Configuration;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Mapping\ClassMetadata;
+use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 use Doctrine\Persistence\Mapping\ClassMetadata as BaseClassMetadata;
 use Doctrine\Persistence\Mapping\AbstractClassMetadataFactory;
 use Doctrine\Persistence\Mapping\Driver\FileLocator;
 use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Persistence\ObjectManager;
-use Doctrine\Persistence\ObjectRepository;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Website\DBSource\ManagerInterface;
 use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
@@ -88,7 +88,7 @@ class ContainerTest extends TestCase
         $container = $this->buildContainer();
         $objectManager = $this->createMock(ObjectManager::class);
         $objectManager->expects(self::any())->method('getRepository')->with($objectClass)->willReturn(
-            $this->createMock(ObjectRepository::class)
+            $this->createMock(DocumentRepository::class)
         );
 
         $container->set(ObjectManager::class, $objectManager);

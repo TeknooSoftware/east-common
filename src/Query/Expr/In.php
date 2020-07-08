@@ -22,13 +22,8 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Query\Content;
+namespace Teknoo\East\Website\Query\Expr;
 
-use Teknoo\East\Foundation\Promise\PromiseInterface;
-use Teknoo\East\Website\DBSource\RepositoryInterface;
-use Teknoo\East\Website\Loader\LoaderInterface;
-use Teknoo\East\Website\Query\Expr\In;
-use Teknoo\East\Website\Query\QueryInterface;
 use Teknoo\Immutable\ImmutableInterface;
 use Teknoo\Immutable\ImmutableTrait;
 
@@ -36,35 +31,21 @@ use Teknoo\Immutable\ImmutableTrait;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class PublishedContentFromIdsQuery implements QueryInterface, ImmutableInterface
+class In implements ExprInterface, ImmutableInterface
 {
     use ImmutableTrait;
 
-    private array $ids;
+    private array $values;
 
-    public function __construct(array $ids)
+    public function __construct(array $values)
     {
         $this->uniqueConstructorCheck();
 
-        $this->ids = $ids;
+        $this->values = $values;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function execute(
-        LoaderInterface $loader,
-        RepositoryInterface $repository,
-        PromiseInterface $promise
-    ): QueryInterface {
-        $repository->findBy(
-            [
-                'id' => new In($this->ids),
-                'deletedAt' => null,
-            ],
-            $promise
-        );
-
-        return $this;
+    public function getValues(): array
+    {
+        return $this->values;
     }
 }

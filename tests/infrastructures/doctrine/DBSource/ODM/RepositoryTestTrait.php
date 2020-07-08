@@ -22,7 +22,6 @@
 
 namespace Teknoo\Tests\East\Website\Doctrine\DBSource\ODM;
 
-use Doctrine\Persistence\ObjectRepository;
 use Doctrine\ODM\MongoDB\Query\Builder;
 use Doctrine\ODM\MongoDB\Query\Query;
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
@@ -36,17 +35,17 @@ use Teknoo\East\Website\DBSource\RepositoryInterface;
 trait RepositoryTestTrait
 {
     /**
-     * @var ObjectRepository
+     * @var DocumentRepository
      */
     private $objectRepository;
 
     /**
-     * @return ObjectRepository|\PHPUnit\Framework\MockObject\MockObject
+     * @return DocumentRepository|\PHPUnit\Framework\MockObject\MockObject
      */
-    protected function getDoctrineObjectRepositoryMock(): ObjectRepository
+    protected function getDoctrineObjectRepositoryMock(): DocumentRepository
     {
-        if (!$this->objectRepository instanceof ObjectRepository) {
-            $this->objectRepository = $this->createMock(ObjectRepository::class);
+        if (!$this->objectRepository instanceof DocumentRepository) {
+            $this->objectRepository = $this->createMock(DocumentRepository::class);
         }
 
         return $this->objectRepository;
@@ -81,7 +80,7 @@ trait RepositoryTestTrait
             ->expects(self::once())
             ->method('find')
             ->with('abc')
-            ->willReturn([]);
+            ->willReturn(null);
 
         self::assertInstanceOf(
             RepositoryInterface::class,
@@ -146,25 +145,6 @@ trait RepositoryTestTrait
 
     public function testFindBy()
     {
-        $object = [new \stdClass()];
-        $promise = $this->createMock(PromiseInterface::class);
-        $promise->expects(self::once())->method('success')->with($object);
-        $promise->expects(self::never())->method('fail');
-
-        $this->getDoctrineObjectRepositoryMock()
-            ->expects(self::once())
-            ->method('findBy')
-            ->with(['foo' => 'bar'])
-            ->willReturn($object);
-
-        self::assertInstanceOf(
-            RepositoryInterface::class,
-            $this->buildRepository()->findBy(['foo' => 'bar'], $promise)
-        );
-    }
-
-    public function testFindByForMongo()
-    {
         $this->objectRepository = $this->createMock(DocumentRepository::class);
 
         $object = [new \stdClass()];
@@ -202,18 +182,6 @@ trait RepositoryTestTrait
             ['foo' => 'bar'],
             $this->createMock(PromiseInterface::class),
             new \stdClass()
-        );
-    }
-
-    public function testCountNotImplemented()
-    {
-        $promise = $this->createMock(PromiseInterface::class);
-        $promise->expects(self::never())->method('success');
-        $promise->expects(self::once())->method('fail');
-
-        self::assertInstanceOf(
-            RepositoryInterface::class,
-            $this->buildRepository()->count(['foo' => 'bar'], $promise)
         );
     }
 
@@ -273,7 +241,7 @@ trait RepositoryTestTrait
             ->expects(self::once())
             ->method('findOneBy')
             ->with(['foo' => 'bar'])
-            ->willReturn([]);
+            ->willReturn(null);
 
         self::assertInstanceOf(
             RepositoryInterface::class,

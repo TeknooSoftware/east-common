@@ -35,10 +35,16 @@ use Teknoo\East\Website\DBSource\RepositoryInterface;
  */
 trait RepositoryTrait
 {
-    private ObjectRepository $repository;
+    use ExprConversionTrait;
+
+    private DocumentRepository $repository;
 
     public function __construct(ObjectRepository $repository)
     {
+        if (!$repository instanceof DocumentRepository) {
+            throw new \RuntimeException('Error, the repository is not managed by this class');
+        }
+
         $this->repository = $repository;
     }
 
@@ -78,15 +84,10 @@ trait RepositoryTrait
         ?int $limit = null,
         ?int $offset = null
     ): RepositoryInterface {
-        if (!$this->repository instanceof DocumentRepository) {
-            $promise->success($this->repository->findBy($criteria, $orderBy, $limit, $offset));
-
-            return $this;
-        }
-
         $queryBuilder = $this->repository->createQueryBuilder();
 
-        $queryBuilder->equals($criteria);
+        $queryBuilder->equals($this->convert($criteria));
+
         if (!empty($orderBy)) {
             $queryBuilder->sort($orderBy);
         }
@@ -111,15 +112,9 @@ trait RepositoryTrait
      */
     public function count(array $criteria, PromiseInterface $promise): RepositoryInterface
     {
-        if (!$this->repository instanceof DocumentRepository) {
-            $promise->fail(new \RuntimeException('Error, this method is not available with this repository'));
-
-            return $this;
-        }
-
         $queryBuilder = $this->repository->createQueryBuilder();
 
-        $queryBuilder->equals($criteria);
+        $queryBuilder->equals($this->convert($criteria));
 
         $queryBuilder->count();
 
@@ -136,7 +131,7 @@ trait RepositoryTrait
     public function findOneBy(array $criteria, PromiseInterface $promise): RepositoryInterface
     {
         try {
-            $result = $this->repository->findOneBy($criteria);
+            $result = $this->repository->findOneBy($this->convert($criteria));
 
             if (!empty($result)) {
                 $promise->success($result);

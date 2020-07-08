@@ -49,9 +49,6 @@ class MenuGenerator
     {
         $stacks = [];
 
-        /**
-         * @var array<int, Item> $items
-         */
         $promise = new Promise(function ($items) use (&$stacks) {
             foreach ($items as $item) {
                 if (!($parent = $item->getParent())) {

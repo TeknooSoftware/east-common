@@ -69,8 +69,8 @@ use Teknoo\East\Website\Doctrine\Translatable\Wrapper\WrapperInterface;
 use Teknoo\East\Website\Middleware\LocaleMiddleware;
 use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Object\User;
-
 use Teknoo\East\Website\Service\ProxyDetectorInterface;
+
 use function DI\get;
 
 return [
@@ -242,14 +242,20 @@ return [
 
     ProxyDetectorInterface::class => static function (): ProxyDetectorInterface {
         return new class implements ProxyDetectorInterface {
-            public function checkIfInstanceBehindProxy(object $object, PromiseInterface $promise): ProxyDetectorInterface
-            {
+            public function checkIfInstanceBehindProxy(
+                object $object,
+                PromiseInterface $promise
+            ): ProxyDetectorInterface {
                 if (!$object instanceof GhostObjectInterface) {
                     $promise->fail(new \Exception('Object is not behind a proxy'));
+
+                    return $this;
                 }
 
                 if ($object->isProxyInitialized()) {
                     $promise->fail(new \Exception('Proxy is already initialized'));
+
+                    return $this;
                 }
 
                 $promise->success($object);

@@ -35,6 +35,8 @@ use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
 use PHPUnit\Framework\TestCase;
+use ProxyManager\Proxy\GhostObjectInterface;
+use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\ManagerInterface;
 use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
 use Teknoo\East\Website\DBSource\Repository\ItemRepositoryInterface;
@@ -50,6 +52,7 @@ use Teknoo\East\Website\Doctrine\Object\Item;
 use Teknoo\East\Website\Doctrine\Object\Media;
 use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Object\User;
+use Teknoo\East\Website\Service\ProxyDetectorInterface;
 
 /**
  * Class DefinitionProviderTest.
@@ -319,5 +322,78 @@ class ContainerTest extends TestCase
 
         $this->expectException(\RuntimeException::class);
         $container->get(TranslatableListener::class);
+    }
+
+    public function testProxyDetectorInterface()
+    {
+        $container = $this->buildContainer();
+        $proxyDetector = $container->get(ProxyDetectorInterface::class);
+
+        $p1 = $this->createMock(PromiseInterface::class);
+        $p1->expects(self::never())->method('success');
+        $p1->expects(self::once())->method('fail');
+
+        self::assertInstanceOf(
+            ProxyDetectorInterface::class,
+            $proxyDetector->checkIfInstanceBehindProxy(new \stdClass(), $p1)
+        );
+
+        $p2 = $this->createMock(PromiseInterface::class);
+        $p2->expects(self::never())->method('success');
+        $p2->expects(self::once())->method('fail');
+
+        self::assertInstanceOf(
+            ProxyDetectorInterface::class,
+            $proxyDetector->checkIfInstanceBehindProxy(new class implements GhostObjectInterface {
+                public function setProxyInitializer(?\Closure $initializer = null)
+                {
+                    throw new \RuntimeException('Must not be called');
+                }
+
+                public function getProxyInitializer(): ?\Closure
+                {
+                    throw new \RuntimeException('Must not be called');
+                }
+
+                public function initializeProxy(): bool
+                {
+                    throw new \RuntimeException('Must not be called');
+                }
+
+                public function isProxyInitialized(): bool
+                {
+                    return true;
+                }
+            }, $p2)
+        );
+
+        $p3 = $this->createMock(PromiseInterface::class);
+        $p3->expects(self::once())->method('success');
+        $p3->expects(self::never())->method('fail');
+
+        self::assertInstanceOf(
+            ProxyDetectorInterface::class,
+            $proxyDetector->checkIfInstanceBehindProxy(new class implements GhostObjectInterface {
+                public function setProxyInitializer(?\Closure $initializer = null)
+                {
+                    throw new \RuntimeException('Must not be called');
+                }
+
+                public function getProxyInitializer(): ?\Closure
+                {
+                    throw new \RuntimeException('Must not be called');
+                }
+
+                public function initializeProxy(): bool
+                {
+                    throw new \RuntimeException('Must not be called');
+                }
+
+                public function isProxyInitialized(): bool
+                {
+                    return false;
+                }
+            }, $p3)
+        );
     }
 }

@@ -31,6 +31,7 @@ use Teknoo\East\Website\Object\Item;
 use Teknoo\East\Website\Query\Content\PublishedContentFromIdsQuery;
 use Teknoo\East\Website\Query\Item\TopItemByLocationQuery;
 use Teknoo\East\Website\Service\MenuGenerator;
+use Teknoo\East\Website\Service\ProxyDetectorInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -78,7 +79,24 @@ class MenuGeneratorTest extends TestCase
      */
     public function buildService()
     {
-        return new MenuGenerator($this->getItemLoader(), $this->getContentLoader());
+        return new MenuGenerator(
+            $this->getItemLoader(),
+            $this->getContentLoader(),
+            new class implements ProxyDetectorInterface {
+                public function checkIfInstanceBehindProxy(
+                    object $object,
+                    PromiseInterface $promise
+                ): ProxyDetectorInterface {
+                    if ($object instanceof Content && 'c4' === $object->getId()) {
+                        $promise->fail(new \Exception());
+                    } else {
+                        $promise->success($object);
+                    }
+
+                    return $this;
+                }
+            }
+        );
     }
 
     public function testExtract()
@@ -100,17 +118,20 @@ class MenuGeneratorTest extends TestCase
                 }
             }
         );;
+        $item4 = (new Item())->setId('i3')->setParent($item1);
 
         $content1 = (new Content())->setId('c1');
         $content2 = (new Content())->setId('c2');
         $content3 = (new Content())->setId('c3');
+        $content4 = (new Content())->setId('c4');
+        $item4->setContent($content4);
 
         $this->getItemLoader()
             ->expects(self::any())
             ->method('query')
             ->with(new TopItemByLocationQuery('location1'))
-            ->willReturnCallback(function ($value, PromiseInterface $promise) use ($item1, $item2, $item3) {
-                $promise->success([$item1, $item2, $item3]);
+            ->willReturnCallback(function ($value, PromiseInterface $promise) use ($item1, $item2, $item3, $item4) {
+                $promise->success([$item1, $item2, $item3, $item4]);
 
                 return $this->getItemLoader();
             });
@@ -130,7 +151,7 @@ class MenuGeneratorTest extends TestCase
             $stack[$key][] = $element;
         }
 
-        self::assertEquals(['parent' => [$item1], 'top' => [$item2], 'i1' => [$item3]], $stack);
+        self::assertEquals(['parent' => [$item1], 'top' => [$item2], 'i1' => [$item3, $item4]], $stack);
     }
 
     public function testExtractWithoutContent()

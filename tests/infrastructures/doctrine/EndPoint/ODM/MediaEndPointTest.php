@@ -28,7 +28,9 @@ use Doctrine\ODM\MongoDB\Repository\GridFSRepository;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Teknoo\East\Diactoros\CallbackStreamFactory;
+use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
+use Teknoo\East\Website\Doctrine\Object\Media;
 use Teknoo\East\Website\Object\Media as BaseMedia;
 use Teknoo\East\Website\Doctrine\EndPoint\ODM\MediaEndPoint;
 use Teknoo\Tests\East\Website\EndPoint\MediaEndPointTraitTest;
@@ -95,8 +97,6 @@ class MediaEndPointTest extends MediaEndPointTraitTest
 
     public function testGetSourceWithNonGridFSMedia()
     {
-        $this->expectException(\RuntimeException::class);
-
         $this->getMediaLoader()
             ->expects(self::any())
             ->method('load')
@@ -111,6 +111,16 @@ class MediaEndPointTest extends MediaEndPointTraitTest
                 return $this->getMediaLoader();
             });
 
-        $this->testInvokeFoundWithoutMetadata();
+        $client = $this->createMock(ClientInterface::class);
+        $client->expects(self::never())->method('acceptResponse');
+        $client->expects(self::once())->method('errorInRequest');
+
+        $endPoint = $this->buildEndPoint();
+
+        $class = \get_class($endPoint);
+        self::assertInstanceOf(
+            $class,
+            $endPoint($client, 'fooBar')
+        );
     }
 }

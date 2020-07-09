@@ -55,7 +55,13 @@ trait MediaEndPointTrait
             $id,
             new Promise(
                 function (Media $media) use ($client) {
-                    $stream = $this->getStream($media);
+                    try {
+                        $stream = $this->getStream($media);
+                    } catch (\Throwable $error) {
+                        $client->errorInRequest($error);
+
+                        return;
+                    }
 
                     $response = $this->responseFactory->createResponse(200);
                     $metadata = $media->getMetadata();

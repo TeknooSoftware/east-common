@@ -1,5 +1,9 @@
 #Teknoo Software - Website - Change Log
 
+##[3.0.0-beta2] - 2020-07-09
+###Change
+- Change exception management into MediaEndPoint
+
 ##[3.0.0-beta1] - 2020-07-08
 ###Beta Release
 ###Change

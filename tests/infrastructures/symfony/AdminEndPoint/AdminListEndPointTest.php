@@ -29,8 +29,9 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Templating\EngineInterface;
+use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
+use Teknoo\East\Foundation\Template\ResultInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Query\PaginationQuery;
 use Teknoo\East\WebsiteBundle\AdminEndPoint\AdminListEndPoint;
@@ -221,7 +222,13 @@ class AdminListEndPointTest extends TestCase
         $this->getEngine()
             ->expects(self::any())
             ->method('render')
-            ->willReturn('foo');
+            ->willReturnCallback(function (PromiseInterface $promise) {
+                $result = $this->createMock(ResultInterface::class);
+                $result->expects(self::any())->method('__toString')->willReturn('foo');
+                $promise->success($result);
+
+                return $this->getEngine();
+            });
 
         self::assertInstanceOf(
             AdminListEndPoint::class,
@@ -254,7 +261,13 @@ class AdminListEndPointTest extends TestCase
         $this->getEngine()
             ->expects(self::any())
             ->method('render')
-            ->willReturn('foo');
+            ->willReturnCallback(function (PromiseInterface $promise) {
+                $result = $this->createMock(ResultInterface::class);
+                $result->expects(self::any())->method('__toString')->willReturn('foo');
+                $promise->success($result);
+
+                return $this->getEngine();
+            });
 
         self::assertInstanceOf(
             AdminListEndPoint::class,
@@ -287,7 +300,13 @@ class AdminListEndPointTest extends TestCase
         $this->getEngine()
             ->expects(self::any())
             ->method('render')
-            ->willReturn('foo');
+            ->willReturnCallback(function (PromiseInterface $promise) {
+                $result = $this->createMock(ResultInterface::class);
+                $result->expects(self::any())->method('__toString')->willReturn('foo');
+                $promise->success($result);
+
+                return $this->getEngine();
+            });
 
         self::assertInstanceOf(
             AdminListEndPoint::class,
@@ -320,7 +339,13 @@ class AdminListEndPointTest extends TestCase
         $this->getEngine()
             ->expects(self::any())
             ->method('render')
-            ->willReturn('foo');
+            ->willReturnCallback(function (PromiseInterface $promise) {
+                $result = $this->createMock(ResultInterface::class);
+                $result->expects(self::any())->method('__toString')->willReturn('foo');
+                $promise->success($result);
+
+                return $this->getEngine();
+            });
 
         self::assertInstanceOf(
             AdminListEndPoint::class,
@@ -375,7 +400,13 @@ class AdminListEndPointTest extends TestCase
         $this->getEngine()
             ->expects(self::any())
             ->method('render')
-            ->willReturn('foo');
+            ->willReturnCallback(function (PromiseInterface $promise) {
+                $result = $this->createMock(ResultInterface::class);
+                $result->expects(self::any())->method('__toString')->willReturn('foo');
+                $promise->success($result);
+
+                return $this->getEngine();
+            });
 
         self::assertInstanceOf(
             AdminListEndPoint::class,
@@ -408,12 +439,13 @@ class AdminListEndPointTest extends TestCase
         $this->getEngine()
             ->expects(self::any())
             ->method('render')
-            ->willReturn('foo');
+            ->willReturnCallback(function (PromiseInterface $promise) {
+                $result = $this->createMock(ResultInterface::class);
+                $result->expects(self::any())->method('__toString')->willReturn('foo');
+                $promise->success($result);
 
-        $this->getEngine()
-            ->expects(self::any())
-            ->method('render')
-            ->willReturn('foo');
+                return $this->getEngine();
+            });
 
         self::assertInstanceOf(
             AdminListEndPoint::class,
@@ -442,7 +474,13 @@ class AdminListEndPointTest extends TestCase
         $this->getEngine()
             ->expects(self::any())
             ->method('render')
-            ->willReturn('foo');
+            ->willReturnCallback(function (PromiseInterface $promise) {
+                $result = $this->createMock(ResultInterface::class);
+                $result->expects(self::any())->method('__toString')->willReturn('foo');
+                $promise->success($result);
+
+                return $this->getEngine();
+            });
 
         self::assertInstanceOf(
             AdminListEndPoint::class,
@@ -471,7 +509,13 @@ class AdminListEndPointTest extends TestCase
         $this->getEngine()
             ->expects(self::any())
             ->method('render')
-            ->willReturn('foo');
+            ->willReturnCallback(function (PromiseInterface $promise) {
+                $result = $this->createMock(ResultInterface::class);
+                $result->expects(self::any())->method('__toString')->willReturn('foo');
+                $promise->success($result);
+
+                return $this->getEngine();
+            });
 
         self::assertInstanceOf(
             AdminListEndPoint::class,
@@ -500,7 +544,13 @@ class AdminListEndPointTest extends TestCase
         $this->getEngine()
             ->expects(self::any())
             ->method('render')
-            ->willReturn('foo');
+            ->willReturnCallback(function (PromiseInterface $promise) {
+                $result = $this->createMock(ResultInterface::class);
+                $result->expects(self::any())->method('__toString')->willReturn('foo');
+                $promise->success($result);
+
+                return $this->getEngine();
+            });
 
         self::assertInstanceOf(
             AdminListEndPoint::class,

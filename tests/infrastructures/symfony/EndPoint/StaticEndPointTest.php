@@ -25,9 +25,11 @@ namespace Teknoo\Tests\East\WebsiteBundle\EndPoint;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
-use Symfony\Component\Templating\EngineInterface;
+use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Diactoros\CallbackStream;
+use Teknoo\East\Foundation\Template\ResultInterface;
 use Teknoo\East\WebsiteBundle\EndPoint\StaticEndPoint;
+use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\Tests\East\Website\EndPoint\StaticEndPointTraitTest;
 
 /**
@@ -50,9 +52,16 @@ class StaticEndPointTest extends StaticEndPointTraitTest
         if (!$this->templating instanceof EngineInterface) {
             $this->templating = $this->createMock(EngineInterface::class);
 
-            $this->templating->expects(self::any())
+            $this->templating
+                ->expects(self::any())
                 ->method('render')
-                ->willReturn('fooBar:executed');
+                ->willReturnCallback(function (PromiseInterface $promise) {
+                    $result = $this->createMock(ResultInterface::class);
+                    $result->expects(self::any())->method('__toString')->willReturn('fooBar:executed');
+                    $promise->success($result);
+
+                    return $this->templating;
+                });
         }
 
         return $this->templating;

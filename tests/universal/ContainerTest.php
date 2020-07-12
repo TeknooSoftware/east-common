@@ -68,7 +68,7 @@ class ContainerTest extends TestCase
     protected function buildContainer() : Container
     {
         $containerDefinition = new ContainerBuilder();
-        $containerDefinition->addDefinitions(__DIR__.'/../../vendor/teknoo/east-foundation/src/universal/di.php');
+        $containerDefinition->addDefinitions(__DIR__.'/../../vendor/teknoo/east-foundation/src/di.php');
         $containerDefinition->addDefinitions(__DIR__ . '/../../src/di.php');
 
         return $containerDefinition->build();
@@ -220,7 +220,7 @@ class ContainerTest extends TestCase
     public function testEastManagerMiddlewareInjection()
     {
         $containerDefinition = new ContainerBuilder();
-        $containerDefinition->addDefinitions(__DIR__.'/../../vendor/teknoo/east-foundation/src/universal/di.php');
+        $containerDefinition->addDefinitions(__DIR__.'/../../vendor/teknoo/east-foundation/src/di.php');
         $containerDefinition->addDefinitions(__DIR__ . '/../../src/di.php');
 
         $container = $containerDefinition->build();

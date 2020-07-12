@@ -46,10 +46,10 @@ Example with Symfony
             // Configure your container here
             $appPath = /**/;
     
-            $builder->addDefinitions($vendorPath.'/teknoo/east-foundation/src/universal/di.php');
+            $builder->addDefinitions($vendorPath.'/teknoo/east-foundation/src/di.php');
             $builder->addDefinitions($vendorPath.'/teknoo/east-foundation/infrastructures/symfony/Resources/config/di.php');
     
-            $builder->addDefinitions($vendorPath.'/teknoo/east-website/src/universal/di.php');
+            $builder->addDefinitions($vendorPath.'/teknoo/east-website/src/di.php');
             $builder->addDefinitions($vendorPath.'/teknoo/east-website/infrastructures/doctrine/di.php');
             $builder->addDefinitions($vendorPath.'/teknoo/east-website/infrastructures/symfony/Resources/config/di.php');
             $builder->addDefinitions($vendorPath.'/teknoo/east-website/infrastructures/di.php');
@@ -74,7 +74,7 @@ Example with Symfony
           mappings:
             TeknooEastWebsite:
               type: 'yml'
-              dir: '%kernel.root_dir%/../vendor/teknoo/east-website/src/universal/config/doctrine'
+              dir: '%kernel.root_dir%/../vendor/teknoo/east-website/src/config/doctrine'
               is_bundle: false
               prefix: 'Teknoo\East\Website\Object'
 

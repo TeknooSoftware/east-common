@@ -2,7 +2,7 @@ Feature: Create an element, with slug or not stored into a the dbms server via a
 
   Scenario: Create a type
     Given I have DI With Symfony initialized
-    And a templating engine
+    And a twig templating engine
     When Symfony will receive the POST request "https://foo.com/admin/type/new" with "type%5Bname%5D=foo&type%5Btemplate%5D=bar"
     Then The client must accept a response
     And An object "Type" must be persisted
@@ -12,7 +12,7 @@ Feature: Create an element, with slug or not stored into a the dbms server via a
 
   Scenario: Create a content
     Given I have DI With Symfony initialized
-    And a templating engine
+    And a twig templating engine
     When Symfony will receive the POST request "https://foo.com/admin/content/new" with "content%5Btitle%5D=foo&content%5Bsubtitle%5D=bar"
     Then The client must accept a response
     And An object "Content" must be persisted
@@ -22,7 +22,7 @@ Feature: Create an element, with slug or not stored into a the dbms server via a
 
   Scenario: Create an item
     Given I have DI With Symfony initialized
-    And a templating engine
+    And a twig templating engine
     When Symfony will receive the POST request "https://foo.com/admin/item/new" with "item%5Bname%5D=foo&item%5Blocation%5D=bar&item%5Bposition%5D=1"
     Then The client must accept a response
     And An object "Item" must be persisted

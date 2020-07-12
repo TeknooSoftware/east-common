@@ -1,5 +1,10 @@
 #Teknoo Software - Website - Change Log
 
+##[3.0.0-beta4] - 2020-07-12
+###Change
+- Require to East Foundation 3.0.0-beta2
+- Fix errors in services definitions
+
 ##[3.0.0-beta3] - 2020-07-12
 ###Change
 - Switch to East Foundation 3.0.0-beta1

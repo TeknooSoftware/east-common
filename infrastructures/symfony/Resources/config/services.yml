@@ -58,10 +58,6 @@ parameters:
   teknoo.east.website.bundle.writer.user.class: 'Teknoo\East\WebsiteBundle\Writer\UserWriter'
 
 services:
-  _instanceof:
-    Teknoo\East\Foundation\EndPoint\RenderingInterface:
-      tags: ['east.endpoint.template']
-
   Teknoo\East\Website\Loader\ContentLoader:
     synthetic: true
 
@@ -122,6 +118,8 @@ services:
     calls:
       - ['setResponseFactory', ['@Psr\Http\Message\ResponseFactoryInterface']]
       - ['setStreamFactory', ['@Psr\Http\Message\StreamFactoryInterface']]
+    tags:
+      - { name: "east.endpoint.template" }
     public: true
 
   teknoo.east.website.endpoint.media.stream.factory:
@@ -142,6 +140,8 @@ services:
     calls:
       - ['setResponseFactory', ['@Psr\Http\Message\ResponseFactoryInterface']]
       - ['setStreamFactory', ['@Psr\Http\Message\StreamFactoryInterface']]
+    tags:
+      - { name: "east.endpoint.template" }
     public: true
 
   #Admin endpoints
@@ -160,6 +160,8 @@ services:
       - ['setStreamFactory', ['@Psr\Http\Message\StreamFactoryInterface']]
       - ['setDatesService', ['@Teknoo\East\Website\Service\DatesService']]
       - ['setFindSlugService', ['@Teknoo\East\Website\Service\FindSlugService', 'slug']]
+    tags:
+      - { name: "east.endpoint.template" }
     public: true
 
   teknoo.east.website.endpoint.admin.list.abstract:
@@ -167,6 +169,8 @@ services:
     calls:
       - ['setResponseFactory', ['@Psr\Http\Message\ResponseFactoryInterface']]
       - ['setStreamFactory', ['@Psr\Http\Message\StreamFactoryInterface']]
+    tags:
+      - { name: "east.endpoint.template" }
     public: true
 
   teknoo.east.website.endpoint.admin.new.abstract:
@@ -177,6 +181,8 @@ services:
       - ['setStreamFactory', ['@Psr\Http\Message\StreamFactoryInterface']]
       - ['setRouter', ['@router']]
       - ['setFindSlugService', ['@Teknoo\East\Website\Service\FindSlugService', 'slug']]
+    tags:
+      - { name: "east.endpoint.template" }
     public: true
 
   #Items

@@ -61,9 +61,10 @@ class StaticEndPointTraitTest extends TestCase
             /**
              * {@inheritdoc}
              */
-            public function render(ClientInterface $client, string $view, array $parameters = array(), int $status = 200, array $headers = []): EndPointInterface
+            public function render(ClientInterface $client, string $view, array $parameters = array(), int $status = 200, array $headers = []): RenderingInterface
             {
                 $client->acceptResponse(new TextResponse($view.':executed'));
+
                 return $this;
             }
         };

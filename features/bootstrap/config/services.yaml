@@ -19,9 +19,6 @@ services:
   Psr\Log\LoggerInterface:
     alias: 'logger'
 
-  Teknoo\East\Website\Service\MenuGenerator:
-    synthetic: true
-
   Psr\Http\Message\ServerRequestFactoryInterface:
     class: 'Laminas\Diactoros\ServerRequestFactory'
 
@@ -37,5 +34,5 @@ services:
   teknoo.east.website.endpoint.media.stream.factory:
     class: 'Laminas\Diactoros\StreamFactory'
 
-  templating.engine.twig:
+  twig:
     synthetic: true

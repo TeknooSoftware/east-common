@@ -26,8 +26,7 @@ Feature: Rendering and return an HTML dynamic page stored into a database server
     And an available page with the slug "foo-bar" of type "type1"
     And The router can process the request "#/page/(?P<slug>[a-zA-Z0-9\.]+)#is" to controller "contentEndPoint"
     When The server will receive the request "https://foo.com/page/bar-foo"
-    Then The client must accept a response
-    And I should get "Error 404"
+    Then The client must accept an error
 
   Scenario: Return error when the content has an error
     Given I have DI initialized

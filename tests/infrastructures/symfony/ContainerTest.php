@@ -51,7 +51,7 @@ class ContainerTest extends TestCase
     protected function buildContainer() : Container
     {
         $containerDefinition = new ContainerBuilder();
-        $containerDefinition->addDefinitions(__DIR__.'/../../../vendor/teknoo/east-foundation/src/universal/di.php');
+        $containerDefinition->addDefinitions(__DIR__.'/../../../vendor/teknoo/east-foundation/src/di.php');
         $containerDefinition->addDefinitions(__DIR__ . '/../../../src/di.php');
         $containerDefinition->addDefinitions(__DIR__.'/../../../infrastructures/symfony/Resources/config/di.php');
         $containerDefinition->useAutowiring(false);

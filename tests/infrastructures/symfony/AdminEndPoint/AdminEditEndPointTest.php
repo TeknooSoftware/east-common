@@ -31,8 +31,9 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Templating\EngineInterface;
+use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
+use Teknoo\East\Foundation\Template\ResultInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Object\Type;
@@ -332,7 +333,13 @@ class AdminEditEndPointTest extends TestCase
         $this->getEngine()
             ->expects(self::any())
             ->method('render')
-            ->willReturn('foo');
+            ->willReturnCallback(function (PromiseInterface $promise) {
+                $result = $this->createMock(ResultInterface::class);
+                $result->expects(self::any())->method('__toString')->willReturn('foo');
+                $promise->success($result);
+
+                return $this->getEngine();
+            });
         
         self::assertInstanceOf(
             AdminEditEndPoint::class,
@@ -425,7 +432,13 @@ class AdminEditEndPointTest extends TestCase
         $this->getEngine()
             ->expects(self::any())
             ->method('render')
-            ->willReturn('foo');
+            ->willReturnCallback(function (PromiseInterface $promise) {
+                $result = $this->createMock(ResultInterface::class);
+                $result->expects(self::any())->method('__toString')->willReturn('foo');
+                $promise->success($result);
+
+                return $this->getEngine();
+            });
 
         self::assertInstanceOf(
             AdminEditEndPoint::class,
@@ -477,7 +490,13 @@ class AdminEditEndPointTest extends TestCase
         $this->getEngine()
             ->expects(self::any())
             ->method('render')
-            ->willReturn('foo');
+            ->willReturnCallback(function (PromiseInterface $promise) {
+                $result = $this->createMock(ResultInterface::class);
+                $result->expects(self::any())->method('__toString')->willReturn('foo');
+                $promise->success($result);
+
+                return $this->getEngine();
+            });
 
         $endPoint = $this->buildEndPoint(ContentType::class);
 
@@ -547,7 +566,13 @@ class AdminEditEndPointTest extends TestCase
         $this->getEngine()
             ->expects(self::any())
             ->method('render')
-            ->willReturn('foo');
+            ->willReturnCallback(function (PromiseInterface $promise) {
+                $result = $this->createMock(ResultInterface::class);
+                $result->expects(self::any())->method('__toString')->willReturn('foo');
+                $promise->success($result);
+
+                return $this->getEngine();
+            });
 
         $endPoint = $this->buildEndPoint(ContentType::class);
 
@@ -618,7 +643,13 @@ class AdminEditEndPointTest extends TestCase
         $this->getEngine()
             ->expects(self::any())
             ->method('render')
-            ->willReturn('foo');
+            ->willReturnCallback(function (PromiseInterface $promise) {
+                $result = $this->createMock(ResultInterface::class);
+                $result->expects(self::any())->method('__toString')->willReturn('foo');
+                $promise->success($result);
+
+                return $this->getEngine();
+            });
 
         $endPoint = $this->buildEndPoint(ContentType::class);
 

@@ -21,15 +21,17 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder as SfContainerBuilder;
 use Symfony\Component\HttpFoundation\Request as SfRequest;
 use Symfony\Component\Routing\RouteCollectionBuilder;
-use Symfony\Component\Templating\EngineInterface;
-use Teknoo\East\Foundation\Recipe\RecipeInterface;
-use Teknoo\East\Foundation\Router\RouterInterface;
+use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Manager\Manager;
+use Teknoo\East\Foundation\Promise\PromiseInterface;
+use Teknoo\East\Foundation\Recipe\RecipeInterface;
 use Teknoo\East\Foundation\Router\Result;
+use Teknoo\East\Foundation\Router\RouterInterface;
 use Teknoo\East\Foundation\Middleware\MiddlewareInterface;
-use Teknoo\East\Foundation\EndPoint\EndPointInterface;
+use Teknoo\East\Foundation\Template\EngineInterface;
+use Teknoo\East\Foundation\Template\ResultInterface;
 use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
 use Teknoo\East\Website\Loader\MediaLoader;
 use Teknoo\East\Website\Loader\ContentLoader;
@@ -43,6 +45,7 @@ use Teknoo\East\Website\Object\Media;
 use Teknoo\East\Website\Doctrine\Object\Content;
 use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Object\Block;
+use Twig\Environment;
 
 /**
  * Defines application features from the specific context.
@@ -88,6 +91,8 @@ class FeatureContext implements Context
 
     public ?EngineInterface $templating = null;
 
+    public ?Environment $twig = null;
+
     public ?string $templateToCall = null;
 
     public ?string $templateContent = null;
@@ -119,7 +124,7 @@ class FeatureContext implements Context
         $containerDefinition = new \DI\ContainerBuilder();
         $rootDir = \dirname(__DIR__, 2);
         $containerDefinition->addDefinitions(
-            include $rootDir.'/vendor/teknoo/east-foundation/src/universal/di.php'
+            include $rootDir.'/vendor/teknoo/east-foundation/src/di.php'
         );
         $containerDefinition->addDefinitions(
             include $rootDir . '/src/di.php'
@@ -167,7 +172,6 @@ class FeatureContext implements Context
             public function registerBundles()
             {
                 yield new \Symfony\Bundle\FrameworkBundle\FrameworkBundle();
-                //todo ?yield new \Doctrine\Bundle\MongoDBBundle\DoctrineMongoDBBundle();
                 yield new \Teknoo\East\FoundationBundle\EastFoundationBundle();
                 yield new \Teknoo\East\WebsiteBundle\TeknooEastWebsiteBundle();
             }
@@ -176,7 +180,7 @@ class FeatureContext implements Context
             {
                 $rootDir = \dirname(__DIR__, 2);
                 $builder->addDefinitions(
-                    include $rootDir.'/vendor/teknoo/east-foundation/src/universal/di.php'
+                    include $rootDir.'/vendor/teknoo/east-foundation/src/di.php'
                 );
                 $builder->addDefinitions(
                     include $rootDir.'/vendor/teknoo/east-foundation/infrastructures/symfony/Resources/config/di.php'
@@ -196,7 +200,7 @@ class FeatureContext implements Context
 
                 $this->context->container = $builder->build();
                 $this->context->container->set(ObjectManager::class, $this->context->buildObjectManager());
-                $this->container->set('templating.engine.twig', $this->context->templating);
+                $this->container->set('twig', $this->context->twig);
 
                 return $this->context->container;
             }
@@ -706,6 +710,62 @@ class FeatureContext implements Context
         $this->contentEndPoint->setStreamFactory($this->container->get(StreamFactoryInterface::class));
     }
 
+    public function buildResultObject (string $body): ResultInterface
+    {
+        return $result = new class ($body) implements ResultInterface {
+            private string $content;
+
+            public function __construct(string $content)
+            {
+                $this->content = $content;
+            }
+
+            public function __toString(): string
+            {
+                return $this->content;
+            }
+        };
+    }
+
+    /**
+     * @Given a twig templating engine
+     */
+    public function aTwigTemplatingEngine()
+    {
+        $this->twig = new class extends Environment {
+            public function __construct() {}
+
+            public function render($name, array $parameters = []): string
+            {
+                //To avoid to manage templating view for crud
+                $final = [];
+                $ro = new \ReflectionObject($object = $parameters['objectInstance']);
+                foreach ($ro->getProperties() as $rp) {
+                    if (\in_array($rp->getName(), [
+                        'id',
+                        'createdAt',
+                        'updatedAt',
+                        'deletedAt',
+                        'states',
+                        'activesStates',
+                        'classesByStates',
+                        'statesAliasesList',
+                        'callerStatedClassesStack',
+                        'localeField',
+                        'publishedAt'
+                    ])) {
+                        continue;
+                    }
+
+                    $rp->setAccessible(true);
+                    $final[$rp->getName()] = $rp->getValue($object);
+                }
+
+                return \json_encode($final);
+            }
+        };
+    }
+
     /**
      * @Given a templating engine
      */
@@ -722,31 +782,14 @@ class FeatureContext implements Context
                 $this->context = $context;
             }
 
-            public function render($name, array $parameters = array())
+            public function render(PromiseInterface $promise, $name, array $parameters = array()): EngineInterface
             {
                 if ('404-error' === $name) {
-                    return 'Error 404';
+                    $promise->fail(new \Exception('Error 404'));
+
+                    return $this;
                 }
 
-                if (
-                    empty($this->context->templateToCall)
-                    && isset($parameters['objectInstance'])
-                ) {
-                    //To avoid to manage templating view for crud
-                    $final = [];
-                    $ro = new \ReflectionObject($object = $parameters['objectInstance']);
-                    foreach ($ro->getProperties() as $rp) {
-                        if (\in_array($rp->getName(), ['id', 'createdAt', 'updatedAt', 'deletedAt', 'states', 'activesStates', 'classesByStates', 'statesAliasesList', 'callerStatedClassesStack', 'localeField', 'publishedAt'])) {
-                            continue;
-                        }
-
-                        $rp->setAccessible(true);
-                        $final[$rp->getName()] = $rp->getValue($object);
-                    }
-
-                    return \json_encode($final);
-                }
-                
                 Assert::assertEquals($this->context->templateToCall, $name);
 
                 $keys = [];
@@ -758,7 +801,10 @@ class FeatureContext implements Context
                     }
                 }
 
-                return \str_replace($keys, $values, $this->context->templateContent);
+                $result = $this->context->buildResultObject(\str_replace($keys, $values, $this->context->templateContent));
+                $promise->success($result);
+
+                return $this;
             }
 
             public function exists($name)

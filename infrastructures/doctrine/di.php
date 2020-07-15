@@ -27,6 +27,7 @@ namespace Teknoo\East\Website\Doctrine;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Mapping\ClassMetadata as OdmClassMetadata;
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
+use Doctrine\ODM\MongoDB\Repository\GridFSRepository;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
@@ -243,7 +244,7 @@ return [
 
     MediaWriter::class => static function (ContainerInterface $container): MediaWriter {
         $repository = $container->get(ObjectManager::class)->getRepository(Media::class);
-        if ($repository instanceof DocumentRepository) {
+        if ($repository instanceof GridFSRepository) {
             return new MediaWriter($repository);
         }
 

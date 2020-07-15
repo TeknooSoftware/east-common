@@ -28,6 +28,7 @@ use Doctrine\ODM\MongoDB\Repository\GridFSRepository;
 use Doctrine\ODM\MongoDB\Repository\UploadOptions;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\Doctrine\Object\Media;
+use Teknoo\East\Website\Object\MediaMetadata;
 use Teknoo\East\Website\Object\ObjectInterface;
 use Teknoo\East\Website\Writer\WriterInterface;
 
@@ -44,12 +45,16 @@ class MediaWriter implements WriterInterface
         $this->repository = $repository;
     }
 
-    /**
-     * @var Media $object
-     * @throws \Throwable
-     */
     public function save(ObjectInterface $object, PromiseInterface $promise = null): WriterInterface
     {
+        if (!$object instanceof Media || !$object->getMetadata() instanceof MediaMetadata) {
+            if ($promise) {
+                $promise->fail(new \RuntimeException('This type of media is not managed by this writer'));
+            }
+
+            return $this;
+        }
+
         $options = new UploadOptions();
         $options->metadata = $object->getMetadata();
         $options->chunkSizeBytes = $object->getLength();
@@ -60,7 +65,9 @@ class MediaWriter implements WriterInterface
             $options
         );
 
-        $promise->success($media);
+        if ($promise) {
+            $promise->success($media);
+        }
 
         return $this;
     }

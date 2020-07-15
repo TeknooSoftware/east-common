@@ -276,7 +276,7 @@ services:
     parent: 'teknoo.east.website.endpoint.admin.new.abstract'
     calls:
       - ['setLoader', ['@Teknoo\East\Website\Loader\MediaLoader']]
-      - ['setWriter', ['@Teknoo\East\Website\Writer\MediaWriter']]
+      - ['setWriter', ['@teknoo.east.website.doctrine.writer.media.new']]
       - ['setFormClass', ['%teknoo.east.website.form_type.media.class%']]
       - ['setViewPath', ['%teknoo.east.website.view.media.new.file%']]
       - ['setObjectClass', ['%teknoo.east.website.media.class%']]

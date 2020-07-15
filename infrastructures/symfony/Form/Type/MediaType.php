@@ -48,7 +48,7 @@ class MediaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): self
     {
         $builder->add('name', TextType::class, ['required' => true]);
-        $builder->add('alternative', TextType::class, ['required' => true]);
+        $builder->add('alternative', TextType::class, ['required' => true, 'mapped' => false]);
         $builder->add('image', FileType::class, ['required' => true, 'mapped' => false]);
 
         $builder->addEventListener(
@@ -79,8 +79,9 @@ class MediaType extends AbstractType
                 $mediaObject->setLength($image->getSize());
                 $meta = new MediaMetadata(
                     (string) $image->getClientMimeType(),
-                    (string) $image->getPathname(),
-                    (string) ($data['alternative'] ?? '')
+                    (string) $image->getClientOriginalName(),
+                    (string) ($data['alternative'] ?? ''),
+                    (string) $image->getPathname()
                 );
                 $mediaObject->setMetadata($meta);
             }

@@ -70,6 +70,7 @@ use Teknoo\East\Website\Middleware\LocaleMiddleware;
 use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Object\User;
 use Teknoo\East\Website\Service\ProxyDetectorInterface;
+use Teknoo\East\Website\Doctrine\Writer\ODM\MediaWriter;
 
 use function DI\get;
 
@@ -239,6 +240,19 @@ return [
 
         return new LocaleMiddleware($callback);
     },
+
+    MediaWriter::class => static function (ContainerInterface $container): MediaWriter {
+        $repository = $container->get(ObjectManager::class)->getRepository(Media::class);
+        if ($repository instanceof DocumentRepository) {
+            return new MediaWriter($repository);
+        }
+
+        throw new \RuntimeException(sprintf(
+            "Error, repository of class %s are not currently managed",
+            \get_class($repository)
+        ));
+    },
+    'teknoo.east.website.doctrine.writer.media.new' => get(MediaWriter::class),
 
     ProxyDetectorInterface::class => static function (): ProxyDetectorInterface {
         return new class implements ProxyDetectorInterface {

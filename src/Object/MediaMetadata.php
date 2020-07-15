@@ -37,13 +37,20 @@ class MediaMetadata implements ImmutableInterface
 
     private ?string $alternative = '';
 
-    public function __construct(string $contentType, string $fileName = '', string $alternative = '')
-    {
+    private ?string $localPath = '';
+
+    public function __construct(
+        string $contentType,
+        string $fileName = '',
+        string $alternative = '',
+        string $localPath = ''
+    ) {
         $this->uniqueConstructorCheck();
 
         $this->contentType = $contentType;
         $this->fileName = $fileName;
         $this->alternative = $alternative;
+        $this->localPath = $localPath;
     }
 
     public function getContentType(): string
@@ -59,5 +66,10 @@ class MediaMetadata implements ImmutableInterface
     public function getAlternative(): string
     {
         return (string) $this->alternative;
+    }
+
+    public function getLocalPath(): string
+    {
+        return (string) $this->localPath;
     }
 }

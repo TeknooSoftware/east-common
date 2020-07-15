@@ -6,7 +6,7 @@
                                             http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
 
     <gridfs-file name="Teknoo\East\Website\Doctrine\Object\Media" bucket-name="media">
-        <id field-name="id" type="string" strategy="UUID"/>
+        <id type="string" strategy="auto"/>
         <length field-name="length"/>
         <chunk-size field-name="chunkSize"/>
         <upload-date field-name="uploadDate"/>

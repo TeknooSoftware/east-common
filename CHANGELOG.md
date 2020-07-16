@@ -1,5 +1,16 @@
 #Teknoo Software - Website - Change Log
 
+##[3.0.1] - 2020-07-16
+###Stable release
+- Fixing issue with new GridFS specifications and ID must be ObjectId and not UUID.
+- Add custom MediaWriter into infrastructure/doctrine/odm to manage file uploading to new GridFS Specification.
+- Add custom Media ODM Repository to manage download file from new GridFS specifications to be compliant with old UUID and new ObjectId.
+- Add legacyId in media metadata to allow loader to find media with media created with old GridFS specifications to be found from UUID (ODM try to convert it to objectId and fail).
+- Add InclusiveOr expr for query and add convert method in Doctrine.
+- Update DeletingService to manage also non DeletableInterface implementation (like media) to call the function remove of manager.
+- Update MediaLoader to not use the LoaderTrait and create custom query, without deletedAt and build a query compliant with old and new id.
+- Add to WriterInterface and implementations a method to remove an object by calling the DBSource manager.
+
 ##[3.0.0] - 2020-07-12
 ###Stable release
 - Migrate to Doctrine ODM 2

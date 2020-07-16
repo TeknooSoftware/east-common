@@ -185,4 +185,92 @@ trait PersistTestTrait
 
         self::assertInstanceOf(WriterInterface::class, $this->buildWriter()->save($object));
     }
+    
+    public function testRemove()
+    {
+        $object = $this->getObject();
+
+        $this->getObjectManager()
+            ->expects(self::once())
+            ->method('remove')
+            ->with($object);
+
+        $this->getObjectManager()
+            ->expects(self::once())
+            ->method('flush');
+
+        self::assertInstanceOf(WriterInterface::class, $this->buildWriter()->remove($object));
+    }
+
+    public function testRemoveWithPromiseSuccess()
+    {
+        $object = $this->getObject();
+
+        $this->getObjectManager()
+            ->expects(self::once())
+            ->method('remove')
+            ->with($object);
+
+        $this->getObjectManager()
+            ->expects(self::once())
+            ->method('flush');
+
+        $promise = $this->createMock(PromiseInterface::class);
+        $promise->expects(self::once())
+            ->method('success')
+            ->willReturnSelf();
+
+        $promise->expects(self::never())
+            ->method('fail');
+
+        self::assertInstanceOf(WriterInterface::class, $this->buildWriter()->remove($object, $promise));
+    }
+
+    public function testRemoveWithPromiseFailure()
+    {
+        $object = $this->getObject();
+
+        $this->getObjectManager()
+            ->expects(self::once())
+            ->method('remove')
+            ->with($object);
+
+        $error = new \Exception();
+
+        $this->getObjectManager()
+            ->expects(self::once())
+            ->method('flush')
+            ->willThrowException($error);
+
+        $promise = $this->createMock(PromiseInterface::class);
+        $promise->expects(self::never())
+            ->method('success');
+
+        $promise->expects(self::once())
+            ->method('fail')
+            ->with($error)
+            ->willReturnSelf();
+
+        self::assertInstanceOf(WriterInterface::class, $this->buildWriter()->remove($object, $promise));
+    }
+
+    public function testRemoveWithoutPromiseFailure()
+    {
+        $this->expectException(\Exception::class);
+        $object = $this->getObject();
+
+        $this->getObjectManager()
+            ->expects(self::once())
+            ->method('remove')
+            ->with($object);
+
+        $error = new \Exception();
+
+        $this->getObjectManager()
+            ->expects(self::once())
+            ->method('flush')
+            ->willThrowException($error);
+
+        self::assertInstanceOf(WriterInterface::class, $this->buildWriter()->remove($object));
+    }
 }

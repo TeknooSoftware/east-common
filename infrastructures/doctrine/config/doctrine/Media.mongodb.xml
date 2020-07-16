@@ -5,7 +5,9 @@
                         xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
                                             http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
 
-    <gridfs-file name="Teknoo\East\Website\Doctrine\Object\Media" bucket-name="media">
+    <gridfs-file  name="Teknoo\East\Website\Doctrine\Object\Media"
+                  bucket-name="media"
+                  repository-class="Teknoo\East\Website\Doctrine\Repository\ODM\Media" >
         <id type="string" strategy="auto"/>
         <length field-name="length"/>
         <chunk-size field-name="chunkSize"/>

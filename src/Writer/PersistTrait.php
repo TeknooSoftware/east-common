@@ -72,4 +72,27 @@ trait PersistTrait
 
         return $this;
     }
+
+    /**
+     * @throws \Throwable
+     */
+    public function remove(ObjectInterface $object, PromiseInterface $promise = null): WriterInterface
+    {
+        try {
+            $this->manager->remove($object);
+            $this->manager->flush();
+
+            if ($promise instanceof PromiseInterface) {
+                $promise->success();
+            }
+        } catch (\Throwable $error) {
+            if ($promise instanceof PromiseInterface) {
+                $promise->fail($error);
+            } else {
+                throw $error;
+            }
+        }
+
+        return $this;
+    }
 }

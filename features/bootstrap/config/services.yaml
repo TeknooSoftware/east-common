@@ -36,3 +36,6 @@ services:
 
   twig:
     synthetic: true
+
+  teknoo.east.website.endpoint.admin.new.media:
+    synthetic: true

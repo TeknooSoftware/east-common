@@ -34,4 +34,6 @@ use Teknoo\East\Website\Object\ObjectInterface;
 interface WriterInterface
 {
     public function save(ObjectInterface $object, PromiseInterface $promise = null): WriterInterface;
+
+    public function remove(ObjectInterface $object, PromiseInterface $promise = null): WriterInterface;
 }

@@ -23,11 +23,13 @@
 namespace Teknoo\Tests\East\Website\Loader;
 
 use PHPUnit\Framework\TestCase;
+use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Website\DBSource\Repository\MediaRepositoryInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Object\Media;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Loader\MediaLoader;
+use Teknoo\East\Website\Query\Expr\InclusiveOr;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -71,5 +73,31 @@ class MediaLoaderTest extends TestCase
     public function getEntity()
     {
         return new Media();
+    }
+
+    public function testLoad()
+    {
+        /**
+         * @var \PHPUnit\Framework\MockObject\MockObject $promiseMock
+         */
+        $promiseMock = $this->createMock(Promise::class);
+        $promiseMock->expects(self::never())->method('success');
+        $promiseMock->expects(self::never())->method('fail');
+
+        $this->getRepositoryMock()
+            ->expects(self::any())
+            ->method('findOneBy')
+            ->with(
+                [new InclusiveOr(
+                    ['id'=>'fooBar'],
+                    ['metadata.legacyId' => 'fooBar',]
+                )],
+                $promiseMock
+            );
+
+        self::assertInstanceOf(
+            LoaderInterface::class,
+            $this->buildLoader()->load('fooBar', $promiseMock)
+        );
     }
 }

@@ -9,5 +9,6 @@
         <field field-name="contentType" name="mime_type" type="string" />
         <field field-name="fileName" name="file_name" type="string" />
         <field field-name="alternative" type="string" />
+        <field field-name="legacyId" name="legacy_id" type="string" />
     </embedded-document>
 </doctrine-mongo-mapping>

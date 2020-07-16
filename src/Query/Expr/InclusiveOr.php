@@ -22,42 +22,33 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Doctrine\DBSource\ODM;
+namespace Teknoo\East\Website\Query\Expr;
 
-use Teknoo\East\Website\Query\Expr\ExprInterface;
-use Teknoo\East\Website\Query\Expr\In;
-use Teknoo\East\Website\Query\Expr\InclusiveOr;
+use Teknoo\Immutable\ImmutableInterface;
+use Teknoo\Immutable\ImmutableTrait;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-trait ExprConversionTrait
+class InclusiveOr implements ExprInterface, ImmutableInterface
 {
-    private function convert(array &$values): array
+    use ImmutableTrait;
+
+    private array $values;
+
+    /**.
+     * @param array<string|int, mixed> ...$values
+     */
+    public function __construct(array ...$values)
     {
-        $final = [];
-        foreach ($values as $key => $value) {
-            if (!$value instanceof ExprInterface) {
-                $final[$key] = $value;
+        $this->uniqueConstructorCheck();
 
-                continue;
-            }
+        $this->values = $values;
+    }
 
-            if ($value instanceof In) {
-                $final[$key] = ['$in' => $value->getValues()];
-
-                continue;
-            }
-
-            if ($value instanceof InclusiveOr) {
-                $orValues = $value->getValues();
-                $final['$or'] = $this->convert($orValues);
-
-                continue;
-            }
-        }
-
-        return $final;
+    public function getValues(): array
+    {
+        return $this->values;
     }
 }

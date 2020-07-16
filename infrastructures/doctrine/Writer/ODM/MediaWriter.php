@@ -31,6 +31,7 @@ use Teknoo\East\Website\Doctrine\Object\Media;
 use Teknoo\East\Website\Object\MediaMetadata;
 use Teknoo\East\Website\Object\ObjectInterface;
 use Teknoo\East\Website\Writer\WriterInterface;
+use Teknoo\East\Website\Writer\MediaWriter as OriginalWriter;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -40,9 +41,12 @@ class MediaWriter implements WriterInterface
 {
     private GridFSRepository $repository;
 
-    public function __construct(GridFSRepository $repository)
+    private OriginalWriter $writer;
+
+    public function __construct(GridFSRepository $repository, OriginalWriter $writer)
     {
         $this->repository = $repository;
+        $this->writer = $writer;
     }
 
     public function save(ObjectInterface $object, PromiseInterface $promise = null): WriterInterface
@@ -68,6 +72,13 @@ class MediaWriter implements WriterInterface
         if ($promise) {
             $promise->success($media);
         }
+
+        return $this;
+    }
+
+    public function remove(ObjectInterface $object, PromiseInterface $promise = null): WriterInterface
+    {
+        $this->writer->remove($object, $promise);
 
         return $this;
     }

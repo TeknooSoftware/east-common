@@ -26,6 +26,7 @@ namespace Teknoo\East\Website\Doctrine\DBSource\Common;
 
 use Teknoo\East\Website\Query\Expr\ExprInterface;
 use Teknoo\East\Website\Query\Expr\In;
+use Teknoo\East\Website\Query\Expr\InclusiveOr;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -45,6 +46,13 @@ trait ExprConversionTrait
 
             if ($value instanceof In) {
                 $final[$key] = $value->getValues();
+            }
+
+            if ($value instanceof InclusiveOr) {
+                $orValues = $value->getValues();
+                $final['or'] = $this->convert($orValues);
+
+                continue;
             }
         }
 

@@ -88,7 +88,7 @@ interface RepositoryInterface
     /**
      * Finds a single object by a set of criteria.
      *
-     * @param array<string, mixed> $criteria The criteria.
+     * @param array<string|int, mixed> $criteria The criteria.
      * @param PromiseInterface $promise
      *
      * @return RepositoryInterface self

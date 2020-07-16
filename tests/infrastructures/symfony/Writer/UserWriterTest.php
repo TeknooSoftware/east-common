@@ -171,4 +171,21 @@ class UserWriterTest extends TestCase
             $this->buildWriter()->save($user, $promise)
         );
     }
+
+    public function testRemove()
+    {
+        $object = $this->createMock(ObjectInterface::class);
+        $promise = $this->createMock(PromiseInterface::class);
+
+        $this->getUniversalWriter()
+            ->expects(self::once())
+            ->method('remove')
+            ->with($object, $promise)
+            ->willReturnSelf();
+
+        self::assertInstanceOf(
+            UserWriter::class,
+            $this->buildWriter()->remove($object, $promise)
+        );
+    }
 }

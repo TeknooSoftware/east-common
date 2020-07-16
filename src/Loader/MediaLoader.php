@@ -24,7 +24,11 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Loader;
 
+use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\Repository\MediaRepositoryInterface;
+use Teknoo\East\Website\DBSource\RepositoryInterface;
+use Teknoo\East\Website\Query\Expr\InclusiveOr;
+use Teknoo\East\Website\Query\QueryInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -32,10 +36,35 @@ use Teknoo\East\Website\DBSource\Repository\MediaRepositoryInterface;
  */
 class MediaLoader implements LoaderInterface
 {
-    use LoaderTrait;
+    private RepositoryInterface $repository;
 
     public function __construct(MediaRepositoryInterface $repository)
     {
         $this->repository = $repository;
+    }
+
+    public function load(string $id, PromiseInterface $promise): LoaderInterface
+    {
+        $criteria = [
+            new InclusiveOr(
+                ['id' => $id,],
+                ['metadata.legacyId' => $id,]
+            )
+        ];
+
+        try {
+            $this->repository->findOneBy($criteria, $promise);
+        } catch (\Throwable $exception) {
+            $promise->fail($exception);
+        }
+
+        return $this;
+    }
+
+    public function query(QueryInterface $query, PromiseInterface $promise): LoaderInterface
+    {
+        $query->execute($this, $this->repository, $promise);
+
+        return $this;
     }
 }

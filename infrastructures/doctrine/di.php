@@ -70,6 +70,7 @@ use Teknoo\East\Website\Doctrine\Translatable\Wrapper\WrapperInterface;
 use Teknoo\East\Website\Middleware\LocaleMiddleware;
 use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Object\User;
+use Teknoo\East\Website\Writer\MediaWriter as OriginalWriter;
 use Teknoo\East\Website\Service\ProxyDetectorInterface;
 use Teknoo\East\Website\Doctrine\Writer\ODM\MediaWriter;
 
@@ -245,7 +246,7 @@ return [
     MediaWriter::class => static function (ContainerInterface $container): MediaWriter {
         $repository = $container->get(ObjectManager::class)->getRepository(Media::class);
         if ($repository instanceof GridFSRepository) {
-            return new MediaWriter($repository);
+            return new MediaWriter($repository, $container->get(OriginalWriter::class));
         }
 
         throw new \RuntimeException(sprintf(

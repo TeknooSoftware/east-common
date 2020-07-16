@@ -30,6 +30,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Object\DeletableInterface;
+use Teknoo\East\Website\Object\ObjectInterface;
 use Teknoo\East\Website\Service\DeletingService;
 use Teknoo\East\WebsiteBundle\AdminEndPoint\AdminDeleteEndPoint;
 use Teknoo\Recipe\Promise\PromiseInterface;
@@ -195,7 +196,7 @@ class AdminDeleteEndPointTest extends TestCase
     {
         $request = $this->createMock(ServerRequestInterface::class);
         $client = $this->createMock(ClientInterface::class);
-        $object = $this->createMock(DeletableInterface::class);
+        $object = $this->createMock(ObjectInterface::class);
 
         $client->expects(self::once())->method('acceptResponse');
         $client->expects(self::never())->method('errorInRequest');

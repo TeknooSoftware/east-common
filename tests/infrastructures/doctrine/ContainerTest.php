@@ -28,6 +28,7 @@ use Doctrine\ODM\MongoDB\Configuration;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Mapping\ClassMetadata;
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
+use Doctrine\ODM\MongoDB\Repository\GridFSRepository;
 use Doctrine\Persistence\Mapping\ClassMetadata as BaseClassMetadata;
 use Doctrine\Persistence\Mapping\AbstractClassMetadataFactory;
 use Doctrine\Persistence\Mapping\Driver\FileLocator;
@@ -46,6 +47,7 @@ use Teknoo\East\Website\DBSource\Repository\UserRepositoryInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Mapping\DriverInterface;
 use Teknoo\East\Website\Doctrine\Translatable\TranslatableListener;
 use Teknoo\East\Website\Doctrine\Translatable\Wrapper\WrapperInterface;
+use Teknoo\East\Website\Doctrine\Writer\ODM\MediaWriter;
 use Teknoo\East\Website\Middleware\LocaleMiddleware;
 use Teknoo\East\Website\Doctrine\Object\Content;
 use Teknoo\East\Website\Doctrine\Object\Item;
@@ -53,6 +55,7 @@ use Teknoo\East\Website\Doctrine\Object\Media;
 use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Object\User;
 use Teknoo\East\Website\Service\ProxyDetectorInterface;
+use Teknoo\East\Website\Writer\MediaWriter as OriginalWriter;
 
 /**
  * Class DefinitionProviderTest.
@@ -394,6 +397,39 @@ class ContainerTest extends TestCase
                     return false;
                 }
             }, $p3)
+        );
+    }
+
+    public function testMediaWriterWithValidRepository()
+    {
+        $this->expectException(\RuntimeException::class);
+        $container = $this->buildContainer();
+        $objectManager = $this->createMock(ObjectManager::class);
+        $objectManager->expects(self::any())->method('getRepository')->willReturn(
+            $this->createMock(\DateTime::class)
+        );
+
+        $container->set(ObjectManager::class, $objectManager);
+        $container->get(MediaWriter::class);
+    }
+
+    public function testMediaWriter()
+    {
+        $container = $this->buildContainer();
+        $objectManager = $this->createMock(ObjectManager::class);
+        $objectManager->expects(self::any())->method('getRepository')->willReturn(
+            $this->createMock(GridFSRepository::class)
+        );
+
+        $container->set(ObjectManager::class, $objectManager);
+        $container->set(OriginalWriter::class, $this->createMock(OriginalWriter::class));
+        self::assertInstanceOf(
+            MediaWriter::class,
+            $container->get(MediaWriter::class)
+        );
+        self::assertInstanceOf(
+            MediaWriter::class,
+            $container->get('teknoo.east.website.doctrine.writer.media.new')
         );
     }
 }

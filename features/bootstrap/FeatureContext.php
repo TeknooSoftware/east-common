@@ -33,6 +33,7 @@ use Teknoo\East\Foundation\Middleware\MiddlewareInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Foundation\Template\ResultInterface;
 use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
+use Teknoo\East\Website\Doctrine\Object\Content;
 use Teknoo\East\Website\Loader\MediaLoader;
 use Teknoo\East\Website\Loader\ContentLoader;
 use Teknoo\East\Website\Loader\ItemLoader;
@@ -42,7 +43,6 @@ use Teknoo\East\Website\EndPoint\ContentEndPointTrait;
 use Teknoo\East\Website\EndPoint\StaticEndPointTrait;
 use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
 use Teknoo\East\Website\Object\Media;
-use Teknoo\East\Website\Doctrine\Object\Content;
 use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Object\Block;
 use Twig\Environment;
@@ -415,7 +415,12 @@ class FeatureContext implements Context
         };
 
         \current($this->objectRepository)->setObject(
-            ['id' => $name],
+            [
+                'or' => [
+                    ['id' => $name],
+                    ['metadata.legacyId' => $name,]
+                ]
+            ],
             $media->setId($name)
                 ->setName($name)
         );

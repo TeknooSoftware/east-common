@@ -76,4 +76,11 @@ class UserWriter implements WriterInterface
 
         return $this;
     }
+
+    public function remove(ObjectInterface $object, PromiseInterface $promise = null): WriterInterface
+    {
+        $this->universalWriter->remove($object, $promise);
+
+        return $this;
+    }
 }

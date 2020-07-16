@@ -34,7 +34,7 @@ class MediaMetadataTest extends TestCase
 {
     public function buildObject(): MediaMetadata
     {
-        return new MediaMetadata('contentType', 'fileName', 'alternative');
+        return new MediaMetadata('contentType', 'fileName', 'alternative', 'path', 'legacy');
     }
 
     public function testGetContentType()
@@ -50,5 +50,15 @@ class MediaMetadataTest extends TestCase
     public function testGetAlternative()
     {
         self::assertEquals('alternative', $this->buildObject()->getAlternative());
+    }
+
+    public function testGetLocalPath()
+    {
+        self::assertEquals('path', $this->buildObject()->getLocalPath());
+    }
+
+    public function testGetLegacyId()
+    {
+        self::assertEquals('legacy', $this->buildObject()->getLegacyId());
     }
 }

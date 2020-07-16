@@ -75,7 +75,7 @@ class DeletingServiceTest extends TestCase
         return new DeletingService($this->getWriterMock(), $this->getDatesServiceMock());
     }
 
-    public function testDelete()
+    public function testDeleteWithDeletable()
     {
         $date = new \DateTime('2017-01-01');
 
@@ -101,6 +101,10 @@ class DeletingServiceTest extends TestCase
             ->with($object)
             ->willReturnSelf();
 
+        $this->getWriterMock()
+            ->expects(self::never())
+            ->method('remove');
+
         $this->getDatesServiceMock()
             ->expects(self::any())
             ->method('passMeTheDate')
@@ -120,5 +124,32 @@ class DeletingServiceTest extends TestCase
         );
 
         self::assertEquals($date, $object->getDeletedAt());
+    }
+
+    public function testDeleteWithNonDeletable()
+    {
+        $object = new class implements ObjectInterface {
+            public function getId(): string
+            {
+            }
+        };
+
+        $this->getWriterMock()
+            ->expects(self::never())
+            ->method('save');
+
+        $this->getWriterMock()
+            ->expects(self::once())
+            ->method('remove')
+            ->with($object)
+            ->willReturnSelf();
+
+
+        $service = $this->buildService();
+
+        self::assertInstanceOf(
+            DeletingService::class,
+            $service->delete($object)
+        );
     }
 }

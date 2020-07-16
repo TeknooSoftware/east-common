@@ -28,6 +28,7 @@ use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Query\Expr\In;
+use Teknoo\East\Website\Query\Expr\InclusiveOr;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -280,12 +281,29 @@ trait RepositoryTestTrait
         $this->getDoctrineObjectRepositoryMock()
             ->expects(self::once())
             ->method('findOneBy')
-            ->with(['foo' => 'bar', 'bar' => ['$in' => ['foo']]])
+            ->with([
+                'foo' => 'bar',
+                'bar' => ['$in' => ['foo']],
+                '$or' => [
+                    ['foo' => 'bar'],
+                    ['bar' => 'foo']
+                ],
+            ])
             ->willReturn($object);
 
         self::assertInstanceOf(
             RepositoryInterface::class,
-            $this->buildRepository()->findOneBy(['foo' => 'bar', 'bar' => new In(['foo'])], $promise)
+            $this->buildRepository()->findOneBy(
+                [
+                    'foo' => 'bar',
+                    'bar' => new In(['foo']),
+                    new InclusiveOr(
+                        ['foo' => 'bar'],
+                        ['bar' => 'foo']
+                    )
+                ],
+                $promise
+            )
         );
     }
 }

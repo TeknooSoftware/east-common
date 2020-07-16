@@ -44,13 +44,24 @@ class DeletingService
         $this->datesService = $datesService;
     }
 
-    public function delete(DeletableInterface $object): DeletingService
+    private function processDeletable(DeletableInterface $object): void
     {
         $this->datesService->passMeTheDate([$object, 'setDeletedAt']);
 
         if ($object instanceof ObjectInterface) {
             $this->writer->save($object);
         }
+    }
+
+    public function delete(ObjectInterface $object): DeletingService
+    {
+        if ($object instanceof DeletableInterface) {
+            $this->processDeletable($object);
+            
+            return $this;
+        }
+
+        $this->writer->remove($object);
 
         return $this;
     }

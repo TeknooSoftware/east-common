@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * East Website.
  *
  * LICENSE
@@ -20,44 +20,21 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-declare(strict_types=1);
+namespace Teknoo\Tests\East\Website\Query\Expr;
 
-namespace Teknoo\East\Website\Doctrine\DBSource\ODM;
-
-use Teknoo\East\Website\Query\Expr\ExprInterface;
-use Teknoo\East\Website\Query\Expr\In;
+use PHPUnit\Framework\TestCase;
 use Teknoo\East\Website\Query\Expr\InclusiveOr;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ * @covers \Teknoo\East\Website\Query\Expr\InclusiveOr
  */
-trait ExprConversionTrait
+class InclusiveOrTest extends TestCase
 {
-    private function convert(array &$values): array
+ public function testExecute()
     {
-        $final = [];
-        foreach ($values as $key => $value) {
-            if (!$value instanceof ExprInterface) {
-                $final[$key] = $value;
-
-                continue;
-            }
-
-            if ($value instanceof In) {
-                $final[$key] = ['$in' => $value->getValues()];
-
-                continue;
-            }
-
-            if ($value instanceof InclusiveOr) {
-                $orValues = $value->getValues();
-                $final['$or'] = $this->convert($orValues);
-
-                continue;
-            }
-        }
-
-        return $final;
+        $or = new InclusiveOr(['foo'], ['bar']);
+        self::assertEquals([['foo'], ['bar']], $or->getValues());
     }
 }

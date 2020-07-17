@@ -25,8 +25,12 @@ declare(strict_types=1);
 namespace Teknoo\East\WebsiteBundle\Resources\config;
 
 use Psr\Container\ContainerInterface;
+use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
 use Teknoo\East\WebsiteBundle\Middleware\LocaleMiddleware;
+use Teknoo\East\Website\Loader\UserLoader;
+use Teknoo\East\WebsiteBundle\Provider\UserProvider;
 
 use function DI\decorate;
 
@@ -46,4 +50,27 @@ return [
 
         return $previous;
     }),
+
+    UserProvider::class => static function (ContainerInterface $container): UserProvider {
+        $loader = $container->get(UserLoader::class);
+
+        if (Kernel::VERSION_ID < 50000) {
+            return new class ($loader) extends UserProvider implements UserProviderInterface {
+                /**
+                 * @param string $username
+                 */
+                public function loadUserByUsername($username)
+                {
+                    return $this->fetchUserByUsername((string) $username);
+                }
+            };
+        }
+
+        return new class ($loader) extends UserProvider implements UserProviderInterface {
+            public function loadUserByUsername(string $username)
+            {
+                return $this->fetchUserByUsername($username);
+            }
+        };
+    },
 ];

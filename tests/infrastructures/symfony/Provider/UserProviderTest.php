@@ -23,6 +23,9 @@
 namespace Teknoo\Tests\East\WebsiteBundle\Provider;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Teknoo\East\Website\Loader\UserLoader;
 use Teknoo\East\Website\Query\User\UserByEmailQuery;
 use Teknoo\East\WebsiteBundle\Object\User;
@@ -56,11 +59,27 @@ class UserProviderTest extends TestCase
 
     public function buildProvider(): UserProvider
     {
-        return new UserProvider($this->getLoader());
+        if (Kernel::VERSION_ID < 50000) {
+            return new class ($this->getLoader()) extends UserProvider implements UserProviderInterface {
+                public function loadUserByUsername($username)
+                {
+                    return $this->fetchUserByUsername($username);
+                }
+            };
+        }
+
+        return new class ($this->getLoader()) extends UserProvider implements UserProviderInterface {
+            public function loadUserByUsername(string $username)
+            {
+                return $this->fetchUserByUsername($username);
+            }
+        };
     }
 
     public function testLoadUserByUsernameNotFound()
     {
+        $this->expectException(UsernameNotFoundException::class);
+
         $this->getLoader()
             ->expects(self::once())
             ->method('query')
@@ -71,7 +90,7 @@ class UserProviderTest extends TestCase
                 return $this->getLoader();
             });
 
-        self::assertNull($this->buildProvider()->loadUserByUsername('foo@bar'));
+        $this->buildProvider()->loadUserByUsername('foo@bar');
     }
 
     public function testLoadUserByUsernameFound()
@@ -97,6 +116,8 @@ class UserProviderTest extends TestCase
 
     public function testrefreshUserNotFound()
     {
+        $this->expectException(UsernameNotFoundException::class);
+
         $this->getLoader()
             ->expects(self::once())
             ->method('query')
@@ -107,7 +128,7 @@ class UserProviderTest extends TestCase
                 return $this->getLoader();
             });
 
-        self::assertNull($this->buildProvider()->refreshUser(new User((new BaseUser())->setEmail('foo@bar'))));
+        $this->buildProvider()->refreshUser(new User((new BaseUser())->setEmail('foo@bar')));
     }
 
     public function testrefreshUserFound()

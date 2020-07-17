@@ -12,6 +12,9 @@ parameters:
         -
             message: '#Call to an undefined method [a-zA-Z0-9\\_]+::createQueryBuilder\(\)#'
             path: infrastructures/doctrine/Form/Type/*
+        -
+            message: '#Comparison operation "<" between [0-9]+ and 50000 is always false#'
+            path: infrastructures/symfony/Resources/config/di.php
 services:
 	-
 		class: Teknoo\States\PHPStan\MethodsClassExtension

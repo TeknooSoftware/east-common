@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace Teknoo\East\WebsiteBundle\Provider;
 
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Website\Loader\UserLoader;
 use Teknoo\East\Website\Query\User\UserByEmailQuery;
@@ -35,7 +35,7 @@ use Teknoo\East\WebsiteBundle\Object\User;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class UserProvider implements UserProviderInterface
+abstract class UserProvider
 {
     private UserLoader $loader;
 
@@ -47,7 +47,7 @@ class UserProvider implements UserProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function loadUserByUsername(string $username): ?UserInterface
+    protected function fetchUserByUsername(string $username): UserInterface
     {
         $loadedUser = null;
         $this->loader->query(
@@ -57,6 +57,10 @@ class UserProvider implements UserProviderInterface
             })
         );
 
+        if (!$loadedUser) {
+            throw new UsernameNotFoundException();
+        }
+
         return $loadedUser;
     }
 
@@ -65,7 +69,7 @@ class UserProvider implements UserProviderInterface
      */
     public function refreshUser(UserInterface $user): ?UserInterface
     {
-        return $this->loadUserByUsername($user->getUsername());
+        return $this->fetchUserByUsername($user->getUsername());
     }
 
     /**

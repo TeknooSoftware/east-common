@@ -111,6 +111,9 @@ services:
 
   #Front endpoints
   teknoo.east.website.endpoint.content:
+    alias: 'Teknoo\East\WebsiteBundle\EndPoint\ContentEndPoint'
+
+  Teknoo\East\WebsiteBundle\EndPoint\ContentEndPoint:
     class: '%teknoo.east.website.endpoint.content.class%'
     arguments:
       - '@Teknoo\East\Website\Loader\ContentLoader'
@@ -126,6 +129,9 @@ services:
     alias: 'Psr\Http\Message\StreamFactoryInterface'
 
   teknoo.east.website.endpoint.media:
+    alias: 'Teknoo\East\Website\Doctrine\EndPoint\ODM\MediaEndPoint'
+
+  Teknoo\East\Website\Doctrine\EndPoint\ODM\MediaEndPoint:
     class: '%teknoo.east.website.endpoint.media.class%'
     arguments:
       - '@Teknoo\East\Website\Loader\MediaLoader'
@@ -136,6 +142,9 @@ services:
     public: true
 
   teknoo.east.website.endpoint.static:
+    alias: 'Teknoo\East\WebsiteBundle\EndPoint\StaticEndPoint'
+
+  Teknoo\East\WebsiteBundle\EndPoint\StaticEndPoint:
     class: '%teknoo.east.website.endpoint.static.class%'
     calls:
       - ['setResponseFactory', ['@Psr\Http\Message\ResponseFactoryInterface']]
@@ -352,13 +361,16 @@ services:
 
   #Provider
   teknoo.east.website.bundle.user_provider:
-    class: '%teknoo.east.website.bundle.user_provider.class%'
-    arguments:
-      - '@Teknoo\East\Website\Loader\UserLoader'
-    public: false
+    alias: 'Teknoo\East\WebsiteBundle\Provider\UserProvider'
+
+  Teknoo\East\WebsiteBundle\Provider\UserProvider:
+    synthetic: true
 
   #Command
   teknoo.east.website.bundle.command.create_user:
+    alias: 'Teknoo\East\WebsiteBundle\Command\CreateUserCommand'
+
+  Teknoo\East\WebsiteBundle\Command\CreateUserCommand:
     class: '%teknoo.east.website.bundle.command.create_user.class%'
     arguments:
       - '@Teknoo\East\Website\Writer\UserWriter'
@@ -369,6 +381,9 @@ services:
 
   #Writer
   teknoo.east.website.bundle.writer.user:
+    alias: 'Teknoo\East\WebsiteBundle\Writer\UserWriter'
+
+  Teknoo\East\WebsiteBundle\Writer\UserWriter:
     class: '%teknoo.east.website.bundle.writer.user.class%'
     arguments:
       - '@Teknoo\East\Website\Writer\UserWriter'

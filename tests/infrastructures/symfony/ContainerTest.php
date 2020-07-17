@@ -31,7 +31,13 @@ use Teknoo\East\Foundation\Recipe\RecipeInterface;
 use Teknoo\East\Foundation\Router\RouterInterface;
 use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
 use Teknoo\East\Website\DBSource\Repository\ItemRepositoryInterface;
+use Teknoo\East\Website\Loader\UserLoader;
+use Teknoo\East\Website\Object\User as BaseUser;
+use Teknoo\East\Website\Query\User\UserByEmailQuery;
 use Teknoo\East\WebsiteBundle\Middleware\LocaleMiddleware;
+use Teknoo\East\WebsiteBundle\Object\User;
+use Teknoo\East\WebsiteBundle\Provider\UserProvider;
+use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
  * Class DefinitionProviderTest.
@@ -86,6 +92,35 @@ class ContainerTest extends TestCase
         self::assertInstanceOf(
             RecipeInterface::class,
             $container->get(RecipeInterface::class)
+        );
+    }
+
+    public function testUserProvider()
+    {
+        $container = $this->buildContainer();
+
+        $container->set(UserLoader::class, $loader = $this->createMock(UserLoader::class));
+
+        self::assertInstanceOf(
+            UserProvider::class,
+            $provider = $container->get(UserProvider::class)
+        );
+
+        $user = new BaseUser();
+        $user->setEmail('foo@bar');
+
+        $loader->expects(self::once())
+            ->method('query')
+            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user, $loader) {
+                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
+                $promise->success($user);
+
+                return $loader;
+            });
+
+        self::assertEquals(
+            (new User($user)),
+            $provider->loadUserByUsername('foo@bar')
         );
     }
 }

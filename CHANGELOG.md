@@ -1,5 +1,13 @@
 #Teknoo Software - Website - Change Log
 
+##[3.0.2] - 2020-07-17
+###Stable Release
+###Change
+- Update libs requirements
+- Fix QA
+- Switch to fork teknoo/bridge-phpdi-symfony instead php-ti/symfony-bridge
+- Add travis run also with lowest dependencies.
+
 ##[3.0.1] - 2020-07-16
 ###Stable release
 - Fixing issue with new GridFS specifications and ID must be ObjectId and not UUID.

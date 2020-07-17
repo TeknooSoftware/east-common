@@ -1,5 +1,10 @@
 #Teknoo Software - Website - Change Log
 
+##[3.0.3] - 2020-07-18
+###Stable Release
+###Change
+- Fix UserProvider to work with Sf 4.4 and Sf 5.* (Since 5.* UserProviderInterface change and is incompatible with 4.4)
+
 ##[3.0.2] - 2020-07-17
 ###Stable Release
 ###Change

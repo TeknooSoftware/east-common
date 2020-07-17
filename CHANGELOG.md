@@ -1,5 +1,10 @@
 #Teknoo Software - Website - Change Log
 
+##[3.0.4] - 2020-07-18
+###Stable Release
+###Change
+- Fix endpoint visibility in container
+
 ##[3.0.3] - 2020-07-18
 ###Stable Release
 ###Change

@@ -112,6 +112,7 @@ services:
   #Front endpoints
   teknoo.east.website.endpoint.content:
     alias: 'Teknoo\East\WebsiteBundle\EndPoint\ContentEndPoint'
+    public: true
 
   Teknoo\East\WebsiteBundle\EndPoint\ContentEndPoint:
     class: '%teknoo.east.website.endpoint.content.class%'
@@ -127,9 +128,11 @@ services:
 
   teknoo.east.website.endpoint.media.stream.factory:
     alias: 'Psr\Http\Message\StreamFactoryInterface'
+    public: true
 
   teknoo.east.website.endpoint.media:
     alias: 'Teknoo\East\Website\Doctrine\EndPoint\ODM\MediaEndPoint'
+    public: true
 
   Teknoo\East\Website\Doctrine\EndPoint\ODM\MediaEndPoint:
     class: '%teknoo.east.website.endpoint.media.class%'
@@ -143,6 +146,7 @@ services:
 
   teknoo.east.website.endpoint.static:
     alias: 'Teknoo\East\WebsiteBundle\EndPoint\StaticEndPoint'
+    public: true
 
   Teknoo\East\WebsiteBundle\EndPoint\StaticEndPoint:
     class: '%teknoo.east.website.endpoint.static.class%'
@@ -382,6 +386,7 @@ services:
   #Writer
   teknoo.east.website.bundle.writer.user:
     alias: 'Teknoo\East\WebsiteBundle\Writer\UserWriter'
+    public: true
 
   Teknoo\East\WebsiteBundle\Writer\UserWriter:
     class: '%teknoo.east.website.bundle.writer.user.class%'

@@ -1,5 +1,10 @@
 #Teknoo Software - Website - Change Log
 
+##[3.0.5] - 2020-07-18
+###Stable Release
+###Change
+- Fix nullable restriction on doctrine mapping
+
 ##[3.0.4] - 2020-07-18
 ###Stable Release
 ###Change

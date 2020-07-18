@@ -9,11 +9,11 @@
         <id type="string" strategy="UUID"/>
         <field field-name="firstName" name="first_name" type="string" />
         <field field-name="lastName" name="last_name" type="string" />
-        <field field-name="roles" name="roles" type="collection" />
-        <field field-name="email" type="string" unique="true" index="true" />
-        <field field-name="password" type="string" />
-        <field field-name="salt" type="string" />
-        <field field-name="createdAt" name="created_at" type="date" />
+        <field field-name="roles" name="roles" type="collection" nullable="false"/>
+        <field field-name="email" type="string" unique="true" index="true" nullable="false"/>
+        <field field-name="password" type="string" nullable="false"/>
+        <field field-name="salt" type="string" nullable="false"/>
+        <field field-name="createdAt" name="created_at" type="date" nullable="false"/>
         <field field-name="updatedAt" name="updated_at" type="date" />
         <field field-name="deletedAt" name="deleted_at" type="date" nullable="true" index="true" />
         <indexes>

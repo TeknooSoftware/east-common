@@ -7,10 +7,10 @@
 
     <document name="Teknoo\East\Website\Doctrine\Object\Translation" collection="translations">
         <id type="string" strategy="UUID"/>
-        <field field-name="locale" type="string" />
-        <field field-name="objectClass" name="object_class" type="string" />
-        <field field-name="field" type="string" />
-        <field field-name="foreignKey" name="foreign_key" type="string" />
+        <field field-name="locale" type="string" nullable="false"/>
+        <field field-name="objectClass" name="object_class" type="string" nullable="false"/>
+        <field field-name="field" type="string" nullable="false"/>
+        <field field-name="foreignKey" name="foreign_key" type="string" nullable="false"/>
         <field field-name="content" type="string" />
         <indexes>
             <index name="lookup_unique_idx">

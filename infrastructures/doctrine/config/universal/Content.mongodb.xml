@@ -7,13 +7,13 @@
 
     <document name="Teknoo\East\Website\Object\Content" collection="contents" inheritance-type="COLLECTION_PER_CLASS">
         <id type="string" strategy="UUID"/>
-        <field field-name="title" type="string" />
+        <field field-name="title" type="string" nullable="false"/>
         <field field-name="subtitle" type="string" />
-        <field field-name="slug" type="string" index="true" unique="true" />
+        <field field-name="slug" type="string" index="true" unique="true" nullable="false"/>
         <field field-name="description" type="string" />
         <field field-name="parts" type="string" />
         <field field-name="tags" type="collection" index="true"/>
-        <field field-name="createdAt" name="created_at" type="date" />
+        <field field-name="createdAt" name="created_at" type="date" nullable="false"/>
         <field field-name="updatedAt" name="updated_at" type="date" />
         <field field-name="deletedAt" name="deleted_at" type="date" nullable="true" index="true" />
         <field field-name="publishedAt" name="published_at" type="date" nullable="true" index="true" />

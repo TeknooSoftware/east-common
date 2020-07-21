@@ -28,6 +28,7 @@ ini_set('memory_limit', '64M');
 
 include 'fakeQuery.php';
 include 'fakeUOW.php';
+include 'fakeRuntimeException.php';
 include __DIR__.'/../vendor/autoload.php';
 
 if (!\class_exists(\MongoGridFSFile::class)) {

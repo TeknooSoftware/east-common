@@ -757,7 +757,8 @@ class FeatureContext implements Context
                         'statesAliasesList',
                         'callerStatedClassesStack',
                         'localeField',
-                        'publishedAt'
+                        'publishedAt',
+                        'defaultCallerStatedClassName',
                     ])) {
                         continue;
                     }

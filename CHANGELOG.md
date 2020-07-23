@@ -1,5 +1,10 @@
 #Teknoo Software - Website - Change Log
 
+##[3.0.6] - 2020-07-18
+###Stable Release
+###Change
+- Fix tests with last Teknoo/states
+
 ##[3.0.5] - 2020-07-18
 ###Stable Release
 ###Change

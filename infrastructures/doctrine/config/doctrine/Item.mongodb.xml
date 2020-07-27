@@ -6,6 +6,27 @@
                                             http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
 
     <document name="Teknoo\East\Website\Doctrine\Object\Item" collection="items">
+        <reference-one
+                field="parent"
+                target-document="Teknoo\East\Website\Doctrine\Object\Item"
+                inversed-by="children"
+                orphan-removal="true">
+            <cascade>
+                <all/>
+            </cascade>
+        </reference-one>
+        <reference-one
+                field="content"
+                target-document="Teknoo\East\Website\Doctrine\Object\Content">
+            <cascade />
+        </reference-one>
+        <reference-many field="children"
+                        target-document="Teknoo\East\Website\Doctrine\Object\Item"
+                        mapped-by="parent">
+            <cascade>
+                <all/>
+            </cascade>
+        </reference-many>
         <lifecycle-callbacks>
             <lifecycle-callback type="postLoad" method="postLoadDoctrine"/>
         </lifecycle-callbacks>

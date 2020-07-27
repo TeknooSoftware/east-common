@@ -1,5 +1,10 @@
 #Teknoo Software - Website - Change Log
 
+##[3.0.7] - 2020-07-27
+###Stable Release
+###Change
+- Fix Item mapping about content and items in the doctrine configuration dedicated for ODM.
+
 ##[3.0.6] - 2020-07-18
 ###Stable Release
 ###Change

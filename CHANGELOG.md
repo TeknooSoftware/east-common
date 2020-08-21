@@ -1,5 +1,10 @@
 #Teknoo Software - Website - Change Log
 
+##[3.0.8] - 2020-8-21
+###Stable Release
+###Change
+- Fix DateService to keep the computed date on first DatesService::getCurrentDate()
+
 ##[3.0.7] - 2020-07-27
 ###Stable Release
 ###Change

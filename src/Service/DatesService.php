@@ -45,7 +45,7 @@ class DatesService
             return $this->currentDate;
         }
 
-        return new \DateTime();
+        return $this->currentDate = new \DateTime();
     }
 
     public function passMeTheDate(callable $setter): self

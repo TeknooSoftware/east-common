@@ -57,11 +57,17 @@ class DatesServiceTest extends TestCase
             }
         };
 
+        $service = $this->buildService();
         self::assertInstanceOf(
             DatesService::class,
-            $this->buildService()->passMeTheDate([$object, 'setDate'])
+            $service->passMeTheDate([$object, 'setDate'])
         );
+
         self::assertInstanceOf(\DateTimeInterface::class, $object->getDate());
+        $oldDate = $object->getDate();
+
+        $service->passMeTheDate([$object, 'setDate']);
+        self::assertEquals($oldDate, $object->getDate());
     }
 
     public function testPassMeTheDateWithDefinedDate()

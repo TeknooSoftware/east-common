@@ -298,14 +298,43 @@ class ODMTest extends TestCase
         );
     }
 
-    public function testPersistTranslationRecordOnUpdate()
+    public function testPersistTranslationRecordOnUpdateWithUUID()
     {
         $translation = $this->createMock(TranslationInterface::class);
         $translation->expects(self::any())->method('getIdentifier')->willReturn('foo');
 
         $meta = $this->createMock(ClassMetadata::class);
-        $meta->expects(self::any())->method('getFieldNames')->willReturn(['foo']);
-        $meta->expects(self::any())->method('getFieldMapping')->willReturn(['fieldName' => 'foo']);
+        $meta->expects(self::any())->method('getFieldNames')->willReturn(['id', 'foo']);
+        $meta->expects(self::any())->method('getFieldMapping')->willReturnOnConsecutiveCalls(
+            ['id' => true, 'fieldName' => '_id'],
+            ['fieldName' => 'foo']
+        );
+        $meta->expects(self::any())->method('getFieldValue')->willReturn('bar');
+
+        $collection = $this->createMock(Collection::class);
+        $collection->expects(self::never())->method('insertOne');
+        $collection->expects(self::once())->method('updateOne');
+
+        $this->getManager()->expects(self::any())->method('getClassMetadata')->willReturn($meta);
+        $this->getManager()->expects(self::any())->method('getDocumentCollection')->willReturn($collection);
+
+        self::assertInstanceOf(
+            AdapterInterface::class,
+            $this->build()->persistTranslationRecord($translation)
+        );
+    }
+
+    public function testPersistTranslationRecordOnUpdateWithObjectId()
+    {
+        $translation = $this->createMock(TranslationInterface::class);
+        $translation->expects(self::any())->method('getIdentifier')->willReturn('5a3d3e2ef7f98a00110ab582');
+
+        $meta = $this->createMock(ClassMetadata::class);
+        $meta->expects(self::any())->method('getFieldNames')->willReturn(['id', 'foo']);
+        $meta->expects(self::any())->method('getFieldMapping')->willReturnOnConsecutiveCalls(
+            ['id' => true, 'fieldName' => '_id'],
+            ['fieldName' => 'foo']
+        );
         $meta->expects(self::any())->method('getFieldValue')->willReturn('bar');
 
         $collection = $this->createMock(Collection::class);

@@ -28,6 +28,7 @@ use Doctrine\ODM\MongoDB\Mapping\ClassMetadata as OdmClassMetadata;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Types\Type;
 use Doctrine\Persistence\Mapping\ClassMetadata;
+use MongoDB\BSON\ObjectId;
 use Teknoo\East\Website\Doctrine\Translatable\Persistence\AdapterInterface;
 use Teknoo\East\Website\Doctrine\Translatable\TranslationInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Wrapper\WrapperInterface;
@@ -128,11 +129,21 @@ class ODM implements AdapterInterface
         $metadata->setIdentifierValue($translation, $idValue);
     }
 
-    private function generateInsertionArray(OdmClassMetadata $metadata, TranslationInterface $translation): array
+    /**
+     * @param mixed|string|ObjectId $id
+     */
+    private function generateInsertionArray(OdmClassMetadata $metadata, TranslationInterface $translation, $id): array
     {
         $final = [];
         foreach ($metadata->getFieldNames() as $fieldName) {
             $fm = $metadata->getFieldMapping($fieldName);
+
+            if (null !== $id && !empty($fm['id'])) {
+                $final[$fm['name'] ?? $fm['fieldName']] = $id;
+
+                continue;
+            }
+
             $final[$fm['name'] ?? $fm['fieldName']] = $metadata->getFieldValue($translation, $fieldName);
         }
 
@@ -147,11 +158,19 @@ class ODM implements AdapterInterface
         $collection = $this->manager->getDocumentCollection($className);
         if (empty($translation->getIdentifier())) {
             $this->prepareId($meta, $translation);
-            $collection->insertOne($this->generateInsertionArray($meta, $translation));
+            $collection->insertOne($this->generateInsertionArray($meta, $translation, null));
         } else {
+            $id = $translation->getIdentifier();
+
+            if (24 === \strlen($id)) {
+                $id = new ObjectId($id);
+            }
+
+            $set = $this->generateInsertionArray($meta, $translation, $id);
+
             $collection->updateOne(
-                ['_id' => $translation->getIdentifier()],
-                ['$set' => $this->generateInsertionArray($meta, $translation)]
+                ['_id' => $id],
+                ['$set' => $set]
             );
         }
 

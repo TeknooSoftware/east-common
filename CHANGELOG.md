@@ -1,5 +1,10 @@
 #Teknoo Software - Website - Change Log
 
+##[3.0.9] - 2020-8-25
+###Stable Release
+###Change
+- Fix Translatable/Persistence/ODM to manage ObjectId id instead of UUID for old translations.
+
 ##[3.0.8] - 2020-8-21
 ###Stable Release
 ###Change

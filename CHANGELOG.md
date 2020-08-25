@@ -1,5 +1,10 @@
 #Teknoo Software - Website - Change Log
 
+##[3.0.10] - 2020-08-25
+###Stable Release
+###Update
+- Update libs and dev libs requirements
+
 ##[3.0.9] - 2020-8-25
 ###Stable Release
 ###Change

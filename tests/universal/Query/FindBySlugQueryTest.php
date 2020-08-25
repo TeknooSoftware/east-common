@@ -42,9 +42,9 @@ class FindBySlugQueryTest extends TestCase
     /**
      * @inheritDoc
      */
-    public function buildQuery(): QueryInterface
+    public function buildQuery(bool $includedDeleted = false): QueryInterface
     {
-        return new FindBySlugQuery('fooBarName', 'HelloWorld');
+        return new FindBySlugQuery('fooBarName', 'HelloWorld', $includedDeleted);
     }
 
     public function testExecute()
@@ -65,6 +65,27 @@ class FindBySlugQueryTest extends TestCase
         self::assertInstanceOf(
             FindBySlugQuery::class,
             $this->buildQuery()->execute($loader, $repository, $promise)
+        );
+    }
+
+    public function testExecuteWithDeleted()
+    {
+        $loader = $this->createMock(LoaderInterface::class);
+        $repository = $this->createMock(RepositoryInterface::class);
+        $promise = $this->createMock(PromiseInterface::class);
+
+        $promise->expects(self::never())->method('success');
+        $promise->expects(self::never())->method('fail');
+
+        $repository->expects(self::once())
+            ->method('findOneBy')
+            ->with(['fooBarName' => 'HelloWorld',], $this->callback(function ($pr) {
+                return $pr instanceof PromiseInterface;
+            }));
+
+        self::assertInstanceOf(
+            FindBySlugQuery::class,
+            $this->buildQuery(true)->execute($loader, $repository, $promise)
         );
     }
 

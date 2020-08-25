@@ -42,12 +42,15 @@ class FindBySlugQuery implements QueryInterface, ImmutableInterface
 
     private string $slugValue;
 
-    public function __construct(string $slugField, string $slugValue)
+    private bool $includeDeleted = false;
+
+    public function __construct(string $slugField, string $slugValue, bool $includeDeleted = false)
     {
         $this->uniqueConstructorCheck();
 
         $this->slugField = $slugField;
         $this->slugValue = $slugValue;
+        $this->includeDeleted = $includeDeleted;
     }
 
     /**
@@ -58,8 +61,14 @@ class FindBySlugQuery implements QueryInterface, ImmutableInterface
         RepositoryInterface $repository,
         PromiseInterface $promise
     ): QueryInterface {
+        $filters = [$this->slugField => $this->slugValue];
+
+        if (!$this->includeDeleted) {
+            $filters['deletedAt'] = null;
+        }
+
         $repository->findOneBy(
-            [$this->slugField => $this->slugValue, 'deletedAt' => null],
+            $filters,
             $promise
         );
 

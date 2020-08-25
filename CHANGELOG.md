@@ -4,6 +4,7 @@
 ###Stable Release
 ###Change
 - Fix Translatable/Persistence/ODM to manage ObjectId id instead of UUID for old translations.
+- Fix FindSlugService and FindBySlugQuery to manage Soft Deletable contents.
 
 ##[3.0.8] - 2020-8-21
 ###Stable Release

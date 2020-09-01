@@ -58,7 +58,6 @@ Example with Symfony
     
             /**/
             $builder->addDefinitions([
-                'teknoo_website_hostname' => \DI\string($websiteName),
                 \Doctrine\Common\Persistence\ObjectManager::class => \DI\get('doctrine_mongodb.odm.default_document_manager'),
             ]);
     

@@ -1,6 +1,6 @@
 {
     "name": "teknoo/east-website",
-    "description": "East package to run a basic website",
+    "description": "Universal package, following the #East programming philosophy, build on Teknoo/East-Foundation (and Teknoo/Recipe), and implementing a basic CMS to display dynamics pages with different types and templates.",
     "license": "MIT",
     "type": "library",
     "keywords": ["east","website","cms"],

@@ -19,42 +19,26 @@ Example with Symfony
     
     declare(strict_types=1);
     
-    use DI\Bridge\Symfony\Kernel;
+    use DI\Bridge\Symfony\Kernel as BaseKernel;
     use Symfony\Component\Config\Loader\LoaderInterface;
     use DI\ContainerBuilder as DIContainerBuilder;
     
-    class AppKernel extends Kernel
+    class Kernel extends BaseKernel
     {
-        public function registerBundles()
-        {
-            $bundles = [
-                /**/
-                new Teknoo\East\FoundationBundle\EastFoundationBundle(),
-                new Teknoo\East\WebsiteBundle\TeknooEastWebsiteBundle(),
-                /**/
-            ];
-    
-            /**/
-    
-            return $bundles;
-        }
-    
-        /**/
-    
         protected function buildPHPDIContainer(DIContainerBuilder $builder)
         {
             // Configure your container here
-            $appPath = /**/;
+            $rootPath = /**/;
     
-            $builder->addDefinitions($vendorPath.'/teknoo/east-foundation/src/di.php');
-            $builder->addDefinitions($vendorPath.'/teknoo/east-foundation/infrastructures/symfony/Resources/config/di.php');
+            $builder->addDefinitions($vendorPath . '/teknoo/east-foundation/src/di.php');
+            $builder->addDefinitions($vendorPath . '/teknoo/east-foundation/infrastructures/symfony/Resources/config/di.php');
     
-            $builder->addDefinitions($vendorPath.'/teknoo/east-website/src/di.php');
-            $builder->addDefinitions($vendorPath.'/teknoo/east-website/infrastructures/doctrine/di.php');
-            $builder->addDefinitions($vendorPath.'/teknoo/east-website/infrastructures/symfony/Resources/config/di.php');
-            $builder->addDefinitions($vendorPath.'/teknoo/east-website/infrastructures/di.php');
+            $builder->addDefinitions($vendorPath . '/teknoo/east-website/src/di.php');
+            $builder->addDefinitions($vendorPath . '/teknoo/east-website/infrastructures/doctrine/di.php');
+            $builder->addDefinitions($vendorPath . '/teknoo/east-website/infrastructures/symfony/Resources/config/di.php');
+            $builder->addDefinitions($vendorPath . '/teknoo/east-website/infrastructures/di.php');
     
-            $builder->addDefinitions($appPath.'/config/di.php');
+            $builder->addDefinitions($rootPath . '/config/di.php');
     
             /**/
             $builder->addDefinitions([
@@ -64,6 +48,11 @@ Example with Symfony
             return $builder->build();
         }
     }
+    
+    //bundles.php
+    ...
+    Teknoo\East\FoundationBundle\EastFoundationBundle::class => ['all' => true],
+    Teknoo\East\WebsiteBundle\TeknooEastWebsiteBundle::class => ['all' => true],
 
     //In doctrine config
     doctrine_mongodb:

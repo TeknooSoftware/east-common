@@ -17,12 +17,12 @@
         <field field-name="updatedAt" name="updated_at" type="date" />
         <field field-name="deletedAt" name="deleted_at" type="date" nullable="true" index="true" />
         <field field-name="publishedAt" name="published_at" type="date" nullable="true" index="true" />
-        <reference-one field="type" target-document="Teknoo\East\Website\Object\Type">
+        <reference-one field="type" target-document="Teknoo\East\Website\Object\Type" store-as="dbRefWithDb">
             <cascade>
                 <all/>
             </cascade>
         </reference-one>
-        <reference-one field="author" target-document="Teknoo\East\Website\Object\User">
+        <reference-one field="author" target-document="Teknoo\East\Website\Object\User" store-as="dbRefWithDb">
             <cascade>
                 <all/>
             </cascade>

@@ -20,6 +20,7 @@
         <reference-one
                 field="parent"
                 target-document="Teknoo\East\Website\Object\Item"
+                store-as="dbRefWithDb"
                 inversed-by="children"
                 orphan-removal="true">
             <cascade>
@@ -28,6 +29,7 @@
         </reference-one>
         <reference-one
                 field="content"
+                store-as="dbRefWithDb"
                 target-document="Teknoo\East\Website\Object\Content">
             <cascade />
         </reference-one>

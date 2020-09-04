@@ -8,6 +8,7 @@
     <document name="Teknoo\East\Website\Doctrine\Object\Item" collection="items">
         <reference-one
                 field="parent"
+                store-as="dbRefWithDb"
                 target-document="Teknoo\East\Website\Doctrine\Object\Item"
                 inversed-by="children"
                 orphan-removal="true">
@@ -17,6 +18,7 @@
         </reference-one>
         <reference-one
                 field="content"
+                store-as="dbRefWithDb"
                 target-document="Teknoo\East\Website\Doctrine\Object\Content">
             <cascade />
         </reference-one>

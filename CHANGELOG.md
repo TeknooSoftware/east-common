@@ -1,5 +1,10 @@
 #Teknoo Software - Website - Change Log
 
+##[3.0.11] - 2020-09-04
+###Stable Release
+###Update
+- Fix Mongo Reference to be compliant with previous version of data created from previous version of this lib.
+
 ##[3.0.10] - 2020-08-25
 ###Stable Release
 ###Update

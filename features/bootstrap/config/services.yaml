@@ -25,17 +25,9 @@ services:
   Psr\Http\Message\UploadedFileFactoryInterface:
     class: 'Laminas\Diactoros\UploadedFileFactory'
 
-  Psr\Http\Message\ResponseFactoryInterface:
-    synthetic: true
-
-  Psr\Http\Message\StreamFactoryInterface:
-    synthetic: true
-
   teknoo.east.website.endpoint.media.stream.factory:
     class: 'Laminas\Diactoros\StreamFactory'
 
   twig:
     synthetic: true
 
-  teknoo.east.website.endpoint.admin.new.media:
-    synthetic: true

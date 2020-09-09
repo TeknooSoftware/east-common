@@ -188,15 +188,13 @@ class FeatureContext implements Context
 
                 $container->setParameter('container.autowiring.strict_mode', true);
                 $container->setParameter('container.dumper.inline_class_loader', true);
-
-                $container->set(ObjectManager::class, $this->context->buildObjectManager());
-                $container->set('twig', $this->context->twig);
             }
 
-            protected function configureRoutes(RoutingConfigurator $routes)
+            protected function configureRoutes(RoutingConfigurator $routes): void
             {
                 $rootDir = \dirname(__DIR__, 2);
-                $routes->import( $rootDir.'/infrastructures/symfony/Resources/config/admin_*.yml', 'glob');
+                $routes->import( $rootDir.'/infrastructures/symfony/Resources/config/admin_*.yml', 'glob')
+                    ->prefix('/admin');
                 $routes->import( $rootDir.'/infrastructures/symfony/Resources/config/r*.yml', 'glob');
             }
         };
@@ -844,6 +842,13 @@ class FeatureContext implements Context
 
     private function runSymfony(SFRequest $serverRequest)
     {
+        $this->symfonyKernel->boot();
+
+        $container = $this->symfonyKernel->getContainer();
+
+        $container->set(ObjectManager::class, $this->buildObjectManager());
+        $container->set('twig', $this->twig);
+
         $response = $this->symfonyKernel->handle($serverRequest);
 
         $psrFactory = new \Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory(

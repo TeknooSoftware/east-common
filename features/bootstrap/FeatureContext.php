@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-use DI\Bridge\Symfony\Kernel as BaseKernel;
-use DI\ContainerBuilder as DIContainerBuilder;
 use Behat\Behat\Context\Context;
 use DI\Container;
 use Doctrine\Persistence\ObjectRepository;
@@ -20,7 +18,8 @@ use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder as SfContainerBuilder;
 use Symfony\Component\HttpFoundation\Request as SfRequest;
-use Symfony\Component\Routing\RouteCollectionBuilder;
+use Symfony\Component\HttpKernel\Kernel as BaseKernel;
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Teknoo\East\Foundation\EndPoint\EndPointInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
@@ -159,6 +158,11 @@ class FeatureContext implements Context
                 parent::__construct($environment, false);
             }
 
+            public function getProjectDir(): string
+            {
+                return \dirname(__DIR__, 2);
+            }
+
             public function getCacheDir()
             {
                 return \dirname(__DIR__, 2).'/tests/var/cache';
@@ -174,50 +178,26 @@ class FeatureContext implements Context
                 yield new \Symfony\Bundle\FrameworkBundle\FrameworkBundle();
                 yield new \Teknoo\East\FoundationBundle\EastFoundationBundle();
                 yield new \Teknoo\East\WebsiteBundle\TeknooEastWebsiteBundle();
-            }
-
-            protected function buildPHPDIContainer(DIContainerBuilder $builder)
-            {
-                $rootDir = \dirname(__DIR__, 2);
-                $builder->addDefinitions(
-                    include $rootDir.'/vendor/teknoo/east-foundation/src/di.php'
-                );
-                $builder->addDefinitions(
-                    include $rootDir.'/vendor/teknoo/east-foundation/infrastructures/symfony/Resources/config/di.php'
-                );
-                $builder->addDefinitions(
-                    include $rootDir.'/src/di.php'
-                );
-                $builder->addDefinitions(
-                    include $rootDir.'/infrastructures/doctrine/di.php'
-                );
-                $builder->addDefinitions(
-                    include $rootDir.'/infrastructures/symfony/Resources/config/di.php'
-                );
-                $builder->addDefinitions(
-                    include $rootDir.'/infrastructures/di.php'
-                );
-
-                $this->context->container = $builder->build();
-                $this->context->container->set(ObjectManager::class, $this->context->buildObjectManager());
-                $this->container->set('twig', $this->context->twig);
-
-                return $this->context->container;
+                yield new \Teknoo\DI\SymfonyBridge\DIBridgeBundle();
             }
 
             protected function configureContainer(SfContainerBuilder $container, LoaderInterface $loader)
             {
                 $loader->load(__DIR__.'/config/packages/*.yaml', 'glob');
                 $loader->load(__DIR__.'/config/services.yaml');
+
                 $container->setParameter('container.autowiring.strict_mode', true);
                 $container->setParameter('container.dumper.inline_class_loader', true);
+
+                $container->set(ObjectManager::class, $this->context->buildObjectManager());
+                $container->set('twig', $this->context->twig);
             }
 
-            protected function configureRoutes(RouteCollectionBuilder $routes)
+            protected function configureRoutes(RoutingConfigurator $routes)
             {
                 $rootDir = \dirname(__DIR__, 2);
-                $routes->import( $rootDir.'/infrastructures/symfony/Resources/config/admin_*.yml', '/admin', 'glob');
-                $routes->import( $rootDir.'/infrastructures/symfony/Resources/config/r*.yml', '/', 'glob');
+                $routes->import( $rootDir.'/infrastructures/symfony/Resources/config/admin_*.yml', 'glob');
+                $routes->import( $rootDir.'/infrastructures/symfony/Resources/config/r*.yml', 'glob');
             }
         };
     }

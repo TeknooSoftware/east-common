@@ -1,0 +1,8 @@
+di_bridge:
+  definitions:
+    - '%kernel.project_dir%/vendor/teknoo/east-foundation/src/di.php'
+    - '%kernel.project_dir%/vendor/teknoo/east-foundation/infrastructures/symfony/Resources/config/di.php'
+    - '%kernel.project_dir%/src/di.php'
+    - '%kernel.project_dir%/infrastructures/doctrine/di.php'
+    - '%kernel.project_dir%/infrastructures/symfony/Resources/config/di.php'
+    - '%kernel.project_dir%/infrastructures/di.php'

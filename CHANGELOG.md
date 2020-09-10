@@ -1,5 +1,10 @@
 #Teknoo Software - Website - Change Log
 
+##[3.1.0] - 2020-09-10
+###Stable Release
+###Update
+- Use new version of teknoo/bridge-phpdi-symfony
+
 ##[3.0.11] - 2020-09-04
 ###Stable Release
 ###Update

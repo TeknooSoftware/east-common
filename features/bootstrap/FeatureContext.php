@@ -197,6 +197,17 @@ class FeatureContext implements Context
                     ->prefix('/admin');
                 $routes->import( $rootDir.'/infrastructures/symfony/Resources/config/r*.yml', 'glob');
             }
+
+            protected function getContainerClass(): string
+            {
+                $characters = 'abcdefghijklmnopqrstuvwxyz';
+                $str = '';
+                for ($i = 0; $i < 10; $i++) {
+                    $str .= $characters[\rand(0, \strlen($characters) - 1)];
+                }
+
+                return $str;
+            }
         };
     }
 

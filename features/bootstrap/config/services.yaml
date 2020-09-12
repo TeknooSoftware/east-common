@@ -13,7 +13,7 @@ services:
   doctrine_mongodb.odm.default_document_manager:
     synthetic: true
 
-  security.encoder_factory:
+  Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface:
     synthetic: true
 
   Psr\Log\LoggerInterface:

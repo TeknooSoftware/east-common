@@ -1,5 +1,10 @@
 #Teknoo Software - Website - Change Log
 
+##[3.1.2] - 2020-09-11
+###Stable Release
+###Update
+- Replace `@security.encoder_factory` by `Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface`
+
 ##[3.1.1] - 2020-09-10
 ###Stable Release
 ###Update

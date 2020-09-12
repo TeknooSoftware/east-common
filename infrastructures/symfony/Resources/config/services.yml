@@ -324,7 +324,7 @@ services:
     class: '%teknoo.east.website.bundle.command.create_user.class%'
     arguments:
       - '@Teknoo\East\Website\Writer\UserWriter'
-      - '@security.encoder_factory'
+      - '@Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface'
     tags:
       - { name: console.command }
     public: false
@@ -338,5 +338,5 @@ services:
     class: '%teknoo.east.website.bundle.writer.user.class%'
     arguments:
       - '@Teknoo\East\Website\Writer\UserWriter'
-      - '@security.encoder_factory'
+      - '@Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface'
     public: false

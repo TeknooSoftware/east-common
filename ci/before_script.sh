@@ -17,6 +17,7 @@ docker-php-ext-install zip
 docker-php-ext-install json
 
 # Install simplexml
+apt-get install -yqq libxml2-dev
 docker-php-ext-install simplexml
 
 # Install json

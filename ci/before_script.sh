@@ -22,7 +22,7 @@ docker-php-ext-install simplexml
 
 # Install json
 pecl install mongodb
-echo "extension=mongo.so" > /usr/local/etc/php/conf.d/mongo.ini
+echo "extension=mongodb.so" > /usr/local/etc/php/conf.d/mongo.ini
 
 # Install xdebug
 pecl install xdebug-2.8.1 -yqq

@@ -190,12 +190,17 @@ class FeatureContext implements Context
                 $container->setParameter('container.dumper.inline_class_loader', true);
             }
 
-            protected function configureRoutes(RoutingConfigurator $routes): void
+            protected function configureRoutes($routes): void
             {
                 $rootDir = \dirname(__DIR__, 2);
-                $routes->import( $rootDir.'/infrastructures/symfony/Resources/config/admin_*.yml', 'glob')
-                    ->prefix('/admin');
-                $routes->import( $rootDir.'/infrastructures/symfony/Resources/config/r*.yml', 'glob');
+                if ($routes instanceof RoutingConfigurator) {
+                    $routes->import($rootDir . '/infrastructures/symfony/Resources/config/admin_*.yml', 'glob')
+                        ->prefix('/admin');
+                    $routes->import($rootDir . '/infrastructures/symfony/Resources/config/r*.yml', 'glob');
+                } else {
+                    $routes->import($rootDir . '/infrastructures/symfony/Resources/config/admin_*.yml', '/admin', 'glob');
+                    $routes->import($rootDir . '/infrastructures/symfony/Resources/config/r*.yml', '/', 'glob');
+                }
             }
 
             protected function getContainerClass(): string

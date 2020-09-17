@@ -36,7 +36,7 @@
         "ext-simplexml" : "*",
         "ext-mongodb" : "*",
         "phpunit/phpunit": "~9.1",
-        "squizlabs/php_codesniffer": "~3.5",
+        "squizlabs/php_codesniffer": "^3.5.6",
         "pdepend/pdepend": "~2.8",
         "sebastian/phpcpd": "~6.0",
         "phploc/phploc": "~7.0",

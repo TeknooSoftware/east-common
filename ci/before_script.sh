@@ -21,7 +21,8 @@ apt-get install -yqq libxml2-dev
 docker-php-ext-install simplexml
 
 # Install json
-docker-php-ext-install mongodb
+pecl install mongodb
+echo "extension=mongo.so" > /usr/local/etc/php/conf.d/mongo.ini
 
 # Install xdebug
 pecl install xdebug-2.8.1 -yqq

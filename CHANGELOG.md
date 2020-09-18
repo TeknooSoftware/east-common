@@ -1,5 +1,10 @@
 #Teknoo Software - Website - Change Log
 
+##[3.1.3] - 2020-09-18
+###Stable Release
+- Update QA and CI tools
+- fix minimum requirement about psr/http-factory and psr/http-message
+
 ##[3.1.2] - 2020-09-11
 ###Stable Release
 ###Update

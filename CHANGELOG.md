@@ -1,5 +1,10 @@
 #Teknoo Software - Website - Change Log
 
+##[3.2.0] - 2020-10-04
+###Stable Release
+- Switch to Teknoo/recipe 2.1
+- Switch to Teknoo/east-foundation 3.2
+
 ##[3.1.3] - 2020-09-18
 ###Stable Release
 - Update QA and CI tools

@@ -25,7 +25,7 @@ use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Manager\Manager;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
-use Teknoo\East\Foundation\Recipe\RecipeInterface;
+use Teknoo\East\Foundation\Recipe\RecipeCookbookInterface;
 use Teknoo\East\Foundation\Router\Result;
 use Teknoo\East\Foundation\Router\RouterInterface;
 use Teknoo\East\Foundation\Middleware\MiddlewareInterface;
@@ -593,7 +593,7 @@ class FeatureContext implements Context
 
     private function buildManager(ServerRequest $request): Manager
     {
-        $manager = new Manager($this->container->get(RecipeInterface::class));
+        $manager = new Manager($this->container->get(RecipeCookbookInterface::class));
 
         $this->response = null;
         $this->error = null;

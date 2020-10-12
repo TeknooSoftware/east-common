@@ -1,5 +1,10 @@
 #Teknoo Software - Website - Change Log
 
+##[3.2.1] - 2020-10-12
+###Stable Release
+- Prepare library to support also PHP8.
+- Fix tests on PHP8
+
 ##[3.2.0] - 2020-10-04
 ###Stable Release
 - Switch to Teknoo/recipe 2.1

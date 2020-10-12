@@ -2,8 +2,6 @@
 
 namespace Doctrine\ODM\MongoDB\Query;
 
-use phpDocumentor\Reflection\Types\Iterable_;
-
 if (!\class_exists(Query::class, false)) {
     class Query
     {

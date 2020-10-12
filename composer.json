@@ -25,10 +25,10 @@
     "require": {
         "php": "~7.4||~8.0",
         "ext-json": "*",
-        "teknoo/immutable": "^2.0.2",
-        "teknoo/states": "^4.0.14",
-        "teknoo/recipe": "^2.1.0",
-        "teknoo/east-foundation": "^3.2.0",
+        "teknoo/immutable": "^2.0.5",
+        "teknoo/states": "^4.1.2",
+        "teknoo/recipe": "^2.1.1",
+        "teknoo/east-foundation": "^3.2.1",
         "php-di/php-di": "~6.2"
     },
     "require-dev": {
@@ -43,7 +43,7 @@
         "phpstan/phpstan": "^0.12.42",
         "behat/behat": "~3.7",
         "behat/transliterator": "~1.3",
-        "teknoo/bridge-phpdi-symfony": "^4.0.0",
+        "teknoo/bridge-phpdi-symfony": "^4.0.3",
         "psr/http-message":"^1.0.1",
         "psr/http-factory":"^1.0.1",
         "symfony/console": "~4.4||~5.1",

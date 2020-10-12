@@ -34,6 +34,7 @@ use Teknoo\East\Website\EndPoint\MediaEndPointTrait;
 use Teknoo\East\Website\Loader\MediaLoader;
 use Teknoo\East\Website\Doctrine\Object\Media;
 use Teknoo\East\Website\Object\MediaMetadata;
+use Teknoo\East\Website\Object\Media as BasicMedia;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -96,7 +97,7 @@ class MediaEndPointTraitTest extends TestCase
                 return $this;
             }
 
-            protected function getStream(Media $media): StreamInterface
+            protected function getStream(BasicMedia $media): StreamInterface
             {
                 return $this->stream;
             }

@@ -796,10 +796,8 @@ class TranslatableListenerTest extends TestCase
 
     public function testOnFlushErrorOnNewTranslationInstance()
     {
-        $classMeta = $this->createMock(ClassMetadata::class);
-        $classMeta->expects(self::any())
-            ->method('getReflectionClass')
-            ->willReturn(new class extends \ReflectionClass {
+        if (PHP_VERSION_ID < 80000) {
+            $refClass = new class extends \ReflectionClass {
                 public function __construct()
                 {
                     parent::__construct(Content::class);
@@ -810,8 +808,26 @@ class TranslatableListenerTest extends TestCase
                 {
                     return null;
                 }
+            };
+        } else {
+            $refClass = new class extends \ReflectionClass {
+                public function __construct()
+                {
+                    parent::__construct(Content::class);
+                }
 
-            });
+
+                public function newInstance(... $args)
+                {
+                    return null;
+                }
+            };
+        }
+
+        $classMeta = $this->createMock(ClassMetadata::class);
+        $classMeta->expects(self::any())
+            ->method('getReflectionClass')
+            ->willReturn($refClass);
 
         $this->getManager()
             ->expects(self::any())

@@ -23,7 +23,7 @@
         }
     },
     "require": {
-        "php": ">=7.4",
+        "php": "~7.4||~8.0",
         "ext-json": "*",
         "teknoo/immutable": "^2.0.2",
         "teknoo/states": "^4.0.14",

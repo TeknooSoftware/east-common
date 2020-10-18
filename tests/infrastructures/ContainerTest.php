@@ -29,6 +29,7 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Diactoros\CallbackStreamFactory;
+use Teknoo\East\Foundation\Http\Message\CallbackStreamFactoryInterface;
 use function DI\string;
 
 /**
@@ -67,6 +68,13 @@ class ContainerTest extends TestCase
     {
         $container = $this->buildContainer();
         $factory = $container->get(StreamFactoryInterface::class);
+        self::assertInstanceOf(StreamFactoryInterface::class, $factory);
+    }
+
+    public function testCallbackStreamFactoryInterface()
+    {
+        $container = $this->buildContainer();
+        $factory = $container->get(CallbackStreamFactoryInterface::class);
         self::assertInstanceOf(StreamFactoryInterface::class, $factory);
         self::assertInstanceOf(CallbackStreamFactory::class, $factory);
     }

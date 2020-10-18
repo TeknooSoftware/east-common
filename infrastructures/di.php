@@ -25,34 +25,13 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Infrastructures;
 
 use Laminas\Diactoros\ResponseFactory as DiactorosResponseFactory;
-use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Teknoo\East\Diactoros\CallbackStreamFactory;
 
-use function DI\string;
+use function DI\get;
 
 return [
-    ResponseFactoryInterface::class . ':value' => string(DiactorosResponseFactory::class),
-
-    ResponseFactoryInterface::class => static function (ContainerInterface $container) {
-        $class = $container->get(ResponseFactoryInterface::class . ':value');
-        if (\class_exists($class)) {
-            return new $class();
-        }
-
-        throw new \RuntimeException('Error, missing definition for a PSR 17 ResponseFactoryInterface');
-    },
-
-    StreamFactoryInterface::class . ':value' => string(CallbackStreamFactory::class),
-
-    StreamFactoryInterface::class => static function (ContainerInterface $container) {
-        $class = $container->get(StreamFactoryInterface::class . ':value');
-
-        if (\class_exists($class)) {
-            return new $class();
-        }
-
-        throw new \RuntimeException('Error, missing definition for a PSR 17 StreamFactoryInterface');
-    },
+    ResponseFactoryInterface::class => get(DiactorosResponseFactory::class),
+    StreamFactoryInterface::class => get(CallbackStreamFactory::class),
 ];

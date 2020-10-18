@@ -70,36 +70,4 @@ class ContainerTest extends TestCase
         self::assertInstanceOf(StreamFactoryInterface::class, $factory);
         self::assertInstanceOf(CallbackStreamFactory::class, $factory);
     }
-
-    public function testResponseFactoryInterfaceInvalid()
-    {
-        $this->expectException(\RuntimeException::class);
-
-        $containerDefinition = new ContainerBuilder();
-        $containerDefinition->addDefinitions(__DIR__.'/../../infrastructures/di.php');
-        $containerDefinition->addDefinitions([
-            ResponseFactoryInterface::class.':value' => string('fooBar')
-        ]);
-
-        $container = $containerDefinition->build();
-        $factory = $container->get(ResponseFactoryInterface::class);
-        self::assertInstanceOf(ResponseFactory::class, $factory);
-        self::assertInstanceOf(ResponseFactoryInterface::class, $factory);
-    }
-
-    public function testStreamFactoryInterfaceInvalid()
-    {
-        $this->expectException(\RuntimeException::class);
-
-        $containerDefinition = new ContainerBuilder();
-        $containerDefinition->addDefinitions(__DIR__.'/../../infrastructures/di.php');
-        $containerDefinition->addDefinitions([
-            StreamFactoryInterface::class.':value' => string('fooBar')
-        ]);
-
-        $container = $containerDefinition->build();
-        $factory = $container->get(StreamFactoryInterface::class);
-        self::assertInstanceOf(StreamFactoryInterface::class, $factory);
-        self::assertInstanceOf(CallbackStreamFactory::class, $factory);
-    }
 }

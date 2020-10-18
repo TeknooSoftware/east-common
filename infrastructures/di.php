@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Infrastructures;
 
 use Laminas\Diactoros\ResponseFactory as DiactorosResponseFactory;
+use Laminas\Diactoros\StreamFactory;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Teknoo\East\Diactoros\CallbackStreamFactory;
@@ -34,6 +35,6 @@ use function DI\get;
 
 return [
     ResponseFactoryInterface::class => get(DiactorosResponseFactory::class),
-    StreamFactoryInterface::class => get(CallbackStreamFactory::class),
+    StreamFactoryInterface::class => get(StreamFactory::class),
     CallbackStreamFactoryInterface::class => get(CallbackStreamFactory::class),
 ];

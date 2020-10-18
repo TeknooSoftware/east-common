@@ -1,5 +1,10 @@
 #Teknoo Software - Website - Change Log
 
+##[3.2.3] - 2020-10-19
+###Stable Release
+- MediaEndPoint use `CallbackStreamFactoryInterface`
+- Other Endpoint use `StreamFactoryInterface`
+
 ##[3.2.2] - 2020-10-18
 ###Stable Release
 - Simplify `infrastructures/di.php` and remove useless `*key*::class:value`

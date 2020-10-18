@@ -28,10 +28,12 @@ use Laminas\Diactoros\ResponseFactory as DiactorosResponseFactory;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Teknoo\East\Diactoros\CallbackStreamFactory;
+use Teknoo\East\Foundation\Http\Message\CallbackStreamFactoryInterface;
 
 use function DI\get;
 
 return [
     ResponseFactoryInterface::class => get(DiactorosResponseFactory::class),
     StreamFactoryInterface::class => get(CallbackStreamFactory::class),
+    CallbackStreamFactoryInterface::class => get(CallbackStreamFactory::class),
 ];

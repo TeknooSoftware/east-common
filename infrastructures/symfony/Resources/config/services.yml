@@ -76,7 +76,7 @@ services:
     public: true
 
   teknoo.east.website.endpoint.media.stream.factory:
-    alias: 'Psr\Http\Message\StreamFactoryInterface'
+    alias: 'Teknoo\East\Foundation\Http\Message\CallbackStreamFactoryInterface'
     public: true
 
   teknoo.east.website.endpoint.media:

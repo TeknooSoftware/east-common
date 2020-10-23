@@ -143,7 +143,7 @@ class ExtensionMetadataFactory
         if (null !== $cacheDriver) {
             $cacheDriver->save($cacheId, $config);
         }
-        
+
         $listener->injectConfiguration($metaData, $config);
 
         return $this;

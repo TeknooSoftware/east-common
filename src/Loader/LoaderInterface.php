@@ -39,7 +39,7 @@ interface LoaderInterface
      * @return LoaderInterface
      */
     public function load(string $id, PromiseInterface $promise): LoaderInterface;
-    
+
     /**
      * @param QueryInterface $query
      * @param PromiseInterface $promise

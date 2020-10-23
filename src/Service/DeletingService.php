@@ -57,7 +57,7 @@ class DeletingService
     {
         if ($object instanceof DeletableInterface) {
             $this->processDeletable($object);
-            
+
             return $this;
         }
 

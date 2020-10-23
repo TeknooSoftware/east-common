@@ -38,7 +38,7 @@ class MediaMetadata implements ImmutableInterface
     private ?string $alternative = '';
 
     private ?string $localPath = '';
-    
+
     private ?string $legacyId = '';
 
     public function __construct(

@@ -70,6 +70,12 @@ Installation & Requirements
 To install this library with composer, run this command :
 
     composer require teknoo/east-website
+    
+To start a project with Symfony :
+
+    symfony new your_project_name new
+    composer require teknoo/composer-install
+    composer require teknoo/east-website-symfony    
 
 This library requires :
 

@@ -25,7 +25,7 @@ pecl install mongodb
 echo "extension=mongodb.so" > /usr/local/etc/php/conf.d/mongo.ini
 
 # Install xdebug
-pecl install xdebug-2.8.1 -yqq
+pecl install xdebug -yqq
 docker-php-ext-enable xdebug
 
 #install composer

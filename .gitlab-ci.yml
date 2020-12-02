@@ -1,5 +1,6 @@
 before_script:
   - bash ci/before_script.sh > /dev/null
+  - make clean
   - make
 
 test:7.4-lower:

@@ -858,31 +858,25 @@ class FeatureContext implements Context
 
     private function runSymfony(SFRequest $serverRequest)
     {
-        try {
-            $this->symfonyKernel->boot();
+        $this->symfonyKernel->boot();
 
-            $container = $this->symfonyKernel->getContainer();
+        $container = $this->symfonyKernel->getContainer();
 
-            $container->set(ObjectManager::class, $this->buildObjectManager());
-            $container->set('twig', $this->twig);
+        $container->set(ObjectManager::class, $this->buildObjectManager());
+        $container->set('twig', $this->twig);
 
-            $response = $this->symfonyKernel->handle($serverRequest);
+        $response = $this->symfonyKernel->handle($serverRequest);
 
-            $psrFactory = new \Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory(
-                new \Laminas\Diactoros\ServerRequestFactory(),
-                new \Laminas\Diactoros\StreamFactory(),
-                new \Laminas\Diactoros\UploadedFileFactory(),
-                new \Laminas\Diactoros\ResponseFactory()
-            );
+        $psrFactory = new \Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory(
+            new \Laminas\Diactoros\ServerRequestFactory(),
+            new \Laminas\Diactoros\StreamFactory(),
+            new \Laminas\Diactoros\UploadedFileFactory(),
+            new \Laminas\Diactoros\ResponseFactory()
+        );
 
-            $this->response = $psrFactory->createResponse($response);
+        $this->response = $psrFactory->createResponse($response);
 
-            $this->symfonyKernel->terminate($serverRequest, $response);
-        } catch (\Throwable $error) {
-            \var_dump($error);
-
-            throw $error;
-        }
+        $this->symfonyKernel->terminate($serverRequest, $response);
     }
 
     /**

@@ -116,7 +116,7 @@ class ExtensionMetadataFactory
         $useObjectName = $metaData->getName();
 
         // collect metadata from inherited classes
-        foreach (\array_reverse(\class_parents($useObjectName)) as $parentClass) {
+        foreach (\array_reverse((array) \class_parents($useObjectName)) as $parentClass) {
             // read only inherited mapped classes
             if ($this->classMetadataFactory->hasMetadataFor($parentClass)) {
                 $parentMetaClass = $this->objectManager->getClassMetadata($parentClass);

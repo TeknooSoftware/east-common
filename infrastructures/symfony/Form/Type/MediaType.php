@@ -77,7 +77,7 @@ class MediaType extends AbstractType
                     return;
                 }
 
-                $mediaObject->setLength($image->getSize());
+                $mediaObject->setLength((int) $image->getSize());
                 $meta = new MediaMetadata(
                     (string) $image->getClientMimeType(),
                     (string) $image->getClientOriginalName(),

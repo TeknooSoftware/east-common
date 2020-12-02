@@ -11,6 +11,7 @@ all: clean depend
 
 ### Dependencies
 depend:
+rm -rf vendor/*
 ifeq ($(DEPENDENCIES), lowest)
 	${COMPOSER} update --prefer-lowest --prefer-dist --no-interaction --ignore-platform-reqs;
 else

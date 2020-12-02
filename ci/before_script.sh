@@ -13,9 +13,6 @@ apt-get install git wget zlib1g-dev -yqq
 apt-get install zip libzip-dev -yqq
 docker-php-ext-install zip
 
-# Install json
-docker-php-ext-install json
-
 # Install simplexml
 apt-get install -yqq libxml2-dev
 docker-php-ext-install simplexml

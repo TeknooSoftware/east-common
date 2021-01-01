@@ -11,20 +11,29 @@ Teknoo Software - Website library
 Universal package, following the #East programming philosophy, build on Teknoo/East-Foundation (and Teknoo/Recipe),
 and implementing a basic CMS to display dynamics pages with different types and templates.
 
-Example with Symfony
+Example with Symfony 
 --------------------
 
-    
+    //These operations are not reauired with teknoo/east-website-symfony
+
     //config/packages/di_bridge.yaml:
+    di_bridge:
+      definitions:
+        - '%kernel.project_dir%/config/di.php'
+    
+    //config/packages/east_foundation.yaml:
     di_bridge:
       definitions:
         - '%kernel.project_dir%/vendor/teknoo/east-foundation/src/di.php'
         - '%kernel.project_dir%/vendor/teknoo/east-foundation/infrastructures/symfony/Resources/config/di.php'
+
+    //config/packages/east_website_di.yaml:
+    di_bridge:
+      definitions:
         - '%kernel.project_dir%/vendor/teknoo/east-website/src/di.php'
         - '%kernel.project_dir%/vendor/teknoo/east-website/infrastructures/doctrine/di.php'
         - '%kernel.project_dir%/vendor/teknoo/east-website/infrastructures/symfony/Resources/config/di.php'
         - '%kernel.project_dir%/vendor/teknoo/east-website/infrastructures/di.php'
-        - '%kernel.project_dir%/config/di.php'
       import:
         Doctrine\Persistence\ObjectManager: 'doctrine_mongodb.odm.default_document_manager'
     
@@ -33,7 +42,6 @@ Example with Symfony
     Teknoo\East\FoundationBundle\EastFoundationBundle::class => ['all' => true],
     Teknoo\East\WebsiteBundle\TeknooEastWebsiteBundle::class => ['all' => true],
     Teknoo\DI\SymfonyBridge\DIBridgeBundle::class => ['all' => true],
-
 
     //In doctrine config
     doctrine_mongodb:

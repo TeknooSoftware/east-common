@@ -38,13 +38,16 @@ use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
 use PHPUnit\Framework\TestCase;
 use ProxyManager\Proxy\GhostObjectInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
+use Teknoo\East\Website\Contracts\Recipe\Step\GetStreamFromMediaInterface;
 use Teknoo\East\Website\DBSource\ManagerInterface;
 use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
 use Teknoo\East\Website\DBSource\Repository\ItemRepositoryInterface;
 use Teknoo\East\Website\DBSource\Repository\MediaRepositoryInterface;
 use Teknoo\East\Website\DBSource\Repository\TypeRepositoryInterface;
 use Teknoo\East\Website\DBSource\Repository\UserRepositoryInterface;
+use Teknoo\East\Website\Doctrine\Recipe\Step\ODM\GetStreamFromMedia;
 use Teknoo\East\Website\Doctrine\Translatable\Mapping\DriverInterface;
 use Teknoo\East\Website\Doctrine\Translatable\TranslatableListener;
 use Teknoo\East\Website\Doctrine\Translatable\Wrapper\WrapperInterface;
@@ -432,6 +435,43 @@ class ContainerTest extends TestCase
         self::assertInstanceOf(
             MediaWriter::class,
             $container->get('teknoo.east.website.doctrine.writer.media.new')
+        );
+    }
+
+    public function testGetStreamFromMediaBadRepo()
+    {
+        $container = $this->buildContainer();
+        $objectManager = $this->createMock(ObjectManager::class);
+        $objectManager->expects(self::any())->method('getRepository')->willReturn(
+            $this->createMock(DocumentRepository::class)
+        );
+
+        $container->set(ObjectManager::class, $objectManager);
+
+        $container->set(StreamFactoryInterface::class, $this->createMock(StreamFactoryInterface::class));
+
+        $this->expectException(\RuntimeException::class);
+        $container->get(GetStreamFromMedia::class);
+    }
+
+    public function testGetStreamFromMedia()
+    {
+        $container = $this->buildContainer();
+        $objectManager = $this->createMock(ObjectManager::class);
+        $objectManager->expects(self::any())->method('getRepository')->willReturn(
+            $this->createMock(GridFSRepository::class)
+        );
+
+        $container->set(ObjectManager::class, $objectManager);
+
+        $container->set(StreamFactoryInterface::class, $this->createMock(StreamFactoryInterface::class));
+        self::assertInstanceOf(
+            GetStreamFromMediaInterface::class,
+            $container->get(GetStreamFromMediaInterface::class)
+        );
+        self::assertInstanceOf(
+            GetStreamFromMedia::class,
+            $container->get(GetStreamFromMedia::class)
         );
     }
 }

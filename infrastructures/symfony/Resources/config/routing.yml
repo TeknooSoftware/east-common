@@ -1,16 +1,23 @@
 _teknoo_website_media:
   path: '/media/{id}'
   methods:  ['GET']
-  defaults: { _controller: 'Teknoo\East\Website\Doctrine\EndPoint\ODM\MediaEndPoint' }
+  defaults:
+    _controller: 'teknoo.east.website.endpoint.media'
+    errorTemplate: '@@TeknooEastWebsite/Error/404.html.twig'
 
 _teknoo_website_content:
   path: '/{slug}'
   methods:  ['GET']
-  defaults: { _controller: 'Teknoo\East\WebsiteBundle\EndPoint\ContentEndPoint' }
+  defaults:
+    _controller: 'teknoo.east.website.endpoint.content'
+    errorTemplate: '@@TeknooEastWebsite/Error/404.html.twig'
   requirements:
     slug: ((?!_wdt|_profiler).).+
 
 _teknoo_website_home:
   path: '/'
   methods:  ['GET']
-  defaults: { _controller: 'Teknoo\East\WebsiteBundle\EndPoint\ContentEndPoint', slug: '/' }
+  defaults:
+    _controller: 'teknoo.east.website.endpoint.content'
+    errorTemplate: '@@TeknooEastWebsite/Error/404.html.twig'
+    slug: '/'

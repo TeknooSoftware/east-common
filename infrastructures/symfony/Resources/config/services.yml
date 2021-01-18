@@ -1,52 +1,6 @@
 parameters:
-  #Front endpoints
-  teknoo.east.website.endpoint.content.class: 'Teknoo\East\WebsiteBundle\EndPoint\ContentEndPoint'
-  teknoo.east.website.endpoint.media.class: 'Teknoo\East\Website\Doctrine\EndPoint\ODM\MediaEndPoint'
-  teknoo.east.website.endpoint.static.class: 'Teknoo\East\WebsiteBundle\EndPoint\StaticEndPoint'
-
-  #Admin endpoints
-  teknoo.east.website.endpoint.admin.delete.class: 'Teknoo\East\WebsiteBundle\AdminEndPoint\AdminDeleteEndPoint'
-  teknoo.east.website.endpoint.admin.edit.class: 'Teknoo\East\WebsiteBundle\AdminEndPoint\AdminEditEndPoint'
-  teknoo.east.website.endpoint.admin.list.class: 'Teknoo\East\WebsiteBundle\AdminEndPoint\AdminListEndPoint'
-  teknoo.east.website.endpoint.admin.new.class: 'Teknoo\East\WebsiteBundle\AdminEndPoint\AdminNewEndPoint'
-
   #Admin form types
-  teknoo.east.website.form_type.item.class: 'Teknoo\East\Website\Doctrine\Form\Type\ItemType'
-  teknoo.east.website.form_type.content.class: 'Teknoo\East\Website\Doctrine\Form\Type\ContentType'
-  teknoo.east.website.form_type.media.class: 'Teknoo\East\WebsiteBundle\Form\Type\MediaType'
-  teknoo.east.website.form_type.type.class: 'Teknoo\East\WebsiteBundle\Form\Type\TypeType'
-  teknoo.east.website.form_type.user.class: 'Teknoo\East\WebsiteBundle\Form\Type\UserType'
   teknoo.east.website.form_type.doctrine.class: 'Doctrine\Bundle\MongoDBBundle\Form\Type\DocumentType'
-
-  #Class
-  teknoo.east.website.item.class: 'Teknoo\East\Website\Doctrine\Object\Item'
-  teknoo.east.website.content.class: 'Teknoo\East\Website\Doctrine\Object\Content'
-  teknoo.east.website.media.class: 'Teknoo\East\Website\Doctrine\Object\Media'
-  teknoo.east.website.type.class: 'Teknoo\East\Website\Object\Type'
-  teknoo.east.website.user.class: 'Teknoo\East\Website\Object\User'
-
-  #Path
-  teknoo.east.website.view.404-error.file: "@@TeknooEastWebsite/Error/404.html.twig"
-
-  #Admin view path
-  teknoo.east.website.view.item.new.file: '@@TeknooEastWebsite/AdminItem/new.html.twig'
-  teknoo.east.website.view.item.edit.file: '@@TeknooEastWebsite/AdminItem/edit.html.twig'
-  teknoo.east.website.view.item.list.file: '@@TeknooEastWebsite/AdminItem/list.html.twig'
-
-  teknoo.east.website.view.content.new.file: '@@TeknooEastWebsite/AdminContent/new.html.twig'
-  teknoo.east.website.view.content.edit.file: '@@TeknooEastWebsite/AdminContent/edit.html.twig'
-  teknoo.east.website.view.content.list.file: '@@TeknooEastWebsite/AdminContent/list.html.twig'
-
-  teknoo.east.website.view.media.new.file: '@@TeknooEastWebsite/AdminMedia/new.html.twig'
-  teknoo.east.website.view.media.list.file: '@@TeknooEastWebsite/AdminMedia/list.html.twig'
-
-  teknoo.east.website.view.type.new.file: '@@TeknooEastWebsite/AdminType/new.html.twig'
-  teknoo.east.website.view.type.edit.file: '@@TeknooEastWebsite/AdminType/edit.html.twig'
-  teknoo.east.website.view.type.list.file: '@@TeknooEastWebsite/AdminType/list.html.twig'
-
-  teknoo.east.website.view.user.new.file: '@@TeknooEastWebsite/AdminUser/new.html.twig'
-  teknoo.east.website.view.user.edit.file: '@@TeknooEastWebsite/AdminUser/edit.html.twig'
-  teknoo.east.website.view.user.list.file: '@@TeknooEastWebsite/AdminUser/list.html.twig'
 
   #Provider
   teknoo.east.website.bundle.user_provider.class: 'Teknoo\East\WebsiteBundle\Provider\UserProvider'
@@ -60,257 +14,54 @@ parameters:
 services:
   #Front endpoints
   teknoo.east.website.endpoint.content:
-    alias: 'Teknoo\East\WebsiteBundle\EndPoint\ContentEndPoint'
+    class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
     public: true
-
-  Teknoo\East\WebsiteBundle\EndPoint\ContentEndPoint:
-    class: '%teknoo.east.website.endpoint.content.class%'
     arguments:
-      - '@Teknoo\East\Website\Loader\ContentLoader'
-      - '%teknoo.east.website.view.404-error.file%'
-    calls:
-      - ['setResponseFactory', ['@Psr\Http\Message\ResponseFactoryInterface']]
-      - ['setStreamFactory', ['@Psr\Http\Message\StreamFactoryInterface']]
-    tags:
-      - { name: "east.endpoint.template" }
-    public: true
-
-  teknoo.east.website.endpoint.media.stream.factory:
-    alias: 'Teknoo\East\Foundation\Http\Message\CallbackStreamFactoryInterface'
-    public: true
+      - '@Teknoo\East\Website\Recipe\Cookbook\RenderDynamicContentEndPoint'
+      - '@service_container'
 
   teknoo.east.website.endpoint.media:
-    alias: 'Teknoo\East\Website\Doctrine\EndPoint\ODM\MediaEndPoint'
+    class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
     public: true
-
-  Teknoo\East\Website\Doctrine\EndPoint\ODM\MediaEndPoint:
-    class: '%teknoo.east.website.endpoint.media.class%'
     arguments:
-      - '@Teknoo\East\Website\Loader\MediaLoader'
-      - '@teknoo.east.website.endpoint.media.stream.factory'
-    calls:
-      - ['setResponseFactory', ['@Psr\Http\Message\ResponseFactoryInterface']]
-      - ['registerRepository', ['@doctrine_mongodb.odm.default_document_manager']]
-    public: true
+      - '@Teknoo\East\Website\Recipe\Cookbook\RenderMediaEndPoint'
+      - '@service_container'
 
   teknoo.east.website.endpoint.static:
-    alias: 'Teknoo\East\WebsiteBundle\EndPoint\StaticEndPoint'
+    class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
     public: true
-
-  Teknoo\East\WebsiteBundle\EndPoint\StaticEndPoint:
-    class: '%teknoo.east.website.endpoint.static.class%'
-    calls:
-      - ['setResponseFactory', ['@Psr\Http\Message\ResponseFactoryInterface']]
-      - ['setStreamFactory', ['@Psr\Http\Message\StreamFactoryInterface']]
-    tags:
-      - { name: "east.endpoint.template" }
-    public: true
+    arguments:
+      - '@Teknoo\East\Website\Recipe\Cookbook\RenderStaticContentEndPoint'
+      - '@service_container'
 
   #Admin endpoints
-  teknoo.east.website.endpoint.admin.delete.abstract:
-    class: '%teknoo.east.website.endpoint.admin.delete.class%'
-    calls:
-      - ['setResponseFactory', ['@Psr\Http\Message\ResponseFactoryInterface']]
-      - ['setRouter', ['@router']]
+  teknoo.east.website.endpoint.admin.delete:
+    class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
     public: true
+    arguments:
+      - '@Teknoo\East\Website\Recipe\Cookbook\DeleteContentEndPoint'
+      - '@service_container'
 
-  teknoo.east.website.endpoint.admin.edit.abstract:
-    class: '%teknoo.east.website.endpoint.admin.edit.class%'
-    calls:
-      - ['setFormFactory', ['@form.factory']]
-      - ['setResponseFactory', ['@Psr\Http\Message\ResponseFactoryInterface']]
-      - ['setStreamFactory', ['@Psr\Http\Message\StreamFactoryInterface']]
-      - ['setDatesService', ['@Teknoo\East\Website\Service\DatesService']]
-      - ['setFindSlugService', ['@Teknoo\East\Website\Service\FindSlugService', 'slug']]
-    tags:
-      - { name: "east.endpoint.template" }
+  teknoo.east.website.endpoint.admin.edit:
+    class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
     public: true
+    arguments:
+      - '@Teknoo\East\Website\Recipe\Cookbook\EditContentEndPoint'
+      - '@service_container'
 
-  teknoo.east.website.endpoint.admin.list.abstract:
-    class: '%teknoo.east.website.endpoint.admin.list.class%'
-    calls:
-      - ['setResponseFactory', ['@Psr\Http\Message\ResponseFactoryInterface']]
-      - ['setStreamFactory', ['@Psr\Http\Message\StreamFactoryInterface']]
-    tags:
-      - { name: "east.endpoint.template" }
+  teknoo.east.website.endpoint.admin.list:
+    class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
     public: true
+    arguments:
+      - '@Teknoo\East\Website\Recipe\Cookbook\ListContentEndPoint'
+      - '@service_container'
 
-  teknoo.east.website.endpoint.admin.new.abstract:
-    class: '%teknoo.east.website.endpoint.admin.new.class%'
-    calls:
-      - ['setFormFactory', ['@form.factory']]
-      - ['setResponseFactory', ['@Psr\Http\Message\ResponseFactoryInterface']]
-      - ['setStreamFactory', ['@Psr\Http\Message\StreamFactoryInterface']]
-      - ['setRouter', ['@router']]
-      - ['setFindSlugService', ['@Teknoo\East\Website\Service\FindSlugService', 'slug']]
-    tags:
-      - { name: "east.endpoint.template" }
+  teknoo.east.website.endpoint.admin.new:
+    class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
     public: true
-
-  #Items
-  teknoo.east.website.endpoint.admin.delete.item:
-    parent: 'teknoo.east.website.endpoint.admin.delete.abstract'
-    calls:
-      - ['setDeletingService', ['@teknoo.east.website.deleting.item']]
-      - ['setLoader', ['@Teknoo\East\Website\Loader\ItemLoader']]
-    public: true
-
-  teknoo.east.website.endpoint.admin.edit.item:
-    parent: 'teknoo.east.website.endpoint.admin.edit.abstract'
-    calls:
-      - ['setLoader', ['@Teknoo\East\Website\Loader\ItemLoader']]
-      - ['setWriter', ['@Teknoo\East\Website\Writer\ItemWriter']]
-      - ['setFormClass', ['%teknoo.east.website.form_type.item.class%']]
-      - ['setViewPath', ['%teknoo.east.website.view.item.edit.file%']]
-      - ['setFormOptions', [{ "doctrine_type": "%teknoo.east.website.form_type.doctrine.class%"}]]
-    public: true
-
-  teknoo.east.website.endpoint.admin.list.item:
-    parent: 'teknoo.east.website.endpoint.admin.list.abstract'
-    calls:
-      - ['setLoader', ['@Teknoo\East\Website\Loader\ItemLoader']]
-      - ['setViewPath', ['%teknoo.east.website.view.item.list.file%']]
-    public: true
-
-  teknoo.east.website.endpoint.admin.new.item:
-    parent: 'teknoo.east.website.endpoint.admin.new.abstract'
-    calls:
-      - ['setLoader', ['@Teknoo\East\Website\Loader\ItemLoader']]
-      - ['setWriter', ['@Teknoo\East\Website\Writer\ItemWriter']]
-      - ['setFormClass', ['%teknoo.east.website.form_type.item.class%']]
-      - ['setViewPath', ['%teknoo.east.website.view.item.new.file%']]
-      - ['setObjectClass', ['%teknoo.east.website.item.class%']]
-      - ['setFormOptions', [{ "doctrine_type": "%teknoo.east.website.form_type.doctrine.class%"}]]
-    public: true
-
-  #Contents
-  teknoo.east.website.endpoint.admin.delete.content:
-    parent: 'teknoo.east.website.endpoint.admin.delete.abstract'
-    calls:
-      - ['setDeletingService', ['@teknoo.east.website.deleting.content']]
-      - ['setLoader', ['@Teknoo\East\Website\Loader\ContentLoader']]
-    public: true
-
-  teknoo.east.website.endpoint.admin.edit.content:
-    parent: 'teknoo.east.website.endpoint.admin.edit.abstract'
-    calls:
-      - ['setLoader', ['@Teknoo\East\Website\Loader\ContentLoader']]
-      - ['setWriter', ['@Teknoo\East\Website\Writer\ContentWriter']]
-      - ['setFormClass', ['%teknoo.east.website.form_type.content.class%']]
-      - ['setViewPath', ['%teknoo.east.website.view.content.edit.file%']]
-      - ['setFormOptions', [{ "doctrine_type": "%teknoo.east.website.form_type.doctrine.class%"}]]
-    public: true
-
-  teknoo.east.website.endpoint.admin.list.content:
-    parent: 'teknoo.east.website.endpoint.admin.list.abstract'
-    calls:
-      - ['setLoader', ['@Teknoo\East\Website\Loader\ContentLoader']]
-      - ['setViewPath', ['%teknoo.east.website.view.content.list.file%']]
-    public: true
-
-  teknoo.east.website.endpoint.admin.new.content:
-    parent: 'teknoo.east.website.endpoint.admin.new.abstract'
-    calls:
-      - ['setLoader', ['@Teknoo\East\Website\Loader\ContentLoader']]
-      - ['setWriter', ['@Teknoo\East\Website\Writer\ContentWriter']]
-      - ['setFormClass', ['%teknoo.east.website.form_type.content.class%']]
-      - ['setViewPath', ['%teknoo.east.website.view.content.new.file%']]
-      - ['setObjectClass', ['%teknoo.east.website.content.class%']]
-      - ['setFormOptions', [{ "doctrine_type": "%teknoo.east.website.form_type.doctrine.class%"}]]
-    public: true
-
-  #Media
-  teknoo.east.website.endpoint.admin.delete.media:
-    parent: 'teknoo.east.website.endpoint.admin.delete.abstract'
-    calls:
-      - ['setDeletingService', ['@teknoo.east.website.deleting.media']]
-      - ['setLoader', ['@Teknoo\East\Website\Loader\MediaLoader']]
-    public: true
-
-  teknoo.east.website.endpoint.admin.list.media:
-    parent: 'teknoo.east.website.endpoint.admin.list.abstract'
-    calls:
-      - ['setLoader', ['@Teknoo\East\Website\Loader\MediaLoader']]
-      - ['setViewPath', ['%teknoo.east.website.view.media.list.file%']]
-    public: true
-
-  teknoo.east.website.endpoint.admin.new.media:
-    parent: 'teknoo.east.website.endpoint.admin.new.abstract'
-    calls:
-      - ['setLoader', ['@Teknoo\East\Website\Loader\MediaLoader']]
-      - ['setWriter', ['@teknoo.east.website.doctrine.writer.media.new']]
-      - ['setFormClass', ['%teknoo.east.website.form_type.media.class%']]
-      - ['setViewPath', ['%teknoo.east.website.view.media.new.file%']]
-      - ['setObjectClass', ['%teknoo.east.website.media.class%']]
-    public: true
-
-  #Type
-  teknoo.east.website.endpoint.admin.delete.type:
-    parent: 'teknoo.east.website.endpoint.admin.delete.abstract'
-    calls:
-      - ['setDeletingService', ['@teknoo.east.website.deleting.type']]
-      - ['setLoader', ['@Teknoo\East\Website\Loader\TypeLoader']]
-    public: true
-
-  teknoo.east.website.endpoint.admin.edit.type:
-    parent: 'teknoo.east.website.endpoint.admin.edit.abstract'
-    calls:
-      - ['setLoader', ['@Teknoo\East\Website\Loader\TypeLoader']]
-      - ['setWriter', ['@Teknoo\East\Website\Writer\TypeWriter']]
-      - ['setFormClass', ['%teknoo.east.website.form_type.type.class%']]
-      - ['setViewPath', ['%teknoo.east.website.view.type.edit.file%']]
-    public: true
-
-  teknoo.east.website.endpoint.admin.list.type:
-    parent: 'teknoo.east.website.endpoint.admin.list.abstract'
-    calls:
-      - ['setLoader', ['@Teknoo\East\Website\Loader\TypeLoader']]
-      - ['setViewPath', ['%teknoo.east.website.view.type.list.file%']]
-    public: true
-
-  teknoo.east.website.endpoint.admin.new.type:
-    parent: 'teknoo.east.website.endpoint.admin.new.abstract'
-    calls:
-      - ['setLoader', ['@Teknoo\East\Website\Loader\TypeLoader']]
-      - ['setWriter', ['@Teknoo\East\Website\Writer\TypeWriter']]
-      - ['setFormClass', ['%teknoo.east.website.form_type.type.class%']]
-      - ['setViewPath', ['%teknoo.east.website.view.type.new.file%']]
-      - ['setObjectClass', ['%teknoo.east.website.type.class%']]
-    public: true
-
-  #User
-  teknoo.east.website.endpoint.admin.delete.user:
-    parent: 'teknoo.east.website.endpoint.admin.delete.abstract'
-    calls:
-      - ['setDeletingService', ['@teknoo.east.website.deleting.user']]
-      - ['setLoader', ['@Teknoo\East\Website\Loader\UserLoader']]
-    public: true
-
-  teknoo.east.website.endpoint.admin.edit.user:
-    parent: 'teknoo.east.website.endpoint.admin.edit.abstract'
-    calls:
-      - ['setLoader', ['@Teknoo\East\Website\Loader\UserLoader']]
-      - ['setWriter', ['@teknoo.east.website.bundle.writer.user']]
-      - ['setFormClass', ['%teknoo.east.website.form_type.user.class%']]
-      - ['setViewPath', ['%teknoo.east.website.view.user.edit.file%']]
-    public: true
-
-  teknoo.east.website.endpoint.admin.list.user:
-    parent: 'teknoo.east.website.endpoint.admin.list.abstract'
-    calls:
-      - ['setLoader', ['@Teknoo\East\Website\Loader\UserLoader']]
-      - ['setViewPath', ['%teknoo.east.website.view.user.list.file%']]
-    public: true
-
-  teknoo.east.website.endpoint.admin.new.user:
-    parent: 'teknoo.east.website.endpoint.admin.new.abstract'
-    calls:
-      - ['setLoader', ['@Teknoo\East\Website\Loader\UserLoader']]
-      - ['setWriter', ['@teknoo.east.website.bundle.writer.user']]
-      - ['setFormClass', ['%teknoo.east.website.form_type.user.class%']]
-      - ['setViewPath', ['%teknoo.east.website.view.user.new.file%']]
-      - ['setObjectClass', ['%teknoo.east.website.user.class%']]
-    public: true
+    arguments:
+      - '@Teknoo\East\Website\Recipe\Cookbook\CreateContentEndPoint'
+      - '@service_container'
 
   #Provider
   teknoo.east.website.bundle.user_provider:

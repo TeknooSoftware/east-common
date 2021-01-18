@@ -30,4 +30,5 @@ services:
 
   twig:
     synthetic: true
+    public: true
 

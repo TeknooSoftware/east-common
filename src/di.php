@@ -26,7 +26,23 @@ declare(strict_types=1);
 namespace Teknoo\East\Website;
 
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Teknoo\East\Website\Contracts\Recipe\Step\FormHandlingInterface;
+use Teknoo\East\Website\Contracts\Recipe\Step\FormProcessingInterface;
+use Teknoo\East\Website\Contracts\Recipe\Step\GetStreamFromMediaInterface;
+use Teknoo\East\Website\Contracts\Recipe\Step\RedirectClientInterface;
+use Teknoo\East\Website\Contracts\Recipe\Step\RenderFormInterface;
+use Teknoo\East\Website\Recipe\Cookbook\DeleteContentEndPoint;
+use Teknoo\East\Website\Recipe\Cookbook\EditContentEndPoint;
+use Teknoo\East\Website\Recipe\Cookbook\ListContentEndPoint;
+use Teknoo\East\Website\Recipe\Cookbook\RenderDynamicContentEndPoint;
+use Teknoo\East\Website\Recipe\Cookbook\RenderMediaEndPoint;
+use Teknoo\East\Website\Recipe\Cookbook\RenderStaticContentEndPoint;
+use Teknoo\East\Website\Recipe\Step\CreateObject;
+use Teknoo\Recipe\RecipeInterface as OriginalRecipeInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
+use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Website\DBSource\ManagerInterface;
 use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
 use Teknoo\East\Website\DBSource\Repository\ItemRepositoryInterface;
@@ -40,6 +56,21 @@ use Teknoo\East\Website\Loader\TypeLoader;
 use Teknoo\East\Website\Loader\UserLoader;
 use Teknoo\East\Website\Middleware\LocaleMiddleware;
 use Teknoo\East\Website\Middleware\MenuMiddleware;
+use Teknoo\East\Website\Recipe\Cookbook\CreateContentEndPoint;
+use Teknoo\East\Website\Recipe\Step\DeleteObject;
+use Teknoo\East\Website\Recipe\Step\ExtractOrder;
+use Teknoo\East\Website\Recipe\Step\ExtractPage;
+use Teknoo\East\Website\Recipe\Step\ExtractSlug;
+use Teknoo\East\Website\Recipe\Step\LoadContent;
+use Teknoo\East\Website\Recipe\Step\LoadListObjects;
+use Teknoo\East\Website\Recipe\Step\LoadMedia;
+use Teknoo\East\Website\Recipe\Step\LoadObject;
+use Teknoo\East\Website\Recipe\Step\Render;
+use Teknoo\East\Website\Recipe\Step\RenderError;
+use Teknoo\East\Website\Recipe\Step\RenderList;
+use Teknoo\East\Website\Recipe\Step\SaveObject;
+use Teknoo\East\Website\Recipe\Step\SendMedia;
+use Teknoo\East\Website\Recipe\Step\SlugPreparation;
 use Teknoo\East\Website\Service\DatesService;
 use Teknoo\East\Website\Service\DeletingService;
 use Teknoo\East\Website\Service\FindSlugService;
@@ -50,6 +81,7 @@ use Teknoo\East\Website\Writer\ContentWriter;
 use Teknoo\East\Website\Writer\MediaWriter;
 use Teknoo\East\Website\Writer\TypeWriter;
 use Teknoo\East\Website\Writer\UserWriter;
+use Teknoo\Recipe\Recipe;
 
 use function DI\get;
 use function DI\decorate;
@@ -126,4 +158,121 @@ return [
 
         return $previous;
     }),
+
+    //Steps
+    //todo test
+    CreateObject::class => create(),
+    DeleteObject::class => create()
+        ->constructor(
+            get(DeletingService::class)
+        ),
+    ExtractOrder::class => create(),
+    ExtractPage::class => create(),
+    ExtractSlug::class => create(),
+    LoadContent::class => create()
+        ->constructor(
+            get(ContentLoader::class)
+        ),
+    LoadListObjects::class => create(),
+    LoadMedia::class => create()
+        ->constructor(
+            get(MediaLoader::class)
+        ),
+    LoadObject::class => create(),
+    Render::class => create()
+        ->constructor(
+            get(EngineInterface::class),
+            get(StreamFactoryInterface::class),
+            get(ResponseFactoryInterface::class)
+        ),
+    RenderError::class => create()
+        ->constructor(
+            get(EngineInterface::class),
+            get(StreamFactoryInterface::class),
+            get(ResponseFactoryInterface::class)
+        ),
+    RenderList::class => create()
+        ->constructor(
+            get(EngineInterface::class),
+            get(StreamFactoryInterface::class),
+            get(ResponseFactoryInterface::class)
+        ),
+    SaveObject::class => create(),
+    SendMedia::class => create()
+        ->constructor(
+            get(ResponseFactoryInterface::class)
+        ),
+    SlugPreparation::class => create()
+        ->constructor(
+            get(FindSlugService::class)
+        ),
+
+    //Base recipe
+    OriginalRecipeInterface::class => get(Recipe::class),
+    Recipe::class => create(),
+
+    //Cookbook
+    //todo test
+    CreateContentEndPoint::class => create()
+        ->constructor(
+            get(OriginalRecipeInterface::class),
+            get(CreateObject::class),
+            get(FormHandlingInterface::class),
+            get(FormProcessingInterface::class),
+            get(SlugPreparation::class),
+            get(SaveObject::class),
+            get(RedirectClientInterface::class),
+            get(RenderFormInterface::class),
+            get(RenderError::class)
+        ),
+    DeleteContentEndPoint::class => create()
+        ->constructor(
+            get(OriginalRecipeInterface::class),
+            get(LoadObject::class),
+            get(DeleteObject::class),
+            get(RedirectClientInterface::class),
+            get(RenderError::class),
+        ),
+    EditContentEndPoint::class => create()
+        ->constructor(
+            get(OriginalRecipeInterface::class),
+            get(LoadObject::class),
+            get(FormHandlingInterface::class),
+            get(FormProcessingInterface::class),
+            get(SlugPreparation::class),
+            get(SaveObject::class),
+            get(RenderFormInterface::class),
+            get(RenderError::class)
+        ),
+    ListContentEndPoint::class => create()
+        ->constructor(
+            get(OriginalRecipeInterface::class),
+            get(ExtractPage::class),
+            get(ExtractOrder::class),
+            get(LoadListObjects::class),
+            get(RenderList::class),
+            get(RenderError::class),
+        ),
+    RenderDynamicContentEndPoint::class => create()
+        ->constructor(
+            get(OriginalRecipeInterface::class),
+            get(ExtractSlug::class),
+            get(LoadContent::class),
+            get(Render::class),
+            get(RenderError::class)
+        ),
+    RenderMediaEndPoint::class => create()
+        ->constructor(
+            get(OriginalRecipeInterface::class),
+            get(LoadMedia::class),
+            get(GetStreamFromMediaInterface::class),
+            get(SendMedia::class),
+            get(RenderError::class)
+        ),
+    RenderStaticContentEndPoint::class => create()
+        ->constructor(
+            get(OriginalRecipeInterface::class),
+            get(Render::class),
+            get(RenderError::class)
+        ),
 ];

@@ -25,19 +25,33 @@ namespace Teknoo\Tests\East\WebsiteBundle;
 
 use DI\Container;
 use DI\ContainerBuilder;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
 use Teknoo\East\Foundation\Router\RouterInterface;
+use Teknoo\East\Foundation\Template\EngineInterface;
+use Teknoo\East\Website\Contracts\Recipe\Step\FormHandlingInterface;
+use Teknoo\East\Website\Contracts\Recipe\Step\FormProcessingInterface;
+use Teknoo\East\Website\Contracts\Recipe\Step\RedirectClientInterface;
+use Teknoo\East\Website\Contracts\Recipe\Step\RenderFormInterface;
 use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
 use Teknoo\East\Website\DBSource\Repository\ItemRepositoryInterface;
 use Teknoo\East\Website\Loader\UserLoader;
 use Teknoo\East\Website\Object\User as BaseUser;
 use Teknoo\East\Website\Query\User\UserByEmailQuery;
+use Teknoo\East\Website\Service\DatesService;
 use Teknoo\East\WebsiteBundle\Middleware\LocaleMiddleware;
 use Teknoo\East\WebsiteBundle\Object\User;
 use Teknoo\East\WebsiteBundle\Provider\UserProvider;
+use Teknoo\East\WebsiteBundle\Recipe\Step\FormHandling;
+use Teknoo\East\WebsiteBundle\Recipe\Step\FormProcessing;
+use Teknoo\East\WebsiteBundle\Recipe\Step\RedirectClient;
+use Teknoo\East\WebsiteBundle\Recipe\Step\RenderForm;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
@@ -123,6 +137,76 @@ class ContainerTest extends TestCase
         self::assertEquals(
             (new User($user)),
             $provider->loadUserByUsername('foo@bar')
+        );
+    }
+
+    public function testFormHandling()
+    {
+        $container = $this->buildContainer();
+
+        $container->set(DatesService::class, $this->createMock(DatesService::class));
+        $container->set('form.factory', $this->createMock(FormFactoryInterface::class));
+
+        self::assertInstanceOf(
+            FormHandlingInterface::class,
+            $container->get(FormHandlingInterface::class)
+        );
+
+        self::assertInstanceOf(
+            FormHandling::class,
+            $container->get(FormHandling::class)
+        );
+    }
+
+    public function testFormProcessing()
+    {
+        $container = $this->buildContainer();
+
+        self::assertInstanceOf(
+            FormProcessing::class,
+            $container->get(FormProcessing::class)
+        );
+
+        self::assertInstanceOf(
+            FormProcessingInterface::class,
+            $container->get(FormProcessingInterface::class)
+        );
+    }
+
+    public function testRedirectClient()
+    {
+        $container = $this->buildContainer();
+
+        $container->set(ResponseFactoryInterface::class, $this->createMock(ResponseFactoryInterface::class));
+        $container->set('router', $this->createMock(UrlGeneratorInterface::class));
+
+        self::assertInstanceOf(
+            RedirectClientInterface::class,
+            $container->get(RedirectClientInterface::class)
+        );
+
+        self::assertInstanceOf(
+            RedirectClient::class,
+            $container->get(RedirectClient::class)
+        );
+    }
+
+    public function testRenderForm()
+    {
+        $container = $this->buildContainer();
+
+        $container->set(EngineInterface::class, $this->createMock(EngineInterface::class));
+        $container->set(StreamFactoryInterface::class, $this->createMock(StreamFactoryInterface::class));
+        $container->set(ResponseFactoryInterface::class, $this->createMock(ResponseFactoryInterface::class));
+
+        self::assertInstanceOf(
+            RenderFormInterface::class,
+            $container->get(RenderFormInterface::class)
+        );
+
+        self::assertInstanceOf(
+            RenderForm::class,
+            $container->get(RenderForm::class)
         );
     }
 }

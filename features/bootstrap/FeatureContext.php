@@ -4,23 +4,29 @@ declare(strict_types=1);
 
 use Behat\Behat\Context\Context;
 use DI\Container;
+use DI\ContainerBuilder;
 use Doctrine\Persistence\ObjectRepository;
 use Doctrine\Persistence\ObjectManager;
 use Laminas\Diactoros\ServerRequest;
 use Laminas\Diactoros\Uri;
+use Laminas\Diactoros\ServerRequestFactory;
+use Laminas\Diactoros\StreamFactory;
+use Laminas\Diactoros\UploadedFileFactory;
+use Laminas\Diactoros\ResponseFactory;
 use PHPUnit\Framework\Assert;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\ResponseFactoryInterface;
-use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\StreamInterface;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder as SfContainerBuilder;
 use Symfony\Component\HttpFoundation\Request as SfRequest;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
-use Teknoo\East\Foundation\EndPoint\EndPointInterface;
+use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
+use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
+use Teknoo\East\Foundation\EndPoint\RecipeEndPoint;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Manager\Manager;
@@ -31,19 +37,23 @@ use Teknoo\East\Foundation\Router\RouterInterface;
 use Teknoo\East\Foundation\Middleware\MiddlewareInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Foundation\Template\ResultInterface;
+use Teknoo\East\Website\Contracts\Recipe\Step\GetStreamFromMediaInterface;
 use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
 use Teknoo\East\Website\Doctrine\Object\Content;
 use Teknoo\East\Website\Loader\MediaLoader;
 use Teknoo\East\Website\Loader\ContentLoader;
 use Teknoo\East\Website\Loader\ItemLoader;
 use Teknoo\East\Website\Loader\TypeLoader;
-use Teknoo\East\Website\EndPoint\MediaEndPointTrait;
-use Teknoo\East\Website\EndPoint\ContentEndPointTrait;
-use Teknoo\East\Website\EndPoint\StaticEndPointTrait;
-use Teknoo\East\FoundationBundle\EndPoint\EastEndPointTrait;
+use Teknoo\East\Website\Object\Media as BaseMedia;
+use Teknoo\East\Website\Recipe\Cookbook\RenderStaticContentEndPoint;
+use Teknoo\East\Website\Recipe\Cookbook\RenderDynamicContentEndPoint;
+use Teknoo\East\Website\Recipe\Cookbook\RenderMediaEndPoint;
 use Teknoo\East\Website\Object\Media;
 use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Object\Block;
+use Teknoo\East\FoundationBundle\EastFoundationBundle;
+use Teknoo\East\WebsiteBundle\TeknooEastWebsiteBundle;
+use Teknoo\DI\SymfonyBridge\DIBridgeBundle;
 use Twig\Environment;
 
 /**
@@ -72,19 +82,19 @@ class FeatureContext implements Context
     private ?TypeLoader $typeLoader = null;
 
     /**
-     * @var MediaEndPointTrait|EndPointInterface
+     * @var RecipeEndPoint
      */
-    private ?EndPointInterface $mediaEndPoint = null;
+    private ?RecipeEndPoint $mediaEndPoint = null;
 
     /**
-     * @var ContentEndPointTrait|EndPointInterface
+     * @var RecipeEndPoint
      */
-    private ?EndPointInterface $contentEndPoint = null;
+    private ?RecipeEndPoint $contentEndPoint = null;
 
     /**
-     * @var StaticEndPointTrait|EndPointInterface
+     * @var RecipeEndPoint
      */
-    private ?EndPointInterface $staticEndPoint = null;
+    private ?RecipeEndPoint $staticEndPoint = null;
 
     private ?Type $type = null;
 
@@ -120,7 +130,7 @@ class FeatureContext implements Context
      */
     public function iHaveDiInitialized(): void
     {
-        $containerDefinition = new \DI\ContainerBuilder();
+        $containerDefinition = new ContainerBuilder();
         $rootDir = \dirname(__DIR__, 2);
         $containerDefinition->addDefinitions(
             include $rootDir.'/vendor/teknoo/east-foundation/src/di.php'
@@ -175,10 +185,10 @@ class FeatureContext implements Context
 
             public function registerBundles()
             {
-                yield new \Symfony\Bundle\FrameworkBundle\FrameworkBundle();
-                yield new \Teknoo\East\FoundationBundle\EastFoundationBundle();
-                yield new \Teknoo\East\WebsiteBundle\TeknooEastWebsiteBundle();
-                yield new \Teknoo\DI\SymfonyBridge\DIBridgeBundle();
+                yield new FrameworkBundle();
+                yield new EastFoundationBundle();
+                yield new TeknooEastWebsiteBundle();
+                yield new DIBridgeBundle();
             }
 
             protected function configureContainer(SfContainerBuilder $container, LoaderInterface $loader)
@@ -299,7 +309,8 @@ class FeatureContext implements Context
 
     public function getObjectRepository(string $className): ObjectRepository
     {
-        return $this->objectRepository[$className] ?? $this->objectRepository[$className] = new class($className) implements ObjectRepository {
+        return $this->objectRepository[$className] ?? $this->objectRepository[$className] =
+                new class($className) implements ObjectRepository {
             private string $className;
 
             /**
@@ -425,24 +436,39 @@ class FeatureContext implements Context
      */
     public function aEndpointAbleToServeResourceFromDatabase(): void
     {
-        $this->mediaEndPoint = new class(
-            $this->mediaLoader,
-            $this->container->get(StreamFactoryInterface::class)
-        ) implements EndPointInterface {
-            use EastEndPointTrait;
-            use MediaEndPointTrait;
+        $this->container->set(
+            GetStreamFromMediaInterface::class,
+            new class($this->container->get(StreamFactoryInterface::class)) implements GetStreamFromMediaInterface {
+                protected StreamFactoryInterface $streamFactory;
 
-            protected function getStream(Media $media): StreamInterface
-            {
-                $hf = fopen('php://memory', 'rw+');
-                fwrite($hf, 'fooBar');
-                fseek($hf, 0);
+                public function __construct(StreamFactoryInterface $streamFactory)
+                {
+                    $this->streamFactory = $streamFactory;
+                }
 
-                return $this->streamFactory->createStreamFromResource($hf);
+                public function __invoke(
+                    BaseMedia $media,
+                    ManagerInterface $manager
+                ): GetStreamFromMediaInterface {
+                    $hf = fopen('php://memory', 'rw+');
+                    fwrite($hf, 'fooBar');
+                    fseek($hf, 0);
+
+                    $stream = $this->streamFactory->createStreamFromResource($hf);
+
+                    $manager->updateWorkPlan([
+                        StreamInterface::class => $stream,
+                    ]);
+
+                    return $this;
+                }
             }
-        };
+        );
 
-        $this->mediaEndPoint->setResponseFactory($this->container->get(ResponseFactoryInterface::class));
+        $this->mediaEndPoint = new RecipeEndPoint(
+            $this->container->get(RenderMediaEndPoint::class),
+            $this->container
+        );
     }
 
     /**
@@ -614,6 +640,7 @@ class FeatureContext implements Context
     public function theServerWillReceiveTheRequest(string $url): void
     {
         $request = new ServerRequest();
+        $request = $request->withAttribute('errorTemplate', '404-error');
         $request = $request->withMethod('GET');
         $request = $request->withUri(new Uri($url));
         $query = [];
@@ -700,13 +727,10 @@ class FeatureContext implements Context
      */
     public function aEndpointAbleToRenderAndServePage(): void
     {
-        $this->contentEndPoint = new class($this->contentLoader, '404-error') implements EndPointInterface {
-            use EastEndPointTrait;
-            use ContentEndPointTrait;
-        };
-
-        $this->contentEndPoint->setResponseFactory($this->container->get(ResponseFactoryInterface::class));
-        $this->contentEndPoint->setStreamFactory($this->container->get(StreamFactoryInterface::class));
+        $this->contentEndPoint = new RecipeEndPoint(
+            $this->container->get(RenderDynamicContentEndPoint::class),
+            $this->container
+        );
     }
 
     public function buildResultObject (string $body): ResultInterface
@@ -816,13 +840,7 @@ class FeatureContext implements Context
             }
         };
 
-        if ($this->staticEndPoint instanceof EndPointInterface) {
-            $this->staticEndPoint->setTemplating($this->templating);
-        }
-
-        if ($this->contentEndPoint instanceof EndPointInterface) {
-            $this->contentEndPoint->setTemplating($this->templating);
-        }
+        $this->container->set(EngineInterface::class, $this->templating);
     }
 
     /**
@@ -839,13 +857,10 @@ class FeatureContext implements Context
      */
     public function aEndpointAbleToRenderAndServeThisTemplate(): void
     {
-        $this->staticEndPoint = new class implements EndPointInterface {
-            use EastEndPointTrait;
-            use StaticEndPointTrait;
-        };
-
-        $this->staticEndPoint->setResponseFactory($this->container->get(ResponseFactoryInterface::class));
-        $this->staticEndPoint->setStreamFactory($this->container->get(StreamFactoryInterface::class));
+        $this->staticEndPoint = new RecipeEndPoint(
+            $this->container->get(RenderStaticContentEndPoint::class),
+            $this->container
+        );
     }
 
     /**
@@ -865,13 +880,18 @@ class FeatureContext implements Context
         $container->set(ObjectManager::class, $this->buildObjectManager());
         $container->set('twig', $this->twig);
 
+        $container->set(
+            EngineInterface::class,
+            new \Teknoo\East\Twig\Template\Engine($this->twig)
+        );
+
         $response = $this->symfonyKernel->handle($serverRequest);
 
-        $psrFactory = new \Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory(
-            new \Laminas\Diactoros\ServerRequestFactory(),
-            new \Laminas\Diactoros\StreamFactory(),
-            new \Laminas\Diactoros\UploadedFileFactory(),
-            new \Laminas\Diactoros\ResponseFactory()
+        $psrFactory = new PsrHttpFactory(
+            new ServerRequestFactory(),
+            new StreamFactory(),
+            new UploadedFileFactory(),
+            new ResponseFactory()
         );
 
         $this->response = $psrFactory->createResponse($response);

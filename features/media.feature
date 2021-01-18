@@ -7,6 +7,7 @@ Feature: Return a required media (an image by example) stored into a database se
     And I register a router
     And a Media Loader
     And an available image called "image.jpeg"
+    And a templating engine
     And a Endpoint able to serve resource from database.
     And The router can process the request "#/media/(?P<id>[a-zA-Z0-9\.]+)#is" to controller "mediaEndPoint"
     When The server will receive the request "https://foo.com/media/image.jpeg"
@@ -17,6 +18,7 @@ Feature: Return a required media (an image by example) stored into a database se
     Given I have DI initialized
     And I register a router
     And a Media Loader
+    And a templating engine
     And a Endpoint able to serve resource from database.
     And The router can process the request "#/media/(?P<id>[a-zA-Z0-9\.]+)#is" to controller "mediaEndPoint"
     When The server will receive the request "https://foo.com/media/image.jpeg"

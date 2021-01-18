@@ -35,7 +35,10 @@ use Doctrine\Persistence\ObjectRepository;
 use Doctrine\Persistence\Mapping\Driver\FileLocator;
 use Psr\Container\ContainerInterface;
 use ProxyManager\Proxy\GhostObjectInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
+use Teknoo\East\Website\Contracts\Recipe\Step\GetStreamFromMediaInterface;
+use Teknoo\East\Website\Doctrine\Recipe\Step\ODM\GetStreamFromMedia;
 use Teknoo\East\Website\Doctrine\Translatable\Mapping\Driver\SimpleXmlFactoryInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Mapping\Driver\Xml;
 use Teknoo\East\Website\Doctrine\Translatable\Mapping\DriverFactoryInterface;
@@ -280,5 +283,18 @@ return [
                 return $this;
             }
         };
+    },
+
+    GetStreamFromMediaInterface::class => get(GetStreamFromMedia::class),
+    GetStreamFromMedia::class => static function (ContainerInterface $container): GetStreamFromMedia {
+        $repository = $container->get(ObjectManager::class)->getRepository(Media::class);
+        if (!$repository instanceof GridFSRepository) {
+            throw new \RuntimeException('Repository for Media class is not a GridFSRepository');
+        }
+
+        return new GetStreamFromMedia(
+            $repository,
+            $container->get(StreamFactoryInterface::class)
+        );
     },
 ];

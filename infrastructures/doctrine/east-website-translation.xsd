@@ -7,7 +7,8 @@
 
   <xs:annotation>
     <xs:documentation><![CDATA[
-    Todo
+      XML Schema to create document to configure translation of Document via Doctrine ODM and the East Website
+      Translatable. Inspirated (forked, redesigned, rewritten) from Gedmo/Translation.
      ]]></xs:documentation>
   </xs:annotation>
 

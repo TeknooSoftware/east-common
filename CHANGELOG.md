@@ -1,5 +1,14 @@
 #Teknoo Software - Website - Change Log
 
+##[4.0.0] - 2021-01-24
+###Stable Release
+- Migrate to Recipe 2.3+ and Tekno 3.3
+- Migrate all classics services endpoints to Cookbook and Recipe.
+- Remove all traits in main namespace with implementation in infrastructures namespaces.
+- All cookbooks and recipes, and majors of step are defined in the main namespace, only specialized steps are defined in infrastructures namespace.
+- Remove AdminEditEndPoint, AdminListEndPoint, AdminNewEndPoint, ContentEndPointTrait and MediaEndPointTrait.
+- Update Symfony configuration to manage this new architecture. Remove all services dedicated for each objects in Website, replaced by only agnostic endpoint. All configuration is pass in route.
+
 ##[3.2.5] - 2020-12-03
 ###Stable Release
 - Official Support of PHP8

@@ -82,7 +82,9 @@ trait TemplateTrait
 
                     $client->acceptResponse($response);
                 },
-                [$client, 'errorInRequest']
+                static function (\Throwable $error) use ($client) {
+                    $client->errorInRequest($error, false);
+                }
             ),
             $view,
             $parameters

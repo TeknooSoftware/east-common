@@ -1,5 +1,9 @@
 #Teknoo Software - Website - Change Log
 
+##[4.0.3] - 2021-01-25
+###Stable Release
+- Revert Fix RenderError to not rethrow an error to switch to silently mode
+
 ##[4.0.2] - 2021-01-25
 ###Stable Release
 - Fix RenderError to not rethrow an error.

@@ -65,6 +65,8 @@ class RenderError
             $errorCode = 500;
         }
 
+        $client->errorInRequest($error, true);
+
         $this->render(
             $client,
             $errorTemplate,

@@ -1,5 +1,9 @@
 #Teknoo Software - Website - Change Log
 
+##[4.0.1] - 2021-01-25
+###Stable Release
+- Fix symfony endpoints services definition to use contracts interfaces instead of cookbooks classes
+
 ##[4.0.0] - 2021-01-24
 ###Stable Release
 - Migrate to Recipe 2.3+ and Tekno 3.3

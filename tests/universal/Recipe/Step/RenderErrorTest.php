@@ -150,7 +150,7 @@ class RenderErrorTest extends TestCase
         $template = 'foo';
         $error = new \Exception('foo');
 
-        $client->expects(self::once())->method('errorInRequest');
+        $client->expects(self::never())->method('errorInRequest');
 
         $response = $this->createMock(ResponseInterface::class);
         $response->expects(self::any())->method('withHeader')->willReturnSelf();
@@ -198,7 +198,7 @@ class RenderErrorTest extends TestCase
         $template = 'foo';
         $error = new \Exception('foo');
 
-        $client->expects(self::exactly(2))->method('errorInRequest');
+        $client->expects(self::once())->method('errorInRequest');
 
         $response = $this->createMock(ResponseInterface::class);
         $response->expects(self::any())->method('withHeader')->willReturnSelf();
@@ -246,7 +246,7 @@ class RenderErrorTest extends TestCase
         $template = 'foo';
         $error = new \Exception('foo');
 
-        $client->expects(self::once())->method('errorInRequest');
+        $client->expects(self::never())->method('errorInRequest');
 
         $response = $this->createMock(ResponseInterface::class);
         $response->expects(self::any())->method('withHeader')->willReturnSelf();
@@ -302,7 +302,7 @@ class RenderErrorTest extends TestCase
         $template = 'foo';
         $error = new \Exception('foo', 404);
 
-        $client->expects(self::once())->method('errorInRequest');
+        $client->expects(self::never())->method('errorInRequest');
 
         $response = $this->createMock(ResponseInterface::class);
         $response->expects(self::any())->method('withHeader')->willReturnSelf();

@@ -60,8 +60,6 @@ class RenderError
         $viewParameters = $request->getAttribute(ViewParameterInterface::REQUEST_PARAMETER_KEY, []);
         $viewParameters = \array_merge($viewParameters, ['error' => $error]);
 
-        $client->errorInRequest($error);
-
         $errorCode = $error->getCode();
         if (empty($errorCode)) {
             $errorCode = 500;

@@ -1,5 +1,9 @@
 #Teknoo Software - Website - Change Log
 
+##[4.0.2] - 2021-01-25
+###Stable Release
+- Fix RenderError to not rethrow an error.
+
 ##[4.0.1] - 2021-01-25
 ###Stable Release
 - Fix symfony endpoints services definition to use contracts interfaces instead of cookbooks classes

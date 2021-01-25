@@ -33,6 +33,13 @@ use Teknoo\East\Foundation\Manager\Manager;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Router\RouterInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
+use Teknoo\East\Website\Contracts\Recipe\Cookbook\CreateContentEndPointInterface;
+use Teknoo\East\Website\Contracts\Recipe\Cookbook\DeleteContentEndPointInterface;
+use Teknoo\East\Website\Contracts\Recipe\Cookbook\EditContentEndPointInterface;
+use Teknoo\East\Website\Contracts\Recipe\Cookbook\ListContentEndPointInterface;
+use Teknoo\East\Website\Contracts\Recipe\Cookbook\RenderDynamicContentEndPointInterface;
+use Teknoo\East\Website\Contracts\Recipe\Cookbook\RenderMediaEndPointInterface;
+use Teknoo\East\Website\Contracts\Recipe\Cookbook\RenderStaticContentEndPointInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\FormHandlingInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\FormProcessingInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\GetStreamFromMediaInterface;
@@ -458,6 +465,11 @@ class ContainerTest extends TestCase
             CreateContentEndPoint::class,
             $container->get(CreateContentEndPoint::class)
         );
+
+        self::assertInstanceOf(
+            CreateContentEndPointInterface::class,
+            $container->get(CreateContentEndPointInterface::class)
+        );
     }
 
     public function testDeleteContentEndPoint()
@@ -472,6 +484,11 @@ class ContainerTest extends TestCase
         self::assertInstanceOf(
             DeleteContentEndPoint::class,
             $container->get(DeleteContentEndPoint::class)
+        );
+
+        self::assertInstanceOf(
+            DeleteContentEndPointInterface::class,
+            $container->get(DeleteContentEndPointInterface::class)
         );
     }
 
@@ -491,6 +508,11 @@ class ContainerTest extends TestCase
             EditContentEndPoint::class,
             $container->get(EditContentEndPoint::class)
         );
+
+        self::assertInstanceOf(
+            EditContentEndPointInterface::class,
+            $container->get(EditContentEndPointInterface::class)
+        );
     }
 
     public function testListContentEndPoint()
@@ -507,6 +529,11 @@ class ContainerTest extends TestCase
             ListContentEndPoint::class,
             $container->get(ListContentEndPoint::class)
         );
+
+        self::assertInstanceOf(
+            ListContentEndPointInterface::class,
+            $container->get(ListContentEndPointInterface::class)
+        );
     }
 
     public function testRenderDynamicContentEndPoint()
@@ -521,6 +548,11 @@ class ContainerTest extends TestCase
         self::assertInstanceOf(
             RenderDynamicContentEndPoint::class,
             $container->get(RenderDynamicContentEndPoint::class)
+        );
+
+        self::assertInstanceOf(
+            RenderDynamicContentEndPointInterface::class,
+            $container->get(RenderDynamicContentEndPointInterface::class)
         );
     }
 
@@ -537,6 +569,11 @@ class ContainerTest extends TestCase
             RenderMediaEndPoint::class,
             $container->get(RenderMediaEndPoint::class)
         );
+
+        self::assertInstanceOf(
+            RenderMediaEndPointInterface::class,
+            $container->get(RenderMediaEndPointInterface::class)
+        );
     }
 
     public function testRenderStaticContentEndPoint()
@@ -549,6 +586,11 @@ class ContainerTest extends TestCase
         self::assertInstanceOf(
             RenderStaticContentEndPoint::class,
             $container->get(RenderStaticContentEndPoint::class)
+        );
+
+        self::assertInstanceOf(
+            RenderStaticContentEndPointInterface::class,
+            $container->get(RenderStaticContentEndPointInterface::class)
         );
     }
 }

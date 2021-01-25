@@ -17,21 +17,21 @@ services:
     class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
     public: true
     arguments:
-      - '@Teknoo\East\Website\Recipe\Cookbook\RenderDynamicContentEndPoint'
+      - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\RenderDynamicContentEndPointInterface'
       - '@service_container'
 
   teknoo.east.website.endpoint.media:
     class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
     public: true
     arguments:
-      - '@Teknoo\East\Website\Recipe\Cookbook\RenderMediaEndPoint'
+      - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\RenderMediaEndPointInterface'
       - '@service_container'
 
   teknoo.east.website.endpoint.static:
     class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
     public: true
     arguments:
-      - '@Teknoo\East\Website\Recipe\Cookbook\RenderStaticContentEndPoint'
+      - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\RenderStaticContentEndPointInterface'
       - '@service_container'
 
   #Admin endpoints
@@ -39,28 +39,28 @@ services:
     class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
     public: true
     arguments:
-      - '@Teknoo\East\Website\Recipe\Cookbook\DeleteContentEndPoint'
+      - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\DeleteContentEndPointInterface'
       - '@service_container'
 
   teknoo.east.website.endpoint.admin.edit:
     class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
     public: true
     arguments:
-      - '@Teknoo\East\Website\Recipe\Cookbook\EditContentEndPoint'
+      - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\EditContentEndPointInterface'
       - '@service_container'
 
   teknoo.east.website.endpoint.admin.list:
     class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
     public: true
     arguments:
-      - '@Teknoo\East\Website\Recipe\Cookbook\ListContentEndPoint'
+      - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\ListContentEndPointInterface'
       - '@service_container'
 
   teknoo.east.website.endpoint.admin.new:
     class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
     public: true
     arguments:
-      - '@Teknoo\East\Website\Recipe\Cookbook\CreateContentEndPoint'
+      - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\CreateContentEndPointInterface'
       - '@service_container'
 
   #Provider

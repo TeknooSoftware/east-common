@@ -28,6 +28,13 @@ namespace Teknoo\East\Website;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Teknoo\East\Website\Contracts\Recipe\Cookbook\CreateContentEndPointInterface;
+use Teknoo\East\Website\Contracts\Recipe\Cookbook\DeleteContentEndPointInterface;
+use Teknoo\East\Website\Contracts\Recipe\Cookbook\EditContentEndPointInterface;
+use Teknoo\East\Website\Contracts\Recipe\Cookbook\ListContentEndPointInterface;
+use Teknoo\East\Website\Contracts\Recipe\Cookbook\RenderDynamicContentEndPointInterface;
+use Teknoo\East\Website\Contracts\Recipe\Cookbook\RenderMediaEndPointInterface;
+use Teknoo\East\Website\Contracts\Recipe\Cookbook\RenderStaticContentEndPointInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\FormHandlingInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\FormProcessingInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\GetStreamFromMediaInterface;
@@ -160,7 +167,6 @@ return [
     }),
 
     //Steps
-    //todo test
     CreateObject::class => create(),
     DeleteObject::class => create()
         ->constructor(
@@ -212,7 +218,7 @@ return [
     Recipe::class => create(),
 
     //Cookbook
-    //todo test
+    CreateContentEndPointInterface::class => get(CreateContentEndPoint::class),
     CreateContentEndPoint::class => create()
         ->constructor(
             get(OriginalRecipeInterface::class),
@@ -225,6 +231,7 @@ return [
             get(RenderFormInterface::class),
             get(RenderError::class)
         ),
+    DeleteContentEndPointInterface::class => get(DeleteContentEndPoint::class),
     DeleteContentEndPoint::class => create()
         ->constructor(
             get(OriginalRecipeInterface::class),
@@ -233,6 +240,7 @@ return [
             get(RedirectClientInterface::class),
             get(RenderError::class),
         ),
+    EditContentEndPointInterface::class => get(EditContentEndPoint::class),
     EditContentEndPoint::class => create()
         ->constructor(
             get(OriginalRecipeInterface::class),
@@ -244,6 +252,7 @@ return [
             get(RenderFormInterface::class),
             get(RenderError::class)
         ),
+    ListContentEndPointInterface::class => get(ListContentEndPoint::class),
     ListContentEndPoint::class => create()
         ->constructor(
             get(OriginalRecipeInterface::class),
@@ -253,6 +262,7 @@ return [
             get(RenderList::class),
             get(RenderError::class),
         ),
+    RenderDynamicContentEndPointInterface::class => get(RenderDynamicContentEndPoint::class),
     RenderDynamicContentEndPoint::class => create()
         ->constructor(
             get(OriginalRecipeInterface::class),
@@ -261,6 +271,7 @@ return [
             get(Render::class),
             get(RenderError::class)
         ),
+    RenderMediaEndPointInterface::class => get(RenderMediaEndPoint::class),
     RenderMediaEndPoint::class => create()
         ->constructor(
             get(OriginalRecipeInterface::class),
@@ -269,6 +280,7 @@ return [
             get(SendMedia::class),
             get(RenderError::class)
         ),
+    RenderStaticContentEndPointInterface::class => get(RenderStaticContentEndPoint::class),
     RenderStaticContentEndPoint::class => create()
         ->constructor(
             get(OriginalRecipeInterface::class),

@@ -8,7 +8,7 @@ _teknoo_website_admin_item_list:
         defaultOrderDirection: 'ASC'
         itemsPerPage: 20
         template: '@@TeknooEastWebsite/AdminItem/list.html.twig'
-        errorTemplate: '@@TeknooEastWebsite/Error/404.html.twig'
+        errorTemplate: '@@TeknooEastWebsite/Error/<error>.html.twig'
 
 _teknoo_website_admin_item_edit:
     path: '/item/edit/{id}'
@@ -19,7 +19,7 @@ _teknoo_website_admin_item_edit:
         writer: '@Teknoo\East\Website\Writer\ItemWriter'
         formClass: 'Teknoo\East\Website\Doctrine\Form\Type\ItemType'
         template: '@@TeknooEastWebsite/AdminItem/edit.html.twig'
-        errorTemplate: '@@TeknooEastWebsite/Error/404.html.twig'
+        errorTemplate: '@@TeknooEastWebsite/Error/<error>.html.twig'
         formOptions: { "doctrine_type": "%teknoo.east.website.form_type.doctrine.class%"}
         isTranslatable: true
         slugField: 'slug'
@@ -34,7 +34,7 @@ _teknoo_website_admin_item_new:
         objectClass: 'Teknoo\East\Website\Doctrine\Object\Item'
         formClass: 'Teknoo\East\Website\Doctrine\Form\Type\ItemType'
         template: '@@TeknooEastWebsite/AdminItem/new.html.twig'
-        errorTemplate: '@@TeknooEastWebsite/Error/404.html.twig'
+        errorTemplate: '@@TeknooEastWebsite/Error/<error>.html.twig'
         formOptions: { "doctrine_type": "%teknoo.east.website.form_type.doctrine.class%"}
         route: '_teknoo_website_admin_item_edit'
         isTranslatable: true
@@ -48,7 +48,7 @@ _teknoo_website_admin_item_delete:
         loader: '@Teknoo\East\Website\Loader\ItemLoader'
         deleter: '@teknoo.east.website.deleting.item'
         route: '_teknoo_website_admin_item_list'
-        errorTemplate: '@@TeknooEastWebsite/Error/404.html.twig'
+        errorTemplate: '@@TeknooEastWebsite/Error/<error>.html.twig'
 
 # content
 _teknoo_website_admin_content_list:
@@ -60,7 +60,7 @@ _teknoo_website_admin_content_list:
         defaultOrderDirection: 'ASC'
         itemsPerPage: 20
         template: '@@TeknooEastWebsite/AdminContent/list.html.twig'
-        errorTemplate: '@@TeknooEastWebsite/Error/404.html.twig'
+        errorTemplate: '@@TeknooEastWebsite/Error/<error>.html.twig'
 
 _teknoo_website_admin_content_edit:
     path: '/content/edit/{id}'
@@ -71,7 +71,7 @@ _teknoo_website_admin_content_edit:
         writer: '@Teknoo\East\Website\Writer\ContentWriter'
         formClass: 'Teknoo\East\Website\Doctrine\Form\Type\ContentType'
         template: '@@TeknooEastWebsite/AdminContent/edit.html.twig'
-        errorTemplate: '@@TeknooEastWebsite/Error/404.html.twig'
+        errorTemplate: '@@TeknooEastWebsite/Error/<error>.html.twig'
         formOptions: { "doctrine_type": "%teknoo.east.website.form_type.doctrine.class%"}
         isTranslatable: true
         slugField: 'slug'
@@ -86,7 +86,7 @@ _teknoo_website_admin_content_new:
         objectClass: 'Teknoo\East\Website\Doctrine\Object\Content'
         formClass: 'Teknoo\East\Website\Doctrine\Form\Type\ContentType'
         template: '@@TeknooEastWebsite/AdminContent/new.html.twig'
-        errorTemplate: '@@TeknooEastWebsite/Error/404.html.twig'
+        errorTemplate: '@@TeknooEastWebsite/Error/<error>.html.twig'
         formOptions: { "doctrine_type": "%teknoo.east.website.form_type.doctrine.class%"}
         route: '_teknoo_website_admin_content_edit'
         isTranslatable: true
@@ -100,7 +100,7 @@ _teknoo_website_admin_content_delete:
         loader: '@Teknoo\East\Website\Loader\ContentLoader'
         deleter: '@teknoo.east.website.deleting.content'
         route: '_teknoo_website_admin_content_list'
-        errorTemplate: '@@TeknooEastWebsite/Error/404.html.twig'
+        errorTemplate: '@@TeknooEastWebsite/Error/<error>.html.twig'
 
 # media
 _teknoo_website_admin_media_list:
@@ -112,7 +112,7 @@ _teknoo_website_admin_media_list:
         defaultOrderDirection: 'ASC'
         itemsPerPage: 20
         template: '@@TeknooEastWebsite/AdminMedia/list.html.twig'
-        errorTemplate: '@@TeknooEastWebsite/Error/404.html.twig'
+        errorTemplate: '@@TeknooEastWebsite/Error/<error>.html.twig'
 
 _teknoo_website_admin_media_new:
     path: '/media/new'
@@ -124,7 +124,7 @@ _teknoo_website_admin_media_new:
         objectClass: 'Teknoo\East\Website\Doctrine\Object\Media'
         formClass: 'Teknoo\East\WebsiteBundle\Form\Type\MediaType'
         template: '@@TeknooEastWebsite/AdminMedia/edit.html.twig'
-        errorTemplate: '@@TeknooEastWebsite/Error/404.html.twig'
+        errorTemplate: '@@TeknooEastWebsite/Error/<error>.html.twig'
         formOptions: { }
         route: '_teknoo_website_admin_media_list'
 
@@ -136,7 +136,7 @@ _teknoo_website_admin_media_delete:
         loader: '@Teknoo\East\Website\Loader\MediaLoader'
         deleter: '@teknoo.east.website.deleting.media'
         route: '_teknoo_website_admin_media_list'
-        errorTemplate: '@@TeknooEastWebsite/Error/404.html.twig'
+        errorTemplate: '@@TeknooEastWebsite/Error/<error>.html.twig'
 
 # type
 _teknoo_website_admin_type_list:
@@ -148,7 +148,7 @@ _teknoo_website_admin_type_list:
         defaultOrderDirection: 'ASC'
         itemsPerPage: 20
         template: '@@TeknooEastWebsite/AdminType/list.html.twig'
-        errorTemplate: '@@TeknooEastWebsite/Error/404.html.twig'
+        errorTemplate: '@@TeknooEastWebsite/Error/<error>.html.twig'
 
 _teknoo_website_admin_type_edit:
     path: '/type/edit/{id}'
@@ -159,7 +159,7 @@ _teknoo_website_admin_type_edit:
         writer: '@Teknoo\East\Website\Writer\TypeWriter'
         formClass: 'Teknoo\East\WebsiteBundle\Form\Type\TypeType'
         template: '@@TeknooEastWebsite/AdminType/edit.html.twig'
-        errorTemplate: '@@TeknooEastWebsite/Error/404.html.twig'
+        errorTemplate: '@@TeknooEastWebsite/Error/<error>.html.twig'
         formOptions: { }
 
 _teknoo_website_admin_type_new:
@@ -172,7 +172,7 @@ _teknoo_website_admin_type_new:
         objectClass: 'Teknoo\East\Website\Object\Type'
         formClass: 'Teknoo\East\WebsiteBundle\Form\Type\TypeType'
         template: '@@TeknooEastWebsite/AdminType/new.html.twig'
-        errorTemplate: '@@TeknooEastWebsite/Error/404.html.twig'
+        errorTemplate: '@@TeknooEastWebsite/Error/<error>.html.twig'
         route: '_teknoo_website_admin_type_edit'
         formOptions: { }
 
@@ -184,7 +184,7 @@ _teknoo_website_admin_type_delete:
         loader: '@Teknoo\East\Website\Loader\TypeLoader'
         deleter: '@teknoo.east.website.deleting.type'
         route: '_teknoo_website_admin_type_list'
-        errorTemplate: '@@TeknooEastWebsite/Error/404.html.twig'
+        errorTemplate: '@@TeknooEastWebsite/Error/<error>.html.twig'
 
 # user
 _teknoo_website_admin_user_list:
@@ -196,7 +196,7 @@ _teknoo_website_admin_user_list:
         defaultOrderDirection: 'ASC'
         itemsPerPage: 20
         template: '@@TeknooEastWebsite/AdminUser/list.html.twig'
-        errorTemplate: '@@TeknooEastWebsite/Error/404.html.twig'
+        errorTemplate: '@@TeknooEastWebsite/Error/<error>.html.twig'
 
 _teknoo_website_admin_user_edit:
     path: '/user/edit/{id}'
@@ -207,7 +207,7 @@ _teknoo_website_admin_user_edit:
         writer: '@Teknoo\East\Website\Writer\UserWriter'
         formClass: 'Teknoo\East\WebsiteBundle\Form\Type\UserType'
         template: '@@TeknooEastWebsite/AdminUser/edit.html.twig'
-        errorTemplate: '@@TeknooEastWebsite/Error/404.html.twig'
+        errorTemplate: '@@TeknooEastWebsite/Error/<error>.html.twig'
         formOptions: {}
 
 _teknoo_website_admin_user_new:
@@ -220,7 +220,7 @@ _teknoo_website_admin_user_new:
         objectClass: 'Teknoo\East\Website\Object\User'
         formClass: 'Teknoo\East\WebsiteBundle\Form\Type\UserType'
         template: '@@TeknooEastWebsite/AdminUser/new.html.twig'
-        errorTemplate: '@@TeknooEastWebsite/Error/404.html.twig'
+        errorTemplate: '@@TeknooEastWebsite/Error/<error>.html.twig'
         route: '_teknoo_website_admin_user_edit'
         formOptions: {}
 
@@ -232,4 +232,4 @@ _teknoo_website_admin_user_delete:
         loader: '@Teknoo\East\Website\Loader\UserLoader'
         deleter: '@teknoo.east.website.deleting.user'
         route: '_teknoo_website_admin_user_list'
-        errorTemplate: '@@TeknooEastWebsite/Error/404.html.twig'
+        errorTemplate: '@@TeknooEastWebsite/Error/<error>.html.twig'

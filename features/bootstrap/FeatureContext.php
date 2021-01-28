@@ -359,7 +359,7 @@ class FeatureContext implements Context
                 }
                 
                 if (isset($criteria['slug']) && 'page-with-error' === $criteria['slug']) {
-                    throw new \Exception('Error');
+                    throw new \Exception('Error', 404);
                 }
 
                 if ($this->criteria == $criteria) {
@@ -640,7 +640,7 @@ class FeatureContext implements Context
     public function theServerWillReceiveTheRequest(string $url): void
     {
         $request = new ServerRequest();
-        $request = $request->withAttribute('errorTemplate', '404-error');
+        $request = $request->withAttribute('errorTemplate', '<error>-error');
         $request = $request->withMethod('GET');
         $request = $request->withUri(new Uri($url));
         $query = [];

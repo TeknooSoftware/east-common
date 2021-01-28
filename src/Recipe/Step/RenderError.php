@@ -65,6 +65,18 @@ class RenderError
             $errorCode = 500;
         }
 
+        $errorView = 'server';
+        switch ($errorCode) {
+            case 400:
+            case 401:
+            case 402:
+            case 403:
+            case 404:
+                $errorView = (string) $errorCode;
+        }
+
+        $errorTemplate = \str_replace('<error>', $errorView, $errorTemplate);
+
         $client->errorInRequest($error, true);
 
         $this->render(

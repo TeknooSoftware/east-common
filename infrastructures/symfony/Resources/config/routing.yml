@@ -3,14 +3,14 @@ _teknoo_website_media:
   methods:  ['GET']
   defaults:
     _controller: 'teknoo.east.website.endpoint.media'
-    errorTemplate: '@@TeknooEastWebsite/Error/404.html.twig'
+    errorTemplate: '@@TeknooEastWebsite/Error/<error>.html.twig'
 
 _teknoo_website_content:
   path: '/{slug}'
   methods:  ['GET']
   defaults:
     _controller: 'teknoo.east.website.endpoint.content'
-    errorTemplate: '@@TeknooEastWebsite/Error/404.html.twig'
+    errorTemplate: '@@TeknooEastWebsite/Error/<error>.html.twig'
   requirements:
     slug: ((?!_wdt|_profiler).).+
 
@@ -19,5 +19,5 @@ _teknoo_website_home:
   methods:  ['GET']
   defaults:
     _controller: 'teknoo.east.website.endpoint.content'
-    errorTemplate: '@@TeknooEastWebsite/Error/404.html.twig'
+    errorTemplate: '@@TeknooEastWebsite/Error/<error>.html.twig'
     slug: '/'

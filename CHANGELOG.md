@@ -1,5 +1,10 @@
 #Teknoo Software - Website - Change Log
 
+##[4.0.4] - 2021-01-28
+###Stable Release
+- Error template can have the joker `<error>`, it will be replace by the code following `40[0-4]` 
+  for errors 400 to 404, error and will be replace by `server` for all other error.
+
 ##[4.0.3] - 2021-01-25
 ###Stable Release
 - Revert Fix RenderError to not rethrow an error to switch to silently mode

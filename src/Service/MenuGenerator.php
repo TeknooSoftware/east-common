@@ -106,6 +106,10 @@ class MenuGenerator
 
         $this->itemLoader->query(new TopItemByLocationQuery($location), $promise);
 
+        if (empty($itemsStacks['top'])) {
+            return $this;
+        }
+
         foreach ($itemsStacks['top'] as $element) {
             $haveChildren = !empty($itemsStacks[$id = $element->getId()]);
 

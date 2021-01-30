@@ -155,6 +155,36 @@ class MenuGeneratorTest extends TestCase
         self::assertEquals(['parent' => [$item1], 'top' => [$item2], 'i1' => [$item3, $item4]], $stack);
     }
 
+    public function testExtractWithoutTop()
+    {
+        $this->getItemLoader()
+            ->expects(self::any())
+            ->method('query')
+            ->with(new TopItemByLocationQuery('location1'))
+            ->willReturnCallback(function ($value, PromiseInterface $promise) {
+                $promise->success([]);
+
+                return $this->getItemLoader();
+            });
+
+        $this->getContentLoader()
+            ->expects(self::any())
+            ->method('query')
+            ->with(new PublishedContentFromIdsQuery([]))
+            ->willReturnCallback(function ($value, PromiseInterface $promise)  {
+                $promise->success([]);
+
+                return $this->getContentLoader();
+            });
+
+        $stack = [];
+        foreach ($this->buildService()->extract('location1') as $key=>$element) {
+            $stack[$key][] = $element;
+        }
+
+        self::assertEquals([], $stack);
+    }
+
     public function testExtractWithoutContent()
     {
         $item1 = (new Item())->setId('i1');

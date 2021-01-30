@@ -1,5 +1,9 @@
 #Teknoo Software - Website - Change Log
 
+##[4.0.5] - 2021-01-31
+###Stable Release
+- Fix MenuGenerator when menu is empty
+
 ##[4.0.4] - 2021-01-28
 ###Stable Release
 - Error template can have the joker `<error>`, it will be replace by the code following `40[0-4]` 

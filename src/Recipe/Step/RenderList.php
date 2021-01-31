@@ -30,6 +30,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
+use Teknoo\East\Website\Middleware\ViewParameterInterface;
 use Teknoo\East\Website\Recipe\Step\Traits\TemplateTrait;
 
 /**
@@ -59,15 +60,20 @@ class RenderList
         int $page,
         string $template
     ): self {
+        $viewParameters = $request->getAttribute(ViewParameterInterface::REQUEST_PARAMETER_KEY, []);
+
         $this->render(
             $client,
             $template,
-            [
-                'objectsCollection' => $objectsCollection,
-                'page' => $page,
-                'pageCount' => $pageCount,
-                'queryParams' => $request->getQueryParams()
-            ]
+            \array_merge(
+                $viewParameters,
+                [
+                    'objectsCollection' => $objectsCollection,
+                    'page' => $page,
+                    'pageCount' => $pageCount,
+                    'queryParams' => $request->getQueryParams()
+                ]
+            )
         );
 
         return $this;

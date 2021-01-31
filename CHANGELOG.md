@@ -1,5 +1,9 @@
 #Teknoo Software - Website - Change Log
 
+##[4.0.6] - 2021-01-31
+###Stable Release
+- Fix RenderList and RenderForm to pass view parameters in request to view
+
 ##[4.0.5] - 2021-01-31
 ###Stable Release
 - Fix MenuGenerator when menu is empty

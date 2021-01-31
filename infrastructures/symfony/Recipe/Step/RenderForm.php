@@ -32,6 +32,7 @@ use Symfony\Component\Form\FormInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\RenderFormInterface;
+use Teknoo\East\Website\Middleware\ViewParameterInterface;
 use Teknoo\East\Website\Object\ObjectInterface;
 use Teknoo\East\Website\Recipe\Step\Traits\TemplateTrait;
 
@@ -64,15 +65,20 @@ class RenderForm implements RenderFormInterface
         ObjectInterface $object,
         bool $isTranslatable = false
     ): RenderFormInterface {
+        $viewParameters = $request->getAttribute(ViewParameterInterface::REQUEST_PARAMETER_KEY, []);
+
         $this->render(
             $client,
             $template,
-            [
-                'objectInstance' => $object,
-                'formView' => $form->createView(),
-                'request' => $request,
-                'isTranslatable' => $isTranslatable
-            ]
+            \array_merge(
+                $viewParameters,
+                [
+                    'objectInstance' => $object,
+                    'formView' => $form->createView(),
+                    'request' => $request,
+                    'isTranslatable' => $isTranslatable
+                ]
+            )
         );
 
         return $this;

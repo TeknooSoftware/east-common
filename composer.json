@@ -73,7 +73,7 @@
         "symfony/yaml": "~4.4||~5.1",
         "twig/twig": "~2.0||~3.0",
         "laminas/laminas-diactoros": "~2.2",
-        "doctrine/common": "~2.13",
+        "doctrine/common": "~2.13||~3.0",
         "doctrine/mongodb-odm": "~2.1",
         "doctrine/mongodb-odm-bundle": "~4.2"
     },

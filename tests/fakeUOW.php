@@ -2,11 +2,10 @@
 
 namespace Doctrine\ODM\MongoDB;
 
-use Doctrine\Common\PropertyChangedListener;
 use Doctrine\ODM\MongoDB\Mapping\ClassMetadata;
 
 if (!\class_exists(UnitOfWork::class, false)) {
-    class UnitOfWork implements PropertyChangedListener
+    class UnitOfWork
     {
         public function propertyChanged($sender, $propertyName, $oldValue, $newValue)
         {

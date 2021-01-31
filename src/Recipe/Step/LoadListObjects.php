@@ -36,15 +36,60 @@ use Teknoo\East\Website\Query\PaginationQuery;
  */
 class LoadListObjects
 {
+    /**
+     * @param array<string, string> $criteria
+     * @return array<string, string>
+     */
+    private function sanitizeCriteria(array &$criteria): array
+    {
+        $final = [];
+        foreach ($criteria as $key => &$value) {
+            if (
+                !\is_string($key)
+                || 0 === \preg_match('#^[a-zA-Z0-9\-_]+$#S', $key)
+            ) {
+                throw new \RuntimeException('Wrong key in criteria, must follow [a-zA-Z0-9\-_]+', 400);
+            }
+
+            if (
+                !\is_string($value)
+                || 0 === \preg_match("#^[\p{L}\p{N}\p{Z}_\-\.,]+$#uS", $value)
+            ) {
+                throw new \RuntimeException("Wrong value in criteria for $key", 400);
+            }
+
+            $final[$key] = $value;
+        }
+
+        return $final;
+    }
+
+    /**
+     * @param array<string, string> $criteria
+     */
     public function __invoke(
         LoaderInterface $loader,
         ManagerInterface $manager,
         array $order,
         int $itemsPerPage,
-        int $page
+        int $page,
+        array $criteria = []
     ): self {
+        try {
+            $criteria = $this->sanitizeCriteria($criteria);
+        } catch (\Throwable $error) {
+            $manager->error($error);
+
+            return $this;
+        }
+
         $loader->query(
-            new PaginationQuery([], $order, $itemsPerPage, ($page - 1) * $itemsPerPage),
+            new PaginationQuery(
+                $criteria,
+                $order,
+                $itemsPerPage,
+                ($page - 1) * $itemsPerPage
+            ),
             new Promise(
                 static function ($objects) use ($itemsPerPage, $manager) {
                     $pageCount = 1;

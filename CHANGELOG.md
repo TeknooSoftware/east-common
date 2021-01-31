@@ -1,5 +1,9 @@
 #Teknoo Software - Website - Change Log
 
+##[4.0.7] - 2021-01-31
+###Stable Release
+- Add optional $criteria to the step LoadListObjects to filter list 
+
 ##[4.0.6] - 2021-01-31
 ###Stable Release
 - Fix RenderList and RenderForm to pass view parameters in request to view

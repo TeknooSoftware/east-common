@@ -193,6 +193,56 @@ class LoadListObjectsTest extends TestCase
         );
     }
 
+    public function testInvokeFoundWithCountableAndCriteria()
+    {
+        $pageCount = 3;
+        $objects = new class implements \Countable, \IteratorAggregate {
+            public function getIterator()
+            {
+                return new \ArrayIterator([
+                    new Content(),
+                    new Content()
+                ]);
+            }
+
+            public function count()
+            {
+                return 30;
+            }
+        };
+
+        $loader = $this->createMock(LoaderInterface::class);
+        $loader->expects(self::any())->method('query')->willReturnCallback(
+            function ($query, PromiseInterface $promise) use ($objects, $loader) {
+                $promise->success($objects);
+
+                return $loader;
+            }
+        );
+
+        $manager = $this->createMock(ManagerInterface::class);
+        $manager->expects(self::never())->method('error');
+        $manager->expects(self::once())->method('updateWorkPlan')->with([
+            'objectsCollection' => $objects,
+            'pageCount' => $pageCount
+        ]);
+
+        self::assertInstanceOf(
+            LoadListObjects::class,
+            $this->buildStep()(
+                $loader,
+                $manager,
+                ['foo' => 'ASC'],
+                10,
+                2,
+                [
+                    'foo' => 'bar',
+                    'ba123' => 'Richard Déloge'
+                ]
+            )
+        );
+    }
+
     public function testInvokeErrorInQuery()
     {
         $loader = $this->createMock(LoaderInterface::class);
@@ -216,6 +266,102 @@ class LoadListObjectsTest extends TestCase
                 ['foo' => 'ASC'],
                 10,
                 2
+            )
+        );
+    }
+
+    public function testInvokeErrorWithBadCriteriaKeyName()
+    {
+        $loader = $this->createMock(LoaderInterface::class);
+        $loader->expects(self::never())->method('query');
+
+        $manager = $this->createMock(ManagerInterface::class);
+        $manager->expects(self::once())->method('error');
+        $manager->expects(self::never())->method('updateWorkPlan');
+
+        self::assertInstanceOf(
+            LoadListObjects::class,
+            $this->buildStep()(
+                $loader,
+                $manager,
+                ['foo' => 'ASC'],
+                10,
+                2,
+                [
+                    '@foo' => 'bar'
+                ]
+            )
+        );
+    }
+
+    public function testInvokeErrorWithBadCriteriaKeyType()
+    {
+        $loader = $this->createMock(LoaderInterface::class);
+        $loader->expects(self::never())->method('query');
+
+        $manager = $this->createMock(ManagerInterface::class);
+        $manager->expects(self::once())->method('error');
+        $manager->expects(self::never())->method('updateWorkPlan');
+
+        self::assertInstanceOf(
+            LoadListObjects::class,
+            $this->buildStep()(
+                $loader,
+                $manager,
+                ['foo' => 'ASC'],
+                10,
+                2,
+                [
+                    0 => 'bar'
+                ]
+            )
+        );
+    }
+
+    public function testInvokeErrorWithBadCriteriaValue()
+    {
+        $loader = $this->createMock(LoaderInterface::class);
+        $loader->expects(self::never())->method('query');
+
+        $manager = $this->createMock(ManagerInterface::class);
+        $manager->expects(self::once())->method('error');
+        $manager->expects(self::never())->method('updateWorkPlan');
+
+        self::assertInstanceOf(
+            LoadListObjects::class,
+            $this->buildStep()(
+                $loader,
+                $manager,
+                ['foo' => 'ASC'],
+                10,
+                2,
+                [
+                    'foo' => "bar;do"
+                ]
+            )
+        );
+    }
+
+    public function testInvokeErrorWithBadCriteriaValueType()
+    {
+        $loader = $this->createMock(LoaderInterface::class);
+        $loader->expects(self::never())->method('query');
+
+        $manager = $this->createMock(ManagerInterface::class);
+        $manager->expects(self::once())->method('error');
+        $manager->expects(self::never())->method('updateWorkPlan');
+
+        self::assertInstanceOf(
+            LoadListObjects::class,
+            $this->buildStep()(
+                $loader,
+                $manager,
+                ['foo' => 'ASC'],
+                10,
+                2,
+                [
+                    'foo' => ['bar']
+                ]
             )
         );
     }

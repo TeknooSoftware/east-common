@@ -119,11 +119,11 @@ _teknoo_website_admin_media_new:
     methods:  ['GET', 'POST', 'PUT']
     defaults:
         _controller: 'teknoo.east.website.endpoint.admin.new'
-        loader: '@Teknoo\East\Website\Loader\ItemLoader'
-        writer: '@Teknoo\East\Website\Writer\MediatWriter'
+        loader: '@Teknoo\East\Website\Loader\MediaLoader'
+        writer: '@Teknoo\East\Website\Doctrine\Writer\ODM\MediaWriter'
         objectClass: 'Teknoo\East\Website\Doctrine\Object\Media'
         formClass: 'Teknoo\East\WebsiteBundle\Form\Type\MediaType'
-        template: '@@TeknooEastWebsite/AdminMedia/edit.html.twig'
+        template: '@@TeknooEastWebsite/AdminMedia/new.html.twig'
         errorTemplate: '@@TeknooEastWebsite/Error/<error>.html.twig'
         formOptions: { }
         route: '_teknoo_website_admin_media_list'

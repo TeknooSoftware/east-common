@@ -1,5 +1,9 @@
 #Teknoo Software - Website - Change Log
 
+##[4.0.8] - 2021-01-31
+###Stable Release
+- Fix definitions for `_teknoo_website_admin_media_new`
+
 ##[4.0.7] - 2021-01-31
 ###Stable Release
 - Add optional $criteria to the step LoadListObjects to filter list 

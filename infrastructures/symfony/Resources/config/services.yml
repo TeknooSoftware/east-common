@@ -55,6 +55,7 @@ services:
     arguments:
       - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\ListContentEndPointInterface'
       - '@service_container'
+      - { criteria: [] }
 
   teknoo.east.website.endpoint.admin.new:
     class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'

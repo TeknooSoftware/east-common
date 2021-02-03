@@ -85,14 +85,7 @@ class SearchFormLoaderTest extends TestCase
         $template = 'foo.html.twig';
 
         $manager->expects(self::never())->method('updateWorkPlan');
-        $manager->expects(self::once())->method('error')->willReturnCallback(
-            function (\Throwable $error) use ($manager) {
-                self::assertInstanceOf(\DomainException::class, $error);
-                self::assertEquals(403, $error->getCode());
-
-                return $manager;
-            }
-        );
+        $manager->expects(self::never())->method('error');
 
         self::assertInstanceOf(
             SearchFormLoader::class,
@@ -112,14 +105,7 @@ class SearchFormLoaderTest extends TestCase
         $template = 'foo.html.twig';
 
         $manager->expects(self::never())->method('updateWorkPlan');
-        $manager->expects(self::once())->method('error')->willReturnCallback(
-            function (\Throwable $error) use ($manager) {
-                self::assertInstanceOf(\DomainException::class, $error);
-                self::assertEquals(403, $error->getCode());
-
-                return $manager;
-            }
-        );
+        $manager->expects(self::never())->method('error');
 
         self::assertInstanceOf(
             SearchFormLoader::class,
@@ -146,14 +132,7 @@ class SearchFormLoaderTest extends TestCase
         $template = 'foo.html.twig';
 
         $manager->expects(self::never())->method('updateWorkPlan');
-        $manager->expects(self::once())->method('error')->willReturnCallback(
-            function (\Throwable $error) use ($manager) {
-                self::assertInstanceOf(\DomainException::class, $error);
-                self::assertEquals(403, $error->getCode());
-
-                return $manager;
-            }
-        );
+        $manager->expects(self::never())->method('error');
 
         self::assertInstanceOf(
             SearchFormLoader::class,

@@ -62,10 +62,6 @@ class SearchFormLoader implements SearchFormLoaderInterface
     ): SearchFormLoader {
         $instances = &$this->formsInstances;
         if (!isset($instances[$template]) && !isset($instances[static::ANY_TEMPLATE])) {
-            $manager->error(
-                new \DomainException("No form allowed for the template $template", 403),
-            );
-
             return $this;
         }
 
@@ -76,10 +72,6 @@ class SearchFormLoader implements SearchFormLoaderInterface
             !isset($instances[$template][$formName])
             && !isset($instances[static::ANY_TEMPLATE][$formName])
         ) {
-            $manager->error(
-                new \DomainException("The form $formName is not allowed for the template $template", 403)
-            );
-
             return $this;
         }
 

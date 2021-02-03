@@ -11,6 +11,9 @@ parameters:
   #Writer
   teknoo.east.website.bundle.writer.user.class: 'Teknoo\East\WebsiteBundle\Writer\UserWriter'
 
+  #Steps
+  teknoo.east.website.bundle.allowed_forms: []
+
 services:
   #Front endpoints
   teknoo.east.website.endpoint.content:
@@ -64,6 +67,28 @@ services:
       - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\CreateContentEndPointInterface'
       - '@service_container'
 
+  #Steps
+  Teknoo\East\WebsiteBundle\Recipe\Step\SearchFormLoader:
+    class: 'Teknoo\East\WebsiteBundle\Recipe\Step\SearchFormLoader'
+    arguments:
+      - '@form.factory'
+      - '%teknoo.east.website.bundle.allowed_forms%'
+    public: true
+
+  Teknoo\East\WebsiteBundle\Recipe\Step\FormHandling:
+    class: 'Teknoo\East\WebsiteBundle\Recipe\Step\FormHandling'
+    arguments:
+      - '@Teknoo\East\Website\Service\DatesService'
+      - '@form.factory'
+    public: true
+
+  Teknoo\East\WebsiteBundle\Recipe\Step\RedirectClient:
+    class: 'Teknoo\East\WebsiteBundle\Recipe\Step\RedirectClient'
+    arguments:
+      - '@Psr\Http\Message\ResponseFactoryInterface'
+      - '@router'
+    public: true
+
   #Provider
   teknoo.east.website.bundle.user_provider:
     alias: 'Teknoo\East\WebsiteBundle\Provider\UserProvider'
@@ -92,3 +117,4 @@ services:
       - '@Teknoo\East\Website\Writer\UserWriter'
       - '@Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface'
     public: false
+

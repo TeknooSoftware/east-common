@@ -36,7 +36,7 @@ use Teknoo\East\Website\Contracts\Recipe\Step\FormHandlingInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\FormProcessingInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\RenderFormInterface;
-use Teknoo\East\Website\Service\DatesService;
+use Teknoo\East\Website\Contracts\Recipe\Step\SearchFormLoaderInterface;
 use Teknoo\East\WebsiteBundle\Middleware\LocaleMiddleware;
 use Teknoo\East\Website\Loader\UserLoader;
 use Teknoo\East\WebsiteBundle\Provider\UserProvider;
@@ -44,6 +44,7 @@ use Teknoo\East\WebsiteBundle\Recipe\Step\FormHandling;
 use Teknoo\East\WebsiteBundle\Recipe\Step\FormProcessing;
 use Teknoo\East\WebsiteBundle\Recipe\Step\RedirectClient;
 use Teknoo\East\WebsiteBundle\Recipe\Step\RenderForm;
+use Teknoo\East\WebsiteBundle\Recipe\Step\SearchFormLoader;
 
 use function DI\create;
 use function DI\decorate;
@@ -89,22 +90,14 @@ return [
         };
     },
 
+    SearchFormLoaderInterface::class => get(SearchFormLoader::class),
+
     FormHandlingInterface::class => get(FormHandling::class),
-    FormHandling::class => create()
-        ->constructor(
-            get(DatesService::class),
-            get('form.factory')
-        ),
 
     FormProcessingInterface::class => get(FormProcessing::class),
     FormProcessing::class => create(),
 
     RedirectClientInterface::class => get(RedirectClient::class),
-    RedirectClient::class => create()
-        ->constructor(
-            get(ResponseFactoryInterface::class),
-            get('router')
-        ),
 
     RenderFormInterface::class => get(RenderForm::class),
     RenderForm::class => create()

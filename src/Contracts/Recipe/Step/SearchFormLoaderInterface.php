@@ -38,5 +38,5 @@ interface SearchFormLoaderInterface
         ServerRequestInterface $request,
         ManagerInterface $manager,
         string $template
-    ): RenderFormInterface;
+    ): SearchFormLoaderInterface;
 }

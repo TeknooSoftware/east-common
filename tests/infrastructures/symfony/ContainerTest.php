@@ -140,24 +140,6 @@ class ContainerTest extends TestCase
         );
     }
 
-    public function testFormHandling()
-    {
-        $container = $this->buildContainer();
-
-        $container->set(DatesService::class, $this->createMock(DatesService::class));
-        $container->set('form.factory', $this->createMock(FormFactoryInterface::class));
-
-        self::assertInstanceOf(
-            FormHandlingInterface::class,
-            $container->get(FormHandlingInterface::class)
-        );
-
-        self::assertInstanceOf(
-            FormHandling::class,
-            $container->get(FormHandling::class)
-        );
-    }
-
     public function testFormProcessing()
     {
         $container = $this->buildContainer();
@@ -170,24 +152,6 @@ class ContainerTest extends TestCase
         self::assertInstanceOf(
             FormProcessingInterface::class,
             $container->get(FormProcessingInterface::class)
-        );
-    }
-
-    public function testRedirectClient()
-    {
-        $container = $this->buildContainer();
-
-        $container->set(ResponseFactoryInterface::class, $this->createMock(ResponseFactoryInterface::class));
-        $container->set('router', $this->createMock(UrlGeneratorInterface::class));
-
-        self::assertInstanceOf(
-            RedirectClientInterface::class,
-            $container->get(RedirectClientInterface::class)
-        );
-
-        self::assertInstanceOf(
-            RedirectClient::class,
-            $container->get(RedirectClient::class)
         );
     }
 

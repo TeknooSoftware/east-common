@@ -25,12 +25,14 @@ namespace Teknoo\Tests\East\Website\Recipe\Cookbook;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Teknoo\East\Website\Contracts\Recipe\Step\SearchFormLoaderInterface;
 use Teknoo\East\Website\Recipe\Cookbook\ListContentEndPoint;
 use Teknoo\East\Website\Recipe\Step\ExtractOrder;
 use Teknoo\East\Website\Recipe\Step\ExtractPage;
 use Teknoo\East\Website\Recipe\Step\LoadListObjects;
 use Teknoo\East\Website\Recipe\Step\RenderError;
 use Teknoo\East\Website\Recipe\Step\RenderList;
+use Teknoo\East\Website\Recipe\Step\SearchFormHandling;
 use Teknoo\Recipe\RecipeInterface;
 use Teknoo\Tests\Recipe\Cookbook\BaseCookbookTestTrait;
 
@@ -49,11 +51,15 @@ class ListContentEndPointTest extends TestCase
 
     private ?ExtractOrder $extractOrder = null;
 
+    private ?SearchFormHandling $searchFormHandling = null;
+
     private ?LoadListObjects $loadListObjects = null;
 
     private ?RenderList $renderList = null;
 
     private ?RenderError $renderError = null;
+
+    private ?SearchFormLoaderInterface $searchFormLoader = null;
 
     /**
      * @return RecipeInterface|MockObject
@@ -127,15 +133,41 @@ class ListContentEndPointTest extends TestCase
         return $this->renderError;
     }
 
+    /**
+     * @return SearchFormHandling|MockObject
+     */
+    public function getSearchFormHandling(): SearchFormHandling
+    {
+        if (null === $this->searchFormHandling) {
+            $this->searchFormHandling = $this->createMock(SearchFormHandling::class);
+        }
+
+        return $this->searchFormHandling;
+    }
+
+    /**
+     * @return SearchFormLoaderInterface|MockObject
+     */
+    public function getSearchFormLoader(): SearchFormLoaderInterface
+    {
+        if (null === $this->searchFormLoader) {
+            $this->searchFormLoader = $this->createMock(SearchFormLoaderInterface::class);
+        }
+
+        return $this->searchFormLoader;
+    }
+
     public function buildCookbook(): ListContentEndPoint
     {
         return new ListContentEndPoint(
             $this->getRecipe(),
             $this->getExtractPage(),
             $this->getExtractOrder(),
+            $this->getSearchFormHandling(),
             $this->getLoadListObjects(),
             $this->getRenderList(),
-            $this->getRenderError()
+            $this->getRenderError(),
+            $this->getSearchFormLoader()
         );
     }
 }

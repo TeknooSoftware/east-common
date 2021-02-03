@@ -40,6 +40,7 @@ use Teknoo\East\Website\Contracts\Recipe\Step\FormProcessingInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\GetStreamFromMediaInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\RenderFormInterface;
+use Teknoo\East\Website\Contracts\Recipe\Step\SearchFormLoaderInterface;
 use Teknoo\East\Website\Recipe\Cookbook\DeleteContentEndPoint;
 use Teknoo\East\Website\Recipe\Cookbook\EditContentEndPoint;
 use Teknoo\East\Website\Recipe\Cookbook\ListContentEndPoint;
@@ -47,6 +48,7 @@ use Teknoo\East\Website\Recipe\Cookbook\RenderDynamicContentEndPoint;
 use Teknoo\East\Website\Recipe\Cookbook\RenderMediaEndPoint;
 use Teknoo\East\Website\Recipe\Cookbook\RenderStaticContentEndPoint;
 use Teknoo\East\Website\Recipe\Step\CreateObject;
+use Teknoo\East\Website\Recipe\Step\SearchFormHandling;
 use Teknoo\Recipe\RecipeInterface as OriginalRecipeInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
@@ -204,6 +206,7 @@ return [
             get(ResponseFactoryInterface::class)
         ),
     SaveObject::class => create(),
+    SearchFormHandling::class => create(),
     SendMedia::class => create()
         ->constructor(
             get(ResponseFactoryInterface::class)
@@ -253,15 +256,23 @@ return [
             get(RenderError::class)
         ),
     ListContentEndPointInterface::class => get(ListContentEndPoint::class),
-    ListContentEndPoint::class => create()
-        ->constructor(
-            get(OriginalRecipeInterface::class),
-            get(ExtractPage::class),
-            get(ExtractOrder::class),
-            get(LoadListObjects::class),
-            get(RenderList::class),
-            get(RenderError::class),
-        ),
+    ListContentEndPoint::class => static function (ContainerInterface $container): ListContentEndPoint {
+        $formLoader = null;
+        if ($container->has(SearchFormLoaderInterface::class)) {
+            $formLoader = $container->get(SearchFormLoaderInterface::class);
+        }
+
+        return new ListContentEndPoint(
+            $container->get(OriginalRecipeInterface::class),
+            $container->get(ExtractPage::class),
+            $container->get(ExtractOrder::class),
+            $container->get(SearchFormHandling::class),
+            $container->get(LoadListObjects::class),
+            $container->get(RenderList::class),
+            $container->get(RenderError::class),
+            $formLoader
+        );
+    },
     RenderDynamicContentEndPointInterface::class => get(RenderDynamicContentEndPoint::class),
     RenderDynamicContentEndPoint::class => create()
         ->constructor(

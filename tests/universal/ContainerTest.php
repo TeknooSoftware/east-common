@@ -45,6 +45,7 @@ use Teknoo\East\Website\Contracts\Recipe\Step\FormProcessingInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\GetStreamFromMediaInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\RenderFormInterface;
+use Teknoo\East\Website\Contracts\Recipe\Step\SearchFormLoaderInterface;
 use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
 use Teknoo\East\Website\DBSource\Repository\ItemRepositoryInterface;
 use Teknoo\East\Website\DBSource\Repository\MediaRepositoryInterface;
@@ -77,6 +78,7 @@ use Teknoo\East\Website\Recipe\Step\Render;
 use Teknoo\East\Website\Recipe\Step\RenderError;
 use Teknoo\East\Website\Recipe\Step\RenderList;
 use Teknoo\East\Website\Recipe\Step\SaveObject;
+use Teknoo\East\Website\Recipe\Step\SearchFormHandling;
 use Teknoo\East\Website\Recipe\Step\SendMedia;
 use Teknoo\East\Website\Recipe\Step\SlugPreparation;
 use Teknoo\East\Website\Service\DeletingService;
@@ -427,6 +429,16 @@ class ContainerTest extends TestCase
         );
     }
 
+    public function testSearchFormHandling()
+    {
+        $container = $this->buildContainer();
+
+        self::assertInstanceOf(
+            SearchFormHandling::class,
+            $container->get(SearchFormHandling::class)
+        );
+    }
+
     public function testSendMedia()
     {
         $container = $this->buildContainer();
@@ -515,7 +527,7 @@ class ContainerTest extends TestCase
         );
     }
 
-    public function testListContentEndPoint()
+    public function testListContentEndPointWithoutFormLoader()
     {
         $container = $this->buildContainer();
         $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
@@ -524,6 +536,30 @@ class ContainerTest extends TestCase
         $container->set(LoadListObjects::class, $this->createMock(LoadListObjects::class));
         $container->set(RenderList::class, $this->createMock(RenderList::class));
         $container->set(RenderError::class, $this->createMock(RenderError::class));
+        $container->set(SearchFormHandling::class, $this->createMock(SearchFormHandling::class));
+
+        self::assertInstanceOf(
+            ListContentEndPoint::class,
+            $container->get(ListContentEndPoint::class)
+        );
+
+        self::assertInstanceOf(
+            ListContentEndPointInterface::class,
+            $container->get(ListContentEndPointInterface::class)
+        );
+    }
+
+    public function testListContentEndPointWithFormLoader()
+    {
+        $container = $this->buildContainer();
+        $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
+        $container->set(ExtractPage::class, $this->createMock(ExtractPage::class));
+        $container->set(ExtractOrder::class, $this->createMock(ExtractOrder::class));
+        $container->set(LoadListObjects::class, $this->createMock(LoadListObjects::class));
+        $container->set(RenderList::class, $this->createMock(RenderList::class));
+        $container->set(RenderError::class, $this->createMock(RenderError::class));
+        $container->set(SearchFormHandling::class, $this->createMock(SearchFormHandling::class));
+        $container->set(SearchFormLoaderInterface::class, $this->createMock(SearchFormLoaderInterface::class));
 
         self::assertInstanceOf(
             ListContentEndPoint::class,

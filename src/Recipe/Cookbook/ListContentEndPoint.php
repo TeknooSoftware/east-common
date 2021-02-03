@@ -27,12 +27,14 @@ namespace Teknoo\East\Website\Recipe\Cookbook;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Teknoo\East\Website\Contracts\Recipe\Cookbook\ListContentEndPointInterface;
+use Teknoo\East\Website\Contracts\Recipe\Step\SearchFormLoaderInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Recipe\Step\ExtractOrder;
 use Teknoo\East\Website\Recipe\Step\ExtractPage;
 use Teknoo\East\Website\Recipe\Step\LoadListObjects;
 use Teknoo\East\Website\Recipe\Step\RenderError;
 use Teknoo\East\Website\Recipe\Step\RenderList;
+use Teknoo\East\Website\Recipe\Step\SearchFormHandling;
 use Teknoo\Recipe\Bowl\Bowl;
 use Teknoo\Recipe\Cookbook\BaseCookbookTrait;
 use Teknoo\Recipe\Ingredient\Ingredient;
@@ -50,6 +52,10 @@ class ListContentEndPoint implements ListContentEndPointInterface
 
     private ExtractOrder $extractOrder;
 
+    private ?SearchFormLoaderInterface $searchFormLoader;
+
+    private SearchFormHandling $searchFormHandling;
+
     private LoadListObjects $loadListObjects;
 
     private RenderList $renderList;
@@ -60,15 +66,19 @@ class ListContentEndPoint implements ListContentEndPointInterface
         RecipeInterface $recipe,
         ExtractPage $extractPage,
         ExtractOrder $extractOrder,
+        SearchFormHandling $searchFormHandling,
         LoadListObjects $loadListObjects,
         RenderList $renderList,
-        RenderError $renderError
+        RenderError $renderError,
+        ?SearchFormLoaderInterface $searchFormLoader = null
     ) {
         $this->extractPage = $extractPage;
         $this->extractOrder = $extractOrder;
+        $this->searchFormHandling = $searchFormHandling;
         $this->loadListObjects = $loadListObjects;
         $this->renderList = $renderList;
         $this->renderError = $renderError;
+        $this->searchFormLoader = $searchFormLoader;
 
         $this->fill($recipe);
     }
@@ -85,9 +95,15 @@ class ListContentEndPoint implements ListContentEndPointInterface
 
         $recipe = $recipe->cook($this->extractOrder, ExtractOrder::class, [], 10);
 
-        $recipe = $recipe->cook($this->loadListObjects, LoadListObjects::class, [], 20);
+        if (null !== $this->searchFormLoader) {
+            $recipe = $recipe->cook($this->searchFormLoader, SearchFormLoaderInterface::class, [], 20);
+        }
 
-        $recipe = $recipe->cook($this->renderList, RenderList::class, [], 30);
+        $recipe = $recipe->cook($this->searchFormHandling, SearchFormHandling::class, [], 30);
+
+        $recipe = $recipe->cook($this->loadListObjects, LoadListObjects::class, [], 40);
+
+        $recipe = $recipe->cook($this->renderList, RenderList::class, [], 50);
 
         $recipe = $recipe->onError(new Bowl($this->renderError, []));
 

@@ -25,10 +25,18 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Contracts\Recipe\Step;
 
+use Psr\Http\Message\ServerRequestInterface;
+use Teknoo\East\Foundation\Manager\ManagerInterface;
+
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 interface ListObjectsAccessControlInterface
 {
+    public function __invoke(
+        ManagerInterface $manager,
+        ServerRequestInterface $request,
+        iterable $objectsCollection
+    ): ListObjectsAccessControlInterface;
 }

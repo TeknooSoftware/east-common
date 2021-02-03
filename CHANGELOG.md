@@ -1,5 +1,12 @@
 #Teknoo Software - Website - Change Log
 
+##[4.1.0] - 2021-02-03
+###Stable Release
+- Update to East-foundation 3.3.3 and reset criteria ingredient in the workplan of ListContentEndPointInterface
+- SearchForm behavior on List of object
+- Fix deprecated in DI
+- Add interfaces to implements access control on CRUD endpoints
+
 ##[4.0.8] - 2021-01-31
 ###Stable Release
 - Fix definitions for `_teknoo_website_admin_media_new`

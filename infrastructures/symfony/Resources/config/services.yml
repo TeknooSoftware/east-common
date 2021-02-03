@@ -37,22 +37,22 @@ services:
       - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\RenderStaticContentEndPointInterface'
       - '@service_container'
 
-  #Admin endpoints
-  teknoo.east.website.endpoint.admin.delete:
+  #CRUD endpoints
+  teknoo.east.website.endpoint.crud.delete:
     class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
     public: true
     arguments:
       - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\DeleteContentEndPointInterface'
       - '@service_container'
 
-  teknoo.east.website.endpoint.admin.edit:
+  teknoo.east.website.endpoint.crud.edit:
     class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
     public: true
     arguments:
       - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\EditContentEndPointInterface'
       - '@service_container'
 
-  teknoo.east.website.endpoint.admin.list:
+  teknoo.east.website.endpoint.crud.list:
     class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
     public: true
     arguments:
@@ -60,7 +60,7 @@ services:
       - '@service_container'
       - { criteria: [] }
 
-  teknoo.east.website.endpoint.admin.new:
+  teknoo.east.website.endpoint.crud.new:
     class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
     public: true
     arguments:

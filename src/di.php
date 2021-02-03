@@ -38,6 +38,8 @@ use Teknoo\East\Website\Contracts\Recipe\Cookbook\RenderStaticContentEndPointInt
 use Teknoo\East\Website\Contracts\Recipe\Step\FormHandlingInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\FormProcessingInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\GetStreamFromMediaInterface;
+use Teknoo\East\Website\Contracts\Recipe\Step\ListObjectsAccessControlInterface;
+use Teknoo\East\Website\Contracts\Recipe\Step\ObjectAccessControlInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\RenderFormInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\SearchFormLoaderInterface;
@@ -222,44 +224,70 @@ return [
 
     //Cookbook
     CreateContentEndPointInterface::class => get(CreateContentEndPoint::class),
-    CreateContentEndPoint::class => create()
-        ->constructor(
-            get(OriginalRecipeInterface::class),
-            get(CreateObject::class),
-            get(FormHandlingInterface::class),
-            get(FormProcessingInterface::class),
-            get(SlugPreparation::class),
-            get(SaveObject::class),
-            get(RedirectClientInterface::class),
-            get(RenderFormInterface::class),
-            get(RenderError::class)
-        ),
+    CreateContentEndPoint::class => static function (ContainerInterface $container): CreateContentEndPoint {
+        $accessControl = null;
+        if ($container->has(ObjectAccessControlInterface::class)) {
+            $accessControl = $container->get(ObjectAccessControlInterface::class);
+        }
+
+        return new CreateContentEndPoint(
+            $container->get(OriginalRecipeInterface::class),
+            $container->get(CreateObject::class),
+            $container->get(FormHandlingInterface::class),
+            $container->get(FormProcessingInterface::class),
+            $container->get(SlugPreparation::class),
+            $container->get(SaveObject::class),
+            $container->get(RedirectClientInterface::class),
+            $container->get(RenderFormInterface::class),
+            $container->get(RenderError::class),
+            $accessControl
+        );
+    },
     DeleteContentEndPointInterface::class => get(DeleteContentEndPoint::class),
-    DeleteContentEndPoint::class => create()
-        ->constructor(
-            get(OriginalRecipeInterface::class),
-            get(LoadObject::class),
-            get(DeleteObject::class),
-            get(RedirectClientInterface::class),
-            get(RenderError::class),
-        ),
+    DeleteContentEndPoint::class => static function (ContainerInterface $container): DeleteContentEndPoint {
+        $accessControl = null;
+        if ($container->has(ObjectAccessControlInterface::class)) {
+            $accessControl = $container->get(ObjectAccessControlInterface::class);
+        }
+
+        return new DeleteContentEndPoint(
+            $container->get(OriginalRecipeInterface::class),
+            $container->get(LoadObject::class),
+            $container->get(DeleteObject::class),
+            $container->get(RedirectClientInterface::class),
+            $container->get(RenderError::class),
+            $accessControl
+        );
+    },
     EditContentEndPointInterface::class => get(EditContentEndPoint::class),
-    EditContentEndPoint::class => create()
-        ->constructor(
-            get(OriginalRecipeInterface::class),
-            get(LoadObject::class),
-            get(FormHandlingInterface::class),
-            get(FormProcessingInterface::class),
-            get(SlugPreparation::class),
-            get(SaveObject::class),
-            get(RenderFormInterface::class),
-            get(RenderError::class)
-        ),
+    EditContentEndPoint::class => static function (ContainerInterface $container): EditContentEndPoint {
+        $accessControl = null;
+        if ($container->has(ObjectAccessControlInterface::class)) {
+            $accessControl = $container->get(ObjectAccessControlInterface::class);
+        }
+
+        return new EditContentEndPoint(
+            $container->get(OriginalRecipeInterface::class),
+            $container->get(LoadObject::class),
+            $container->get(FormHandlingInterface::class),
+            $container->get(FormProcessingInterface::class),
+            $container->get(SlugPreparation::class),
+            $container->get(SaveObject::class),
+            $container->get(RenderFormInterface::class),
+            $container->get(RenderError::class),
+            $accessControl
+        );
+    },
     ListContentEndPointInterface::class => get(ListContentEndPoint::class),
     ListContentEndPoint::class => static function (ContainerInterface $container): ListContentEndPoint {
         $formLoader = null;
         if ($container->has(SearchFormLoaderInterface::class)) {
             $formLoader = $container->get(SearchFormLoaderInterface::class);
+        }
+
+        $accessControl = null;
+        if ($container->has(ListObjectsAccessControlInterface::class)) {
+            $accessControl = $container->get(ListObjectsAccessControlInterface::class);
         }
 
         return new ListContentEndPoint(
@@ -270,7 +298,8 @@ return [
             $container->get(LoadListObjects::class),
             $container->get(RenderList::class),
             $container->get(RenderError::class),
-            $formLoader
+            $formLoader,
+            $accessControl
         );
     },
     RenderDynamicContentEndPointInterface::class => get(RenderDynamicContentEndPoint::class),

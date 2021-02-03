@@ -43,6 +43,8 @@ use Teknoo\East\Website\Contracts\Recipe\Cookbook\RenderStaticContentEndPointInt
 use Teknoo\East\Website\Contracts\Recipe\Step\FormHandlingInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\FormProcessingInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\GetStreamFromMediaInterface;
+use Teknoo\East\Website\Contracts\Recipe\Step\ListObjectsAccessControlInterface;
+use Teknoo\East\Website\Contracts\Recipe\Step\ObjectAccessControlInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\RenderFormInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\SearchFormLoaderInterface;
@@ -484,6 +486,31 @@ class ContainerTest extends TestCase
         );
     }
 
+    public function testCreateContentEndPointWithAccessControl()
+    {
+        $container = $this->buildContainer();
+        $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
+        $container->set(CreateObject::class, $this->createMock(CreateObject::class));
+        $container->set(FormHandlingInterface::class, $this->createMock(FormHandlingInterface::class));
+        $container->set(FormProcessingInterface::class, $this->createMock(FormProcessingInterface::class));
+        $container->set(SlugPreparation::class, $this->createMock(SlugPreparation::class));
+        $container->set(SaveObject::class, $this->createMock(SaveObject::class));
+        $container->set(RedirectClientInterface::class, $this->createMock(RedirectClientInterface::class));
+        $container->set(RenderFormInterface::class, $this->createMock(RenderFormInterface::class));
+        $container->set(RenderError::class, $this->createMock(RenderError::class));
+        $container->set(ObjectAccessControlInterface::class, $this->createMock(ObjectAccessControlInterface::class));
+
+        self::assertInstanceOf(
+            CreateContentEndPoint::class,
+            $container->get(CreateContentEndPoint::class)
+        );
+
+        self::assertInstanceOf(
+            CreateContentEndPointInterface::class,
+            $container->get(CreateContentEndPointInterface::class)
+        );
+    }
+
     public function testDeleteContentEndPoint()
     {
         $container = $this->buildContainer();
@@ -492,6 +519,27 @@ class ContainerTest extends TestCase
         $container->set(DeleteObject::class, $this->createMock(DeleteObject::class));
         $container->set(RedirectClientInterface::class, $this->createMock(RedirectClientInterface::class));
         $container->set(RenderError::class, $this->createMock(RenderError::class));
+
+        self::assertInstanceOf(
+            DeleteContentEndPoint::class,
+            $container->get(DeleteContentEndPoint::class)
+        );
+
+        self::assertInstanceOf(
+            DeleteContentEndPointInterface::class,
+            $container->get(DeleteContentEndPointInterface::class)
+        );
+    }
+
+    public function testDeleteContentEndPointWithAccessControl()
+    {
+        $container = $this->buildContainer();
+        $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
+        $container->set(LoadObject::class, $this->createMock(LoadObject::class));
+        $container->set(DeleteObject::class, $this->createMock(DeleteObject::class));
+        $container->set(RedirectClientInterface::class, $this->createMock(RedirectClientInterface::class));
+        $container->set(RenderError::class, $this->createMock(RenderError::class));
+        $container->set(ObjectAccessControlInterface::class, $this->createMock(ObjectAccessControlInterface::class));
 
         self::assertInstanceOf(
             DeleteContentEndPoint::class,
@@ -515,6 +563,30 @@ class ContainerTest extends TestCase
         $container->set(SaveObject::class, $this->createMock(SaveObject::class));
         $container->set(RenderFormInterface::class, $this->createMock(RenderFormInterface::class));
         $container->set(RenderError::class, $this->createMock(RenderError::class));
+
+        self::assertInstanceOf(
+            EditContentEndPoint::class,
+            $container->get(EditContentEndPoint::class)
+        );
+
+        self::assertInstanceOf(
+            EditContentEndPointInterface::class,
+            $container->get(EditContentEndPointInterface::class)
+        );
+    }
+
+    public function testEditContentEndPointWithAccessControl()
+    {
+        $container = $this->buildContainer();
+        $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
+        $container->set(LoadObject::class, $this->createMock(LoadObject::class));
+        $container->set(FormHandlingInterface::class, $this->createMock(FormHandlingInterface::class));
+        $container->set(FormProcessingInterface::class, $this->createMock(FormProcessingInterface::class));
+        $container->set(SlugPreparation::class, $this->createMock(SlugPreparation::class));
+        $container->set(SaveObject::class, $this->createMock(SaveObject::class));
+        $container->set(RenderFormInterface::class, $this->createMock(RenderFormInterface::class));
+        $container->set(RenderError::class, $this->createMock(RenderError::class));
+        $container->set(ObjectAccessControlInterface::class, $this->createMock(ObjectAccessControlInterface::class));
 
         self::assertInstanceOf(
             EditContentEndPoint::class,
@@ -560,6 +632,29 @@ class ContainerTest extends TestCase
         $container->set(RenderError::class, $this->createMock(RenderError::class));
         $container->set(SearchFormHandling::class, $this->createMock(SearchFormHandling::class));
         $container->set(SearchFormLoaderInterface::class, $this->createMock(SearchFormLoaderInterface::class));
+
+        self::assertInstanceOf(
+            ListContentEndPoint::class,
+            $container->get(ListContentEndPoint::class)
+        );
+
+        self::assertInstanceOf(
+            ListContentEndPointInterface::class,
+            $container->get(ListContentEndPointInterface::class)
+        );
+    }
+
+    public function testListContentEndPointWithAccessControl()
+    {
+        $container = $this->buildContainer();
+        $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
+        $container->set(ExtractPage::class, $this->createMock(ExtractPage::class));
+        $container->set(ExtractOrder::class, $this->createMock(ExtractOrder::class));
+        $container->set(LoadListObjects::class, $this->createMock(LoadListObjects::class));
+        $container->set(RenderList::class, $this->createMock(RenderList::class));
+        $container->set(RenderError::class, $this->createMock(RenderError::class));
+        $container->set(SearchFormHandling::class, $this->createMock(SearchFormHandling::class));
+        $container->set(ListObjectsAccessControlInterface::class, $this->createMock(ListObjectsAccessControlInterface::class));
 
         self::assertInstanceOf(
             ListContentEndPoint::class,

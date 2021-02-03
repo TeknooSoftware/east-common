@@ -27,6 +27,7 @@ namespace Teknoo\East\Website\Recipe\Cookbook;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Teknoo\East\Website\Contracts\Recipe\Cookbook\DeleteContentEndPointInterface;
+use Teknoo\East\Website\Contracts\Recipe\Step\ObjectAccessControlInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Recipe\Step\DeleteObject;
@@ -47,6 +48,8 @@ class DeleteContentEndPoint implements DeleteContentEndPointInterface
 
     private LoadObject $loadObject;
 
+    private ?ObjectAccessControlInterface $objectAccessControl = null;
+
     private DeleteObject $deleteObject;
 
     private RedirectClientInterface $redirectClient;
@@ -58,12 +61,14 @@ class DeleteContentEndPoint implements DeleteContentEndPointInterface
         LoadObject $loadObject,
         DeleteObject $deleteObject,
         RedirectClientInterface $redirectClient,
-        RenderError $renderError
+        RenderError $renderError,
+        ?ObjectAccessControlInterface $objectAccessControl = null
     ) {
         $this->loadObject = $loadObject;
         $this->deleteObject = $deleteObject;
         $this->redirectClient = $redirectClient;
         $this->renderError = $renderError;
+        $this->objectAccessControl = $objectAccessControl;
 
         $this->fill($recipe);
     }
@@ -76,6 +81,10 @@ class DeleteContentEndPoint implements DeleteContentEndPointInterface
         $recipe = $recipe->require(new Ingredient('string', 'route'));
 
         $recipe = $recipe->cook($this->loadObject, LoadObject::class, [], 00);
+
+        if (null !== $this->objectAccessControl) {
+            $recipe = $recipe->cook($this->objectAccessControl, ObjectAccessControlInterface::class, [], 05);
+        }
 
         $recipe = $recipe->cook($this->deleteObject, DeleteObject::class, [], 10);
 

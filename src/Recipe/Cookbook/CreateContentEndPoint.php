@@ -29,6 +29,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Teknoo\East\Website\Contracts\Recipe\Cookbook\CreateContentEndPointInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\FormHandlingInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\FormProcessingInterface;
+use Teknoo\East\Website\Contracts\Recipe\Step\ObjectAccessControlInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\RenderFormInterface;
 use Teknoo\East\Website\Recipe\Step\CreateObject;
@@ -57,6 +58,8 @@ class CreateContentEndPoint implements CreateContentEndPointInterface
 
     private SlugPreparation $slugPreparation;
 
+    private ?ObjectAccessControlInterface $objectAccessControl = null;
+
     private SaveObject $saveObject;
 
     private RedirectClientInterface $redirectClient;
@@ -74,7 +77,8 @@ class CreateContentEndPoint implements CreateContentEndPointInterface
         SaveObject $saveObject,
         RedirectClientInterface $redirectClient,
         RenderFormInterface $renderForm,
-        RenderError $renderError
+        RenderError $renderError,
+        ?ObjectAccessControlInterface $objectAccessControl = null
     ) {
         $this->createObject = $createObject;
         $this->formHandling = $formHandling;
@@ -84,6 +88,7 @@ class CreateContentEndPoint implements CreateContentEndPointInterface
         $this->redirectClient = $redirectClient;
         $this->renderForm = $renderForm;
         $this->renderError = $renderError;
+        $this->objectAccessControl = $objectAccessControl;
 
         $this->fill($recipe);
     }
@@ -105,6 +110,10 @@ class CreateContentEndPoint implements CreateContentEndPointInterface
         $recipe = $recipe->cook($this->formProcessing, FormProcessingInterface::class, [], 20);
 
         $recipe = $recipe->cook($this->slugPreparation, SlugPreparation::class, [], 30);
+
+        if (null !== $this->objectAccessControl) {
+            $recipe = $recipe->cook($this->objectAccessControl, ObjectAccessControlInterface::class, [], 05);
+        }
 
         $recipe = $recipe->cook($this->saveObject, SaveObject::class, [], 40);
 

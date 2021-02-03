@@ -29,6 +29,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Teknoo\East\Website\Contracts\Recipe\Cookbook\EditContentEndPointInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\FormHandlingInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\FormProcessingInterface;
+use Teknoo\East\Website\Contracts\Recipe\Step\ObjectAccessControlInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\RenderFormInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Recipe\Step\LoadObject;
@@ -51,6 +52,8 @@ class EditContentEndPoint implements EditContentEndPointInterface
 
     private LoadObject $loadObject;
 
+    private ?ObjectAccessControlInterface $objectAccessControl = null;
+
     private FormHandlingInterface $formHandling;
 
     private FormProcessingInterface $formProcessing;
@@ -71,7 +74,8 @@ class EditContentEndPoint implements EditContentEndPointInterface
         SlugPreparation $slugPreparation,
         SaveObject $saveObject,
         RenderFormInterface $renderForm,
-        RenderError $renderError
+        RenderError $renderError,
+        ?ObjectAccessControlInterface $objectAccessControl = null
     ) {
         $this->loadObject = $loadObject;
         $this->formHandling = $formHandling;
@@ -80,6 +84,7 @@ class EditContentEndPoint implements EditContentEndPointInterface
         $this->saveObject = $saveObject;
         $this->renderForm = $renderForm;
         $this->renderError = $renderError;
+        $this->objectAccessControl = $objectAccessControl;
 
         $this->fill($recipe);
     }
@@ -95,6 +100,10 @@ class EditContentEndPoint implements EditContentEndPointInterface
         $recipe = $recipe->require(new Ingredient('string', 'template'));
 
         $recipe = $recipe->cook($this->loadObject, LoadObject::class, [], 00);
+
+        if (null !== $this->objectAccessControl) {
+            $recipe = $recipe->cook($this->objectAccessControl, ObjectAccessControlInterface::class, [], 05);
+        }
 
         $recipe = $recipe->cook($this->formHandling, FormHandlingInterface::class, [], 10);
 

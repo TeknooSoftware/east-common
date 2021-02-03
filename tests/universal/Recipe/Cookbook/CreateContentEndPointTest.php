@@ -27,6 +27,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Website\Contracts\Recipe\Step\FormHandlingInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\FormProcessingInterface;
+use Teknoo\East\Website\Contracts\Recipe\Step\ObjectAccessControlInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\RenderFormInterface;
 use Teknoo\East\Website\Recipe\Cookbook\CreateContentEndPoint;
@@ -55,6 +56,8 @@ class CreateContentEndPointTest extends TestCase
     private ?FormProcessingInterface $formProcessing = null;
 
     private ?SlugPreparation $slugPreparation = null;
+
+    private ?ObjectAccessControlInterface $objectAccessControl = null;
 
     private ?SaveObject $saveObject = null;
 
@@ -172,6 +175,18 @@ class CreateContentEndPointTest extends TestCase
         return $this->renderError;
     }
 
+    /**
+     * @return ObjectAccessControlInterface|MockObject
+     */
+    public function getObjectAccessControl(): ObjectAccessControlInterface
+    {
+        if (null === $this->objectAccessControl) {
+            $this->objectAccessControl = $this->createMock(ObjectAccessControlInterface::class);
+        }
+
+        return $this->objectAccessControl;
+    }
+
     public function buildCookbook(): CreateContentEndPoint
     {
         return new CreateContentEndPoint(
@@ -183,7 +198,8 @@ class CreateContentEndPointTest extends TestCase
             $this->getSaveObject(),
             $this->getRedirectClient(),
             $this->getRenderForm(),
-            $this->getRenderError()
+            $this->getRenderError(),
+            $this->getObjectAccessControl()
         );
     }
 }

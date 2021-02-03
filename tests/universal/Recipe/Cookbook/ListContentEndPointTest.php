@@ -25,6 +25,7 @@ namespace Teknoo\Tests\East\Website\Recipe\Cookbook;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Teknoo\East\Website\Contracts\Recipe\Step\ListObjectsAccessControlInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\SearchFormLoaderInterface;
 use Teknoo\East\Website\Recipe\Cookbook\ListContentEndPoint;
 use Teknoo\East\Website\Recipe\Step\ExtractOrder;
@@ -60,6 +61,8 @@ class ListContentEndPointTest extends TestCase
     private ?RenderError $renderError = null;
 
     private ?SearchFormLoaderInterface $searchFormLoader = null;
+
+    private ?ListObjectsAccessControlInterface $listObjectsAccessControl = null;
 
     /**
      * @return RecipeInterface|MockObject
@@ -157,6 +160,18 @@ class ListContentEndPointTest extends TestCase
         return $this->searchFormLoader;
     }
 
+    /**
+     * @return ListObjectsAccessControlInterface|MockObject
+     */
+    public function getListObjectsAccessControl(): ListObjectsAccessControlInterface
+    {
+        if (null === $this->listObjectsAccessControl) {
+            $this->listObjectsAccessControl = $this->createMock(ListObjectsAccessControlInterface::class);
+        }
+
+        return $this->listObjectsAccessControl;
+    }
+
     public function buildCookbook(): ListContentEndPoint
     {
         return new ListContentEndPoint(
@@ -167,7 +182,8 @@ class ListContentEndPointTest extends TestCase
             $this->getLoadListObjects(),
             $this->getRenderList(),
             $this->getRenderError(),
-            $this->getSearchFormLoader()
+            $this->getSearchFormLoader(),
+            $this->getListObjectsAccessControl()
         );
     }
 }

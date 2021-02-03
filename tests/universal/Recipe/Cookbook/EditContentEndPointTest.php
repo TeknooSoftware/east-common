@@ -27,6 +27,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Website\Contracts\Recipe\Step\FormHandlingInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\FormProcessingInterface;
+use Teknoo\East\Website\Contracts\Recipe\Step\ObjectAccessControlInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\RenderFormInterface;
 use Teknoo\East\Website\Recipe\Cookbook\EditContentEndPoint;
 use Teknoo\East\Website\Recipe\Step\LoadObject;
@@ -48,6 +49,8 @@ class EditContentEndPointTest extends TestCase
     private ?RecipeInterface $recipe = null;
 
     private ?LoadObject $loadObject = null;
+
+    private ?ObjectAccessControlInterface $objectAccessControl = null;
 
     private ?FormHandlingInterface $formHandling = null;
 
@@ -157,6 +160,18 @@ class EditContentEndPointTest extends TestCase
         return $this->renderError;
     }
 
+    /**
+     * @return ObjectAccessControlInterface|MockObject
+     */
+    public function getObjectAccessControl(): ObjectAccessControlInterface
+    {
+        if (null === $this->objectAccessControl) {
+            $this->objectAccessControl = $this->createMock(ObjectAccessControlInterface::class);
+        }
+
+        return $this->objectAccessControl;
+    }
+
     public function buildCookbook(): EditContentEndPoint
     {
         return new EditContentEndPoint(
@@ -167,7 +182,8 @@ class EditContentEndPointTest extends TestCase
             $this->getSlugPreparation(),
             $this->getSaveObject(),
             $this->getRenderForm(),
-            $this->getRenderError()
+            $this->getRenderError(),
+            $this->getObjectAccessControl()
         );
     }
 }

@@ -27,6 +27,7 @@ namespace Teknoo\East\Website\Recipe\Cookbook;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Teknoo\East\Website\Contracts\Recipe\Cookbook\ListContentEndPointInterface;
+use Teknoo\East\Website\Contracts\Recipe\Step\ListObjectsAccessControlInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\SearchFormLoaderInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Recipe\Step\ExtractOrder;
@@ -58,6 +59,8 @@ class ListContentEndPoint implements ListContentEndPointInterface
 
     private LoadListObjects $loadListObjects;
 
+    private ?ListObjectsAccessControlInterface $listObjectsAccessControl;
+
     private RenderList $renderList;
 
     private RenderError $renderError;
@@ -70,7 +73,8 @@ class ListContentEndPoint implements ListContentEndPointInterface
         LoadListObjects $loadListObjects,
         RenderList $renderList,
         RenderError $renderError,
-        ?SearchFormLoaderInterface $searchFormLoader = null
+        ?SearchFormLoaderInterface $searchFormLoader = null,
+        ?ListObjectsAccessControlInterface $listObjectsAccessControl = null
     ) {
         $this->extractPage = $extractPage;
         $this->extractOrder = $extractOrder;
@@ -79,6 +83,7 @@ class ListContentEndPoint implements ListContentEndPointInterface
         $this->renderList = $renderList;
         $this->renderError = $renderError;
         $this->searchFormLoader = $searchFormLoader;
+        $this->listObjectsAccessControl = $listObjectsAccessControl;
 
         $this->fill($recipe);
     }
@@ -102,6 +107,15 @@ class ListContentEndPoint implements ListContentEndPointInterface
         $recipe = $recipe->cook($this->searchFormHandling, SearchFormHandling::class, [], 30);
 
         $recipe = $recipe->cook($this->loadListObjects, LoadListObjects::class, [], 40);
+
+        if (null !== $this->listObjectsAccessControl) {
+            $recipe = $recipe->cook(
+                $this->listObjectsAccessControl,
+                ListObjectsAccessControlInterface::class,
+                [],
+                40
+            );
+        }
 
         $recipe = $recipe->cook($this->renderList, RenderList::class, [], 50);
 

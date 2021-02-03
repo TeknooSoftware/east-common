@@ -25,6 +25,7 @@ namespace Teknoo\Tests\East\Website\Recipe\Cookbook;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Teknoo\East\Website\Contracts\Recipe\Step\ObjectAccessControlInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Website\Recipe\Cookbook\DeleteContentEndPoint;
 use Teknoo\East\Website\Recipe\Step\DeleteObject;
@@ -45,6 +46,8 @@ class DeleteContentEndPointTest extends TestCase
     private ?RecipeInterface $recipe = null;
 
     private ?LoadObject $loadObject = null;
+
+    private ?ObjectAccessControlInterface $objectAccessControl = null;
 
     private ?DeleteObject $deleteObject = null;
 
@@ -112,6 +115,18 @@ class DeleteContentEndPointTest extends TestCase
         return $this->renderError;
     }
 
+    /**
+     * @return ObjectAccessControlInterface|MockObject
+     */
+    public function getObjectAccessControl(): ObjectAccessControlInterface
+    {
+        if (null === $this->objectAccessControl) {
+            $this->objectAccessControl = $this->createMock(ObjectAccessControlInterface::class);
+        }
+
+        return $this->objectAccessControl;
+    }
+
     public function buildCookbook(): DeleteContentEndPoint
     {
         return new DeleteContentEndPoint(
@@ -119,7 +134,8 @@ class DeleteContentEndPointTest extends TestCase
             $this->getLoadObject(),
             $this->getDeleteObject(),
             $this->getRedirectClient(),
-            $this->getRenderError()
+            $this->getRenderError(),
+            $this->getObjectAccessControl()
         );
     }
 }

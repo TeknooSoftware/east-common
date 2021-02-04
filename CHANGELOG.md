@@ -1,6 +1,10 @@
 #Teknoo Software - Website - Change Log
 
-##[4.1.1] - 2021-02-03
+##[4.1.2] - 2021-02-05
+###Stable Release
+- Allow POST method for list, to allow search forms
+
+##[4.1.1] - 2021-02-04
 ###Stable Release
 - RenderList step pass also search form to thew view
 

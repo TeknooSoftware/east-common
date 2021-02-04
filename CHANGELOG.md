@@ -1,5 +1,9 @@
 #Teknoo Software - Website - Change Log
 
+##[4.1.1] - 2021-02-03
+###Stable Release
+- RenderList step pass also search form to thew view
+
 ##[4.1.0] - 2021-02-03
 ###Stable Release
 - Update to East-foundation 3.3.3 and reset criteria ingredient in the workplan of ListContentEndPointInterface

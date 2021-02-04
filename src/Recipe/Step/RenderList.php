@@ -30,6 +30,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
+use Teknoo\East\Website\Contracts\Form\SearchFormInterface;
 use Teknoo\East\Website\Middleware\ViewParameterInterface;
 use Teknoo\East\Website\Recipe\Step\Traits\TemplateTrait;
 
@@ -58,7 +59,8 @@ class RenderList
         int $pageCount,
         int $itemsPerPage,
         int $page,
-        string $template
+        string $template,
+        ?SearchFormInterface $form = null
     ): self {
         $viewParameters = $request->getAttribute(ViewParameterInterface::REQUEST_PARAMETER_KEY, []);
 
@@ -71,7 +73,8 @@ class RenderList
                     'objectsCollection' => $objectsCollection,
                     'page' => $page,
                     'pageCount' => $pageCount,
-                    'queryParams' => $request->getQueryParams()
+                    'queryParams' => $request->getQueryParams(),
+                    'searchForm' => $form
                 ]
             )
         );

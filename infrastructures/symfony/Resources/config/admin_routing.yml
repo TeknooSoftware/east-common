@@ -1,7 +1,7 @@
 # item
 _teknoo_website_admin_item_list:
     path: '/items/'
-    methods:  ['GET']
+    methods:  ['GET', 'POST']
     defaults:
         _controller: 'teknoo.east.website.endpoint.crud.list'
         loader: '@Teknoo\East\Website\Loader\ItemLoader'
@@ -53,7 +53,7 @@ _teknoo_website_admin_item_delete:
 # content
 _teknoo_website_admin_content_list:
     path: '/contents/'
-    methods:  ['GET']
+    methods:  ['GET', 'POST']
     defaults:
         _controller: 'teknoo.east.website.endpoint.crud.list'
         loader: '@Teknoo\East\Website\Loader\ContentLoader'
@@ -105,7 +105,7 @@ _teknoo_website_admin_content_delete:
 # media
 _teknoo_website_admin_media_list:
     path: '/media/'
-    methods:  ['GET']
+    methods:  ['GET', 'POST']
     defaults:
         _controller: 'teknoo.east.website.endpoint.crud.list'
         loader: '@Teknoo\East\Website\Loader\MediaLoader'
@@ -141,7 +141,7 @@ _teknoo_website_admin_media_delete:
 # type
 _teknoo_website_admin_type_list:
     path: '/types/'
-    methods:  ['GET']
+    methods:  ['GET', 'POST']
     defaults:
         _controller: 'teknoo.east.website.endpoint.crud.list'
         loader: '@Teknoo\East\Website\Loader\TypeLoader'
@@ -189,7 +189,7 @@ _teknoo_website_admin_type_delete:
 # user
 _teknoo_website_admin_user_list:
     path: '/users/'
-    methods:  ['GET']
+    methods:  ['GET', 'POST']
     defaults:
         _controller: 'teknoo.east.website.endpoint.crud.list'
         loader: '@Teknoo\East\Website\Loader\UserLoader'

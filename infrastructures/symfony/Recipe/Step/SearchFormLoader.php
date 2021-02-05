@@ -30,6 +30,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Website\Contracts\Form\SearchFormInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\SearchFormLoaderInterface;
+use Teknoo\East\Website\Middleware\ViewParameterInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -60,12 +61,16 @@ class SearchFormLoader implements SearchFormLoaderInterface
         ManagerInterface $manager,
         string $template
     ): SearchFormLoader {
+        $params = $request->getParsedBody();
+        if (!\is_array($params)) {
+            return $this;
+        }
+
         $instances = &$this->formsInstances;
         if (!isset($instances[$template]) && !isset($instances[static::ANY_TEMPLATE])) {
             return $this;
         }
 
-        $params = $request->getQueryParams();
         $formName = \key($params);
 
         if (
@@ -76,14 +81,19 @@ class SearchFormLoader implements SearchFormLoaderInterface
         }
 
         $formClass = $instances[$template][$formName] ?? $instances[static::ANY_TEMPLATE][$formName];
-        $form = $this->formFactory->create($formClass);
+        $form = $this->formFactory->create(
+            $formClass,
+            null,
+            [
+                'manager' => $manager
+            ]
+        );
 
-        if (!$form instanceof SearchFormInterface) {
-            $manager->error(new \RuntimeException("$formClass must implement SearchFormInterface", 500));
-            return $this;
-        }
+        $form->handleRequest($request->getAttribute('request'));
 
-        $manager->updateWorkPlan([SearchFormInterface::class => $form]);
+        $manager->updateWorkPlan([
+            'searchForm' => $form
+        ]);
 
         return $this;
     }

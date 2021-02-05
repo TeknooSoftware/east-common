@@ -29,10 +29,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Teknoo\East\Foundation\Manager\ManagerInterface;
-use Teknoo\East\Website\Contracts\Form\SearchFormInterface;
-use Teknoo\East\Website\Object\Content;
-use Teknoo\East\Website\Object\ObjectInterface;
+use Teknoo\East\Foundation\Manager\ManagerInterface;;
 use Teknoo\East\WebsiteBundle\Recipe\Step\SearchFormLoader;
 
 /**
@@ -58,17 +55,6 @@ class SearchFormLoaderTest extends TestCase
 
     public function buildStep(array $templates): SearchFormLoader
     {
-        /*
-        [
-            'foo.html.twig' => [
-                'bar1' => \stdClass::class
-            ],
-            SearchFormLoader::ANY_TEMPLATE => [
-                'bar2' => \stdClass::class
-            ]
-        ]
-        */
-
         return new SearchFormLoader(
             $this->getFormFactory(),
             $templates
@@ -78,13 +64,15 @@ class SearchFormLoaderTest extends TestCase
     public function testInvokeWithNonAllowedInTemplate()
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects(self::any())->method('getQueryParams')->willReturn([
+        $request->expects(self::any())->method('getAttribute')->willReturn(
+            $this->createMock(Request::class)
+        );
+        $request->expects(self::any())->method('getParsedBody')->willReturn([
             'bar1' => []
         ]);
         $manager = $this->createMock(ManagerInterface::class);
         $template = 'foo.html.twig';
 
-        $manager->expects(self::never())->method('updateWorkPlan');
         $manager->expects(self::never())->method('error');
 
         self::assertInstanceOf(
@@ -95,16 +83,43 @@ class SearchFormLoaderTest extends TestCase
         );
     }
 
+    public function testInvokeWithNotArrayInBody()
+    {
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->expects(self::any())->method('getAttribute')->willReturn(
+            $this->createMock(Request::class)
+        );
+        $request->expects(self::any())->method('getParsedBody')->willReturn(null);
+        $manager = $this->createMock(ManagerInterface::class);
+        $template = 'foo.html.twig';
+
+        $manager->expects(self::never())->method('error');
+
+        self::assertInstanceOf(
+            SearchFormLoader::class,
+            $this->buildStep(
+                [
+                    'bar.html.twig' => [
+                        'bar1' => \stdClass::class
+                    ],
+                    SearchFormLoader::ANY_TEMPLATE => [
+                        'bar2' => \stdClass::class
+                    ]
+                ]
+            )($request, $manager, $template)
+        );
+    }
+
+
     public function testInvokeWithNoFormFoundWithAny()
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects(self::any())->method('getQueryParams')->willReturn([
+        $request->expects(self::any())->method('getParsedBody')->willReturn([
             'bar3' => []
         ]);
         $manager = $this->createMock(ManagerInterface::class);
         $template = 'foo.html.twig';
 
-        $manager->expects(self::never())->method('updateWorkPlan');
         $manager->expects(self::never())->method('error');
 
         self::assertInstanceOf(
@@ -125,53 +140,16 @@ class SearchFormLoaderTest extends TestCase
     public function testInvokeWithNoFormFoundWithTemplate()
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects(self::any())->method('getQueryParams')->willReturn([
+        $request->expects(self::any())->method('getAttribute')->willReturn(
+            $this->createMock(Request::class)
+        );
+        $request->expects(self::any())->method('getParsedBody')->willReturn([
             'bar3' => []
         ]);
         $manager = $this->createMock(ManagerInterface::class);
         $template = 'foo.html.twig';
 
-        $manager->expects(self::never())->method('updateWorkPlan');
         $manager->expects(self::never())->method('error');
-
-        self::assertInstanceOf(
-            SearchFormLoader::class,
-            $this->buildStep(
-                [
-                    'foo.html.twig' => [
-                        'bar1' => \stdClass::class
-                    ],
-                    SearchFormLoader::ANY_TEMPLATE => [
-                        'bar2' => \stdClass::class
-                    ]
-                ]
-            )($request, $manager, $template)
-        );
-    }
-
-    public function testInvokeWithFormFoundWithTemplateWithBadFromClass()
-    {
-        $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects(self::any())->method('getQueryParams')->willReturn([
-            'bar1' => []
-        ]);
-        $manager = $this->createMock(ManagerInterface::class);
-        $template = 'foo.html.twig';
-
-        $manager->expects(self::never())->method('updateWorkPlan');
-        $manager->expects(self::once())->method('error')->willReturnCallback(
-            function (\Throwable $error) use ($manager) {
-                self::assertInstanceOf(\RuntimeException::class, $error);
-                self::assertEquals(500, $error->getCode());
-
-                return $manager;
-            }
-        );
-
-        $this->getFormFactory()
-            ->expects(self::once())
-            ->method('create')
-            ->willReturn(new \stdClass());
 
         self::assertInstanceOf(
             SearchFormLoader::class,
@@ -191,19 +169,21 @@ class SearchFormLoaderTest extends TestCase
     public function testInvokeWithFormFoundWithTemplate()
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects(self::any())->method('getQueryParams')->willReturn([
+        $request->expects(self::any())->method('getAttribute')->willReturn(
+            $this->createMock(Request::class)
+        );
+        $request->expects(self::any())->method('getParsedBody')->willReturn([
             'bar1' => []
         ]);
         $manager = $this->createMock(ManagerInterface::class);
         $template = 'foo.html.twig';
 
-        $manager->expects(self::once())->method('updateWorkPlan');
         $manager->expects(self::never())->method('error');
 
         $this->getFormFactory()
             ->expects(self::once())
             ->method('create')
-            ->willReturn($this->createMock(SearchFormInterface::class));
+            ->willReturn($this->createMock(FormInterface::class));
 
         self::assertInstanceOf(
             SearchFormLoader::class,
@@ -223,19 +203,21 @@ class SearchFormLoaderTest extends TestCase
     public function testInvokeWithFormFoundWithAny()
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects(self::any())->method('getQueryParams')->willReturn([
+        $request->expects(self::any())->method('getAttribute')->willReturn(
+            $this->createMock(Request::class)
+        );
+        $request->expects(self::any())->method('getParsedBody')->willReturn([
             'bar2' => []
         ]);
         $manager = $this->createMock(ManagerInterface::class);
         $template = 'foo.html.twig';
 
-        $manager->expects(self::once())->method('updateWorkPlan');
         $manager->expects(self::never())->method('error');
 
         $this->getFormFactory()
             ->expects(self::once())
             ->method('create')
-            ->willReturn($this->createMock(SearchFormInterface::class));
+            ->willReturn($this->createMock(FormInterface::class));
 
         self::assertInstanceOf(
             SearchFormLoader::class,

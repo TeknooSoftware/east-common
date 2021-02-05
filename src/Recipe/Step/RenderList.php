@@ -52,6 +52,9 @@ class RenderList
         $this->responseFactory = $responseFactory;
     }
 
+    /**
+     * @param mixed $searchForm
+     */
     public function __invoke(
         ServerRequestInterface $request,
         ClientInterface $client,
@@ -60,7 +63,7 @@ class RenderList
         int $itemsPerPage,
         int $page,
         string $template,
-        ?SearchFormInterface $form = null
+        $searchForm = null
     ): self {
         $viewParameters = $request->getAttribute(ViewParameterInterface::REQUEST_PARAMETER_KEY, []);
 
@@ -74,7 +77,7 @@ class RenderList
                     'page' => $page,
                     'pageCount' => $pageCount,
                     'queryParams' => $request->getQueryParams(),
-                    'searchForm' => $form
+                    'searchForm' => $searchForm
                 ]
             )
         );

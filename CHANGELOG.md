@@ -1,5 +1,10 @@
 #Teknoo Software - Website - Change Log
 
+##[4.1.3] - 2021-02-05
+###Stable Release
+- Fix SearchFormLoader to pass manager to the builder as option instead of fetch a form instance
+ from builder. (More easier to write form, without overide Symfony Form).
+
 ##[4.1.2] - 2021-02-05
 ###Stable Release
 - Allow POST method for list, to allow search forms

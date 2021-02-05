@@ -50,7 +50,6 @@ use Teknoo\East\Website\Recipe\Cookbook\RenderDynamicContentEndPoint;
 use Teknoo\East\Website\Recipe\Cookbook\RenderMediaEndPoint;
 use Teknoo\East\Website\Recipe\Cookbook\RenderStaticContentEndPoint;
 use Teknoo\East\Website\Recipe\Step\CreateObject;
-use Teknoo\East\Website\Recipe\Step\SearchFormHandling;
 use Teknoo\Recipe\RecipeInterface as OriginalRecipeInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
@@ -208,7 +207,6 @@ return [
             get(ResponseFactoryInterface::class)
         ),
     SaveObject::class => create(),
-    SearchFormHandling::class => create(),
     SendMedia::class => create()
         ->constructor(
             get(ResponseFactoryInterface::class)
@@ -294,7 +292,6 @@ return [
             $container->get(OriginalRecipeInterface::class),
             $container->get(ExtractPage::class),
             $container->get(ExtractOrder::class),
-            $container->get(SearchFormHandling::class),
             $container->get(LoadListObjects::class),
             $container->get(RenderList::class),
             $container->get(RenderError::class),

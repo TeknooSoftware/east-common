@@ -431,16 +431,6 @@ class ContainerTest extends TestCase
         );
     }
 
-    public function testSearchFormHandling()
-    {
-        $container = $this->buildContainer();
-
-        self::assertInstanceOf(
-            SearchFormHandling::class,
-            $container->get(SearchFormHandling::class)
-        );
-    }
-
     public function testSendMedia()
     {
         $container = $this->buildContainer();
@@ -608,7 +598,6 @@ class ContainerTest extends TestCase
         $container->set(LoadListObjects::class, $this->createMock(LoadListObjects::class));
         $container->set(RenderList::class, $this->createMock(RenderList::class));
         $container->set(RenderError::class, $this->createMock(RenderError::class));
-        $container->set(SearchFormHandling::class, $this->createMock(SearchFormHandling::class));
 
         self::assertInstanceOf(
             ListContentEndPoint::class,
@@ -630,7 +619,6 @@ class ContainerTest extends TestCase
         $container->set(LoadListObjects::class, $this->createMock(LoadListObjects::class));
         $container->set(RenderList::class, $this->createMock(RenderList::class));
         $container->set(RenderError::class, $this->createMock(RenderError::class));
-        $container->set(SearchFormHandling::class, $this->createMock(SearchFormHandling::class));
         $container->set(SearchFormLoaderInterface::class, $this->createMock(SearchFormLoaderInterface::class));
 
         self::assertInstanceOf(
@@ -653,7 +641,6 @@ class ContainerTest extends TestCase
         $container->set(LoadListObjects::class, $this->createMock(LoadListObjects::class));
         $container->set(RenderList::class, $this->createMock(RenderList::class));
         $container->set(RenderError::class, $this->createMock(RenderError::class));
-        $container->set(SearchFormHandling::class, $this->createMock(SearchFormHandling::class));
         $container->set(ListObjectsAccessControlInterface::class, $this->createMock(ListObjectsAccessControlInterface::class));
 
         self::assertInstanceOf(

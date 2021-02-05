@@ -33,7 +33,6 @@ use Teknoo\East\Website\Recipe\Step\ExtractPage;
 use Teknoo\East\Website\Recipe\Step\LoadListObjects;
 use Teknoo\East\Website\Recipe\Step\RenderError;
 use Teknoo\East\Website\Recipe\Step\RenderList;
-use Teknoo\East\Website\Recipe\Step\SearchFormHandling;
 use Teknoo\Recipe\RecipeInterface;
 use Teknoo\Tests\Recipe\Cookbook\BaseCookbookTestTrait;
 
@@ -51,8 +50,6 @@ class ListContentEndPointTest extends TestCase
     private ?ExtractPage $extractPage = null;
 
     private ?ExtractOrder $extractOrder = null;
-
-    private ?SearchFormHandling $searchFormHandling = null;
 
     private ?LoadListObjects $loadListObjects = null;
 
@@ -137,18 +134,6 @@ class ListContentEndPointTest extends TestCase
     }
 
     /**
-     * @return SearchFormHandling|MockObject
-     */
-    public function getSearchFormHandling(): SearchFormHandling
-    {
-        if (null === $this->searchFormHandling) {
-            $this->searchFormHandling = $this->createMock(SearchFormHandling::class);
-        }
-
-        return $this->searchFormHandling;
-    }
-
-    /**
      * @return SearchFormLoaderInterface|MockObject
      */
     public function getSearchFormLoader(): SearchFormLoaderInterface
@@ -178,7 +163,6 @@ class ListContentEndPointTest extends TestCase
             $this->getRecipe(),
             $this->getExtractPage(),
             $this->getExtractOrder(),
-            $this->getSearchFormHandling(),
             $this->getLoadListObjects(),
             $this->getRenderList(),
             $this->getRenderError(),

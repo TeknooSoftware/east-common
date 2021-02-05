@@ -55,8 +55,6 @@ class ListContentEndPoint implements ListContentEndPointInterface
 
     private ?SearchFormLoaderInterface $searchFormLoader;
 
-    private SearchFormHandling $searchFormHandling;
-
     private LoadListObjects $loadListObjects;
 
     private ?ListObjectsAccessControlInterface $listObjectsAccessControl;
@@ -69,7 +67,6 @@ class ListContentEndPoint implements ListContentEndPointInterface
         RecipeInterface $recipe,
         ExtractPage $extractPage,
         ExtractOrder $extractOrder,
-        SearchFormHandling $searchFormHandling,
         LoadListObjects $loadListObjects,
         RenderList $renderList,
         RenderError $renderError,
@@ -78,7 +75,6 @@ class ListContentEndPoint implements ListContentEndPointInterface
     ) {
         $this->extractPage = $extractPage;
         $this->extractOrder = $extractOrder;
-        $this->searchFormHandling = $searchFormHandling;
         $this->loadListObjects = $loadListObjects;
         $this->renderList = $renderList;
         $this->renderError = $renderError;
@@ -103,8 +99,6 @@ class ListContentEndPoint implements ListContentEndPointInterface
         if (null !== $this->searchFormLoader) {
             $recipe = $recipe->cook($this->searchFormLoader, SearchFormLoaderInterface::class, [], 20);
         }
-
-        $recipe = $recipe->cook($this->searchFormHandling, SearchFormHandling::class, [], 30);
 
         $recipe = $recipe->cook($this->loadListObjects, LoadListObjects::class, [], 40);
 

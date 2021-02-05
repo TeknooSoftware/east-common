@@ -28,6 +28,7 @@ use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Object\Content;
+use Teknoo\East\Website\Query\Expr\ExprInterface;
 use Teknoo\East\Website\Recipe\Step\LoadListObjects;
 
 /**
@@ -243,6 +244,56 @@ class LoadListObjectsTest extends TestCase
         );
     }
 
+    public function testInvokeFoundWithCountableAndCriteriaAsExpr()
+    {
+        $pageCount = 3;
+        $objects = new class implements \Countable, \IteratorAggregate {
+            public function getIterator()
+            {
+                return new \ArrayIterator([
+                    new Content(),
+                    new Content()
+                ]);
+            }
+
+            public function count()
+            {
+                return 30;
+            }
+        };
+
+        $loader = $this->createMock(LoaderInterface::class);
+        $loader->expects(self::any())->method('query')->willReturnCallback(
+            function ($query, PromiseInterface $promise) use ($objects, $loader) {
+                $promise->success($objects);
+
+                return $loader;
+            }
+        );
+
+        $manager = $this->createMock(ManagerInterface::class);
+        $manager->expects(self::never())->method('error');
+        $manager->expects(self::once())->method('updateWorkPlan')->with([
+            'objectsCollection' => $objects,
+            'pageCount' => $pageCount
+        ]);
+
+        self::assertInstanceOf(
+            LoadListObjects::class,
+            $this->buildStep()(
+                $loader,
+                $manager,
+                ['foo' => 'ASC'],
+                10,
+                2,
+                [
+                    'foo' => 'bar',
+                    'ba123' => $this->createMock(ExprInterface::class)
+                ]
+            )
+        );
+    }
+
     public function testInvokeErrorInQuery()
     {
         $loader = $this->createMock(LoaderInterface::class);
@@ -361,6 +412,30 @@ class LoadListObjectsTest extends TestCase
                 2,
                 [
                     'foo' => ['bar']
+                ]
+            )
+        );
+    }
+
+    public function testInvokeErrorWithBadCriteriaValueTypeObject()
+    {
+        $loader = $this->createMock(LoaderInterface::class);
+        $loader->expects(self::never())->method('query');
+
+        $manager = $this->createMock(ManagerInterface::class);
+        $manager->expects(self::once())->method('error');
+        $manager->expects(self::never())->method('updateWorkPlan');
+
+        self::assertInstanceOf(
+            LoadListObjects::class,
+            $this->buildStep()(
+                $loader,
+                $manager,
+                ['foo' => 'ASC'],
+                10,
+                2,
+                [
+                    'foo' => new \stdClass
                 ]
             )
         );

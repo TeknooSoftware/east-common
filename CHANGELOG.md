@@ -1,5 +1,9 @@
 #Teknoo Software - Website - Change Log
 
+##[4.1.4] - 2021-02-05
+###Stable Release
+- Improve criteria sanitization to support array and Expr object.
+
 ##[4.1.3] - 2021-02-05
 ###Stable Release
 - Fix SearchFormLoader to pass manager to the builder as option instead of fetch a form instance

@@ -28,6 +28,7 @@ namespace Teknoo\East\Website\Recipe\Step;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Website\Loader\LoaderInterface;
+use Teknoo\East\Website\Query\Expr\ExprInterface;
 use Teknoo\East\Website\Query\PaginationQuery;
 
 /**
@@ -37,8 +38,8 @@ use Teknoo\East\Website\Query\PaginationQuery;
 class LoadListObjects
 {
     /**
-     * @param array<string, string> $criteria
-     * @return array<string, string>
+     * @param array<string, mixed> $criteria
+     * @return array<string, mixed>
      */
     private function sanitizeCriteria(array &$criteria): array
     {
@@ -52,8 +53,17 @@ class LoadListObjects
             }
 
             if (
-                !\is_string($value)
-                || 0 === \preg_match("#^[\p{L}\p{N}\p{Z}_\-\.,]+$#uS", $value)
+                \is_object($value)
+                && !$value instanceof ExprInterface
+            ) {
+                throw new \RuntimeException("Wrong value in criteria for $key", 400);
+            }
+
+            if (\is_array($value)) {
+                $value = $this->sanitizeCriteria($value);
+            } elseif (
+                \is_string($value)
+                && 0 === \preg_match("#^[\p{Sm}\p{Sc}\p{L}\p{N}\p{Z}_\-\.\@,]+$#uS", $value)
             ) {
                 throw new \RuntimeException("Wrong value in criteria for $key", 400);
             }

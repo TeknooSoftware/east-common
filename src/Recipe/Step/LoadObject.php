@@ -39,13 +39,14 @@ class LoadObject
     public function __invoke(
         LoaderInterface $loader,
         string $id,
-        ManagerInterface $manager
+        ManagerInterface $manager,
+        string $workPlanKey = ObjectInterface::class
     ): self {
         $loader->load(
             $id,
             new Promise(
-                static function (ObjectInterface $object) use ($manager) {
-                    $manager->updateWorkPlan([ObjectInterface::class => $object]);
+                static function (ObjectInterface $object) use ($manager, $workPlanKey) {
+                    $manager->updateWorkPlan([$workPlanKey => $object]);
                 },
                 static function (\Throwable $error) use ($manager) {
                     $error = new \DomainException($error->getMessage(), 404, $error);

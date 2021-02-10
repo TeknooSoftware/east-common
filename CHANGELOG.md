@@ -1,5 +1,9 @@
 #Teknoo Software - Website - Change Log
 
+##[4.1.5] - 2021-02-10
+###Stable Release
+- Can pass the variable name to store object loaded into workplan
+
 ##[4.1.4] - 2021-02-05
 ###Stable Release
 - Improve criteria sanitization to support array and Expr object.

@@ -106,6 +106,38 @@ class LoadObjectTest extends TestCase
         );
     }
 
+    public function testInvokeFoundWithKey()
+    {
+        $object = $this->createMock(ObjectInterface::class);
+
+        $manager = $this->createMock(ManagerInterface::class);
+        $manager->expects(self::never())->method('error');
+        $manager->expects(self::once())->method('updateWorkPlan')->with([
+            'MyKey' => $object
+        ]);
+
+        $loader = $this->createMock(LoaderInterface::class);
+        $loader->expects(self::any())
+            ->method('load')
+            ->willReturnCallback(
+                function ($query, PromiseInterface $promise) use ($loader, $object) {
+                    $promise->success($object);
+
+                    return $loader;
+                }
+            );
+
+        self::assertInstanceOf(
+            LoadObject::class,
+            $this->buildStep()(
+                $loader,
+                'foo',
+                $manager,
+                'MyKey'
+            )
+        );
+    }
+
     public function testInvokeError()
     {
         $manager = $this->createMock(ManagerInterface::class);

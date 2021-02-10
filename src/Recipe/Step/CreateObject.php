@@ -36,7 +36,8 @@ class CreateObject
 {
     public function __invoke(
         string $objectClass,
-        ManagerInterface $manager
+        ManagerInterface $manager,
+        ?array $constructorArguments = null
     ): self {
         if (!\class_exists($objectClass)) {
             $error = new \DomainException("Error class $objectClass is not available");
@@ -46,7 +47,12 @@ class CreateObject
             return $this;
         }
 
-        $object = new $objectClass();
+        if (null !== $constructorArguments) {
+            $object = new $objectClass(...$constructorArguments);
+        } else {
+            $object = new $objectClass();
+        }
+
         if (!$object instanceof ObjectInterface) {
             $error = new \RuntimeException("Error $objectClass is not a ObjectInterface");
 

@@ -1,5 +1,9 @@
 #Teknoo Software - Website - Change Log
 
+##[4.1.6] - 2021-02-10
+###Stable Release
+- Can pass arguments to create object with CreateObject
+
 ##[4.1.5] - 2021-02-10
 ###Stable Release
 - Can pass the variable name to store object loaded into workplan

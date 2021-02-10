@@ -62,7 +62,7 @@ class RenderStaticContentEndPoint implements RenderStaticContentEndPointInterfac
         $recipe = $recipe->require(new Ingredient(ServerRequestInterface::class, 'request'));
         $recipe = $recipe->require(new Ingredient('string', 'template'));
 
-        $recipe = $recipe->cook($this->render, Render::class, [], 20);
+        $recipe = $recipe->cook($this->render, Render::class, [], 10);
 
         $recipe = $recipe->onError(new Bowl($this->renderError, []));
 

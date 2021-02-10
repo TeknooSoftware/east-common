@@ -100,7 +100,7 @@ class ListContentEndPoint implements ListContentEndPointInterface
             $recipe = $recipe->cook($this->searchFormLoader, SearchFormLoaderInterface::class, [], 20);
         }
 
-        $recipe = $recipe->cook($this->loadListObjects, LoadListObjects::class, [], 40);
+        $recipe = $recipe->cook($this->loadListObjects, LoadListObjects::class, [], 30);
 
         if (null !== $this->listObjectsAccessControl) {
             $recipe = $recipe->cook(

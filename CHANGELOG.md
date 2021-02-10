@@ -1,5 +1,9 @@
 #Teknoo Software - Website - Change Log
 
+##[4.1.7] - 2021-02-10
+###Stable Release
+- Fix priorities in cookbook
+
 ##[4.1.6] - 2021-02-10
 ###Stable Release
 - Can pass arguments to create object with CreateObject

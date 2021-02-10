@@ -34,10 +34,13 @@ use Teknoo\East\Website\Object\ObjectInterface;
  */
 class CreateObject
 {
+    /**
+     * @param array<int|string, mixed>|mixed $constructorArguments
+     */
     public function __invoke(
         string $objectClass,
         ManagerInterface $manager,
-        ?array $constructorArguments = null
+        $constructorArguments = null
     ): self {
         if (!\class_exists($objectClass)) {
             $error = new \DomainException("Error class $objectClass is not available");
@@ -48,6 +51,10 @@ class CreateObject
         }
 
         if (null !== $constructorArguments) {
+            if (!\is_array($constructorArguments)) {
+                $constructorArguments = [$constructorArguments];
+            }
+
             $object = new $objectClass(...$constructorArguments);
         } else {
             $object = new $objectClass();

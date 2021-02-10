@@ -71,11 +71,11 @@ class RenderDynamicContentEndPoint implements RenderDynamicContentEndPointInterf
     {
         $recipe = $recipe->require(new Ingredient(ServerRequestInterface::class, 'request'));
 
-        $recipe = $recipe->cook($this->extractSlug, ExtractSlug::class, [], 00);
+        $recipe = $recipe->cook($this->extractSlug, ExtractSlug::class, [], 10);
 
-        $recipe = $recipe->cook($this->loadContent, LoadContent::class, [], 10);
+        $recipe = $recipe->cook($this->loadContent, LoadContent::class, [], 20);
 
-        $recipe = $recipe->cook($this->render, Render::class, [], 20);
+        $recipe = $recipe->cook($this->render, Render::class, [], 30);
 
         $recipe = $recipe->onError(new Bowl($this->renderError, []));
 

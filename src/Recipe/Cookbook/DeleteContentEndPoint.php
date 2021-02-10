@@ -80,15 +80,15 @@ class DeleteContentEndPoint implements DeleteContentEndPointInterface
         $recipe = $recipe->require(new Ingredient('string', 'id'));
         $recipe = $recipe->require(new Ingredient('string', 'route'));
 
-        $recipe = $recipe->cook($this->loadObject, LoadObject::class, [], 00);
+        $recipe = $recipe->cook($this->loadObject, LoadObject::class, [], 10);
 
         if (null !== $this->objectAccessControl) {
-            $recipe = $recipe->cook($this->objectAccessControl, ObjectAccessControlInterface::class, [], 05);
+            $recipe = $recipe->cook($this->objectAccessControl, ObjectAccessControlInterface::class, [], 20);
         }
 
-        $recipe = $recipe->cook($this->deleteObject, DeleteObject::class, [], 10);
+        $recipe = $recipe->cook($this->deleteObject, DeleteObject::class, [], 30);
 
-        $recipe = $recipe->cook($this->redirectClient, RedirectClientInterface::class, [], 20);
+        $recipe = $recipe->cook($this->redirectClient, RedirectClientInterface::class, [], 40);
 
         $recipe = $recipe->onError(new Bowl($this->renderError, []));
 

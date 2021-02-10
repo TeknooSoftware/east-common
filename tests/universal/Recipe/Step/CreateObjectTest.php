@@ -107,4 +107,16 @@ class CreateObjectTest extends TestCase
             $this->buildStep()(Type::class, $manager, ['foo', 'bar'])
         );
     }
+
+    public function testInvokeWithSignleArg()
+    {
+        $manager = $this->createMock(ManagerInterface::class);
+        $manager->expects(self::once())->method('updateWorkPlan');
+        $manager->expects(self::never())->method('error');
+
+        self::assertInstanceOf(
+            CreateObject::class,
+            $this->buildStep()(Type::class, $manager, 'foo', 'bar')
+        );
+    }
 }

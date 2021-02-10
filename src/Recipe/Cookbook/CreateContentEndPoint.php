@@ -103,23 +103,23 @@ class CreateContentEndPoint implements CreateContentEndPointInterface
         $recipe = $recipe->require(new Ingredient('array', 'formOptions'));
         $recipe = $recipe->require(new Ingredient('string', 'template'));
 
-        $recipe = $recipe->cook($this->createObject, CreateObject::class, [], 00);
+        $recipe = $recipe->cook($this->createObject, CreateObject::class, [], 10);
 
-        $recipe = $recipe->cook($this->formHandling, FormHandlingInterface::class, [], 10);
+        $recipe = $recipe->cook($this->formHandling, FormHandlingInterface::class, [], 20);
 
-        $recipe = $recipe->cook($this->formProcessing, FormProcessingInterface::class, [], 20);
+        $recipe = $recipe->cook($this->formProcessing, FormProcessingInterface::class, [], 30);
 
-        $recipe = $recipe->cook($this->slugPreparation, SlugPreparation::class, [], 30);
+        $recipe = $recipe->cook($this->slugPreparation, SlugPreparation::class, [], 40);
 
         if (null !== $this->objectAccessControl) {
-            $recipe = $recipe->cook($this->objectAccessControl, ObjectAccessControlInterface::class, [], 05);
+            $recipe = $recipe->cook($this->objectAccessControl, ObjectAccessControlInterface::class, [], 50);
         }
 
-        $recipe = $recipe->cook($this->saveObject, SaveObject::class, [], 40);
+        $recipe = $recipe->cook($this->saveObject, SaveObject::class, [], 60);
 
-        $recipe = $recipe->cook($this->redirectClient, RedirectClientInterface::class, [], 50);
+        $recipe = $recipe->cook($this->redirectClient, RedirectClientInterface::class, [], 70);
 
-        $recipe = $recipe->cook($this->renderForm, RenderFormInterface::class, [], 60);
+        $recipe = $recipe->cook($this->renderForm, RenderFormInterface::class, [], 80);
 
         $recipe = $recipe->onError(new Bowl($this->renderError, []));
 

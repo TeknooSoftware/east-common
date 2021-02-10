@@ -99,21 +99,21 @@ class EditContentEndPoint implements EditContentEndPointInterface
         $recipe = $recipe->require(new Ingredient('array', 'formOptions'));
         $recipe = $recipe->require(new Ingredient('string', 'template'));
 
-        $recipe = $recipe->cook($this->loadObject, LoadObject::class, [], 00);
+        $recipe = $recipe->cook($this->loadObject, LoadObject::class, [], 10);
 
         if (null !== $this->objectAccessControl) {
-            $recipe = $recipe->cook($this->objectAccessControl, ObjectAccessControlInterface::class, [], 05);
+            $recipe = $recipe->cook($this->objectAccessControl, ObjectAccessControlInterface::class, [], 20);
         }
 
-        $recipe = $recipe->cook($this->formHandling, FormHandlingInterface::class, [], 10);
+        $recipe = $recipe->cook($this->formHandling, FormHandlingInterface::class, [], 30);
 
-        $recipe = $recipe->cook($this->formProcessing, FormProcessingInterface::class, [], 20);
+        $recipe = $recipe->cook($this->formProcessing, FormProcessingInterface::class, [], 40);
 
-        $recipe = $recipe->cook($this->slugPreparation, SlugPreparation::class, [], 30);
+        $recipe = $recipe->cook($this->slugPreparation, SlugPreparation::class, [], 50);
 
-        $recipe = $recipe->cook($this->saveObject, SaveObject::class, [], 40);
+        $recipe = $recipe->cook($this->saveObject, SaveObject::class, [], 60);
 
-        $recipe = $recipe->cook($this->renderForm, RenderFormInterface::class, [], 50);
+        $recipe = $recipe->cook($this->renderForm, RenderFormInterface::class, [], 70);
 
         $recipe = $recipe->onError(new Bowl($this->renderError, []));
 

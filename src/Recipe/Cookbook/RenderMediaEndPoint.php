@@ -72,11 +72,11 @@ class RenderMediaEndPoint implements RenderMediaEndPointInterface
         $recipe = $recipe->require(new Ingredient(ServerRequestInterface::class, 'request'));
         $recipe = $recipe->require(new Ingredient('string', 'id'));
 
-        $recipe = $recipe->cook($this->loadMedia, LoadMedia::class, [], 00);
+        $recipe = $recipe->cook($this->loadMedia, LoadMedia::class, [], 10);
 
-        $recipe = $recipe->cook($this->getStreamFromMedia, GetStreamFromMediaInterface::class, [], 10);
+        $recipe = $recipe->cook($this->getStreamFromMedia, GetStreamFromMediaInterface::class, [], 20);
 
-        $recipe = $recipe->cook($this->sendMedia, SendMedia::class, [], 20);
+        $recipe = $recipe->cook($this->sendMedia, SendMedia::class, [], 30);
 
         $recipe = $recipe->onError(new Bowl($this->renderError, []));
 

@@ -87,7 +87,7 @@ trait RepositoryTrait
     ): RepositoryInterface {
         $queryBuilder = $this->repository->createQueryBuilder();
 
-        $queryBuilder->equals($this->convert($criteria));
+        $queryBuilder->equals(static::convert($criteria));
 
         if (!empty($orderBy)) {
             $queryBuilder->sort($orderBy);
@@ -115,7 +115,7 @@ trait RepositoryTrait
     {
         $queryBuilder = $this->repository->createQueryBuilder();
 
-        $queryBuilder->equals($this->convert($criteria));
+        $queryBuilder->equals(static::convert($criteria));
 
         $queryBuilder->count();
 
@@ -132,7 +132,7 @@ trait RepositoryTrait
     public function findOneBy(array $criteria, PromiseInterface $promise): RepositoryInterface
     {
         try {
-            $result = $this->repository->findOneBy($this->convert($criteria));
+            $result = $this->repository->findOneBy(static::convert($criteria));
 
             if (!empty($result)) {
                 $promise->success($result);

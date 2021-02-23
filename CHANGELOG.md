@@ -1,5 +1,10 @@
 #Teknoo Software - Website - Change Log
 
+##[4.2.0] - 2021-02-23
+###Stable Release
+- Add `ExprConversionTrait::addExprMappingConversion` to allow your custom evaluation of expression
+- Add `ObjectReference` expression to filter on reference
+
 ##[4.1.7] - 2021-02-10
 ###Stable Release
 - Fix priorities in cookbook

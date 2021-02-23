@@ -28,8 +28,10 @@ use Doctrine\ODM\MongoDB\Query\Query;
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
+use Teknoo\East\Website\Object\ObjectInterface;
 use Teknoo\East\Website\Query\Expr\In;
 use Teknoo\East\Website\Query\Expr\InclusiveOr;
+use Teknoo\East\Website\Query\Expr\ObjectReference;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -289,6 +291,7 @@ trait RepositoryTestTrait
                     ['foo' => 'bar'],
                     ['bar' => 'foo']
                 ],
+                'hello.$id' => '',
             ])
             ->willReturn($object);
 
@@ -301,7 +304,8 @@ trait RepositoryTestTrait
                     new InclusiveOr(
                         ['foo' => 'bar'],
                         ['bar' => 'foo']
-                    )
+                    ),
+                    'hello' => new ObjectReference($this->createMock(ObjectInterface::class))
                 ],
                 $promise
             )

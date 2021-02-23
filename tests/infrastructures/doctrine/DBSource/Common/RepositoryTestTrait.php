@@ -26,8 +26,11 @@ namespace Teknoo\Tests\East\Website\Doctrine\DBSource\Common;
 use Doctrine\Persistence\ObjectRepository;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
+use Teknoo\East\Website\Object\ObjectInterface;
+use Teknoo\East\Website\Query\Expr\ExprInterface;
 use Teknoo\East\Website\Query\Expr\In;
 use Teknoo\East\Website\Query\Expr\InclusiveOr;
+use Teknoo\East\Website\Query\Expr\ObjectReference;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -254,6 +257,7 @@ trait RepositoryTestTrait
                     ['foo' => 'bar'],
                     ['bar' => 'foo']
                 ],
+                'hello.id' => '',
             ])
             ->willReturn($object);
 
@@ -266,7 +270,69 @@ trait RepositoryTestTrait
                     new InclusiveOr(
                         ['foo' => 'bar'],
                         ['bar' => 'foo']
-                    )
+                    ),
+                    'hello' => new ObjectReference($this->createMock(ObjectInterface::class))
+                ],
+                $promise
+            )
+        );
+    }
+
+    public function testConvertExprWithoutManaged()
+    {
+        $expr = new class implements ExprInterface {
+
+        };
+
+        $promise = $this->createMock(PromiseInterface::class);
+        $promise->expects(self::never())->method('success');
+        $promise->expects(self::once())->method('fail');
+
+        $this->getDoctrineObjectRepositoryMock()
+            ->expects(self::never())
+            ->method('findOneBy');
+
+        self::assertInstanceOf(
+            RepositoryInterface::class,
+            $this->buildRepository()->findOneBy(
+                [
+                    $expr
+                ],
+                $promise
+            )
+        );
+    }
+
+    public function testAddExprMappingConversion()
+    {
+        $expr = $this->createMock(ExprInterface::class);
+
+        $class = \get_class($this->buildRepository());
+        $class::addExprMappingConversion(
+            \get_class($expr),
+            static function (array &$final, string $key, ExprInterface $expr) {
+                $final['foo'] = 'bar';
+            }
+            );
+
+        $object = new \stdClass();
+        $promise = $this->createMock(PromiseInterface::class);
+        $promise->expects(self::once())->method('success')->with($object);
+        $promise->expects(self::never())->method('fail');
+
+        $this->getDoctrineObjectRepositoryMock()
+            ->expects(self::once())
+            ->method('findOneBy')
+            ->with([
+                'foo' => 'bar',
+            ])
+            ->willReturn($object);
+
+        self::assertInstanceOf(
+            RepositoryInterface::class,
+            $this->buildRepository()->findOneBy(
+                [
+                    $expr
                 ],
                 $promise
             )

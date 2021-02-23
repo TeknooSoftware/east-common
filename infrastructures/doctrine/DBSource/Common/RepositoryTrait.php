@@ -101,7 +101,7 @@ trait RepositoryTrait
     public function findOneBy(array $criteria, PromiseInterface $promise): RepositoryInterface
     {
         try {
-            $result = $this->repository->findOneBy($this->convert($criteria));
+            $result = $this->repository->findOneBy(static::convert($criteria));
 
             if (!empty($result)) {
                 $promise->success($result);

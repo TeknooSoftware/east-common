@@ -28,6 +28,7 @@ namespace Teknoo\East\Website\Doctrine\DBSource\Common;
 use Teknoo\East\Website\Query\Expr\ExprInterface;
 use Teknoo\East\Website\Query\Expr\In;
 use Teknoo\East\Website\Query\Expr\InclusiveOr;
+use Teknoo\East\Website\Query\Expr\ObjectReference;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -35,7 +36,46 @@ use Teknoo\East\Website\Query\Expr\InclusiveOr;
  */
 trait ExprConversionTrait
 {
-    private function convert(array &$values): array
+    /**
+     * @var array<string, callable>
+     */
+    private static $exprMappings = [
+        In::class => [self::class, 'processInExpr'],
+        InclusiveOr::class => [self::class, 'processInclusiveOrExpr'],
+        ObjectReference::class => [self::class, 'processObjectReferenceExpr'],
+    ];
+
+    public static function addExprMappingConversion(string $exprClass, callable $conversionFunction): void
+    {
+        static::$exprMappings[$exprClass] = $conversionFunction;
+    }
+
+    /**
+     * @param In $expr
+     */
+    private static function processInExpr(array &$final, string $key, ExprInterface $expr): void
+    {
+        $final[$key] = $expr->getValues();
+    }
+
+    /**
+     * @param InclusiveOr $expr
+     */
+    private static function processInclusiveOrExpr(array &$final, string $key, ExprInterface $expr): void
+    {
+        $orValues = $expr->getValues();
+        $final['or'] = static::convert($orValues);
+    }
+
+    /**
+     * @param ObjectReference $expr
+     */
+    private static function processObjectReferenceExpr(array &$final, string $key, ExprInterface $expr): void
+    {
+        $final[$key . '.id'] = (string) $expr->getObject()->getId();
+    }
+
+    private static function convert(array &$values): array
     {
         $final = [];
         foreach ($values as $key => $value) {
@@ -45,16 +85,13 @@ trait ExprConversionTrait
                 continue;
             }
 
-            if ($value instanceof In) {
-                $final[$key] = $value->getValues();
+            $exprClass = \get_class($value);
+            if (!isset(static::$exprMappings[$exprClass])) {
+                throw new \RuntimeException("$exprClass is not managed by this repository");
             }
 
-            if ($value instanceof InclusiveOr) {
-                $orValues = $value->getValues();
-                $final['or'] = $this->convert($orValues);
-
-                continue;
-            }
+            $callable = static::$exprMappings[$exprClass];
+            $callable($final, (string) $key, $value);
         }
 
         return $final;

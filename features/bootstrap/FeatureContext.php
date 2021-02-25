@@ -14,6 +14,7 @@ use Laminas\Diactoros\StreamFactory;
 use Laminas\Diactoros\UploadedFileFactory;
 use Laminas\Diactoros\ResponseFactory;
 use PHPUnit\Framework\Assert;
+use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -31,7 +32,7 @@ use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Manager\Manager;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
-use Teknoo\East\Foundation\Recipe\RecipeCookbookInterface;
+use Teknoo\East\Foundation\Recipe\CookbookInterface;
 use Teknoo\East\Foundation\Router\Result;
 use Teknoo\East\Foundation\Router\RouterInterface;
 use Teknoo\East\Foundation\Middleware\MiddlewareInterface;
@@ -493,9 +494,13 @@ class FeatureContext implements Context
              */
             public function execute(
                 ClientInterface $client,
-                ServerRequestInterface $request,
+                MessageInterface $request,
                 ManagerInterface $manager
             ): MiddlewareInterface {
+                if (!$request instanceof ServerRequestInterface) {
+                    return $this;
+                }
+
                 $path = $request->getUri()->getPath();
 
                 foreach ($this->routes as $route => $endpoint) {
@@ -619,7 +624,7 @@ class FeatureContext implements Context
 
     private function buildManager(ServerRequest $request): Manager
     {
-        $manager = new Manager($this->container->get(RecipeCookbookInterface::class));
+        $manager = new Manager($this->container->get(CookbookInterface::class));
 
         $this->response = null;
         $this->error = null;

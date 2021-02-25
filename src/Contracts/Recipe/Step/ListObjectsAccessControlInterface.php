@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Contracts\Recipe\Step;
 
-use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\MessageInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 
 /**
@@ -36,7 +36,7 @@ interface ListObjectsAccessControlInterface
 {
     public function __invoke(
         ManagerInterface $manager,
-        ServerRequestInterface $request,
+        MessageInterface $message,
         iterable $objectsCollection
     ): ListObjectsAccessControlInterface;
 }

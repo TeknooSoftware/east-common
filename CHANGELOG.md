@@ -1,5 +1,10 @@
 #Teknoo Software - Website - Change Log
 
+##[4.3.1] - 2021-02-25
+###Stable Release
+- Replace ServerRequestInterface to MessageInterface for ListObjectAccessControlInterface and ObjectAccessControlInterface
+- Switch Render steps to MessageInterface
+
 ##[4.3.0] - 2021-02-25
 ###Stable Release
 - Switch to East Foundation 4.0

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Recipe\Step;
 
+use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -52,12 +53,15 @@ class RenderError
     }
 
     public function __invoke(
-        ServerRequestInterface $request,
+        MessageInterface $message,
         ClientInterface $client,
         string $errorTemplate,
         \Throwable $error
     ): self {
-        $viewParameters = $request->getAttribute(ViewParameterInterface::REQUEST_PARAMETER_KEY, []);
+        $viewParameters = [];
+        if ($message instanceof ServerRequestInterface) {
+            $viewParameters = $message->getAttribute(ViewParameterInterface::REQUEST_PARAMETER_KEY, []);
+        }
         $viewParameters = \array_merge($viewParameters, ['error' => $error]);
 
         $errorCode = $error->getCode();

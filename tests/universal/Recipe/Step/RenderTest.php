@@ -25,6 +25,7 @@ namespace Teknoo\Tests\East\Website\Recipe\Step;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -184,6 +185,51 @@ class RenderTest extends TestCase
             Render::class,
             $this->buildStep()(
                 $request,
+                $client,
+                'foo',
+                'bar',
+                $this->createMock(ObjectInterface::class)
+            )
+        );
+    }
+
+    public function testInvokeWithMessage()
+    {
+        $message = $this->createMock(MessageInterface::class);
+
+        $client = $this->createMock(ClientInterface::class);
+        $client->expects(self::once())->method('acceptResponse');
+
+        $response = $this->createMock(ResponseInterface::class);
+        $response->expects(self::any())->method('withHeader')->willReturnSelf();
+        $response->expects(self::any())->method('withBody')->willReturnSelf();
+        $this->getResponseFactory()
+            ->expects(self::any())
+            ->method('createResponse')
+            ->willReturn($response);
+
+        $this->getStreamFactory()
+            ->expects(self::any())
+            ->method('createStream')
+            ->willReturn($this->createMock(StreamInterface::class));
+
+        $this->getEngine()
+            ->expects(self::any())
+            ->method('render')
+            ->willReturnCallback(
+                function (PromiseInterface $promise) {
+                    $promise->success(
+                        $this->createMock(ResultInterface::class)
+                    );
+
+                    return $this->getEngine();
+                }
+            );
+
+        self::assertInstanceOf(
+            Render::class,
+            $this->buildStep()(
+                $message,
                 $client,
                 'foo',
                 'bar',

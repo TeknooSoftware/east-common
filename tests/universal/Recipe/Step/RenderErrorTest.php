@@ -25,6 +25,7 @@ namespace Teknoo\Tests\East\Website\Recipe\Step;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -184,6 +185,55 @@ class RenderErrorTest extends TestCase
             RenderError::class,
             $this->buildStep()(
                 $request,
+                $client,
+                $template,
+                $error
+            )
+        );
+    }
+
+    public function testInvokeWithMessage()
+    {
+        $message = $this->createMock(MessageInterface::class);
+
+        $client = $this->createMock(ClientInterface::class);
+        $template = 'foo';
+        $error = new \Exception('foo');
+
+        $client->expects(self::once())
+            ->method('errorInRequest')
+            ->with($error, true);
+
+        $response = $this->createMock(ResponseInterface::class);
+        $response->expects(self::any())->method('withHeader')->willReturnSelf();
+        $response->expects(self::any())->method('withBody')->willReturnSelf();
+        $this->getResponseFactory()
+            ->expects(self::any())
+            ->method('createResponse')
+            ->willReturn($response);
+
+        $this->getStreamFactory()
+            ->expects(self::any())
+            ->method('createStream')
+            ->willReturn($this->createMock(StreamInterface::class));
+
+        $this->getEngine()
+            ->expects(self::any())
+            ->method('render')
+            ->willReturnCallback(
+                function (PromiseInterface $promise) {
+                    $promise->success(
+                        $this->createMock(ResultInterface::class)
+                    );
+
+                    return $this->getEngine();
+                }
+            );
+
+        self::assertInstanceOf(
+            RenderError::class,
+            $this->buildStep()(
+                $message,
                 $client,
                 $template,
                 $error

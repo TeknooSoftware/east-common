@@ -23,6 +23,7 @@
 
 namespace Teknoo\Tests\East\Website\Middleware;
 
+use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Foundation\Http\ClientInterface;
@@ -94,6 +95,34 @@ class LocaleMiddlewareTest extends TestCase
             $this->createMock(ClientInterface::class),
             $this->createMock(ServerRequestInterface::class),
             new \stdClass()
+        );
+    }
+
+    public function testWithMessage()
+    {
+        $client = $this->createMock(ClientInterface::class);
+
+        $message = $this->createMock(MessageInterface::class);
+
+        $manager = $this->createMock(ManagerInterface::class);
+
+        $this->getTranslatableSetter()
+            ->expects(self::once())
+            ->method('__invoke')
+            ->with('en');
+
+        $sessionMiddleware = $this->createMock(SessionInterface::class);
+        $sessionMiddleware->expects(self::any())
+            ->method('get')
+            ->willReturnCallback(function ($key, PromiseInterface $promise) use ($sessionMiddleware) {
+                $promise->fail(new \DomainException());
+
+                return $sessionMiddleware;
+            });
+
+        self::assertInstanceOf(
+            LocaleMiddleware::class,
+            $this->buildMiddleware('en')->execute($client, $message, $manager)
         );
     }
 

@@ -1,5 +1,9 @@
 #Teknoo Software - Website - Change Log
 
+##[4.3.0] - 2021-02-25
+###Stable Release
+- Switch to East Foundation 4.0
+
 ##[4.2.0] - 2021-02-23
 ###Stable Release
 - Add `ExprConversionTrait::addExprMappingConversion` to allow your custom evaluation of expression

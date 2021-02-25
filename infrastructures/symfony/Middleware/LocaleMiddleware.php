@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\WebsiteBundle\Middleware;
 
+use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
@@ -51,10 +52,14 @@ class LocaleMiddleware implements MiddlewareInterface
      */
     public function execute(
         ClientInterface $client,
-        ServerRequestInterface $request,
+        MessageInterface $message,
         ManagerInterface $manager
     ): MiddlewareInterface {
-        $locale = $request->getAttribute('locale', null);
+        if (!$message instanceof ServerRequestInterface) {
+            return $this;
+        }
+
+        $locale = $message->getAttribute('locale', null);
 
         if (!empty($locale)) {
             $this->translator->setLocale($locale);

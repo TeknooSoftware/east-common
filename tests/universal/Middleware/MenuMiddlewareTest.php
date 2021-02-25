@@ -23,6 +23,7 @@
 
 namespace Teknoo\Tests\East\Website\Middleware;
 
+use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Foundation\Http\ClientInterface;
@@ -120,6 +121,19 @@ class MenuMiddlewareTest extends TestCase
         self::assertInstanceOf(
             MenuMiddleware::class,
             $this->buildMiddleware()->execute($client, $serverRequest, $manager)
+        );
+    }
+
+    public function testExecuteWithMessage()
+    {
+        $message = $this->createMock(MessageInterface::class);
+
+        $client = $this->createMock(ClientInterface::class);
+
+        $manager = $this->createMock(ManagerInterface::class);
+        self::assertInstanceOf(
+            MenuMiddleware::class,
+            $this->buildMiddleware()->execute($client, $message, $manager)
         );
     }
 }

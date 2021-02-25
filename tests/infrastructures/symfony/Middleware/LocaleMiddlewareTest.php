@@ -24,6 +24,7 @@
 namespace Teknoo\Tests\East\WebsiteBundle\Middleware;
 
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
@@ -104,6 +105,24 @@ class LocaleMiddlewareTest extends TestCase
             $this->buildMiddleware()->execute(
                 $this->createMock(ClientInterface::class),
                 $serverRequest,
+                $this->createMock(ManagerInterface::class)
+            )
+        );
+    }
+
+    public function testWithMessage()
+    {
+        $message = $this->createMock(MessageInterface::class);
+
+        $this->getTranslator()
+            ->expects(self::never())
+            ->method('setLocale');
+
+        self::assertInstanceOf(
+            LocaleMiddleware::class,
+            $this->buildMiddleware()->execute(
+                $this->createMock(ClientInterface::class),
+                $message,
                 $this->createMock(ManagerInterface::class)
             )
         );

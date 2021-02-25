@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Middleware;
 
+use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
@@ -113,24 +114,32 @@ class LocaleMiddleware implements MiddlewareInterface
      */
     public function execute(
         ClientInterface $client,
-        ServerRequestInterface $request,
+        MessageInterface $message,
         ManagerInterface $manager
     ): MiddlewareInterface {
-        $queryParams = $request->getQueryParams();
+        if (!$message instanceof ServerRequestInterface) {
+            if (\is_callable($this->translatableSetter)) {
+                ($this->translatableSetter)($this->defaultLocale);
+            }
+
+            return $this;
+        }
+
+        $queryParams = $message->getQueryParams();
         if (isset($queryParams['locale'])) {
             $locale = $queryParams['locale'];
             if (\is_callable($this->translatableSetter)) {
                 ($this->translatableSetter)($locale);
             }
-            $this->registerLocaleInSession($request, $locale);
-            $request = $request->withAttribute('locale', $locale);
+            $this->registerLocaleInSession($message, $locale);
+            $message = $message->withAttribute('locale', $locale);
         } else {
-            $locale = $this->getLocaleFromSession($request);
+            $locale = $this->getLocaleFromSession($message);
         }
 
-        $request = $this->updateViewParameters($locale, $request);
+        $message = $this->updateViewParameters($locale, $message);
 
-        $manager->continueExecution($client, $request);
+        $manager->continueExecution($client, $message);
 
         return $this;
     }

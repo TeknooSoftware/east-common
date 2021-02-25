@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Middleware;
 
+use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
@@ -57,13 +58,17 @@ class MenuMiddleware implements ViewParameterInterface
      */
     public function execute(
         ClientInterface $client,
-        ServerRequestInterface $request,
+        MessageInterface $message,
         ManagerInterface $manager
     ): MiddlewareInterface {
-        $parameters = $this->getViewParameters($request);
+        if (!$message instanceof ServerRequestInterface) {
+            return $this;
+        }
+
+        $parameters = $this->getViewParameters($message);
         $parameters['menuGenerator'] = $this->menuGenerator;
 
-        $request = $request->withAttribute(self::REQUEST_PARAMETER_KEY, $parameters);
+        $request = $message->withAttribute(self::REQUEST_PARAMETER_KEY, $parameters);
 
         $manager->continueExecution($client, $request);
 

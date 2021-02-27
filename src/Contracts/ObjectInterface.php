@@ -1,6 +1,7 @@
 <?php
 
 /*
+/*
  * East Website.
  *
  * LICENSE
@@ -23,23 +24,13 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Contracts\Recipe\Step;
-
-use Psr\Http\Message\ServerRequestInterface;
-use Teknoo\East\Foundation\Manager\ManagerInterface;
-use Teknoo\East\Website\Contracts\ObjectInterface;
+namespace Teknoo\East\Website\Contracts;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-interface FormHandlingInterface
+interface ObjectInterface
 {
-    public function __invoke(
-        ServerRequestInterface $request,
-        ManagerInterface $manager,
-        string $formClass,
-        array $formOptions,
-        ObjectInterface $object
-    ): FormHandlingInterface;
+
 }

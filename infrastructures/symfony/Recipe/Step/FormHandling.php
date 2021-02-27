@@ -30,7 +30,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\FormHandlingInterface;
-use Teknoo\East\Website\Object\ObjectInterface;
+use Teknoo\East\Website\Contracts\ObjectInterface;
 use Teknoo\East\Website\Object\PublishableInterface;
 use Teknoo\East\Website\Service\DatesService;
 

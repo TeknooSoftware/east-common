@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Recipe\Step;
 
 use Teknoo\East\Foundation\Manager\ManagerInterface;
-use Teknoo\East\Website\Object\ObjectInterface;
+use Teknoo\East\Website\Contracts\ObjectInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License

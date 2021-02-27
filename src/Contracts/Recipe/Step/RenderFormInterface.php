@@ -28,7 +28,7 @@ namespace Teknoo\East\Website\Contracts\Recipe\Step;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Form\FormInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
-use Teknoo\East\Website\Object\ObjectInterface;
+use Teknoo\East\Website\Contracts\ObjectInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License

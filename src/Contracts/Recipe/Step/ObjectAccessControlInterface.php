@@ -27,7 +27,7 @@ namespace Teknoo\East\Website\Contracts\Recipe\Step;
 
 use Psr\Http\Message\MessageInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
-use Teknoo\East\Website\Object\ObjectInterface;
+use Teknoo\East\Website\Contracts\ObjectInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License

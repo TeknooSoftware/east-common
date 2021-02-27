@@ -33,7 +33,7 @@ use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\RenderFormInterface;
 use Teknoo\East\Website\Middleware\ViewParameterInterface;
-use Teknoo\East\Website\Object\ObjectInterface;
+use Teknoo\East\Website\Contracts\ObjectInterface;
 use Teknoo\East\Website\Recipe\Step\Traits\TemplateTrait;
 
 /**

@@ -1,5 +1,11 @@
 #Teknoo Software - Website - Change Log
 
+##[4.3.2] - 2021-02-27
+###Stable Release
+- Create `Teknoo\East\Website\Contracts\ObjectInterface`, `Teknoo\East\Website\Object\ObjectInterface` extends it
+  dedicated to non persisted object, manipulable by other components
+- Update steps and forms interface to use this new interface
+
 ##[4.3.1] - 2021-02-25
 ###Stable Release
 - Replace ServerRequestInterface to MessageInterface for ListObjectAccessControlInterface and ObjectAccessControlInterface

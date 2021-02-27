@@ -26,11 +26,13 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Object;
 
+use Teknoo\East\Website\Contracts\ObjectInterface as BaseInterface;
+
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-interface ObjectInterface
+interface ObjectInterface extends BaseInterface
 {
     /**
      * Unique Identifier about the object

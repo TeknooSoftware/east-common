@@ -1,120 +1,120 @@
 parameters:
-  #Admin form types
-  teknoo.east.website.form_type.doctrine.class: 'Doctrine\Bundle\MongoDBBundle\Form\Type\DocumentType'
+    #Admin form types
+    teknoo.east.website.form_type.doctrine.class: 'Doctrine\Bundle\MongoDBBundle\Form\Type\DocumentType'
 
-  #Provider
-  teknoo.east.website.bundle.user_provider.class: 'Teknoo\East\WebsiteBundle\Provider\UserProvider'
+    #Provider
+    teknoo.east.website.bundle.user_provider.class: 'Teknoo\East\WebsiteBundle\Provider\UserProvider'
 
-  #Command
-  teknoo.east.website.bundle.command.create_user.class: 'Teknoo\East\WebsiteBundle\Command\CreateUserCommand'
+    #Command
+    teknoo.east.website.bundle.command.create_user.class: 'Teknoo\East\WebsiteBundle\Command\CreateUserCommand'
 
-  #Writer
-  teknoo.east.website.bundle.writer.user.class: 'Teknoo\East\WebsiteBundle\Writer\UserWriter'
+    #Writer
+    teknoo.east.website.bundle.writer.user.class: 'Teknoo\East\WebsiteBundle\Writer\UserWriter'
 
-  #Steps
-  teknoo.east.website.bundle.allowed_forms: []
+    #Steps
+    teknoo.east.website.bundle.allowed_forms: []
 
 services:
-  #Front endpoints
-  teknoo.east.website.endpoint.content:
-    class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
-    public: true
-    arguments:
-      - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\RenderDynamicContentEndPointInterface'
-      - '@service_container'
+    #Front endpoints
+    teknoo.east.website.endpoint.content:
+        class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
+        public: true
+        arguments:
+            - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\RenderDynamicContentEndPointInterface'
+            - '@service_container'
 
-  teknoo.east.website.endpoint.media:
-    class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
-    public: true
-    arguments:
-      - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\RenderMediaEndPointInterface'
-      - '@service_container'
+    teknoo.east.website.endpoint.media:
+        class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
+        public: true
+        arguments:
+            - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\RenderMediaEndPointInterface'
+            - '@service_container'
 
-  teknoo.east.website.endpoint.static:
-    class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
-    public: true
-    arguments:
-      - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\RenderStaticContentEndPointInterface'
-      - '@service_container'
+    teknoo.east.website.endpoint.static:
+        class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
+        public: true
+        arguments:
+            - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\RenderStaticContentEndPointInterface'
+            - '@service_container'
 
-  #CRUD endpoints
-  teknoo.east.website.endpoint.crud.delete:
-    class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
-    public: true
-    arguments:
-      - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\DeleteContentEndPointInterface'
-      - '@service_container'
+    #CRUD endpoints
+    teknoo.east.website.endpoint.crud.delete:
+        class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
+        public: true
+        arguments:
+            - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\DeleteContentEndPointInterface'
+            - '@service_container'
 
-  teknoo.east.website.endpoint.crud.edit:
-    class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
-    public: true
-    arguments:
-      - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\EditContentEndPointInterface'
-      - '@service_container'
+    teknoo.east.website.endpoint.crud.edit:
+        class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
+        public: true
+        arguments:
+            - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\EditContentEndPointInterface'
+            - '@service_container'
 
-  teknoo.east.website.endpoint.crud.list:
-    class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
-    public: true
-    arguments:
-      - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\ListContentEndPointInterface'
-      - '@service_container'
-      - { criteria: [] }
+    teknoo.east.website.endpoint.crud.list:
+        class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
+        public: true
+        arguments:
+            - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\ListContentEndPointInterface'
+            - '@service_container'
+            - { criteria: [] }
 
-  teknoo.east.website.endpoint.crud.new:
-    class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
-    public: true
-    arguments:
-      - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\CreateContentEndPointInterface'
-      - '@service_container'
+    teknoo.east.website.endpoint.crud.new:
+        class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
+        public: true
+        arguments:
+            - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\CreateContentEndPointInterface'
+            - '@service_container'
 
-  #Steps
-  Teknoo\East\WebsiteBundle\Recipe\Step\SearchFormLoader:
-    class: 'Teknoo\East\WebsiteBundle\Recipe\Step\SearchFormLoader'
-    arguments:
-      - '@form.factory'
-      - '%teknoo.east.website.bundle.allowed_forms%'
-    public: true
+    #Steps
+    Teknoo\East\WebsiteBundle\Recipe\Step\SearchFormLoader:
+        class: 'Teknoo\East\WebsiteBundle\Recipe\Step\SearchFormLoader'
+        arguments:
+            - '@form.factory'
+            - '%teknoo.east.website.bundle.allowed_forms%'
+        public: true
 
-  Teknoo\East\WebsiteBundle\Recipe\Step\FormHandling:
-    class: 'Teknoo\East\WebsiteBundle\Recipe\Step\FormHandling'
-    arguments:
-      - '@Teknoo\East\Website\Service\DatesService'
-      - '@form.factory'
-    public: true
+    Teknoo\East\WebsiteBundle\Recipe\Step\FormHandling:
+        class: 'Teknoo\East\WebsiteBundle\Recipe\Step\FormHandling'
+        arguments:
+            - '@Teknoo\East\Website\Service\DatesService'
+            - '@form.factory'
+        public: true
 
-  Teknoo\East\WebsiteBundle\Recipe\Step\RedirectClient:
-    class: 'Teknoo\East\WebsiteBundle\Recipe\Step\RedirectClient'
-    arguments:
-      - '@Psr\Http\Message\ResponseFactoryInterface'
-      - '@router'
-    public: true
+    Teknoo\East\WebsiteBundle\Recipe\Step\RedirectClient:
+        class: 'Teknoo\East\WebsiteBundle\Recipe\Step\RedirectClient'
+        arguments:
+            - '@Psr\Http\Message\ResponseFactoryInterface'
+            - '@router'
+        public: true
 
-  #Provider
-  teknoo.east.website.bundle.user_provider:
-    alias: 'Teknoo\East\WebsiteBundle\Provider\UserProvider'
+    #Provider
+    teknoo.east.website.bundle.user_provider:
+        alias: 'Teknoo\East\WebsiteBundle\Provider\UserProvider'
 
-  #Command
-  teknoo.east.website.bundle.command.create_user:
-    alias: 'Teknoo\East\WebsiteBundle\Command\CreateUserCommand'
+    #Command
+    teknoo.east.website.bundle.command.create_user:
+        alias: 'Teknoo\East\WebsiteBundle\Command\CreateUserCommand'
 
-  Teknoo\East\WebsiteBundle\Command\CreateUserCommand:
-    class: '%teknoo.east.website.bundle.command.create_user.class%'
-    arguments:
-      - '@Teknoo\East\Website\Writer\UserWriter'
-      - '@Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface'
-    tags:
-      - { name: console.command }
-    public: false
+    Teknoo\East\WebsiteBundle\Command\CreateUserCommand:
+        class: '%teknoo.east.website.bundle.command.create_user.class%'
+        arguments:
+            - '@Teknoo\East\Website\Writer\UserWriter'
+            - '@Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface'
+        tags:
+            - { name: console.command }
+        public: false
 
-  #Writer
-  teknoo.east.website.bundle.writer.user:
-    alias: 'Teknoo\East\WebsiteBundle\Writer\UserWriter'
-    public: true
+    #Writer
+    teknoo.east.website.bundle.writer.user:
+        alias: 'Teknoo\East\WebsiteBundle\Writer\UserWriter'
+        public: true
 
-  Teknoo\East\WebsiteBundle\Writer\UserWriter:
-    class: '%teknoo.east.website.bundle.writer.user.class%'
-    arguments:
-      - '@Teknoo\East\Website\Writer\UserWriter'
-      - '@Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface'
-    public: false
+    Teknoo\East\WebsiteBundle\Writer\UserWriter:
+        class: '%teknoo.east.website.bundle.writer.user.class%'
+        arguments:
+            - '@Teknoo\East\Website\Writer\UserWriter'
+            - '@Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface'
+        public: false
 

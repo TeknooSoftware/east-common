@@ -589,7 +589,7 @@ class FeatureContext implements Context
             /**
              * @inheritDoc
              */
-            public function acceptResponse(ResponseInterface $response): ClientInterface
+            public function acceptResponse(MessageInterface $response): ClientInterface
             {
                 $this->context->response = $response;
 
@@ -599,7 +599,7 @@ class FeatureContext implements Context
             /**
              * @inheritDoc
              */
-            public function sendResponse(ResponseInterface $response = null, bool $silently = false): ClientInterface
+            public function sendResponse(MessageInterface $response = null, bool $silently = false): ClientInterface
             {
                 if (!empty($response)) {
                     $this->context->response = $response;

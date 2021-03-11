@@ -41,7 +41,7 @@
         "ext-json": "*",
         "php-di/php-di": "~6.3",
         "teknoo/immutable": "^2.0.6",
-        "teknoo/east-foundation": "^4.0.0",
+        "teknoo/east-foundation": "^4.1.0",
         "teknoo/recipe": "^2.4.0",
         "teknoo/states": "^4.1.9"
     },

@@ -3,6 +3,7 @@
 ##[4.3.4] - 2021-03-11
 ###Stable Release
 - Support East Foundation 4.1
+- Remove some public services
 
 ##[4.3.3] - 2021-03-09
 ###Stable Release

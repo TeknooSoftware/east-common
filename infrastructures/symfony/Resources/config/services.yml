@@ -109,12 +109,10 @@ services:
     #Writer
     teknoo.east.website.bundle.writer.user:
         alias: 'Teknoo\East\WebsiteBundle\Writer\UserWriter'
-        public: true
 
     Teknoo\East\WebsiteBundle\Writer\UserWriter:
         class: '%teknoo.east.website.bundle.writer.user.class%'
         arguments:
             - '@Teknoo\East\Website\Writer\UserWriter'
             - '@Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface'
-        public: false
 

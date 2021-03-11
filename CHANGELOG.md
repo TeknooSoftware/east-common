@@ -1,8 +1,12 @@
 #Teknoo Software - Website - Change Log
 
-##[4.3.3] - 2021-03-11
+##[4.3.4] - 2021-03-11
 ###Stable Release
 - Support East Foundation 4.1
+
+##[4.3.3] - 2021-03-09
+###Stable Release
+- Clean symfony yaml indentations
 
 ##[4.3.2] - 2021-02-27
 ###Stable Release

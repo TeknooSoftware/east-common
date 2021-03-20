@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license and the version 3 of the GPL3
+ * This source file is subject to the MIT license
  * license that are bundled with this package in the folder licences
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -28,9 +28,10 @@ namespace Teknoo\East\WebsiteBundle\Recipe\Step;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
-use Teknoo\East\Website\Contracts\Form\SearchFormInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\SearchFormLoaderInterface;
-use Teknoo\East\Website\Middleware\ViewParameterInterface;
+
+use function is_array;
+use function key;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -62,7 +63,7 @@ class SearchFormLoader implements SearchFormLoaderInterface
         string $template
     ): SearchFormLoader {
         $params = $request->getParsedBody();
-        if (!\is_array($params)) {
+        if (!is_array($params)) {
             return $this;
         }
 
@@ -71,7 +72,7 @@ class SearchFormLoader implements SearchFormLoaderInterface
             return $this;
         }
 
-        $formName = \key($params);
+        $formName = key($params);
 
         if (
             !isset($instances[$template][$formName])

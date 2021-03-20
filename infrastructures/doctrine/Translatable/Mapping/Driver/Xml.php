@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license and the version 3 of the GPL3
+ * This source file is subject to the MIT license
  * license that are bundled with this package in the folder licences
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -29,9 +29,15 @@ namespace Teknoo\East\Website\Doctrine\Translatable\Mapping\Driver;
 
 use Doctrine\Persistence\Mapping\Driver\FileLocator;
 use Doctrine\Persistence\Mapping\ClassMetadata;
+use RuntimeException;
+use SimpleXMLElement;
 use Teknoo\East\Website\Doctrine\Object\Translation;
 use Teknoo\East\Website\Doctrine\Translatable\Mapping\DriverInterface;
 use Teknoo\East\Website\Doctrine\Exception\InvalidMappingException;
+
+use function class_exists;
+use function file_exists;
+use function str_replace;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -55,33 +61,33 @@ class Xml implements DriverInterface
         $this->simpleXmlFactory = $simpleXmlFactory;
     }
 
-    private function getMapping(string $className): ?\SimpleXMLElement
+    private function getMapping(string $className): ?SimpleXMLElement
     {
         $file = (string) $this->locator->findMappingFile($className);
-        $file = \str_replace('.xml', '.translate.xml', $file);
+        $file = str_replace('.xml', '.translate.xml', $file);
 
-        if (!\file_exists($file)) {
+        if (!file_exists($file)) {
             return null;
         }
 
         return $this->loadMappingFile($file);
     }
 
-    private function loadMappingFile(string $file): \SimpleXMLElement
+    private function loadMappingFile(string $file): SimpleXMLElement
     {
         $result = null;
         $xmlElement = ($this->simpleXmlFactory)($file);
         $xmlElement = $xmlElement->children(self::DOCTRINE_NAMESPACE_URI);
 
         if (!isset($xmlElement->object)) {
-            throw new \RuntimeException('error');
+            throw new RuntimeException('error');
         }
 
         return $xmlElement->object;
     }
 
     private function inspectElementsForTranslatableFields(
-        \SimpleXMLElement $xml,
+        SimpleXMLElement $xml,
         array &$config
     ): void {
         $config['fields'] = [];
@@ -110,7 +116,7 @@ class Xml implements DriverInterface
 
         $config['translationClass'] = (string) ($xml->attributes()['translation-class'] ?? Translation::class);
 
-        if (!\class_exists($config['translationClass'])) {
+        if (!class_exists($config['translationClass'])) {
             throw new InvalidMappingException(
                 "Translation entity class: {$config['translationClass']} does not exist."
             );

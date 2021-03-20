@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license and the version 3 of the GPL3
+ * This source file is subject to the MIT license
  * license that are bundled with this package in the folder licences
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -29,10 +29,13 @@ use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Mapping\ClassMetadata;
 use Doctrine\ODM\MongoDB\UnitOfWork;
 use Doctrine\Persistence\Mapping\ClassMetadata as BaseClassMetadata;
+use RuntimeException;
 use Teknoo\East\Website\DBSource\ManagerInterface;
 use Teknoo\East\Website\Doctrine\Translatable\ObjectManager\AdapterInterface;
 use Teknoo\East\Website\Doctrine\Translatable\TranslatableListener;
 use Teknoo\East\Website\Object\TranslatableInterface;
+
+use function spl_object_hash;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -52,14 +55,14 @@ class ODM implements AdapterInterface
         $this->doctrineManager = $doctrineManager;
     }
 
-    public function persist($object): ManagerInterface
+    public function persist(object $object): ManagerInterface
     {
         $this->eastManager->persist($object);
 
         return $this;
     }
 
-    public function remove($object): ManagerInterface
+    public function remove(object $object): ManagerInterface
     {
         $this->eastManager->remove($object);
 
@@ -108,11 +111,11 @@ class ODM implements AdapterInterface
         TranslatableInterface $object
     ): AdapterInterface {
         if (!$metadata instanceof ClassMetadata) {
-            throw new \RuntimeException("Error this classMetada is not compatible with the document manager");
+            throw new RuntimeException("Error this classMetada is not compatible with the document manager");
         }
 
         $uow = $this->getUnitOfWork();
-        $uow->clearDocumentChangeSet(\spl_object_hash($object));
+        $uow->clearDocumentChangeSet(spl_object_hash($object));
         $uow->recomputeSingleDocumentChangeSet($metadata, $object);
 
         return $this;
@@ -145,10 +148,7 @@ class ODM implements AdapterInterface
         return $this;
     }
 
-    /**
-     * @param mixed $value
-     */
-    public function setOriginalObjectProperty(string $oid, string $property, $value): AdapterInterface
+    public function setOriginalObjectProperty(string $oid, string $property, mixed $value): AdapterInterface
     {
         $this->getUnitOfWork()->setOriginalDocumentProperty($oid, $property, $value);
 

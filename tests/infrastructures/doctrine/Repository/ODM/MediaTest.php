@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license and the version 3 of the GPL3
+ * This source file is subject to the MIT license
  * license that are bundled with this package in the folder licences
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -100,10 +100,6 @@ class MediaTest extends TestCase
 
     public function testOpenDownloadStreamWithLegacyId()
     {
-        if (!\class_exists(ObjectId::class)) {
-            $this->markTestSkipped('Mongodb is not available');
-        }
-
         $id = 'IEdJQ4vbUO7UNyrlmjIZUoQWCW99TYPq';
         $bucket = $this->createMock(Bucket::class);
         $bucket->expects(self::any())
@@ -128,10 +124,6 @@ class MediaTest extends TestCase
 
     public function testOpenDownloadStreamWithObjectId()
     {
-        if (!\class_exists(ObjectId::class)) {
-            $this->markTestSkipped('Mongodb is not available');
-        }
-
         $id = '5f0f4a76c0918d70c7759a52';
         $bucket = $this->createMock(Bucket::class);
         $bucket->expects(self::any())

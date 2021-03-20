@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license and the version 3 of the GPL3
+ * This source file is subject to the MIT license
  * license that are bundled with this package in the folder licences
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -30,13 +30,19 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Doctrine\Persistence\Event\LoadClassMetadataEventArgs;
 use Doctrine\Persistence\Mapping\ClassMetadata;
+use DomainException;
 use ProxyManager\Proxy\GhostObjectInterface;
+use RuntimeException;
 use Teknoo\East\Website\Doctrine\Translatable\ObjectManager\AdapterInterface as ManagerAdapterInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Persistence\AdapterInterface as PersistenceAdapterInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Mapping\ExtensionMetadataFactory;
 use Teknoo\East\Website\Doctrine\Translatable\Wrapper\FactoryInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Wrapper\WrapperInterface;
 use Teknoo\East\Website\Object\TranslatableInterface;
+
+use function array_flip;
+use function get_parent_class;
+use function spl_object_hash;
 
 /**
  * The translation listener handles the generation and
@@ -160,7 +166,7 @@ class TranslatableListener implements EventSubscriber
             return $this->classMetadata[$className];
         }
 
-        throw new \DomainException("Error no classmeta data available for $className");
+        throw new DomainException("Error no classmeta data available for $className");
     }
 
     public function registerClassMetadata(string $className, ClassMetadata $classMetadata): self
@@ -180,10 +186,10 @@ class TranslatableListener implements EventSubscriber
     private function getObjectClassName(TranslatableInterface $object): string
     {
         if ($object instanceof GhostObjectInterface) {
-            return (string) \get_parent_class($object);
+            return (string) get_parent_class($object);
         }
 
-        return \get_class($object);
+        return $object::class;
     }
 
     private function wrap(TranslatableInterface $translatable, ClassMetadata $metadata): WrapperInterface
@@ -352,12 +358,12 @@ class TranslatableListener implements EventSubscriber
                 $metaData
             ) {
                 // check for the availability of the primary key
-                $oid = \spl_object_hash($object);
+                $oid = spl_object_hash($object);
 
                 $translationMetadata = $this->getClassMetadata($translationClass);
                 $translationReflection = $translationMetadata->getReflectionClass();
 
-                $translatableFields = \array_flip($config['fields']);
+                $translatableFields = array_flip($config['fields']);
                 foreach ($translatableFields as $field => $notUsed) {
                     if (!isset($changeSet[$field])) {
                         continue; // locale is same and nothing changed
@@ -382,7 +388,7 @@ class TranslatableListener implements EventSubscriber
                     if (!$translation instanceof TranslationInterface && $locale !== $this->defaultLocale) {
                         $translation = $translationReflection->newInstance();
                         if (!$translation instanceof TranslationInterface) {
-                            throw new \RuntimeException(
+                            throw new RuntimeException(
                                 'Error the translation object does not implement the interface'
                             );
                         }
@@ -499,7 +505,7 @@ class TranslatableListener implements EventSubscriber
             return $this;
         }
 
-        $oid = \spl_object_hash($object);
+        $oid = spl_object_hash($object);
 
         if (!isset($this->pendingTranslationInserts[$oid])) {
             return $this;

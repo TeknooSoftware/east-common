@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license and the version 3 of the GPL3
+ * This source file is subject to the MIT license
  * license that are bundled with this package in the folder licences
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -35,28 +35,18 @@ interface ManagerInterface
      * Tells the Manager to make an instance managed and persistent.
      *
      * The object will be entered into the database as a result of the flush operation.
-     *
-     * @param object $object The instance to make managed and persistent.
-     *
-     * @return ManagerInterface
      */
-    public function persist($object): ManagerInterface;
+    public function persist(object $object): ManagerInterface;
 
     /**
      * Tells the Manager to remove an instance managed
-     *
-     * @param object $object The instance to make managed and persistent.
-     *
-     * @return ManagerInterface
      */
-    public function remove($object): ManagerInterface;
+    public function remove(object $object): ManagerInterface;
 
     /**
      * Flushes all changes to objects that have been queued up to now to the database.
      * This effectively synchronizes the in-memory state of managed objects with the
      * database.
-     *
-     * @return ManagerInterface
      */
     public function flush(): ManagerInterface;
 }

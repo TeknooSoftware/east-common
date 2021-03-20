@@ -1,5 +1,12 @@
 #Teknoo Software - Website - Change Log
 
+##[5.0.0] - 2021-03-20
+###Stable Release
+- Migrate to PHP 8.0
+- Remove support of Symfony 4.4 and old versions of Doctrine.
+- QA
+- Fix license header
+
 ##[4.3.4] - 2021-03-11
 ###Stable Release
 - Support East Foundation 4.1

@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license and the version 3 of the GPL3
+ * This source file is subject to the MIT license
  * license that are bundled with this package in the folder licences
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -25,8 +25,12 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Recipe\Step;
 
+use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
+use Throwable;
+
+use function strtoupper;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -46,13 +50,13 @@ class ExtractOrder
         $queryParams = $request->getQueryParams();
         $direction = $defaultOrderDirection;
         if (isset($queryParams['direction'])) {
-            switch ($value = \strtoupper($queryParams['direction'])) {
+            switch ($value = strtoupper($queryParams['direction'])) {
                 case 'ASC':
                 case 'DESC':
                     $direction = $value;
                     break;
                 default:
-                    throw new \InvalidArgumentException('Invalid direction value %value');
+                    throw new InvalidArgumentException('Invalid direction value %value');
             }
         }
 
@@ -78,7 +82,7 @@ class ExtractOrder
             $manager->updateWorkPlan([
                 'order' => $listOrder,
             ]);
-        } catch (\Throwable $error) {
+        } catch (Throwable $error) {
             $manager->error($error);
         }
 

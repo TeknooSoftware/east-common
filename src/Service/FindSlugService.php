@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license and the version 3 of the GPL3
+ * This source file is subject to the MIT license
  * license that are bundled with this package in the folder licences
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -31,6 +31,12 @@ use Teknoo\East\Website\Object\DeletableInterface;
 use Teknoo\East\Website\Object\SluggableInterface;
 use Teknoo\East\Website\Query\FindBySlugQuery;
 
+use function array_map;
+use function implode;
+use function preg_replace;
+use function strtolower;
+use function trim;
+
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -39,7 +45,7 @@ class FindSlugService
 {
     private function sluggify(string $text): string
     {
-        return \strtolower(\trim((string) \preg_replace('/[^A-Za-z0-9-]+/', '-', $text)));
+        return strtolower(trim((string) preg_replace('/[^A-Za-z0-9-]+/', '-', $text)));
     }
 
     public function process(
@@ -57,7 +63,7 @@ class FindSlugService
                 $candidateParts[] = $counter;
             }
 
-            $candidate = \implode($glue, \array_map([$this, 'sluggify'], $candidateParts));
+            $candidate = implode($glue, array_map([$this, 'sluggify'], $candidateParts));
 
             $loader->query(
                 new FindBySlugQuery($slugField, $candidate, $sluggable instanceof DeletableInterface),

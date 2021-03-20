@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license and the version 3 of the GPL3
+ * This source file is subject to the MIT license
  * license that are bundled with this package in the folder licences
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Object;
 
+use DateTimeInterface;
+
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -33,11 +35,11 @@ trait ObjectTrait
 {
     protected ?string $id = null;
 
-    protected ?\DateTimeInterface $createdAt = null;
+    protected ?DateTimeInterface $createdAt = null;
 
-    protected ?\DateTimeInterface $updatedAt = null;
+    protected ?DateTimeInterface $updatedAt = null;
 
-    protected ?\DateTimeInterface $deletedAt = null;
+    protected ?DateTimeInterface $deletedAt = null;
 
     public function getId(): string
     {
@@ -51,17 +53,17 @@ trait ObjectTrait
         return $this;
     }
 
-    public function createdAt(): ?\DateTimeInterface
+    public function createdAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function updatedAt(): ?\DateTimeInterface
+    public function updatedAt(): ?DateTimeInterface
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    public function setUpdatedAt(?DateTimeInterface $updatedAt): self
     {
         if (null === $this->createdAt) {
             $this->createdAt = $updatedAt;
@@ -72,12 +74,12 @@ trait ObjectTrait
         return $this;
     }
 
-    public function getDeletedAt(): ?\DateTimeInterface
+    public function getDeletedAt(): ?DateTimeInterface
     {
         return $this->deletedAt;
     }
 
-    public function setDeletedAt(\DateTimeInterface $deletedAt): DeletableInterface
+    public function setDeletedAt(DateTimeInterface $deletedAt): DeletableInterface
     {
         $this->deletedAt = $deletedAt;
 

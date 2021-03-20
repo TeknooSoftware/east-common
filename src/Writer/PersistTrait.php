@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license and the version 3 of the GPL3
+ * This source file is subject to the MIT license
  * license that are bundled with this package in the folder licences
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -30,6 +30,7 @@ use Teknoo\East\Website\DBSource\ManagerInterface;
 use Teknoo\East\Website\Object\ObjectInterface;
 use Teknoo\East\Website\Object\TimestampableInterface;
 use Teknoo\East\Website\Service\DatesService;
+use Throwable;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -48,7 +49,7 @@ trait PersistTrait
     }
 
     /**
-     * @throws \Throwable
+     * @throws Throwable
      */
     private function persist(ObjectInterface $object, ?PromiseInterface $promise = null): self
     {
@@ -63,7 +64,7 @@ trait PersistTrait
             if ($promise instanceof PromiseInterface) {
                 $promise->success($object);
             }
-        } catch (\Throwable $error) {
+        } catch (Throwable $error) {
             if ($promise instanceof PromiseInterface) {
                 $promise->fail($error);
             } else {
@@ -75,7 +76,7 @@ trait PersistTrait
     }
 
     /**
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function remove(ObjectInterface $object, PromiseInterface $promise = null): WriterInterface
     {
@@ -86,7 +87,7 @@ trait PersistTrait
             if ($promise instanceof PromiseInterface) {
                 $promise->success();
             }
-        } catch (\Throwable $error) {
+        } catch (Throwable $error) {
             if ($promise instanceof PromiseInterface) {
                 $promise->fail($error);
             } else {

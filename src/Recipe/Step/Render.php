@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license and the version 3 of the GPL3
+ * This source file is subject to the MIT license
  * license that are bundled with this package in the folder licences
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -34,6 +34,10 @@ use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Website\Middleware\ViewParameterInterface;
 use Teknoo\East\Website\Recipe\Step\Traits\TemplateTrait;
 
+use function array_merge;
+use function is_object;
+use function method_exists;
+
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -52,15 +56,12 @@ class Render
         $this->responseFactory = $responseFactory;
     }
 
-    /**
-     * @param mixed $objectInstance
-     */
     public function __invoke(
         MessageInterface $message,
         ClientInterface $client,
         string $template,
         ?string $objectViewKey = null,
-        $objectInstance = null
+        mixed $objectInstance = null
     ): self {
         $viewParameters = [];
         if ($message instanceof ServerRequestInterface) {
@@ -68,13 +69,13 @@ class Render
         }
 
         if (!empty($objectViewKey)) {
-            $viewParameters = \array_merge($viewParameters, [$objectViewKey => $objectInstance]);
+            $viewParameters = array_merge($viewParameters, [$objectViewKey => $objectInstance]);
         }
 
         $headers = [];
         if (
-            \is_object($objectInstance)
-            && \method_exists($objectInstance, 'updatedAt')
+            is_object($objectInstance)
+            && method_exists($objectInstance, 'updatedAt')
             && null !== ($updatedAt = $updatedAt = $objectInstance->updatedAt())
         ) {
             $headers['Last-Modified'] = $updatedAt->format('D, d M Y H:i:s \G\M\T');

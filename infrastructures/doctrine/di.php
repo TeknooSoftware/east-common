@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license and the version 3 of the GPL3
+ * This source file is subject to the MIT license
  * license that are bundled with this package in the folder licences
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -33,9 +33,12 @@ use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
 use Doctrine\Persistence\Mapping\Driver\FileLocator;
+use Exception;
 use Psr\Container\ContainerInterface;
 use ProxyManager\Proxy\GhostObjectInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use RuntimeException;
+use SimpleXMLElement;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\GetStreamFromMediaInterface;
 use Teknoo\East\Website\Doctrine\Recipe\Step\ODM\GetStreamFromMedia;
@@ -86,7 +89,7 @@ return [
         $eastManager = $container->get(ManagerInterface::class);
 
         if (!$objectManager instanceof DocumentManager) {
-            throw new \RuntimeException('Sorry currently, this listener supports only ODM');
+            throw new RuntimeException('Sorry currently, this listener supports only ODM');
         }
 
         $eventManager = $objectManager->getEventManager();
@@ -100,7 +103,7 @@ return [
 
         $mappingDriver = $objectManager->getConfiguration()->getMetadataDriverImpl();
         if (null === $mappingDriver) {
-            throw new \RuntimeException('The Mapping Driver is not available from the Doctrine manager');
+            throw new RuntimeException('The Mapping Driver is not available from the Doctrine manager');
         }
 
         $extensionMetadataFactory = new ExtensionMetadataFactory(
@@ -113,9 +116,9 @@ return [
                     return new Xml(
                         $locator,
                         new class implements SimpleXmlFactoryInterface {
-                            public function __invoke(string $file): \SimpleXMLElement
+                            public function __invoke(string $file): SimpleXMLElement
                             {
-                                return new \SimpleXMLElement($file, 0, true);
+                                return new SimpleXMLElement($file, 0, true);
                             }
                         }
                     );
@@ -131,7 +134,7 @@ return [
                 public function __invoke(TranslatableInterface $object, ClassMetadata $metadata): WrapperInterface
                 {
                     if (!$metadata instanceof OdmClassMetadata) {
-                        throw new \RuntimeException('Error wrapper support only ' . OdmClassMetadata::class);
+                        throw new RuntimeException('Error wrapper support only ' . OdmClassMetadata::class);
                     }
 
                     return new DocumentWrapper($object, $metadata);
@@ -161,9 +164,9 @@ return [
             return new ContentRepository($repository);
         }
 
-        throw new \RuntimeException(sprintf(
+        throw new RuntimeException(sprintf(
             "Error, repository of class %s are not currently managed",
-            \get_class($repository)
+            $repository::class
         ));
     },
 
@@ -177,9 +180,9 @@ return [
             return new ItemRepository($repository);
         }
 
-        throw new \RuntimeException(sprintf(
+        throw new RuntimeException(sprintf(
             "Error, repository of class %s are not currently managed",
-            \get_class($repository)
+            $repository::class
         ));
     },
 
@@ -193,9 +196,9 @@ return [
             return new MediaRepository($repository);
         }
 
-        throw new \RuntimeException(sprintf(
+        throw new RuntimeException(sprintf(
             "Error, repository of class %s are not currently managed",
-            \get_class($repository)
+            $repository::class
         ));
     },
 
@@ -209,9 +212,9 @@ return [
             return new TypeRepository($repository);
         }
 
-        throw new \RuntimeException(sprintf(
+        throw new RuntimeException(sprintf(
             "Error, repository of class %s are not currently managed",
-            \get_class($repository)
+            $repository::class
         ));
     },
 
@@ -225,9 +228,9 @@ return [
             return new UserRepository($repository);
         }
 
-        throw new \RuntimeException(sprintf(
+        throw new RuntimeException(sprintf(
             "Error, repository of class %s are not currently managed",
-            \get_class($repository)
+            $repository::class
         ));
     },
 
@@ -253,9 +256,9 @@ return [
             return new MediaWriter($repository, $container->get(OriginalWriter::class));
         }
 
-        throw new \RuntimeException(sprintf(
+        throw new RuntimeException(sprintf(
             "Error, repository of class %s are not currently managed",
-            \get_class($repository)
+            $repository::class
         ));
     },
     'teknoo.east.website.doctrine.writer.media.new' => get(MediaWriter::class),
@@ -267,13 +270,13 @@ return [
                 PromiseInterface $promise
             ): ProxyDetectorInterface {
                 if (!$object instanceof GhostObjectInterface) {
-                    $promise->fail(new \Exception('Object is not behind a proxy'));
+                    $promise->fail(new Exception('Object is not behind a proxy'));
 
                     return $this;
                 }
 
                 if ($object->isProxyInitialized()) {
-                    $promise->fail(new \Exception('Proxy is already initialized'));
+                    $promise->fail(new Exception('Proxy is already initialized'));
 
                     return $this;
                 }
@@ -289,7 +292,7 @@ return [
     GetStreamFromMedia::class => static function (ContainerInterface $container): GetStreamFromMedia {
         $repository = $container->get(ObjectManager::class)->getRepository(Media::class);
         if (!$repository instanceof GridFSRepository) {
-            throw new \RuntimeException('Repository for Media class is not a GridFSRepository');
+            throw new RuntimeException('Repository for Media class is not a GridFSRepository');
         }
 
         return new GetStreamFromMedia(

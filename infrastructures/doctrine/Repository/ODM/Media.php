@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license and the version 3 of the GPL3
+ * This source file is subject to the MIT license
  * license that are bundled with this package in the folder licences
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -30,6 +30,8 @@ use Doctrine\ODM\MongoDB\Repository\DefaultGridFSRepository;
 use MongoDB\GridFS\Bucket;
 use MongoDB\GridFS\Exception\FileNotFoundException;
 
+use function strlen;
+
 class Media extends DefaultGridFSRepository
 {
     private function getDocumentBucket(): Bucket
@@ -40,7 +42,7 @@ class Media extends DefaultGridFSRepository
     public function openDownloadStream($id)
     {
         try {
-            if (24 === \strlen($id)) {
+            if (24 === strlen($id)) {
                 $id = $this->class->getDatabaseIdentifierValue($id);
             }
 

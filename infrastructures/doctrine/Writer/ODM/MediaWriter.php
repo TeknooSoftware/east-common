@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license and the version 3 of the GPL3
+ * This source file is subject to the MIT license
  * license that are bundled with this package in the folder licences
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -27,6 +27,7 @@ namespace Teknoo\East\Website\Doctrine\Writer\ODM;
 
 use Doctrine\ODM\MongoDB\Repository\GridFSRepository;
 use Doctrine\ODM\MongoDB\Repository\UploadOptions;
+use RuntimeException;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\Doctrine\Object\Media;
 use Teknoo\East\Website\Object\MediaMetadata;
@@ -54,7 +55,7 @@ class MediaWriter implements WriterInterface
     {
         if (!$object instanceof Media || !$object->getMetadata() instanceof MediaMetadata) {
             if ($promise) {
-                $promise->fail(new \RuntimeException('This type of media is not managed by this writer'));
+                $promise->fail(new RuntimeException('This type of media is not managed by this writer'));
             }
 
             return $this;

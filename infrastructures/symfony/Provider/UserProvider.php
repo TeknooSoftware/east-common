@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license and the version 3 of the GPL3
+ * This source file is subject to the MIT license
  * license that are bundled with this package in the folder licences
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\WebsiteBundle\Provider;
 
+use ReflectionException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Teknoo\East\Foundation\Promise\Promise;
@@ -45,9 +46,6 @@ abstract class UserProvider
         $this->loader = $loader;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function fetchUserByUsername(string $username): UserInterface
     {
         $loadedUser = null;
@@ -65,18 +63,14 @@ abstract class UserProvider
         return $loadedUser;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function refreshUser(UserInterface $user): ?UserInterface
     {
         return $this->fetchUserByUsername($user->getUsername());
     }
 
     /**
-     * {@inheritdoc}
      * @param class-string<User> $class
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function supportsClass($class): bool
     {

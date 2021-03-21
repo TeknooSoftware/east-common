@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license and the version 3 of the GPL3
+ * This source file is subject to the MIT license
  * license that are bundled with this package in the folder licences
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\WebsiteBundle\Writer;
 
+use RuntimeException;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\Object\ObjectInterface;
@@ -64,8 +65,8 @@ class UserWriter implements WriterInterface
     {
         if (!$object instanceof BaseUser) {
             if (null !== $promise) {
-                $class = \get_class($object);
-                $promise->fail(new \RuntimeException("The class $class is not managed by this writer"));
+                $class = $object::class;
+                $promise->fail(new RuntimeException("The class $class is not managed by this writer"));
             }
 
             return $this;

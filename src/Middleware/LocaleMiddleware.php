@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license and the version 3 of the GPL3
+ * This source file is subject to the MIT license
  * license that are bundled with this package in the folder licences
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -33,6 +33,8 @@ use Teknoo\East\Foundation\Middleware\MiddlewareInterface;
 use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Foundation\Session\SessionInterface;
 
+use function is_callable;
+
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -47,7 +49,7 @@ class LocaleMiddleware implements MiddlewareInterface
      */
     private $translatableSetter;
 
-    private string $defaultLocale = 'en';
+    private string $defaultLocale;
 
     public function __construct(?callable $translatableSetter = null, string $defaultLocale = 'en')
     {
@@ -74,14 +76,14 @@ class LocaleMiddleware implements MiddlewareInterface
                 self::SESSION_KEY,
                 new Promise(
                     function (string $locale) use (&$request, &$returnedLocale) {
-                        if (\is_callable($this->translatableSetter)) {
+                        if (is_callable($this->translatableSetter)) {
                             ($this->translatableSetter)($locale);
                         }
                         $request = $request->withAttribute('locale', $locale);
                         $returnedLocale = $locale;
                     },
                     function () use (&$request) {
-                        if (\is_callable($this->translatableSetter)) {
+                        if (is_callable($this->translatableSetter)) {
                             ($this->translatableSetter)($this->defaultLocale);
                         }
                         $request = $request->withAttribute('locale', $this->defaultLocale);
@@ -109,16 +111,13 @@ class LocaleMiddleware implements MiddlewareInterface
         return $request->withAttribute(ViewParameterInterface::REQUEST_PARAMETER_KEY, $parameters);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function execute(
         ClientInterface $client,
         MessageInterface $message,
         ManagerInterface $manager
     ): MiddlewareInterface {
         if (!$message instanceof ServerRequestInterface) {
-            if (\is_callable($this->translatableSetter)) {
+            if (is_callable($this->translatableSetter)) {
                 ($this->translatableSetter)($this->defaultLocale);
             }
 
@@ -128,7 +127,7 @@ class LocaleMiddleware implements MiddlewareInterface
         $queryParams = $message->getQueryParams();
         if (isset($queryParams['locale'])) {
             $locale = $queryParams['locale'];
-            if (\is_callable($this->translatableSetter)) {
+            if (is_callable($this->translatableSetter)) {
                 ($this->translatableSetter)($locale);
             }
             $this->registerLocaleInSession($message, $locale);

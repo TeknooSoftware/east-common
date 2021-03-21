@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license and the version 3 of the GPL3
+ * This source file is subject to the MIT license
  * license that are bundled with this package in the folder licences
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Object;
 
+use DateTimeInterface;
+use Exception;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Object\Content\Draft;
 use Teknoo\East\Website\Object\Content\Published;
@@ -37,6 +39,9 @@ use Teknoo\States\Automated\AutomatedInterface;
 use Teknoo\States\Automated\AutomatedTrait;
 use Teknoo\States\Proxy\ProxyInterface;
 use Teknoo\States\Proxy\ProxyTrait;
+
+use function json_decode;
+use function json_encode;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -78,7 +83,7 @@ class Content implements
     protected ?string $localeField = null;
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct()
     {
@@ -87,7 +92,6 @@ class Content implements
     }
 
     /**
-     * {@inheritdoc}
      * @return array<string>
      */
     public static function statesListDeclaration(): array
@@ -99,14 +103,13 @@ class Content implements
     }
 
     /**
-     * {@inheritdoc}
      * @return array<AssertionInterface>
      */
     protected function listAssertions(): array
     {
         return [
-            (new Property([Draft::class]))->with('publishedAt', new IsNotInstanceOf(\DateTimeInterface::class)),
-            (new Property([Published::class]))->with('publishedAt', new IsInstanceOf(\DateTimeInterface::class)),
+            (new Property([Draft::class]))->with('publishedAt', new IsNotInstanceOf(DateTimeInterface::class)),
+            (new Property([Published::class]))->with('publishedAt', new IsInstanceOf(DateTimeInterface::class)),
         ];
     }
 
@@ -201,7 +204,7 @@ class Content implements
      */
     public function getParts(): array
     {
-        return (array) \json_decode((string) $this->parts, true);
+        return (array) json_decode((string) $this->parts, true);
     }
 
     /**
@@ -209,7 +212,7 @@ class Content implements
      */
     public function setParts(?array $parts): Content
     {
-        $this->parts = (string) \json_encode((array) $parts);
+        $this->parts = (string) json_encode((array) $parts);
 
         return $this;
     }

@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license and the version 3 of the GPL3
+ * This source file is subject to the MIT license
  * license that are bundled with this package in the folder licences
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -25,11 +25,20 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Recipe\Step;
 
+use Countable;
+use RuntimeException;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Query\Expr\ExprInterface;
 use Teknoo\East\Website\Query\PaginationQuery;
+use Throwable;
+
+use function ceil;
+use function is_array;
+use function is_object;
+use function is_string;
+use function preg_match;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -46,26 +55,26 @@ class LoadListObjects
         $final = [];
         foreach ($criteria as $key => &$value) {
             if (
-                !\is_string($key)
-                || 0 === \preg_match('#^[a-zA-Z0-9\-_]+$#S', $key)
+                !is_string($key)
+                || 0 === preg_match('#^[a-zA-Z0-9\-_]+$#S', $key)
             ) {
-                throw new \RuntimeException('Wrong key in criteria, must follow [a-zA-Z0-9\-_]+', 400);
+                throw new RuntimeException('Wrong key in criteria, must follow [a-zA-Z0-9\-_]+', 400);
             }
 
             if (
-                \is_object($value)
+                is_object($value)
                 && !$value instanceof ExprInterface
             ) {
-                throw new \RuntimeException("Wrong value in criteria for $key", 400);
+                throw new RuntimeException("Wrong value in criteria for $key", 400);
             }
 
-            if (\is_array($value)) {
+            if (is_array($value)) {
                 $value = $this->sanitizeCriteria($value);
             } elseif (
-                \is_string($value)
-                && 0 === \preg_match("#^[\p{Sm}\p{Sc}\p{L}\p{N}\p{Z}_\-\.\@,]+$#uS", $value)
+                is_string($value)
+                && 0 === preg_match("#^[\p{Sm}\p{Sc}\p{L}\p{N}\p{Z}_\-\.\@,]+$#uS", $value)
             ) {
-                throw new \RuntimeException("Wrong value in criteria for $key", 400);
+                throw new RuntimeException("Wrong value in criteria for $key", 400);
             }
 
             $final[$key] = $value;
@@ -87,7 +96,7 @@ class LoadListObjects
     ): self {
         try {
             $criteria = $this->sanitizeCriteria($criteria);
-        } catch (\Throwable $error) {
+        } catch (Throwable $error) {
             $manager->error($error);
 
             return $this;
@@ -103,8 +112,8 @@ class LoadListObjects
             new Promise(
                 static function ($objects) use ($itemsPerPage, $manager) {
                     $pageCount = 1;
-                    if ($objects instanceof \Countable) {
-                        $pageCount = (int) \ceil($objects->count() / $itemsPerPage);
+                    if ($objects instanceof Countable) {
+                        $pageCount = (int) ceil($objects->count() / $itemsPerPage);
                     }
 
                     $manager->updateWorkPlan(

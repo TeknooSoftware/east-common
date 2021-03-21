@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license and the version 3 of the GPL3
+ * This source file is subject to the MIT license
  * license that are bundled with this package in the folder licences
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -33,8 +33,11 @@ use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\Persistence\ObjectManager;
 use Teknoo\East\Website\Doctrine\Exception\InvalidMappingException;
-use Teknoo\East\Website\Doctrine\Exception\RuntimeException;
 use Teknoo\East\Website\Doctrine\Translatable\TranslatableListener;
+
+use function array_reverse;
+use function class_parents;
+use function is_callable;
 
 /*
  * The extension metadata factory is responsible for extension driver
@@ -116,7 +119,7 @@ class ExtensionMetadataFactory
         $useObjectName = $metaData->getName();
 
         // collect metadata from inherited classes
-        foreach (\array_reverse((array) \class_parents($useObjectName)) as $parentClass) {
+        foreach (array_reverse((array) class_parents($useObjectName)) as $parentClass) {
             // read only inherited mapped classes
             if ($this->classMetadataFactory->hasMetadataFor((string) $parentClass)) {
                 $parentMetaClass = $this->objectManager->getClassMetadata((string) $parentClass);
@@ -126,7 +129,7 @@ class ExtensionMetadataFactory
                     empty($parentMetaClass->parentClasses)
                     && !empty($config)
                     && (
-                        !\is_callable([$parentMetaClass, 'isInheritanceTypeNone'])
+                        !is_callable([$parentMetaClass, 'isInheritanceTypeNone'])
                         || !$parentMetaClass->isInheritanceTypeNone()
                     )
                 ) {

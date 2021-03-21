@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license and the version 3 of the GPL3
+ * This source file is subject to the MIT license
  * license that are bundled with this package in the folder licences
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -32,6 +32,8 @@ use Teknoo\East\Website\Doctrine\Translatable\ObjectManager\AdapterInterface as 
 use Teknoo\East\Website\Doctrine\Translatable\Persistence\AdapterInterface;
 use Teknoo\East\Website\Doctrine\Translatable\TranslationInterface;
 use Teknoo\East\Website\Object\TranslatableInterface;
+
+use function spl_object_hash;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -63,10 +65,7 @@ class DocumentWrapper implements WrapperInterface
         return $this->object;
     }
 
-    /**
-     * @return mixed
-     */
-    private function getPropertyValue(string $name)
+    private function getPropertyValue(string $name): mixed
     {
         $this->initialize();
 
@@ -80,7 +79,7 @@ class DocumentWrapper implements WrapperInterface
     {
         // ensure clean changeset
         $manager->setOriginalObjectProperty(
-            \spl_object_hash($this->getObject()),
+            spl_object_hash($this->getObject()),
             $name,
             $this->getPropertyValue($name)
         );
@@ -94,7 +93,7 @@ class DocumentWrapper implements WrapperInterface
     public function updateTranslationRecord(
         TranslationInterface $translation,
         string $name,
-        $type
+        mixed $type
     ): WrapperInterface {
         $value = $this->getPropertyValue($name);
 
@@ -103,7 +102,7 @@ class DocumentWrapper implements WrapperInterface
         return $this;
     }
 
-    public function setPropertyValue(string $name, $value): WrapperInterface
+    public function setPropertyValue(string $name, mixed $value): WrapperInterface
     {
         $this->initialize();
 

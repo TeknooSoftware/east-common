@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license and the version 3 of the GPL3
+ * This source file is subject to the MIT license
  * license that are bundled with this package in the folder licences
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -42,41 +42,26 @@ class User implements UserInterface, EquatableInterface
         $this->user = $user;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRoles()
     {
         return $this->user->getRoles();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPassword(): string
     {
         return $this->user->getPassword();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSalt()
     {
         return $this->user->getSalt();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getUsername()
     {
         return $this->user->getUsername();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function eraseCredentials(): self
     {
         $this->user->eraseCredentials();
@@ -84,9 +69,6 @@ class User implements UserInterface, EquatableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isEqualTo(UserInterface $user): bool
     {
         return $user->getUsername() === $this->getUsername();

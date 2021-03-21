@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license and the version 3 of the GPL3
+ * This source file is subject to the MIT license
  * license that are bundled with this package in the folder licences
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -27,6 +27,7 @@ namespace Teknoo\East\Website\Writer;
 
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\Object\ObjectInterface;
+use Throwable;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -37,8 +38,7 @@ class MediaWriter implements WriterInterface
     use PersistTrait;
 
     /**
-     * {@inheritdoc}
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function save(ObjectInterface $object, PromiseInterface $promise = null): WriterInterface
     {

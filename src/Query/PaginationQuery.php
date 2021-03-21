@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license and the version 3 of the GPL3
+ * This source file is subject to the MIT license
  * license that are bundled with this package in the folder licences
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -25,12 +25,16 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Query;
 
+use Countable;
+use IteratorAggregate;
 use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\Immutable\ImmutableInterface;
 use Teknoo\Immutable\ImmutableTrait;
+use Throwable;
+use Traversable;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -68,9 +72,6 @@ class PaginationQuery implements QueryInterface, ImmutableInterface
         $this->offset = $offset;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function execute(
         LoaderInterface $loader,
         RepositoryInterface $repository,
@@ -79,7 +80,7 @@ class PaginationQuery implements QueryInterface, ImmutableInterface
         $criteria = $this->criteria;
         $criteria['deletedAt'] = null;
 
-        $failClosure = static function (\Throwable $error) use ($promise) {
+        $failClosure = static function (Throwable $error) use ($promise) {
             $promise->fail($error);
         };
 
@@ -91,12 +92,12 @@ class PaginationQuery implements QueryInterface, ImmutableInterface
                         $criteria,
                         new Promise(
                             static function ($count) use ($promise, $result) {
-                                $iterator = new class ($count, $result) implements \Countable, \IteratorAggregate {
+                                $iterator = new class ($count, $result) implements Countable, IteratorAggregate {
                                     private int $count;
 
-                                    private \Traversable $iterator;
+                                    private Traversable $iterator;
 
-                                    public function __construct(int $count, \Traversable $iterator)
+                                    public function __construct(int $count, Traversable $iterator)
                                     {
                                         $this->count = $count;
                                         $this->iterator = $iterator;

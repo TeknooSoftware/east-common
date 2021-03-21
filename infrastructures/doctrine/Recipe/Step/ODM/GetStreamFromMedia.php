@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license and the version 3 of the GPL3
+ * This source file is subject to the MIT license
  * license that are bundled with this package in the folder licences
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -29,6 +29,7 @@ use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Repository\GridFSRepository;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
+use RuntimeException;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\GetStreamFromMediaInterface;
 use Teknoo\East\Website\Doctrine\Object\Media;
@@ -55,7 +56,7 @@ class GetStreamFromMedia implements GetStreamFromMediaInterface
         ManagerInterface $manager
     ): GetStreamFromMediaInterface {
         if (!$media instanceof Media) {
-            $manager->error(new \RuntimeException('Error this media is not compatible with this endpoint'));
+            $manager->error(new RuntimeException('Error this media is not compatible with this endpoint'));
 
             return $this;
         }

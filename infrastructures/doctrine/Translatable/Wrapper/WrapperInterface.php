@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license and the version 3 of the GPL3
+ * This source file is subject to the MIT license
  * license that are bundled with this package in the folder licences
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -35,20 +35,14 @@ use Teknoo\East\Website\Doctrine\Translatable\TranslationInterface;
  */
 interface WrapperInterface
 {
-    /**
-     * @param mixed $value
-     */
-    public function setPropertyValue(string $name, $value): WrapperInterface;
+    public function setPropertyValue(string $name, mixed $value): WrapperInterface;
 
     public function setOriginalObjectProperty(ManagerAdapterInterface $manager, string $name): WrapperInterface;
 
-    /**
-     * @param mixed $type
-     */
     public function updateTranslationRecord(
         TranslationInterface $translation,
         string $name,
-        $type
+        mixed $type
     ): WrapperInterface;
 
     public function linkTranslationRecord(TranslationInterface $translation): WrapperInterface;

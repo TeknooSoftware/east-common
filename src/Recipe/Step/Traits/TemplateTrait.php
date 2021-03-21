@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license and the version 3 of the GPL3
+ * This source file is subject to the MIT license
  * license that are bundled with this package in the folder licences
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -32,6 +32,7 @@ use Teknoo\East\Foundation\Http\Message\CallbackStreamInterface;
 use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Foundation\Template\ResultInterface;
+use Throwable;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -48,7 +49,6 @@ trait TemplateTrait
     /**
      * Renders a view.
      *
-     * @param ClientInterface $client
      * @param string          $view       The view name
      * @param array           $parameters An array of parameters to pass to the view
      * @param int             $status The status code to use for the Response
@@ -82,7 +82,7 @@ trait TemplateTrait
 
                     $client->acceptResponse($response);
                 },
-                static function (\Throwable $error) use ($client) {
+                static function (Throwable $error) use ($client) {
                     $client->errorInRequest($error, false);
                 }
             ),

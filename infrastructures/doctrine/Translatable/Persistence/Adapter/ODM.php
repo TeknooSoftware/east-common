@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license and the version 3 of the GPL3
+ * This source file is subject to the MIT license
  * license that are bundled with this package in the folder licences
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -30,9 +30,12 @@ use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Types\Type;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use MongoDB\BSON\ObjectId;
+use RuntimeException;
 use Teknoo\East\Website\Doctrine\Translatable\Persistence\AdapterInterface;
 use Teknoo\East\Website\Doctrine\Translatable\TranslationInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Wrapper\WrapperInterface;
+
+use function strlen;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -122,7 +125,7 @@ class ODM implements AdapterInterface
         }
 
         if (null === $metadata->idGenerator) {
-            throw new \RuntimeException('Missing Id Generator');
+            throw new RuntimeException('Missing Id Generator');
         }
 
         $idValue = $metadata->idGenerator->generate($this->manager, $translation);
@@ -130,11 +133,11 @@ class ODM implements AdapterInterface
         $metadata->setIdentifierValue($translation, $idValue);
     }
 
-    /**
-     * @param mixed|string|ObjectId $id
-     */
-    private function generateInsertionArray(OdmClassMetadata $metadata, TranslationInterface $translation, $id): array
-    {
+    private function generateInsertionArray(
+        OdmClassMetadata $metadata,
+        TranslationInterface $translation,
+        mixed $id
+    ): array {
         $final = [];
         foreach ($metadata->getFieldNames() as $fieldName) {
             $fm = $metadata->getFieldMapping($fieldName);
@@ -153,7 +156,7 @@ class ODM implements AdapterInterface
 
     public function persistTranslationRecord(TranslationInterface $translation): AdapterInterface
     {
-        $meta = $this->manager->getClassMetadata(\get_class($translation));
+        $meta = $this->manager->getClassMetadata($translation::class);
 
         $className = $meta->getName();
         $collection = $this->manager->getDocumentCollection($className);
@@ -163,7 +166,7 @@ class ODM implements AdapterInterface
         } else {
             $id = $translation->getIdentifier();
 
-            if (24 === \strlen($id)) {
+            if (24 === strlen($id)) {
                 $id = new ObjectId($id);
             }
 
@@ -190,7 +193,7 @@ class ODM implements AdapterInterface
         TranslationInterface $translation
     ): AdapterInterface {
         if (!$metadata instanceof OdmClassMetadata) {
-            throw new \RuntimeException("Error this classMetadata is not compatible with this adapter");
+            throw new RuntimeException("Error this classMetadata is not compatible with this adapter");
         }
 
         $mapping = $metadata->getFieldMapping($field);
@@ -206,10 +209,10 @@ class ODM implements AdapterInterface
         WrapperInterface $wrapped,
         ClassMetadata $metadata,
         string $field,
-        $value
+        mixed $value
     ): AdapterInterface {
         if (!$metadata instanceof OdmClassMetadata) {
-            throw new \RuntimeException("Error this classMetadata is not compatible with this adapter");
+            throw new RuntimeException("Error this classMetadata is not compatible with this adapter");
         }
 
         $mapping = $metadata->getFieldMapping($field);

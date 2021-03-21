@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license and the version 3 of the GPL3
+ * This source file is subject to the MIT license
  * license that are bundled with this package in the folder licences
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -26,8 +26,11 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Doctrine\DBSource\Common;
 
 use Doctrine\Persistence\ObjectRepository;
+use DomainException;
+use RuntimeException;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
+use Throwable;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -44,9 +47,6 @@ trait RepositoryTrait
         $this->repository = $repository;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function find(string $id, PromiseInterface $promise): RepositoryInterface
     {
         $result = $this->repository->find($id);
@@ -54,15 +54,12 @@ trait RepositoryTrait
         if (!empty($result)) {
             $promise->success($result);
         } else {
-            $promise->fail(new \DomainException('Object not found'));
+            $promise->fail(new DomainException('Object not found'));
         }
 
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findAll(PromiseInterface $promise): RepositoryInterface
     {
         $promise->success($this->repository->findAll());
@@ -70,9 +67,6 @@ trait RepositoryTrait
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findBy(
         array $criteria,
         PromiseInterface $promise,
@@ -85,19 +79,13 @@ trait RepositoryTrait
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function count(array $criteria, PromiseInterface $promise): RepositoryInterface
     {
-        $promise->fail(new \RuntimeException('Error, this method is not available with this repository'));
+        $promise->fail(new RuntimeException('Error, this method is not available with this repository'));
 
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findOneBy(array $criteria, PromiseInterface $promise): RepositoryInterface
     {
         try {
@@ -106,9 +94,9 @@ trait RepositoryTrait
             if (!empty($result)) {
                 $promise->success($result);
             } else {
-                $promise->fail(new \DomainException('Object not found'));
+                $promise->fail(new DomainException('Object not found'));
             }
-        } catch (\Throwable $error) {
+        } catch (Throwable $error) {
             $promise->fail($error);
         }
 

@@ -35,11 +35,9 @@ use Teknoo\East\Website\Object\User as BaseUser;
  */
 class User implements UserInterface, EquatableInterface
 {
-    private BaseUser $user;
-
-    public function __construct(BaseUser $user)
-    {
-        $this->user = $user;
+    public function __construct(
+        private BaseUser $user
+    ) {
     }
 
     public function getRoles()

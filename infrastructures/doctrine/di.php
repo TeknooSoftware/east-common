@@ -242,9 +242,8 @@ return [
             $listener = $container->get(TranslatableListener::class);
             $callback = [$listener, 'setLocale'];
         } else {
-            $callback = static function () {
-                //do nothing
-            };
+            //do nothing
+            $callback = static function () {};
         }
 
         return new LocaleMiddleware($callback);

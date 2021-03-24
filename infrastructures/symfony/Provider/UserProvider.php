@@ -39,11 +39,9 @@ use Teknoo\East\WebsiteBundle\Object\User;
  */
 abstract class UserProvider
 {
-    private UserLoader $loader;
-
-    public function __construct(UserLoader $loader)
-    {
-        $this->loader = $loader;
+    public function __construct(
+        private UserLoader $loader
+    ) {
     }
 
     protected function fetchUserByUsername(string $username): UserInterface

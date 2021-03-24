@@ -36,11 +36,9 @@ use Teknoo\East\Website\Service\FindSlugService;
  */
 class SlugPreparation
 {
-    private FindSlugService $findSlugService;
-
-    public function __construct(FindSlugService $findSlugService)
-    {
-        $this->findSlugService = $findSlugService;
+    public function __construct(
+        private FindSlugService $findSlugService,
+    ) {
     }
 
     public function __invoke(LoaderInterface $loader, ObjectInterface $object, ?string $slugField = null): self

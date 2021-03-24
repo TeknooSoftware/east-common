@@ -41,14 +41,11 @@ class RedirectClient implements RedirectClientInterface
 {
     use ResponseTrait;
 
-    private UrlGeneratorInterface $router;
-
     public function __construct(
         ResponseFactoryInterface $responseFactory,
-        UrlGeneratorInterface $router
+        private UrlGeneratorInterface $router,
     ) {
         $this->responseFactory = $responseFactory;
-        $this->router = $router;
     }
 
     /**

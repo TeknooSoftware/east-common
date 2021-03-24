@@ -41,16 +41,10 @@ use function spl_object_hash;
  */
 class DocumentWrapper implements WrapperInterface
 {
-    private ?string $identifier = null;
-
-    private TranslatableInterface $object;
-
-    private ClassMetadata $meta;
-
-    public function __construct(TranslatableInterface $object, ClassMetadata $meta)
-    {
-        $this->object = $object;
-        $this->meta = $meta;
+    public function __construct(
+        private TranslatableInterface $object,
+        private ClassMetadata $meta,
+    ) {
     }
 
     private function initialize(): void

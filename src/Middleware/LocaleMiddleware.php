@@ -49,12 +49,11 @@ class LocaleMiddleware implements MiddlewareInterface
      */
     private $translatableSetter;
 
-    private string $defaultLocale;
-
-    public function __construct(?callable $translatableSetter = null, string $defaultLocale = 'en')
-    {
+    public function __construct(
+        ?callable $translatableSetter = null,
+        private string $defaultLocale = 'en',
+    ) {
         $this->translatableSetter = $translatableSetter;
-        $this->defaultLocale = $defaultLocale;
     }
 
     private function registerLocaleInSession(ServerRequestInterface $request, string $locale): LocaleMiddleware

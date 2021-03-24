@@ -40,11 +40,9 @@ class LocaleMiddleware implements MiddlewareInterface
 {
     public const MIDDLEWARE_PRIORITY = 7;
 
-    private LocaleAwareInterface $translator;
-
-    public function __construct(LocaleAwareInterface $translator)
-    {
-        $this->translator = $translator;
+    public function __construct(
+        private LocaleAwareInterface $translator
+    ) {
     }
 
     public function execute(

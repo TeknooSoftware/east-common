@@ -50,46 +50,18 @@ class CreateContentEndPoint implements CreateContentEndPointInterface
 {
     use BaseCookbookTrait;
 
-    private FormHandlingInterface $formHandling;
-
-    private CreateObject $createObject;
-
-    private FormProcessingInterface $formProcessing;
-
-    private SlugPreparation $slugPreparation;
-
-    private ?ObjectAccessControlInterface $objectAccessControl = null;
-
-    private SaveObject $saveObject;
-
-    private RedirectClientInterface $redirectClient;
-
-    private RenderFormInterface $renderForm;
-
-    private RenderError $renderError;
-
     public function __construct(
         RecipeInterface $recipe,
-        CreateObject $createObject,
-        FormHandlingInterface $formHandling,
-        FormProcessingInterface $formProcessing,
-        SlugPreparation $slugPreparation,
-        SaveObject $saveObject,
-        RedirectClientInterface $redirectClient,
-        RenderFormInterface $renderForm,
-        RenderError $renderError,
-        ?ObjectAccessControlInterface $objectAccessControl = null
+        private CreateObject $createObject,
+        private FormHandlingInterface $formHandling,
+        private FormProcessingInterface $formProcessing,
+        private SlugPreparation $slugPreparation,
+        private SaveObject $saveObject,
+        private RedirectClientInterface $redirectClient,
+        private RenderFormInterface $renderForm,
+        private RenderError $renderError,
+        private ?ObjectAccessControlInterface $objectAccessControl = null,
     ) {
-        $this->createObject = $createObject;
-        $this->formHandling = $formHandling;
-        $this->formProcessing = $formProcessing;
-        $this->slugPreparation = $slugPreparation;
-        $this->saveObject = $saveObject;
-        $this->redirectClient = $redirectClient;
-        $this->renderForm = $renderForm;
-        $this->renderError = $renderError;
-        $this->objectAccessControl = $objectAccessControl;
-
         $this->fill($recipe);
     }
 

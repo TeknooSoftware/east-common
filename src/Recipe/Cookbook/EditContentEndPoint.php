@@ -50,42 +50,17 @@ class EditContentEndPoint implements EditContentEndPointInterface
 {
     use BaseCookbookTrait;
 
-    private LoadObject $loadObject;
-
-    private ?ObjectAccessControlInterface $objectAccessControl = null;
-
-    private FormHandlingInterface $formHandling;
-
-    private FormProcessingInterface $formProcessing;
-
-    private SlugPreparation $slugPreparation;
-
-    private SaveObject $saveObject;
-
-    private RenderFormInterface $renderForm;
-
-    private RenderError $renderError;
-
     public function __construct(
         RecipeInterface $recipe,
-        LoadObject $loadObject,
-        FormHandlingInterface $formHandling,
-        FormProcessingInterface $formProcessing,
-        SlugPreparation $slugPreparation,
-        SaveObject $saveObject,
-        RenderFormInterface $renderForm,
-        RenderError $renderError,
-        ?ObjectAccessControlInterface $objectAccessControl = null
+        private LoadObject $loadObject,
+        private FormHandlingInterface $formHandling,
+        private FormProcessingInterface $formProcessing,
+        private SlugPreparation $slugPreparation,
+        private SaveObject $saveObject,
+        private RenderFormInterface $renderForm,
+        private RenderError $renderError,
+        private ?ObjectAccessControlInterface $objectAccessControl = null,
     ) {
-        $this->loadObject = $loadObject;
-        $this->formHandling = $formHandling;
-        $this->formProcessing = $formProcessing;
-        $this->slugPreparation = $slugPreparation;
-        $this->saveObject = $saveObject;
-        $this->renderForm = $renderForm;
-        $this->renderError = $renderError;
-        $this->objectAccessControl = $objectAccessControl;
-
         $this->fill($recipe);
     }
 

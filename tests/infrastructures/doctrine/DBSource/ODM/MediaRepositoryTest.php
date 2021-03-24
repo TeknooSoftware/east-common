@@ -49,7 +49,7 @@ class MediaRepositoryTest extends TestCase
 
     public function testWithNonSupportedRepository()
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(\TypeError::class);
         new MediaRepository($this->createMock(ObjectRepository::class));
     }
 }

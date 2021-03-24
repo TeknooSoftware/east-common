@@ -40,15 +40,10 @@ use Teknoo\East\WebsiteBundle\Object\User;
  */
 class CreateUserCommand extends Command
 {
-    private UserWriter $writer;
-
-    private EncoderFactoryInterface $encoderFactory;
-
-    public function __construct(UserWriter $writer, EncoderFactoryInterface $encoderFactory)
-    {
-        $this->writer = $writer;
-        $this->encoderFactory = $encoderFactory;
-
+    public function __construct(
+        private UserWriter $writer,
+        private EncoderFactoryInterface $encoderFactory,
+    ) {
         parent::__construct();
     }
 

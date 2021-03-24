@@ -35,14 +35,10 @@ use Teknoo\East\Website\Writer\WriterInterface;
  */
 class DeletingService
 {
-    private DatesService $datesService;
-
-    private WriterInterface $writer;
-
-    public function __construct(WriterInterface $writer, DatesService $datesService)
-    {
-        $this->writer = $writer;
-        $this->datesService = $datesService;
+    public function __construct(
+        private WriterInterface $writer,
+        private DatesService $datesService,
+    ) {
     }
 
     private function processDeletable(DeletableInterface $object): void

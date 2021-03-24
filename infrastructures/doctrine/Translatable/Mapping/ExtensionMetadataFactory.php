@@ -50,24 +50,12 @@ use function is_callable;
  */
 class ExtensionMetadataFactory
 {
-    private ObjectManager $objectManager;
-
-    private AbstractClassMetadataFactory $classMetadataFactory;
-
-    private MappingDriver $mappingDriver;
-
-    private DriverFactoryInterface $driverFactory;
-
     public function __construct(
-        ObjectManager $objectManager,
-        AbstractClassMetadataFactory $classMetadataFactory,
-        MappingDriver $mappingDriver,
-        DriverFactoryInterface $driverFactory
+        private ObjectManager $objectManager,
+        private AbstractClassMetadataFactory $classMetadataFactory,
+        private MappingDriver $mappingDriver,
+        private DriverFactoryInterface $driverFactory,
     ) {
-        $this->objectManager = $objectManager;
-        $this->classMetadataFactory = $classMetadataFactory;
-        $this->mappingDriver = $mappingDriver;
-        $this->driverFactory = $driverFactory;
     }
 
     private function getDriver(): DriverInterface

@@ -43,11 +43,9 @@ use function strlen;
  */
 class ODM implements AdapterInterface
 {
-    private DocumentManager $manager;
-
-    public function __construct(DocumentManager $manager)
-    {
-        $this->manager = $manager;
+    public function __construct(
+        private DocumentManager $manager,
+    ) {
     }
 
     public function loadTranslations(

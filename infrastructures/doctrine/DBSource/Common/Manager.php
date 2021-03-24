@@ -34,11 +34,9 @@ use Teknoo\East\Website\DBSource\ManagerInterface;
  */
 class Manager implements ManagerInterface
 {
-    private ObjectManager $objectManager;
-
-    public function __construct(ObjectManager $objectManager)
-    {
-        $this->objectManager = $objectManager;
+    public function __construct(
+        private ObjectManager $objectManager,
+    ) {
     }
 
     public function persist(object $object): ManagerInterface

@@ -43,16 +43,12 @@ use function spl_object_hash;
  */
 class ODM implements AdapterInterface
 {
-    private ManagerInterface $eastManager;
-
-    private DocumentManager $doctrineManager;
-
     private ?UnitOfWork $unitOfWork = null;
 
-    public function __construct(ManagerInterface $eastManager, DocumentManager $doctrineManager)
-    {
-        $this->eastManager = $eastManager;
-        $this->doctrineManager = $doctrineManager;
+    public function __construct(
+        private ManagerInterface $eastManager,
+        private DocumentManager $doctrineManager,
+    ) {
     }
 
     public function persist(object $object): ManagerInterface

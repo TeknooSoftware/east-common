@@ -46,30 +46,14 @@ class DeleteContentEndPoint implements DeleteContentEndPointInterface
 {
     use BaseCookbookTrait;
 
-    private LoadObject $loadObject;
-
-    private ?ObjectAccessControlInterface $objectAccessControl = null;
-
-    private DeleteObject $deleteObject;
-
-    private RedirectClientInterface $redirectClient;
-
-    private RenderError $renderError;
-
     public function __construct(
         RecipeInterface $recipe,
-        LoadObject $loadObject,
-        DeleteObject $deleteObject,
-        RedirectClientInterface $redirectClient,
-        RenderError $renderError,
-        ?ObjectAccessControlInterface $objectAccessControl = null
+        private LoadObject $loadObject,
+        private DeleteObject $deleteObject,
+        private RedirectClientInterface $redirectClient,
+        private RenderError $renderError,
+        private ?ObjectAccessControlInterface $objectAccessControl = null,
     ) {
-        $this->loadObject = $loadObject;
-        $this->deleteObject = $deleteObject;
-        $this->redirectClient = $redirectClient;
-        $this->renderError = $renderError;
-        $this->objectAccessControl = $objectAccessControl;
-
         $this->fill($recipe);
     }
 

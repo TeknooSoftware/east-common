@@ -93,14 +93,10 @@ class PaginationQuery implements QueryInterface, ImmutableInterface
                         new Promise(
                             static function ($count) use ($promise, $result) {
                                 $iterator = new class ($count, $result) implements Countable, IteratorAggregate {
-                                    private int $count;
-
-                                    private Traversable $iterator;
-
-                                    public function __construct(int $count, Traversable $iterator)
-                                    {
-                                        $this->count = $count;
-                                        $this->iterator = $iterator;
+                                    public function __construct(
+                                        private int $count,
+                                        private Traversable $iterator,
+                                    ) {
                                     }
 
                                     public function getIterator()

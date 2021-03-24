@@ -38,11 +38,9 @@ use Throwable;
  */
 class LoadMedia
 {
-    private MediaLoader $mediaLoader;
-
-    public function __construct(MediaLoader $mediaLoader)
-    {
-        $this->mediaLoader = $mediaLoader;
+    public function __construct(
+        private MediaLoader $mediaLoader,
+    ) {
     }
 
     public function __invoke(string $id, ManagerInterface $manager): self

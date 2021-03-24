@@ -49,38 +49,16 @@ class ListContentEndPoint implements ListContentEndPointInterface
 {
     use BaseCookbookTrait;
 
-    private ExtractPage $extractPage;
-
-    private ExtractOrder $extractOrder;
-
-    private ?SearchFormLoaderInterface $searchFormLoader;
-
-    private LoadListObjects $loadListObjects;
-
-    private ?ListObjectsAccessControlInterface $listObjectsAccessControl;
-
-    private RenderList $renderList;
-
-    private RenderError $renderError;
-
     public function __construct(
         RecipeInterface $recipe,
-        ExtractPage $extractPage,
-        ExtractOrder $extractOrder,
-        LoadListObjects $loadListObjects,
-        RenderList $renderList,
-        RenderError $renderError,
-        ?SearchFormLoaderInterface $searchFormLoader = null,
-        ?ListObjectsAccessControlInterface $listObjectsAccessControl = null
+        private ExtractPage $extractPage,
+        private ExtractOrder $extractOrder,
+        private LoadListObjects $loadListObjects,
+        private RenderList $renderList,
+        private RenderError $renderError,
+        private ?SearchFormLoaderInterface $searchFormLoader = null,
+        private ?ListObjectsAccessControlInterface $listObjectsAccessControl = null
     ) {
-        $this->extractPage = $extractPage;
-        $this->extractOrder = $extractOrder;
-        $this->loadListObjects = $loadListObjects;
-        $this->renderList = $renderList;
-        $this->renderError = $renderError;
-        $this->searchFormLoader = $searchFormLoader;
-        $this->listObjectsAccessControl = $listObjectsAccessControl;
-
         $this->fill($recipe);
     }
 

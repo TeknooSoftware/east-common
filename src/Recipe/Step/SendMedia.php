@@ -40,7 +40,7 @@ class SendMedia
     use ResponseTrait;
 
     public function __construct(
-        ResponseFactoryInterface $responseFactory
+        ResponseFactoryInterface $responseFactory,
     ) {
         $this->responseFactory = $responseFactory;
     }

@@ -44,26 +44,13 @@ class RenderDynamicContentEndPoint implements RenderDynamicContentEndPointInterf
 {
     use BaseCookbookTrait;
 
-    private ExtractSlug $extractSlug;
-
-    private LoadContent $loadContent;
-
-    private Render $render;
-
-    private RenderError $renderError;
-
     public function __construct(
-        RecipeInterface $recipe,
-        ExtractSlug $extractSlug,
-        LoadContent $loadContent,
-        Render $render,
-        RenderError $renderError
+        private RecipeInterface $recipe,
+        private ExtractSlug $extractSlug,
+        private LoadContent $loadContent,
+        private Render $render,
+        private RenderError $renderError
     ) {
-        $this->extractSlug = $extractSlug;
-        $this->loadContent = $loadContent;
-        $this->render = $render;
-        $this->renderError = $renderError;
-
         $this->fill($recipe);
     }
 

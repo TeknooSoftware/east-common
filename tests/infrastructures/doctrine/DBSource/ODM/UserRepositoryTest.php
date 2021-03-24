@@ -49,7 +49,7 @@ class UserRepositoryTest extends TestCase
 
     public function testWithNonSupportedRepository()
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(\TypeError::class);
         new UserRepository($this->createMock(ObjectRepository::class));
     }
 }

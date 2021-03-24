@@ -41,15 +41,9 @@ trait RepositoryTrait
 {
     use ExprConversionTrait;
 
-    private DocumentRepository $repository;
-
-    public function __construct(ObjectRepository $repository)
-    {
-        if (!$repository instanceof DocumentRepository) {
-            throw new RuntimeException('Error, the repository is not managed by this class');
-        }
-
-        $this->repository = $repository;
+    public function __construct(
+        private DocumentRepository $repository
+    ) {
     }
 
     public function find(string $id, PromiseInterface $promise): RepositoryInterface

@@ -41,20 +41,13 @@ class SearchFormLoader implements SearchFormLoaderInterface
 {
     public const ANY_TEMPLATE = 'any';
 
-    private FormFactoryInterface $formFactory;
-
-    /**
-     * @var array<string, array<string, class-string>>
-     */
-    private array $formsInstances;
-
     /**
      * @param array<string, array<string, class-string>> $formsInstances
      */
-    public function __construct(FormFactoryInterface $formFactory, array $formsInstances)
-    {
-        $this->formFactory = $formFactory;
-        $this->formsInstances = $formsInstances;
+    public function __construct(
+        private FormFactoryInterface $formFactory,
+        private array $formsInstances,
+    ) {
     }
 
     public function __invoke(

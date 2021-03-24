@@ -44,26 +44,13 @@ class RenderMediaEndPoint implements RenderMediaEndPointInterface
 {
     use BaseCookbookTrait;
 
-    private LoadMedia $loadMedia;
-
-    private GetStreamFromMediaInterface $getStreamFromMedia;
-
-    private SendMedia $sendMedia;
-
-    private RenderError $renderError;
-
     public function __construct(
         RecipeInterface $recipe,
-        LoadMedia $loadMedia,
-        GetStreamFromMediaInterface $getStreamFromMedia,
-        SendMedia $sendMedia,
-        RenderError $renderError
+        private LoadMedia $loadMedia,
+        private GetStreamFromMediaInterface $getStreamFromMedia,
+        private SendMedia $sendMedia,
+        private RenderError $renderError
     ) {
-        $this->loadMedia = $loadMedia;
-        $this->getStreamFromMedia = $getStreamFromMedia;
-        $this->sendMedia = $sendMedia;
-        $this->renderError = $renderError;
-
         $this->fill($recipe);
     }
 

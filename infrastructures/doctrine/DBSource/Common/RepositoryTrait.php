@@ -40,11 +40,9 @@ trait RepositoryTrait
 {
     use ExprConversionTrait;
 
-    private ObjectRepository $repository;
-
-    public function __construct(ObjectRepository $repository)
-    {
-        $this->repository = $repository;
+    public function __construct(
+        private ObjectRepository $repository,
+    ) {
     }
 
     public function find(string $id, PromiseInterface $promise): RepositoryInterface

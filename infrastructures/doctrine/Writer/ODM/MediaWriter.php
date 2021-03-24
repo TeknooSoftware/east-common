@@ -41,14 +41,10 @@ use Teknoo\East\Website\Writer\MediaWriter as OriginalWriter;
  */
 class MediaWriter implements WriterInterface
 {
-    private GridFSRepository $repository;
-
-    private OriginalWriter $writer;
-
-    public function __construct(GridFSRepository $repository, OriginalWriter $writer)
-    {
-        $this->repository = $repository;
-        $this->writer = $writer;
+    public function __construct(
+        private GridFSRepository $repository,
+        private OriginalWriter $writer,
+    ) {
     }
 
     public function save(ObjectInterface $object, PromiseInterface $promise = null): WriterInterface

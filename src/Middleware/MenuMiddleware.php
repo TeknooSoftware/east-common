@@ -38,11 +38,9 @@ use Teknoo\East\Website\Service\MenuGenerator;
  */
 class MenuMiddleware implements ViewParameterInterface
 {
-    private MenuGenerator $menuGenerator;
-
-    public function __construct(MenuGenerator $menuGenerator)
-    {
-        $this->menuGenerator = $menuGenerator;
+    public function __construct(
+        private MenuGenerator $menuGenerator,
+    ) {
     }
 
     /**

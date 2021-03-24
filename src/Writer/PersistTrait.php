@@ -38,14 +38,10 @@ use Throwable;
  */
 trait PersistTrait
 {
-    private ManagerInterface $manager;
-
-    private ?DatesService $datesService;
-
-    public function __construct(ManagerInterface $manager, ?DatesService $datesService = null)
-    {
-        $this->manager = $manager;
-        $this->datesService = $datesService;
+    public function __construct(
+        private ManagerInterface $manager,
+        private ?DatesService $datesService = null,
+    ) {
     }
 
     /**

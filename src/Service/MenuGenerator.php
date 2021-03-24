@@ -40,20 +40,11 @@ use function array_keys;
  */
 class MenuGenerator
 {
-    private ItemLoader $itemLoader;
-
-    private ContentLoader $contentLoader;
-
-    private ?ProxyDetectorInterface $proxyDetector = null;
-
     public function __construct(
-        ItemLoader $itemLoader,
-        ContentLoader $contentLoader,
-        ?ProxyDetectorInterface $proxyDetector = null
+        private ItemLoader $itemLoader,
+        private ContentLoader $contentLoader,
+        private ?ProxyDetectorInterface $proxyDetector = null,
     ) {
-        $this->itemLoader = $itemLoader;
-        $this->contentLoader = $contentLoader;
-        $this->proxyDetector = $proxyDetector;
     }
 
     /**

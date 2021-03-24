@@ -40,14 +40,10 @@ use Teknoo\East\WebsiteBundle\Object\User;
  */
 class UserWriter implements WriterInterface
 {
-    private UniversalWriter $universalWriter;
-
-    private EncoderFactoryInterface $encoderFactory;
-
-    public function __construct(UniversalWriter $universalWriter, EncoderFactoryInterface $encoderFactory)
-    {
-        $this->universalWriter = $universalWriter;
-        $this->encoderFactory = $encoderFactory;
+    public function __construct(
+        private UniversalWriter $universalWriter,
+        private EncoderFactoryInterface $encoderFactory,
+    ) {
     }
 
     private function encodePassword(BaseUser $user): void

@@ -42,14 +42,10 @@ use function is_callable;
  */
 class FormHandling implements FormHandlingInterface
 {
-    private DatesService $datesService;
-
-    private FormFactoryInterface $formFactory;
-
-    public function __construct(DatesService $datesService, FormFactoryInterface $formFactory)
-    {
-        $this->datesService = $datesService;
-        $this->formFactory = $formFactory;
+    public function __construct(
+        private DatesService $datesService,
+        private FormFactoryInterface $formFactory
+    ) {
     }
 
     /**

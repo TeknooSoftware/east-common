@@ -41,14 +41,10 @@ use Teknoo\East\Website\Object\Media as BaseMedia;
  */
 class GetStreamFromMedia implements GetStreamFromMediaInterface
 {
-    private GridFSRepository $repository;
-
-    private StreamFactoryInterface $streamFactory;
-
-    public function __construct(GridFSRepository $repository, StreamFactoryInterface $streamFactory)
-    {
-        $this->repository = $repository;
-        $this->streamFactory = $streamFactory;
+    public function __construct(
+        private GridFSRepository $repository,
+        private StreamFactoryInterface $streamFactory,
+    ) {
     }
 
     public function __invoke(

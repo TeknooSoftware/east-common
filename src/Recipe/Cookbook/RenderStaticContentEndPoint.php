@@ -42,18 +42,11 @@ class RenderStaticContentEndPoint implements RenderStaticContentEndPointInterfac
 {
     use BaseCookbookTrait;
 
-    private Render $render;
-
-    private RenderError $renderError;
-
     public function __construct(
-        RecipeInterface $recipe,
-        Render $render,
-        RenderError $renderError
+        private RecipeInterface $recipe,
+        private Render $render,
+        private RenderError $renderError
     ) {
-        $this->render = $render;
-        $this->renderError = $renderError;
-
         $this->fill($recipe);
     }
 

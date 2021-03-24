@@ -49,7 +49,7 @@ class RenderForm implements RenderFormInterface
     public function __construct(
         EngineInterface $templating,
         StreamFactoryInterface $streamFactory,
-        ResponseFactoryInterface $responseFactory
+        ResponseFactoryInterface $responseFactory,
     ) {
         $this->templating = $templating;
         $this->streamFactory = $streamFactory;

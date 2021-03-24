@@ -70,18 +70,6 @@ return [
     UserProvider::class => static function (ContainerInterface $container): UserProvider {
         $loader = $container->get(UserLoader::class);
 
-        if (Kernel::VERSION_ID < 50000) {
-            return new class ($loader) extends UserProvider implements UserProviderInterface {
-                /**
-                 * @param string $username
-                 */
-                public function loadUserByUsername($username)
-                {
-                    return $this->fetchUserByUsername((string) $username);
-                }
-            };
-        }
-
         return new class ($loader) extends UserProvider implements UserProviderInterface {
             public function loadUserByUsername(string $username)
             {

@@ -40,11 +40,9 @@ use Throwable;
  */
 class LoadContent
 {
-    private ContentLoader $contentLoader;
-
-    public function __construct(ContentLoader $contentLoader)
-    {
-        $this->contentLoader = $contentLoader;
+    public function __construct(
+        private ContentLoader $contentLoader,
+    ) {
     }
 
     public function __invoke(string $slug, ManagerInterface $manager): self

@@ -47,7 +47,7 @@ class Media extends DefaultGridFSRepository
             }
 
             return $this->getDocumentBucket()->openDownloadStream($id);
-        } catch (FileNotFoundException $e) {
+        } catch (FileNotFoundException) {
             throw DocumentNotFoundException::documentNotFound($this->getClassName(), $id);
         }
     }

@@ -65,10 +65,7 @@ trait ObjectTrait
 
     public function setUpdatedAt(?DateTimeInterface $updatedAt): self
     {
-        if (null === $this->createdAt) {
-            $this->createdAt = $updatedAt;
-        }
-
+        $this->createdAt ??= $updatedAt;
         $this->updatedAt = $updatedAt;
 
         return $this;

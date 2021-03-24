@@ -84,11 +84,7 @@ class ODM implements AdapterInterface
 
     private function getUnitOfWork(): UnitOfWork
     {
-        if (null === $this->unitOfWork) {
-            $this->unitOfWork = $this->doctrineManager->getUnitOfWork();
-        }
-
-        return $this->unitOfWork;
+        return $this->unitOfWork ??= $this->doctrineManager->getUnitOfWork();
     }
 
     public function ifObjectHasChangeSet(TranslatableInterface $object, callable $callback): AdapterInterface

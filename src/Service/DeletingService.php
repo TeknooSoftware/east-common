@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Service;
 
 use Teknoo\East\Website\Object\DeletableInterface;
-use Teknoo\East\Website\Object\ObjectInterface;
+use Teknoo\East\Website\Contracts\ObjectInterface;
 use Teknoo\East\Website\Writer\WriterInterface;
 
 /**

@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Recipe\Step;
 
 use Teknoo\East\Website\Loader\LoaderInterface;
-use Teknoo\East\Website\Object\ObjectInterface;
+use Teknoo\East\Website\Contracts\ObjectInterface;
 use Teknoo\East\Website\Object\SluggableInterface;
 use Teknoo\East\Website\Service\FindSlugService;
 

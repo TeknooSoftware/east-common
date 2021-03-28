@@ -29,7 +29,7 @@ use DomainException;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Website\Loader\LoaderInterface;
-use Teknoo\East\Website\Object\ObjectInterface;
+use Teknoo\East\Website\Contracts\ObjectInterface;
 use Throwable;
 
 /**
@@ -42,7 +42,7 @@ class LoadObject
         LoaderInterface $loader,
         string $id,
         ManagerInterface $manager,
-        string $workPlanKey = ObjectInterface::class
+        string $workPlanKey = ObjectInterface::class,
     ): self {
         $loader->load(
             $id,

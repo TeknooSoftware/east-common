@@ -1,5 +1,14 @@
 #Teknoo Software - Website - Change Log
 
+##[5.0.2] - 2021-03-28
+###Stable Release
+- CreateObject step has a new parameter `$workPlanKey` to custom the key to use to store the
+  new object in the workplan
+- CreateObject, DeleteObject, LoadObject, SaveObject and SlugPreparation use `Teknoo\East\Website\Contracts\ObjectInterface`
+  instead `Teknoo\East\Website\Object\ObjectInterface`. SaveObject pass the id only if the object implements
+  this last object
+- Writers services, Deleting services, and interfaces use also `Teknoo\East\Website\Contracts\ObjectInterface`.
+
 ##[5.0.1] - 2021-03-24
 ###Stable Release
 - Constructor Property Promotion

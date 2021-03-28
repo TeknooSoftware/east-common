@@ -27,7 +27,7 @@ namespace Teknoo\East\Website\Writer;
 
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\ManagerInterface;
-use Teknoo\East\Website\Object\ObjectInterface;
+use Teknoo\East\Website\Contracts\ObjectInterface;
 use Teknoo\East\Website\Object\TimestampableInterface;
 use Teknoo\East\Website\Service\DatesService;
 use Throwable;

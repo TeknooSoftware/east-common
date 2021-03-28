@@ -45,7 +45,8 @@ class CreateObject
     public function __invoke(
         string $objectClass,
         ManagerInterface $manager,
-        $constructorArguments = null
+        $constructorArguments = null,
+        string $workPlanKey = ObjectInterface::class,
     ): self {
         if (!class_exists($objectClass)) {
             $error = new DomainException("Error class $objectClass is not available");
@@ -73,7 +74,7 @@ class CreateObject
             return $this;
         }
 
-        $manager->updateWorkPlan([ObjectInterface::class => $object]);
+        $manager->updateWorkPlan([$workPlanKey => $object]);
 
         return $this;
     }

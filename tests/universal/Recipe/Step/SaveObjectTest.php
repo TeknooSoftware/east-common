@@ -26,7 +26,8 @@ namespace Teknoo\Tests\East\Website\Recipe\Step;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
-use Teknoo\East\Website\Object\ObjectInterface;
+use Teknoo\East\Website\Object\ObjectInterface as ObjectWithId;
+use Teknoo\East\Website\Contracts\ObjectInterface;
 use Teknoo\East\Website\Recipe\Step\SaveObject;
 use Teknoo\East\Website\Writer\WriterInterface;
 
@@ -75,10 +76,11 @@ class SaveObjectTest extends TestCase
         );
     }
 
-    public function testInvoke()
+    public function testInvokeWithObjectId()
     {
         $writer = $this->createMock(WriterInterface::class);
-        $object = $this->createMock(ObjectInterface::class);
+        $object = $this->createMock(ObjectWithId
+        ::class);
         $object->expects(self::any())->method('getId')->willReturn('foo');
         $manager = $this->createMock(ManagerInterface::class);
 
@@ -110,10 +112,70 @@ class SaveObjectTest extends TestCase
         );
     }
 
-    public function testInvokeWithError()
+    public function testInvokeWithObjectContact()
     {
         $writer = $this->createMock(WriterInterface::class);
         $object = $this->createMock(ObjectInterface::class);
+        $manager = $this->createMock(ManagerInterface::class);
+
+        $manager->expects(self::never())->method('error');
+        $manager->expects(self::never())->method('updateWorkPlan');
+
+        $writer->expects(self::any())
+            ->method('save')
+            ->willReturnCallback(
+                function ($object, PromiseInterface $promise) use ($writer) {
+                    $promise->success($object);
+
+                    return $writer;
+                }
+            );
+
+        self::assertInstanceOf(
+            SaveObject::class,
+            $this->buildStep()(
+                $writer,
+                $object,
+                $manager
+            )
+        );
+    }
+
+    public function testInvokeWithErrorWithObjectContract()
+    {
+        $writer = $this->createMock(WriterInterface::class);
+        $object = $this->createMock(ObjectInterface::class);
+        $manager = $this->createMock(ManagerInterface::class);
+
+        $manager->expects(self::once())->method('error');
+        $manager->expects(self::never())->method('updateWorkPlan');
+
+        $writer->expects(self::any())
+            ->method('save')
+            ->willReturnCallback(
+                function ($object, PromiseInterface $promise) use ($writer) {
+                    $promise->fail(
+                        new \Exception()
+                    );
+
+                    return $writer;
+                }
+            );
+
+        self::assertInstanceOf(
+            SaveObject::class,
+            $this->buildStep()(
+                $writer,
+                $object,
+                $manager
+            )
+        );
+    }
+
+    public function testInvokeWithErrorWithObjectId()
+    {
+        $writer = $this->createMock(WriterInterface::class);
+        $object = $this->createMock(ObjectWithId::class);
         $object->expects(self::any())->method('getId')->willReturn('foo');
         $manager = $this->createMock(ManagerInterface::class);
 

@@ -27,7 +27,8 @@ namespace Teknoo\East\Website\Recipe\Step;
 
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Promise\Promise;
-use Teknoo\East\Website\Object\ObjectInterface;
+use Teknoo\East\Website\Contracts\ObjectInterface;
+use Teknoo\East\Website\Object\ObjectInterface as ObjectWithId;
 use Teknoo\East\Website\Writer\WriterInterface;
 
 /**
@@ -39,18 +40,20 @@ class SaveObject
     public function __invoke(
         WriterInterface $writer,
         ObjectInterface $object,
-        ManagerInterface $manager
+        ManagerInterface $manager,
     ): self {
         $writer->save(
             $object,
             new Promise(
                 static function (ObjectInterface $object) use ($manager) {
-                    $manager->updateWorkPlan([
-                        'id' => $object->getId(),
-                        'parameters' => [
+                    if ($object instanceof ObjectWithId) {
+                        $manager->updateWorkPlan([
                             'id' => $object->getId(),
-                        ],
-                    ]);
+                            'parameters' => [
+                                'id' => $object->getId(),
+                            ],
+                        ]);
+                    }
                 },
                 [$manager, 'error']
             )

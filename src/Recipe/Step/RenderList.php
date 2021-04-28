@@ -33,8 +33,6 @@ use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Website\Middleware\ViewParameterInterface;
 use Teknoo\East\Website\Recipe\Step\Traits\TemplateTrait;
 
-use function array_merge;
-
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -68,16 +66,14 @@ class RenderList
         $this->render(
             $client,
             $template,
-            array_merge(
-                $viewParameters,
-                [
-                    'objectsCollection' => $objectsCollection,
-                    'page' => $page,
-                    'pageCount' => $pageCount,
-                    'queryParams' => $request->getQueryParams(),
-                    'searchForm' => $searchForm
-                ]
-            )
+            [
+                'objectsCollection' => $objectsCollection,
+                'page' => $page,
+                'pageCount' => $pageCount,
+                'queryParams' => $request->getQueryParams(),
+                'searchForm' => $searchForm
+            ]
+            + $viewParameters,
         );
 
         return $this;

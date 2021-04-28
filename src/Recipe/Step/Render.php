@@ -34,7 +34,6 @@ use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Website\Middleware\ViewParameterInterface;
 use Teknoo\East\Website\Recipe\Step\Traits\TemplateTrait;
 
-use function array_merge;
 use function is_object;
 use function method_exists;
 
@@ -69,7 +68,7 @@ class Render
         }
 
         if (!empty($objectViewKey)) {
-            $viewParameters = array_merge($viewParameters, [$objectViewKey => $objectInstance]);
+            $viewParameters = [$objectViewKey => $objectInstance] + $viewParameters;
         }
 
         $headers = [];

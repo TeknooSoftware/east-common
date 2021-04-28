@@ -36,8 +36,6 @@ use Teknoo\East\Website\Middleware\ViewParameterInterface;
 use Teknoo\East\Website\Contracts\ObjectInterface;
 use Teknoo\East\Website\Recipe\Step\Traits\TemplateTrait;
 
-use function array_merge;
-
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -72,15 +70,13 @@ class RenderForm implements RenderFormInterface
         $this->render(
             $client,
             $template,
-            array_merge(
-                $viewParameters,
-                [
-                    'objectInstance' => $object,
-                    'formView' => $form->createView(),
-                    'request' => $request,
-                    'isTranslatable' => $isTranslatable
-                ]
-            )
+            [
+                'objectInstance' => $object,
+                'formView' => $form->createView(),
+                'request' => $request,
+                'isTranslatable' => $isTranslatable
+            ]
+            + $viewParameters
         );
 
         return $this;

@@ -35,7 +35,6 @@ use Teknoo\East\Website\Middleware\ViewParameterInterface;
 use Teknoo\East\Website\Recipe\Step\Traits\TemplateTrait;
 use Throwable;
 
-use function array_merge;
 use function str_replace;
 
 /**
@@ -66,7 +65,7 @@ class RenderError
         if ($message instanceof ServerRequestInterface) {
             $viewParameters = $message->getAttribute(ViewParameterInterface::REQUEST_PARAMETER_KEY, []);
         }
-        $viewParameters = array_merge($viewParameters, ['error' => $error]);
+        $viewParameters = ['error' => $error] + $viewParameters;
 
         $errorCode = $error->getCode();
         if (empty($errorCode)) {

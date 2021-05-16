@@ -19,6 +19,9 @@ parameters:
         -
             message: '#Unreachable statement - code above always terminates.#'
             path: infrastructures/symfony/Resources/config/di.php
+        -
+            message: '#expects class-string<object>, string given#'
+            path:  infrastructures/doctrine/Translatable/Mapping/ExtensionMetadataFactory.php
 services:
 	-
 		class: Teknoo\States\PHPStan\MethodsClassExtension

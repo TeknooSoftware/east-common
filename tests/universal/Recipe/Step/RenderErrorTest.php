@@ -33,6 +33,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Http\Message\CallbackStreamInterface;
+use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Foundation\Template\ResultInterface;
@@ -114,7 +115,8 @@ class RenderErrorTest extends TestCase
             $this->createMock(ServerRequestInterface::class),
             new \stdClass(),
             'foo',
-            $this->createMock(\Throwable::class)
+            $this->createMock(\Throwable::class),
+            $this->createMock(ManagerInterface::class)
         );
     }
 
@@ -126,7 +128,8 @@ class RenderErrorTest extends TestCase
             $this->createMock(ServerRequestInterface::class),
             $this->createMock(ClientInterface::class),
             new \stdClass(),
-            $this->createMock(\Throwable::class)
+            $this->createMock(\Throwable::class),
+            $this->createMock(ManagerInterface::class)
         );
     }
 
@@ -138,7 +141,8 @@ class RenderErrorTest extends TestCase
             $this->createMock(ServerRequestInterface::class),
             $this->createMock(ClientInterface::class),
             'foo',
-            new \stdClass()
+            new \stdClass(),
+            $this->createMock(ManagerInterface::class)
         );
     }
 
@@ -187,7 +191,8 @@ class RenderErrorTest extends TestCase
                 $request,
                 $client,
                 $template,
-                $error
+                $error,
+                $this->createMock(ManagerInterface::class)
             )
         );
     }
@@ -236,7 +241,8 @@ class RenderErrorTest extends TestCase
                 $message,
                 $client,
                 $template,
-                $error
+                $error,
+                $this->createMock(ManagerInterface::class)
             )
         );
     }
@@ -285,7 +291,8 @@ class RenderErrorTest extends TestCase
                 $request,
                 $client,
                 $template,
-                $error
+                $error,
+                $this->createMock(ManagerInterface::class)
             )
         );
     }
@@ -343,7 +350,8 @@ class RenderErrorTest extends TestCase
                 $request,
                 $client,
                 $template,
-                $error
+                $error,
+                $this->createMock(ManagerInterface::class)
             )
         );
     }
@@ -395,7 +403,8 @@ class RenderErrorTest extends TestCase
                 $request,
                 $client,
                 $template,
-                $error
+                $error,
+                $this->createMock(ManagerInterface::class)
             )
         );
     }

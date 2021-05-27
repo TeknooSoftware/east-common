@@ -1,5 +1,9 @@
 #Teknoo Software - Website - Change Log
 
+##[5.0.4] - 2021-05-27
+###Stable Release
+- Switch to last version of Recipe
+
 ##[5.0.3] - 2021-04-28
 ###Stable Release
 - Some optimisations on array functions to limit O(n)

@@ -30,6 +30,7 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Teknoo\East\Foundation\Http\ClientInterface;
+use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Website\Middleware\ViewParameterInterface;
 use Teknoo\East\Website\Recipe\Step\Traits\TemplateTrait;
@@ -59,8 +60,11 @@ class RenderError
         MessageInterface $message,
         ClientInterface $client,
         string $errorTemplate,
-        Throwable $error
+        Throwable $error,
+        ManagerInterface $manager
     ): self {
+        $manager->stopErrorReporting();
+
         $viewParameters = [];
         if ($message instanceof ServerRequestInterface) {
             $viewParameters = $message->getAttribute(ViewParameterInterface::REQUEST_PARAMETER_KEY, []);

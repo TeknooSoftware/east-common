@@ -617,6 +617,16 @@ class FeatureContext implements Context
 
                 return $this;
             }
+
+            public function mustSendAResponse(): ClientInterface
+            {
+                return $this;
+            }
+
+            public function sendAResponseIsOptional(): ClientInterface
+            {
+                return $this;
+            }
         };
 
         return $this->client;

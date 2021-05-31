@@ -71,6 +71,10 @@ return [
         $loader = $container->get(UserLoader::class);
 
         return new class ($loader) extends UserProvider implements UserProviderInterface {
+            /**
+             * @param string $username
+             * @return \Symfony\Component\Security\Core\User\UserInterface
+             */
             public function loadUserByUsername(string $username)
             {
                 return $this->fetchUserByUsername($username);

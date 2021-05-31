@@ -55,6 +55,9 @@ class User implements UserInterface, EquatableInterface
         return $this->user->getSalt();
     }
 
+    /**
+     * @return string
+     */
     public function getUsername()
     {
         return $this->user->getUsername();
@@ -69,6 +72,6 @@ class User implements UserInterface, EquatableInterface
 
     public function isEqualTo(UserInterface $user): bool
     {
-        return $user->getUsername() === $this->getUsername();
+        return $user instanceof static &&  $user->getUsername() === $this->getUsername();
     }
 }

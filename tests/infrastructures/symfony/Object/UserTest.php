@@ -136,6 +136,10 @@ class UserTest extends TestCase
 
     public function testIsEqualToNotSameUserName()
     {
+        if (!\method_exists(UserInterface::class, 'UserInterface')) {
+            self::markTestSkipped('Method removed in Interface');
+        }
+
         $this->getUser()
             ->expects(self::once())
             ->method('getUsername')
@@ -144,7 +148,7 @@ class UserTest extends TestCase
         $user = $this->createMock(UserInterface::class);
         $user
             ->expects(self::once())
-            ->method('getUsername')
+            ->method('UserInterface')
             ->willReturn('notUserName');
 
         self::assertFalse(
@@ -154,6 +158,10 @@ class UserTest extends TestCase
 
     public function testIsEqualToSameUserName()
     {
+        if (!\method_exists(UserInterface::class, 'UserInterface')) {
+            self::markTestSkipped('Method removed in Interface');
+        }
+        
         $this->getUser()
             ->expects(self::once())
             ->method('getUsername')

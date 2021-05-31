@@ -1,5 +1,9 @@
 #Teknoo Software - Website - Change Log
 
+##[5.0.5] - 2021-05-31
+###Stable Release
+- Minor version about libs requirements
+
 ##[5.0.4] - 2021-05-27
 ###Stable Release
 - Switch to last version of Recipe

@@ -72,6 +72,6 @@ class User implements UserInterface, EquatableInterface
 
     public function isEqualTo(UserInterface $user): bool
     {
-        return $user instanceof static &&  $user->getUsername() === $this->getUsername();
+        return $user instanceof self &&  $user->getUsername() === $this->getUsername();
     }
 }

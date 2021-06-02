@@ -1,5 +1,9 @@
 #Teknoo Software - Website - Change Log
 
+##[5.0.6] - 2021-06-02
+###Stable Release
+- Fix User with Symfony 5.3
+
 ##[5.0.5] - 2021-05-31
 ###Stable Release
 - Minor version about libs requirements

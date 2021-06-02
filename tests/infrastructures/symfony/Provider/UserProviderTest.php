@@ -115,6 +115,44 @@ class UserProviderTest extends TestCase
         );
     }
 
+    public function testLoadUserByIdentifierNotFound()
+    {
+        $this->expectException(UsernameNotFoundException::class);
+
+        $this->getLoader()
+            ->expects(self::once())
+            ->method('query')
+            ->willReturnCallback(function ($name, PromiseInterface $promise) {
+                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
+                $promise->fail(new \DomainException());
+
+                return $this->getLoader();
+            });
+
+        $this->buildProvider()->loadUserByIdentifier('foo@bar');
+    }
+
+    public function testLoadUserByIdentifierFound()
+    {
+        $user = new BaseUser();
+        $user->setEmail('foo@bar');
+
+        $this->getLoader()
+            ->expects(self::once())
+            ->method('query')
+            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
+                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
+                $promise->success($user);
+
+                return $this->getLoader();
+            });
+
+        self::assertEquals(
+            (new User($user)),
+            $this->buildProvider()->loadUserByIdentifier('foo@bar')
+        );
+    }
+
     public function testrefreshUserNotFound()
     {
         $this->expectException(UsernameNotFoundException::class);

@@ -115,6 +115,19 @@ class UserTest extends TestCase
         );
     }
 
+    public function testGetUserIdentifier()
+    {
+        $this->getUser()
+            ->expects(self::once())
+            ->method('getUsername')
+            ->willReturn('username');
+
+        self::assertEquals(
+            'username',
+            $this->buildObject()->getUserIdentifier()
+        );
+    }
+
     public function testEraseCredentials()
     {
         $this->getUser()

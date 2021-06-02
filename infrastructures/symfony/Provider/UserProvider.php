@@ -45,6 +45,11 @@ abstract class UserProvider
     ) {
     }
 
+    public function loadUserByIdentifier(string $username): ?UserInterface
+    {
+        return $this->fetchUserByUsername($username);
+    }
+
     protected function fetchUserByUsername(string $username): UserInterface
     {
         $loadedUser = null;

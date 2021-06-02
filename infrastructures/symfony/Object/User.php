@@ -63,6 +63,11 @@ class User implements UserInterface, EquatableInterface
         return $this->user->getUsername();
     }
 
+    public function getUserIdentifier(): string
+    {
+        return $this->user->getUsername();
+    }
+
     public function eraseCredentials(): self
     {
         $this->user->eraseCredentials();

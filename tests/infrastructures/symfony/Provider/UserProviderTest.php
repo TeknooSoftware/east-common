@@ -26,13 +26,17 @@ namespace Teknoo\Tests\East\WebsiteBundle\Provider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\User\LegacyPasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Teknoo\East\Website\Loader\UserLoader;
 use Teknoo\East\Website\Query\User\UserByEmailQuery;
+use Teknoo\East\WebsiteBundle\Object\LegacyUser;
 use Teknoo\East\WebsiteBundle\Object\User;
 use Teknoo\East\WebsiteBundle\Provider\UserProvider;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\Object\User as BaseUser;
+
+use function interface_exists;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -109,8 +113,14 @@ class UserProviderTest extends TestCase
                 return $this->getLoader();
             });
 
+        if (interface_exists(LegacyPasswordAuthenticatedUserInterface::class)) {
+            $loadedUser = new LegacyUser($user);
+        } else {
+            $loadedUser = new User($user);
+        }
+
         self::assertEquals(
-            (new User($user)),
+            $loadedUser,
             $this->buildProvider()->loadUserByUsername('foo@bar')
         );
     }
@@ -147,8 +157,14 @@ class UserProviderTest extends TestCase
                 return $this->getLoader();
             });
 
+        if (interface_exists(LegacyPasswordAuthenticatedUserInterface::class)) {
+            $loadedUser = new LegacyUser($user);
+        } else {
+            $loadedUser = new User($user);
+        }
+
         self::assertEquals(
-            (new User($user)),
+            $loadedUser,
             $this->buildProvider()->loadUserByIdentifier('foo@bar')
         );
     }
@@ -185,8 +201,14 @@ class UserProviderTest extends TestCase
                 return $this->getLoader();
             });
 
+        if (interface_exists(LegacyPasswordAuthenticatedUserInterface::class)) {
+            $loadedUser = new LegacyUser($user);
+        } else {
+            $loadedUser = new User($user);
+        }
+
         self::assertEquals(
-            (new User($user)),
+            $loadedUser,
             $this->buildProvider()->refreshUser(new User((new BaseUser())->setEmail('foo@bar')))
         );
     }

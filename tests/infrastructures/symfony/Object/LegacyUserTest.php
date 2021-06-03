@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * East Website.
  *
  * LICENSE
@@ -21,23 +21,43 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-declare(strict_types=1);
+namespace Teknoo\Tests\East\WebsiteBundle\Object;
 
-namespace Teknoo\East\WebsiteBundle\Object;
-
-use Symfony\Component\Security\Core\User\EquatableInterface;
-use Symfony\Component\Security\Core\User\LegacyPasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Teknoo\East\WebsiteBundle\Object\LegacyUser;
 use Teknoo\East\Website\Object\User as BaseUser;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ * @covers      \Teknoo\East\WebsiteBundle\Object\LegacyUser
  */
-class LegacyUser extends User implements LegacyPasswordAuthenticatedUserInterface
+class LegacyUserTest extends UserTest
 {
-    public function getSalt(): ?string
+    /**
+     * @var BaseUser
+     */
+    private $user;
+
+    /**
+     * @return BaseUser|\PHPUnit\Framework\MockObject\MockObject
+     */
+    public function getUser(): BaseUser
     {
-        return parent::getSalt();
+        if (!$this->user instanceof BaseUser) {
+            $this->user = $this->createMock(BaseUser::class);
+        }
+
+        return $this->user;
+    }
+
+    public function buildObject(): LegacyUser
+    {
+        return new LegacyUser($this->getUser());
+    }
+
+    public function testExceptionWithBadUser()
+    {
+        $this->expectException(\TypeError::class);
+        new LegacyUser(new \stdClass());
     }
 }

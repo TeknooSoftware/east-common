@@ -31,6 +31,7 @@ include 'fakeQuery.php';
 include 'fakeUOW.php';
 include 'fakeRuntimeException.php';
 include 'fakeObjectId.php';
+include 'fakeLegacyPasswordAuthenticatedUserInterface.php';
 include __DIR__.'/../vendor/autoload.php';
 
 if (!\class_exists(\MongoGridFSFile::class)) {
@@ -44,3 +45,4 @@ if (!\class_exists(\MongoGridFSFile::class)) {
         }
     }
 }
+

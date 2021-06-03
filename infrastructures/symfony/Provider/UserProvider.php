@@ -28,11 +28,15 @@ namespace Teknoo\East\WebsiteBundle\Provider;
 use ReflectionClass;
 use ReflectionException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\User\LegacyPasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Website\Loader\UserLoader;
 use Teknoo\East\Website\Query\User\UserByEmailQuery;
+use Teknoo\East\WebsiteBundle\Object\LegacyUser;
 use Teknoo\East\WebsiteBundle\Object\User;
+
+use function interface_exists;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -56,7 +60,11 @@ abstract class UserProvider
         $this->loader->query(
             new UserByEmailQuery($username),
             new Promise(static function ($user) use (&$loadedUser) {
-                $loadedUser = new User($user);
+                if (interface_exists(LegacyPasswordAuthenticatedUserInterface::class)) {
+                    $loadedUser = new LegacyUser($user);
+                } else {
+                    $loadedUser = new User($user);
+                }
             })
         );
 

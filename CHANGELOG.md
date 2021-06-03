@@ -1,5 +1,9 @@
 #Teknoo Software - Website - Change Log
 
+##[5.0.7] - 2021-06-04
+###Stable Release
+- Fix Deprecatuib for Symfony 5.3
+
 ##[5.0.6] - 2021-06-02
 ###Stable Release
 - Fix User with Symfony 5.3

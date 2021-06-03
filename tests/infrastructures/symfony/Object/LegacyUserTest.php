@@ -23,6 +23,7 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\Object;
 
+use Symfony\Component\Security\Core\User\LegacyPasswordAuthenticatedUserInterface;
 use Teknoo\East\WebsiteBundle\Object\LegacyUser;
 use Teknoo\East\Website\Object\User as BaseUser;
 
@@ -52,11 +53,19 @@ class LegacyUserTest extends UserTest
 
     public function buildObject(): LegacyUser
     {
+        if (!interface_exists(LegacyPasswordAuthenticatedUserInterface::class)) {
+            self::markTestSkipped();
+        }
+
         return new LegacyUser($this->getUser());
     }
 
     public function testExceptionWithBadUser()
     {
+        if (!interface_exists(LegacyPasswordAuthenticatedUserInterface::class)) {
+            self::markTestSkipped();
+        }
+
         $this->expectException(\TypeError::class);
         new LegacyUser(new \stdClass());
     }

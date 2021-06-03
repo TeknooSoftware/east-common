@@ -27,6 +27,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\LegacyPasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Teknoo\East\Website\Loader\UserLoader;
 use Teknoo\East\Website\Query\User\UserByEmailQuery;
@@ -186,7 +187,7 @@ class UserProviderTest extends TestCase
         $this->buildProvider()->refreshUser(new User((new BaseUser())->setEmail('foo@bar')));
     }
 
-    public function testrefreshUserFound()
+    public function testRefreshUserFound()
     {
         $user = new BaseUser();
         $user->setEmail('foo@bar');
@@ -210,6 +211,13 @@ class UserProviderTest extends TestCase
         self::assertEquals(
             $loadedUser,
             $this->buildProvider()->refreshUser(new User((new BaseUser())->setEmail('foo@bar')))
+        );
+    }
+
+    public function testRefreshUserNotSupported()
+    {
+        self::assertNull(
+            $this->buildProvider()->refreshUser($this->createMock(UserInterface::class))
         );
     }
 

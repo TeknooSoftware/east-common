@@ -31,6 +31,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Teknoo\East\Website\Object\User as BaseUser;
 
 /**
+ * Class implementing user for Symfony 5.3+ with new interface.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

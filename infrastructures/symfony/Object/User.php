@@ -26,8 +26,11 @@ declare(strict_types=1);
 namespace Teknoo\East\WebsiteBundle\Object;
 
 use Symfony\Component\Security\Core\User\EquatableInterface;
+use Symfony\Component\Security\Core\User\LegacyPasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Teknoo\East\Website\Object\User as BaseUser;
+
+use function interface_exists;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -38,6 +41,14 @@ class User implements UserInterface, EquatableInterface
     public function __construct(
         private BaseUser $user
     ) {
+        if (interface_exists(LegacyPasswordAuthenticatedUserInterface::class) && !$this instanceof LegacyUser) {
+            trigger_deprecation(
+                'teknoo/east-website',
+                '5.0',
+                'class "%s()" is deprecated, use \Teknoo\East\WebsiteBundle\Object\LegacyUser instead.',
+                __CLASS__
+            );
+        }
     }
 
     public function getRoles()

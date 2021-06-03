@@ -24,6 +24,7 @@
 namespace Teknoo\Tests\East\WebsiteBundle\Object;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Security\Core\User\LegacyPasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Teknoo\East\WebsiteBundle\Object\User;
 use Teknoo\East\Website\Object\User as BaseUser;

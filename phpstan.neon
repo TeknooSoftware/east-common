@@ -20,7 +20,7 @@ parameters:
             message: '#Unreachable statement - code above always terminates.#'
             path: infrastructures/symfony/Resources/config/di.php
         -
-            message: '#LegacyPasswordAuthenticatedUserInterface not found.#'
+            message: '#LegacyPasswordAuthenticatedUserInterface not found#'
             path: infrastructures/symfony/
         -
             message: '#expects class-string<object>, string given#'

@@ -3,6 +3,10 @@ parameters:
     checkMissingIterableValueType: false
     checkGenericClassInNonGenericObjectType: false
     reportUnmatchedIgnoredErrors: false
+    excludePaths:
+        - infrastructures/symfony/Object/LegacyUser.php
+        - infrastructures/symfony/Object/User.php
+        - infrastructures/symfony/Provider/UserProvider.php
     ignoreErrors:
         -
             message: '#Parameter \#1 \$translatableSetter of class [a-zA-Z0-9\\_]+ constructor expects \(callable\(\): mixed\)\|null#'
@@ -19,9 +23,6 @@ parameters:
         -
             message: '#Unreachable statement - code above always terminates.#'
             path: infrastructures/symfony/Resources/config/di.php
-        -
-            message: '#LegacyPasswordAuthenticatedUserInterface not found#'
-            path: infrastructures/symfony/
         -
             message: '#expects class-string<object>, string given#'
             path:  infrastructures/doctrine/Translatable/Mapping/ExtensionMetadataFactory.php

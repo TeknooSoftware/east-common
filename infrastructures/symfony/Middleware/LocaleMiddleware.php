@@ -28,15 +28,12 @@ namespace Teknoo\East\WebsiteBundle\Middleware;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
-use Teknoo\East\Foundation\Http\ClientInterface;
-use Teknoo\East\Foundation\Manager\ManagerInterface;
-use Teknoo\East\Foundation\Middleware\MiddlewareInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class LocaleMiddleware implements MiddlewareInterface
+class LocaleMiddleware
 {
     public const MIDDLEWARE_PRIORITY = 7;
 
@@ -46,10 +43,8 @@ class LocaleMiddleware implements MiddlewareInterface
     }
 
     public function execute(
-        ClientInterface $client,
         MessageInterface $message,
-        ManagerInterface $manager
-    ): MiddlewareInterface {
+    ): self {
         if (!$message instanceof ServerRequestInterface) {
             return $this;
         }

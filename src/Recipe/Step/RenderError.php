@@ -34,6 +34,7 @@ use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Website\Middleware\ViewParameterInterface;
 use Teknoo\East\Website\Recipe\Step\Traits\TemplateTrait;
+use Teknoo\Recipe\Ingredient\Attributes\Transform;
 use Throwable;
 
 use function str_replace;
@@ -61,13 +62,13 @@ class RenderError
         ClientInterface $client,
         string $errorTemplate,
         Throwable $error,
-        ManagerInterface $manager
+        ManagerInterface $manager,
+        #[Transform] array $viewParameters = [],
     ): self {
         $manager->stopErrorReporting();
 
-        $viewParameters = [];
         if ($message instanceof ServerRequestInterface) {
-            $viewParameters = $message->getAttribute(ViewParameterInterface::REQUEST_PARAMETER_KEY, []);
+            $viewParameters += $message->getAttribute(ViewParameterInterface::REQUEST_PARAMETER_KEY, []);
         }
         $viewParameters = ['error' => $error] + $viewParameters;
 

@@ -32,6 +32,7 @@ use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Website\Middleware\ViewParameterInterface;
 use Teknoo\East\Website\Recipe\Step\Traits\TemplateTrait;
+use Teknoo\Recipe\Ingredient\Attributes\Transform;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -59,9 +60,10 @@ class RenderList
         int $itemsPerPage,
         int $page,
         string $template,
-        mixed $searchForm = null
+        mixed $searchForm = null,
+        #[Transform] array $viewParameters = [],
     ): self {
-        $viewParameters = $request->getAttribute(ViewParameterInterface::REQUEST_PARAMETER_KEY, []);
+        $viewParameters += $request->getAttribute(ViewParameterInterface::REQUEST_PARAMETER_KEY, []);
 
         $this->render(
             $client,

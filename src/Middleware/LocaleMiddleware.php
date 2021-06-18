@@ -27,19 +27,18 @@ namespace Teknoo\East\Website\Middleware;
 
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
-use Teknoo\East\Foundation\Middleware\MiddlewareInterface;
 use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Foundation\Session\SessionInterface;
 
+use Teknoo\East\Website\View\ParametersBag;
 use function is_callable;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class LocaleMiddleware implements MiddlewareInterface
+class LocaleMiddleware
 {
     public const SESSION_KEY = 'locale';
     public const MIDDLEWARE_PRIORITY = 6;
@@ -94,27 +93,11 @@ class LocaleMiddleware implements MiddlewareInterface
         return $returnedLocale;
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    private function getViewParameters(ServerRequestInterface $request): array
-    {
-        return $request->getAttribute(ViewParameterInterface::REQUEST_PARAMETER_KEY, []);
-    }
-
-    private function updateViewParameters(string $locale, ServerRequestInterface $request): ServerRequestInterface
-    {
-        $parameters = $this->getViewParameters($request);
-        $parameters['locale'] = $locale;
-
-        return $request->withAttribute(ViewParameterInterface::REQUEST_PARAMETER_KEY, $parameters);
-    }
-
     public function execute(
-        ClientInterface $client,
         MessageInterface $message,
-        ManagerInterface $manager
-    ): MiddlewareInterface {
+        ManagerInterface $manager,
+        ParametersBag $bag,
+    ): self {
         if (!$message instanceof ServerRequestInterface) {
             if (is_callable($this->translatableSetter)) {
                 ($this->translatableSetter)($this->defaultLocale);
@@ -131,13 +114,13 @@ class LocaleMiddleware implements MiddlewareInterface
             }
             $this->registerLocaleInSession($message, $locale);
             $message = $message->withAttribute('locale', $locale);
+
+            $manager->updateMessage($message);
         } else {
             $locale = $this->getLocaleFromSession($message);
         }
 
-        $message = $this->updateViewParameters($locale, $message);
-
-        $manager->updateMessage($message);
+        $bag->add('locale', $locale);
 
         return $this;
     }

@@ -35,6 +35,7 @@ use Teknoo\East\Website\Contracts\Recipe\Step\RenderFormInterface;
 use Teknoo\East\Website\Middleware\ViewParameterInterface;
 use Teknoo\East\Website\Contracts\ObjectInterface;
 use Teknoo\East\Website\Recipe\Step\Traits\TemplateTrait;
+use Teknoo\Recipe\Ingredient\Attributes\Transform;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -63,9 +64,10 @@ class RenderForm implements RenderFormInterface
         FormInterface $form,
         string $template,
         ObjectInterface $object,
-        bool $isTranslatable = false
+        bool $isTranslatable = false,
+        #[Transform] array $viewParameters = [],
     ): RenderFormInterface {
-        $viewParameters = $request->getAttribute(ViewParameterInterface::REQUEST_PARAMETER_KEY, []);
+        $viewParameters += $request->getAttribute(ViewParameterInterface::REQUEST_PARAMETER_KEY, []);
 
         $this->render(
             $client,

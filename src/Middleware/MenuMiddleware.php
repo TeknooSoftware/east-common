@@ -25,47 +25,24 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Middleware;
 
-use Psr\Http\Message\MessageInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Teknoo\East\Foundation\Http\ClientInterface;
-use Teknoo\East\Foundation\Manager\ManagerInterface;
-use Teknoo\East\Foundation\Middleware\MiddlewareInterface;
 use Teknoo\East\Website\Service\MenuGenerator;
+use Teknoo\East\Website\View\ParametersBag;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class MenuMiddleware implements ViewParameterInterface
+class MenuMiddleware
 {
     public function __construct(
         private MenuGenerator $menuGenerator,
     ) {
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    private function getViewParameters(ServerRequestInterface $request): array
-    {
-        return $request->getAttribute(self::REQUEST_PARAMETER_KEY, []);
-    }
-
     public function execute(
-        ClientInterface $client,
-        MessageInterface $message,
-        ManagerInterface $manager
-    ): MiddlewareInterface {
-        if (!$message instanceof ServerRequestInterface) {
-            return $this;
-        }
-
-        $parameters = $this->getViewParameters($message);
-        $parameters['menuGenerator'] = $this->menuGenerator;
-
-        $request = $message->withAttribute(self::REQUEST_PARAMETER_KEY, $parameters);
-
-        $manager->updateMessage($request);
+        ParametersBag $bag,
+    ): self {
+        $bag->add('menuGenerator', $this->menuGenerator);
 
         return $this;
     }

@@ -23,15 +23,40 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Middleware;
+namespace Teknoo\East\Website\View;
+
+use Teknoo\Recipe\Ingredient\MergeableInterface;
+use Teknoo\Recipe\Ingredient\TransformableInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-interface ViewParameterInterface
+class ParametersBag implements MergeableInterface, TransformableInterface
 {
-    public const REQUEST_PARAMETER_KEY = 'view.parameters';
+    /**
+     * @var array<string, mixed>
+     */
+    private array $bag = [];
 
-    public const MIDDLEWARE_PRIORITY = 7;
+    public function set(string $name, mixed $value): self
+    {
+        $this->bag[$name] = $value;
+
+        return $this;
+    }
+
+    public function merge(MergeableInterface $mergeable): MergeableInterface
+    {
+        if ($mergeable instanceof ParametersBag) {
+            $this->bag = $mergeable->bag + $this->bag;
+        }
+
+        return $this;
+    }
+
+    public function transform(): mixed
+    {
+        return $this->bag;
+    }
 }

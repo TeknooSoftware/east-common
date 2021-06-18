@@ -65,7 +65,7 @@ class MenuMiddleware implements ViewParameterInterface
 
         $request = $message->withAttribute(self::REQUEST_PARAMETER_KEY, $parameters);
 
-        $manager->continueExecution($client, $request);
+        $manager->updateMessage($request);
 
         return $this;
     }

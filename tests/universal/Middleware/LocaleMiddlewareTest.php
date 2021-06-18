@@ -135,8 +135,8 @@ class LocaleMiddlewareTest extends TestCase
 
         $manager = $this->createMock(ManagerInterface::class);
         $manager->expects(self::once())
-            ->method('continueExecution')
-            ->with($client, $serverRequestFinal)
+            ->method('updateMessage')
+            ->with($serverRequestFinal)
             ->willReturnSelf();
 
         $this->getTranslatableSetter()
@@ -187,8 +187,8 @@ class LocaleMiddlewareTest extends TestCase
 
         $manager = $this->createMock(ManagerInterface::class);
         $manager->expects(self::once())
-            ->method('continueExecution')
-            ->with($client, $serverRequestFinal)
+            ->method('updateMessage')
+            ->with($serverRequestFinal)
             ->willReturnSelf();
 
         $this->getTranslatableSetter()
@@ -239,8 +239,8 @@ class LocaleMiddlewareTest extends TestCase
 
         $manager = $this->createMock(ManagerInterface::class);
         $manager->expects(self::once())
-            ->method('continueExecution')
-            ->with($client, $serverRequestFinal)
+            ->method('updateMessage')
+            ->with($serverRequestFinal)
             ->willReturnSelf();
 
         $this->getTranslatableSetter()

@@ -137,7 +137,7 @@ class LocaleMiddleware implements MiddlewareInterface
 
         $message = $this->updateViewParameters($locale, $message);
 
-        $manager->continueExecution($client, $message);
+        $manager->updateMessage($message);
 
         return $this;
     }

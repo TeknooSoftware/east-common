@@ -31,6 +31,7 @@ use Teknoo\East\Website\Contracts\Recipe\Step\GetStreamFromMediaInterface;
 use Teknoo\East\Website\Recipe\Step\LoadMedia;
 use Teknoo\East\Website\Recipe\Step\RenderError;
 use Teknoo\East\Website\Recipe\Step\SendMedia;
+use Teknoo\East\Website\View\ParametersBag;
 use Teknoo\Recipe\Bowl\Bowl;
 use Teknoo\Recipe\Cookbook\BaseCookbookTrait;
 use Teknoo\Recipe\Ingredient\Ingredient;
@@ -66,6 +67,8 @@ class RenderMediaEndPoint implements RenderMediaEndPointInterface
         $recipe = $recipe->cook($this->sendMedia, SendMedia::class, [], 30);
 
         $recipe = $recipe->onError(new Bowl($this->renderError, []));
+
+        $this->addToWorkplan(ParametersBag::class, new ParametersBag());
 
         return $recipe;
     }

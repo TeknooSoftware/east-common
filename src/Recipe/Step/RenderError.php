@@ -34,6 +34,7 @@ use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Website\Middleware\ViewParameterInterface;
 use Teknoo\East\Website\Recipe\Step\Traits\TemplateTrait;
+use Teknoo\East\Website\View\ParametersBag;
 use Teknoo\Recipe\Ingredient\Attributes\Transform;
 use Throwable;
 
@@ -63,7 +64,7 @@ class RenderError
         string $errorTemplate,
         Throwable $error,
         ManagerInterface $manager,
-        #[Transform] array $viewParameters = [],
+        #[Transform(ParametersBag::class)] array $viewParameters = [],
     ): self {
         $manager->stopErrorReporting();
 

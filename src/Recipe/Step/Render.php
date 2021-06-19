@@ -33,8 +33,9 @@ use Teknoo\East\Foundation\Http\ClientInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Website\Middleware\ViewParameterInterface;
 use Teknoo\East\Website\Recipe\Step\Traits\TemplateTrait;
-
+use Teknoo\East\Website\View\ParametersBag;
 use Teknoo\Recipe\Ingredient\Attributes\Transform;
+
 use function is_object;
 use function method_exists;
 
@@ -62,7 +63,7 @@ class Render
         string $template,
         ?string $objectViewKey = null,
         mixed $objectInstance = null,
-        #[Transform] array $viewParameters = [],
+        #[Transform(ParametersBag::class)] array $viewParameters = [],
     ): self {
         if ($message instanceof ServerRequestInterface) {
             $viewParameters += $message->getAttribute(ViewParameterInterface::REQUEST_PARAMETER_KEY, []);

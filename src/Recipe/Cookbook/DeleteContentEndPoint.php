@@ -33,6 +33,7 @@ use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Recipe\Step\DeleteObject;
 use Teknoo\East\Website\Recipe\Step\LoadObject;
 use Teknoo\East\Website\Recipe\Step\RenderError;
+use Teknoo\East\Website\View\ParametersBag;
 use Teknoo\Recipe\Bowl\Bowl;
 use Teknoo\Recipe\Cookbook\BaseCookbookTrait;
 use Teknoo\Recipe\Ingredient\Ingredient;
@@ -75,6 +76,8 @@ class DeleteContentEndPoint implements DeleteContentEndPointInterface
         $recipe = $recipe->cook($this->redirectClient, RedirectClientInterface::class, [], 40);
 
         $recipe = $recipe->onError(new Bowl($this->renderError, []));
+
+        $this->addToWorkplan(ParametersBag::class, new ParametersBag());
 
         return $recipe;
     }

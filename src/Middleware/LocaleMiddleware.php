@@ -30,8 +30,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Foundation\Session\SessionInterface;
-
 use Teknoo\East\Website\View\ParametersBag;
+
 use function is_callable;
 
 /**
@@ -120,7 +120,7 @@ class LocaleMiddleware
             $locale = $this->getLocaleFromSession($message);
         }
 
-        $bag->add('locale', $locale);
+        $bag->set('locale', $locale);
 
         return $this;
     }

@@ -28,7 +28,6 @@ namespace Teknoo\East\WebsiteBundle\Resources\config;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
@@ -58,8 +57,10 @@ return [
 
     RecipeInterface::class => decorate(static function ($previous, ContainerInterface $container) {
         if ($previous instanceof RecipeInterface) {
-            $previous = $previous->registerMiddleware(
-                $container->get(LocaleMiddleware::class),
+            $previous = $previous->cook(
+                [$container->get(LocaleMiddleware::class), 'execute'],
+                LocaleMiddleware::class,
+                [],
                 LocaleMiddleware::MIDDLEWARE_PRIORITY
             );
         }

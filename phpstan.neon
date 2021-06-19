@@ -26,6 +26,12 @@ parameters:
         -
             message: '#expects class-string<object>, string given#'
             path:  infrastructures/doctrine/Translatable/Mapping/ExtensionMetadataFactory.php
+        -
+            message: '#[a-zA-Z0-9\\_]+::cook\(\) expects \(callable\(\): mixed\)|[a-zA-Z0-9\\_]+#'
+            path: src/di.php
+        -
+            message: '#[a-zA-Z0-9\\_]+::cook\(\) expects \(callable\(\): mixed\)|[a-zA-Z0-9\\_]+#'
+            path: infrastructures/symfony/Resources/config/di.php
 services:
 	-
 		class: Teknoo\States\PHPStan\MethodsClassExtension

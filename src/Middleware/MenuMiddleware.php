@@ -34,6 +34,8 @@ use Teknoo\East\Website\View\ParametersBag;
  */
 class MenuMiddleware
 {
+    public const MIDDLEWARE_PRIORITY = 7;
+
     public function __construct(
         private MenuGenerator $menuGenerator,
     ) {
@@ -42,7 +44,7 @@ class MenuMiddleware
     public function execute(
         ParametersBag $bag,
     ): self {
-        $bag->add('menuGenerator', $this->menuGenerator);
+        $bag->set('menuGenerator', $this->menuGenerator);
 
         return $this;
     }

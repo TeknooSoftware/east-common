@@ -32,6 +32,7 @@ use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Foundation\Session\SessionInterface;
 use Teknoo\East\Website\Middleware\LocaleMiddleware;
 use Teknoo\East\Website\Middleware\ViewParameterInterface;
+use Teknoo\East\Website\View\ParametersBag;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -68,43 +69,13 @@ class LocaleMiddlewareTest extends TestCase
         return new LocaleMiddleware($this->getTranslatableSetter(), $locale);
     }
 
-    public function testExecuteBadClient()
-    {
-        $this->expectException(\TypeError::class);
-        $this->buildMiddleware()->execute(
-            new \stdClass(),
-            $this->createMock(ServerRequestInterface::class),
-            $this->createMock(ManagerInterface::class)
-        );
-    }
-
-    public function testExecuteBadRequest()
-    {
-        $this->expectException(\TypeError::class);
-        $this->buildMiddleware()->execute(
-            $this->createMock(ClientInterface::class),
-            new \stdClass(),
-            $this->createMock(ManagerInterface::class)
-        );
-    }
-
-    public function testExecuteBadManager()
-    {
-        $this->expectException(\TypeError::class);
-        $this->buildMiddleware()->execute(
-            $this->createMock(ClientInterface::class),
-            $this->createMock(ServerRequestInterface::class),
-            new \stdClass()
-        );
-    }
-
     public function testWithMessage()
     {
-        $client = $this->createMock(ClientInterface::class);
-
         $message = $this->createMock(MessageInterface::class);
 
         $manager = $this->createMock(ManagerInterface::class);
+
+        $bag = $this->createMock(ParametersBag::class);
 
         $this->getTranslatableSetter()
             ->expects(self::once())
@@ -122,22 +93,18 @@ class LocaleMiddlewareTest extends TestCase
 
         self::assertInstanceOf(
             LocaleMiddleware::class,
-            $this->buildMiddleware('en')->execute($client, $message, $manager)
+            $this->buildMiddleware('en')->execute($message, $manager, $bag)
         );
     }
 
     public function testExecuteNoInRequestNoInSession()
     {
-        $client = $this->createMock(ClientInterface::class);
+        $bag = $this->createMock(ParametersBag::class);
 
         $serverRequest = $this->createMock(ServerRequestInterface::class);
         $serverRequestFinal = $this->createMock(ServerRequestInterface::class);
 
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::once())
-            ->method('updateMessage')
-            ->with($serverRequestFinal)
-            ->willReturnSelf();
 
         $this->getTranslatableSetter()
             ->expects(self::once())
@@ -174,22 +141,18 @@ class LocaleMiddlewareTest extends TestCase
 
         self::assertInstanceOf(
             LocaleMiddleware::class,
-            $this->buildMiddleware('en')->execute($client, $serverRequest, $manager)
+            $this->buildMiddleware('en')->execute($serverRequest, $manager, $bag)
         );
     }
 
     public function testExecuteNoInRequestInSession()
     {
-        $client = $this->createMock(ClientInterface::class);
-
         $serverRequest = $this->createMock(ServerRequestInterface::class);
         $serverRequestFinal = $this->createMock(ServerRequestInterface::class);
+        $bag = $this->createMock(ParametersBag::class);
 
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::once())
-            ->method('updateMessage')
-            ->with($serverRequestFinal)
-            ->willReturnSelf();
+
 
         $this->getTranslatableSetter()
             ->expects(self::once())
@@ -226,7 +189,7 @@ class LocaleMiddlewareTest extends TestCase
 
         self::assertInstanceOf(
             LocaleMiddleware::class,
-            $this->buildMiddleware('en')->execute($client, $serverRequest, $manager)
+            $this->buildMiddleware('en')->execute($serverRequest, $manager, $bag)
         );
     }
 
@@ -236,6 +199,8 @@ class LocaleMiddlewareTest extends TestCase
 
         $serverRequest = $this->createMock(ServerRequestInterface::class);
         $serverRequestFinal = $this->createMock(ServerRequestInterface::class);
+
+        $bag = $this->createMock(ParametersBag::class);
 
         $manager = $this->createMock(ManagerInterface::class);
         $manager->expects(self::once())
@@ -277,7 +242,7 @@ class LocaleMiddlewareTest extends TestCase
 
         self::assertInstanceOf(
             LocaleMiddleware::class,
-            $this->buildMiddleware('en')->execute($client, $serverRequest, $manager)
+            $this->buildMiddleware('en')->execute($serverRequest, $manager, $bag)
         );
     }
 }

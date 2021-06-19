@@ -35,6 +35,7 @@ use Teknoo\East\Website\Contracts\Recipe\Step\RenderFormInterface;
 use Teknoo\East\Website\Middleware\ViewParameterInterface;
 use Teknoo\East\Website\Contracts\ObjectInterface;
 use Teknoo\East\Website\Recipe\Step\Traits\TemplateTrait;
+use Teknoo\East\Website\View\ParametersBag;
 use Teknoo\Recipe\Ingredient\Attributes\Transform;
 
 /**
@@ -65,7 +66,7 @@ class RenderForm implements RenderFormInterface
         string $template,
         ObjectInterface $object,
         bool $isTranslatable = false,
-        #[Transform] array $viewParameters = [],
+        #[Transform(ParametersBag::class)] array $viewParameters = [],
     ): RenderFormInterface {
         $viewParameters += $request->getAttribute(ViewParameterInterface::REQUEST_PARAMETER_KEY, []);
 

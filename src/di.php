@@ -154,14 +154,18 @@ return [
     RecipeInterface::class => decorate(static function ($previous, ContainerInterface $container) {
         if ($previous instanceof RecipeInterface) {
             if ($container->has(LocaleMiddleware::class)) {
-                $previous = $previous->registerMiddleware(
-                    $container->get(LocaleMiddleware::class),
+                $previous = $previous->cook(
+                    [$container->get(LocaleMiddleware::class), 'execute'],
+                    LocaleMiddleware::class,
+                    [],
                     LocaleMiddleware::MIDDLEWARE_PRIORITY
                 );
             }
 
-            $previous = $previous->registerMiddleware(
-                $container->get(MenuMiddleware::class),
+            $previous = $previous->cook(
+                [$container->get(MenuMiddleware::class), 'execute'],
+                MenuMiddleware::class,
+                [],
                 MenuMiddleware::MIDDLEWARE_PRIORITY
             );
         }

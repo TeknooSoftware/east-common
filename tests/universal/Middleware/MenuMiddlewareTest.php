@@ -31,6 +31,7 @@ use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Website\Middleware\MenuMiddleware;
 use Teknoo\East\Website\Middleware\ViewParameterInterface;
 use Teknoo\East\Website\Service\MenuGenerator;
+use Teknoo\East\Website\View\ParametersBag;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -61,79 +62,13 @@ class MenuMiddlewareTest extends TestCase
         return new MenuMiddleware($this->getMenuGenerator());
     }
 
-    public function testExecuteBadClient()
-    {
-        $this->expectException(\TypeError::class);
-        $this->buildMiddleware()->execute(
-            new \stdClass(),
-            $this->createMock(ServerRequestInterface::class),
-            $this->createMock(ManagerInterface::class)
-        );
-    }
-
-    public function testExecuteBadRequest()
-    {
-        $this->expectException(\TypeError::class);
-        $this->buildMiddleware()->execute(
-            $this->createMock(ClientInterface::class),
-            new \stdClass(),
-            $this->createMock(ManagerInterface::class)
-        );
-    }
-
-    public function testExecuteBadManager()
-    {
-        $this->expectException(\TypeError::class);
-        $this->buildMiddleware()->execute(
-            $this->createMock(ClientInterface::class),
-            $this->createMock(ServerRequestInterface::class),
-            new \stdClass()
-        );
-    }
-
     public function testExecute()
     {
-        $serverRequest = $this->createMock(ServerRequestInterface::class);
-        $serverRequestFinal = $this->createMock(ServerRequestInterface::class);
-
-        $client = $this->createMock(ClientInterface::class);
-
-        $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::once())
-            ->method('updateMessage')
-            ->with($serverRequestFinal)
-            ->willReturnSelf();
-
-        $serverRequest->expects(self::any())
-            ->method('withAttribute')
-            ->with(ViewParameterInterface::REQUEST_PARAMETER_KEY, [
-                'foo'=>'bar',
-                'menuGenerator'=>$this->getMenuGenerator()
-            ])
-            ->willReturn($serverRequestFinal);
-
-        $serverRequest->expects(self::any())
-            ->method('getAttribute')
-            ->willReturnMap([
-                [ViewParameterInterface::REQUEST_PARAMETER_KEY, [], ['foo'=>'bar']]
-            ]);
+        $bag = $this->createMock(ParametersBag::class);
 
         self::assertInstanceOf(
             MenuMiddleware::class,
-            $this->buildMiddleware()->execute($client, $serverRequest, $manager)
-        );
-    }
-
-    public function testExecuteWithMessage()
-    {
-        $message = $this->createMock(MessageInterface::class);
-
-        $client = $this->createMock(ClientInterface::class);
-
-        $manager = $this->createMock(ManagerInterface::class);
-        self::assertInstanceOf(
-            MenuMiddleware::class,
-            $this->buildMiddleware()->execute($client, $message, $manager)
+            $this->buildMiddleware()->execute($bag)
         );
     }
 }

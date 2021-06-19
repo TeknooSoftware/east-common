@@ -36,6 +36,7 @@ use Teknoo\East\Website\Recipe\Step\CreateObject;
 use Teknoo\East\Website\Recipe\Step\RenderError;
 use Teknoo\East\Website\Recipe\Step\SaveObject;
 use Teknoo\East\Website\Recipe\Step\SlugPreparation;
+use Teknoo\East\Website\View\ParametersBag;
 use Teknoo\East\Website\Writer\WriterInterface;
 use Teknoo\Recipe\Bowl\Bowl;
 use Teknoo\Recipe\Cookbook\BaseCookbookTrait;
@@ -96,6 +97,7 @@ class CreateContentEndPoint implements CreateContentEndPointInterface
         $recipe = $recipe->onError(new Bowl($this->renderError, []));
 
         $this->addToWorkplan('nextStep', RenderFormInterface::class);
+        $this->addToWorkplan(ParametersBag::class, new ParametersBag());
 
         return $recipe;
     }

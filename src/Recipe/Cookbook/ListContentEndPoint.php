@@ -36,6 +36,7 @@ use Teknoo\East\Website\Recipe\Step\LoadListObjects;
 use Teknoo\East\Website\Recipe\Step\RenderError;
 use Teknoo\East\Website\Recipe\Step\RenderList;
 use Teknoo\East\Website\Recipe\Step\SearchFormHandling;
+use Teknoo\East\Website\View\ParametersBag;
 use Teknoo\Recipe\Bowl\Bowl;
 use Teknoo\Recipe\Cookbook\BaseCookbookTrait;
 use Teknoo\Recipe\Ingredient\Ingredient;
@@ -92,6 +93,8 @@ class ListContentEndPoint implements ListContentEndPointInterface
         $recipe = $recipe->cook($this->renderList, RenderList::class, [], 50);
 
         $recipe = $recipe->onError(new Bowl($this->renderError, []));
+
+        $this->addToWorkplan(ParametersBag::class, new ParametersBag());
 
         return $recipe;
     }

@@ -80,9 +80,7 @@ class LocaleMiddlewareTest extends TestCase
         self::assertInstanceOf(
             LocaleMiddleware::class,
             $this->buildMiddleware()->execute(
-                $this->createMock(ClientInterface::class),
                 $serverRequest,
-                $this->createMock(ManagerInterface::class)
             )
         );
     }
@@ -103,9 +101,7 @@ class LocaleMiddlewareTest extends TestCase
         self::assertInstanceOf(
             LocaleMiddleware::class,
             $this->buildMiddleware()->execute(
-                $this->createMock(ClientInterface::class),
                 $serverRequest,
-                $this->createMock(ManagerInterface::class)
             )
         );
     }
@@ -121,9 +117,7 @@ class LocaleMiddlewareTest extends TestCase
         self::assertInstanceOf(
             LocaleMiddleware::class,
             $this->buildMiddleware()->execute(
-                $this->createMock(ClientInterface::class),
                 $message,
-                $this->createMock(ManagerInterface::class)
             )
         );
     }

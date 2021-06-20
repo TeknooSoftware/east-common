@@ -103,6 +103,8 @@ class LocaleMiddleware
                 ($this->translatableSetter)($this->defaultLocale);
             }
 
+            $bag->set('locale', $this->defaultLocale);
+
             return $this;
         }
 

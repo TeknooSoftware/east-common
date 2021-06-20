@@ -1,5 +1,10 @@
 #Teknoo Software - Website - Change Log
 
+##[5.1.0] - 2021-06-20
+###Stable Release
+- Use updateMessage instead of continueExecution to update only message in workplan
+- Writing ParametersBag to store view's parameters to avoid to use and update the server's request at each step
+
 ##[5.0.7] - 2021-06-04
 ###Stable Release
 - Fix Deprecatuib for Symfony 5.3

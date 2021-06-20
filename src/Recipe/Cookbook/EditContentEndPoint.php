@@ -94,7 +94,6 @@ class EditContentEndPoint implements EditContentEndPointInterface
         $recipe = $recipe->onError(new Bowl($this->renderError, []));
 
         $this->addToWorkplan('nextStep', RenderFormInterface::class);
-        $this->addToWorkplan(ParametersBag::class, new ParametersBag());
 
         return $recipe;
     }

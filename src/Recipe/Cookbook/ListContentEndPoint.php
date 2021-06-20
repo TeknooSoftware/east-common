@@ -94,8 +94,6 @@ class ListContentEndPoint implements ListContentEndPointInterface
 
         $recipe = $recipe->onError(new Bowl($this->renderError, []));
 
-        $this->addToWorkplan(ParametersBag::class, new ParametersBag());
-
         return $recipe;
     }
 }

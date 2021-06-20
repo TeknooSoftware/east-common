@@ -50,6 +50,7 @@ use Teknoo\East\Website\Recipe\Cookbook\RenderDynamicContentEndPoint;
 use Teknoo\East\Website\Recipe\Cookbook\RenderMediaEndPoint;
 use Teknoo\East\Website\Recipe\Cookbook\RenderStaticContentEndPoint;
 use Teknoo\East\Website\Recipe\Step\CreateObject;
+use Teknoo\East\Website\Recipe\Step\InitParametersBag;
 use Teknoo\Recipe\RecipeInterface as OriginalRecipeInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
@@ -153,6 +154,13 @@ return [
     //Middleware
     RecipeInterface::class => decorate(static function ($previous, ContainerInterface $container) {
         if ($previous instanceof RecipeInterface) {
+            $previous = $previous->cook(
+                $container->get(InitParametersBag::class),
+                InitParametersBag::class,
+                [],
+                4
+            );
+
             if ($container->has(LocaleMiddleware::class)) {
                 $previous = $previous->cook(
                     [$container->get(LocaleMiddleware::class), 'execute'],
@@ -182,6 +190,7 @@ return [
     ExtractOrder::class => create(),
     ExtractPage::class => create(),
     ExtractSlug::class => create(),
+    InitParametersBag::class => create(),
     LoadContent::class => create()
         ->constructor(
             get(ContentLoader::class)

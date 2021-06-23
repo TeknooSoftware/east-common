@@ -27,7 +27,7 @@ namespace Teknoo\East\Website\Recipe\Step;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamInterface;
-use Teknoo\East\Foundation\Http\ClientInterface;
+use Teknoo\East\Foundation\Client\ClientInterface;
 use Teknoo\East\Website\Object\Media;
 use Teknoo\East\Website\Recipe\Step\Traits\ResponseTrait;
 

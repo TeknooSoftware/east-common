@@ -27,8 +27,9 @@ use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
+use Teknoo\East\Foundation\Client\ResponseInterface as EastResponse;
 use Teknoo\East\Foundation\EndPoint\RecipeEndPoint;
-use Teknoo\East\Foundation\Http\ClientInterface;
+use Teknoo\East\Foundation\Client\ClientInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Manager\Manager;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
@@ -589,7 +590,7 @@ class FeatureContext implements Context
             /**
              * @inheritDoc
              */
-            public function acceptResponse(MessageInterface $response): ClientInterface
+            public function acceptResponse(EastResponse | MessageInterface $response): ClientInterface
             {
                 $this->context->response = $response;
 
@@ -599,7 +600,7 @@ class FeatureContext implements Context
             /**
              * @inheritDoc
              */
-            public function sendResponse(MessageInterface $response = null, bool $silently = false): ClientInterface
+            public function sendResponse(EastResponse | MessageInterface | null $response = null, bool $silently = false): ClientInterface
             {
                 if (!empty($response)) {
                     $this->context->response = $response;

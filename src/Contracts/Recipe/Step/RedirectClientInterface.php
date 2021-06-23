@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Contracts\Recipe\Step;
 
-use Teknoo\East\Foundation\Http\ClientInterface;
+use Teknoo\East\Foundation\Client\ClientInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 
 /**

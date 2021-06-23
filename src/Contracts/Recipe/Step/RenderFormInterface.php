@@ -27,7 +27,7 @@ namespace Teknoo\East\Website\Contracts\Recipe\Step;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Form\FormInterface;
-use Teknoo\East\Foundation\Http\ClientInterface;
+use Teknoo\East\Foundation\Client\ClientInterface;
 use Teknoo\East\Website\Contracts\ObjectInterface;
 
 /**

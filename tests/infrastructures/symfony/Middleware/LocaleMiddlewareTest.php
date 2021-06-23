@@ -27,8 +27,6 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
-use Teknoo\East\Foundation\Http\ClientInterface;
-use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\WebsiteBundle\Middleware\LocaleMiddleware;
 
 /**

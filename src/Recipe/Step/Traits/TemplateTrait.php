@@ -26,8 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Recipe\Step\Traits;
 
 use Psr\Http\Message\StreamFactoryInterface;
-use Teknoo\East\Foundation\EndPoint\RenderingInterface;
-use Teknoo\East\Foundation\Http\ClientInterface;
+use Teknoo\East\Foundation\Client\ClientInterface;
 use Teknoo\East\Foundation\Http\Message\CallbackStreamInterface;
 use Teknoo\East\Foundation\Promise\Promise;
 use Teknoo\East\Foundation\Template\EngineInterface;

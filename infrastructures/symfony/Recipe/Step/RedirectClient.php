@@ -28,7 +28,7 @@ namespace Teknoo\East\WebsiteBundle\Recipe\Step;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Teknoo\East\Foundation\Http\ClientInterface;
+use Teknoo\East\Foundation\Client\ClientInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Website\Recipe\Step\Traits\ResponseTrait;

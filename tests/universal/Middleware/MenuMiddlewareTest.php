@@ -23,13 +23,8 @@
 
 namespace Teknoo\Tests\East\Website\Middleware;
 
-use Psr\Http\Message\MessageInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use PHPUnit\Framework\TestCase;
-use Teknoo\East\Foundation\Http\ClientInterface;
-use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Website\Middleware\MenuMiddleware;
-use Teknoo\East\Website\Middleware\ViewParameterInterface;
 use Teknoo\East\Website\Service\MenuGenerator;
 use Teknoo\East\Website\View\ParametersBag;
 

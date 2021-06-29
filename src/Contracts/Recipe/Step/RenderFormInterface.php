@@ -31,6 +31,9 @@ use Teknoo\East\Foundation\Client\ClientInterface;
 use Teknoo\East\Website\Contracts\ObjectInterface;
 
 /**
+ * Interface to define step to use into a HTTP EndPoint Recipe to render thanks to a template engine the form instance
+ * from the workplan
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

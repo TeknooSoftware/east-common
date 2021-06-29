@@ -34,6 +34,13 @@ use function class_exists;
 use function is_array;
 
 /**
+ * Recipe step to create a new `Teknoo\East\Website\Contracts\ObjectInterface` to be use/populate in next step of
+ * recipes (in a form, a view, etc...). The object will be put in the manager's workplan at the key `$workPlanKey`
+ * (by default  ObjectInterface::class).
+ *
+ * Constructor Arguments can be passed as`$constructorArguments` (If several arguments must be passed, they must be
+ * passed as array).
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
@@ -45,7 +52,7 @@ class CreateObject
     public function __invoke(
         string $objectClass,
         ManagerInterface $manager,
-        $constructorArguments = null,
+        mixed $constructorArguments = null,
         string $workPlanKey = ObjectInterface::class,
     ): self {
         if (!class_exists($objectClass)) {

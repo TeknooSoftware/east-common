@@ -29,6 +29,8 @@ use Teknoo\East\Website\Contracts\ObjectInterface;
 use Teknoo\East\Website\Service\DeletingService;
 
 /**
+ * Recipe's step to delete an object thanks to its deleting service
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

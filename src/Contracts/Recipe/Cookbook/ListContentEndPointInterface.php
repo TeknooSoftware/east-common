@@ -28,6 +28,9 @@ namespace Teknoo\East\Website\Contracts\Recipe\Cookbook;
 use Teknoo\Recipe\CookbookInterface;
 
 /**
+ * Interface defining a HTTP EndPoint Recipe able to list or browse persisted objects implementing the class
+ * `Teknoo\East\Website\Object\ObjectInterface`.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

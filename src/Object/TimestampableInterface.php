@@ -29,12 +29,14 @@ namespace Teknoo\East\Website\Object;
 use DateTimeInterface;
 
 /**
+ * Interface to define object can be timestamped at each update (At creation or any updates).
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 interface TimestampableInterface
 {
-    /**
+    /*
      * To update the current  timestamp to kown when the object has ben updated
      */
     public function setUpdatedAt(?DateTimeInterface $updatedAt): TimestampableInterface;

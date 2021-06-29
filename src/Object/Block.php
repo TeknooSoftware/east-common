@@ -26,6 +26,9 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Object;
 
 /**
+ * Persisted object representing a dynamic bloc in a type of content page.
+ * Used into Type class.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

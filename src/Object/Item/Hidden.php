@@ -29,6 +29,9 @@ use Teknoo\States\State\StateInterface;
 use Teknoo\States\State\StateTrait;
 
 /**
+ * Item's state representing an hidden menu item instance. This state has no method. It is only used as simple
+ * object's state.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

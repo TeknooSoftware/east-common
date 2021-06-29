@@ -32,6 +32,10 @@ use Teknoo\East\Website\Object\Media;
 use Teknoo\East\Website\Recipe\Step\Traits\ResponseTrait;
 
 /**
+ * Recipe step to pass to the PSR11 response the stream corresponding to a loaded media in a previous step.
+ * This step will also update reponses's headers to add content type and filename if they are defined in the media.
+ * The lenght of the stream will be also put into headers.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

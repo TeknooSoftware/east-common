@@ -44,6 +44,10 @@ use function json_decode;
 use function json_encode;
 
 /**
+ * Stated class representing a dynamic content in the website. The content has a `Type` with several blocks.
+ * Block's values are stored in object of this class in `parts`.
+ * Object of this class can be translated.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

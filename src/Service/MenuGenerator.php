@@ -35,6 +35,17 @@ use Teknoo\East\Website\Query\Item\TopItemByLocationQuery;
 use function array_keys;
 
 /**
+ * Service to generate a menu from persisted item and loader. It will use the query TopItemByLocationQuery to extract
+ * an ordered list of items, by items's order and items's hierarchie and build a PHP Generator to call in a template
+ * to build the menu by looping in result.
+ *
+ * Sadly, some DB abstraction layer use proxy class to fetch data from the database. This service require an
+ * implementation of the interface ProxyDetectorInterface to fetch the real object's instance.
+ *
+ * Content instance linked to Item instance are also fetched during the main query `TopItemByLocationQuery\.
+ * To avoid multiple queries, all Content ids are extracted to fetch all required instances in a single query via
+ * `PublishedContentFromIdsQuery`, then redispatched to each item.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

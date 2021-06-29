@@ -30,6 +30,9 @@ use function array_map;
 use function array_values;
 
 /**
+ * Class to define persisted types of dynamics contents and parts of this pages. A type is defined by a name, a template
+ * to use to render the dynamic content and a list of Block instance to define each part
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

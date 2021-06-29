@@ -40,6 +40,15 @@ use function is_object;
 use function method_exists;
 
 /**
+ * Step recipe to render a view thanks a template engine. The template to call must be passed as ingredient.
+ * The object instance, referenced as `$objectViewKey` ingredient will be automatically passed but is not mandatory.
+ * It will be passed to the view in the variable defined in the ingredient `$objectViewKey` (if defined)
+ *
+ * Views parameters are fetched from the Parameters Bag and transformed to an array.
+ * They can also be passed in message's attribute `view.parameters` (legacy behavior, deprecated)
+ *
+ * If the object instance is publishable, the `Last-Modified` will be added
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

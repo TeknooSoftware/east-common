@@ -34,6 +34,10 @@ use Teknoo\East\Foundation\Template\ResultInterface;
 use Throwable;
 
 /**
+ * Trait used into recipe's steps to render a page thanks to template engine and pass the result to the response in a
+ * StreamInterface instance.
+ * Callback streams are supported to render template only on stream string conversion.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

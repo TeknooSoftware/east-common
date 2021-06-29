@@ -29,6 +29,8 @@ use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Service\FindSlugService;
 
 /**
+ * Interface to define object can be identified by a string slug to be selected easily in a request.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

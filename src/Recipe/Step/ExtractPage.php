@@ -28,6 +28,9 @@ namespace Teknoo\East\Website\Recipe\Step;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 
 /**
+ * Recipe step to extract from server request the required page (from the key `page`) and put it in the
+ * manager's workplan at `page` after int conversion.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

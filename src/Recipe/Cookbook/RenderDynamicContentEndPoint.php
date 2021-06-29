@@ -31,13 +31,15 @@ use Teknoo\East\Website\Recipe\Step\ExtractSlug;
 use Teknoo\East\Website\Recipe\Step\LoadContent;
 use Teknoo\East\Website\Recipe\Step\Render;
 use Teknoo\East\Website\Recipe\Step\RenderError;
-use Teknoo\East\Website\View\ParametersBag;
 use Teknoo\Recipe\Bowl\Bowl;
 use Teknoo\Recipe\Cookbook\BaseCookbookTrait;
 use Teknoo\Recipe\Ingredient\Ingredient;
 use Teknoo\Recipe\RecipeInterface;
 
 /**
+ * HTTP EndPoint Recipe able to load a `Teknoo\East\Website\Object\Content` instance and render a
+ * page via a template engine and send it to the client.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

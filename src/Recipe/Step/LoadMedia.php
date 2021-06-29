@@ -33,6 +33,8 @@ use Teknoo\East\Website\Object\Media;
 use Throwable;
 
 /**
+ * Step recipe to load a Media instance, from its id, thank to the Content's loader and put it into the workplan.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

@@ -30,6 +30,9 @@ use function trim;
 use function uniqid;
 
 /**
+ * Class to defined persisted user allow to be connected to the website. An user can have some roles, like admin,
+ * redactor, or simple user.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

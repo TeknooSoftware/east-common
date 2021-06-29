@@ -35,14 +35,15 @@ use Teknoo\East\Website\Recipe\Step\ExtractPage;
 use Teknoo\East\Website\Recipe\Step\LoadListObjects;
 use Teknoo\East\Website\Recipe\Step\RenderError;
 use Teknoo\East\Website\Recipe\Step\RenderList;
-use Teknoo\East\Website\Recipe\Step\SearchFormHandling;
-use Teknoo\East\Website\View\ParametersBag;
 use Teknoo\Recipe\Bowl\Bowl;
 use Teknoo\Recipe\Cookbook\BaseCookbookTrait;
 use Teknoo\Recipe\Ingredient\Ingredient;
 use Teknoo\Recipe\RecipeInterface;
 
 /**
+ * Interface defining a HTTP EndPoint Recipe able to list or browse persisted objects implementing the class
+ * `Teknoo\East\Website\Object\ObjectInterface`.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

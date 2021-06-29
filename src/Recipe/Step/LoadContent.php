@@ -35,6 +35,10 @@ use Teknoo\East\Website\Query\Content\PublishedContentFromSlugQuery;
 use Throwable;
 
 /**
+ * Step recipe to load a published Content instance, from its slug, thank to the Content's loader and put it into the
+ * workplan at Content::class key, and `objectInstance`. The template file to use with the fetched content is also
+ * injected to the template.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

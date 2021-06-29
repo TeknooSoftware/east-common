@@ -28,6 +28,8 @@ namespace Teknoo\East\Website\Object;
 use DateTimeInterface;
 
 /**
+ * Interface to define soft deletable object.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

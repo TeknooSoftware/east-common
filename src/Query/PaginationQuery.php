@@ -37,6 +37,9 @@ use Throwable;
 use Traversable;
 
 /**
+ * Generic class implementing query to load any persisted instance with a pagination, order behavior and criteria
+ * selections.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

@@ -28,6 +28,9 @@ namespace Teknoo\East\Website\Contracts\Recipe\Cookbook;
 use Teknoo\Recipe\CookbookInterface;
 
 /**
+ * Interface defining a HTTP EndPoint Recipe able to load a `Teknoo\East\Website\Object\Content` instance and render a
+ * page via a template engine and send it to the client.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

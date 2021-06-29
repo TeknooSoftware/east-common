@@ -28,6 +28,8 @@ namespace Teknoo\East\Website\Object;
 use DateTimeInterface;
 
 /**
+ * Trait to implement all basic and common getter/setter about object's identification and timestamp.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

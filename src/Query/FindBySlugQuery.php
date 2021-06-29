@@ -32,6 +32,9 @@ use Teknoo\Immutable\ImmutableInterface;
 use Teknoo\Immutable\ImmutableTrait;
 
 /**
+ * Generic class implementing query to load any sluggable instance from its slug, and pass result to the
+ * passed promise.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

@@ -38,6 +38,9 @@ use Teknoo\Immutable\ImmutableTrait;
 use Throwable;
 
 /**
+ * Class implementing query to load a non soft-deleted Content instance from its slug, and pass result to the
+ * passed promise.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

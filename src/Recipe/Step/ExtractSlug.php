@@ -33,6 +33,9 @@ use function explode;
 use function trim;
 
 /**
+ * Recipe step to extract from server request the required page (from the key `slug`) and put it in the
+ * manager's workplan at `slug`.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

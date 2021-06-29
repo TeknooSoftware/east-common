@@ -31,19 +31,19 @@ namespace Teknoo\East\Website\DBSource;
  */
 interface ManagerInterface
 {
-    /**
+    /*
      * Tells the Manager to make an instance managed and persistent.
      *
      * The object will be entered into the database as a result of the flush operation.
      */
     public function persist(object $object): ManagerInterface;
 
-    /**
+    /*
      * Tells the Manager to remove an instance managed
      */
     public function remove(object $object): ManagerInterface;
 
-    /**
+    /*
      * Flushes all changes to objects that have been queued up to now to the database.
      * This effectively synchronizes the in-memory state of managed objects with the
      * database.

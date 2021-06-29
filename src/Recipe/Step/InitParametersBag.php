@@ -29,6 +29,11 @@ use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Website\View\ParametersBag;
 
 /**
+ * Recipe's step, used in the main East Foundation 's recipe to initialize the Parameters bags and register it into the
+ * manager's workplan. It must be used (as step's ingredient) to pass some value to the view.
+ *
+ * @see ParametersBag
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

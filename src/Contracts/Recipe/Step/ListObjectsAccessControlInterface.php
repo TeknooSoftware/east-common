@@ -27,13 +27,19 @@ namespace Teknoo\East\Website\Contracts\Recipe\Step;
 
 use Psr\Http\Message\MessageInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
+use Teknoo\East\Website\Contracts\ObjectInterface;
 
 /**
+ * Interface to define step to use into a Recipe to implement ACL checking on a list of objects instance
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 interface ListObjectsAccessControlInterface
 {
+    /**
+     * @param iterable<ObjectInterface> $objectsCollection
+     */
     public function __invoke(
         ManagerInterface $manager,
         MessageInterface $message,

@@ -30,6 +30,11 @@ use Teknoo\East\Website\Contracts\ObjectInterface;
 use Teknoo\East\Website\Writer\WriterInterface;
 
 /**
+ * Generic deleting service to delete an object (soft deletable or not) thanks to dedicated writer service to the
+ * object's class. So they have one instance of this service per object's classes.
+ * If the object is soft deletable, it will be flagged with a timestamp to its deletedAt property,
+ * else the method "remove" of its writter will be called.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

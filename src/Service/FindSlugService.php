@@ -38,6 +38,9 @@ use function strtolower;
 use function trim;
 
 /**
+ * Service to find a uniq slug about an object, in its class domain, thanks to its dedicated loader, and loop until it
+ * found a non used slug and update the object with a valid slug.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

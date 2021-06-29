@@ -29,12 +29,15 @@ namespace Teknoo\East\Website\Object;
 use Teknoo\East\Website\Contracts\ObjectInterface as BaseInterface;
 
 /**
+ * Interface defining an persisted object can be manipulated by a East Website's component, like a form, a loader or a
+ * writer. This class inherits of base interface `ObjectInterface`.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 interface ObjectInterface extends BaseInterface
 {
-    /**
+    /*
      * Unique Identifier about the object
      */
     public function getId(): string;

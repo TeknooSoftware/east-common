@@ -31,6 +31,9 @@ use Teknoo\East\Website\Object\SluggableInterface;
 use Teknoo\East\Website\Service\FindSlugService;
 
 /**
+ * Recipe step to prepare a persisted and sluggable object to generate a new uniq slug (if needed) and inject it into
+ * the object before save in a next step.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

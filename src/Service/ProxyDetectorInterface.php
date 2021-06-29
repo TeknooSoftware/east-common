@@ -28,6 +28,10 @@ namespace Teknoo\East\Website\Service;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 
 /**
+ * Interface to implement according to DB abstract layer used (Doctrine ODM, Doctrine ORM, others...) to detect if an
+ * object instance is ghosted by a proxy class by the abstract layer, and return the real instance to the promise,
+ * or return directly the instance to the promise
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

@@ -28,6 +28,8 @@ namespace Teknoo\East\Website\Object;
 use DateTimeInterface;
 
 /**
+ * Trait to implement methods in PublishableInterface in object classes
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

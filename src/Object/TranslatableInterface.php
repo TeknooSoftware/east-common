@@ -26,9 +26,11 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Object;
 
 /**
- * This interface is not necessary but can be implemented for
- * Entities which in some cases needs to be identified as
+ * This interface is not necessary but can be implemented for object which in some cases needs to be identified as
  * TranslatableInterface
+ *
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 interface TranslatableInterface extends ObjectInterface
 {

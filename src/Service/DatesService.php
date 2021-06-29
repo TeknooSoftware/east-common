@@ -29,6 +29,11 @@ use DateTime;
 use DateTimeInterface;
 
 /**
+ * Simple service to manage date and hour in a recipe to return always the same date during the request and avoid
+ * differences between two datetime instance.
+ *
+ * You can override the date to pass by calling "setCurrentDate"
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

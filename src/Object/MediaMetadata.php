@@ -28,6 +28,13 @@ namespace Teknoo\East\Website\Object;
 use Teknoo\Immutable\ImmutableInterface;
 use Teknoo\Immutable\ImmutableTrait;
 
+/**
+ * Class to create embedded object into a media instance to host major metadata of a media (content type, file name,
+ * alternative name, etc...)
+ *
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 class MediaMetadata implements ImmutableInterface
 {
     use ImmutableTrait;

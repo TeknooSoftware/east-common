@@ -33,6 +33,9 @@ use Teknoo\East\Website\Query\QueryInterface;
 use Throwable;
 
 /**
+ * Object loader in charge of object `Teknoo\East\Website\Object\Media`.
+ * The loader's load method is compliant with legacy id, migrated into metadata or new id format, automatically.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

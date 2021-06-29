@@ -29,6 +29,9 @@ use Psr\Http\Message\ServerRequestInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 
 /**
+ * Interface to define step to use into a HTTP EndPoint Recipe to load and inject into workplan a form dedicated to
+ * search in a objects lists
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

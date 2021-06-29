@@ -27,6 +27,9 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Contracts;
 
 /**
+ * Base interface defining an object can be manipulated by a East Website's component, like a form, a loader or a
+ * writer.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

@@ -29,6 +29,13 @@ use Teknoo\Recipe\Ingredient\MergeableInterface;
 use Teknoo\Recipe\Ingredient\TransformableInterface;
 
 /**
+ * Bag to inject into a manager's workplan to host all parameters to pass to the final view/template.
+ *
+ * Because it is an mutable object, it is not necessary to forward the bag to the manager after modification.
+ *
+ * Two bag in a workplan can be merged via the manager's method `merge`
+ * A bag can be transformed to an array before to be passed to a step by using the recipe attribute `Transform`
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

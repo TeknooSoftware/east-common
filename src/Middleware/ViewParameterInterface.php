@@ -26,8 +26,12 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Middleware;
 
 /**
+ * Legacy interface to host constants defined key to use as message's attributes to inject some value into template's
+ * view. Use `Teknoo\East\Website\View\ParametersBag` instead
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ * @deprecated
  */
 interface ViewParameterInterface
 {

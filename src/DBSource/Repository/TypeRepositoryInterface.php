@@ -28,6 +28,8 @@ namespace Teknoo\East\Website\DBSource\Repository;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 
 /**
+ * Interface to define repository in charge of object `Teknoo\East\Website\Object\Type`.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

@@ -41,6 +41,11 @@ use function is_string;
 use function preg_match;
 
 /**
+ * Generic step recipe to load a liste of persisted objects thank to its loader and the PaginationQuery and put it
+ * into the workplan at key 'objectsCollection'.
+ * Criteria are sanitized before to be passed to the query (accept only `^[a-zA-Z0-9\-_]+` keys and only
+ * `^[\p{Sm}\p{Sc}\p{L}\p{N}\p{Z}_\-\.\@,]+` string, or a ExprInterface instance, or an array following this same rules
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

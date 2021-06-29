@@ -31,6 +31,10 @@ use Teknoo\States\State\StateInterface;
 use Teknoo\States\State\StateTrait;
 
 /**
+ * Content's state representing a content instance not published, aka a draft. The methode "setPublishedAt" has no
+ * effect. So, a published content can not be republished (but can be updated).
+ * The method setPublishedAt is only available in this state to avoid useless crash on a "Save & Publish" request.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  *

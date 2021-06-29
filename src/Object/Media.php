@@ -26,6 +26,12 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Object;
 
 /**
+ * Abstract class to persist media in the database (image, pdf, or any binary stuff). Metadata of this media are
+ * stored into an embedded MediaMetadata instance (content type, filename, alternative name).
+ *
+ * This class is not directly instanciable and must be inherited according to data layer :
+ *   (Doctrine ODM, Doctrine ORM, ... other)
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

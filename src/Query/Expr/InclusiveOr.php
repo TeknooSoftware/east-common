@@ -29,6 +29,9 @@ use Teknoo\Immutable\ImmutableInterface;
 use Teknoo\Immutable\ImmutableTrait;
 
 /**
+ * Operator to add a meta-constraint to require at least once sub constraint is valided to be validated (aka the
+ * "OR" operator in SQL)
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

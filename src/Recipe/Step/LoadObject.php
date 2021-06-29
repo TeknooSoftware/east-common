@@ -33,6 +33,9 @@ use Teknoo\East\Website\Contracts\ObjectInterface;
 use Throwable;
 
 /**
+ * Generic step recipe to load, from its id, a persisted object thank to its loader and put it into the workplan
+ * at key defined in the ingredient $workPlanKey (by default `ObjectInterface::class`)
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

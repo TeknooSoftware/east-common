@@ -28,6 +28,8 @@ namespace Teknoo\East\Website\Loader;
 use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
 
 /**
+ * Object loader in charge of object `Teknoo\East\Website\Object\Content`.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

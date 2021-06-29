@@ -29,6 +29,9 @@ use Symfony\Component\Form\FormInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 
 /**
+ * Interface to define step to use into a HTTP EndPoint Recipe to skip some recipe's steps if the form is not validate
+ * by rules
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

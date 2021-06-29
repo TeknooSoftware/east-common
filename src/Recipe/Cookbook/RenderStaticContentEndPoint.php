@@ -36,6 +36,8 @@ use Teknoo\Recipe\Ingredient\Ingredient;
 use Teknoo\Recipe\RecipeInterface;
 
 /**
+ * HTTP EndPoint Recipe able to render a static template via the engine and send it to the client.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

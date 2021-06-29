@@ -28,6 +28,9 @@ namespace Teknoo\East\Website\Contracts\Recipe\Cookbook;
 use Teknoo\Recipe\CookbookInterface;
 
 /**
+ * Interface defining a HTTP EndPoint Recipe able to load a `Teknoo\East\Website\Object\Media` instance and send its
+ * to the client to display it (images, pdf, files, etc..)
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

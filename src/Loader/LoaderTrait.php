@@ -31,6 +31,8 @@ use Teknoo\East\Website\Query\QueryInterface;
 use Throwable;
 
 /**
+ * Trait to share standard implementation of load and query methods of loaders
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @mixin LoaderInterface

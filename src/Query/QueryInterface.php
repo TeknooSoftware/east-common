@@ -30,6 +30,9 @@ use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
 
 /**
+ * Interface to define query to fetch persisted objects from a database. Each query must be implemented into a specific
+ * class.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

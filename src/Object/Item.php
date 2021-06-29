@@ -38,6 +38,10 @@ use Teknoo\States\Proxy\ProxyInterface;
 use Teknoo\States\Proxy\ProxyTrait;
 
 /**
+ * Stated class representing a menu item in the website. They can be linked to a Content instance and is a child of
+ * another menu item instance.
+ * Object of this class can be translated.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

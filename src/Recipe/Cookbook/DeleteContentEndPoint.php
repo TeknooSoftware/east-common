@@ -33,13 +33,15 @@ use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Recipe\Step\DeleteObject;
 use Teknoo\East\Website\Recipe\Step\LoadObject;
 use Teknoo\East\Website\Recipe\Step\RenderError;
-use Teknoo\East\Website\View\ParametersBag;
 use Teknoo\Recipe\Bowl\Bowl;
 use Teknoo\Recipe\Cookbook\BaseCookbookTrait;
 use Teknoo\Recipe\Ingredient\Ingredient;
 use Teknoo\Recipe\RecipeInterface;
 
 /**
+ * HTTP EndPoint Recipe able to delete a persisted object implementing the class
+ * `Teknoo\East\Website\Object\ObjectInterface`.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

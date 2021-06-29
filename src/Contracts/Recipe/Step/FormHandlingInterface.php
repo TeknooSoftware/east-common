@@ -30,6 +30,9 @@ use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Website\Contracts\ObjectInterface;
 
 /**
+ * Interface to define step to use into a HTTP EndPoint Recipe to create a form instance and handle the current request.
+ * The form must be put into the manager's workplan.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

@@ -29,6 +29,9 @@ use Teknoo\East\Foundation\Client\ClientInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 
 /**
+ * Interface to define step to use into a HTTP EndPoint Recipe to create PSR11 response to redirect the client to a new
+ * request
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

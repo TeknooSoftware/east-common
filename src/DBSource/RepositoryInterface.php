@@ -34,17 +34,17 @@ use UnexpectedValueException;
  */
 interface RepositoryInterface
 {
-    /**
+    /*
      * Finds an object by its primary key / identifier.
      */
     public function find(string $id, PromiseInterface $promise): RepositoryInterface;
 
-    /**
+    /*
      * Finds all objects in the repository.
      */
     public function findAll(PromiseInterface $promise): RepositoryInterface;
 
-    /**
+    /*
      * Finds objects by a set of criteria.
      *
      * Optionally sorting and limiting details can be passed. An implementation may throw

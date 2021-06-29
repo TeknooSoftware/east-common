@@ -33,6 +33,12 @@ use Throwable;
 use function strtoupper;
 
 /**
+ * Recipe step to extract from server request the required order (the column from the key `order` and the direction
+ * from the key `direction`). The result is put in the workplan at `order`
+ *
+ * A default column and a default order can be defined as ingredients with name `$defaultOrderColumn` and
+ * `$defaultOrderDirection`
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

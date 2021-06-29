@@ -32,6 +32,9 @@ use Teknoo\East\Website\Object\ObjectInterface as ObjectWithId;
 use Teknoo\East\Website\Writer\WriterInterface;
 
 /**
+ * Recipe step to save/persist a persistable object into a database thanks to its dedicated writer passed also as
+ * ingredient
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

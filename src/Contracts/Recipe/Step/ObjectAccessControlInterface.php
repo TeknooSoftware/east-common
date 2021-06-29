@@ -30,6 +30,8 @@ use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Website\Contracts\ObjectInterface;
 
 /**
+ * Interface to define step to use into a Recipe to implement ACL checking on a an object instance
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

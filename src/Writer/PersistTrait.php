@@ -33,6 +33,8 @@ use Teknoo\East\Website\Service\DatesService;
 use Throwable;
 
 /**
+ * Trait to share standard implementation of persist and delete methods of loaders
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

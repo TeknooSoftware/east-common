@@ -29,6 +29,7 @@ use Teknoo\East\Website\DBSource\Repository\UserRepositoryInterface;
 
 /**
  * Object loader in charge of object `Teknoo\East\Website\Object\User`.
+ * Must provide an implementation of `UserRepositoryInterface` to be able work.
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>

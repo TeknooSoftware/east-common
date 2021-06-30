@@ -29,6 +29,9 @@ use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\Contracts\ObjectInterface;
 
 /**
+ * Interface defining methods to implement in writer in charge of persisted objects, to save or delete persisted objects
+ * to be used into recipes of this library.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

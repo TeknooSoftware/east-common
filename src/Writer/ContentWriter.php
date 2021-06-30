@@ -30,6 +30,11 @@ use Teknoo\East\Website\Contracts\ObjectInterface;
 use Throwable;
 
 /**
+ * Object writer in charge of object `Teknoo\East\Website\Object\Content`.
+ * The writer will update object's timestamp before update. The object persisted will be passed, with its new id for
+ * new persisted object, to the promise, else the error is also passed to the promise.
+ * Must provide an implementation of `Teknoo\East\Website\DBSource\ManagerInterface` to be able work.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

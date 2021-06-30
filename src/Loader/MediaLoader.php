@@ -34,6 +34,7 @@ use Throwable;
 
 /**
  * Object loader in charge of object `Teknoo\East\Website\Object\Media`.
+ * Must provide an implementation of `MediaRepositoryInterface` to be able work.
  * The loader's load method is compliant with legacy id, migrated into metadata or new id format, automatically.
  *
  * @license     http://teknoo.software/license/mit         MIT License

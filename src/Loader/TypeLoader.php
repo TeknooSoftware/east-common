@@ -29,6 +29,7 @@ use Teknoo\East\Website\DBSource\Repository\TypeRepositoryInterface;
 
 /**
  * Object loader in charge of object `Teknoo\East\Website\Object\Type`.
+ * Must provide an implementation of `TypeRepositoryInterface` to be able work.
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>

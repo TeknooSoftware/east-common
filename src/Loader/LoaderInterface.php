@@ -29,8 +29,8 @@ use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\Query\QueryInterface;
 
 /**
- * Interface defining methods to implement in loader in charge of persisteds objects, to be used into recipes of this
- * library.
+ * Interface defining methods to implement in loader in charge of persisted objects, to load of find via queries,
+ * objects to be used into recipes of this library.
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>

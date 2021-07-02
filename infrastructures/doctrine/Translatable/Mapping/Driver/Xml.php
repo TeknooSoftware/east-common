@@ -40,6 +40,8 @@ use function file_exists;
 use function str_replace;
 
 /**
+ * Driver implementation to read Doctrine Translation configuration/metadata in XML files
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @author      Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
@@ -69,7 +71,6 @@ class Xml implements DriverInterface
 
     private function loadMappingFile(string $file): SimpleXMLElement
     {
-        $result = null;
         $xmlElement = ($this->simpleXmlFactory)($file);
         $xmlElement = $xmlElement->children(self::DOCTRINE_NAMESPACE_URI);
 

@@ -64,7 +64,9 @@ class ContentTypeTest extends TestCase
                     new Block('foo', 'text'),
                     new Block('foo2', 'textarea'),
                     new Block('foo3', 'numeric'),
-                    new Block('foo3', 'image')
+                    new Block('foo3', 'image'),
+                    new Block('foo4', 'raw'),
+                    new Block('foo5', 'other')
                 ]);
                 $content->setType($type);
                 $content->setParts(['foo' => 'bar']);

@@ -28,6 +28,8 @@ namespace Teknoo\East\Website\Doctrine\Translatable\Mapping;
 use Doctrine\Persistence\Mapping\Driver\FileLocator;
 
 /**
+ * To define factory able to create new instance of driver configured with this extension
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

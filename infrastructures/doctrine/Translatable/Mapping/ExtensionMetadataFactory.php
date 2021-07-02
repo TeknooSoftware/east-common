@@ -39,11 +39,10 @@ use function array_reverse;
 use function class_parents;
 use function is_callable;
 
-/*
+/**
  * The extension metadata factory is responsible for extension driver
  * initialization and fully reading the extension metadata
- */
-/**
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @author      Gediminas Morkevicius <gediminas.morkevicius@gmail.com>

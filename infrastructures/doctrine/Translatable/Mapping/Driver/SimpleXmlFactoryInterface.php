@@ -28,6 +28,8 @@ namespace Teknoo\East\Website\Doctrine\Translatable\Mapping\Driver;
 use SimpleXMLElement;
 
 /**
+ * To define factory able to create a new SimpleXMLElement instance with the file passed in argument
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

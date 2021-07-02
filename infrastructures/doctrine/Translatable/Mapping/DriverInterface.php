@@ -29,6 +29,9 @@ namespace Teknoo\East\Website\Doctrine\Translatable\Mapping;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 
 /**
+ * Interface to define driver, able to read a configuration / metadata about class/object's translations and return it
+ * to the ExtensionMetadataFactory to configure this Doctrine extension.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @author      Gediminas Morkevicius <gediminas.morkevicius@gmail.com>

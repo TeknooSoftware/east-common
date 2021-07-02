@@ -28,6 +28,13 @@ namespace Teknoo\East\Website\Doctrine\Object;
 use DateTimeInterface;
 use Teknoo\East\Website\Object\Media as OriginalMedia;
 
+/**
+ * Media specialization in doctrine, present originally to support new GirdFS implementation in Doctrine ODM
+ * Present to avoid bc break.
+ *
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 class Media extends OriginalMedia
 {
     private ?DateTimeInterface $uploadDate = null;

@@ -36,6 +36,12 @@ use Teknoo\East\Website\Object\TranslatableInterface;
 use function spl_object_hash;
 
 /**
+ * Implementation of WrapperInterface dedicated to Document managed by Doctrine ODM, to allow this extension to work
+ * evenly with Doctrine Document and Doctrine Entity.
+ * This wrapped redirects calls to they wrapped object or class metadata and allow this extension to update value in
+ * the wrapped object, manipulate data in the object's manager (according to its implementations/technology)
+ * or manage `TranslationInterface` instances linked to the wrapped object. *
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
@@ -45,6 +51,11 @@ class DocumentWrapper implements WrapperInterface
         private TranslatableInterface $object,
         private ClassMetadata $meta,
     ) {
+    }
+
+    private function getIdentifier(): string
+    {
+        return $this->object->getId();
     }
 
     private function initialize(): void
@@ -69,10 +80,21 @@ class DocumentWrapper implements WrapperInterface
         return $propertyReflection->getValue($this->object);
     }
 
-    public function setOriginalObjectProperty(ManagerAdapterInterface $manager, string $name): WrapperInterface
+    public function setPropertyValue(string $name, mixed $value): WrapperInterface
+    {
+        $this->initialize();
+
+        $propertyReflection = $this->meta->getReflectionProperty($name);
+        $propertyReflection->setAccessible(true);
+        $propertyReflection->setValue($this->object, $value);
+
+        return $this;
+    }
+
+    public function setObjectPropertyInManager(ManagerAdapterInterface $manager, string $name): WrapperInterface
     {
         // ensure clean changeset
-        $manager->setOriginalObjectProperty(
+        $manager->setObjectPropertyInManager(
             spl_object_hash($this->getObject()),
             $name,
             $this->getPropertyValue($name)
@@ -96,22 +118,6 @@ class DocumentWrapper implements WrapperInterface
         return $this;
     }
 
-    public function setPropertyValue(string $name, mixed $value): WrapperInterface
-    {
-        $this->initialize();
-
-        $propertyReflection = $this->meta->getReflectionProperty($name);
-        $propertyReflection->setAccessible(true);
-        $propertyReflection->setValue($this->object, $value);
-
-        return $this;
-    }
-
-    private function getIdentifier(): string
-    {
-        return $this->object->getId();
-    }
-
     public function linkTranslationRecord(TranslationInterface $translation): WrapperInterface
     {
         $translation->setForeignKey($this->getIdentifier());
@@ -119,14 +125,14 @@ class DocumentWrapper implements WrapperInterface
         return $this;
     }
 
-    public function loadTranslations(
+    public function loadAllTranslations(
         AdapterInterface $adapter,
         string $locale,
         string $translationClass,
         string $objectClass,
         callable $callback
     ): WrapperInterface {
-        $adapter->loadTranslations(
+        $adapter->loadAllTranslations(
             $locale,
             $this->getIdentifier(),
             $translationClass,

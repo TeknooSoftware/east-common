@@ -26,6 +26,11 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Doctrine\Translatable;
 
 /**
+ * Interface to define object storing translations for object. Each translated field in a object has is dedicated
+ * TranslationInterface instance.
+ * Instances of this interface are not directly usable by developers, or reader or writer.
+ * They are internals objecst used by this Doctrine extension to store translations.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

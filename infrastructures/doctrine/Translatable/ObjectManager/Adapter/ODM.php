@@ -38,6 +38,9 @@ use Teknoo\East\Website\Object\TranslatableInterface;
 use function spl_object_hash;
 
 /**
+ * Implementation of adapter dedicated to Doctrine ODM Manager to use it into this library as Object Manager to update
+ * objects's states.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
@@ -103,7 +106,7 @@ class ODM implements AdapterInterface
         TranslatableInterface $object
     ): AdapterInterface {
         if (!$metadata instanceof ClassMetadata) {
-            throw new RuntimeException("Error this classMetada is not compatible with the document manager");
+            throw new RuntimeException('Error this classMetada is not compatible with the document manager');
         }
 
         $uow = $this->getUnitOfWork();
@@ -140,7 +143,7 @@ class ODM implements AdapterInterface
         return $this;
     }
 
-    public function setOriginalObjectProperty(string $oid, string $property, mixed $value): AdapterInterface
+    public function setObjectPropertyInManager(string $oid, string $property, mixed $value): AdapterInterface
     {
         $this->getUnitOfWork()->setOriginalDocumentProperty($oid, $property, $value);
 

@@ -30,6 +30,12 @@ use Teknoo\East\Website\Doctrine\Translatable\Persistence\AdapterInterface;
 use Teknoo\East\Website\Doctrine\Translatable\TranslationInterface;
 
 /**
+ * Interface to help this extension to work evenly with Doctrine Document and Doctrine Entity.
+ * Implementations of this interface must redirect calls to they wrapped object or class metadata.
+ *
+ * This interface defines method to update value in wrapped object, manipulate data in the object's manager (according
+ * to its implementations/technology) or manage `TranslationInterface` instances linked to the wrapped object.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
@@ -37,7 +43,7 @@ interface WrapperInterface
 {
     public function setPropertyValue(string $name, mixed $value): WrapperInterface;
 
-    public function setOriginalObjectProperty(ManagerAdapterInterface $manager, string $name): WrapperInterface;
+    public function setObjectPropertyInManager(ManagerAdapterInterface $manager, string $name): WrapperInterface;
 
     public function updateTranslationRecord(
         TranslationInterface $translation,
@@ -47,7 +53,7 @@ interface WrapperInterface
 
     public function linkTranslationRecord(TranslationInterface $translation): WrapperInterface;
 
-    public function loadTranslations(
+    public function loadAllTranslations(
         AdapterInterface $adapter,
         string $locale,
         string $translationClass,

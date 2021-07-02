@@ -290,7 +290,7 @@ class ODMTest extends TestCase
         self::assertEquals(2, $counter);
     }
 
-    public function testSetOriginalObjectProperty()
+    public function testSetObjectPropertyInManager()
     {
         $uow = $this->createMock(UnitOfWork::class);
         $uow->expects(self::once())->method('setOriginalDocumentProperty');
@@ -302,7 +302,7 @@ class ODMTest extends TestCase
 
         self::assertInstanceOf(
             ODM::class,
-            $this->build()->setOriginalObjectProperty('foo', 'bar', 'hello')
+            $this->build()->setObjectPropertyInManager('foo', 'bar', 'hello')
         );
     }
 }

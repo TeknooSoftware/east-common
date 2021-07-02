@@ -38,6 +38,9 @@ use Teknoo\East\Website\Doctrine\Translatable\Wrapper\WrapperInterface;
 use function strlen;
 
 /**
+ * Doctrine ODM adapter able to load and write translated value into a `TranslationInterface` document implementation
+ * for each field of a translatable object, and load, in an optimized query, all translations for an object
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
@@ -48,7 +51,7 @@ class ODM implements AdapterInterface
     ) {
     }
 
-    public function loadTranslations(
+    public function loadAllTranslations(
         string $locale,
         string $identifier,
         string $translationClass,
@@ -191,7 +194,7 @@ class ODM implements AdapterInterface
         TranslationInterface $translation
     ): AdapterInterface {
         if (!$metadata instanceof OdmClassMetadata) {
-            throw new RuntimeException("Error this classMetadata is not compatible with this adapter");
+            throw new RuntimeException('Error this classMetadata is not compatible with this adapter');
         }
 
         $mapping = $metadata->getFieldMapping($field);
@@ -203,14 +206,14 @@ class ODM implements AdapterInterface
         return $this;
     }
 
-    public function setTranslationValue(
+    public function setTranslatedValue(
         WrapperInterface $wrapped,
         ClassMetadata $metadata,
         string $field,
         mixed $value
     ): AdapterInterface {
         if (!$metadata instanceof OdmClassMetadata) {
-            throw new RuntimeException("Error this classMetadata is not compatible with this adapter");
+            throw new RuntimeException('Error this classMetadata is not compatible with this adapter');
         }
 
         $mapping = $metadata->getFieldMapping($field);

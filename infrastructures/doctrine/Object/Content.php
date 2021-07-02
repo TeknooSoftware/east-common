@@ -29,6 +29,14 @@ use Teknoo\East\Website\Object\Content as OriginalContent;
 use Teknoo\States\Automated\AutomatedTrait;
 use Teknoo\States\Doctrine\Document\StandardTrait;
 
+/**
+ * Content specialization in doctrine, present originally to support translation by Gedmo extension.
+ * The translation is now directly provided by an full internal extension embedded in this library.
+ * Present to avoid bc break.
+ *
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 class Content extends OriginalContent
 {
     use AutomatedTrait;

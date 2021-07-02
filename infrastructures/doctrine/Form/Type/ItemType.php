@@ -36,6 +36,10 @@ use Teknoo\East\Website\Doctrine\Object\Content;
 use Teknoo\East\Website\Doctrine\Object\Item;
 
 /**
+ * Symfony Form dedicated to manage translatable Item Object in a Symfony Website.
+ * This form is placed in this namespace to use the good Symfony Form Doctrine Type to link an item to a parent and
+ * to a content. Parents list and Contents list are populated from theirs respective repository.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

@@ -69,7 +69,7 @@ class ODMTest extends TestCase
         return new ODM($this->getManager());
     }
 
-    public function testLoadTranslations()
+    public function testloadAllTranslations()
     {
         $qBuilder = $this->createMock(Builder::class);
         $qBuilder->expects(self::any())
@@ -98,7 +98,7 @@ class ODMTest extends TestCase
 
         self::assertInstanceOf(
             AdapterInterface::class,
-            $this->build()->loadTranslations(
+            $this->build()->loadAllTranslations(
                 'fr',
                 'fooId',
                 'fooClass',
@@ -384,7 +384,7 @@ class ODMTest extends TestCase
         );
     }
 
-    public function testSetTranslationValueWithGenericClassMetaData()
+    public function testsetTranslatedValueWithGenericClassMetaData()
     {
         $this->expectException(\RuntimeException::class);
 
@@ -393,10 +393,10 @@ class ODMTest extends TestCase
 
         $meta = $this->createMock(BaseClassMetadata::class);
 
-        $this->build()->setTranslationValue($wrapper, $meta, 'foo', 'bar');
+        $this->build()->setTranslatedValue($wrapper, $meta, 'foo', 'bar');
     }
 
-    public function testSetTranslationValue()
+    public function testsetTranslatedValue()
     {
         $wrapper = $this->createMock(WrapperInterface::class);
         $wrapper->expects(self::once())->method('setPropertyValue');
@@ -408,7 +408,7 @@ class ODMTest extends TestCase
 
         self::assertInstanceOf(
             AdapterInterface::class,
-            $this->build()->setTranslationValue($wrapper, $meta, 'foo', 'bar')
+            $this->build()->setTranslatedValue($wrapper, $meta, 'foo', 'bar')
         );
     }
 }

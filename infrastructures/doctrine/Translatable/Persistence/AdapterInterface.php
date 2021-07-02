@@ -30,12 +30,15 @@ use Teknoo\East\Website\Doctrine\Translatable\TranslationInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Wrapper\WrapperInterface;
 
 /**
+ * Interface to define adapter able to load and write translated value into a `TranslationInterface` implementation for
+ * each field of a translatable object, and load, in an optimized query, all translations for an object
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 interface AdapterInterface
 {
-    public function loadTranslations(
+    public function loadAllTranslations(
         string $locale,
         string $identifier,
         string $translationClass,
@@ -58,7 +61,9 @@ interface AdapterInterface
         string $objectClass
     ): AdapterInterface;
 
-    public function persistTranslationRecord(TranslationInterface $translation): AdapterInterface;
+    public function persistTranslationRecord(
+        TranslationInterface $translation
+    ): AdapterInterface;
 
     public function updateTranslationRecord(
         WrapperInterface $wrapped,
@@ -67,7 +72,7 @@ interface AdapterInterface
         TranslationInterface $translation
     ): AdapterInterface;
 
-    public function setTranslationValue(
+    public function setTranslatedValue(
         WrapperInterface $wrapped,
         ClassMetadata $metadata,
         string $field,

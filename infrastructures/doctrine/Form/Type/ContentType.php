@@ -41,6 +41,10 @@ use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Object\User;
 
 /**
+ * Symfony Form dedicated to manage translatable Content Object in a Symfony Website.
+ * This form is placed in this namespace to use the good Symfony Form Doctrine Type to link a content to an author and
+ * to a type. Author list and Type list are populated from theirs respective repository.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @SuppressWarnings(PHPMD)
@@ -126,19 +130,13 @@ class ContentType extends AbstractType
                 $parts = $data->getParts();
 
                 foreach ($type->getBlocks() as $block) {
-                    switch ($block->getType()) {
-                        case 'textarea':
-                        case 'raw':
-                            $formType = TextareaType::class;
-                            break;
-                        case 'numeric':
-                            $formType = NumberType::class;
-                            break;
-                        case 'text':
-                        case 'image':
-                        default:
-                            $formType = TextType::class;
-                            break;
+                    $formType = match ($block->getType()) {
+                        'textarea' => TextareaType::class,
+                        'raw' => TextareaType::class,
+                        'numeric' => NumberType::class,
+                        'text' => TextType::class,
+                        'image' => TextType::class,
+                        default => TextType::class,
                     };
 
                     $value = '';

@@ -28,6 +28,13 @@ namespace Teknoo\East\Website\Doctrine\Object;
 use Teknoo\East\Website\Doctrine\Translatable\TranslationInterface;
 
 /**
+ * Persisted object to store translations for translated object. Each translated field in a object has is dedicated
+ * Translation instance.
+ * Instances of this class are not directly usable by developers, or reader or writer. They are internals objects used
+ * by `Teknoo\East\Website\Doctrine\Translatable` to store translations.
+ *
+ * @internal
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

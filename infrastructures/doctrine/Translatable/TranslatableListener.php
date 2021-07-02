@@ -46,24 +46,23 @@ use function spl_object_hash;
 
 /**
  * The translation listener handles the generation and
- * loading of translations for entities which implements
+ * loading of translations for object which implements
  * the TranslatableInterface interface.
  *
  * This behavior can impact the performance of your application
  * since it does an additional query for each field to translate.
  *
- * Nevertheless the annotation metadata is properly cached and
- * it is not a big overhead to lookup all entity annotations since
+ * Nevertheless the xml metadata is properly cached and
+ * it is not a big overhead to lookup all objects mapping since
  * the caching is activated for metadata
- */
-/**
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @author      Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
  */
 class TranslatableListener implements EventSubscriber
 {
-    /**
+    /*
      * ExtensionMetadataFactory used to read the extension
      * metadata through the extension drivers
      */
@@ -75,14 +74,14 @@ class TranslatableListener implements EventSubscriber
 
     private FactoryInterface $wrapperFactory;
 
-    /**
+    /*
      * Locale which is set on this listener.
-     * If Entity being translated has locale defined it
+     * If pbject being translated has locale defined it
      * will override this one
      */
     private string $locale;
 
-    /**
+    /*
      * Default locale, this changes behavior
      * to not update the original record field if locale
      * which is used for updating is not default. This
@@ -91,8 +90,8 @@ class TranslatableListener implements EventSubscriber
      */
     private string $defaultLocale;
 
-    /**
-     * If this is set to false, when if entity does
+    /*
+     * If this is set to false, when if object does
      * not have a translation for requested locale
      * it will show a blank value
      */
@@ -245,14 +244,14 @@ class TranslatableListener implements EventSubscriber
         return $object->getLocaleField() ?? $this->locale;
     }
 
-    private function loadTranslations(
+    private function loadAllTranslations(
         WrapperInterface $wrapper,
         string $locale,
         string $translationClass,
         array $config,
         ClassMetadata $metaData
-    ): self {
-        $wrapper->loadTranslations(
+    ): void {
+        $wrapper->loadAllTranslations(
             $this->persistence,
             $locale,
             $translationClass,
@@ -279,15 +278,12 @@ class TranslatableListener implements EventSubscriber
                         $isTranslated
                         || (!$this->translationFallback && empty($config['fallback'][$field]))
                     ) {
-                        $this->persistence->setTranslationValue($wrapper, $metaData, $field, $translated);
-                        $wrapper->setOriginalObjectProperty($this->manager, $field);
+                        $this->persistence->setTranslatedValue($wrapper, $metaData, $field, $translated);
+                        $wrapper->setObjectPropertyInManager($this->manager, $field);
                     }
                 }
             }
         );
-
-
-        return $this;
     }
 
     /*
@@ -319,7 +315,7 @@ class TranslatableListener implements EventSubscriber
         $translationClass = $config['translationClass'];
         $wrapper = $this->wrap($object, $metaData);
 
-        $this->loadTranslations($wrapper, $locale, $translationClass, $config, $metaData);
+        $this->loadAllTranslations($wrapper, $locale, $translationClass, $config, $metaData);
 
         return $this;
     }
@@ -416,7 +412,7 @@ class TranslatableListener implements EventSubscriber
                 // check if we have default translation and need to reset the translation
                 if (!$isInsert) {
                     foreach ($changeSet as $field => $changes) {
-                        $this->manager->setOriginalObjectProperty($oid, $field, $changes[0]);
+                        $this->manager->setObjectPropertyInManager($oid, $field, $changes[0]);
                         if (isset($translatableFields[$field]) && $locale !== $this->defaultLocale) {
                             $wrapper->setPropertyValue($field, $changes[0]);
                         }
@@ -459,7 +455,7 @@ class TranslatableListener implements EventSubscriber
 
         $this->manager->foreachScheduledObjectDeletions(function ($object) {
             if (!$object instanceof TranslatableInterface) {
-                return $this;
+                return;
             }
 
             $metaData = $this->getClassMetadata($this->getObjectClassName($object));
@@ -482,7 +478,7 @@ class TranslatableListener implements EventSubscriber
     {
         foreach ($this->objectsToTranslate as $local => &$objects) {
             foreach ($objects as &$object) {
-                $this->loadTranslations($object[0], $local, $object[1], $object[2], $object[3]);
+                $this->loadAllTranslations($object[0], $local, $object[1], $object[2], $object[3]);
             }
             unset($object);
         }

@@ -249,7 +249,7 @@ class TranslatableListenerTest extends TestCase
 
         $wrapper = $this->createMock(WrapperInterface::class);
         $wrapper->expects(self::never())
-            ->method('loadTranslations');
+            ->method('loadAllTranslations');
 
         $this->getWrapperFactory()
             ->expects(self::never())
@@ -282,7 +282,7 @@ class TranslatableListenerTest extends TestCase
 
         $wrapper = $this->createMock(WrapperInterface::class);
         $wrapper->expects(self::never())
-            ->method('loadTranslations');
+            ->method('loadAllTranslations');
 
         $this->getWrapperFactory()
             ->expects(self::never())
@@ -336,7 +336,7 @@ class TranslatableListenerTest extends TestCase
 
         $wrapper = $this->createMock(WrapperInterface::class);
         $wrapper->expects(self::never())
-            ->method('loadTranslations');
+            ->method('loadAllTranslations');
 
         $this->getWrapperFactory()
             ->expects(self::never())
@@ -389,7 +389,7 @@ class TranslatableListenerTest extends TestCase
 
         $wrapper = $this->createMock(WrapperInterface::class);
         $wrapper->expects(self::any())
-            ->method('loadTranslations')
+            ->method('loadAllTranslations')
             ->willReturnCallback(
                 function (
                     AdapterInterface $adapter,
@@ -460,7 +460,7 @@ class TranslatableListenerTest extends TestCase
 
         $wrapper = $this->createMock(WrapperInterface::class);
         $wrapper->expects(self::any())
-            ->method('loadTranslations')
+            ->method('loadAllTranslations')
             ->willReturnCallback(
                 function (
                     AdapterInterface $adapter,
@@ -550,7 +550,7 @@ class TranslatableListenerTest extends TestCase
 
         $wrapper = $this->createMock(WrapperInterface::class);
         $wrapper->expects(self::any())
-            ->method('loadTranslations')
+            ->method('loadAllTranslations')
             ->willReturnCallback(
                 function (
                     AdapterInterface $adapter,

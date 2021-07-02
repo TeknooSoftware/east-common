@@ -128,10 +128,10 @@ class DocumentWrapperTest extends TestCase
         );
     }
 
-    public function testSetOriginalObjectPropertyWithProxy()
+    public function testSetObjectPropertyInManagerWithProxy()
     {
         $manager = $this->createMock(ManagerAdapterInterface::class);
-        $manager->expects(self::once())->method('setOriginalObjectProperty');
+        $manager->expects(self::once())->method('setObjectPropertyInManager');
 
         $this->object = new class implements TranslatableInterface, GhostObjectInterface {
             public function setProxyInitializer(?\Closure $initializer = null)
@@ -167,18 +167,18 @@ class DocumentWrapperTest extends TestCase
 
         self::assertInstanceOf(
             WrapperInterface::class,
-            $this->build()->setOriginalObjectProperty($manager, 'bar')
+            $this->build()->setObjectPropertyInManager($manager, 'bar')
         );
     }
 
-    public function testSetOriginalObjectProperty()
+    public function testSetObjectPropertyInManager()
     {
         $manager = $this->createMock(ManagerAdapterInterface::class);
-        $manager->expects(self::once())->method('setOriginalObjectProperty');
+        $manager->expects(self::once())->method('setObjectPropertyInManager');
 
         self::assertInstanceOf(
             WrapperInterface::class,
-            $this->build()->setOriginalObjectProperty($manager, 'bar')
+            $this->build()->setObjectPropertyInManager($manager, 'bar')
         );
     }
 
@@ -207,14 +207,14 @@ class DocumentWrapperTest extends TestCase
         );
     }
 
-    public function testLoadTranslations()
+    public function testloadAllTranslations()
     {
         $adapter = $this->createMock(AdapterInterface::class);
-        $adapter->expects(self::once())->method('loadTranslations');
+        $adapter->expects(self::once())->method('loadAllTranslations');
 
         self::assertInstanceOf(
             WrapperInterface::class,
-            $this->build()->loadTranslations(
+            $this->build()->loadAllTranslations(
                 $adapter,
                 'fr',
                 'fooClass',

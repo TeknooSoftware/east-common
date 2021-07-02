@@ -31,6 +31,10 @@ use Teknoo\East\Website\Doctrine\Translatable\TranslatableListener;
 use Teknoo\East\Website\Object\TranslatableInterface;
 
 /**
+ * Interface to help this extension to work evenly with Doctrine Document Manager or Doctrine Entity Manager.
+ * This manager extends `Teknoo\East\Website\DBSource\ManagerInterface` because this parent interface define wrapper
+ * for Persistence Manager to use in East Website.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
@@ -51,5 +55,5 @@ interface AdapterInterface extends ManagerInterface
         TranslatableInterface $object
     ): AdapterInterface;
 
-    public function setOriginalObjectProperty(string $oid, string $property, mixed $value): AdapterInterface;
+    public function setObjectPropertyInManager(string $oid, string $property, mixed $value): AdapterInterface;
 }

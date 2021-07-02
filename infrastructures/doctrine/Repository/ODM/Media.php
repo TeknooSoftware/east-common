@@ -32,6 +32,13 @@ use MongoDB\GridFS\Exception\FileNotFoundException;
 
 use function strlen;
 
+/**
+ * Repository dedicated to Media implementation as GridFS Repository to store all media (image, pdf, or other stuff)
+ * into a MongoDB's GridFS via Doctrine ODM.
+ *
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 class Media extends DefaultGridFSRepository
 {
     private function getDocumentBucket(): Bucket

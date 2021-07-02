@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\Recipe\Step\ODM;
 
-use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Repository\GridFSRepository;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
@@ -36,6 +35,10 @@ use Teknoo\East\Website\Doctrine\Object\Media;
 use Teknoo\East\Website\Object\Media as BaseMedia;
 
 /**
+ * Recipe Step to fetch Media's stream from new GridFSRepository provided by Doctrine ODM.
+ * Open a resource via the GirdFS Repository, then create a new StreamInterface instance wrapping this resource and
+ * put it into the workplan.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

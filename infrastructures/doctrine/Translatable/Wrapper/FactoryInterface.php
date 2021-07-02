@@ -29,6 +29,9 @@ use Doctrine\Persistence\Mapping\ClassMetadata;
 use Teknoo\East\Website\Object\TranslatableInterface;
 
 /**
+ * Implementation to define factory able to create the good wrapper instance to wrap the Translatable object passed in
+ * parameter with its metadata.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

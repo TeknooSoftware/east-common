@@ -32,6 +32,11 @@ use Teknoo\East\Website\Query\Expr\InclusiveOr;
 use Teknoo\East\Website\Query\Expr\ObjectReference;
 
 /**
+ * Default implementation dedicated to generic Doctrine component to convert East Website
+ * Queries expressions to Doctrines generic queries.
+ * Usable with ORM or ODM, but a optimized version dedicated to ODM is available into `ODM`
+ * namespace.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

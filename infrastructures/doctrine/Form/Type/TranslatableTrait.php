@@ -31,6 +31,9 @@ use Teknoo\East\Website\Doctrine\Translatable\TranslatableListener;
 use Teknoo\East\Website\Object\ObjectInterface;
 
 /**
+ * Form trait to support translatable fields for translatable object.
+ * Will add hidden fields to memorize current langage
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

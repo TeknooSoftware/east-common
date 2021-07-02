@@ -29,6 +29,10 @@ use Doctrine\Persistence\ObjectManager;
 use Teknoo\East\Website\DBSource\ManagerInterface;
 
 /**
+ * Default implementation of `ManagerInterface` wrapping Doctrine's object manager,
+ * following generic Doctrine interfaces.
+ * Usable with ORM or ODM.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

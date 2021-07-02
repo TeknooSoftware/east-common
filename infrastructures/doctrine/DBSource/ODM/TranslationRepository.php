@@ -28,6 +28,9 @@ namespace Teknoo\East\Website\Doctrine\DBSource\ODM;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 
 /**
+ * ODM optimised implementation of repository to manage translation in this library for Doctrine's ODM repositories.
+ * Can be used only with Doctrine ODM.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

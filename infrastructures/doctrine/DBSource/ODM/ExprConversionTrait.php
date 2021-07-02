@@ -32,6 +32,10 @@ use Teknoo\East\Website\Query\Expr\InclusiveOr;
 use Teknoo\East\Website\Query\Expr\ObjectReference;
 
 /**
+ * Odm Optimised implementation dedicated to ODM Doctrine component to convert East Website
+ * Queries expressions to MongoDB queries.
+ * Can be used only with Doctrine ODM.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

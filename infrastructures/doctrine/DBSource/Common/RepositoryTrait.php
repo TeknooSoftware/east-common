@@ -33,6 +33,10 @@ use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Throwable;
 
 /**
+ * Default repository implementation of generic doctrine repositories.
+ * Usable with ORM or ODM, but a optimized version dedicated to ODM is available into `ODM`
+ * namespace.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

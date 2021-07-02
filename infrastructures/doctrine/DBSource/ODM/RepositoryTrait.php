@@ -25,15 +25,16 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\DBSource\ODM;
 
-use Doctrine\Persistence\ObjectRepository;
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 use DomainException;
-use RuntimeException;
 use Teknoo\East\Foundation\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Throwable;
 
 /**
+ * ODM optimized repository implementation of ODM doctrine repositories.
+ * Can be used only with Doctrine ODM.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

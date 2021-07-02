@@ -28,6 +28,11 @@ namespace Teknoo\East\Website\Doctrine\DBSource\Common;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 
 /**
+ * Default implementation of repository to manage translation in this library for Doctrine's repositories,
+ * following generic Doctrine interfaces.
+ * Usable with ORM or ODM, but a optimized version dedicated to ODM is available into `ODM`
+ * namespace.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

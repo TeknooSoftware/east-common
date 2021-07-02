@@ -27,6 +27,9 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Doctrine\Exception;
 
 /**
+ * Exception class used in Website Doctrine extension dedicated to translation.
+ * Used when any non mapping errors occurred during translation
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @author      Gediminas Morkevicius <gediminas.morkevicius@gmail.com>

@@ -28,6 +28,11 @@ namespace Teknoo\East\Website\Doctrine\DBSource\Common;
 use Teknoo\East\Website\DBSource\Repository\MediaRepositoryInterface;
 
 /**
+ * Default implementation of `MediaRepositoryInterface` for Doctrine's repositories,
+ * following generic Doctrine interfaces.
+ * Usable with ORM or ODM, but a optimized version dedicated to ODM is available into `ODM`
+ * namespace.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

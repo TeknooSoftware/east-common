@@ -39,6 +39,9 @@ use Teknoo\East\WebsiteBundle\Object\User;
 use function interface_exists;
 
 /**
+ * Symfony user provider to load East Website's user from email.
+ * Use the standard User Loader, and wrap user fetched into User or LegacyUser, available in this namespace.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
@@ -69,7 +72,7 @@ abstract class UserProvider
         );
 
         if (!$loadedUser) {
-            throw new UsernameNotFoundException();
+            throw new UsernameNotFoundException(); //todo deprecated
         }
 
         return $loadedUser;

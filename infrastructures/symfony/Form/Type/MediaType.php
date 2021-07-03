@@ -37,6 +37,8 @@ use Teknoo\East\Website\Object\Media;
 use Teknoo\East\Website\Object\MediaMetadata;
 
 /**
+ * Symfony form to edit East Website Media
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

@@ -342,12 +342,10 @@ class FeatureContext implements Context
 
             public function find($id)
             {
-                // TODO: Implement find() method.
             }
 
             public function findAll()
             {
-                // TODO: Implement findAll() method.
             }
 
             public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)

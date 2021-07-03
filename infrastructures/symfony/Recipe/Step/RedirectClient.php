@@ -34,6 +34,10 @@ use Teknoo\East\Website\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Website\Recipe\Step\Traits\ResponseTrait;
 
 /**
+ * Recipe Step to use into a HTTP EndPoint Recipe to create PSR11 response to redirect the client to a new
+ * request.
+ * Symfony implementation for `RedirectClientInterface`.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

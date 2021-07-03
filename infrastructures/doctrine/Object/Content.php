@@ -30,9 +30,9 @@ use Teknoo\States\Automated\AutomatedTrait;
 use Teknoo\States\Doctrine\Document\StandardTrait;
 
 /**
- * Content specialization in doctrine, present originally to support translation by Gedmo extension.
+ * Content specialization in doctrine as document.
  * The translation is now directly provided by an full internal extension embedded in this library.
- * Present to avoid bc break.
+ * Implement States's Doctrine Document feature via the trait `Teknoo\States\Doctrine\Document\StandardTrait`
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>

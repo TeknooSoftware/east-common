@@ -37,6 +37,11 @@ use Teknoo\East\Website\Service\DatesService;
 use function is_callable;
 
 /**
+ * Recipe step to use into a HTTP EndPoint Recipe to create a form instance and handle the current request.
+ * The form must be put into the manager's workplan.
+ * If the key `publish` is present into the request, the current date will be passed to the object as published date.
+ * Symfony implementation for `FormHandlingInterface`.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

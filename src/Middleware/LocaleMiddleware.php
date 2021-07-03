@@ -35,9 +35,9 @@ use Teknoo\East\Website\View\ParametersBag;
 use function is_callable;
 
 /**
- * Middleware injected into the main East Foundation's recipe to detect the locale/language required by the user from
- * the serveur request : from the request's parameter "locale", fallback from the session variable (key "locale"),
- * or request's attribute.
+ * Middleware injected into the main East Foundation's recipe as middle ware to detect the locale/language required by
+ * the user from the serveur request : from the request's parameter "locale", fallback from the session variable
+ * (key "locale"), or request's attribute.
  * And register it into the session for next requests, add it as message attribute and workplan's ingredient.
  * Register also it into the view parameters bags.
  *

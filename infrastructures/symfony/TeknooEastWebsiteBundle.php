@@ -28,6 +28,8 @@ namespace Teknoo\East\WebsiteBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
+ * East Website integration in Symfony platform
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

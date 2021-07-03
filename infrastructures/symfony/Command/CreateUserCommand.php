@@ -35,6 +35,9 @@ use Teknoo\East\Website\Writer\UserWriter;
 use Teknoo\East\WebsiteBundle\Object\User;
 
 /**
+ * Symfony App Console to put a new administrator into the Website's database. By example, to use to create the first
+ * administrator to configure it online.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
@@ -42,7 +45,7 @@ class CreateUserCommand extends Command
 {
     public function __construct(
         private UserWriter $writer,
-        private EncoderFactoryInterface $encoderFactory,
+        private EncoderFactoryInterface $encoderFactory, //todo
     ) {
         parent::__construct();
     }

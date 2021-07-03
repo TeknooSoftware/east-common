@@ -35,6 +35,9 @@ use Teknoo\East\Website\Writer\UserWriter as UniversalWriter;
 use Teknoo\East\WebsiteBundle\Object\User;
 
 /**
+ * East Website writer to manager persistent operations on Symfony version of East Website's User class.
+ * This writer is able to manage users'passwords, and hash them before persist data via Symfony's hashers.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
@@ -42,7 +45,7 @@ class UserWriter implements WriterInterface
 {
     public function __construct(
         private UniversalWriter $universalWriter,
-        private EncoderFactoryInterface $encoderFactory,
+        private EncoderFactoryInterface $encoderFactory, //todo deprecated
     ) {
     }
 

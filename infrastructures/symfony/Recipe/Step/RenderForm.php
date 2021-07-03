@@ -39,6 +39,10 @@ use Teknoo\East\Website\View\ParametersBag;
 use Teknoo\Recipe\Ingredient\Attributes\Transform;
 
 /**
+ * Recipe step to use into a HTTP EndPoint Recipe to render thanks to a template engine the form instance
+ * from the workplan.
+ * Symfony implementation for `RenderFormInterface`.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

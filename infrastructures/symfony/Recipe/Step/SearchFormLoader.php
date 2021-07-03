@@ -34,6 +34,10 @@ use function is_array;
 use function key;
 
 /**
+ * Recipe step to use into a HTTP EndPoint Recipe to load and inject into workplan a form dedicated to
+ * search in a objects lists.
+ * Symfony implementation for `SearchFormLoaderInterface`.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

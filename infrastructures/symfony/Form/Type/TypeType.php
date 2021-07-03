@@ -32,6 +32,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Teknoo\East\Website\Object\Type;
 
 /**
+ * Symfony form to edit East Website Page's Type and theirs dynamics blocks
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

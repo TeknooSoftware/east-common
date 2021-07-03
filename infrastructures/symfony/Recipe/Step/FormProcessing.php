@@ -30,6 +30,10 @@ use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\FormProcessingInterface;
 
 /**
+ * Recipe step to define step to use into a HTTP EndPoint Recipe to skip some recipe's steps if the form is not validate
+ * by rules.
+ * Symfony implementation for `FormProcessingInterface`.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

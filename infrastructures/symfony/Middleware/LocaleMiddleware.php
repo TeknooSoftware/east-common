@@ -30,6 +30,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 
 /**
+ * Recipe step to use in main East Foundation recipe as middleware, to configure the Symfony's translator with the
+ * selected locale
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
@@ -44,12 +46,13 @@ class LocaleMiddleware
 
     public function execute(
         MessageInterface $message,
+        string $locale = null,
     ): self {
         if (!$message instanceof ServerRequestInterface) {
             return $this;
         }
 
-        $locale = $message->getAttribute('locale', null);
+        $locale = $message->getAttribute('locale', $locale);
 
         if (!empty($locale)) {
             $this->translator->setLocale($locale);

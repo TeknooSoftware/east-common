@@ -33,6 +33,9 @@ use Teknoo\East\Website\Object\User as BaseUser;
 use function interface_exists;
 
 /**
+ * Symfony user class, implementing Symfony interface and wrapping East Website User.
+ * To use with Symfony 5.2
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

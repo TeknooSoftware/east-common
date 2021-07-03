@@ -33,6 +33,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Teknoo\East\Website\Object\Block;
 
 /**
+ * Symfony form to edit East Website Block
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

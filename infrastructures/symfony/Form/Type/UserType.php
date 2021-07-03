@@ -35,6 +35,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Teknoo\East\WebsiteBundle\Object\User;
 
 /**
+ * Symfony form to edit East Website User.
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

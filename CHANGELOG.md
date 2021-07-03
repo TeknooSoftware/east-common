@@ -1,5 +1,9 @@
 # Teknoo Software - Website - Change Log
 
+## [5.1.2] - 2021-07-03
+### Stable Release
+- Update documents and dev libs requirements
+
 ## [5.1.1] - 2021-06-20
 ### Stable Release
 - Switch to East Foundation 5.3.0+

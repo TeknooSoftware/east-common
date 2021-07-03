@@ -17,53 +17,67 @@ Example with Symfony
 
     //config/packages/di_bridge.yaml:
     di_bridge:
-      definitions:
-        - '%kernel.project_dir%/config/di.php'
+        compilation_path: '%kernel.project_dir%/var/cache/phpdi'
+        definitions:
+          - '%kernel.project_dir%/config/di.php'
     
     //config/packages/east_foundation.yaml:
     di_bridge:
-      definitions:
-        - '%kernel.project_dir%/vendor/teknoo/east-foundation/src/di.php'
-        - '%kernel.project_dir%/vendor/teknoo/east-foundation/infrastructures/symfony/Resources/config/di.php'
+        definitions:
+            - '%kernel.project_dir%/vendor/teknoo/east-foundation/src/di.php'
+            - '%kernel.project_dir%/vendor/teknoo/east-foundation/infrastructures/symfony/Resources/config/di.php'
+            - '%kernel.project_dir%/vendor/teknoo/east-foundation/infrastructures/symfony/Resources/config/laminas_di.php'
+        import:
+            Psr\Log\LoggerInterface: 'logger'
 
     //config/packages/east_website_di.yaml:
     di_bridge:
-      definitions:
-        - '%kernel.project_dir%/vendor/teknoo/east-website/src/di.php'
-        - '%kernel.project_dir%/vendor/teknoo/east-website/infrastructures/doctrine/di.php'
-        - '%kernel.project_dir%/vendor/teknoo/east-website/infrastructures/symfony/Resources/config/di.php'
-        - '%kernel.project_dir%/vendor/teknoo/east-website/infrastructures/di.php'
-      import:
-        Doctrine\Persistence\ObjectManager: 'doctrine_mongodb.odm.default_document_manager'
+        definitions:
+            - '%kernel.project_dir%/vendor/teknoo/east-website/src/di.php'
+            - '%kernel.project_dir%/vendor/teknoo/east-website/infrastructures/doctrine/di.php'
+            - '%kernel.project_dir%/vendor/teknoo/east-website/infrastructures/symfony/Resources/config/di.php'
+            - '%kernel.project_dir%/vendor/teknoo/east-website/infrastructures/symfony/Resources/config/laminas_di.php'
+            - '%kernel.project_dir%/vendor/teknoo/east-website/infrastructures/di.php'
+        import:
+            Doctrine\Persistence\ObjectManager: 'doctrine_mongodb.odm.default_document_manager'
     
     //bundles.php
     ...
+    Teknoo\DI\SymfonyBridge\DIBridgeBundle::class => ['all' => true],
     Teknoo\East\FoundationBundle\EastFoundationBundle::class => ['all' => true],
     Teknoo\East\WebsiteBundle\TeknooEastWebsiteBundle::class => ['all' => true],
-    Teknoo\DI\SymfonyBridge\DIBridgeBundle::class => ['all' => true],
 
-    //In doctrine config
+    //In doctrine config (east_website_doctrine_mongodb.yaml)
     doctrine_mongodb:
-      document_managers:
-        default:
-          auto_mapping: true
-          mappings:
-            TeknooEastWebsite:
-              type: 'yml'
-              dir: '%kernel.root_dir%/../vendor/teknoo/east-website/src/config/doctrine'
-              is_bundle: false
-              prefix: 'Teknoo\East\Website\Object'
+        document_managers:
+            default:
+                auto_mapping: true
+                mappings:
+                    TeknooEastWebsite:
+                        type: 'xml'
+                        dir: '%kernel.project_dir%/vendor/teknoo/east-website/infrastructures/doctrine/config/universal'
+                        is_bundle: false
+                        prefix: 'Teknoo\East\Website\Object'
+                    TeknooEastWebsiteDoctrine:
+                        type: 'xml'
+                        dir: '%kernel.project_dir%/vendor/teknoo/east-website/infrastructures/doctrine/config/doctrine'
+                        is_bundle: false
+                        prefix: 'Teknoo\East\Website\Doctrine\Object'
 
     //In security.yml
     security:
-      //..
-      providers:
-        main:
-          id: 'teknoo.east.website.bundle.user_provider'
+        //..
+        providers:
+            main:
+                id: 'teknoo.east.website.bundle.user_provider'
 
-    //In routing.yml
+    //In routes/website.yml
+    admin_website:
+        resource: '@TeknooEastWebsiteBundle/Resources/config/admin_routing.yml'
+        prefix: '/admin'
+    
     website:
-      resource: '@TeknooEastWebsiteBundle/Resources/config/routing.yml'
+        resource: '@TeknooEastWebsiteBundle/Resources/config/routing.yml'
 
 Support this project
 ---------------------
@@ -93,6 +107,61 @@ This library requires :
     * Teknoo/Recipe.
     * Teknoo/East-Foundation.
     * Optional: Symfony 5.2+ (for administration)
+
+News from Teknoo Website 5.0
+----------------------------
+
+This library requires PHP 8.0 or newer and it's only compatible with Symfony 5.2 or newer
+- Migrate to PHP 8.0
+- Writers services, Deleting services, and interfaces use also `Teknoo\East\Website\Contracts\ObjectInterface`.
+- Create `Teknoo\East\Website\Contracts\ObjectInterface`, `Teknoo\East\Website\Object\ObjectInterface` extends it
+  dedicated to non persisted object, manipulable by other components
+- Update steps and forms interface to use this new interface
+- Replace ServerRequestInterface to MessageInterface for ListObjectAccessControlInterface and ObjectAccessControlInterface
+- Switch Render steps to MessageInterface
+- Add `ExprConversionTrait::addExprMappingConversion` to allow your custom evaluation of expression
+- Add `ObjectReference` expression to filter on reference
+- CreateObject step has a new parameter `$workPlanKey` to custom the key to use to store the
+  new object in the workplan
+- CreateObject, DeleteObject, LoadObject, SaveObject and SlugPreparation use `Teknoo\East\Website\Contracts\ObjectInterface`
+  instead `Teknoo\East\Website\Object\ObjectInterface`. SaveObject pass the id only if the object implements
+  this last object
+  
+News from Teknoo Website 4.0
+----------------------------
+
+This library requires PHP 7.4 or newer and it's only compatible with Symfony 4.4 or newer
+- Migrate to Recipe 2.3+ and Tekno 3.3
+- Migrate all classics services endpoints to Cookbook and Recipe.
+- Remove all traits in main namespace with implementation in infrastructures namespaces.
+- All cookbooks and recipes, and majors of step are defined in the main namespace, only specialized steps are defined in infrastructures namespace.
+- Remove AdminEditEndPoint, AdminListEndPoint, AdminNewEndPoint, ContentEndPointTrait and MediaEndPointTrait.
+- Update Symfony configuration to manage this new architecture. Remove all services dedicated for each objects in Website, replaced by only agnostic endpoint. All configuration is pass in route.
+
+News from Teknoo Website 3.0
+----------------------------
+
+This library requires PHP 7.4 or newer and it's only compatible with Symfony 4.4 or newer
+- Migrate to Doctrine ODM 2
+- Migrate to new GridFS Repository
+- Migrate Gedmo's Timestamp to intern function and service
+- Migrate Gedmo's Slug to intern function and service
+- Migrate to Doctrine XML Mapping
+- Reworking Translation : Fork Gedmo Translation, clean, simplify, rework, in East philosophy
+- Remove Gedmo
+- Create new Translation configuration
+- Pagination Query support countable
+- ContentType and ItemType are not hardcoded to use DocumentType, but a Type passed in options via the EndPoint
+- Optimize menu to limit requests
+- Expr In Agnostic support
+- Change Doctrine Repository behavior to create classes dedicated to ODM
+- Create Common repository for non ODM with fallback feature
+- Autoselect Good Repository in DI
+- Migrate MediaEndPoint into ODM namespace
+- Add ProxyDetectorInterface and a snippet into DI to detect if an object is behind a proxy agnosticaly
+- Require to East Foundation 3.0.0
+- Fix errors in services definitions
+- Change exception management into MediaEndPoint
 
 News from Teknoo Website 2.0
 ----------------------------

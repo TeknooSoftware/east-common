@@ -1,5 +1,9 @@
 # Teknoo Software - Website - Change Log
 
+## [5.1.3] - 2021-07-17
+### Stable Release
+- Fix call promise's fail in repositories loader to avoid double call on exception in promise
+
 ## [5.1.2] - 2021-07-03
 ### Stable Release
 - Update documents and dev libs requirements

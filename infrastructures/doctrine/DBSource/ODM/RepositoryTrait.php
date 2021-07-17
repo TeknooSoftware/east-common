@@ -114,16 +114,21 @@ trait RepositoryTrait
 
     public function findOneBy(array $criteria, PromiseInterface $promise): RepositoryInterface
     {
+        $error = null;
         try {
             $result = $this->repository->findOneBy(static::convert($criteria));
 
             if (!empty($result)) {
                 $promise->success($result);
             } else {
-                $promise->fail(new DomainException('Object not found'));
+                $error = new DomainException('Object not found');
             }
-        } catch (Throwable $error) {
-            $promise->fail($error);
+        } catch (Throwable $catchedError) {
+            $error = $catchedError;
+        } finally {
+            if (null !== $error) {
+                $promise->fail($error);
+            }
         }
 
         return $this;

@@ -1,5 +1,9 @@
 # Teknoo Software - Website - Change Log
 
+## [5.1.4] - 2021-07-18
+### Stable Release
+- Add option to `DatesService` to prefer real current date instead stored date.
+
 ## [5.1.3] - 2021-07-17
 ### Stable Release
 - Fix call promise's fail in repositories loader to avoid double call on exception in promise

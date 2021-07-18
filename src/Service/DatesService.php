@@ -57,9 +57,13 @@ class DatesService
         return $this->currentDate = new DateTime();
     }
 
-    public function passMeTheDate(callable $setter): self
+    public function passMeTheDate(callable $setter, bool $preferRealDate = false): self
     {
-        $setter(clone $this->getCurrentDate());
+        if (false === $preferRealDate) {
+            $setter(clone $this->getCurrentDate());
+        } else {
+            $setter(new DateTime());
+        }
 
         return $this;
     }

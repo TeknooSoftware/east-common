@@ -105,4 +105,39 @@ class DatesServiceTest extends TestCase
 
         self::assertEquals($date, $object->getDate());
     }
+
+    public function testPassMeTheDateWithRealDate()
+    {
+        $date = new \DateTime('2017-01-01');
+
+        $object = new class implements ObjectInterface {
+            private $date;
+            public function getDate(): ?\DateTimeInterface
+            {
+                return $this->date;
+            }
+            public function setDate(\DateTimeInterface $date): self
+            {
+                $this->date = $date;
+                return $this;
+            }
+            public function getId(): string
+            {
+            }
+        };
+
+        $service = $this->buildService();
+
+        self::assertInstanceOf(
+            DatesService::class,
+            $service->setCurrentDate($date)
+        );
+
+        self::assertInstanceOf(
+            DatesService::class,
+            $service->passMeTheDate([$object, 'setDate'], true)
+        );
+
+        self::assertNotEquals($date, $object->getDate());
+    }
 }

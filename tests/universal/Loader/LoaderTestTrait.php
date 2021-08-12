@@ -23,7 +23,7 @@
 
 namespace Teknoo\Tests\East\Website\Loader;
 
-use Teknoo\East\Foundation\Promise\Promise;
+use Teknoo\Recipe\Promise\Promise;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Query\QueryInterface;

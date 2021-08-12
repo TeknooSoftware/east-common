@@ -27,8 +27,8 @@ namespace Teknoo\East\Website\Query\Content;
 
 use DateTimeInterface;
 use DomainException;
-use Teknoo\East\Foundation\Promise\Promise;
-use Teknoo\East\Foundation\Promise\PromiseInterface;
+use Teknoo\Recipe\Promise\Promise;
+use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Object\PublishableInterface;
@@ -75,7 +75,8 @@ class PublishedContentFromSlugQuery implements QueryInterface, ImmutableInterfac
             },
             static function (Throwable $e, PromiseInterface $next) {
                 $next->fail($e);
-            }
+            },
+            true
         );
 
         $repository->findOneBy(

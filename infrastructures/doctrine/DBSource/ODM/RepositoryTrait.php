@@ -27,7 +27,7 @@ namespace Teknoo\East\Website\Doctrine\DBSource\ODM;
 
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 use DomainException;
-use Teknoo\East\Foundation\Promise\PromiseInterface;
+use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Throwable;
 

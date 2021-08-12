@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Service;
 
-use Teknoo\East\Foundation\Promise\Promise;
+use Teknoo\Recipe\Promise\Promise;
 use Teknoo\East\Website\Loader\ContentLoader;
 use Teknoo\East\Website\Loader\ItemLoader;
 use Teknoo\East\Website\Object\Item;

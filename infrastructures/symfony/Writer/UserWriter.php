@@ -27,7 +27,7 @@ namespace Teknoo\East\WebsiteBundle\Writer;
 
 use RuntimeException;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
-use Teknoo\East\Foundation\Promise\PromiseInterface;
+use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\Contracts\ObjectInterface;
 use Teknoo\East\Website\Object\User as BaseUser;
 use Teknoo\East\Website\Writer\WriterInterface;

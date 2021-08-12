@@ -26,7 +26,7 @@ namespace Teknoo\Tests\East\WebsiteBundle\Writer;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
-use Teknoo\East\Foundation\Promise\PromiseInterface;
+use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\Object\ObjectInterface;
 use Teknoo\East\WebsiteBundle\Writer\UserWriter;
 use Teknoo\East\Website\Writer\UserWriter as UniversalWriter;

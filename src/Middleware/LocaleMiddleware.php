@@ -28,7 +28,7 @@ namespace Teknoo\East\Website\Middleware;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
-use Teknoo\East\Foundation\Promise\Promise;
+use Teknoo\Recipe\Promise\Promise;
 use Teknoo\East\Foundation\Session\SessionInterface;
 use Teknoo\East\Website\View\ParametersBag;
 

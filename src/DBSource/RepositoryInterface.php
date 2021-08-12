@@ -25,8 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\DBSource;
 
-use Teknoo\East\Foundation\Promise\PromiseInterface;
-use UnexpectedValueException;
+use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License

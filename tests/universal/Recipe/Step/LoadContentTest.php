@@ -26,7 +26,7 @@ namespace Teknoo\Tests\East\Website\Recipe\Step;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
-use Teknoo\East\Foundation\Promise\PromiseInterface;
+use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\Loader\ContentLoader;
 use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Object\Type;

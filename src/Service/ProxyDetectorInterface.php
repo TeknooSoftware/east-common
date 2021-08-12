@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Service;
 
-use Teknoo\East\Foundation\Promise\PromiseInterface;
+use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
  * Interface to implement according to DB abstract layer used (Doctrine ODM, Doctrine ORM, others...) to detect if an

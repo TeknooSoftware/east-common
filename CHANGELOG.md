@@ -1,5 +1,10 @@
 # Teknoo Software - Website - Change Log
 
+## [5.1.5] - 2021-08-12
+### Stable Release
+- Switch to `Recipe Promise`
+- Remove support of Symfony 5.2
+
 ## [5.1.4] - 2021-07-18
 ### Stable Release
 - Add option to `DatesService` to prefer real current date instead stored date.

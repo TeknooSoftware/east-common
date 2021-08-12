@@ -24,7 +24,7 @@
 namespace Teknoo\Tests\East\Website\Loader;
 
 use PHPUnit\Framework\TestCase;
-use Teknoo\East\Foundation\Promise\Promise;
+use Teknoo\Recipe\Promise\Promise;
 use Teknoo\East\Website\DBSource\Repository\MediaRepositoryInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Object\Media;

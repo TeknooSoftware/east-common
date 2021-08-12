@@ -28,7 +28,7 @@ namespace Teknoo\East\Website\Doctrine\Writer\ODM;
 use Doctrine\ODM\MongoDB\Repository\GridFSRepository;
 use Doctrine\ODM\MongoDB\Repository\UploadOptions;
 use RuntimeException;
-use Teknoo\East\Foundation\Promise\PromiseInterface;
+use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\Doctrine\Object\Media;
 use Teknoo\East\Website\Object\MediaMetadata;
 use Teknoo\East\Website\Contracts\ObjectInterface;

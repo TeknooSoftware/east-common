@@ -39,7 +39,7 @@ use ProxyManager\Proxy\GhostObjectInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use RuntimeException;
 use SimpleXMLElement;
-use Teknoo\East\Foundation\Promise\PromiseInterface;
+use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\GetStreamFromMediaInterface;
 use Teknoo\East\Website\Doctrine\Recipe\Step\ODM\GetStreamFromMedia;
 use Teknoo\East\Website\Doctrine\Translatable\Mapping\Driver\SimpleXmlFactoryInterface;

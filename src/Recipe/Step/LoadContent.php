@@ -28,7 +28,7 @@ namespace Teknoo\East\Website\Recipe\Step;
 use DomainException;
 use RuntimeException;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
-use Teknoo\East\Foundation\Promise\Promise;
+use Teknoo\Recipe\Promise\Promise;
 use Teknoo\East\Website\Loader\ContentLoader;
 use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Query\Content\PublishedContentFromSlugQuery;

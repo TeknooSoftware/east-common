@@ -28,7 +28,7 @@ namespace Teknoo\East\Website\Recipe\Step;
 use Countable;
 use RuntimeException;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
-use Teknoo\East\Foundation\Promise\Promise;
+use Teknoo\Recipe\Promise\Promise;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Query\Expr\ExprInterface;
 use Teknoo\East\Website\Query\PaginationQuery;

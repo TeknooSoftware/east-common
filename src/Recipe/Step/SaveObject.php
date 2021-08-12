@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Recipe\Step;
 
 use Teknoo\East\Foundation\Manager\ManagerInterface;
-use Teknoo\East\Foundation\Promise\Promise;
+use Teknoo\Recipe\Promise\Promise;
 use Teknoo\East\Website\Contracts\ObjectInterface;
 use Teknoo\East\Website\Object\ObjectInterface as ObjectWithId;
 use Teknoo\East\Website\Writer\WriterInterface;

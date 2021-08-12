@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Loader;
 
-use Teknoo\East\Foundation\Promise\PromiseInterface;
+use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\Query\QueryInterface;
 
 /**

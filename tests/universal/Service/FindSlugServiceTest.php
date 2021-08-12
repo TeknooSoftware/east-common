@@ -24,7 +24,7 @@
 namespace Teknoo\Tests\East\Website\Service;
 
 use PHPUnit\Framework\TestCase;
-use Teknoo\East\Foundation\Promise\PromiseInterface;
+use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Object\ObjectInterface;
 use Teknoo\East\Website\Object\SluggableInterface;

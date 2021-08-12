@@ -27,7 +27,7 @@ namespace Teknoo\East\Website\Recipe\Step;
 
 use DomainException;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
-use Teknoo\East\Foundation\Promise\Promise;
+use Teknoo\Recipe\Promise\Promise;
 use Teknoo\East\Website\Loader\MediaLoader;
 use Teknoo\East\Website\Object\Media;
 use Throwable;

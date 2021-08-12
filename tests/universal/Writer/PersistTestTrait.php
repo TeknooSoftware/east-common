@@ -23,7 +23,7 @@
 
 namespace Teknoo\Tests\East\Website\Writer;
 
-use Teknoo\East\Foundation\Promise\PromiseInterface;
+use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\ManagerInterface;
 use Teknoo\East\Website\Object\TimestampableInterface;
 use Teknoo\East\Website\Service\DatesService;

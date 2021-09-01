@@ -24,7 +24,7 @@ parameters:
             message: '#Unreachable statement - code above always terminates.#'
             path: infrastructures/symfony/Resources/config/di.php
         -
-            message: '#expects class-string<object>, string given#'
+            message: '#expects class-string<object>, class-string\|string given#'
             path:  infrastructures/doctrine/Translatable/Mapping/ExtensionMetadataFactory.php
         -
             message: '#[a-zA-Z0-9\\_]+::cook\(\) expects \(callable\(\): mixed\)|[a-zA-Z0-9\\_]+#'

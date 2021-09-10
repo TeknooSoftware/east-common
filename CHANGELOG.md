@@ -1,5 +1,96 @@
 # Teknoo Software - Website - Change Log
 
+## [6.0.0] - 2021-09-10
+### Stable Release
+- Add `UserInterface` to represent and User in a Eastt Website / WebApp.
+- Add `AuthDataInterface` to represent any data/credentials, able to authenticate an user
+- Update `User` class to following the previeous interface
+- Split authentications data from `User` class to a dedicated class `StoredPassword`
+- Support password already hashed into `StoredPassword`
+- Update Doctrine ODM mappingg about `User` ans add `StoredPassword`
+- Support third-party authentication.
+- Add `ThirdPartyAuth` to store ids data from thrid party needed to authenticate an user.
+- Add `AbstractPassordAuthUser` to wrap password logic in Symfony User for `LegacyUser` and `PasswordAuthenticatedUser`.
+- `AbstractUser` can be also used for non password authenticated user.
+- Create `PasswordAuthenticatedUser` to implements new Symfony's interface `PasswordAuthenticatedUserInterface`
+- Update `SymfonyUserWriter` implementation in Symfony to hash password only when its needed.
+- Rework `UserProvider` to `PasswordAuthenticatedUserProvider` to return a `LegacyUser` if the user use the legacy Symfony behavior with a slug
+  or a `PasswordAuthenticatedUser`. It is able to migrate logged user to the new behavior, update the hashed ppassword passed by Symfony and
+  remove salt.
+- Some QA fixes on PHPDoc
+- Remove deprecated `ViewParameterInterface`
+- Remove deprecated Symfony `User` class
+- Create `StoredPasswordType` to manage new user in a Symfony Form.
+- Fix some bug in admin routes.
+- Update annd fix some minor bug in Doctrinemapping
+- Create `OAuth2Authenticator`, built on KNPU OAuth2 client bundle to authenticate user thanks to a OAuth2 provider.
+
+## [6.0.0-rc1] - 2021-09-10
+### Beta Release
+- Clean legacies salt and hash after migration into User object.
+
+## [6.0.0-beta8] - 2021-09-09
+### Beta Release
+- Fix migration of old document structure about user to new structure : *(Doctrine ODM override authData collection)*
+- Migration structure is now managed by a `User` child class in the `Doctrine` namespace.
+
+## [6.0.0-beta7] - 2021-09-09
+### Beta Release
+- Migration of old document structure about user to new structure
+
+## [6.0.0-beta6] - 2021-09-08
+### Beta Release
+- Complete phpdoc
+- Add ConnectEndPoint to redirect viisitor to an oauth2 provider thanks to KNPU OAuth2 Client Bundle
+
+## [6.0.0-beta5] - 2021-09-08
+### Beta Release
+- Complete integrations tests
+- Fix Symfony config
+
+## [6.0.0-beta4] - 2021-09-03
+### Beta Release
+- Fix `SymfonyUserWriter` to set algo when password is hashed
+
+## [6.0.0-beta3] - 2021-09-02
+### Beta Release
+- Fix `OAuth2Authenticator` with exception during user's fetching from storage.
+- Rename `ThirdPartyAuthenticatedUser` to `ThirdPartyAuthenticatedUser`.
+- Add `ThirdPartyAuthenticatedUserProvider` as provider for third part authenticated user.
+
+## [6.0.0-beta2] - 2021-09-01
+### Beta Release
+- Add `ThirdPartyAuth` to store ids data from thrid party needed to authenticate an user.
+- Update annd fix some minor bug in Doctrinemapping
+- Add hidden and non usable field in `StoredPassword` to help persistents systems to identify `AuthDataInterface` 
+  instances.
+- Add `AbstractPassordAuthUser` to implement password logic for `LegacyUser` and `PasswordAuthenticatedUser`.
+- `AbstractUser` can be also used for non password authenticated user.
+- Rename `PasswordAuthenticatedUser` to `SymfonyUserWriter`
+- Create `OAuth2Authenticator`, built on KNPU OAuth2 client bundle to authenticate user thanks to a OAuth2 provider. 
+
+## [6.0.0-beta1] - 2021-08-26
+### Beta Release
+- Add `UserInterface` to represent and User in a Eastt Website / WebApp.
+- Add `AuthDataInterface` to represent any data/credentials, able to authenticate an user
+- Update `User` class to following the previeous interface
+- Split authentications data from `User` class to a dedicated class `StoredPassword`
+- Support password already hashed into `StoredPassword`
+- Update Doctrine ODM mappingg about `User` ans add `StoredPassword`
+- Create `AbstractUser` to wrap East Webiste `User` with a `StoredPassword` in Symfony
+- Create `PasswordAuthenticatedUser` to implements new Symfony's interface `PasswordAuthenticatedUserInterface`
+- Update `LegacyUser` to use `AbstractUser`
+- Update `UserWriter` implementation in Symfony to hash password only when its needed.
+- Rework `UserProvider` to `PasswordAuthenticatedUserProvider` to return a `LegacyUser` if the user use the legacy Symfony behavior with a slug
+  or a `PasswordAuthenticatedUser`. It is able to migrate logged user to the new behavior, update the hashed ppassword passed by Symfony and 
+  remove salt.
+- Prepare third-party authentication.
+- Some QA fixes on PHPDoc
+- Remove deprecated `ViewParameterInterface`
+- Remove deprecated Symfony `User` class
+- Create `StoredPasswordType` to manage new user in a Symfony Form.
+- Fix some bug in admin routes.
+
 ## [5.1.5] - 2021-08-12
 ### Stable Release
 - Switch to `Recipe Promise`

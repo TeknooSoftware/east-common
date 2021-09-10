@@ -29,10 +29,11 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Teknoo\East\Website\Object\StoredPassword;
 use Teknoo\East\Website\Object\User as BaseUser;
 use Teknoo\East\Website\Writer\UserWriter;
-use Teknoo\East\WebsiteBundle\Object\User;
+use Teknoo\East\WebsiteBundle\Object\PasswordAuthenticatedUser;
 
 /**
  * Symfony App Console to put a new administrator into the Website's database. By example, to use to create the first
@@ -45,7 +46,7 @@ class CreateUserCommand extends Command
 {
     public function __construct(
         private UserWriter $writer,
-        private EncoderFactoryInterface $encoderFactory, //todo
+        private UserPasswordHasherInterface $passwordHasher,
     ) {
         parent::__construct();
     }
@@ -69,9 +70,18 @@ class CreateUserCommand extends Command
         $user->setLastName((string) $input->getArgument('last_name'));
         $user->setRoles(['ROLE_USER', 'ROLE_ADMIN']);
 
-        $encoder = $this->encoderFactory->getEncoder(new User($user));
-        $salt = $user->getSalt();
-        $user->setPassword((string) $encoder->encodePassword((string) $input->getArgument('password'), $salt));
+        $storedPassword = new StoredPassword();
+        $storedPassword->setHashedPassword(
+            $this->passwordHasher->hashPassword(
+                new PasswordAuthenticatedUser(
+                    $user,
+                    $storedPassword
+                ),
+                (string) $input->getArgument('password')
+            )
+        );
+
+        $user->addAuthData($storedPassword);
 
         $this->writer->save($user);
 

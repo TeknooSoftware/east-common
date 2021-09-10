@@ -81,6 +81,9 @@ class Xml implements DriverInterface
         return $xmlElement->object;
     }
 
+    /**
+     * @param array<string, mixed> $config
+     */
     private function inspectElementsForTranslatableFields(
         SimpleXMLElement $xml,
         array &$config
@@ -101,6 +104,9 @@ class Xml implements DriverInterface
         }
     }
 
+    /**
+     * @param array<string, mixed> $config
+     */
     public function readExtendedMetadata(ClassMetadata $meta, array &$config): self
     {
         $xml = $this->getMapping($meta->getName());

@@ -24,22 +24,18 @@
 namespace Teknoo\Tests\East\WebsiteBundle\Object;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Security\Core\User\LegacyPasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Teknoo\East\WebsiteBundle\Object\User;
+use Teknoo\East\Website\Object\User;
+use Teknoo\East\WebsiteBundle\Object\AbstractUser;
 use Teknoo\East\Website\Object\User as BaseUser;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers      \Teknoo\East\WebsiteBundle\Object\User
  */
-class UserTest extends TestCase
+abstract class AbstractUserTest extends TestCase
 {
-    /**
-     * @var BaseUser
-     */
-    private $user;
+    private ?BaseUser $user = null;
 
     /**
      * @return BaseUser|\PHPUnit\Framework\MockObject\MockObject
@@ -48,21 +44,14 @@ class UserTest extends TestCase
     {
         if (!$this->user instanceof BaseUser) {
             $this->user = $this->createMock(BaseUser::class);
+
+            $this->user->expects(self::any())->method('getAuthData')->willReturn([$this->getStoredPassword()]);
         }
 
         return $this->user;
     }
 
-    public function buildObject(): User
-    {
-        return new User($this->getUser());
-    }
-
-    public function testExceptionWithBadUser()
-    {
-        $this->expectException(\TypeError::class);
-        new User(new \stdClass());
-    }
+    abstract public function buildObject(): AbstractUser;
 
     public function testGetRoles()
     {
@@ -77,37 +66,16 @@ class UserTest extends TestCase
         );
     }
 
-    public function testGetPassword()
-    {
-        $this->getUser()
-            ->expects(self::once())
-            ->method('getPassword')
-            ->willReturn('foo');
-
-        self::assertEquals(
-            'foo',
-            $this->buildObject()->getPassword()
-        );
-    }
-
     public function testGetSalt()
     {
-        $this->getUser()
-            ->expects(self::once())
-            ->method('getSalt')
-            ->willReturn('salt');
-
-        self::assertEquals(
-            'salt',
-            $this->buildObject()->getSalt()
-        );
+        self::assertEmpty($this->buildObject()->getSalt());
     }
 
     public function testGetUsername()
     {
         $this->getUser()
             ->expects(self::once())
-            ->method('getUsername')
+            ->method('getUserIdentifier')
             ->willReturn('username');
 
         self::assertEquals(
@@ -120,25 +88,12 @@ class UserTest extends TestCase
     {
         $this->getUser()
             ->expects(self::once())
-            ->method('getUsername')
+            ->method('getUserIdentifier')
             ->willReturn('username');
 
         self::assertEquals(
             'username',
             $this->buildObject()->getUserIdentifier()
-        );
-    }
-
-    public function testEraseCredentials()
-    {
-        $this->getUser()
-            ->expects(self::once())
-            ->method('eraseCredentials')
-            ->willReturnSelf();
-
-        self::assertInstanceOf(
-            User::class,
-            $this->buildObject()->eraseCredentials()
         );
     }
 
@@ -156,7 +111,7 @@ class UserTest extends TestCase
 
         $this->getUser()
             ->expects(self::any())
-            ->method('getUsername')
+            ->method('getUserIdentifier')
             ->willReturn('myUserName');
 
         $user = $this->createMock(UserInterface::class);
@@ -178,10 +133,10 @@ class UserTest extends TestCase
         
         $this->getUser()
             ->expects(self::once())
-            ->method('getUsername')
+            ->method('getUserIdentifier')
             ->willReturn('myUserName');
 
-        $user = $this->createMock(User::class);
+        $user = $this->createMock(AbstractUser::class);
         $user
             ->expects(self::any())
             ->method('getUsername')
@@ -189,6 +144,14 @@ class UserTest extends TestCase
 
         self::assertTrue(
             $this->buildObject()->isEqualTo($user)
+        );
+    }
+
+    public function testGetWrappedUser()
+    {
+        self::assertInstanceOf(
+            User::class,
+            $this->buildObject()->getWrappedUser()
         );
     }
 }

@@ -38,6 +38,9 @@ use Teknoo\East\Website\Contracts\ObjectInterface;
  */
 interface FormHandlingInterface
 {
+    /**
+     * @param array<string, mixed> $formOptions
+     */
     public function __invoke(
         ServerRequestInterface $request,
         ManagerInterface $manager,

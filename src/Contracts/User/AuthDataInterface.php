@@ -1,6 +1,7 @@
 <?php
 
 /*
+/*
  * East Website.
  *
  * LICENSE
@@ -23,19 +24,16 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Middleware;
+namespace Teknoo\East\Website\Contracts\User;
+
+use Teknoo\East\Website\Contracts\ObjectInterface;
 
 /**
- * Legacy interface to host constants defined key to use as message's attributes to inject some value into template's
- * view. Use `Teknoo\East\Website\View\ParametersBag` instead
+ * Interface defining set of data able to authenticate an user on a web app thanks to a authentication provider
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @deprecated
  */
-interface ViewParameterInterface
+interface AuthDataInterface extends ObjectInterface
 {
-    public const REQUEST_PARAMETER_KEY = 'view.parameters';
-
-    public const MIDDLEWARE_PRIORITY = 7;
 }

@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Contracts\Recipe\Step;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Symfony\Component\Form\FormInterface;
 use Teknoo\East\Foundation\Client\ClientInterface;
 use Teknoo\East\Website\Contracts\ObjectInterface;
 
@@ -42,7 +41,7 @@ interface RenderFormInterface
     public function __invoke(
         ServerRequestInterface $request,
         ClientInterface $client,
-        FormInterface $form,
+        mixed $form,
         string $template,
         ObjectInterface $object,
         bool $isTranslatable = false

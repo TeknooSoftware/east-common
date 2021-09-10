@@ -67,6 +67,10 @@ trait RepositoryTrait
         return $this;
     }
 
+    /**
+     * @param array<string, mixed> $criteria
+     * @param array<string, 'asc'|'ASC'|'desc'|'DESC'>|null $orderBy
+     */
     public function findBy(
         array $criteria,
         PromiseInterface $promise,
@@ -97,6 +101,9 @@ trait RepositoryTrait
         return $this;
     }
 
+    /**
+     * @param array<int|string, mixed> $criteria
+     */
     public function count(array $criteria, PromiseInterface $promise): RepositoryInterface
     {
         $queryBuilder = $this->repository->createQueryBuilder();
@@ -112,6 +119,9 @@ trait RepositoryTrait
         return $this;
     }
 
+    /**
+     * @param array<int|string, mixed> $criteria
+     */
     public function findOneBy(array $criteria, PromiseInterface $promise): RepositoryInterface
     {
         $error = null;

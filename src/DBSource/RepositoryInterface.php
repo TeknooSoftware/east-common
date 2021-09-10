@@ -49,11 +49,10 @@ interface RepositoryInterface
      * Optionally sorting and limiting details can be passed. An implementation may throw
      * an UnexpectedValueException if certain values of the sorting or limiting details are
      * not supported.
-     *
+     */
+     /**
      * @param array<string, mixed> $criteria
      * @param array<string, mixed>|null $orderBy
-     *
-     * @throws UnexpectedValueException
      */
     public function findBy(
         array $criteria,

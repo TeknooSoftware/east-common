@@ -28,11 +28,13 @@ namespace Teknoo\East\WebsiteBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Teknoo\East\WebsiteBundle\Object\User;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Teknoo\East\Website\Object\StoredPassword;
+use Teknoo\East\Website\Object\User;
+use Teknoo\East\WebsiteBundle\Object\PasswordAuthenticatedUser;
 
 /**
  * Symfony form to edit East Website User.
@@ -43,7 +45,7 @@ use Teknoo\East\WebsiteBundle\Object\User;
 class UserType extends AbstractType
 {
     /**
-     * @param FormBuilderInterface<User> $builder
+     * @param FormBuilderInterface<PasswordAuthenticatedUser> $builder
      * @param array<string, mixed> $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options): self
@@ -62,17 +64,33 @@ class UserType extends AbstractType
                 ]
             ]
         );
+
         $builder->add('email', EmailType::class, ['required' => true]);
-        $builder->add(
-            'password',
-            RepeatedType::class,
-            [
-                'type' => PasswordType::class,
-                'first_options' => ['label' => 'Password'],
-                'second_options' => ['label' => 'Confirm it'],
-                'invalid_message' => 'The password fields must match.',
-                'required' => false
-            ]
+
+        $builder->add('storedPassword', StoredPasswordType::class, ['mapped' => false]);
+
+        $builder->addEventListener(
+            FormEvents::POST_SET_DATA,
+            static function (FormEvent $event) {
+                /**
+                 * @var User $user
+                 */
+                $user = $event->getData();
+                $spForm = $event->getForm()->get('storedPassword');
+
+                foreach ($user->getAuthData() as $authData) {
+                    if (!$authData instanceof StoredPassword) {
+                        continue;
+                    }
+
+                    $spForm->setData($authData);
+                    return;
+                }
+
+                $authData = new StoredPassword();
+                $spForm->setData($authData);
+                $user->addAuthData($authData);
+            }
         );
 
         return $this;

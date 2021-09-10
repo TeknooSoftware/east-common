@@ -26,13 +26,14 @@ declare(strict_types=1);
 namespace Teknoo\East\WebsiteBundle\Writer;
 
 use RuntimeException;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Teknoo\East\Website\Object\StoredPassword;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\Contracts\ObjectInterface;
 use Teknoo\East\Website\Object\User as BaseUser;
 use Teknoo\East\Website\Writer\WriterInterface;
 use Teknoo\East\Website\Writer\UserWriter as UniversalWriter;
-use Teknoo\East\WebsiteBundle\Object\User;
+use Teknoo\East\WebsiteBundle\Object\PasswordAuthenticatedUser;
 
 /**
  * East Website writer to manager persistent operations on Symfony version of East Website's User class.
@@ -41,37 +42,47 @@ use Teknoo\East\WebsiteBundle\Object\User;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class UserWriter implements WriterInterface
+class SymfonyUserWriter implements WriterInterface
 {
     public function __construct(
         private UniversalWriter $universalWriter,
-        private EncoderFactoryInterface $encoderFactory, //todo deprecated
+        private UserPasswordHasherInterface $passwordHasher,
     ) {
     }
 
-    private function encodePassword(BaseUser $user): void
+    private function hashPassword(BaseUser $user, StoredPassword $password): void
     {
-        if ($user->hasUpdatedPassword()) {
-            $encoder = $this->encoderFactory->getEncoder(new User($user));
-            $salt = $user->getSalt();
-            $user->setPassword((string) $encoder->encodePassword($user->getPassword(), $salt));
-        } else {
-            $user->eraseCredentials();
-        }
+        $password->setSalt('');
+        $password->setAlgo(PasswordAuthenticatedUser::class);
+
+        $password->setHashedPassword(
+            $this->passwordHasher->hashPassword(
+                new PasswordAuthenticatedUser($user, $password),
+                $password->getHash()
+            )
+        );
     }
 
     public function save(ObjectInterface $object, PromiseInterface $promise = null): WriterInterface
     {
         if (!$object instanceof BaseUser) {
             if (null !== $promise) {
-                $class = $object::class;
-                $promise->fail(new RuntimeException("The class $class is not managed by this writer"));
+                $objectClass = $object::class;
+                $promise->fail(new RuntimeException("The class $objectClass is not managed by this writer"));
             }
 
             return $this;
         }
 
-        $this->encodePassword($object);
+        foreach ($object->getAuthData() as $authData) {
+            if (!$authData instanceof StoredPassword) {
+                continue;
+            }
+
+            if ($authData->mustHashPassword()) {
+                $this->hashPassword($object, $authData);
+            }
+        }
 
         $this->universalWriter->save($object, $promise);
 

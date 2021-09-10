@@ -66,10 +66,27 @@ Example with Symfony
 
     //In security.yml
     security:
-        //..
+        //...
+        enable_authenticator_manager: true
+
         providers:
-            main:
-                id: 'teknoo.east.website.bundle.user_provider'
+            with_password:
+                id: 'Teknoo\East\WebsiteBundle\Provider\PasswordAuthenticatedUserProvider'
+    
+        password_hashers:
+            legacy:
+                algorithm: pbkdf2
+                encode_as_base64: false
+                iterations: 100
+    
+            Teknoo\East\WebsiteBundle\Object\LegacyUser:
+                algorithm: '%teknoo.east.website.bundle.password_authenticated_user_provider.default_algo%'
+                migrate_from:
+                    - legacy
+    
+            Teknoo\East\WebsiteBundle\Object\PasswordAuthenticatedUser:
+                algorithm: '%teknoo.east.website.bundle.password_authenticated_user_provider.default_algo%'
+
 
     //In routes/website.yml
     admin_website:
@@ -78,6 +95,128 @@ Example with Symfony
     
     website:
         resource: '@TeknooEastWebsiteBundle/Resources/config/routing.yml'
+
+Enable third party authentication with an OAuth2 Provider (example with Gitlab)
+-------------------------------------------------------------------------------
+
+    //In security.yml
+    security:
+        providers:
+            //...
+            # Third party user provider
+            from_third_party:
+                id: 'Teknoo\East\WebsiteBundle\Provider\ThirdPartyAuthenticatedUserProvider'
+        firewalls:
+            # disables authentication for assets and the profiler, adapt it according to your needs
+            //...
+            admin_gitlab_login:
+                pattern: '^/oauth2/gitlab/login$'
+                security: false
+    
+            #require admin role for all others pages
+            restricted_area:
+                //...
+                # Enable oauth2 authenticator for this form
+                custom_authenticators:
+                    - '%teknoo.east.website.bundle.security.authenticator.oauth2.class%'
+
+    //In knpu_oauth2_client.yaml
+    knpu_oauth2_client:
+        clients:
+            # will create service: "knpu.oauth2.client.gitlab"
+            # an instance of: KnpU\OAuth2ClientBundle\Client\Provider\GitlabClient
+            # composer require omines/oauth2-gitlab
+            gitlab:
+                # must be "gitlab" - it activates that type!
+                type: gitlab
+                # add and set these environment variables in your .env files
+                client_id: '%env(OAUTH_GITLAB_CLIENT_ID)%'
+                client_secret: '%env(OAUTH_GITLAB_CLIENT_SECRET)%'
+                # a route name you'll create
+                redirect_route: admin_connect_gitlab_check
+                redirect_params: {}
+                # Base installation URL, modify this for self-hosted instances
+                domain: '%env(OAUTH_GITLAB_URL)%'
+
+    //In service.yaml
+    services:
+        Teknoo\East\WebsiteBundle\EndPoint\ConnectEndPoint:
+            class: 'Teknoo\East\WebsiteBundle\EndPoint\ConnectEndPoint'
+            arguments:
+              - '@KnpU\OAuth2ClientBundle\Client\ClientRegistry'
+              - 'gitlab'
+              - ['read_user']
+            calls:
+              - ['setResponseFactory', ['@Psr\Http\Message\ResponseFactoryInterface']]
+              - ['setRouter', ['@router']]
+            public: true
+    
+        Teknoo\East\WebsiteBundle\Contracts\Security\Authenticator\UserConverterInterface:
+            class: 'App\Security\Authenticator\UserConverter'
+
+    //In src/Security\Authenticator\UserConverter.php
+    <?php
+    
+    declare(strict_types=1);
+    
+    namespace App\Security\Authenticator;
+    
+    use DomainException;
+    use League\OAuth2\Client\Provider\ResourceOwnerInterface;
+    use Omines\OAuth2\Client\Provider\GitlabResourceOwner;
+    use Teknoo\East\Website\Object\User;
+    use Teknoo\East\WebsiteBundle\Contracts\Security\Authenticator\UserConverterInterface;
+    use Teknoo\Recipe\Promise\PromiseInterface;
+    
+    class UserConverter implements UserConverterInterface
+    {
+        public function extractEmail(ResourceOwnerInterface $owner, PromiseInterface $promise): UserConverterInterface
+        {
+            if (!$owner instanceof GitlabResourceOwner) {
+                $promise->fail(new DomainException('Resource not manager'));
+    
+                return $this;
+            }
+    
+            $promise->success($owner->getEmail());
+    
+            return $this;
+        }
+    
+        public function convertToUser(ResourceOwnerInterface $owner, PromiseInterface $promise): UserConverterInterface
+        {
+            if (!$owner instanceof GitlabResourceOwner) {
+                $promise->fail(new DomainException('Resource not manager'));
+    
+                return $this;
+            }
+    
+            $promise->success(
+                (new User())->setEmail($owner->getEmail())
+                    ->setLastName($owner->getName())
+                    ->setFirstName($owner->getUsername())
+            );
+    
+            return $this;
+        }
+    }
+
+    //In routes/gitlab.yaml
+    admin_connect_gitlab_login:
+        path: '/oauth2/gitlab/login'
+        defaults:
+            _controller: 'Teknoo\East\WebsiteBundle\EndPoint\ConnectEndPoint'
+    
+    admin_connect_gitlab_check:
+        path: '/oauth2/gitlab/check'
+        defaults:
+            _controller: 'teknoo.east.website.endpoint.static'
+            template: '@@TeknooEastWebsite/Admin/index.html.twig'
+            errorTemplate: '@@TeknooEastWebsite/Error/404.html.twig'
+            _oauth_client_key: gitlab
+
+
+    //In your template, create a link with {{ path('admin_connect_gitlab_login') }}
 
 Support this project
 ---------------------
@@ -107,6 +246,33 @@ This library requires :
     * Teknoo/Recipe.
     * Teknoo/East-Foundation.
     * Optional: Symfony 5.2+ (for administration)
+
+News from Teknoo Website 6.0
+----------------------------
+
+This library requires PHP 8.0 or newer and it's only compatible with Symfony 5.3 or newer
+- Add `UserInterface` to represent and User in a Eastt Website / WebApp.
+- Add `AuthDataInterface` to represent any data/credentials, able to authenticate an user
+- Update `User` class to following the previeous interface
+- Split authentications data from `User` class to a dedicated class `StoredPassword`
+- Support password already hashed into `StoredPassword`
+- Update Doctrine ODM mappingg about `User` ans add `StoredPassword`
+- Support third-party authentication.
+- Add `ThirdPartyAuth` to store ids data from thrid party needed to authenticate an user.
+- Add `AbstractPassordAuthUser` to wrap password logic in Symfony User for `LegacyUser` and `PasswordAuthenticatedUser`.
+- `AbstractUser` can be also used for non password authenticated user.
+- Create `PasswordAuthenticatedUser` to implements new Symfony's interface `PasswordAuthenticatedUserInterface`
+- Update `SymfonyUserWriter` implementation in Symfony to hash password only when its needed.
+- Rework `UserProvider` to `PasswordAuthenticatedUserProvider` to return a `LegacyUser` if the user use the legacy Symfony behavior with a slug
+  or a `PasswordAuthenticatedUser`. It is able to migrate logged user to the new behavior, update the hashed ppassword passed by Symfony and
+  remove salt.
+- Some QA fixes on PHPDoc
+- Remove deprecated `ViewParameterInterface`
+- Remove deprecated Symfony `User` class
+- Create `StoredPasswordType` to manage new user in a Symfony Form.
+- Fix some bug in admin routes.
+- Update annd fix some minor bug in Doctrinemapping
+- Create `OAuth2Authenticator`, built on KNPU OAuth2 client bundle to authenticate user thanks to a OAuth2 provider.
 
 News from Teknoo Website 5.0
 ----------------------------

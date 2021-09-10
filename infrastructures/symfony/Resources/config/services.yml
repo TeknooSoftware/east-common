@@ -2,14 +2,19 @@ parameters:
     #Admin form types
     teknoo.east.website.form_type.doctrine.class: 'Doctrine\Bundle\MongoDBBundle\Form\Type\DocumentType'
 
-    #Provider
-    teknoo.east.website.bundle.user_provider.class: 'Teknoo\East\WebsiteBundle\Provider\UserProvider'
-
     #Command
     teknoo.east.website.bundle.command.create_user.class: 'Teknoo\East\WebsiteBundle\Command\CreateUserCommand'
 
+    #Provider
+    teknoo.east.website.bundle.password_authenticated_user_provider.class: 'Teknoo\East\WebsiteBundle\Provider\PasswordAuthenticatedUserProvider'
+    teknoo.east.website.bundle.third_party_authenticated_user_provider.class: 'Teknoo\East\WebsiteBundle\Provider\ThirdPartyAuthenticatedUserProvider'
+    teknoo.east.website.bundle.password_authenticated_user_provider.default_algo: 'sodium'
+
+    #Authenticator
+    teknoo.east.website.bundle.security.authenticator.oauth2.class: 'Teknoo\East\WebsiteBundle\Security\Authenticator\OAuth2Authenticator'
+
     #Writer
-    teknoo.east.website.bundle.writer.user.class: 'Teknoo\East\WebsiteBundle\Writer\UserWriter'
+    teknoo.east.website.bundle.writer.user.class: 'Teknoo\East\WebsiteBundle\Writer\SymfonyUserWriter'
 
     #Steps
     teknoo.east.website.bundle.allowed_forms: []
@@ -90,29 +95,44 @@ services:
         public: true
 
     #Provider
-    teknoo.east.website.bundle.user_provider:
-        alias: 'Teknoo\East\WebsiteBundle\Provider\UserProvider'
+    Teknoo\East\WebsiteBundle\Provider\PasswordAuthenticatedUserProvider:
+        class: '%teknoo.east.website.bundle.password_authenticated_user_provider.class%'
+        arguments:
+            - '@Teknoo\East\Website\Loader\UserLoader'
+            - '@Teknoo\East\WebsiteBundle\Writer\SymfonyUserWriter'
+
+    Teknoo\East\WebsiteBundle\Provider\ThirdPartyAuthenticatedUserProvider:
+        class: '%teknoo.east.website.bundle.third_party_authenticated_user_provider.class%'
+        arguments:
+            - '@Teknoo\East\Website\Loader\UserLoader'
 
     #Command
-    teknoo.east.website.bundle.command.create_user:
-        alias: 'Teknoo\East\WebsiteBundle\Command\CreateUserCommand'
-
     Teknoo\East\WebsiteBundle\Command\CreateUserCommand:
         class: '%teknoo.east.website.bundle.command.create_user.class%'
         arguments:
             - '@Teknoo\East\Website\Writer\UserWriter'
-            - '@Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface'
+            - '@security.user_password_hasher'
         tags:
             - { name: console.command }
         public: false
 
-    #Writer
-    teknoo.east.website.bundle.writer.user:
-        alias: 'Teknoo\East\WebsiteBundle\Writer\UserWriter'
+    #Authenticator
+    Teknoo\East\WebsiteBundle\Contracts\Security\Authenticator\UserConverterInterface:
+        public: true
+        synthetic: true
 
-    Teknoo\East\WebsiteBundle\Writer\UserWriter:
+    Teknoo\East\WebsiteBundle\Security\Authenticator\OAuth2Authenticator:
+        class: '%teknoo.east.website.bundle.security.authenticator.oauth2.class%'
+        arguments:
+            - '@KnpU\OAuth2ClientBundle\Client\ClientRegistry'
+            - '@Teknoo\East\Website\Loader\UserLoader'
+            - '@Teknoo\East\WebsiteBundle\Writer\SymfonyUserWriter'
+            - '@Teknoo\East\WebsiteBundle\Contracts\Security\Authenticator\UserConverterInterface'
+
+    #Writer
+    Teknoo\East\WebsiteBundle\Writer\SymfonyUserWriter:
         class: '%teknoo.east.website.bundle.writer.user.class%'
         arguments:
             - '@Teknoo\East\Website\Writer\UserWriter'
-            - '@Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface'
-
+            - '@security.user_password_hasher'
+        public: true

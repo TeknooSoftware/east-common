@@ -27,6 +27,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Doctrine\Translatable\Mapping;
 
 use Doctrine\Persistence\Mapping\ClassMetadata;
+use Doctrine\ODM\MongoDB\Mapping\ClassMetadata as ClassMetadataODM;
 
 /**
  * Interface to define driver, able to read a configuration / metadata about class/object's translations and return it
@@ -40,6 +41,10 @@ interface DriverInterface
 {
     /*
      * Read extended metadata configuration for a single mapped class
+     */
+    /**
+     * @param ClassMetadata<ClassMetadataODM|object> $meta
+     * @param array<string, mixed> $config
      */
     public function readExtendedMetadata(ClassMetadata $meta, array &$config): DriverInterface;
 }

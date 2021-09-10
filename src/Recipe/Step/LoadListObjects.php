@@ -89,6 +89,7 @@ class LoadListObjects
     }
 
     /**
+     * @param array<string, string> $order
      * @param array<string, string> $criteria
      */
     public function __invoke(

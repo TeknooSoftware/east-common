@@ -24,20 +24,23 @@
 namespace Teknoo\Tests\East\WebsiteBundle\Writer;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Teknoo\East\Website\Contracts\User\AuthDataInterface;
+use Teknoo\East\Website\Object\StoredPassword;
+use Teknoo\East\WebsiteBundle\Object\PasswordAuthenticatedUser;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\Object\ObjectInterface;
-use Teknoo\East\WebsiteBundle\Writer\UserWriter;
+use Teknoo\East\WebsiteBundle\Writer\SymfonyUserWriter;
 use Teknoo\East\Website\Writer\UserWriter as UniversalWriter;
 use Teknoo\East\Website\Object\User as BaseUser;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers      \Teknoo\East\WebsiteBundle\Writer\UserWriter
+ * @covers      \Teknoo\East\WebsiteBundle\Writer\SymfonyUserWriter
  */
-class UserWriterTest extends TestCase
+class SymfonyUserWriterTest extends TestCase
 {
     /**
      * @var UniversalWriter
@@ -45,9 +48,9 @@ class UserWriterTest extends TestCase
     private $universalWriter;
 
     /**
-     * @var EncoderFactoryInterface
+     * @var UserPasswordHasherInterface
      */
-    private $encoderFactory;
+    private $userPasswordHasher;
 
     /**
      * @return UniversalWriter|\PHPUnit\Framework\MockObject\MockObject
@@ -62,22 +65,27 @@ class UserWriterTest extends TestCase
     }
 
     /**
-     * @return EncoderFactoryInterface|\PHPUnit\Framework\MockObject\MockObject
+     * @return UserPasswordHasherInterface|\PHPUnit\Framework\MockObject\MockObject
      */
-    public function getEncoderFactory(): EncoderFactoryInterface
+    public function getUserPasswordHasher(): UserPasswordHasherInterface
     {
-        if (!$this->encoderFactory instanceof EncoderFactoryInterface) {
-            $this->encoderFactory = $this->createMock(EncoderFactoryInterface::class);
+        if (!$this->userPasswordHasher instanceof UserPasswordHasherInterface) {
+            $this->userPasswordHasher = new class implements UserPasswordHasherInterface {
+                public function hashPassword(PasswordAuthenticatedUserInterface $user, string $plainPassword): string
+                {
+                    return 'fooBar';
+                }
+            };
         }
 
-        return $this->encoderFactory;
+        return $this->userPasswordHasher;
     }
 
-    public function buildWriter(): UserWriter
+    public function buildWriter(): SymfonyUserWriter
     {
-        return new UserWriter(
+        return new SymfonyUserWriter(
             $this->getUniversalWriter(),
-            $this->getEncoderFactory()
+            $this->getUserPasswordHasher()
         );
     }
 
@@ -100,24 +108,19 @@ class UserWriterTest extends TestCase
             ->method('fail');
 
         self::assertInstanceOf(
-            UserWriter::class,
+            SymfonyUserWriter::class,
             $this->buildWriter()->save($object, $promise)
         );
     }
 
-    public function testSaveWithUserWithNoUpdatedPassword()
+    public function testSaveWithUserWithNoStoredPassword()
     {
         $promise = $this->createMock(PromiseInterface::class);
         $user = $this->createMock(BaseUser::class);
-        $user->expects(self::once())
-            ->method('hasUpdatedPassword')
-            ->willReturn(false);
-
-        $user->expects(self::once())
-            ->method('eraseCredentials');
-
-        $user->expects(self::never())
-            ->method('setPassword');
+        $authData = $this->createMock(AuthDataInterface::class);
+        $user->expects(self::any())
+            ->method('getAuthData')
+            ->willReturn([$authData]);
 
         $this->getUniversalWriter()
             ->expects(self::once())
@@ -126,7 +129,7 @@ class UserWriterTest extends TestCase
             ->willReturnSelf();
 
         self::assertInstanceOf(
-            UserWriter::class,
+            SymfonyUserWriter::class,
             $this->buildWriter()->save($user, $promise)
         );
     }
@@ -135,30 +138,29 @@ class UserWriterTest extends TestCase
     {
         $promise = $this->createMock(PromiseInterface::class);
         $user = $this->createMock(BaseUser::class);
-        $encoder = $this->createMock(PasswordEncoderInterface::class);
+        $storedPassword = $this->createMock(StoredPassword::class);
 
-        $this->getEncoderFactory()
-            ->expects(self::any())
-            ->method('getEncoder')
-            ->willReturn($encoder);
+        $user->expects(self::any())
+            ->method('getAuthData')
+            ->willReturn([$storedPassword]);
 
-        $encoder->expects(self::once())
-            ->method('encodePassword')
-            ->willReturn('fooBar');
-
-        $user->expects(self::once())
-            ->method('hasUpdatedPassword')
+        $storedPassword->expects(self::once())
+            ->method('mustHashPassword')
             ->willReturn(true);
 
-        $user->expects(self::never())
-            ->method('eraseCredentials');
-
-        $user->expects(self::once())
-            ->method('getSalt');
-
-        $user->expects(self::once())
-            ->method('setPassword')
+        $storedPassword->expects(self::once())
+            ->method('setHashedPassword')
             ->with('fooBar')
+            ->willReturnSelf();
+
+        $storedPassword->expects(self::once())
+            ->method('setSalt')
+            ->with('')
+            ->willReturnSelf();
+
+        $storedPassword->expects(self::once())
+            ->method('setAlgo')
+            ->with(PasswordAuthenticatedUser::class)
             ->willReturnSelf();
 
         $this->getUniversalWriter()
@@ -168,7 +170,46 @@ class UserWriterTest extends TestCase
             ->willReturnSelf();
 
         self::assertInstanceOf(
-            UserWriter::class,
+            SymfonyUserWriter::class,
+            $this->buildWriter()->save($user, $promise)
+        );
+    }
+
+    public function testSaveWithUserWithUpdatedHashedPassword()
+    {
+        $promise = $this->createMock(PromiseInterface::class);
+        $user = $this->createMock(BaseUser::class);
+        $storedPassword = $this->createMock(StoredPassword::class);
+
+        $user->expects(self::any())
+            ->method('getAuthData')
+            ->willReturn([$storedPassword]);
+
+        $storedPassword->expects(self::once())
+            ->method('mustHashPassword')
+            ->willReturn(false);
+
+        $storedPassword->expects(self::never())
+            ->method('eraseCredentials');
+
+        $storedPassword->expects(self::never())
+            ->method('setPassword')
+            ->with('fooBar')
+            ->willReturnSelf();
+
+        $storedPassword->expects(self::never())
+            ->method('setSalt')
+            ->with('')
+            ->willReturnSelf();
+
+        $this->getUniversalWriter()
+            ->expects(self::once())
+            ->method('save')
+            ->with($user, $promise)
+            ->willReturnSelf();
+
+        self::assertInstanceOf(
+            SymfonyUserWriter::class,
             $this->buildWriter()->save($user, $promise)
         );
     }
@@ -185,7 +226,7 @@ class UserWriterTest extends TestCase
             ->willReturnSelf();
 
         self::assertInstanceOf(
-            UserWriter::class,
+            SymfonyUserWriter::class,
             $this->buildWriter()->remove($object, $promise)
         );
     }

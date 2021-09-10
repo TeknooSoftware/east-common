@@ -27,6 +27,7 @@ namespace Teknoo\East\Website\Query;
 
 use Countable;
 use IteratorAggregate;
+use Teknoo\East\Website\Contracts\ObjectInterface;
 use Teknoo\Recipe\Promise\Promise;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
@@ -96,18 +97,24 @@ class PaginationQuery implements QueryInterface, ImmutableInterface
                         new Promise(
                             static function ($count) use ($promise, $result) {
                                 $iterator = new class ($count, $result) implements Countable, IteratorAggregate {
+                                    /**
+                                     * @param iterable<ObjectInterface> $iterator
+                                     */
                                     public function __construct(
                                         private int $count,
-                                        private Traversable $iterator,
+                                        private iterable $iterator,
                                     ) {
                                     }
 
-                                    public function getIterator()
+                                    /**
+                                     * @return iterable<ObjectInterface>
+                                     */
+                                    public function getIterator(): iterable
                                     {
                                         return $this->iterator;
                                     }
 
-                                    public function count()
+                                    public function count(): int
                                     {
                                         return $this->count;
                                     }

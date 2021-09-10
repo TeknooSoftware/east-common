@@ -101,6 +101,9 @@ class ODM implements AdapterInterface
         return $this;
     }
 
+    /**
+     * @param BaseClassMetadata<ClassMetadata> $metadata
+     */
     public function recomputeSingleObjectChangeSet(
         BaseClassMetadata $metadata,
         TranslatableInterface $object

@@ -73,30 +73,34 @@ class LocaleMiddleware
 
     private function getLocaleFromSession(ServerRequestInterface &$request): string
     {
-        $returnedLocale = $this->defaultLocale;
         $session = $request->getAttribute(SessionInterface::ATTRIBUTE_KEY);
-        if ($session instanceof SessionInterface) {
-            $session->get(
-                self::SESSION_KEY,
-                new Promise(
-                    function (string $locale) use (&$request, &$returnedLocale) {
-                        if (is_callable($this->translatableSetter)) {
-                            ($this->translatableSetter)($locale);
-                        }
-                        $request = $request->withAttribute('locale', $locale);
-                        $returnedLocale = $locale;
-                    },
-                    function () use (&$request) {
-                        if (is_callable($this->translatableSetter)) {
-                            ($this->translatableSetter)($this->defaultLocale);
-                        }
-                        $request = $request->withAttribute('locale', $this->defaultLocale);
-                    }
-                )
-            );
+        if (!$session instanceof SessionInterface) {
+            return $this->defaultLocale;
         }
 
-        return $returnedLocale;
+        $promise = new Promise(
+            function (string $locale) use (&$request) {
+                if (is_callable($this->translatableSetter)) {
+                    ($this->translatableSetter)($locale);
+                }
+                $request = $request->withAttribute('locale', $locale);
+
+                return $locale;
+            },
+            function () use (&$request) {
+                if (is_callable($this->translatableSetter)) {
+                    ($this->translatableSetter)($this->defaultLocale);
+                }
+                $request = $request->withAttribute('locale', $this->defaultLocale);
+            }
+        );
+
+        $session->get(
+            self::SESSION_KEY,
+            $promise
+        );
+
+        return $promise->fetchResult() ?? $this->defaultLocale;
     }
 
     public function execute(

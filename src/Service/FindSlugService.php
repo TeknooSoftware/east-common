@@ -51,6 +51,9 @@ class FindSlugService
         return strtolower(trim((string) preg_replace('/[^A-Za-z0-9-]+/', '-', $text)));
     }
 
+    /**
+     * @param array<string|int, mixed> $parts
+     */
     public function process(
         LoaderInterface $loader,
         string $slugField,

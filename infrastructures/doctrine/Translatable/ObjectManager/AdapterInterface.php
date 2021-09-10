@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Doctrine\Translatable\ObjectManager;
 
 use Doctrine\Persistence\Mapping\ClassMetadata;
+use Doctrine\ODM\MongoDB\Mapping\ClassMetadata as ClassMetadataODM;
 use Teknoo\East\Website\DBSource\ManagerInterface;
 use Teknoo\East\Website\Doctrine\Translatable\TranslatableListener;
 use Teknoo\East\Website\Object\TranslatableInterface;
@@ -50,6 +51,9 @@ interface AdapterInterface extends ManagerInterface
 
     public function foreachScheduledObjectDeletions(callable $callback): AdapterInterface;
 
+    /**
+     * @param ClassMetadata<ClassMetadataODM> $meta
+     */
     public function recomputeSingleObjectChangeSet(
         ClassMetadata $meta,
         TranslatableInterface $object

@@ -25,24 +25,19 @@ declare(strict_types=1);
 
 namespace Teknoo\East\WebsiteBundle\Object;
 
-use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\LegacyPasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Teknoo\East\Website\Object\User as BaseUser;
 
 /**
- * Symfony user class, implementing Symfony interface and wrapping East Website User.
- * To use with Symfony 5.3
- *
- * Class implementing user for Symfony 5.3+ with new interface.
+ * Symfony user implentation to wrap a East Website user instance authenticated via a password hashed by the legacy
+ * pbkdf2 algo, with a salt. Authenticating data are stored into a StoredPassword instance.
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class LegacyUser extends User implements LegacyPasswordAuthenticatedUserInterface
+class LegacyUser extends AbstractPasswordAuthUser implements LegacyPasswordAuthenticatedUserInterface
 {
     public function getSalt(): ?string
     {
-        return parent::getSalt();
+        return $this->password->getSalt();
     }
 }

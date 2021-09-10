@@ -40,7 +40,7 @@ use Teknoo\East\Website\Contracts\Recipe\Step\FormProcessingInterface;
 class FormProcessing implements FormProcessingInterface
 {
     public function __invoke(
-        FormInterface $form,
+        mixed $form,
         ManagerInterface $manager,
         string $nextStep
     ): FormProcessingInterface {

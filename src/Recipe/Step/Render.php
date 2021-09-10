@@ -27,11 +27,9 @@ namespace Teknoo\East\Website\Recipe\Step;
 
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Teknoo\East\Foundation\Client\ClientInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
-use Teknoo\East\Website\Middleware\ViewParameterInterface;
 use Teknoo\East\Website\Recipe\Step\Traits\TemplateTrait;
 use Teknoo\East\Website\View\ParametersBag;
 use Teknoo\Recipe\Ingredient\Attributes\Transform;
@@ -66,6 +64,9 @@ class Render
         $this->responseFactory = $responseFactory;
     }
 
+    /**
+     * @param array<string, mixed> $viewParameters
+     */
     public function __invoke(
         MessageInterface $message,
         ClientInterface $client,
@@ -74,10 +75,6 @@ class Render
         mixed $objectInstance = null,
         #[Transform(ParametersBag::class)] array $viewParameters = [],
     ): self {
-        if ($message instanceof ServerRequestInterface) {
-            $viewParameters += $message->getAttribute(ViewParameterInterface::REQUEST_PARAMETER_KEY, []);
-        }
-
         if (!empty($objectViewKey)) {
             $viewParameters = [$objectViewKey => $objectInstance] + $viewParameters;
         }

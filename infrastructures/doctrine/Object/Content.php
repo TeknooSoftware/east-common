@@ -27,7 +27,7 @@ namespace Teknoo\East\Website\Doctrine\Object;
 
 use Teknoo\East\Website\Object\Content as OriginalContent;
 use Teknoo\States\Automated\AutomatedTrait;
-use Teknoo\States\Doctrine\Document\StandardTrait;
+use Teknoo\States\Doctrine\StandardTrait;
 
 /**
  * Content specialization in doctrine as document.

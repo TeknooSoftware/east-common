@@ -1,0 +1,18 @@
+user_website_logout:
+    path: '/user/logout'
+    defaults:
+        _controller: 'teknoo.east.website.endpoint.static'
+
+user_website_login:
+    path: '/user/login'
+    defaults:
+        _controller: 'teknoo.east.website.endpoint.static'
+
+user_website_home:
+    path: '/user/home'
+    defaults:
+        _controller: 'teknoo.east.website.endpoint.static'
+
+user_website_check:
+    path: '/user/check'
+    methods: ['POST']

@@ -38,6 +38,9 @@ trait ResponseTrait
 {
     private ResponseFactoryInterface $responseFactory;
 
+    /**
+     * @param array<string, mixed> $headers
+     */
     private function addHeadersIntoResponse(ResponseInterface $response, array &$headers): ResponseInterface
     {
         foreach ($headers as $name => &$value) {

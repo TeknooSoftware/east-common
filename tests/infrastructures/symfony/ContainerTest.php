@@ -39,10 +39,12 @@ use Teknoo\East\Website\Contracts\Recipe\Step\RenderFormInterface;
 use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
 use Teknoo\East\Website\DBSource\Repository\ItemRepositoryInterface;
 use Teknoo\East\Website\Loader\UserLoader;
+use Teknoo\East\Website\Object\StoredPassword;
 use Teknoo\East\Website\Object\User as BaseUser;
 use Teknoo\East\Website\Query\User\UserByEmailQuery;
 use Teknoo\East\WebsiteBundle\Middleware\LocaleMiddleware;
 use Teknoo\East\WebsiteBundle\Object\LegacyUser;
+use Teknoo\East\WebsiteBundle\Object\PasswordAuthenticatedUser;
 use Teknoo\East\WebsiteBundle\Object\User;
 use Teknoo\East\WebsiteBundle\Provider\UserProvider;
 use Teknoo\East\WebsiteBundle\Recipe\Step\FormProcessing;
@@ -104,41 +106,6 @@ class ContainerTest extends TestCase
         self::assertInstanceOf(
             RecipeInterface::class,
             $container->get(RecipeInterface::class)
-        );
-    }
-
-    public function testUserProvider()
-    {
-        $container = $this->buildContainer();
-
-        $container->set(UserLoader::class, $loader = $this->createMock(UserLoader::class));
-
-        self::assertInstanceOf(
-            UserProvider::class,
-            $provider = $container->get(UserProvider::class)
-        );
-
-        $user = new BaseUser();
-        $user->setEmail('foo@bar');
-
-        $loader->expects(self::once())
-            ->method('query')
-            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user, $loader) {
-                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
-                $promise->success($user);
-
-                return $loader;
-            });
-
-        if (interface_exists(LegacyPasswordAuthenticatedUserInterface::class)) {
-            $loadedUser = new LegacyUser($user);
-        } else {
-            $loadedUser = new User($user);
-        }
-
-        self::assertEquals(
-            $loadedUser,
-            $provider->loadUserByUsername('foo@bar')
         );
     }
 

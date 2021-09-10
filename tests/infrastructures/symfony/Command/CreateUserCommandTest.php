@@ -26,11 +26,10 @@ namespace Teknoo\Tests\East\WebsiteBundle\Command;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Teknoo\East\WebsiteBundle\Command\CreateUserCommand;
 use Teknoo\East\Website\Writer\UserWriter;
-use Teknoo\East\WebsiteBundle\Object\User;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -45,9 +44,9 @@ class CreateUserCommandTest extends TestCase
     private $writer;
 
     /**
-     * @var EncoderFactoryInterface
+     * @var UserPasswordHasherInterface
      */
-    private $encoderFactory;
+    private $userPasswordHasher;
 
     /**
      * @return UserWriter|\PHPUnit\Framework\MockObject\MockObject
@@ -62,22 +61,27 @@ class CreateUserCommandTest extends TestCase
     }
 
     /**
-     * @return EncoderFactoryInterface|\PHPUnit\Framework\MockObject\MockObject
+     * @return UserPasswordHasherInterface|\PHPUnit\Framework\MockObject\MockObject
      */
-    public function getEncoderFactory(): EncoderFactoryInterface
+    public function getUserPasswordHasher(): UserPasswordHasherInterface
     {
-        if (!$this->encoderFactory instanceof EncoderFactoryInterface) {
-            $this->encoderFactory = $this->createMock(EncoderFactoryInterface::class);
+        if (!$this->userPasswordHasher instanceof UserPasswordHasherInterface) {
+            $this->userPasswordHasher = new class implements UserPasswordHasherInterface {
+                public function hashPassword(PasswordAuthenticatedUserInterface $user, string $plainPassword): string
+                {
+                    return 'fooBar';
+                }
+            };
         }
 
-        return $this->encoderFactory;
+        return $this->userPasswordHasher;
     }
 
     public function buildCommand()
     {
         return new CreateUserCommand(
             $this->getWriter(),
-            $this->getEncoderFactory()
+            $this->getUserPasswordHasher()
         );
     }
 
@@ -95,19 +99,6 @@ class CreateUserCommandTest extends TestCase
 
         $output = $this->createMock(OutputInterface::class);
         $output->expects(self::atLeastOnce())->method('writeln');
-
-        $encoder = $this->createMock(PasswordEncoderInterface::class);
-        $encoder->expects(self::once())
-            ->method('encodePassword')
-            ->willReturn('fooBar');
-
-        $this->getEncoderFactory()
-            ->expects(self::once())
-            ->method('getEncoder')
-            ->with($this->callback(function ($instance) {
-                return $instance instanceof User;
-            }))
-            ->willReturn($encoder);
 
         $this->getWriter()
             ->expects(self::once())

@@ -51,7 +51,7 @@ class Type implements ObjectInterface, DeletableInterface, TimestampableInterfac
 
     public function getName(): string
     {
-        return (string) $this->name;
+        return $this->name;
     }
 
     public function setName(string $name): Type
@@ -68,7 +68,7 @@ class Type implements ObjectInterface, DeletableInterface, TimestampableInterfac
 
     public function getTemplate(): string
     {
-        return (string) $this->template;
+        return $this->template;
     }
 
     public function setTemplate(string $template): Type

@@ -1,37 +1,33 @@
 parameters:
     scopeClass: Teknoo\States\PHPStan\Analyser\Scope
-    checkMissingIterableValueType: false
-    checkGenericClassInNonGenericObjectType: false
-    reportUnmatchedIgnoredErrors: false
-    excludePaths:
-        - infrastructures/symfony/Object/LegacyUser.php
-        - infrastructures/symfony/Object/User.php
-        - infrastructures/symfony/Provider/UserProvider.php
     ignoreErrors:
         -
             message: '#Parameter \#1 \$translatableSetter of class [a-zA-Z0-9\\_]+ constructor expects \(callable\(\): mixed\)\|null#'
             path: infrastructures/doctrine/di.php
         -
-            message: '#Cannot cast array<string>\|string\|null to string.#'
-            path: infrastructures/symfony/Command/CreateUserCommand.php
+            message: '#ClassMetadataFactory#'
+            path: infrastructures/doctrine/di.php
         -
             message: '#Call to an undefined method [a-zA-Z0-9\\_]+::createQueryBuilder\(\)#'
             path: infrastructures/doctrine/Form/Type/*
         -
-            message: '#Comparison operation "<" between [0-9]+ and 50000 is always#'
-            path: infrastructures/symfony/Resources/config/di.php
-        -
-            message: '#Unreachable statement - code above always terminates.#'
-            path: infrastructures/symfony/Resources/config/di.php
-        -
             message: '#expects class-string<object>, class-string\|string given#'
             path:  infrastructures/doctrine/Translatable/Mapping/ExtensionMetadataFactory.php
+        -
+            message: '#Method [a-zA-Z0-9\\_]+::getClassMetadata\(\) should return [a-zA-Z0-9\\_<>]+ but returns [a-zA-Z0-9\\_<>]+#'
+            path:  infrastructures/doctrine/Translatable/TranslatableListener.php
+        -
+            message: '#Doctrine\\Persistence\\Mapping\\ClassMetadata<object>#'
+            path:  infrastructures/doctrine/Translatable/TranslatableListener.php
+        -
+            message: '#[a-zA-Z0-9\\_]+::cook\(\) expects \(callable\(\): mixed\)|[a-zA-Z0-9\\_]+#'
+            path: infrastructures/symfony/Resources/config/di.php
         -
             message: '#[a-zA-Z0-9\\_]+::cook\(\) expects \(callable\(\): mixed\)|[a-zA-Z0-9\\_]+#'
             path: src/di.php
         -
-            message: '#[a-zA-Z0-9\\_]+::cook\(\) expects \(callable\(\): mixed\)|[a-zA-Z0-9\\_]+#'
-            path: infrastructures/symfony/Resources/config/di.php
+            message: '#Method [a-zA-Z0-9\\_]+::__construct\(\) has parameter \$values with no value type specified in iterable type array#'
+            path: src/Query/Expr/InclusiveOr.php
 services:
 	-
 		class: Teknoo\States\PHPStan\MethodsClassExtension

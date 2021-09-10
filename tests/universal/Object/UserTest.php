@@ -24,13 +24,15 @@
 namespace Teknoo\Tests\East\Website\Object;
 
 use PHPUnit\Framework\TestCase;
+use Teknoo\East\Website\Contracts\User\AuthDataInterface;
+use Teknoo\East\Website\Object\StoredPassword;
+use Teknoo\East\Website\Object\ThirdPartyAuth;
 use Teknoo\Tests\East\Website\Object\Traits\ObjectTestTrait;
 use Teknoo\East\Website\Object\User;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Object\PublishableTrait
  * @covers \Teknoo\East\Website\Object\ObjectTrait
  * @covers \Teknoo\East\Website\Object\User
  */
@@ -118,11 +120,11 @@ class UserTest extends TestCase
         );
     }
 
-    public function testGetUsername()
+    public function testGetUserIdentifier()
     {
         self::assertEquals(
             'fooBar',
-            $this->generateObjectPopulated(['email' => 'fooBar'])->getUsername()
+            $this->generateObjectPopulated(['email' => 'fooBar'])->getUserIdentifier()
         );
     }
 
@@ -146,161 +148,6 @@ class UserTest extends TestCase
         $this->buildObject()->setEmail(new \stdClass());
     }
 
-    public function testGetPassword()
-    {
-        self::assertEquals(
-            'fooBar',
-            $this->generateObjectPopulated(['password' => 'fooBar'])->getPassword()
-        );
-    }
-
-    public function testSetPassword()
-    {
-        $object = $this->buildObject();
-        self::assertInstanceOf(
-            \get_class($object),
-            $object->setPassword('fooBar')
-        );
-
-        self::assertEquals(
-            'fooBar',
-            $object->getPassword()
-        );
-    }
-
-    public function testEraseCredentials()
-    {
-        $object = $this->buildObject();
-        self::assertInstanceOf(
-            \get_class($object),
-            $object->setPassword('fooBar')
-        );
-
-        self::assertEquals(
-            'fooBar',
-            $object->getPassword()
-        );
-
-        self::assertEquals(
-            'fooBar',
-            $object->getOriginalPassword()
-        );
-
-        self::assertInstanceOf(
-            \get_class($object),
-            $object->setPassword('fooBar2')
-        );
-
-        self::assertEquals(
-            'fooBar2',
-            $object->getPassword()
-        );
-
-        self::assertEquals(
-            'fooBar',
-            $object->getOriginalPassword()
-        );
-
-        self::assertInstanceOf(
-            \get_class($object),
-            $object->eraseCredentials()
-        );
-
-        self::assertEmpty($object->getPassword());
-        self::assertEmpty($object->getOriginalPassword());
-    }
-    
-    public function testHasUpdatedPassword()
-    {
-        $object = $this->buildObject();
-        self::assertFalse($object->hasUpdatedPassword());
-        self::assertInstanceOf(
-            \get_class($object),
-            $object->setPassword('fooBar')
-        );
-
-        self::assertTrue($object->hasUpdatedPassword());
-
-        self::assertInstanceOf(
-            \get_class($object),
-            $object->setPassword('fooBar2')
-        );
-
-        self::assertTrue($object->hasUpdatedPassword());
-
-        $object = $this->buildObject(['password' => 'fooBar']);
-        self::assertFalse($object->hasUpdatedPassword());
-
-        self::assertInstanceOf(
-            \get_class($object),
-            $object->setPassword(null)
-        );
-
-        self::assertFalse($object->hasUpdatedPassword());
-
-        $object = $this->buildObject();
-        $refProperty = new \ReflectionProperty($object, 'password');
-        $refProperty->setAccessible(true);
-        $refProperty->setValue($object, 'fooBar');
-
-        self::assertTrue($object->hasUpdatedPassword());
-
-        self::assertInstanceOf(
-            \get_class($object),
-            $object->setPassword('fooBar')
-        );
-
-        self::assertFalse($object->hasUpdatedPassword());
-
-        self::assertInstanceOf(
-            \get_class($object),
-            $object->setPassword('fooBar2')
-        );
-
-        self::assertTrue($object->hasUpdatedPassword());
-
-        self::assertInstanceOf(
-            \get_class($object),
-            $object->setPassword('fooBar3')
-        );
-
-        self::assertTrue($object->hasUpdatedPassword());
-    }
-
-    public function testSetPasswordExceptionOnBadArgument()
-    {
-        $this->expectException(\Throwable::class);
-        $this->buildObject()->setPassword(new \stdClass());
-    }
-
-    public function testGetSalt()
-    {
-        self::assertEquals(
-            'fooBar',
-            $this->generateObjectPopulated(['salt' => 'fooBar'])->getSalt()
-        );
-    }
-
-    public function testSetSalt()
-    {
-        $object = $this->buildObject();
-        self::assertInstanceOf(
-            \get_class($object),
-            $object->setSalt('fooBar')
-        );
-
-        self::assertEquals(
-            'fooBar',
-            $object->getSalt()
-        );
-    }
-
-    public function testSetSaltExceptionOnBadArgument()
-    {
-        $this->expectException(\Throwable::class);
-        $this->buildObject()->setSalt(new \stdClass());
-    }
-    
     public function testGetRoles()
     {
         self::assertEquals(
@@ -327,5 +174,84 @@ class UserTest extends TestCase
     {
         $this->expectException(\Throwable::class);
         $this->buildObject()->setRoles(new \stdClass());
+    }
+
+    public function testGetAuthData()
+    {
+        self::assertEquals(
+            [],
+            $this->generateObjectPopulated(['authData' => []])->getAuthData()
+        );
+    }
+
+    public function testSetAuthData()
+    {
+        $object = $this->buildObject();
+        self::assertInstanceOf(
+            \get_class($object),
+            $object->setAuthData([$this->createMock(AuthDataInterface::class)])
+        );
+
+        self::assertEquals(
+            [$this->createMock(AuthDataInterface::class)],
+            $object->getAuthData()
+        );
+    }
+
+    public function testAddAuthData()
+    {
+        $object = $this->buildObject();
+        self::assertInstanceOf(
+            \get_class($object),
+            $object->addAuthData(
+                $ad1 = $this->createMock(AuthDataInterface::class)
+            )
+        );
+
+        self::assertEquals(
+            [$ad1],
+            $object->getAuthData()
+        );
+
+        self::assertInstanceOf(
+            \get_class($object),
+            $object->addAuthData(
+                $ad2 = $this->createMock(AuthDataInterface::class)
+            )
+        );
+
+        self::assertEquals(
+            [$ad1, $ad2],
+            $object->getAuthData()
+        );
+    }
+
+    public function testAddAuthDataWithIterator()
+    {
+        $object = $this->generateObjectPopulated(
+            [
+                'authData' => new \ArrayIterator([
+                    $ad1 = $this->createMock(AuthDataInterface::class)
+                ])
+            ]
+        );
+
+        self::assertInstanceOf(
+            \get_class($object),
+            $object->addAuthData(
+                $ad2 = $this->createMock(AuthDataInterface::class)
+            )
+        );
+
+        self::assertEquals(
+            [$ad1, $ad2],
+            $object->getAuthData()
+        );
+    }
+
+    public function testSetAuthDataExceptionOnBadArgument()
+    {
+        $this->expectException(\Throwable::class);
+        $this->buildObject()->setAuthData(new \stdClass());
     }
 }

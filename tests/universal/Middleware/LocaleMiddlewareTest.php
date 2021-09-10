@@ -31,7 +31,6 @@ use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Foundation\Session\SessionInterface;
 use Teknoo\East\Website\Middleware\LocaleMiddleware;
-use Teknoo\East\Website\Middleware\ViewParameterInterface;
 use Teknoo\East\Website\View\ParametersBag;
 
 /**
@@ -134,11 +133,6 @@ class LocaleMiddlewareTest extends TestCase
             ->method('getAttribute')
             ->willReturn([]);
 
-        $serverRequestFinal->expects(self::any())
-            ->method('withAttribute')
-            ->with(ViewParameterInterface::REQUEST_PARAMETER_KEY, ['locale' => 'en'])
-            ->willReturnSelf();
-
         self::assertInstanceOf(
             LocaleMiddleware::class,
             $this->buildMiddleware('en')->execute($serverRequest, $manager, $bag)
@@ -182,11 +176,6 @@ class LocaleMiddlewareTest extends TestCase
             ->method('getAttribute')
             ->willReturn(['foo' => 'bar']);
 
-        $serverRequestFinal->expects(self::any())
-            ->method('withAttribute')
-            ->with(ViewParameterInterface::REQUEST_PARAMETER_KEY, ['foo'=>'bar', 'locale' => 'fr'])
-            ->willReturnSelf();
-
         self::assertInstanceOf(
             LocaleMiddleware::class,
             $this->buildMiddleware('en')->execute($serverRequest, $manager, $bag)
@@ -195,8 +184,6 @@ class LocaleMiddlewareTest extends TestCase
 
     public function testExecuteInRequestInSession()
     {
-        $client = $this->createMock(ClientInterface::class);
-
         $serverRequest = $this->createMock(ServerRequestInterface::class);
         $serverRequestFinal = $this->createMock(ServerRequestInterface::class);
 
@@ -235,10 +222,28 @@ class LocaleMiddlewareTest extends TestCase
             ->method('getAttribute')
             ->willReturn([]);
 
+        self::assertInstanceOf(
+            LocaleMiddleware::class,
+            $this->buildMiddleware('en')->execute($serverRequest, $manager, $bag)
+        );
+    }
+
+    public function testExecuteNoSession()
+    {
+        $serverRequest = $this->createMock(ServerRequestInterface::class);
+        $serverRequestFinal = $this->createMock(ServerRequestInterface::class);
+
+        $bag = $this->createMock(ParametersBag::class);
+
+        $manager = $this->createMock(ManagerInterface::class);
+
+        $serverRequest->expects(self::any())
+            ->method('getQueryParams')
+            ->willReturn([]);
+
         $serverRequestFinal->expects(self::any())
-            ->method('withAttribute')
-            ->with(ViewParameterInterface::REQUEST_PARAMETER_KEY, ['locale' => 'es'])
-            ->willReturnSelf();
+            ->method('getAttribute')
+            ->willReturn([]);
 
         self::assertInstanceOf(
             LocaleMiddleware::class,

@@ -30,6 +30,7 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Doctrine\Persistence\Event\LoadClassMetadataEventArgs;
 use Doctrine\Persistence\Mapping\ClassMetadata;
+use Doctrine\ODM\MongoDB\Mapping\ClassMetadata as ClassMetadataODM;
 use DomainException;
 use ProxyManager\Proxy\GhostObjectInterface;
 use RuntimeException;
@@ -107,7 +108,7 @@ class TranslatableListener implements EventSubscriber
 
     /**
      * Tracks objects to reload after flush
-     * @var array<string, array<WrapperInterface, string, array<string, string, ClassMetadata>>>
+     * @var array<string, mixed>
      */
     private array $objectsToTranslate = [];
 
@@ -120,7 +121,7 @@ class TranslatableListener implements EventSubscriber
 
     /**
      * List of cached class metadata from doctrine manager
-     * @var array<string, ClassMetadata>
+     * @var array<string, ClassMetadataODM>
      */
     private array $classMetadata = [];
 
@@ -153,6 +154,9 @@ class TranslatableListener implements EventSubscriber
         ];
     }
 
+    /**
+     * @return ClassMetadata<ClassMetadataODM>
+     */
     private function getClassMetadata(string $className): ClassMetadata
     {
         if (isset($this->classMetadata[$className])) {
@@ -168,6 +172,9 @@ class TranslatableListener implements EventSubscriber
         throw new DomainException("Error no classmeta data available for $className");
     }
 
+    /**
+     * @param ClassMetadataODM $classMetadata
+     */
     public function registerClassMetadata(string $className, ClassMetadata $classMetadata): self
     {
         $this->classMetadata[$className] = $classMetadata;
@@ -191,16 +198,26 @@ class TranslatableListener implements EventSubscriber
         return $object::class;
     }
 
+    /**
+     * @param ClassMetadata<ClassMetadataODM> $metadata
+     */
     private function wrap(TranslatableInterface $translatable, ClassMetadata $metadata): WrapperInterface
     {
         return ($this->wrapperFactory)($translatable, $metadata);
     }
 
+    /**
+     * @param ClassMetadata<ClassMetadataODM> $metadata
+     */
     private function loadMetadataForObjectClass(ClassMetadata $metadata): void
     {
         $this->extensionMetadataFactory->loadExtensionMetadata($metadata, $this);
     }
 
+    /**
+     * @param ClassMetadata<ClassMetadataODM> $metadata
+     * @param array<string, mixed> $config
+     */
     public function injectConfiguration(ClassMetadata $metadata, array $config): self
     {
         $className = $metadata->getName();
@@ -210,6 +227,10 @@ class TranslatableListener implements EventSubscriber
         return $this;
     }
 
+    /**
+     * @param ClassMetadata<ClassMetadataODM> $metadata
+     * @return array<string, mixed>
+     */
     private function getConfiguration(ClassMetadata $metadata): array
     {
         $className = $metadata->getName();
@@ -244,6 +265,10 @@ class TranslatableListener implements EventSubscriber
         return $object->getLocaleField() ?? $this->locale;
     }
 
+    /**
+     * @param array<string, mixed> $config
+     * @param ClassMetadata<ClassMetadataODM> $metaData
+     */
     private function loadAllTranslations(
         WrapperInterface $wrapper,
         string $locale,

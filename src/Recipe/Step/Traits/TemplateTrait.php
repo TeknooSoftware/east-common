@@ -53,7 +53,7 @@ trait TemplateTrait
      * Renders a view.
      *
      * @param string          $view       The view name
-     * @param array           $parameters An array of parameters to pass to the view
+     * @param array<string, mixed> $parameters An array of parameters to pass to the view
      * @param int             $status The status code to use for the Response
      * @param array<string, mixed> $headers An array of values to inject into HTTP header response
      */

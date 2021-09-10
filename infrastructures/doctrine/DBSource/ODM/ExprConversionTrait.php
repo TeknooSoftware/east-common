@@ -44,6 +44,7 @@ trait ExprConversionTrait
     use CommonTrait;
 
     /**
+     * @param array<string, mixed> $final
      * @param In $expr
      */
     private static function processInExpr(array &$final, string $key, ExprInterface $expr): void
@@ -52,6 +53,7 @@ trait ExprConversionTrait
     }
 
     /**
+     * @param array<string, mixed> $final
      * @param InclusiveOr $expr
      */
     private static function processInclusiveOrExpr(array &$final, string $key, ExprInterface $expr): void
@@ -61,6 +63,7 @@ trait ExprConversionTrait
     }
 
     /**
+     * @param array<string, mixed> $final
      * @param ObjectReference $expr
      */
     private static function processObjectReferenceExpr(array &$final, string $key, ExprInterface $expr): void

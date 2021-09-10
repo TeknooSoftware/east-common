@@ -25,20 +25,24 @@ use Symfony\Component\DependencyInjection\ContainerBuilder as SfContainerBuilder
 use Symfony\Component\HttpFoundation\Request as SfRequest;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
+use Symfony\Component\PasswordHasher\Hasher\SodiumPasswordHasher;
+use Symfony\Component\Security\Core\Encoder\Pbkdf2PasswordEncoder;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
+use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 use Teknoo\East\Foundation\Client\ResponseInterface as EastResponse;
 use Teknoo\East\Foundation\EndPoint\RecipeEndPoint;
 use Teknoo\East\Foundation\Client\ClientInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Manager\Manager;
-use Teknoo\Recipe\Promise\PromiseInterface;
+use Teknoo\East\Foundation\Middleware\MiddlewareInterface;
 use Teknoo\East\Foundation\Recipe\CookbookInterface;
 use Teknoo\East\Foundation\Router\Result;
 use Teknoo\East\Foundation\Router\RouterInterface;
-use Teknoo\East\Foundation\Middleware\MiddlewareInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Foundation\Template\ResultInterface;
+use Teknoo\East\FoundationBundle\EastFoundationBundle;
+use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\GetStreamFromMediaInterface;
 use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
 use Teknoo\East\Website\Doctrine\Object\Content;
@@ -47,13 +51,16 @@ use Teknoo\East\Website\Loader\ContentLoader;
 use Teknoo\East\Website\Loader\ItemLoader;
 use Teknoo\East\Website\Loader\TypeLoader;
 use Teknoo\East\Website\Object\Media as BaseMedia;
-use Teknoo\East\Website\Recipe\Cookbook\RenderStaticContentEndPoint;
-use Teknoo\East\Website\Recipe\Cookbook\RenderDynamicContentEndPoint;
-use Teknoo\East\Website\Recipe\Cookbook\RenderMediaEndPoint;
 use Teknoo\East\Website\Object\Media;
 use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Object\Block;
-use Teknoo\East\FoundationBundle\EastFoundationBundle;
+use Teknoo\East\Website\Doctrine\Object\User;
+use Teknoo\East\Website\Object\StoredPassword;
+use Teknoo\East\Website\Recipe\Cookbook\RenderStaticContentEndPoint;
+use Teknoo\East\Website\Recipe\Cookbook\RenderDynamicContentEndPoint;
+use Teknoo\East\Website\Recipe\Cookbook\RenderMediaEndPoint;
+use Teknoo\East\WebsiteBundle\Object\PasswordAuthenticatedUser;
+use Teknoo\East\WebsiteBundle\Object\LegacyUser;
 use Teknoo\East\WebsiteBundle\TeknooEastWebsiteBundle;
 use Teknoo\DI\SymfonyBridge\DIBridgeBundle;
 use Twig\Environment;
@@ -191,6 +198,7 @@ class FeatureContext implements Context
                 yield new EastFoundationBundle();
                 yield new TeknooEastWebsiteBundle();
                 yield new DIBridgeBundle();
+                yield new SecurityBundle();
             }
 
             protected function configureContainer(SfContainerBuilder $container, LoaderInterface $loader)
@@ -208,9 +216,11 @@ class FeatureContext implements Context
                 if ($routes instanceof RoutingConfigurator) {
                     $routes->import($rootDir . '/infrastructures/symfony/Resources/config/admin_*.yml', 'glob')
                         ->prefix('/admin');
+                    $routes->import($rootDir . '/features/bootstrap/config/routes/*.yaml', 'glob');
                     $routes->import($rootDir . '/infrastructures/symfony/Resources/config/r*.yml', 'glob');
                 } else {
                     $routes->import($rootDir . '/infrastructures/symfony/Resources/config/admin_*.yml', '/admin', 'glob');
+                    $routes->import($rootDir . '/features/bootstrap/config/routes/*.yaml', '/', 'glob');
                     $routes->import($rootDir . '/infrastructures/symfony/Resources/config/r*.yml', '/', 'glob');
                 }
             }
@@ -774,6 +784,10 @@ class FeatureContext implements Context
 
             public function render($name, array $parameters = []): string
             {
+                if (empty($parameters['objectInstance'])) {
+                    return 'non-object-view';
+                }
+
                 //To avoid to manage templating view for crud
                 $final = [];
                 $ro = new \ReflectionObject($object = $parameters['objectInstance']);
@@ -1021,4 +1035,110 @@ class FeatureContext implements Context
         $this->getObjectRepository($class)->setObject(['id' => $id], $object);
     }
 
+    /**
+     * @Given a legacy user with password :password
+     */
+    public function aLegacyUserWithPassword($password)
+    {
+        $this->symfonyKernel->boot();
+
+        $object = new User;
+
+        $storedPassword = new StoredPassword();
+        $salt = \hash('sha256', \uniqid());
+
+        $encoder = new Pbkdf2PasswordEncoder();
+
+        $storedPassword->setAlgo('')
+            ->setSalt($salt)
+            ->setPassword((string) $encoder->encodePassword($password, $salt));
+
+        $object->setId($id = 'userid');
+        $object->setEmail('admin@teknoo.software')
+            ->setFirstName('ad')
+            ->setLastName('min')
+            ->setAuthData([$storedPassword]);
+
+        $this->getObjectRepository(User::class)->setObject(['email' => 'admin@teknoo.software'], $object);
+    }
+
+    /**
+     * @Then no session must be opened
+     */
+    public function noSessionMustBeOpened()
+    {
+        $container = $this->symfonyKernel->getContainer();
+        if (!$container->has('security.token_storage')) {
+            Assert::fail('The SecurityBundle is not registered in your application.');
+        }
+
+        if (null === $token = $container->get('security.token_storage')->getToken()) {
+            return;
+        }
+
+        Assert::assertEmpty($token->getUser());
+    }
+
+    /**
+     * @Then a session must be opened
+     */
+    public function aSessionMustBeOpened()
+    {
+        $container = $this->symfonyKernel->getContainer();
+        if (!$container->has('security.token_storage')) {
+            Assert::fail('The SecurityBundle is not registered in your application.');
+        }
+
+        Assert::assertNotEmpty($token = $container->get('security.token_storage')->getToken());
+        Assert::assertInstanceOf(PasswordAuthenticatedUser::class, $token->getUser());
+    }
+
+    /**
+     * @Then a legacy session must be opened
+     */
+    public function aLegacySessionMustBeOpened()
+    {
+        $container = $this->symfonyKernel->getContainer();
+        if (!$container->has('security.token_storage')) {
+            Assert::fail('The SecurityBundle is not registered in your application.');
+        }
+
+        Assert::assertNotEmpty($token = $container->get('security.token_storage')->getToken());
+        Assert::assertInstanceOf(LegacyUser::class, $token->getUser());
+    }
+
+    /**
+     * @Then the user must been converted to sodium and not have salt
+     */
+    public function theUserMustBeenConvertedToSodiumAndNotHaveSalt()
+    {
+        Assert::assertNotEmpty($this->updatedObjects['userid']);
+        Assert::assertEmpty($this->updatedObjects['userid']
+            ->getAuthData()[0]->getSalt());
+    }
+
+    /**
+     * @Given a user with password :password
+     */
+    public function aUserWithPassword($password)
+    {
+        $this->symfonyKernel->boot();
+
+        $object = new User;
+
+        $storedPassword = new StoredPassword();
+        $storedPassword->setAlgo(PasswordAuthenticatedUser::class)
+            ->setSalt('')
+            ->setHashedPassword(
+                (new SodiumPasswordHasher())->hash($password)
+            );
+
+        $object->setId($id = 'userid');
+        $object->setEmail('admin@teknoo.software')
+            ->setFirstName('ad')
+            ->setLastName('min')
+            ->setAuthData([$storedPassword]);
+
+        $this->getObjectRepository(User::class)->setObject(['email' => 'admin@teknoo.software'], $object);
+    }
 }

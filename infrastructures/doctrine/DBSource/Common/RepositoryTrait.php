@@ -44,6 +44,9 @@ trait RepositoryTrait
 {
     use ExprConversionTrait;
 
+    /**
+     * @param ObjectRepository<mixed> $repository
+     */
     public function __construct(
         private ObjectRepository $repository,
     ) {
@@ -69,6 +72,10 @@ trait RepositoryTrait
         return $this;
     }
 
+    /**
+     * @param array<string, mixed> $criteria
+     * @param array<string, 'asc'|'ASC'|'desc'|'DESC'>|null $orderBy
+     */
     public function findBy(
         array $criteria,
         PromiseInterface $promise,
@@ -81,6 +88,9 @@ trait RepositoryTrait
         return $this;
     }
 
+    /**
+     * @param array<int|string, mixed> $criteria
+     */
     public function count(array $criteria, PromiseInterface $promise): RepositoryInterface
     {
         $promise->fail(new RuntimeException('Error, this method is not available with this repository'));
@@ -88,6 +98,9 @@ trait RepositoryTrait
         return $this;
     }
 
+    /**
+     * @param array<int|string, mixed> $criteria
+     */
     public function findOneBy(array $criteria, PromiseInterface $promise): RepositoryInterface
     {
         $error = null;

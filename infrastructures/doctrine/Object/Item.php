@@ -27,7 +27,7 @@ namespace Teknoo\East\Website\Doctrine\Object;
 
 use Teknoo\East\Website\Object\Item as OriginalItem;
 use Teknoo\States\Automated\AutomatedTrait;
-use Teknoo\States\Doctrine\Document\StandardTrait;
+use Teknoo\States\Doctrine\StandardTrait;
 
 /**
  * Item specialization in doctrine as document.

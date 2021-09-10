@@ -81,7 +81,7 @@ _teknoo_website_admin_content_new:
     methods:  ['GET', 'POST', 'PUT']
     defaults:
         _controller: 'teknoo.east.website.endpoint.crud.new'
-        loader: '@Teknoo\East\Website\Loader\ItemLoader'
+        loader: '@Teknoo\East\Website\Loader\ContentLoader'
         writer: '@Teknoo\East\Website\Writer\ContentWriter'
         objectClass: 'Teknoo\East\Website\Doctrine\Object\Content'
         formClass: 'Teknoo\East\Website\Doctrine\Form\Type\ContentType'
@@ -167,7 +167,7 @@ _teknoo_website_admin_type_new:
     methods:  ['GET', 'POST', 'PUT']
     defaults:
         _controller: 'teknoo.east.website.endpoint.crud.new'
-        loader: '@Teknoo\East\Website\Loader\ItemLoader'
+        loader: '@Teknoo\East\Website\Loader\TypeLoader'
         writer: '@Teknoo\East\Website\Writer\TypeWriter'
         objectClass: 'Teknoo\East\Website\Object\Type'
         formClass: 'Teknoo\East\WebsiteBundle\Form\Type\TypeType'
@@ -204,7 +204,7 @@ _teknoo_website_admin_user_edit:
     defaults:
         _controller: 'teknoo.east.website.endpoint.crud.edit'
         loader: '@Teknoo\East\Website\Loader\UserLoader'
-        writer: '@Teknoo\East\Website\Writer\UserWriter'
+        writer: '@Teknoo\East\WebsiteBundle\Writer\SymfonyUserWriter'
         formClass: 'Teknoo\East\WebsiteBundle\Form\Type\UserType'
         template: '@@TeknooEastWebsite/AdminUser/edit.html.twig'
         errorTemplate: '@@TeknooEastWebsite/Error/<error>.html.twig'
@@ -215,8 +215,8 @@ _teknoo_website_admin_user_new:
     methods:  ['GET', 'POST', 'PUT']
     defaults:
         _controller: 'teknoo.east.website.endpoint.crud.new'
-        loader: '@Teknoo\East\Website\Loader\ItemLoader'
-        writer: '@Teknoo\East\Website\Writer\UserWriter'
+        loader: '@Teknoo\East\Website\Loader\UserLoader'
+        writer: '@Teknoo\East\WebsiteBundle\Writer\SymfonyUserWriter'
         objectClass: 'Teknoo\East\Website\Object\User'
         formClass: 'Teknoo\East\WebsiteBundle\Form\Type\UserType'
         template: '@@TeknooEastWebsite/AdminUser/new.html.twig'

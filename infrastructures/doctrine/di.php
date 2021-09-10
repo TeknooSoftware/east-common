@@ -71,12 +71,12 @@ use Teknoo\East\Website\Doctrine\DBSource\Common\UserRepository;
 use Teknoo\East\Website\Doctrine\Object\Content;
 use Teknoo\East\Website\Doctrine\Object\Item;
 use Teknoo\East\Website\Doctrine\Object\Media;
+use Teknoo\East\Website\Doctrine\Object\User;
 use Teknoo\East\Website\Doctrine\Translatable\Wrapper\DocumentWrapper;
 use Teknoo\East\Website\Doctrine\Translatable\Wrapper\FactoryInterface as WrapperFactory;
 use Teknoo\East\Website\Doctrine\Translatable\Wrapper\WrapperInterface;
 use Teknoo\East\Website\Middleware\LocaleMiddleware;
 use Teknoo\East\Website\Object\Type;
-use Teknoo\East\Website\Object\User;
 use Teknoo\East\Website\Writer\MediaWriter as OriginalWriter;
 use Teknoo\East\Website\Service\ProxyDetectorInterface;
 use Teknoo\East\Website\Doctrine\Writer\ODM\MediaWriter;
@@ -243,8 +243,7 @@ return [
             $callback = [$listener, 'setLocale'];
         } else {
             //do nothing
-            $callback = static function () {
-            };
+            $callback = null;
         }
 
         return new LocaleMiddleware($callback);

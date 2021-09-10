@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Doctrine\Translatable\Persistence;
 
 use Doctrine\Persistence\Mapping\ClassMetadata;
+use Doctrine\ODM\MongoDB\Mapping\ClassMetadata as ClassMetadataODM;
 use Teknoo\East\Website\Doctrine\Translatable\TranslationInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Wrapper\WrapperInterface;
 
@@ -65,6 +66,9 @@ interface AdapterInterface
         TranslationInterface $translation
     ): AdapterInterface;
 
+    /**
+     * @param ClassMetadata<ClassMetadataODM> $metadata
+     */
     public function updateTranslationRecord(
         WrapperInterface $wrapped,
         ClassMetadata $metadata,
@@ -72,6 +76,9 @@ interface AdapterInterface
         TranslationInterface $translation
     ): AdapterInterface;
 
+    /**
+     * @param ClassMetadata<ClassMetadataODM> $metadata
+     */
     public function setTranslatedValue(
         WrapperInterface $wrapped,
         ClassMetadata $metadata,

@@ -66,7 +66,7 @@ class ContentType extends AbstractType
                 'class' => User::class,
                 'required' => true,
                 'multiple' => false,
-                'choice_label' => 'username',
+                'choice_label' => 'userIdentifier',
                 'query_builder' => static function (ObjectRepository $repository) {
                     return $repository->createQueryBuilder()
                         ->field('deletedAt')->equals(null);

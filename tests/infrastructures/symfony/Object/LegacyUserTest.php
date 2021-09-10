@@ -24,20 +24,24 @@
 namespace Teknoo\Tests\East\WebsiteBundle\Object;
 
 use Symfony\Component\Security\Core\User\LegacyPasswordAuthenticatedUserInterface;
+use Teknoo\East\Website\Object\StoredPassword;
+use Teknoo\East\WebsiteBundle\Object\AbstractPasswordAuthUser;
+use Teknoo\East\WebsiteBundle\Object\AbstractUser;
 use Teknoo\East\WebsiteBundle\Object\LegacyUser;
 use Teknoo\East\Website\Object\User as BaseUser;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ * @covers      \Teknoo\East\WebsiteBundle\Object\AbstractUser
+ * @covers      \Teknoo\East\WebsiteBundle\Object\AbstractPasswordAuthUser
  * @covers      \Teknoo\East\WebsiteBundle\Object\LegacyUser
  */
-class LegacyUserTest extends UserTest
+class LegacyUserTest extends AbstractPasswordAuthUserTest
 {
-    /**
-     * @var BaseUser
-     */
-    private $user;
+    private ?BaseUser $user = null;
+
+    private ?StoredPassword $storedPassword = null;
 
     /**
      * @return BaseUser|\PHPUnit\Framework\MockObject\MockObject
@@ -46,18 +50,32 @@ class LegacyUserTest extends UserTest
     {
         if (!$this->user instanceof BaseUser) {
             $this->user = $this->createMock(BaseUser::class);
+
+            $this->user->expects(self::any())->method('getAuthData')->willReturn([$this->getStoredPassword()]);
         }
 
         return $this->user;
     }
 
-    public function buildObject(): LegacyUser
+    /**
+     * @return StoredPassword|\PHPUnit\Framework\MockObject\MockObject
+     */
+    public function getStoredPassword(): StoredPassword
+    {
+        if (!$this->storedPassword instanceof StoredPassword) {
+            $this->storedPassword = $this->createMock(StoredPassword::class);
+        }
+
+        return $this->storedPassword;
+    }
+
+    public function buildObject(): AbstractUser
     {
         if (!interface_exists(LegacyPasswordAuthenticatedUserInterface::class)) {
             self::markTestSkipped();
         }
 
-        return new LegacyUser($this->getUser());
+        return new LegacyUser($this->getUser(), $this->getStoredPassword());
     }
 
     public function testExceptionWithBadUser()
@@ -67,6 +85,29 @@ class LegacyUserTest extends UserTest
         }
 
         $this->expectException(\TypeError::class);
-        new LegacyUser(new \stdClass());
+        new LegacyUser(new \stdClass(), $this->getStoredPassword());
+    }
+
+    public function testExceptionWithBadPassword()
+    {
+        if (!interface_exists(LegacyPasswordAuthenticatedUserInterface::class)) {
+            self::markTestSkipped();
+        }
+
+        $this->expectException(\TypeError::class);
+        new LegacyUser($this->getUser(), new \stdClass());
+    }
+
+    public function testGetSalt()
+    {
+        $this->getStoredPassword()
+            ->expects(self::once())
+            ->method('getSalt')
+            ->willReturn('salt');
+
+        self::assertEquals(
+            'salt',
+            $this->buildObject()->getSalt()
+        );
     }
 }

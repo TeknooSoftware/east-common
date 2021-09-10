@@ -37,6 +37,9 @@ use Teknoo\East\Foundation\Manager\ManagerInterface;
  */
 interface RedirectClientInterface
 {
+    /**
+     * @param array<string, mixed> $parameters
+     */
     public function __invoke(
         ManagerInterface $manager,
         ClientInterface $client,

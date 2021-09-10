@@ -25,30 +25,28 @@ declare(strict_types=1);
 
 namespace Teknoo\East\WebsiteBundle\Provider;
 
-use ReflectionClass;
 use ReflectionException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-use Symfony\Component\Security\Core\User\LegacyPasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Teknoo\East\Website\Object\ThirdPartyAuth;
+use Teknoo\East\Website\Object\User;
+use Teknoo\East\WebsiteBundle\Object\ThirdPartyAuthenticatedUser;
 use Teknoo\Recipe\Promise\Promise;
 use Teknoo\East\Website\Loader\UserLoader;
 use Teknoo\East\Website\Query\User\UserByEmailQuery;
-use Teknoo\East\WebsiteBundle\Object\LegacyUser;
-use Teknoo\East\WebsiteBundle\Object\User;
-
-use function interface_exists;
 
 /**
- * Symfony user provider to load East Website's user from email.
- * Use the standard User Loader, and wrap user fetched into User or LegacyUser, available in this namespace.
+ * Symfony user provider to load East Website's user authenticated thanks to OAuth2Authenticator, or any third party
+ * authenticated. It can manage only ThirdPartyAuthenticatedUser.
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-abstract class UserProvider
+class ThirdPartyAuthenticatedUserProvider implements UserProviderInterface
 {
     public function __construct(
-        private UserLoader $loader
+        private UserLoader $loader,
     ) {
     }
 
@@ -57,22 +55,29 @@ abstract class UserProvider
         return $this->fetchUserByUsername($username);
     }
 
+    public function loadUserByUsername(string $username)
+    {
+        return $this->fetchUserByUsername($username);
+    }
+
     protected function fetchUserByUsername(string $username): UserInterface
     {
-        $loadedUser = null;
         $this->loader->query(
             new UserByEmailQuery($username),
-            new Promise(static function ($user) use (&$loadedUser) {
-                if (interface_exists(LegacyPasswordAuthenticatedUserInterface::class)) {
-                    $loadedUser = new LegacyUser($user);
-                } else {
-                    $loadedUser = new User($user);
+            $promise = new Promise(static function (User $user) {
+                foreach ($user->getAuthData() as $authData) {
+                    if (!$authData instanceof ThirdPartyAuth) {
+                        continue;
+                    }
+
+                    return new ThirdPartyAuthenticatedUser($user, $authData);
                 }
             })
         );
 
-        if (!$loadedUser) {
-            throw new UsernameNotFoundException(); //todo deprecated
+        $loadedUser = $promise->fetchResult();
+        if (!$loadedUser instanceof ThirdPartyAuthenticatedUser) {
+            throw new UserNotFoundException();
         }
 
         return $loadedUser;
@@ -80,7 +85,7 @@ abstract class UserProvider
 
     public function refreshUser(UserInterface $user): ?UserInterface
     {
-        if ($user instanceof User) {
+        if ($user instanceof ThirdPartyAuthenticatedUser) {
             return $this->fetchUserByUsername($user->getUsername());
         }
 
@@ -88,12 +93,11 @@ abstract class UserProvider
     }
 
     /**
-     * @param class-string<User> $class
+     * @param class-string<ThirdPartyAuthenticatedUser> $class
      * @throws ReflectionException
      */
     public function supportsClass($class): bool
     {
-        $reflection = new ReflectionClass($class);
-        return $class === User::class || $reflection->isSubclassOf(User::class);
+        return ThirdPartyAuthenticatedUser::class === $class;
     }
 }

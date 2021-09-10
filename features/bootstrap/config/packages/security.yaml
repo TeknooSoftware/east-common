@@ -1,0 +1,41 @@
+security:
+    enable_authenticator_manager: true
+
+    role_hierarchy:
+        ROLE_USER: ~
+
+    providers:
+        with_password:
+            id: 'Teknoo\East\WebsiteBundle\Provider\PasswordAuthenticatedUserProvider'
+
+    password_hashers:
+        legacy:
+            algorithm: pbkdf2
+            iterations: 1000
+
+        Teknoo\East\WebsiteBundle\Object\LegacyUser:
+            algorithm: '%teknoo.east.website.bundle.password_authenticated_user_provider.default_algo%'
+            migrate_from:
+                - legacy
+
+        Teknoo\East\WebsiteBundle\Object\PasswordAuthenticatedUser:
+            algorithm: '%teknoo.east.website.bundle.password_authenticated_user_provider.default_algo%'
+
+    firewalls:
+        user_login:
+            pattern: '^/user/login$'
+            security: false
+
+        #require user role for all others pages
+        user_area:
+            pattern: '^/user'
+            form_login:
+                provider: 'with_password'
+                check_path: 'user_website_check'
+                login_path: 'user_website_login'
+                default_target_path: 'user_website_home'
+                enable_csrf: false
+
+    access_control:
+        - { path: '^/user', roles: ROLE_USER, requires_channel: https }
+        - { path: '^/', roles: [ROLE_USER,IS_AUTHENTICATED_ANONYMOUSLY], requires_channel: https }

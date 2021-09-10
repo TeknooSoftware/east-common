@@ -39,10 +39,13 @@ class InclusiveOr implements ExprInterface, ImmutableInterface
 {
     use ImmutableTrait;
 
+    /**
+     * @var array<string|int, mixed>
+     */
     private array $values;
 
     /**.
-     * @param array<string|int, mixed> ...$values
+     * @param array<string|int, mixed> $values
      */
     public function __construct(array ...$values)
     {
@@ -51,6 +54,9 @@ class InclusiveOr implements ExprInterface, ImmutableInterface
         $this->values = $values;
     }
 
+    /**
+     * @return array<string|int, mixed>
+     */
     public function getValues(): array
     {
         return $this->values;

@@ -85,7 +85,7 @@ class FormHandling implements FormHandlingInterface
         $form->handleRequest($request->getAttribute('request'));
 
         $manager->updateWorkPlan([
-            FormInterface::class => $form,
+            'form' => $form,
         ]);
 
         return $this;

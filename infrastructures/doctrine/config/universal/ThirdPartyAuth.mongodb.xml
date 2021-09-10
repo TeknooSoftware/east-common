@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--infrastructures/doctrine/config/doctrine/ThirdPartyAuth.mongodb.yml-->
+<doctrine-mongo-mapping xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"
+                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                        xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
+                                            http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
+
+    <embedded-document name="Teknoo\East\Website\Object\ThirdPartyAuth">
+        <field field-name="type" type="string" nullable="false"/>
+        <field field-name="protocol" type="string" nullable="true"/>
+        <field field-name="provider" type="string" nullable="true"/>
+        <field field-name="token" type="string" nullable="true"/>
+        <field field-name="userIdentifier" name="user_identifier" type="string" nullable="true"/>
+    </embedded-document>
+</doctrine-mongo-mapping>

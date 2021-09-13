@@ -28,6 +28,9 @@ parameters:
         -
             message: '#Method [a-zA-Z0-9\\_]+::__construct\(\) has parameter \$values with no value type specified in iterable type array#'
             path: src/Query/Expr/InclusiveOr.php
+        -
+            message: '#does not exist on SimpleXMLElement\|null#'
+            path:  infrastructures/doctrine/Translatable/Mapping/Driver/Xml.php
 services:
 	-
 		class: Teknoo\States\PHPStan\MethodsClassExtension

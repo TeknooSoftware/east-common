@@ -20,6 +20,17 @@ Feature: Create an element, with slug or not stored into a the dbms server via a
     When the client follows the redirection
     And I should get in the form '{"author":null,"title":"foo","subtitle":"bar","slug":"foo","type":null,"parts":"{}","tags":[],"description":null}'
 
+  Scenario: Create a content without defined locale
+    Given I have DI With Symfony initialized
+    And an empty locale
+    And a twig templating engine
+    When Symfony will receive the POST request "https://foo.com/admin/content/new" with "content%5Btitle%5D=foo&content%5Bsubtitle%5D=bar"
+    Then The client must accept a response
+    And An object "Content" must be persisted
+    And It is redirect to "/admin/content/edit/[a-zA-Z0-9]+"
+    When the client follows the redirection
+    And I should get in the form '{"author":null,"title":"foo","subtitle":"bar","slug":"foo","type":null,"parts":"{}","tags":[],"description":null}'
+
   Scenario: Create an item
     Given I have DI With Symfony initialized
     And a twig templating engine

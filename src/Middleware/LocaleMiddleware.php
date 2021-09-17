@@ -87,10 +87,11 @@ class LocaleMiddleware
 
                 return $locale;
             },
-            function () use (&$request) {
+            function () use (&$request, $session) {
                 if (is_callable($this->translatableSetter)) {
                     ($this->translatableSetter)($this->defaultLocale);
                 }
+                $session->set(self::SESSION_KEY, $this->defaultLocale);
                 $request = $request->withAttribute('locale', $this->defaultLocale);
             }
         );

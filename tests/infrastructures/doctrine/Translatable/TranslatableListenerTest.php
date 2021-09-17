@@ -150,6 +150,16 @@ class TranslatableListenerTest extends TestCase
         );
     }
 
+    public function testSetLocaleEmpty()
+    {
+        self::assertInstanceOf(
+            TranslatableListener::class,
+            $this->build()->setLocale(
+                ''
+            )
+        );
+    }
+
     public function testInjectConfiguration()
     {
         self::assertInstanceOf(

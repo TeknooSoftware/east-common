@@ -18,6 +18,16 @@ Feature: Update an element, with slug or not stored into a the dbms server via a
     And An object "foo" must be updated
     And I should get in the form '{"author":null,"title":"foo2","subtitle":"bar3","slug":"foo","type":null,"parts":"{}","tags":[],"description":null}'
 
+  Scenario: Update a content with an empty locale
+    Given I have DI With Symfony initialized
+    And an empty locale
+    And a twig templating engine
+    And a object of type "Teknoo\East\Website\Doctrine\Object\Content" with id "foo" and '{"author":null,"title":"foo","subtitle":"bar","slug":"foo"}'
+    When Symfony will receive the POST request "https://foo.com/admin/content/edit/foo" with "content%5Btitle%5D=foo2&content%5Bsubtitle%5D=bar3"
+    Then The client must accept a response
+    And An object "foo" must be updated
+    And I should get in the form '{"author":null,"title":"foo2","subtitle":"bar3","slug":"foo","type":null,"parts":"{}","tags":[],"description":null}'
+
   Scenario: Update an item
     Given I have DI With Symfony initialized
     And a twig templating engine

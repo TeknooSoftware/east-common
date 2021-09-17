@@ -117,7 +117,7 @@ class DocumentWrapperTest extends TestCase
             {
             }
 
-            public function setLocaleField(string $localeField): TranslatableInterface
+            public function setLocaleField(?string $localeField): TranslatableInterface
             {
             }
         };
@@ -160,7 +160,7 @@ class DocumentWrapperTest extends TestCase
             {
             }
 
-            public function setLocaleField(string $localeField): TranslatableInterface
+            public function setLocaleField(?string $localeField): TranslatableInterface
             {
             }
         };

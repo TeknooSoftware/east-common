@@ -361,6 +361,19 @@ class ContentTest extends TestCase
         );
     }
 
+    public function testSetLocaleFieldToNull()
+    {
+        $Object = $this->buildObject();
+        self::assertInstanceOf(
+            \get_class($Object),
+            $Object->setLocaleField(null)
+        );
+
+        self::assertNull(
+            $Object->getLocaleField()
+        );
+    }
+
     public function testSetLocaleFieldExceptionOnBadArgument()
     {
         $this->expectException(\Throwable::class);

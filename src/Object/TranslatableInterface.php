@@ -36,5 +36,5 @@ interface TranslatableInterface extends ObjectInterface
 {
     public function getLocaleField(): ?string;
 
-    public function setLocaleField(string $localeField): TranslatableInterface;
+    public function setLocaleField(?string $localeField): TranslatableInterface;
 }

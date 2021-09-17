@@ -164,6 +164,7 @@ class FeatureContext implements Context
      */
     public function iHaveDiWithSymfonyInitialized(): void
     {
+        $this->locale = 'en';
         $this->symfonyKernel = new class($this, 'test') extends BaseKernel
         {
             use MicroKernelTrait;
@@ -1140,5 +1141,13 @@ class FeatureContext implements Context
             ->setAuthData([$storedPassword]);
 
         $this->getObjectRepository(User::class)->setObject(['email' => 'admin@teknoo.software'], $object);
+    }
+
+    /**
+     * @Given an empty locale
+     */
+    public function anEmptyLocale()
+    {
+        $this->locale = '';
     }
 }

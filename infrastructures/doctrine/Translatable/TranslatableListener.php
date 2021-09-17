@@ -184,6 +184,10 @@ class TranslatableListener implements EventSubscriber
 
     public function setLocale(string $locale): self
     {
+        if (empty($locale)) {
+            $locale = $this->defaultLocale;
+        }
+
         $this->locale = $locale;
 
         return $this;

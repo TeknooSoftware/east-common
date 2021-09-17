@@ -241,7 +241,7 @@ class Item implements
         return $this->localeField;
     }
 
-    public function setLocaleField(string $localeField): TranslatableInterface
+    public function setLocaleField(?string $localeField): TranslatableInterface
     {
         $this->localeField = $localeField;
 

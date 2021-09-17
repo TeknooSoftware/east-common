@@ -1,5 +1,11 @@
 # Teknoo Software - Website - Change Log
 
+## [6.0.1] - 2021-09-16
+### Stable Release
+- Change `setLocaleField` to allow translatable object with monolanguage website.
+- Fix Doctrine `TranslatableListener` when an empty locale is passed to use the default locale
+- Fix `LocaleMiddleware` to set the default locale into Session when is not already set.
+
 ## [6.0.0] - 2021-09-10
 ### Stable Release
 - Add `UserInterface` to represent and User in a Eastt Website / WebApp.

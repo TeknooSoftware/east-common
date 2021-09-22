@@ -1,5 +1,9 @@
 # Teknoo Software - Website - Change Log
 
+## [6.0.2] - 2021-09-22
+### Stable Release
+- Add `active` property to `User` to allow disable an user (If the field is not present it is considered at true)
+
 ## [6.0.1] - 2021-09-16
 ### Stable Release
 - Change `setLocaleField` to allow translatable object with monolanguage website.

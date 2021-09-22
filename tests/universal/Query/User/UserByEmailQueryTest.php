@@ -24,6 +24,7 @@
 namespace Teknoo\Tests\East\Website\Query\User;
 
 use PHPUnit\Framework\TestCase;
+use Teknoo\East\Website\Query\Expr\InclusiveOr;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
@@ -59,7 +60,15 @@ class UserByEmailQueryTest extends TestCase
 
         $repository->expects(self::once())
             ->method('findOneBy')
-            ->with(['email' => 'foo@bar', 'deletedAt' => null,], $promise);
+            ->with([
+                'email' => 'foo@bar',
+                'active' => new InclusiveOr(
+                    ['active' => true],
+                    ['active' => null],
+                ),
+                'deletedAt' => null,],
+                $promise
+            );
 
         self::assertInstanceOf(
             UserByEmailQuery::class,

@@ -54,6 +54,8 @@ class User implements ObjectInterface, UserInterface, DeletableInterface, Timest
 
     private string $email = '';
 
+    private bool $active = true;
+
     /**
      * @var iterable<AuthDataInterface>
      */
@@ -147,5 +149,17 @@ class User implements ObjectInterface, UserInterface, DeletableInterface, Timest
     public function getAuthData(): iterable
     {
         return $this->authData;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): User
+    {
+        $this->active = $active;
+
+        return $this;
     }
 }

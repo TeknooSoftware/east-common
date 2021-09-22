@@ -368,6 +368,10 @@ class FeatureContext implements Context
                 if (\array_key_exists('deletedAt', $criteria)) {
                     unset($criteria['deletedAt']);
                 }
+
+                if (isset($criteria['or'][0]['active'])) {
+                    unset($criteria['or']);
+                }
                 
                 if (isset($criteria['slug']) && 'page-with-error' === $criteria['slug']) {
                     throw new \Exception('Error', 404);

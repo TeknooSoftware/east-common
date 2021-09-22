@@ -254,4 +254,45 @@ class UserTest extends TestCase
         $this->expectException(\Throwable::class);
         $this->buildObject()->setAuthData(new \stdClass());
     }
+
+    public function testGetActive()
+    {
+        self::assertTrue(
+            $this->generateObjectPopulated(['active' => true])->isActive()
+        );
+        self::assertFalse(
+            $this->generateObjectPopulated(['active' => false])->isActive()
+        );
+        self::assertTrue(
+            $this->generateObjectPopulated()->isActive()
+        );
+    }
+
+    public function testSetActive()
+    {
+        $object = $this->buildObject();
+        self::assertInstanceOf(
+            \get_class($object),
+            $object->setActive(true)
+        );
+
+        self::assertTrue(
+            $object->isActive()
+        );
+
+        self::assertInstanceOf(
+            \get_class($object),
+            $object->setActive(false)
+        );
+
+        self::assertFalse(
+            $object->isActive()
+        );
+    }
+
+    public function testSetActiveExceptionOnBadArgument()
+    {
+        $this->expectException(\Throwable::class);
+        $this->buildObject()->setActive(new \stdClass());
+    }
 }

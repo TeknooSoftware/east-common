@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Query\User;
 
+use Teknoo\East\Website\Query\Expr\InclusiveOr;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
@@ -60,6 +61,10 @@ class UserByEmailQuery implements QueryInterface, ImmutableInterface
         $repository->findOneBy(
             [
                 'email' => $this->email,
+                'active' => new InclusiveOr(
+                    ['active' => true],
+                    ['active' => null],
+                ),
                 'deletedAt' => null
             ],
             $promise

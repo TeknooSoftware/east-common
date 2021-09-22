@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\East\WebsiteBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -66,7 +67,7 @@ class UserType extends AbstractType
         );
 
         $builder->add('email', EmailType::class, ['required' => true]);
-
+        $builder->add('active', CheckboxType::class);
         $builder->add('storedPassword', StoredPasswordType::class, ['mapped' => false]);
 
         $builder->addEventListener(

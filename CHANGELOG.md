@@ -1,5 +1,9 @@
 # Teknoo Software - Website - Change Log
 
+## [6.0.3] - 2021-10-04
+### Stable Release
+- Fix deprecation in doctrine ODM mapping
+
 ## [6.0.2] - 2021-09-22
 ### Stable Release
 - Add `active` property to `User` to allow disable an user (If the field is not present it is considered at true)

@@ -142,10 +142,29 @@ class ContentTest extends TestCase
 
         self::assertInstanceOf(
             Content::class,
-            $this->buildObject()->prepareSlugNear(
+            $this->buildObject()->setTitle('titleValue')->prepareSlugNear(
                 $loader,
                 $findSlugService,
-                'slug'
+                'slug',
+                ['titleValue'],
+            )
+        );
+    }
+
+    public function testPrepareSlugNearWithCurrentSlugValue()
+    {
+        $loader = $this->createMock(LoaderInterface::class);
+
+        $findSlugService = $this->createMock(FindSlugService::class);
+        $findSlugService->expects(self::once())->method('process');
+
+        self::assertInstanceOf(
+            Content::class,
+            $this->buildObject()->setSlug('currentValue')->prepareSlugNear(
+                $loader,
+                $findSlugService,
+                'slug',
+                ['currentValue'],
             )
         );
     }
@@ -156,16 +175,6 @@ class ContentTest extends TestCase
         self::assertInstanceOf(
             \get_class($Object),
             $Object->setSlug('fooBar')
-        );
-
-        self::assertEquals(
-            'fooBar',
-            $Object->getSlug()
-        );
-
-        self::assertInstanceOf(
-            \get_class($Object),
-            $Object->setSlug('helloWorld')
         );
 
         self::assertEquals(

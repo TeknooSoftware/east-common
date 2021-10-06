@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Service;
 
+use Teknoo\East\Website\Object\ObjectInterface;
 use Teknoo\Recipe\Promise\Promise;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Object\DeletableInterface;
@@ -71,8 +72,18 @@ class FindSlugService
 
             $candidate = implode($glue, array_map([$this, 'sluggify'], $candidateParts));
 
+            $object = null;
+            if ($sluggable instanceof ObjectInterface) {
+                $object = $sluggable;
+            }
+
             $loader->query(
-                new FindBySlugQuery($slugField, $candidate, $sluggable instanceof DeletableInterface),
+                new FindBySlugQuery(
+                    $slugField,
+                    $candidate,
+                    $sluggable instanceof DeletableInterface,
+                    $object
+                ),
                 new Promise(
                     function () use (&$counter) {
                         $counter++;

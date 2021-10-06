@@ -29,7 +29,10 @@ use Teknoo\East\Website\Doctrine\DBSource\Common\ExprConversionTrait as CommonTr
 use Teknoo\East\Website\Query\Expr\ExprInterface;
 use Teknoo\East\Website\Query\Expr\In;
 use Teknoo\East\Website\Query\Expr\InclusiveOr;
+use Teknoo\East\Website\Query\Expr\NotEqual;
 use Teknoo\East\Website\Query\Expr\ObjectReference;
+
+use function is_array;
 
 /**
  * Odm Optimised implementation dedicated to ODM Doctrine component to convert East Website
@@ -42,6 +45,20 @@ use Teknoo\East\Website\Query\Expr\ObjectReference;
 trait ExprConversionTrait
 {
     use CommonTrait;
+
+    /**
+     * @param array<string, mixed> $final
+     * @param NotEqual $expr
+     */
+    private static function processNotEqualExpr(array &$final, string $key, ExprInterface $expr): void
+    {
+        $values = $expr->getValue();
+        if (is_array($values)) {
+            $values = self::convert($values);
+        }
+
+        $final['$ne'] = [$key => $values];
+    }
 
     /**
      * @param array<string, mixed> $final

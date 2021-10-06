@@ -134,12 +134,17 @@ class Item implements
         FindSlugService $findSlugService,
         string $slugField
     ): SluggableInterface {
+        $slugValue = $this->getSlug();
+        if (empty($slugValue)) {
+            $slugValue = $this->getName();
+        }
+
         $findSlugService->process(
             $loader,
             $slugField,
             $this,
             [
-                $this->getName()
+                $slugValue
             ]
         );
 
@@ -148,10 +153,6 @@ class Item implements
 
     public function setSlug(?string $slug): Item
     {
-        if (!empty($this->slug)) {
-            return $this;
-        }
-
         $this->slug = $slug;
 
         return $this;

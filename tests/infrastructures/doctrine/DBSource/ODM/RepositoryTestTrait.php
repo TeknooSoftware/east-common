@@ -26,6 +26,7 @@ namespace Teknoo\Tests\East\Website\Doctrine\DBSource\ODM;
 use Doctrine\ODM\MongoDB\Query\Builder;
 use Doctrine\ODM\MongoDB\Query\Query;
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
+use Teknoo\East\Website\Query\Expr\NotEqual;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Object\ObjectInterface;
@@ -287,6 +288,7 @@ trait RepositoryTestTrait
             ->with([
                 'foo' => 'bar',
                 'bar' => ['$in' => ['foo']],
+                '$ne' => ['barNot' => ['foo']],
                 '$or' => [
                     ['foo' => 'bar'],
                     ['bar' => 'foo']
@@ -301,6 +303,7 @@ trait RepositoryTestTrait
                 [
                     'foo' => 'bar',
                     'bar' => new In(['foo']),
+                    'barNot' => new NotEqual(['foo']),
                     new InclusiveOr(
                         ['foo' => 'bar'],
                         ['bar' => 'foo']

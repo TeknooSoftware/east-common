@@ -168,12 +168,17 @@ class Content implements
         FindSlugService $findSlugService,
         string $slugField
     ): SluggableInterface {
+        $slugValue = $this->getSlug();
+        if (empty($slugValue)) {
+            $slugValue = $this->getTitle();
+        }
+
         $findSlugService->process(
             $loader,
             $slugField,
             $this,
             [
-                $this->getTitle()
+                $slugValue
             ]
         );
 
@@ -182,10 +187,6 @@ class Content implements
 
     public function setSlug(?string $slug): Content
     {
-        if (!empty($this->slug)) {
-            return $this;
-        }
-
         $this->slug = $slug;
 
         return $this;

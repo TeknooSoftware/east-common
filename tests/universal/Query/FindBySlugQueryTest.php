@@ -24,6 +24,8 @@
 namespace Teknoo\Tests\East\Website\Query;
 
 use PHPUnit\Framework\TestCase;
+use Teknoo\East\Website\Object\ObjectInterface;
+use Teknoo\East\Website\Query\Expr\NotEqual;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
@@ -43,9 +45,9 @@ class FindBySlugQueryTest extends TestCase
     /**
      * @inheritDoc
      */
-    public function buildQuery(bool $includedDeleted = false): QueryInterface
+    public function buildQuery(bool $includedDeleted = false, mixed $object = null): QueryInterface
     {
-        return new FindBySlugQuery('fooBarName', 'HelloWorld', $includedDeleted);
+        return new FindBySlugQuery('fooBarName', 'HelloWorld', $includedDeleted, $object);
     }
 
     public function testExecute()
@@ -87,6 +89,53 @@ class FindBySlugQueryTest extends TestCase
         self::assertInstanceOf(
             FindBySlugQuery::class,
             $this->buildQuery(true)->execute($loader, $repository, $promise)
+        );
+    }
+
+    public function testExecuteWithNonSavedObject()
+    {
+        $loader = $this->createMock(LoaderInterface::class);
+        $repository = $this->createMock(RepositoryInterface::class);
+        $promise = $this->createMock(PromiseInterface::class);
+
+        $promise->expects(self::never())->method('success');
+        $promise->expects(self::never())->method('fail');
+
+        $object = $this->createMock(ObjectInterface::class);
+
+        $repository->expects(self::once())
+            ->method('findOneBy')
+            ->with(['fooBarName' => 'HelloWorld',], $this->callback(function ($pr) {
+                return $pr instanceof PromiseInterface;
+            }));
+
+        self::assertInstanceOf(
+            FindBySlugQuery::class,
+            $this->buildQuery(true, $object)->execute($loader, $repository, $promise)
+        );
+    }
+
+    public function testExecuteWithSavedObject()
+    {
+        $loader = $this->createMock(LoaderInterface::class);
+        $repository = $this->createMock(RepositoryInterface::class);
+        $promise = $this->createMock(PromiseInterface::class);
+
+        $promise->expects(self::never())->method('success');
+        $promise->expects(self::never())->method('fail');
+
+        $object = $this->createMock(ObjectInterface::class);
+        $object->expects(self::any())->method('getId')->willReturn('foo');
+
+        $repository->expects(self::once())
+            ->method('findOneBy')
+            ->with(['fooBarName' => 'HelloWorld', 'id' => new NotEqual('foo')], $this->callback(function ($pr) {
+                return $pr instanceof PromiseInterface;
+            }));
+
+        self::assertInstanceOf(
+            FindBySlugQuery::class,
+            $this->buildQuery(true, $object)->execute($loader, $repository, $promise)
         );
     }
 

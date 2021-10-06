@@ -24,6 +24,7 @@
 namespace Teknoo\Tests\East\Website\Doctrine\DBSource\Common;
 
 use Doctrine\Persistence\ObjectRepository;
+use Teknoo\East\Website\Query\Expr\NotEqual;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Object\ObjectInterface;
@@ -253,6 +254,7 @@ trait RepositoryTestTrait
             ->with([
                 'foo' => 'bar',
                 'bar' => ['foo'],
+                'notEqual' => ['bwrNot' =>'foo'],
                 'or' => [
                     ['foo' => 'bar'],
                     ['bar' => 'foo']
@@ -267,6 +269,7 @@ trait RepositoryTestTrait
                 [
                     'foo' => 'bar',
                     'bar' => new In(['foo']),
+                    'bwrNot' => new NotEqual('foo'),
                     new InclusiveOr(
                         ['foo' => 'bar'],
                         ['bar' => 'foo']

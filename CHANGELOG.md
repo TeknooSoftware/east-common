@@ -1,5 +1,11 @@
 # Teknoo Software - Website - Change Log
 
+## [6.1.0] - 2021-10-06
+### Stable Release
+- Add `NotEqual` expression
+- `Sluggable` object can update their slug
+- Users can override slugs of `Sluggable` objects
+
 ## [6.0.3] - 2021-10-04
 ### Stable Release
 - Fix deprecation in doctrine ODM mapping

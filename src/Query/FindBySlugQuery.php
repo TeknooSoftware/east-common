@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Query;
 
+use Teknoo\East\Website\Object\ObjectInterface;
+use Teknoo\East\Website\Query\Expr\NotEqual;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
@@ -48,13 +50,20 @@ class FindBySlugQuery implements QueryInterface, ImmutableInterface
 
     private bool $includeDeleted;
 
-    public function __construct(string $slugField, string $slugValue, bool $includeDeleted = false)
-    {
+    private ?ObjectInterface $sluggable;
+
+    public function __construct(
+        string $slugField,
+        string $slugValue,
+        bool $includeDeleted = false,
+        ?ObjectInterface $sluggable = null
+    ) {
         $this->uniqueConstructorCheck();
 
         $this->slugField = $slugField;
         $this->slugValue = $slugValue;
         $this->includeDeleted = $includeDeleted;
+        $this->sluggable = $sluggable;
     }
 
     public function execute(
@@ -66,6 +75,13 @@ class FindBySlugQuery implements QueryInterface, ImmutableInterface
 
         if (!$this->includeDeleted) {
             $filters['deletedAt'] = null;
+        }
+
+        if (
+            $this->sluggable instanceof ObjectInterface
+            && !empty($id = $this->sluggable->getId())
+        ) {
+            $filters['id'] = new NotEqual($id);
         }
 
         $repository->findOneBy(

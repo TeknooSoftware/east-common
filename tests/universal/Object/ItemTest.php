@@ -101,10 +101,29 @@ class ItemTest extends TestCase
 
         self::assertInstanceOf(
             Item::class,
-            $this->buildObject()->prepareSlugNear(
+            $this->buildObject()->setName('nameValue')->prepareSlugNear(
                 $loader,
                 $findSlugService,
-                'slug'
+                'slug',
+                ['nameValue'],
+            )
+        );
+    }
+
+    public function testPrepareSlugNearWithCurrentSlugValue()
+    {
+        $loader = $this->createMock(LoaderInterface::class);
+
+        $findSlugService = $this->createMock(FindSlugService::class);
+        $findSlugService->expects(self::once())->method('process');
+
+        self::assertInstanceOf(
+            Item::class,
+            $this->buildObject()->setSlug('currentValue')->prepareSlugNear(
+                $loader,
+                $findSlugService,
+                'slug',
+                ['currentValue'],
             )
         );
     }
@@ -115,16 +134,6 @@ class ItemTest extends TestCase
         self::assertInstanceOf(
             \get_class($Object),
             $Object->setSlug('fooBar')
-        );
-
-        self::assertEquals(
-            'fooBar',
-            $Object->getSlug()
-        );
-
-        self::assertInstanceOf(
-            \get_class($Object),
-            $Object->setSlug('helloWorld')
         );
 
         self::assertEquals(

@@ -29,6 +29,7 @@ use RuntimeException;
 use Teknoo\East\Website\Query\Expr\ExprInterface;
 use Teknoo\East\Website\Query\Expr\In;
 use Teknoo\East\Website\Query\Expr\InclusiveOr;
+use Teknoo\East\Website\Query\Expr\NotEqual;
 use Teknoo\East\Website\Query\Expr\ObjectReference;
 
 /**
@@ -46,6 +47,7 @@ trait ExprConversionTrait
      * @var array<string, callable>
      */
     private static $exprMappings = [
+        NotEqual::class => [self::class, 'processNotEqualExpr'],
         In::class => [self::class, 'processInExpr'],
         InclusiveOr::class => [self::class, 'processInclusiveOrExpr'],
         ObjectReference::class => [self::class, 'processObjectReferenceExpr'],
@@ -54,6 +56,15 @@ trait ExprConversionTrait
     public static function addExprMappingConversion(string $exprClass, callable $conversionFunction): void
     {
         static::$exprMappings[$exprClass] = $conversionFunction;
+    }
+
+    /**
+     * @param array<string, mixed> $final
+     * @param NotEqual $expr
+     */
+    private static function processNotEqualExpr(array &$final, string $key, ExprInterface $expr): void
+    {
+        $final['notEqual'] = [$key => $expr->getValue()];
     }
 
     /**

@@ -104,7 +104,14 @@ class ExtensionMetadataFactory
         $cacheDriver = $this->classMetadataFactory->getCacheDriver();
 
         if (null !== $cacheDriver && $cacheDriver->contains($cacheId)) {
-            $listener->injectConfiguration($metaData, $cacheDriver->fetch($cacheId));
+            /** @var array{
+             *        useObjectClass: string,
+             *        translationClass: string,
+             *        fields: array<int, string>|null,
+             *        fallback: array<string, string>
+             *      } $config */
+            $config = $cacheDriver->fetch($cacheId);
+            $listener->injectConfiguration($metaData, $config);
 
             return $this;
         }

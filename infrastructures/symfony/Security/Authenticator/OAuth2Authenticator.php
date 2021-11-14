@@ -81,7 +81,7 @@ class OAuth2Authenticator extends BaseAuthenticator
             if (
                 !$authData instanceof ThirdPartyAuth
                 || $authData->getProvider() != $provider
-                || $authData->getProtocol() != static::PROTOCOL
+                || $authData->getProtocol() != self::PROTOCOL
             ) {
                 continue;
             }
@@ -93,7 +93,7 @@ class OAuth2Authenticator extends BaseAuthenticator
         if (null === $thirdPartyAuth) {
             $thirdPartyAuth = new ThirdPartyAuth();
 
-            $thirdPartyAuth->setProtocol(static::PROTOCOL);
+            $thirdPartyAuth->setProtocol(self::PROTOCOL);
             $thirdPartyAuth->setProvider($provider);
             $user->addAuthData($thirdPartyAuth);
         }
@@ -109,7 +109,7 @@ class OAuth2Authenticator extends BaseAuthenticator
 
     public function authenticate(Request $request): PassportInterface
     {
-        $provider = $request->attributes->get('_oauth_client_key', '');
+        $provider = (string) $request->attributes->get('_oauth_client_key', '');
         $client = $this->clientRegistry->getClient($provider);
         $accessToken = $this->fetchAccessToken($client);
 
@@ -130,7 +130,7 @@ class OAuth2Authenticator extends BaseAuthenticator
 
                     $registerTokenPromise = new Promise(
                         function (User $user, PromiseInterface $next) use ($accessToken, $provider) {
-                            $this->registerToken($user, $provider, $accessToken->getToken(), $next);
+                            $this->registerToken($user, (string) $provider, $accessToken->getToken(), $next);
                         },
                         fn (Throwable $error, PromiseInterface $next) => $next->fail($error),
                         true
@@ -177,7 +177,9 @@ class OAuth2Authenticator extends BaseAuthenticator
                         )
                     );
 
-                    return $promise->fetchResult();
+                    /** @var UserInterface $user */
+                    $user = $promise->fetchResult();
+                    return $user;
                 }
             )
         );

@@ -80,7 +80,7 @@ trait RepositoryTrait
     ): RepositoryInterface {
         $queryBuilder = $this->repository->createQueryBuilder();
 
-        $queryBuilder->equals(static::convert($criteria));
+        $queryBuilder->equals(self::convert($criteria));
 
         if (!empty($orderBy)) {
             $queryBuilder->sort($orderBy);
@@ -108,7 +108,7 @@ trait RepositoryTrait
     {
         $queryBuilder = $this->repository->createQueryBuilder();
 
-        $queryBuilder->equals(static::convert($criteria));
+        $queryBuilder->equals(self::convert($criteria));
 
         $queryBuilder->count();
 
@@ -126,7 +126,7 @@ trait RepositoryTrait
     {
         $error = null;
         try {
-            $result = $this->repository->findOneBy(static::convert($criteria));
+            $result = $this->repository->findOneBy(self::convert($criteria));
 
             if (!empty($result)) {
                 $promise->success($result);

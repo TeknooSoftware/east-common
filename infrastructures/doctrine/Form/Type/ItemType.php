@@ -49,7 +49,7 @@ class ItemType extends AbstractType
 
     /**
      * @param FormBuilderInterface<Item> $builder
-     * @param array<string, mixed> $options
+     * @param array<string, string> $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options): self
     {

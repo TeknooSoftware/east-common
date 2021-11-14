@@ -108,14 +108,35 @@ class TranslatableListener implements EventSubscriber
 
     /**
      * Tracks objects to reload after flush
-     * @var array<string, mixed>
+     * @var array<
+     *     string,
+     *     array<array{
+     *      0:WrapperInterface,
+     *      1: string,
+     *      2:array{
+     *          useObjectClass: string,
+     *          translationClass: string,
+     *          fields: array<int, string>,
+     *          fallback: array<string, string>
+     *      },
+     *      3:\Doctrine\Persistence\Mapping\ClassMetadata<\Doctrine\ODM\MongoDB\Mapping\ClassMetadata>
+     *     }>
+     * >
      */
     private array $objectsToTranslate = [];
 
     /**
      * List of cached object configurations leaving it static for reasons to look into
      * other listener configuration.
-     * @var array<string, mixed>
+     * @var array<
+     *     string,
+     *      array{
+     *        useObjectClass: string,
+     *        translationClass: string,
+     *        fields: array<int, string>|null,
+     *        fallback: array<string, string>
+     *      }
+     *  >
      */
     private array $configurations = array();
 
@@ -220,7 +241,12 @@ class TranslatableListener implements EventSubscriber
 
     /**
      * @param ClassMetadata<ClassMetadataODM> $metadata
-     * @param array<string, mixed> $config
+     * @param array{
+     *        useObjectClass: string,
+     *        translationClass: string,
+     *        fields: array<int, string>|null,
+     *        fallback: array<string, string>
+     *      } $config
      */
     public function injectConfiguration(ClassMetadata $metadata, array $config): self
     {
@@ -233,7 +259,12 @@ class TranslatableListener implements EventSubscriber
 
     /**
      * @param ClassMetadata<ClassMetadataODM> $metadata
-     * @return array<string, mixed>
+     * @return array{
+     *        useObjectClass: string,
+     *        translationClass: string,
+     *        fields: array<int, string>|null,
+     *        fallback: array<string, string>
+     *      }
      */
     private function getConfiguration(ClassMetadata $metadata): array
     {
@@ -270,7 +301,12 @@ class TranslatableListener implements EventSubscriber
     }
 
     /**
-     * @param array<string, mixed> $config
+     * @param array{
+     *     useObjectClass: string,
+     *     translationClass: string,
+     *     fields: array<int, string>|null,
+     *     fallback: array<string, string>
+     * } $config
      * @param ClassMetadata<ClassMetadataODM> $metaData
      */
     private function loadAllTranslations(
@@ -291,7 +327,7 @@ class TranslatableListener implements EventSubscriber
                 }
 
                 // translate object's translatable properties
-                foreach ($config['fields'] as $field) {
+                foreach (($config['fields'] ?? []) as $field) {
                     $translated = '';
                     $isTranslated = false;
                     foreach ($result as $entry) {
@@ -388,7 +424,7 @@ class TranslatableListener implements EventSubscriber
                 $translationMetadata = $this->getClassMetadata($translationClass);
                 $translationReflection = $translationMetadata->getReflectionClass();
 
-                $translatableFields = array_flip($config['fields']);
+                $translatableFields = array_flip($config['fields'] ?? []);
                 foreach ($translatableFields as $field => $notUsed) {
                     if (!isset($changeSet[$field])) {
                         continue; // locale is same and nothing changed

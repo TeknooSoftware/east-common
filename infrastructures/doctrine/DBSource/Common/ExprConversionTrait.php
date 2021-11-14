@@ -55,7 +55,7 @@ trait ExprConversionTrait
 
     public static function addExprMappingConversion(string $exprClass, callable $conversionFunction): void
     {
-        static::$exprMappings[$exprClass] = $conversionFunction;
+        self::$exprMappings[$exprClass] = $conversionFunction;
     }
 
     /**
@@ -83,7 +83,7 @@ trait ExprConversionTrait
     private static function processInclusiveOrExpr(array &$final, string $key, ExprInterface $expr): void
     {
         $orValues = $expr->getValues();
-        $final['or'] = static::convert($orValues);
+        $final['or'] = self::convert($orValues);
     }
 
     /**
@@ -110,11 +110,11 @@ trait ExprConversionTrait
             }
 
             $exprClass = $value::class;
-            if (!isset(static::$exprMappings[$exprClass])) {
+            if (!isset(self::$exprMappings[$exprClass])) {
                 throw new RuntimeException("$exprClass is not managed by this repository");
             }
 
-            $callable = static::$exprMappings[$exprClass];
+            $callable = self::$exprMappings[$exprClass];
             $callable($final, (string) $key, $value);
         }
 

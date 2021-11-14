@@ -39,7 +39,7 @@ trait ResponseTrait
     private ResponseFactoryInterface $responseFactory;
 
     /**
-     * @param array<string, mixed> $headers
+     * @param array<string, array<string>|string> $headers
      */
     private function addHeadersIntoResponse(ResponseInterface $response, array &$headers): ResponseInterface
     {

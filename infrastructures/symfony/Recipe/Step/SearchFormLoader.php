@@ -65,7 +65,7 @@ class SearchFormLoader implements SearchFormLoaderInterface
         }
 
         $instances = &$this->formsInstances;
-        if (!isset($instances[$template]) && !isset($instances[static::ANY_TEMPLATE])) {
+        if (!isset($instances[$template]) && !isset($instances[self::ANY_TEMPLATE])) {
             return $this;
         }
 
@@ -73,12 +73,12 @@ class SearchFormLoader implements SearchFormLoaderInterface
 
         if (
             !isset($instances[$template][$formName])
-            && !isset($instances[static::ANY_TEMPLATE][$formName])
+            && !isset($instances[self::ANY_TEMPLATE][$formName])
         ) {
             return $this;
         }
 
-        $formClass = $instances[$template][$formName] ?? $instances[static::ANY_TEMPLATE][$formName];
+        $formClass = $instances[$template][$formName] ?? $instances[self::ANY_TEMPLATE][$formName];
         $form = $this->formFactory->create(
             $formClass,
             null,

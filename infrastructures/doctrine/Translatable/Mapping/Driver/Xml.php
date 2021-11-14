@@ -82,7 +82,7 @@ class Xml implements DriverInterface
     }
 
     /**
-     * @param array<string, mixed> $config
+     * @param array<string, array<int|string, mixed>> $config
      */
     private function inspectElementsForTranslatableFields(
         SimpleXMLElement $xml,

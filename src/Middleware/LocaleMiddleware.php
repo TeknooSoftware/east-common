@@ -101,7 +101,7 @@ class LocaleMiddleware
             $promise
         );
 
-        return $promise->fetchResult() ?? $this->defaultLocale;
+        return (string) ($promise->fetchResult() ?? $this->defaultLocale);
     }
 
     public function execute(

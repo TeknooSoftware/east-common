@@ -44,7 +44,7 @@ class FormProcessing implements FormProcessingInterface
         ManagerInterface $manager,
         string $nextStep
     ): FormProcessingInterface {
-        if (!$form->isSubmitted() || !$form->isValid()) {
+        if ($form instanceof FormInterface && (!$form->isSubmitted() || !$form->isValid())) {
             $manager->continue([], $nextStep);
         }
 

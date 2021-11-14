@@ -55,7 +55,7 @@ class ContentType extends AbstractType
 
     /**
      * @param FormBuilderInterface<Content> $builder
-     * @param array<string, mixed> $options
+     * @param array<string, string> $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options): self
     {
@@ -162,6 +162,7 @@ class ContentType extends AbstractType
             FormEvents::PRE_SUBMIT,
             static function (FormEvent $event) {
                 $form = $event->getForm();
+                /** @var array<string, string> $data */
                 $data = $event->getData();
                 $contentObject = $form->getNormData();
 

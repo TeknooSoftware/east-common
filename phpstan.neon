@@ -1,5 +1,4 @@
 parameters:
-    scopeClass: Teknoo\States\PHPStan\Analyser\Scope
     ignoreErrors:
         -
             message: '#Parameter \#1 \$translatableSetter of class [a-zA-Z0-9\\_]+ constructor expects \(callable\(\): mixed\)\|null#'
@@ -11,6 +10,9 @@ parameters:
             message: '#Call to an undefined method [a-zA-Z0-9\\_]+::createQueryBuilder\(\)#'
             path: infrastructures/doctrine/Form/Type/*
         -
+            message: '#Teknoo\\East\\Website\\Doctrine\\Object\\Translation::\$[a-zA-Z0-9]+ is never read, only written#'
+            path: infrastructures/doctrine/Object/Translation.php
+        -
             message: '#expects class-string<object>, class-string\|string given#'
             path:  infrastructures/doctrine/Translatable/Mapping/ExtensionMetadataFactory.php
         -
@@ -19,6 +21,12 @@ parameters:
         -
             message: '#Doctrine\\Persistence\\Mapping\\ClassMetadata<object>#'
             path:  infrastructures/doctrine/Translatable/TranslatableListener.php
+        -
+            message: '#does not accept array\{\}\.#'
+            path:  infrastructures/doctrine/Translatable/TranslatableListener.php
+        -
+            message: '#mixed#'
+            path:  infrastructures/doctrine/di.php
         -
             message: '#[a-zA-Z0-9\\_]+::cook\(\) expects \(callable\(\): mixed\)|[a-zA-Z0-9\\_]+#'
             path: infrastructures/symfony/Resources/config/di.php
@@ -31,8 +39,33 @@ parameters:
         -
             message: '#does not exist on SimpleXMLElement\|null#'
             path:  infrastructures/doctrine/Translatable/Mapping/Driver/Xml.php
+        -
+            message: '#::\$type is never read, only written#'
+            path:  src/Object
+        -   '#Cannot cast mixed to string#'
+        -   '#Cannot cast mixed to int#'
+
 services:
-	-
-		class: Teknoo\States\PHPStan\MethodsClassExtension
-		tags:
-			- phpstan.broker.methodsClassReflectionExtension
+    -
+        class: Teknoo\States\PHPStan\MethodsClassExtension
+        arguments:
+            parser: @defaultAnalysisParser
+        tags:
+            - phpstan.broker.methodsClassReflectionExtension
+
+    -
+        class: Teknoo\States\PHPStan\Analyser\ASTVisitor
+        arguments:
+            parser: @defaultAnalysisParser
+
+    -
+        class: Teknoo\States\PHPStan\Analyser\NodeScopeResolver
+        autowired: PHPStan\Analyser\NodeScopeResolver
+        arguments:
+            parser: @defaultAnalysisParser
+            classReflector: @nodeScopeResolverClassReflector
+            polluteScopeWithLoopInitialAssignments: %polluteScopeWithLoopInitialAssignments%
+            polluteScopeWithAlwaysIterableForeach: %polluteScopeWithAlwaysIterableForeach%
+            earlyTerminatingMethodCalls: %earlyTerminatingMethodCalls%
+            earlyTerminatingFunctionCalls: %earlyTerminatingFunctionCalls%
+            implicitThrows: %exceptions.implicitThrows%

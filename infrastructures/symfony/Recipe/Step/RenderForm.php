@@ -28,6 +28,7 @@ namespace Teknoo\East\WebsiteBundle\Recipe\Step;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Symfony\Component\Form\FormInterface;
 use Teknoo\East\Foundation\Client\ClientInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\RenderFormInterface;
@@ -70,15 +71,21 @@ class RenderForm implements RenderFormInterface
         bool $isTranslatable = false,
         #[Transform(ParametersBag::class)] array $viewParameters = [],
     ): RenderFormInterface {
+        $parameters = [
+            'objectInstance' => $object,
+            'request' => $request,
+            'formView' => null,
+            'isTranslatable' => $isTranslatable
+        ];
+
+        if ($form instanceof FormInterface) {
+            $parameters['formView'] = $form->createView();
+        }
+
         $this->render(
             $client,
             $template,
-            [
-                'objectInstance' => $object,
-                'formView' => $form->createView(),
-                'request' => $request,
-                'isTranslatable' => $isTranslatable
-            ]
+            $parameters
             + $viewParameters
         );
 

@@ -58,6 +58,7 @@ class MediaType extends AbstractType
             FormEvents::PRE_SUBMIT,
             static function (FormEvent $event) {
                 $form = $event->getForm();
+                /** @var array<string, string|UploadedFile> $data */
                 $data = $event->getData();
                 $mediaObject = $form->getNormData();
 

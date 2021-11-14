@@ -1,5 +1,9 @@
 # Teknoo Software - Website - Change Log
 
+## [6.1.1] - 2021-11-14
+### Stable Release
+- Migrate to PHPStan 1.1+
+
 ## [6.1.0] - 2021-10-06
 ### Stable Release
 - Add `NotEqual` expression

@@ -27,12 +27,10 @@ namespace Teknoo\East\Website\Recipe\Step;
 
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Teknoo\East\Foundation\Client\ClientInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
-use Teknoo\East\Website\Middleware\ViewParameterInterface;
 use Teknoo\East\Website\Recipe\Step\Traits\TemplateTrait;
 use Teknoo\East\Website\View\ParametersBag;
 use Teknoo\Recipe\Ingredient\Attributes\Transform;
@@ -76,7 +74,7 @@ class RenderError
         $manager->stopErrorReporting();
         $viewParameters = ['error' => $error] + $viewParameters;
 
-        $errorCode = $error->getCode();
+        $errorCode = (int) $error->getCode();
         if (empty($errorCode)) {
             $errorCode = 500;
         }

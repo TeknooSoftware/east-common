@@ -105,7 +105,7 @@ trait RepositoryTrait
     {
         $error = null;
         try {
-            $result = $this->repository->findOneBy(static::convert($criteria));
+            $result = $this->repository->findOneBy(self::convert($criteria));
 
             if (!empty($result)) {
                 $promise->success($result);

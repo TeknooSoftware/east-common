@@ -46,6 +46,9 @@ class Media extends DefaultGridFSRepository
         return $this->dm->getDocumentBucket($this->documentName);
     }
 
+    /**
+     * @param string $id
+     */
     public function openDownloadStream($id)
     {
         try {

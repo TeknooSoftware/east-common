@@ -75,6 +75,51 @@ class FindSlugServiceTest extends TestCase
         );
     }
 
+    public function testProcessSlugAvailableWithObject()
+    {
+        $loader = $this->createMock(LoaderInterface::class);
+        $sluggable = new class implements SluggableInterface, ObjectInterface {
+            public function getId(): string
+            {
+                return 'foo';
+            }
+
+            public function prepareSlugNear(
+                LoaderInterface $loader,
+                FindSlugService $findSlugService,
+                string $slugField
+            ): SluggableInterface {
+                return $this;
+            }
+
+            public function setSlug(string $slug): SluggableInterface
+            {
+                return $this;
+            }
+        };
+
+        $loader->expects(self::once())
+            ->method('query')
+            ->with(new FindBySlugQuery('slugField', 'foo-bar', false, $sluggable))
+            ->willReturnCallback(
+                function ($query, PromiseInterface $promise) use ($loader) {
+                    $promise->fail(new \DomainException('Not Found'));
+
+                    return $loader;
+                }
+            );
+
+        self::assertInstanceOf(
+            FindSlugService::class,
+            $this->buildService()->process(
+                $loader,
+                'slugField',
+                $sluggable,
+                ['Foo', 'bAr']
+            )
+        );
+    }
+
     public function testProcessSlugFirstAndSecondNotAvailable()
     {
         $loader = $this->createMock(LoaderInterface::class);

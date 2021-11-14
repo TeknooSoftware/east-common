@@ -52,7 +52,7 @@ class LocaleMiddleware
             return $this;
         }
 
-        $locale = $message->getAttribute('locale', $locale);
+        $locale = (string) $message->getAttribute('locale', $locale);
 
         if (!empty($locale)) {
             $this->translator->setLocale($locale);

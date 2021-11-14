@@ -76,7 +76,7 @@ trait ExprConversionTrait
     private static function processInclusiveOrExpr(array &$final, string $key, ExprInterface $expr): void
     {
         $orValues = $expr->getValues();
-        $final['$or'] = static::convert($orValues);
+        $final['$or'] = self::convert($orValues);
     }
 
     /**

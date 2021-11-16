@@ -1,5 +1,9 @@
 # Teknoo Software - Website - Change Log
 
+## [6.1.2] - 2021-11-16
+### Stable Release
+- QA
+
 ## [6.1.1] - 2021-11-14
 ### Stable Release
 - Migrate to PHPStan 1.1+

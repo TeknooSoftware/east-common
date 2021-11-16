@@ -52,7 +52,7 @@ interface AdapterInterface extends ManagerInterface
     public function foreachScheduledObjectDeletions(callable $callback): AdapterInterface;
 
     /**
-     * @param ClassMetadata<ClassMetadataODM> $meta
+     * @param ClassMetadata $meta
      */
     public function recomputeSingleObjectChangeSet(
         ClassMetadata $meta,

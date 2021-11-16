@@ -1,4 +1,5 @@
 parameters:
+    checkGenericClassInNonGenericObjectType: false
     ignoreErrors:
         -
             message: '#Parameter \#1 \$translatableSetter of class [a-zA-Z0-9\\_]+ constructor expects \(callable\(\): mixed\)\|null#'
@@ -12,15 +13,6 @@ parameters:
         -
             message: '#Teknoo\\East\\Website\\Doctrine\\Object\\Translation::\$[a-zA-Z0-9]+ is never read, only written#'
             path: infrastructures/doctrine/Object/Translation.php
-        -
-            message: '#expects class-string<object>, class-string\|string given#'
-            path:  infrastructures/doctrine/Translatable/Mapping/ExtensionMetadataFactory.php
-        -
-            message: '#Method [a-zA-Z0-9\\_]+::getClassMetadata\(\) should return [a-zA-Z0-9\\_<>]+ but returns [a-zA-Z0-9\\_<>]+#'
-            path:  infrastructures/doctrine/Translatable/TranslatableListener.php
-        -
-            message: '#Doctrine\\Persistence\\Mapping\\ClassMetadata<object>#'
-            path:  infrastructures/doctrine/Translatable/TranslatableListener.php
         -
             message: '#does not accept array\{\}\.#'
             path:  infrastructures/doctrine/Translatable/TranslatableListener.php

@@ -142,7 +142,7 @@ class TranslatableListener implements EventSubscriber
 
     /**
      * List of cached class metadata from doctrine manager
-     * @var array<string, ClassMetadataODM>
+     * @var array<string, ClassMetadata>
      */
     private array $classMetadata = [];
 
@@ -176,7 +176,7 @@ class TranslatableListener implements EventSubscriber
     }
 
     /**
-     * @return ClassMetadata<ClassMetadataODM>
+     * @return ClassMetadata
      */
     private function getClassMetadata(string $className): ClassMetadata
     {
@@ -194,7 +194,7 @@ class TranslatableListener implements EventSubscriber
     }
 
     /**
-     * @param ClassMetadataODM $classMetadata
+     * @param ClassMetadata $classMetadata
      */
     public function registerClassMetadata(string $className, ClassMetadata $classMetadata): self
     {
@@ -224,7 +224,7 @@ class TranslatableListener implements EventSubscriber
     }
 
     /**
-     * @param ClassMetadata<ClassMetadataODM> $metadata
+     * @param ClassMetadata $metadata
      */
     private function wrap(TranslatableInterface $translatable, ClassMetadata $metadata): WrapperInterface
     {
@@ -232,7 +232,7 @@ class TranslatableListener implements EventSubscriber
     }
 
     /**
-     * @param ClassMetadata<ClassMetadataODM> $metadata
+     * @param ClassMetadata $metadata
      */
     private function loadMetadataForObjectClass(ClassMetadata $metadata): void
     {
@@ -240,7 +240,7 @@ class TranslatableListener implements EventSubscriber
     }
 
     /**
-     * @param ClassMetadata<ClassMetadataODM> $metadata
+     * @param ClassMetadata $metadata
      * @param array{
      *        useObjectClass: string,
      *        translationClass: string,
@@ -258,7 +258,7 @@ class TranslatableListener implements EventSubscriber
     }
 
     /**
-     * @param ClassMetadata<ClassMetadataODM> $metadata
+     * @param ClassMetadata $metadata
      * @return array{
      *        useObjectClass: string,
      *        translationClass: string,
@@ -307,7 +307,7 @@ class TranslatableListener implements EventSubscriber
      *     fields: array<int, string>|null,
      *     fallback: array<string, string>
      * } $config
-     * @param ClassMetadata<ClassMetadataODM> $metaData
+     * @param ClassMetadata $metaData
      */
     private function loadAllTranslations(
         WrapperInterface $wrapper,

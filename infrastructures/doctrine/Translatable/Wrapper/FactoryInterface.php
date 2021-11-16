@@ -39,7 +39,7 @@ use Teknoo\East\Website\Object\TranslatableInterface;
 interface FactoryInterface
 {
     /**
-     * @param ClassMetadata<ClassMetadataODM> $metadata
+     * @param ClassMetadata $metadata
      */
     public function __invoke(TranslatableInterface $object, ClassMetadata $metadata): WrapperInterface;
 }

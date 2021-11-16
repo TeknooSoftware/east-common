@@ -88,7 +88,7 @@ class ExtensionMetadataFactory
     }
 
     /**
-     * @param ClassMetadata<ClassMetadataODM> $metaData
+     * @param ClassMetadata $metaData
      */
     public function loadExtensionMetadata(
         ClassMetadata $metaData,
@@ -122,8 +122,9 @@ class ExtensionMetadataFactory
         // collect metadata from inherited classes
         foreach (array_reverse((array) class_parents($useObjectName)) as $parentClass) {
             // read only inherited mapped classes
-            if ($this->classMetadataFactory->hasMetadataFor((string) $parentClass)) {
-                $parentMetaClass = $this->objectManager->getClassMetadata((string) $parentClass);
+            /** @var class-string $parentClass */
+            if ($this->classMetadataFactory->hasMetadataFor($parentClass)) {
+                $parentMetaClass = $this->objectManager->getClassMetadata($parentClass);
                 $driver->readExtendedMetadata($parentMetaClass, $config);
 
                 if (

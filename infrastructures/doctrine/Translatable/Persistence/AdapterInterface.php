@@ -67,7 +67,7 @@ interface AdapterInterface
     ): AdapterInterface;
 
     /**
-     * @param ClassMetadata<ClassMetadataODM> $metadata
+     * @param ClassMetadata $metadata
      */
     public function updateTranslationRecord(
         WrapperInterface $wrapped,
@@ -77,7 +77,7 @@ interface AdapterInterface
     ): AdapterInterface;
 
     /**
-     * @param ClassMetadata<ClassMetadataODM> $metadata
+     * @param ClassMetadata $metadata
      */
     public function setTranslatedValue(
         WrapperInterface $wrapped,

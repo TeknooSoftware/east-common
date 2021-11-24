@@ -448,7 +448,7 @@ class TranslatableListener implements EventSubscriber
                     // create new translation if translation not already created and locale is different from default
                     // locale, otherwise, we have the date in the original record
                     if (!$translation instanceof TranslationInterface && $locale !== $this->defaultLocale) {
-                        try{
+                        try {
                             $translation = $translationReflection->newInstance();
                             if (!$translation instanceof TranslationInterface) {
                                 throw new RuntimeException(

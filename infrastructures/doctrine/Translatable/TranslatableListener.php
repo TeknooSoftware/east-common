@@ -33,6 +33,7 @@ use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\ODM\MongoDB\Mapping\ClassMetadata as ClassMetadataODM;
 use DomainException;
 use ProxyManager\Proxy\GhostObjectInterface;
+use ReflectionException;
 use RuntimeException;
 use Teknoo\East\Website\Doctrine\Translatable\ObjectManager\AdapterInterface as ManagerAdapterInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Persistence\AdapterInterface as PersistenceAdapterInterface;
@@ -447,8 +448,14 @@ class TranslatableListener implements EventSubscriber
                     // create new translation if translation not already created and locale is different from default
                     // locale, otherwise, we have the date in the original record
                     if (!$translation instanceof TranslationInterface && $locale !== $this->defaultLocale) {
-                        $translation = $translationReflection->newInstance();
-                        if (!$translation instanceof TranslationInterface) {
+                        try{
+                            $translation = $translationReflection->newInstance();
+                            if (!$translation instanceof TranslationInterface) {
+                                throw new RuntimeException(
+                                    'Error the translation object does not implement the interface'
+                                );
+                            }
+                        } catch (ReflectionException) {
                             throw new RuntimeException(
                                 'Error the translation object does not implement the interface'
                             );

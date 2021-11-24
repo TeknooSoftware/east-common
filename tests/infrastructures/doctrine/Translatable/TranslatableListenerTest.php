@@ -828,8 +828,7 @@ class TranslatableListenerTest extends TestCase
                     parent::__construct(Content::class);
                 }
 
-
-                public function newInstance(... $args)
+                public function newInstance(... $args): object
                 {
                     return null;
                 }

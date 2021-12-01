@@ -66,7 +66,7 @@ class PasswordAuthenticatedUserProvider implements UserProviderInterface, Passwo
         return $this->fetchUserByUsername($username);
     }
 
-    public function loadUserByUsername(string $username)
+    public function loadUserByUsername(string $username): UserInterface
     {
         return $this->fetchUserByUsername($username);
     }

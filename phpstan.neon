@@ -32,6 +32,9 @@ parameters:
             message: '#does not exist on SimpleXMLElement\|null#'
             path:  infrastructures/doctrine/Translatable/Mapping/Driver/Xml.php
         -
+            message: "#Offset 'name'#"
+            path:  infrastructures/doctrine/Translatable/Persistence/Adapter/ODM.php
+        -
             message: '#::\$type is never read, only written#'
             path:  src/Object
         -   '#Cannot cast mixed to string#'

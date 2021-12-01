@@ -55,7 +55,7 @@ class ThirdPartyAuthenticatedUserProvider implements UserProviderInterface
         return $this->fetchUserByUsername($username);
     }
 
-    public function loadUserByUsername(string $username)
+    public function loadUserByUsername(string $username): UserInterface
     {
         return $this->fetchUserByUsername($username);
     }

@@ -75,6 +75,9 @@ class ODM implements AdapterInterface
         return $this;
     }
 
+    /**
+     * @param class-string<object> $class
+     */
     public function findClassMetadata(string $class, TranslatableListener $listener): AdapterInterface
     {
         $listener->registerClassMetadata(

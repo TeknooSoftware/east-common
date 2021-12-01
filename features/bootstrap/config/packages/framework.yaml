@@ -3,7 +3,7 @@ framework:
   secret: 'foo-bar'
   form: ~
   session:
-    storage_id: session.storage.mock_file
+    storage_factory_id: 'Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorageFactory'
   http_method_override: true
   csrf_protection:
     enabled: false

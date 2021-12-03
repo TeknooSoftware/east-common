@@ -40,10 +40,10 @@
         "php": "~8.0",
         "ext-json": "*",
         "php-di/php-di": "^6.3.5",
-        "teknoo/immutable": "^2.0.10",
-        "teknoo/states": "^5.1.1",
-        "teknoo/recipe": "^3.4.1",
-        "teknoo/east-foundation": "^5.3.6"
+        "teknoo/immutable": "^2.0.11",
+        "teknoo/states": "^5.1.4",
+        "teknoo/recipe": "^3.4.3",
+        "teknoo/east-foundation": "^5.3.9"
     },
     "require-dev": {
         "ext-simplexml" : "*",

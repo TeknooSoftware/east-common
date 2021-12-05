@@ -61,7 +61,7 @@ class CreateUserCommand extends Command
             ->addArgument('first_name', InputArgument::OPTIONAL, 'Your first name?');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $user = new BaseUser();
 

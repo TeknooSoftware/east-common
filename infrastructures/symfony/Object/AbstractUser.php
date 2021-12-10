@@ -53,7 +53,7 @@ abstract class AbstractUser implements
         return $this->user->getRoles();
     }
 
-    public function getSalt()
+    public function getSalt(): ?string
     {
         return null;
     }

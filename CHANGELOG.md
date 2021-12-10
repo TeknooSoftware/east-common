@@ -1,5 +1,9 @@
 # Teknoo Software - Website - Change Log
 
+## [6.1.5] - 2021-12-10
+### Stable Release
+- Fix some deprecated with PHP 8.1
+ 
 ## [6.1.4] - 2021-12-08
 ### Stable Release
 - Fix some deprecated with PHP 8.1

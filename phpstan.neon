@@ -1,5 +1,6 @@
 parameters:
     checkGenericClassInNonGenericObjectType: false
+    reportUnmatchedIgnoredErrors: false
     ignoreErrors:
         -
             message: '#Parameter \#1 \$translatableSetter of class [a-zA-Z0-9\\_]+ constructor expects \(callable\(\): mixed\)\|null#'

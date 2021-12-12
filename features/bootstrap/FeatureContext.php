@@ -133,6 +133,11 @@ class FeatureContext implements Context
      */
     public function __construct()
     {
+        if (60000 <= BaseKernel::VERSION_ID) {
+            copy(__DIR__ . '/config/packages/framework.yaml.sf60', __DIR__ . '/config/packages/framework.yaml');
+        } else {
+            copy(__DIR__ . '/config/packages/framework.yaml.sf54', __DIR__ . '/config/packages/framework.yaml');
+        }
     }
 
     /**
@@ -184,12 +189,12 @@ class FeatureContext implements Context
                 return \dirname(__DIR__, 2);
             }
 
-            public function getCacheDir()
+            public function getCacheDir(): string
             {
                 return \dirname(__DIR__, 2).'/tests/var/cache';
             }
 
-            public function getLogDir()
+            public function getLogDir(): string
             {
                 return \dirname(__DIR__, 2).'/tests/var/logs';
             }

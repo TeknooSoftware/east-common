@@ -45,10 +45,10 @@
         "php": "~8.0",
         "ext-json": "*",
         "php-di/php-di": "^6.3.5",
-        "teknoo/immutable": "^2.0.11",
-        "teknoo/states": "^5.1.4",
-        "teknoo/recipe": "^3.4.3",
-        "teknoo/east-foundation": "^5.3.9"
+        "teknoo/immutable": "^2.0.12",
+        "teknoo/states": "^5.1.5",
+        "teknoo/recipe": "^3.4.4",
+        "teknoo/east-foundation": "^5.3.10"
     },
     "require-dev": {
         "ext-simplexml" : "*",
@@ -60,7 +60,7 @@
         "phploc/phploc": "^7.0.2",
         "phpstan/phpstan": "^1.2.0",
         "behat/behat": "~3.10",
-        "teknoo/bridge-phpdi-symfony": "^5.0.4",
+        "teknoo/bridge-phpdi-symfony": "^5.0.6",
         "psr/http-message":"^1.0.1",
         "psr/http-factory":"^1.0.1",
         "symfony/config": "~5.4||~6.0",

@@ -1,5 +1,11 @@
 # Teknoo Software - Website - Change Log
 
+## [6.1.6] - 2021-12-12
+### Stable Release
+- Remove unused QA tool
+- Remove support of Symfony 5.3
+- Support Symfony 5.4 and 6.0+
+
 ## [6.1.5] - 2021-12-10
 ### Stable Release
 - Fix some deprecated with PHP 8.1

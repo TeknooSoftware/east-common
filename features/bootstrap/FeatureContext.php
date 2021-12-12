@@ -5,36 +5,37 @@ declare(strict_types=1);
 use Behat\Behat\Context\Context;
 use DI\Container;
 use DI\ContainerBuilder;
-use Doctrine\Persistence\ObjectRepository;
 use Doctrine\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectRepository;
+use Laminas\Diactoros\ResponseFactory;
 use Laminas\Diactoros\ServerRequest;
-use Laminas\Diactoros\Uri;
 use Laminas\Diactoros\ServerRequestFactory;
 use Laminas\Diactoros\StreamFactory;
 use Laminas\Diactoros\UploadedFileFactory;
-use Laminas\Diactoros\ResponseFactory;
+use Laminas\Diactoros\Uri;
 use PHPUnit\Framework\Assert;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
+use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
+use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
+use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder as SfContainerBuilder;
 use Symfony\Component\HttpFoundation\Request as SfRequest;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
-use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
+use Symfony\Component\PasswordHasher\Hasher\Pbkdf2PasswordHasher;
 use Symfony\Component\PasswordHasher\Hasher\SodiumPasswordHasher;
-use Symfony\Component\Security\Core\Encoder\Pbkdf2PasswordEncoder;
-use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
-use Symfony\Bundle\SecurityBundle\SecurityBundle;
-use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
+use Teknoo\DI\SymfonyBridge\DIBridgeBundle;
+use Teknoo\East\Foundation\Client\ClientInterface;
 use Teknoo\East\Foundation\Client\ResponseInterface as EastResponse;
 use Teknoo\East\Foundation\EndPoint\RecipeEndPoint;
-use Teknoo\East\Foundation\Client\ClientInterface;
-use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Manager\Manager;
+use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Middleware\MiddlewareInterface;
 use Teknoo\East\Foundation\Recipe\CookbookInterface;
 use Teknoo\East\Foundation\Router\Result;
@@ -42,27 +43,27 @@ use Teknoo\East\Foundation\Router\RouterInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Foundation\Template\ResultInterface;
 use Teknoo\East\FoundationBundle\EastFoundationBundle;
-use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\GetStreamFromMediaInterface;
 use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
 use Teknoo\East\Website\Doctrine\Object\Content;
-use Teknoo\East\Website\Loader\MediaLoader;
+use Teknoo\East\Website\Doctrine\Object\User;
 use Teknoo\East\Website\Loader\ContentLoader;
 use Teknoo\East\Website\Loader\ItemLoader;
+use Teknoo\East\Website\Loader\MediaLoader;
 use Teknoo\East\Website\Loader\TypeLoader;
-use Teknoo\East\Website\Object\Media as BaseMedia;
-use Teknoo\East\Website\Object\Media;
-use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Object\Block;
-use Teknoo\East\Website\Doctrine\Object\User;
+use Teknoo\East\Website\Object\Media;
+use Teknoo\East\Website\Object\Media as BaseMedia;
 use Teknoo\East\Website\Object\StoredPassword;
-use Teknoo\East\Website\Recipe\Cookbook\RenderStaticContentEndPoint;
+use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Recipe\Cookbook\RenderDynamicContentEndPoint;
 use Teknoo\East\Website\Recipe\Cookbook\RenderMediaEndPoint;
-use Teknoo\East\WebsiteBundle\Object\PasswordAuthenticatedUser;
+use Teknoo\East\Website\Recipe\Cookbook\RenderStaticContentEndPoint;
+use Teknoo\Tests\East\Website\Behat\GetTokenStorageService;
 use Teknoo\East\WebsiteBundle\Object\LegacyUser;
+use Teknoo\East\WebsiteBundle\Object\PasswordAuthenticatedUser;
 use Teknoo\East\WebsiteBundle\TeknooEastWebsiteBundle;
-use Teknoo\DI\SymfonyBridge\DIBridgeBundle;
+use Teknoo\Recipe\Promise\PromiseInterface;
 use Twig\Environment;
 
 /**
@@ -193,7 +194,7 @@ class FeatureContext implements Context
                 return \dirname(__DIR__, 2).'/tests/var/logs';
             }
 
-            public function registerBundles()
+            public function registerBundles(): iterable
             {
                 yield new FrameworkBundle();
                 yield new EastFoundationBundle();
@@ -1052,11 +1053,11 @@ class FeatureContext implements Context
         $storedPassword = new StoredPassword();
         $salt = \hash('sha256', \uniqid());
 
-        $encoder = new Pbkdf2PasswordEncoder();
+        $hasher = new Pbkdf2PasswordHasher();
 
         $storedPassword->setAlgo('')
             ->setSalt($salt)
-            ->setPassword((string) $encoder->encodePassword($password, $salt));
+            ->setPassword((string) $hasher->hash($password, $salt));
 
         $object->setId($id = 'userid');
         $object->setEmail('admin@teknoo.software')
@@ -1072,12 +1073,12 @@ class FeatureContext implements Context
      */
     public function noSessionMustBeOpened()
     {
-        $container = $this->symfonyKernel->getContainer();
-        if (!$container->has('security.token_storage')) {
+        $container = $this->symfonyKernel->getContainer()->get(GetTokenStorageService::class);
+        if (!$container->tokenStorage) {
             Assert::fail('The SecurityBundle is not registered in your application.');
         }
 
-        if (null === $token = $container->get('security.token_storage')->getToken()) {
+        if (null === $token = $container->tokenStorage->getToken()) {
             return;
         }
 
@@ -1089,12 +1090,12 @@ class FeatureContext implements Context
      */
     public function aSessionMustBeOpened()
     {
-        $container = $this->symfonyKernel->getContainer();
-        if (!$container->has('security.token_storage')) {
+        $container = $this->symfonyKernel->getContainer()->get(GetTokenStorageService::class);
+        if (!$container->tokenStorage) {
             Assert::fail('The SecurityBundle is not registered in your application.');
         }
 
-        Assert::assertNotEmpty($token = $container->get('security.token_storage')->getToken());
+        Assert::assertNotEmpty($token = $container->tokenStorage->getToken());
         Assert::assertInstanceOf(PasswordAuthenticatedUser::class, $token->getUser());
     }
 
@@ -1103,12 +1104,12 @@ class FeatureContext implements Context
      */
     public function aLegacySessionMustBeOpened()
     {
-        $container = $this->symfonyKernel->getContainer();
-        if (!$container->has('security.token_storage')) {
+        $container = $this->symfonyKernel->getContainer()->get(GetTokenStorageService::class);
+        if (!$container->tokenStorage) {
             Assert::fail('The SecurityBundle is not registered in your application.');
         }
 
-        Assert::assertNotEmpty($token = $container->get('security.token_storage')->getToken());
+        Assert::assertNotEmpty($token = $container->tokenStorage->getToken());
         Assert::assertInstanceOf(LegacyUser::class, $token->getUser());
     }
 

@@ -75,6 +75,14 @@ class SymfonyUserWriterTest extends TestCase
                 {
                     return 'fooBar';
                 }
+
+                public function isPasswordValid(PasswordAuthenticatedUserInterface $user, string $plainPassword): bool
+                {
+                }
+
+                public function needsRehash(PasswordAuthenticatedUserInterface $user): bool
+                {
+                }
             };
         }
 

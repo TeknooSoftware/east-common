@@ -23,6 +23,7 @@
 
 namespace Teknoo\Tests\East\WebsiteBundle\Object;
 
+use ArrayIterator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Teknoo\East\Website\Object\User;
@@ -53,12 +54,25 @@ abstract class AbstractUserTest extends TestCase
 
     abstract public function buildObject(): AbstractUser;
 
-    public function testGetRoles()
+    public function testGetRolesFromArray()
     {
         $this->getUser()
             ->expects(self::once())
             ->method('getRoles')
             ->willReturn(['foo','bar']);
+
+        self::assertEquals(
+            ['foo','bar'],
+            $this->buildObject()->getRoles()
+        );
+    }
+
+    public function testGetRolesFromIterable()
+    {
+        $this->getUser()
+            ->expects(self::once())
+            ->method('getRoles')
+            ->willReturn(new ArrayIterator(['foo','bar']));
 
         self::assertEquals(
             ['foo','bar'],

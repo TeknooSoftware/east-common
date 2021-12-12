@@ -56,7 +56,7 @@ class ContentTypeTest extends TestCase
         $builder = $this->createMock(FormBuilderInterface::class);
         $builder->expects(self::any())
             ->method('addEventListener')
-            ->willReturnCallback(function ($name, $callable) {
+            ->willReturnCallback(function ($name, $callable) use ($builder) {
                 $form = $this->createMock(FormInterface::class);
                 $content = new Content();
                 $type = new Type();
@@ -73,6 +73,8 @@ class ContentTypeTest extends TestCase
 
                 $event = new FormEvent($form, $content);
                 $callable($event);
+
+                return $builder;
             });
 
         $builder->expects(self::any())
@@ -99,7 +101,7 @@ class ContentTypeTest extends TestCase
                         $options['query_builder']($repository);
                     }
 
-                    return $this;
+                    return $builder;
                 }
             );
 
@@ -114,7 +116,7 @@ class ContentTypeTest extends TestCase
         $builder = $this->createMock(FormBuilderInterface::class);
         $builder->expects(self::any())
             ->method('addEventListener')
-            ->willReturnCallback(function ($name, $callable) {
+            ->willReturnCallback(function ($name, $callable) use ($builder) {
                 $form = $this->createMock(FormInterface::class);
                 $content = new Content();
                 $type = new Type();
@@ -129,6 +131,8 @@ class ContentTypeTest extends TestCase
 
                 $event = new FormEvent($form, $content);
                 $callable($event);
+
+                return $builder;
             });
 
         $builder->expects(self::any())
@@ -155,7 +159,7 @@ class ContentTypeTest extends TestCase
                         $options['query_builder']($repository);
                     }
 
-                    return $this;
+                    return $builder;
                 }
             );
 
@@ -170,7 +174,7 @@ class ContentTypeTest extends TestCase
         $builder = $this->createMock(FormBuilderInterface::class);
         $builder->expects(self::any())
             ->method('addEventListener')
-            ->willReturnCallback(function ($name, $callable) {
+            ->willReturnCallback(function ($name, $callable) use ($builder) {
                 $form = $this->createMock(FormInterface::class);
                 $content = new Content();
                 $type = new Type();
@@ -180,6 +184,8 @@ class ContentTypeTest extends TestCase
 
                 $event = new FormEvent($form, ['foo'=>'bar', 'foo2'=>'bar']);
                 $callable($event);
+
+                return $builder;
             });
 
         $builder->expects(self::any())
@@ -206,7 +212,7 @@ class ContentTypeTest extends TestCase
                         $options['query_builder']($repository);
                     }
 
-                    return $this;
+                    return $builder;
                 }
             );
 

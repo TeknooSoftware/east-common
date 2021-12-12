@@ -21,44 +21,23 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-declare(strict_types=1);
+namespace Teknoo\Tests\East\Website\Behat;
 
-namespace Teknoo\East\WebsiteBundle\Object;
-
-use Teknoo\East\Website\Object\ThirdPartyAuth;
-use Teknoo\East\Website\Object\User as BaseUser;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * Symfony user implentation to wrap a East Website user instance authenticated via a third party, like
- * OAuth2Authenticator. Authenticating data are stored into a ThirdPartyAuth instance.
+ * @copyright   Copyright (c) 2009-2021 EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) 2020-2021 SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/east Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class ThirdPartyAuthenticatedUser extends AbstractUser
+class GetTokenStorageService
 {
     public function __construct(
-        BaseUser $user,
-        protected ThirdPartyAuth $auth,
+        public ?TokenStorageInterface $tokenStorage = null,
     ) {
-        parent::__construct($user);
-    }
-
-    public function getWrappedThirdAuth(): ThirdPartyAuth
-    {
-        return $this->auth;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getPassword()
-    {
-        return $this->auth->getToken();
-    }
-
-    public function eraseCredentials(): self
-    {
-        return $this;
     }
 }

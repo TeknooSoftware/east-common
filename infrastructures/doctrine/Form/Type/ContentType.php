@@ -73,6 +73,7 @@ class ContentType extends AbstractType
                 }
             ]
         );
+
         $builder->add(
             'type',
             $options['doctrine_type'],

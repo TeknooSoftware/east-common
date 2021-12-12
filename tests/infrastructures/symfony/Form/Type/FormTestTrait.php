@@ -63,7 +63,7 @@ trait FormTestTrait
                         $options['query_builder']($repository);
                     }
 
-                    return $this;
+                    return $builder;
                 }
             );
 

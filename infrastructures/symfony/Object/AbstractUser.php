@@ -30,6 +30,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Teknoo\East\Website\Object\User;
 use Teknoo\East\Website\Object\User as BaseUser;
 
+use function is_array;
+use function iterator_to_array;
+
 /**
  * Abstract Symfony user implentation to wrap a East Website user instance
  *
@@ -46,11 +49,16 @@ abstract class AbstractUser implements
     }
 
     /**
-     * @return iterable<string>
+     * @return array<string>
      */
-    public function getRoles(): iterable
+    public function getRoles(): array
     {
-        return $this->user->getRoles();
+        $roles = $this->user->getRoles();
+        if (!is_array($roles)) {
+            $roles = iterator_to_array($roles);
+        }
+
+        return $roles;
     }
 
     public function getSalt(): ?string

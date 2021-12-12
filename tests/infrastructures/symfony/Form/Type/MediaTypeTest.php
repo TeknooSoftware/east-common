@@ -50,12 +50,14 @@ class MediaTypeTest extends TestCase
         $builder = $this->createMock(FormBuilderInterface::class);
         $builder->expects(self::once())
             ->method('addEventListener')
-            ->willReturnCallback(function ($name, $callable) {
+            ->willReturnCallback(function ($name, $callable) use ($builder) {
                 self::assertEquals(FormEvents::PRE_SUBMIT, $name);
 
                 $form = $this->createMock(FormInterface::class);
                 $event = new FormEvent($form, []);
                 $callable($event);
+
+                return $builder;
             });
 
         self::assertInstanceOf(
@@ -69,7 +71,7 @@ class MediaTypeTest extends TestCase
         $builder = $this->createMock(FormBuilderInterface::class);
         $builder->expects(self::once())
             ->method('addEventListener')
-            ->willReturnCallback(function ($name, $callable) {
+            ->willReturnCallback(function ($name, $callable) use ($builder) {
                 self::assertEquals(FormEvents::PRE_SUBMIT, $name);
 
                 $form = $this->createMock(FormInterface::class);
@@ -82,6 +84,8 @@ class MediaTypeTest extends TestCase
 
                 $event = new FormEvent($form, ['image' => $image]);
                 $callable($event);
+
+                return $builder;
             });
 
         self::assertInstanceOf(
@@ -95,7 +99,7 @@ class MediaTypeTest extends TestCase
         $builder = $this->createMock(FormBuilderInterface::class);
         $builder->expects(self::once())
             ->method('addEventListener')
-            ->willReturnCallback(function ($name, $callable) {
+            ->willReturnCallback(function ($name, $callable) use ($builder) {
                 self::assertEquals(FormEvents::PRE_SUBMIT, $name);
 
                 $form = $this->createMock(FormInterface::class);
@@ -107,6 +111,8 @@ class MediaTypeTest extends TestCase
                 $form->expects(self::never())->method('addError');
                 $event = new FormEvent($form, ['image' => $image]);
                 $callable($event);
+
+                return $builder;
             });
 
         self::assertInstanceOf(

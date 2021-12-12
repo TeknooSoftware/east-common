@@ -33,7 +33,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
-use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
+use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 use Teknoo\East\Website\Loader\UserLoader;
 use Teknoo\East\Website\Object\ThirdPartyAuth;
@@ -80,8 +80,8 @@ class OAuth2Authenticator extends BaseAuthenticator
         foreach ($user->getAuthData() as $authData) {
             if (
                 !$authData instanceof ThirdPartyAuth
-                || $authData->getProvider() != $provider
-                || $authData->getProtocol() != self::PROTOCOL
+                || $authData->getProvider() !== $provider
+                || $authData->getProtocol() !== self::PROTOCOL
             ) {
                 continue;
             }
@@ -107,7 +107,7 @@ class OAuth2Authenticator extends BaseAuthenticator
         return $this;
     }
 
-    public function authenticate(Request $request): PassportInterface
+    public function authenticate(Request $request): Passport
     {
         $provider = (string) $request->attributes->get('_oauth_client_key', '');
         $client = $this->clientRegistry->getClient($provider);

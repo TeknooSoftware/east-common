@@ -35,5 +35,4 @@ namespace Teknoo\East\Website\Contracts;
  */
 interface ObjectInterface
 {
-
 }

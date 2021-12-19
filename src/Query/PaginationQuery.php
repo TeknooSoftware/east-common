@@ -109,7 +109,7 @@ class PaginationQuery implements QueryInterface, ImmutableInterface
                                     /**
                                      * @return iterable<ObjectInterface>
                                      */
-                                    public function getIterator(): iterable
+                                    public function getIterator(): \Traversable
                                     {
                                         return $this->iterator;
                                     }

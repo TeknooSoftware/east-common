@@ -111,7 +111,7 @@ class LoadListObjectsTest extends TestCase
     public function testInvokeFoundWithNoCountable()
     {
         $objects = new class implements \IteratorAggregate {
-            public function getIterator()
+            public function getIterator(): \Traversable
             {
                 return new \ArrayIterator([
                     new Content(),
@@ -152,7 +152,7 @@ class LoadListObjectsTest extends TestCase
     {
         $pageCount = 3;
         $objects = new class implements \Countable, \IteratorAggregate {
-            public function getIterator()
+            public function getIterator(): \Traversable
             {
                 return new \ArrayIterator([
                     new Content(),
@@ -160,7 +160,7 @@ class LoadListObjectsTest extends TestCase
                 ]);
             }
 
-            public function count()
+            public function count(): int
             {
                 return 30;
             }
@@ -198,7 +198,7 @@ class LoadListObjectsTest extends TestCase
     {
         $pageCount = 3;
         $objects = new class implements \Countable, \IteratorAggregate {
-            public function getIterator()
+            public function getIterator(): \Traversable
             {
                 return new \ArrayIterator([
                     new Content(),
@@ -206,7 +206,7 @@ class LoadListObjectsTest extends TestCase
                 ]);
             }
 
-            public function count()
+            public function count(): int
             {
                 return 30;
             }
@@ -248,7 +248,7 @@ class LoadListObjectsTest extends TestCase
     {
         $pageCount = 3;
         $objects = new class implements \Countable, \IteratorAggregate {
-            public function getIterator()
+            public function getIterator(): \Traversable
             {
                 return new \ArrayIterator([
                     new Content(),
@@ -256,7 +256,7 @@ class LoadListObjectsTest extends TestCase
                 ]);
             }
 
-            public function count()
+            public function count(): int
             {
                 return 30;
             }

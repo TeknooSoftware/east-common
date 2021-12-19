@@ -1,5 +1,10 @@
 # Teknoo Software - Website - Change Log
 
+## [6.1.7] - 2021-12-19
+### Stable Release
+- Use internal fork of OAuth2 client instead of League version
+- Some deprecation fixes with PHP 8.1
+
 ## [6.1.6] - 2021-12-12
 ### Stable Release
 - Remove unused QA tool

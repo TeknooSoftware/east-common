@@ -89,7 +89,7 @@
         "doctrine/persistence": "^2.2.2",
         "doctrine/mongodb-odm": "^2.2.2",
         "doctrine/mongodb-odm-bundle": "^4.3.0",
-        "teknoo/oauth2-client": "^2.6.1",
+        "league/oauth2-client": "^2.6.1",
         "knpuniversity/oauth2-client-bundle": "~2.8"
     },
     "archive": {

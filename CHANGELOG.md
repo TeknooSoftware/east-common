@@ -1,5 +1,9 @@
 # Teknoo Software - Website - Change Log
 
+## [6.1.8] - 2022-01-17
+### Stable Release
+- Switch to PHPStan 1.4.1+
+
 ## [6.1.7] - 2021-12-19
 ### Stable Release
 - Use internal fork of OAuth2 client instead of League version

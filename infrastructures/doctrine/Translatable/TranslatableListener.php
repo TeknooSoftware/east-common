@@ -274,7 +274,12 @@ class TranslatableListener implements EventSubscriber
             return $this->configurations[$className];
         }
 
-        $this->configurations[$className] = [];
+        $this->configurations[$className] = [
+            'useObjectClass' => '',
+            'translationClass' => '',
+            'fields' => [],
+            'fallback:' => [],
+        ];
         $this->loadMetadataForObjectClass($metadata);
 
         return $this->configurations[$className];

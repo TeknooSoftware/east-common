@@ -54,7 +54,6 @@ use function json_encode;
 class Content implements
     ObjectInterface,
     TranslatableInterface,
-    ProxyInterface,
     AutomatedInterface,
     DeletableInterface,
     PublishableInterface,

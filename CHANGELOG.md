@@ -1,5 +1,11 @@
 # Teknoo Software - Website - Change Log
 
+## [6.1.9] - 2022-02-11
+### Stable Release
+- Support Immutable 3.0
+- Support State 6.0
+- Support Recipe 4.0
+
 ## [6.1.8] - 2022-01-17
 ### Stable Release
 - Switch to PHPStan 1.4.1+

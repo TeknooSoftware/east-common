@@ -1,5 +1,10 @@
 # Teknoo Software - Website - Change Log
 
+## [6.1.10] - 2022-02-24
+### Stable Release
+- Support Recipe 4.0.1+
+- Support East Foundation 6.0.1+
+
 ## [6.1.9] - 2022-02-11
 ### Stable Release
 - Support Immutable 3.0

@@ -48,7 +48,7 @@
         "teknoo/immutable": "^2.0.12||^3.0",
         "teknoo/states": "^5.1.9||^6.0",
         "teknoo/recipe": "^3.4.5||^4.0",
-        "teknoo/east-foundation": "^5.3.11"
+        "teknoo/east-foundation": "^5.3.11||^6.0"
     },
     "require-dev": {
         "ext-simplexml" : "*",

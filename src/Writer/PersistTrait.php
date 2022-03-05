@@ -53,7 +53,7 @@ trait PersistTrait
     {
         try {
             if ($object instanceof TimestampableInterface && $this->datesService instanceof DatesService) {
-                $this->datesService->passMeTheDate([$object, 'setUpdatedAt']);
+                $this->datesService->passMeTheDate($object->setUpdatedAt(...));
             }
 
             $this->manager->persist($object);

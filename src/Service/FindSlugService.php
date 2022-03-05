@@ -70,7 +70,7 @@ class FindSlugService
                 $candidateParts[] = $counter;
             }
 
-            $candidate = implode($glue, array_map([$this, 'sluggify'], $candidateParts));
+            $candidate = implode($glue, array_map($this->sluggify(...), $candidateParts));
 
             $object = null;
             if ($sluggable instanceof ObjectInterface) {

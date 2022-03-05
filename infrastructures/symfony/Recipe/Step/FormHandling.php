@@ -78,7 +78,7 @@ class FormHandling implements FormHandlingInterface
             && isset($parsedBody['publish'])
             && is_callable([$object, 'setPublishedAt'])
         ) {
-            $this->datesService->passMeTheDate([$object, 'setPublishedAt']);
+            $this->datesService->passMeTheDate($object->setPublishedAt(...));
         }
 
         $form = $this->createForm($formClass, $object, $formOptions);

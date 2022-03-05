@@ -28,6 +28,7 @@ namespace Teknoo\East\Website\Query;
 use Countable;
 use IteratorAggregate;
 use Teknoo\East\Website\Contracts\ObjectInterface;
+use Teknoo\East\Website\Query\Enum\Direction;
 use Teknoo\Recipe\Promise\Promise;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
@@ -49,31 +50,16 @@ class PaginationQuery implements QueryInterface, ImmutableInterface
     use ImmutableTrait;
 
     /**
-     * @var array<string, mixed>
-     */
-    private array $criteria;
-
-    /**
-     * @var array<string, string>
-     */
-    private array $order;
-
-    private int $limit;
-
-    private int $offset;
-
-    /**
      * @param array<string, mixed> $criteria
-     * @param array<string, string> $order
+     * @param array<string, Direction> $order
      */
-    public function __construct(array $criteria, array $order, int $limit, int $offset)
-    {
+    public function __construct(
+        private readonly array $criteria,
+        private readonly array $order,
+        private readonly int $limit,
+        private readonly int $offset,
+    ) {
         $this->uniqueConstructorCheck();
-
-        $this->criteria = $criteria;
-        $this->order = $order;
-        $this->limit = $limit;
-        $this->offset = $offset;
     }
 
     public function execute(
@@ -101,8 +87,8 @@ class PaginationQuery implements QueryInterface, ImmutableInterface
                                      * @param Traversable<ObjectInterface> $iterator
                                      */
                                     public function __construct(
-                                        private int $count,
-                                        private Traversable $iterator,
+                                        private readonly int $count,
+                                        private readonly Traversable $iterator,
                                     ) {
                                     }
 

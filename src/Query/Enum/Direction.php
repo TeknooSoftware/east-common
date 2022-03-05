@@ -23,30 +23,16 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Query\Expr;
-
-use Teknoo\East\Website\Object\ObjectInterface;
-use Teknoo\Immutable\ImmutableInterface;
-use Teknoo\Immutable\ImmutableTrait;
+namespace Teknoo\East\Website\Query\Enum;
 
 /**
- * Operator to define a reference to an object (Aka foreign key in SQL, or references in document databases).
+ *
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class ObjectReference implements ExprInterface, ImmutableInterface
+enum Direction: string
 {
-    use ImmutableTrait;
-
-    public function __construct(
-        private readonly ObjectInterface $object,
-    ) {
-        $this->uniqueConstructorCheck();
-    }
-
-    public function getObject(): ObjectInterface
-    {
-        return $this->object;
-    }
+    case Asc = 'ASC';
+    case Desc = 'DESC';
 }

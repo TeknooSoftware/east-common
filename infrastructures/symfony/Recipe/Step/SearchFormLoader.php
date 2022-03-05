@@ -43,7 +43,7 @@ use function key;
  */
 class SearchFormLoader implements SearchFormLoaderInterface
 {
-    public const ANY_TEMPLATE = 'any';
+    final public const ANY_TEMPLATE = 'any';
 
     /**
      * @param array<string, array<string, class-string>> $formsInstances

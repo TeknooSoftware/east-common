@@ -27,6 +27,7 @@ namespace Teknoo\East\Website\Doctrine\DBSource\ODM;
 
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 use DomainException;
+use Teknoo\East\Website\Query\Enum\Direction;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Throwable;
@@ -69,7 +70,7 @@ trait RepositoryTrait
 
     /**
      * @param array<string, mixed> $criteria
-     * @param array<string, 'asc'|'ASC'|'desc'|'DESC'>|null $orderBy
+     * @param array<string, Direction>|null $orderBy
      */
     public function findBy(
         array $criteria,
@@ -83,6 +84,11 @@ trait RepositoryTrait
         $queryBuilder->equals(self::convert($criteria));
 
         if (!empty($orderBy)) {
+            array_walk(
+                $orderBy,
+                fn(Direction &$item) => $item = $item->value
+            );
+
             $queryBuilder->sort($orderBy);
         }
 

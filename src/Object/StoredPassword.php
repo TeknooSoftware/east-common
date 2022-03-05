@@ -43,8 +43,6 @@ class StoredPassword implements AuthDataInterface
 
     private ?string $hash = null;
 
-    private string $salt = '';
-
     public function getAlgo(): ?string
     {
         return $this->algo;
@@ -68,7 +66,7 @@ class StoredPassword implements AuthDataInterface
     }
 
     /*
-     * Empty password are not allowed and ignored.
+     * Empty passwords are not allowed and ignored.
      * To clear a password, you must pass an empty hash to setHashedPassword
      * A hash must not be rehashed, be a password must always be hashed before persisted
      */
@@ -95,18 +93,6 @@ class StoredPassword implements AuthDataInterface
     public function mustHashPassword(): bool
     {
         return $this->unhashedPassword;
-    }
-
-    public function getSalt(): string
-    {
-        return $this->salt;
-    }
-
-    public function setSalt(string $salt): self
-    {
-        $this->salt = $salt;
-
-        return $this;
     }
 
     public function eraseCredentials(): self

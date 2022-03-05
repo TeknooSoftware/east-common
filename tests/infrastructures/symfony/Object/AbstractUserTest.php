@@ -80,24 +80,6 @@ abstract class AbstractUserTest extends TestCase
         );
     }
 
-    public function testGetSalt()
-    {
-        self::assertEmpty($this->buildObject()->getSalt());
-    }
-
-    public function testGetUsername()
-    {
-        $this->getUser()
-            ->expects(self::once())
-            ->method('getUserIdentifier')
-            ->willReturn('username');
-
-        self::assertEquals(
-            'username',
-            $this->buildObject()->getUsername()
-        );
-    }
-
     public function testGetUserIdentifier()
     {
         $this->getUser()
@@ -119,10 +101,6 @@ abstract class AbstractUserTest extends TestCase
 
     public function testIsEqualToNotSameUserName()
     {
-        if (!\method_exists(UserInterface::class, 'getUsername')) {
-            self::markTestSkipped('Method removed in Interface');
-        }
-
         $this->getUser()
             ->expects(self::any())
             ->method('getUserIdentifier')
@@ -131,32 +109,10 @@ abstract class AbstractUserTest extends TestCase
         $user = $this->createMock(UserInterface::class);
         $user
             ->expects(self::any())
-            ->method('getUsername')
+            ->method('getUserIdentifier')
             ->willReturn('notUserName');
 
         self::assertFalse(
-            $this->buildObject()->isEqualTo($user)
-        );
-    }
-
-    public function testIsEqualToSameUserName()
-    {
-        if (!\method_exists(UserInterface::class, 'getUsername')) {
-            self::markTestSkipped('Method removed in Interface');
-        }
-        
-        $this->getUser()
-            ->expects(self::once())
-            ->method('getUserIdentifier')
-            ->willReturn('myUserName');
-
-        $user = $this->createMock(AbstractUser::class);
-        $user
-            ->expects(self::any())
-            ->method('getUsername')
-            ->willReturn('myUserName');
-
-        self::assertTrue(
             $this->buildObject()->isEqualTo($user)
         );
     }

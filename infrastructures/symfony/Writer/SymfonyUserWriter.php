@@ -52,7 +52,6 @@ class SymfonyUserWriter implements WriterInterface
 
     private function hashPassword(BaseUser $user, StoredPassword $password): void
     {
-        $password->setSalt('');
         $password->setAlgo(PasswordAuthenticatedUser::class);
 
         $password->setHashedPassword(

@@ -28,6 +28,7 @@ namespace Teknoo\East\Website\Recipe\Step;
 use Countable;
 use RuntimeException;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
+use Teknoo\East\Website\Query\Enum\Direction;
 use Teknoo\Recipe\Promise\Promise;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Query\Expr\ExprInterface;
@@ -89,7 +90,7 @@ class LoadListObjects
     }
 
     /**
-     * @param array<string, string> $order
+     * @param array<string, Direction> $order
      * @param array<string, string> $criteria
      */
     public function __invoke(
@@ -129,7 +130,7 @@ class LoadListObjects
                         ]
                     );
                 },
-                [$manager, 'error']
+                $manager->error(...)
             )
         );
 

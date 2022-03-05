@@ -36,6 +36,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Teknoo\East\Website\Doctrine\Object\Content;
+use Teknoo\East\Website\Object\BlockType;
 use Teknoo\East\Website\Object\Content\Published;
 use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Object\User;
@@ -132,12 +133,11 @@ class ContentType extends AbstractType
 
                 foreach ($type->getBlocks() as $block) {
                     $formType = match ($block->getType()) {
-                        'textarea' => TextareaType::class,
-                        'raw' => TextareaType::class,
-                        'numeric' => NumberType::class,
-                        'text' => TextType::class,
-                        'image' => TextType::class,
-                        default => TextType::class,
+                        BlockType::Textarea => TextareaType::class,
+                        BlockType::Raw => TextareaType::class,
+                        BlockType::Numeric => NumberType::class,
+                        BlockType::Text => TextType::class,
+                        BlockType::Image => TextType::class,
                     };
 
                     $value = '';
@@ -152,7 +152,7 @@ class ContentType extends AbstractType
                             'mapped' => false,
                             'data' => $value,
                             'required' => false,
-                            'attr' => ['data-type' => $block->getType()]
+                            'attr' => ['data-type' => $block->getType()->value]
                         ]
                     );
                 }

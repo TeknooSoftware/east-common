@@ -48,13 +48,10 @@ class PublishedContentFromSlugQuery implements QueryInterface, ImmutableInterfac
 {
     use ImmutableTrait;
 
-    private string $slug;
-
-    public function __construct(string $slug)
-    {
+    public function __construct(
+        private readonly string $slug,
+    ) {
         $this->uniqueConstructorCheck();
-
-        $this->slug = $slug;
     }
 
     public function execute(

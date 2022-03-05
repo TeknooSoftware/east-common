@@ -25,6 +25,7 @@ namespace Teknoo\Tests\East\Website\Object;
 
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Website\Object\Block;
+use Teknoo\East\Website\Object\BlockType;
 use Teknoo\Tests\East\Website\Object\Traits\ObjectTestTrait;
 use Teknoo\East\Website\Object\Type;
 
@@ -116,8 +117,8 @@ class TypeTest extends TestCase
     public function testGetBlocks()
     {
         self::assertEquals(
-            [new Block('foo', 'bar')],
-            $this->generateObjectPopulated(['blocks' => ['foo'=>'bar']])->getBlocks()
+            [new Block('foo', BlockType::Raw)],
+            $this->generateObjectPopulated(['blocks' => ['foo'=>BlockType::Raw->value]])->getBlocks()
         );
     }
 
@@ -126,11 +127,11 @@ class TypeTest extends TestCase
         $Object = $this->buildObject();
         self::assertInstanceOf(
             \get_class($Object),
-            $Object->setBlocks([new Block('foo', 'bar')])
+            $Object->setBlocks([new Block('foo', BlockType::Textarea)])
         );
 
         self::assertEquals(
-            [new Block('foo', 'bar')],
+            [new Block('foo', BlockType::Textarea)],
             $Object->getBlocks()
         );
     }

@@ -35,6 +35,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Teknoo\East\Website\Object\Block;
 use Teknoo\East\Website\Doctrine\Object\Content;
+use Teknoo\East\Website\Object\BlockType;
 use Teknoo\East\Website\Object\Type;
 use Teknoo\East\Website\Doctrine\Form\Type\ContentType;
 
@@ -61,12 +62,11 @@ class ContentTypeTest extends TestCase
                 $content = new Content();
                 $type = new Type();
                 $type->setBlocks([
-                    new Block('foo', 'text'),
-                    new Block('foo2', 'textarea'),
-                    new Block('foo3', 'numeric'),
-                    new Block('foo3', 'image'),
-                    new Block('foo4', 'raw'),
-                    new Block('foo5', 'other')
+                    new Block('foo', BlockType::Text),
+                    new Block('foo2', BlockType::Textarea),
+                    new Block('foo3', BlockType::Numeric),
+                    new Block('foo3', BlockType::Image),
+                    new Block('foo4', BlockType::Raw),
                 ]);
                 $content->setType($type);
                 $content->setParts(['foo' => 'bar']);
@@ -121,9 +121,9 @@ class ContentTypeTest extends TestCase
                 $content = new Content();
                 $type = new Type();
                 $type->setBlocks([
-                    new Block('foo', 'text'),
-                    new Block('foo2', 'textarea'),
-                    new Block('foo3', 'numeric')
+                    new Block('foo', BlockType::Text),
+                    new Block('foo2', BlockType::Textarea),
+                    new Block('foo3', BlockType::Image)
                 ]);
                 $content->setType($type);
                 $content->setParts(['foo' => 'bar']);
@@ -178,7 +178,7 @@ class ContentTypeTest extends TestCase
                 $form = $this->createMock(FormInterface::class);
                 $content = new Content();
                 $type = new Type();
-                $type->setBlocks([new Block('foo', 'text'), new Block('foo2', 'text')]);
+                $type->setBlocks([new Block('foo', BlockType::Text), new Block('foo2', BlockType::Text)]);
                 $content->setType($type);
                 $form->expects(self::any())->method('getNormData')->willReturn($content);
 

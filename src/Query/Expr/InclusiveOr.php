@@ -42,10 +42,10 @@ class InclusiveOr implements ExprInterface, ImmutableInterface
     /**
      * @var array<string|int, mixed>
      */
-    private array $values;
+    private readonly array $values;
 
     /**.
-     * @param array<string|int, mixedz> $values
+     * @param array<string|int, mixed> $values
      */
     public function __construct(array ...$values)
     {

@@ -61,19 +61,6 @@ abstract class AbstractUser implements
         return $roles;
     }
 
-    public function getSalt(): ?string
-    {
-        return null;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUsername()
-    {
-        return $this->user->getUserIdentifier();
-    }
-
     public function getUserIdentifier(): string
     {
         return $this->user->getUserIdentifier();
@@ -86,6 +73,6 @@ abstract class AbstractUser implements
 
     public function isEqualTo(UserInterface $user): bool
     {
-        return $user instanceof self &&  $user->getUsername() === $this->getUsername();
+        return $user instanceof self &&  $user->getUserIdentifier() === $this->getUserIdentifier();
     }
 }

@@ -1,9 +1,0 @@
-framework:
-  test: true
-  secret: 'foo-bar'
-  form: ~
-  session:
-    storage_factory_id: 'Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorageFactory'
-  http_method_override: true
-  csrf_protection:
-    enabled: false

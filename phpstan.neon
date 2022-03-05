@@ -3,9 +3,6 @@ parameters:
     reportUnmatchedIgnoredErrors: false
     ignoreErrors:
         -
-            message: '#Parameter \#1 \$translatableSetter of class [a-zA-Z0-9\\_]+ constructor expects \(callable\(\): mixed\)\|null#'
-            path: infrastructures/doctrine/di.php
-        -
             message: '#ClassMetadataFactory#'
             path: infrastructures/doctrine/di.php
         -
@@ -20,6 +17,12 @@ parameters:
         -
             message: '#mixed#'
             path:  infrastructures/doctrine/di.php
+        -
+            message: '#Cannot cast mixed to string#'
+            path: src
+        -
+            message: '#Cannot cast mixed to string#'
+            path: infrastructures
         -
             message: '#[a-zA-Z0-9\\_]+::cook\(\) expects \(callable\(\): mixed\)|[a-zA-Z0-9\\_]+#'
             path: infrastructures/symfony/Resources/config/di.php
@@ -38,7 +41,12 @@ parameters:
         -
             message: '#::\$type is never read, only written#'
             path:  src/Object
-        -   '#Cannot cast mixed to string#'
+        -
+            message: '#Creating callable from a non-native method stdClass#'
+            path:  infrastructures/symfony/Recipe/Step/FormHandling.php
+        -
+            message: '#Closure\(string\): string given#'
+            path:  src/Service/FindSlugService.php
 
 services:
     -

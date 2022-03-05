@@ -45,18 +45,12 @@ class PublishedContentFromIdsQuery implements QueryInterface, ImmutableInterface
     use ImmutableTrait;
 
     /**
-     * @var array<int, string|int>
-     */
-    private array $ids;
-
-    /**
      * @param array<int, string|int> $ids
      */
-    public function __construct(array $ids)
-    {
+    public function __construct(
+        private readonly array $ids
+    ) {
         $this->uniqueConstructorCheck();
-
-        $this->ids = $ids;
     }
 
     public function execute(

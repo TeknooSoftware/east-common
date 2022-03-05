@@ -19,57 +19,109 @@ parameters:
     #Steps
     teknoo.east.website.bundle.allowed_forms: []
 
+    #Bowls
+    teknoo.east.website.endpoint.content.bowl.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
+    teknoo.east.website.endpoint.media.bowl.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
+    teknoo.east.website.endpoint.media.static.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
+
+    teknoo.east.website.endpoint.crud.delete.bowl.class: 'Teknoo\Recipe\Bowl\RecipeBowl'
+    teknoo.east.website.endpoint.crud.edit.bowl.class: 'Teknoo\Recipe\Bowl\RecipeBowl'
+    teknoo.east.website.endpoint.crud.list.bowl.class: 'Teknoo\Recipe\Bowl\RecipeBowl'
+    teknoo.east.website.endpoint.crud.new.bowl.class: 'Teknoo\Recipe\Bowl\RecipeBowl'
+
 services:
     #Front endpoints
+    teknoo.east.website.endpoint.content.bowl:
+        class: '%teknoo.east.website.endpoint.content.bowl.class%'
+        arguments:
+            - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\RenderDynamicContentEndPointInterface'
+            - 0
+
     teknoo.east.website.endpoint.content:
         class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
         public: true
         arguments:
-            - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\RenderDynamicContentEndPointInterface'
+            - '@teknoo.east.website.endpoint.content.bowl'
             - '@service_container'
+
+    teknoo.east.website.endpoint.media.bowl:
+        class: '%teknoo.east.website.endpoint.media.bowl.class%'
+        arguments:
+            - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\RenderMediaEndPointInterface'
+            - 0
 
     teknoo.east.website.endpoint.media:
         class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
         public: true
         arguments:
-            - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\RenderMediaEndPointInterface'
+            - '@teknoo.east.website.endpoint.media.bowl'
             - '@service_container'
+
+    teknoo.east.website.endpoint.static.bowl:
+        class: '%teknoo.east.website.endpoint.media.static.class%'
+        arguments:
+            - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\RenderStaticContentEndPointInterface'
+            - 0
 
     teknoo.east.website.endpoint.static:
         class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
         public: true
         arguments:
-            - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\RenderStaticContentEndPointInterface'
+            - '@teknoo.east.website.endpoint.static.bowl'
             - '@service_container'
 
     #CRUD endpoints
+    teknoo.east.website.endpoint.crud.delete.bowl:
+        class: '%teknoo.east.website.endpoint.crud.delete.bowl.class%'
+        arguments:
+            - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\DeleteContentEndPointInterface'
+            - 0
+
     teknoo.east.website.endpoint.crud.delete:
         class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
         public: true
         arguments:
-            - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\DeleteContentEndPointInterface'
+            - '@teknoo.east.website.endpoint.crud.delete.bowl'
             - '@service_container'
+
+    teknoo.east.website.endpoint.crud.edit.bowl:
+        class: '%teknoo.east.website.endpoint.crud.edit.bowl.class%'
+        arguments:
+            - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\EditContentEndPointInterface'
+            - 0
 
     teknoo.east.website.endpoint.crud.edit:
         class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
         public: true
         arguments:
-            - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\EditContentEndPointInterface'
+            - '@teknoo.east.website.endpoint.crud.edit.bowl'
             - '@service_container'
+
+    teknoo.east.website.endpoint.crud.list.bowl:
+        class: '%teknoo.east.website.endpoint.crud.list.bowl.class%'
+        arguments:
+            - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\ListContentEndPointInterface'
+            - 0
 
     teknoo.east.website.endpoint.crud.list:
         class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
         public: true
         arguments:
-            - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\ListContentEndPointInterface'
+            - '@teknoo.east.website.endpoint.crud.list.bowl'
             - '@service_container'
             - { criteria: [] }
+
+    teknoo.east.website.endpoint.crud.new.bowl:
+        class: '%teknoo.east.website.endpoint.crud.new.bowl.class%'
+        arguments:
+            - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\CreateContentEndPointInterface'
+            - 0
 
     teknoo.east.website.endpoint.crud.new:
         class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
         public: true
         arguments:
-            - '@Teknoo\East\Website\Contracts\Recipe\Cookbook\CreateContentEndPointInterface'
+            - '@teknoo.east.website.endpoint.crud.new.bowl'
             - '@service_container'
 
     #Steps

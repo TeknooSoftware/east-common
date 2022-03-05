@@ -108,7 +108,7 @@ class Item implements
 
     public function getName(): string
     {
-        return (string) $this->name;
+        return $this->name;
     }
 
     public function __toString()
@@ -171,7 +171,7 @@ class Item implements
 
     public function getLocation(): string
     {
-        return (string) $this->location;
+        return $this->location;
     }
 
     public function setLocation(?string $location): Item

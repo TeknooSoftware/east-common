@@ -28,9 +28,12 @@ namespace Teknoo\East\Website\Doctrine\DBSource\Common;
 use Doctrine\Persistence\ObjectRepository;
 use DomainException;
 use RuntimeException;
+use Teknoo\East\Website\Query\Enum\Direction;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Throwable;
+
+use function array_walk;
 
 /**
  * Default repository implementation of generic doctrine repositories.
@@ -74,7 +77,7 @@ trait RepositoryTrait
 
     /**
      * @param array<string, mixed> $criteria
-     * @param array<string, 'asc'|'ASC'|'desc'|'DESC'>|null $orderBy
+     * @param array<string, Direction>|null $orderBy
      */
     public function findBy(
         array $criteria,
@@ -83,7 +86,22 @@ trait RepositoryTrait
         ?int $limit = null,
         ?int $offset = null
     ): RepositoryInterface {
-        $promise->success($this->repository->findBy($criteria, $orderBy, $limit, $offset));
+        if (null !== $orderBy) {
+            array_walk(
+                $orderBy,
+                fn(Direction &$item) => $item = $item->value
+            );
+        }
+
+        /** @var array<string, 'asc'|'ASC'|'desc'|'DESC'>|null $orderBy */
+        $promise->success(
+            $this->repository->findBy(
+                $criteria,
+                $orderBy,
+                $limit,
+                $offset
+            )
+        );
 
         return $this;
     }

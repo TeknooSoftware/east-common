@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Object;
 
+use Teknoo\Tests\East\WebsiteBundle\Form\Type\BlockTypeTest;
+
 /**
  * Persisted object representing a dynamic bloc in a type of content page.
  * Used into Type class.
@@ -36,13 +38,13 @@ class Block
 {
     public function __construct(
         private string $name = '',
-        private string $type = '',
+        private BlockType $type = BlockType::Text,
     ) {
     }
 
     public function getName(): string
     {
-        return (string) $this->name;
+        return $this->name;
     }
 
     public function __toString(): string
@@ -57,12 +59,12 @@ class Block
         return $this;
     }
 
-    public function getType(): string
+    public function getType(): BlockType
     {
-        return (string) $this->type;
+        return $this->type;
     }
 
-    public function setType(string $type): Block
+    public function setType(BlockType $type): Block
     {
         $this->type = $type;
 

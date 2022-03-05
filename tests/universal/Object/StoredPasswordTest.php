@@ -158,28 +158,6 @@ class StoredPasswordTest extends TestCase
         $this->buildObject()->setPassword(new \stdClass());
     }
 
-    public function testGetSalt()
-    {
-        self::assertEquals(
-            'fooBar',
-            $this->generateObjectPopulated(['salt' => 'fooBar'])->getSalt()
-        );
-    }
-
-    public function testSetSalt()
-    {
-        $object = $this->buildObject();
-        self::assertInstanceOf(
-            \get_class($object),
-            $object->setSalt('fooBar')
-        );
-
-        self::assertEquals(
-            'fooBar',
-            $object->getSalt()
-        );
-    }
-
     public function testGetAlgo()
     {
         self::assertEquals(

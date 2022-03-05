@@ -38,13 +38,10 @@ class NotEqual implements ExprInterface, ImmutableInterface
 {
     use ImmutableTrait;
 
-    private mixed $value;
-
-    public function __construct(mixed $value)
-    {
+    public function __construct(
+        private readonly mixed $value,
+    ) {
         $this->uniqueConstructorCheck();
-
-        $this->value = $value;
     }
 
     public function getValue(): mixed

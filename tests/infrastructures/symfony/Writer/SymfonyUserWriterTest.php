@@ -162,11 +162,6 @@ class SymfonyUserWriterTest extends TestCase
             ->willReturnSelf();
 
         $storedPassword->expects(self::once())
-            ->method('setSalt')
-            ->with('')
-            ->willReturnSelf();
-
-        $storedPassword->expects(self::once())
             ->method('setAlgo')
             ->with(PasswordAuthenticatedUser::class)
             ->willReturnSelf();
@@ -203,11 +198,6 @@ class SymfonyUserWriterTest extends TestCase
         $storedPassword->expects(self::never())
             ->method('setPassword')
             ->with('fooBar')
-            ->willReturnSelf();
-
-        $storedPassword->expects(self::never())
-            ->method('setSalt')
-            ->with('')
             ->willReturnSelf();
 
         $this->getUniversalWriter()

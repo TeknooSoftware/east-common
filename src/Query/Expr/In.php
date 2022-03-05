@@ -39,18 +39,12 @@ class In implements ExprInterface, ImmutableInterface
     use ImmutableTrait;
 
     /**
-     * @var array<int, string|int>
-     */
-    private array $values;
-
-    /**
      * @param array<int, string|int> $values
      */
-    public function __construct(array $values)
-    {
+    public function __construct(
+        private readonly array $values,
+    ) {
         $this->uniqueConstructorCheck();
-
-        $this->values = $values;
     }
 
     /**

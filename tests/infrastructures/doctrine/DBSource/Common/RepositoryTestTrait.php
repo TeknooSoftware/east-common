@@ -24,6 +24,7 @@
 namespace Teknoo\Tests\East\Website\Doctrine\DBSource\Common;
 
 use Doctrine\Persistence\ObjectRepository;
+use Teknoo\East\Website\Query\Enum\Direction;
 use Teknoo\East\Website\Query\Expr\NotEqual;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
@@ -185,7 +186,11 @@ trait RepositoryTestTrait
 
         self::assertInstanceOf(
             RepositoryInterface::class,
-            $this->buildRepository()->findBy(['foo' => 'bar'], $promise)
+            $this->buildRepository()->findBy(
+                ['foo' => 'bar'],
+                $promise,
+                ['foo' => Direction::Asc]
+            )
         );
     }
 

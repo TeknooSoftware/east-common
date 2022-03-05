@@ -44,26 +44,13 @@ class FindBySlugQuery implements QueryInterface, ImmutableInterface
 {
     use ImmutableTrait;
 
-    private string $slugField;
-
-    private string $slugValue;
-
-    private bool $includeDeleted;
-
-    private ?ObjectInterface $sluggable;
-
     public function __construct(
-        string $slugField,
-        string $slugValue,
-        bool $includeDeleted = false,
-        ?ObjectInterface $sluggable = null
+        private readonly string $slugField,
+        private readonly string $slugValue,
+        private readonly bool $includeDeleted = false,
+        private readonly ?ObjectInterface $sluggable = null
     ) {
         $this->uniqueConstructorCheck();
-
-        $this->slugField = $slugField;
-        $this->slugValue = $slugValue;
-        $this->includeDeleted = $includeDeleted;
-        $this->sluggable = $sluggable;
     }
 
     public function execute(

@@ -86,7 +86,7 @@ class ThirdPartyAuthenticatedUserProvider implements UserProviderInterface
     public function refreshUser(UserInterface $user): ?UserInterface
     {
         if ($user instanceof ThirdPartyAuthenticatedUser) {
-            return $this->fetchUserByUsername($user->getUsername());
+            return $this->fetchUserByUsername($user->getUserIdentifier());
         }
 
         return null;

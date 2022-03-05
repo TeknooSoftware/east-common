@@ -44,13 +44,10 @@ class UserByEmailQuery implements QueryInterface, ImmutableInterface
 {
     use ImmutableTrait;
 
-    private string $email;
-
-    public function __construct(string $email)
-    {
+    public function __construct(
+        private readonly string $email,
+    ) {
         $this->uniqueConstructorCheck();
-
-        $this->email = $email;
     }
 
     public function execute(

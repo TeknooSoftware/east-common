@@ -130,7 +130,7 @@ class Content implements
 
     public function getTitle(): string
     {
-        return (string) $this->title;
+        return $this->title;
     }
 
     public function setTitle(?string $title): Content
@@ -147,7 +147,7 @@ class Content implements
 
     public function getSubtitle(): string
     {
-        return (string) $this->subtitle;
+        return $this->subtitle;
     }
 
     public function setSubtitle(?string $subtitle = null): Content

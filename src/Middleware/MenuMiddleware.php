@@ -37,7 +37,7 @@ use Teknoo\East\Website\View\ParametersBag;
  */
 class MenuMiddleware
 {
-    public const MIDDLEWARE_PRIORITY = 7;
+    final public const MIDDLEWARE_PRIORITY = 7;
 
     public function __construct(
         private MenuGenerator $menuGenerator,

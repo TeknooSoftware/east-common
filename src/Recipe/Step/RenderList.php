@@ -39,7 +39,6 @@ use Teknoo\Recipe\Ingredient\Attributes\Transform;
  * Recipe step to render, via a template engine, a list of persisted object, loaded thanks to LoadListObjects steps.
  *
  * Views parameters are fetched from the Parameters Bag and transformed to an array.
- * They can also be passed in message's attribute `view.parameters` (legacy behavior, deprecated)
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>

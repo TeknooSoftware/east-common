@@ -85,7 +85,7 @@ class Type implements ObjectInterface, DeletableInterface, TimestampableInterfac
     {
         return array_map(
             static function ($key, $value) {
-                return new Block($key, $value);
+                return new Block($key, BlockType::from($value));
             },
             array_keys($this->blocks),
             array_values($this->blocks)
@@ -93,14 +93,14 @@ class Type implements ObjectInterface, DeletableInterface, TimestampableInterfac
     }
 
     /**
-     * @param array<Block> $blocks
+     * @param Block[] $blocks
      */
     public function setBlocks(array $blocks): Type
     {
         $this->blocks = [];
 
         foreach ($blocks as $block) {
-            $this->blocks[$block->getName()] = $block->getType();
+            $this->blocks[$block->getName()] = $block->getType()->value;
         }
 
         return $this;

@@ -46,12 +46,13 @@ use Teknoo\East\FoundationBundle\EastFoundationBundle;
 use Teknoo\East\Website\Contracts\Recipe\Step\GetStreamFromMediaInterface;
 use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
 use Teknoo\East\Website\Doctrine\Object\Content;
-use Teknoo\East\Website\Doctrine\Object\User;
+use Teknoo\East\Website\Object\User;
 use Teknoo\East\Website\Loader\ContentLoader;
 use Teknoo\East\Website\Loader\ItemLoader;
 use Teknoo\East\Website\Loader\MediaLoader;
 use Teknoo\East\Website\Loader\TypeLoader;
 use Teknoo\East\Website\Object\Block;
+use Teknoo\East\Website\Object\BlockType;
 use Teknoo\East\Website\Object\Media;
 use Teknoo\East\Website\Object\Media as BaseMedia;
 use Teknoo\East\Website\Object\StoredPassword;
@@ -60,7 +61,6 @@ use Teknoo\East\Website\Recipe\Cookbook\RenderDynamicContentEndPoint;
 use Teknoo\East\Website\Recipe\Cookbook\RenderMediaEndPoint;
 use Teknoo\East\Website\Recipe\Cookbook\RenderStaticContentEndPoint;
 use Teknoo\Tests\East\Website\Behat\GetTokenStorageService;
-use Teknoo\East\WebsiteBundle\Object\LegacyUser;
 use Teknoo\East\WebsiteBundle\Object\PasswordAuthenticatedUser;
 use Teknoo\East\WebsiteBundle\TeknooEastWebsiteBundle;
 use Teknoo\Recipe\Promise\PromiseInterface;
@@ -123,22 +123,6 @@ class FeatureContext implements Context
     public $createdObjects = [];
 
     public $updatedObjects = [];
-
-    /**
-     * Initializes context.
-     *
-     * Every scenario gets its own context instance.
-     * You can also pass arbitrary arguments to the
-     * context constructor through behat.yml.
-     */
-    public function __construct()
-    {
-        if (60000 <= BaseKernel::VERSION_ID) {
-            copy(__DIR__ . '/config/packages/framework.yaml.sf60', __DIR__ . '/config/packages/framework.yaml');
-        } else {
-            copy(__DIR__ . '/config/packages/framework.yaml.sf54', __DIR__ . '/config/packages/framework.yaml');
-        }
-    }
 
     /**
      * @Given I have DI initialized
@@ -735,7 +719,7 @@ class FeatureContext implements Context
         $this->type->setName($name);
         $blocksList = [];
         foreach (\explode(',', $blocks) as $blockName) {
-            $blocksList[] = new Block($blockName, 'text');
+            $blocksList[] = new Block($blockName, BlockType::Text);
         }
         $this->type->setBlocks($blocksList);
         $this->type->setTemplate($template);
@@ -1047,33 +1031,6 @@ class FeatureContext implements Context
     }
 
     /**
-     * @Given a legacy user with password :password
-     */
-    public function aLegacyUserWithPassword($password)
-    {
-        $this->symfonyKernel->boot();
-
-        $object = new User;
-
-        $storedPassword = new StoredPassword();
-        $salt = \hash('sha256', \uniqid());
-
-        $hasher = new Pbkdf2PasswordHasher();
-
-        $storedPassword->setAlgo('')
-            ->setSalt($salt)
-            ->setPassword((string) $hasher->hash($password, $salt));
-
-        $object->setId($id = 'userid');
-        $object->setEmail('admin@teknoo.software')
-            ->setFirstName('ad')
-            ->setLastName('min')
-            ->setAuthData([$storedPassword]);
-
-        $this->getObjectRepository(User::class)->setObject(['email' => 'admin@teknoo.software'], $object);
-    }
-
-    /**
      * @Then no session must be opened
      */
     public function noSessionMustBeOpened()
@@ -1105,30 +1062,6 @@ class FeatureContext implements Context
     }
 
     /**
-     * @Then a legacy session must be opened
-     */
-    public function aLegacySessionMustBeOpened()
-    {
-        $container = $this->symfonyKernel->getContainer()->get(GetTokenStorageService::class);
-        if (!$container->tokenStorage) {
-            Assert::fail('The SecurityBundle is not registered in your application.');
-        }
-
-        Assert::assertNotEmpty($token = $container->tokenStorage->getToken());
-        Assert::assertInstanceOf(LegacyUser::class, $token->getUser());
-    }
-
-    /**
-     * @Then the user must been converted to sodium and not have salt
-     */
-    public function theUserMustBeenConvertedToSodiumAndNotHaveSalt()
-    {
-        Assert::assertNotEmpty($this->updatedObjects['userid']);
-        Assert::assertEmpty($this->updatedObjects['userid']
-            ->getAuthData()[0]->getSalt());
-    }
-
-    /**
      * @Given a user with password :password
      */
     public function aUserWithPassword($password)
@@ -1139,7 +1072,6 @@ class FeatureContext implements Context
 
         $storedPassword = new StoredPassword();
         $storedPassword->setAlgo(PasswordAuthenticatedUser::class)
-            ->setSalt('')
             ->setHashedPassword(
                 (new SodiumPasswordHasher())->hash($password)
             );

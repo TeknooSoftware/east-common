@@ -37,7 +37,7 @@ use Symfony\Contracts\Translation\LocaleAwareInterface;
  */
 class LocaleMiddleware
 {
-    public const MIDDLEWARE_PRIORITY = 7;
+    final public const MIDDLEWARE_PRIORITY = 7;
 
     public function __construct(
         private LocaleAwareInterface $translator

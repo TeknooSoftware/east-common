@@ -239,13 +239,31 @@ To start a project with Symfony :
 
 This library requires :
 
-    * PHP 8.0+
+    * PHP 8.1+
     * A PHP autoloader (Composer is recommended)
     * Teknoo/Immutable.
     * Teknoo/States.
     * Teknoo/Recipe.
     * Teknoo/East-Foundation.
-    * Optional: Symfony 5.2+ (for administration)
+    * Optional: Symfony 6.0+ (for administration)
+
+News from Teknoo Website 7.0
+----------------------------
+
+This library requires PHP 8.1 or newer and it's only compatible with Symfony 6.0 or newer.
+
+- Support Recipe 4.1.1+
+- Support East Foundation 6.0.1+
+- Public constant are final
+- Block's types are Enums
+- Direction are Enums
+- Use readonly properties behaviors on Immutables
+- Remove support of deprecated features removed in `Symfony 6.0` (`Salt`, `LegacyUser`)
+- Use `(...)` notation instead array notation for callable
+- Enable fiber support in front endpoint
+
+* Warning * : All legacy user are not supported from this version. User's salt are also
+  not supported, all users' passwords must be converted before switching to this version.
 
 News from Teknoo Website 6.0
 ----------------------------

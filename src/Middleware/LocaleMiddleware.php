@@ -46,8 +46,8 @@ use function is_callable;
  */
 class LocaleMiddleware
 {
-    public const SESSION_KEY = 'locale';
-    public const MIDDLEWARE_PRIORITY = 6;
+    final public const SESSION_KEY = 'locale';
+    final public const MIDDLEWARE_PRIORITY = 6;
 
     /**
      * @var callable|null

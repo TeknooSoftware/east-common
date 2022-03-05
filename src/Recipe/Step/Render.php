@@ -43,7 +43,6 @@ use function method_exists;
  * It will be passed to the view in the variable defined in the ingredient `$objectViewKey` (if defined)
  *
  * Views parameters are fetched from the Parameters Bag and transformed to an array.
- * They can also be passed in message's attribute `view.parameters` (legacy behavior, deprecated)
  *
  * If the object instance is publishable, the `Last-Modified` will be added
  *

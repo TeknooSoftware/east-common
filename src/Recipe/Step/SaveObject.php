@@ -58,7 +58,7 @@ class SaveObject
                         ]);
                     }
                 },
-                [$manager, 'error']
+                $manager->error(...)
             )
         );
 

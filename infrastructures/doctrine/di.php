@@ -39,6 +39,7 @@ use ProxyManager\Proxy\GhostObjectInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use RuntimeException;
 use SimpleXMLElement;
+use Teknoo\East\Website\Object\User;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\GetStreamFromMediaInterface;
 use Teknoo\East\Website\Doctrine\Recipe\Step\ODM\GetStreamFromMedia;
@@ -71,7 +72,6 @@ use Teknoo\East\Website\Doctrine\DBSource\Common\UserRepository;
 use Teknoo\East\Website\Doctrine\Object\Content;
 use Teknoo\East\Website\Doctrine\Object\Item;
 use Teknoo\East\Website\Doctrine\Object\Media;
-use Teknoo\East\Website\Doctrine\Object\User;
 use Teknoo\East\Website\Doctrine\Translatable\Wrapper\DocumentWrapper;
 use Teknoo\East\Website\Doctrine\Translatable\Wrapper\FactoryInterface as WrapperFactory;
 use Teknoo\East\Website\Doctrine\Translatable\Wrapper\WrapperInterface;
@@ -240,7 +240,7 @@ return [
             && ($container->get(ObjectManager::class)) instanceof DocumentManager
         ) {
             $listener = $container->get(TranslatableListener::class);
-            $callback = [$listener, 'setLocale'];
+            $callback = $listener->setLocale(...);
         } else {
             //do nothing
             $callback = null;

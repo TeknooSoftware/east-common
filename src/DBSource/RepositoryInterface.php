@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\DBSource;
 
+use Teknoo\East\Website\Query\Enum\Direction;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
@@ -52,7 +53,7 @@ interface RepositoryInterface
      */
      /**
      * @param array<string, mixed> $criteria
-     * @param array<string, mixed>|null $orderBy
+     * @param array<string, Direction>|null $orderBy
      */
     public function findBy(
         array $criteria,

@@ -26,6 +26,7 @@ namespace Teknoo\Tests\East\Website\Doctrine\DBSource\ODM;
 use Doctrine\ODM\MongoDB\Query\Builder;
 use Doctrine\ODM\MongoDB\Query\Query;
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
+use Teknoo\East\Website\Query\Enum\Direction;
 use Teknoo\East\Website\Query\Expr\NotEqual;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
@@ -177,7 +178,7 @@ trait RepositoryTestTrait
 
         self::assertInstanceOf(
             RepositoryInterface::class,
-            $this->buildRepository()->findBy(['foo' => 'bar', 'bar' => new In(['foo'])], $promise, ['foo'=>'ASC'], 1, 2)
+            $this->buildRepository()->findBy(['foo' => 'bar', 'bar' => new In(['foo'])], $promise, ['foo'=>Direction::Asc], 1, 2)
         );
     }
 

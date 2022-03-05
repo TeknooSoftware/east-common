@@ -31,6 +31,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Teknoo\East\Website\Object\Block;
+use Teknoo\East\Website\Object\BlockType as BlockTypeEnum;
 
 /**
  * Symfony form to edit East Website Block
@@ -53,11 +54,11 @@ class BlockType extends AbstractType
             [
                 'required' => true,
                 'choices' => [
-                    'Textarea' => 'textarea',
-                    'Raw' => 'raw',
-                    'Text' => 'text',
-                    'Numeric' => 'numeric',
-                    'Image' => 'image'
+                    'Textarea' => BlockTypeEnum::Textarea,
+                    'Raw' => BlockTypeEnum::Raw,
+                    'Text' => BlockTypeEnum::Text,
+                    'Numeric' => BlockTypeEnum::Numeric,
+                    'Image' => BlockTypeEnum::Image,
                 ]
             ]
         );

@@ -31,7 +31,6 @@ use Teknoo\East\Website\Loader\UserLoader;
 use Teknoo\East\Website\Object\StoredPassword;
 use Teknoo\East\Website\Object\User;
 use Teknoo\East\Website\Query\User\UserByEmailQuery;
-use Teknoo\East\WebsiteBundle\Object\LegacyUser;
 use Teknoo\East\WebsiteBundle\Object\PasswordAuthenticatedUser;
 use Teknoo\East\WebsiteBundle\Provider\PasswordAuthenticatedUserProvider;
 use Teknoo\East\WebsiteBundle\Writer\SymfonyUserWriter;
@@ -143,31 +142,6 @@ class PasswordAuthenticatedUserProviderTest extends TestCase
 
         $this->expectException(UserNotFoundException::class);
         $this->buildProvider()->loadUserByUsername('foo@bar');
-    }
-
-    public function testLoadLegacyUserByUsernameFound()
-    {
-        $user = new BaseUser();
-        $user->setEmail('foo@bar');
-        $user->setAuthData([$storedPassword = new StoredPassword()]);
-        $storedPassword->setSalt('foo');
-
-        $this->getLoader()
-            ->expects(self::once())
-            ->method('query')
-            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
-                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
-                $promise->success($user);
-
-                return $this->getLoader();
-            });
-
-        $loadedUser = new LegacyUser($user, $storedPassword);
-
-        self::assertEquals(
-            $loadedUser,
-            $this->buildProvider()->loadUserByUsername('foo@bar')
-        );
     }
 
     public function testLoadUserByIdentifierNotFound()
@@ -282,36 +256,6 @@ class PasswordAuthenticatedUserProviderTest extends TestCase
         );
     }
 
-    public function testRefreshLegacyUserFound()
-    {
-        $user = new BaseUser();
-        $user->setEmail('foo@bar');
-        $user->setAuthData([$storedPassword = new StoredPassword()]);
-        $storedPassword->setSalt('foo');
-
-        $this->getLoader()
-            ->expects(self::once())
-            ->method('query')
-            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
-                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
-                $promise->success($user);
-
-                return $this->getLoader();
-            });
-
-        $loadedUser = new LegacyUser($user, $storedPassword);
-
-        self::assertEquals(
-            $loadedUser,
-            $this->buildProvider()->refreshUser(
-                new LegacyUser(
-                    (new BaseUser())->setEmail('foo@bar'),
-                    $storedPassword
-                )
-            )
-        );
-    }
-
     public function testRefreshUserNotSupported()
     {
         self::assertNull(
@@ -331,20 +275,17 @@ class PasswordAuthenticatedUserProviderTest extends TestCase
 
     public function testUpgradePassword()
     {
-        $user = $this->createMock(User::class);
+        $user = $this->createMock(PasswordAuthenticatedUser::class);
         $storedPassword = $this->createMock(StoredPassword::class);
 
-        $legacyUser = $this->createMock(LegacyUser::class);
-        $legacyUser->expects(self::any())->method('getWrappedUser')->willReturn($user);
-        $legacyUser->expects(self::any())->method('getWrappedStoredPassword')->willReturn($storedPassword);
+        $user->expects(self::any())->method('getWrappedStoredPassword')->willReturn($storedPassword);
 
-        $storedPassword->expects(self::once())->method('setSalt')->with('');
         $storedPassword->expects(self::once())->method('setHashedPassword')->with('foo');
 
         $this->getWriter()->expects(self::once())->method('save');
 
         $this->buildProvider()->upgradePassword(
-            $legacyUser,
+            $user,
             'foo'
         );
     }

@@ -1,5 +1,22 @@
 # Teknoo Software - Website - Change Log
 
+## [7.0.0] - 2022-03-05
+### Stable Release
+- Support Recipe 4.1.1+
+- Support East Foundation 6.0.1+
+- Remove support of `PHP 8.0`, support only `PHP 8.1+`
+- Remove support of `Symfony 5.4`, support only `Symfony 6.0+`
+- Public constant are final
+- Block's types are Enums
+- Direction are Enums
+- Use readonly properties behaviors on Immutables
+- Remove support of deprecated features removed in `Symfony 6.0` (`Salt`, `LegacyUser`)
+- Use `(...)` notation instead array notation for callable
+- Enable fiber support in front endpoint
+
+* Warning * : All legacy user are not supported from this version. User's salt are also
+not supported, all users' passwords must be converted before switching to this version.
+
 ## [6.1.10] - 2022-02-24
 ### Stable Release
 - Support Recipe 4.0.1+

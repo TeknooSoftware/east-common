@@ -26,6 +26,7 @@ namespace Teknoo\Tests\East\Website\Recipe\Step;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
+use Teknoo\East\Website\Query\Enum\Direction;
 use Teknoo\East\Website\Recipe\Step\ExtractOrder;
 
 /**
@@ -47,7 +48,7 @@ class ExtractOrderTest extends TestCase
         $this->buildStep()(
             new \stdClass(),
             $this->createMock(ManagerInterface::class),
-            'ASC',
+            Direction::Asc,
             'id'
         );
     }
@@ -59,7 +60,7 @@ class ExtractOrderTest extends TestCase
         $this->buildStep()(
             $this->createMock(ServerRequestInterface::class),
             new \stdClass(),
-            'ASC',
+            Direction::Asc,
             'id'
         );
     }
@@ -82,7 +83,7 @@ class ExtractOrderTest extends TestCase
         $this->buildStep()(
             $this->createMock(ServerRequestInterface::class),
             $this->createMock(ManagerInterface::class),
-            'ASC',
+            Direction::Asc,
             new \stdClass()
         );
     }
@@ -90,7 +91,7 @@ class ExtractOrderTest extends TestCase
     public function testInvokeWithNoParameter()
     {
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::once())->method('updateWorkPlan')->with(['order' => ['id' => 'DESC']]);
+        $manager->expects(self::once())->method('updateWorkPlan')->with(['order' => ['id' => Direction::Desc]]);
         $manager->expects(self::never())->method('error');
 
         self::assertInstanceOf(
@@ -105,7 +106,7 @@ class ExtractOrderTest extends TestCase
     public function testInvokeWithDefaultToAsc()
     {
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::once())->method('updateWorkPlan')->with(['order' => ['createdAt' => 'ASC']]);
+        $manager->expects(self::once())->method('updateWorkPlan')->with(['order' => ['createdAt' => Direction::Asc]]);
         $manager->expects(self::never())->method('error');
 
         self::assertInstanceOf(
@@ -113,7 +114,7 @@ class ExtractOrderTest extends TestCase
             $this->buildStep()(
                 $this->createMock(ServerRequestInterface::class),
                 $manager,
-                'ASC',
+                Direction::Asc,
                 'createdAt'
             )
         );
@@ -128,7 +129,7 @@ class ExtractOrderTest extends TestCase
         ]);
 
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::once())->method('updateWorkPlan')->with(['order' => ['createdAt' => 'ASC']]);
+        $manager->expects(self::once())->method('updateWorkPlan')->with(['order' => ['createdAt' => Direction::Asc]]);
         $manager->expects(self::never())->method('error');
 
         self::assertInstanceOf(
@@ -136,7 +137,7 @@ class ExtractOrderTest extends TestCase
             $this->buildStep()(
                 $request,
                 $manager,
-                'DESC',
+                Direction::Desc,
                 'id'
             )
         );
@@ -159,7 +160,7 @@ class ExtractOrderTest extends TestCase
             $this->buildStep()(
                 $request,
                 $manager,
-                'DESC',
+                Direction::Desc,
                 'id'
             )
         );

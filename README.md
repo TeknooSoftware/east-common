@@ -74,16 +74,6 @@ Example with Symfony
                 id: 'Teknoo\East\WebsiteBundle\Provider\PasswordAuthenticatedUserProvider'
     
         password_hashers:
-            legacy:
-                algorithm: pbkdf2
-                encode_as_base64: false
-                iterations: 100
-    
-            Teknoo\East\WebsiteBundle\Object\LegacyUser:
-                algorithm: '%teknoo.east.website.bundle.password_authenticated_user_provider.default_algo%'
-                migrate_from:
-                    - legacy
-    
             Teknoo\East\WebsiteBundle\Object\PasswordAuthenticatedUser:
                 algorithm: '%teknoo.east.website.bundle.password_authenticated_user_provider.default_algo%'
 

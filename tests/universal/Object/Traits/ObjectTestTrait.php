@@ -23,6 +23,8 @@
 
 namespace Teknoo\Tests\East\Website\Object\Traits;
 
+use Teknoo\East\Website\Object\DeletableInterface;
+
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -101,6 +103,12 @@ trait ObjectTestTrait
 
     public function testDeletedAt()
     {
+        $object = $this->buildObject();
+        if (!$object instanceof DeletableInterface) {
+            self::assertTrue(true); //To avoid warning about skipped test
+            return;
+        }
+
         $date = new \DateTime('2017-06-13');
         self::assertEquals(
             $date,
@@ -110,6 +118,12 @@ trait ObjectTestTrait
 
     public function testSetDeletedAt()
     {
+        $object = $this->buildObject();
+        if (!$object instanceof DeletableInterface) {
+            self::assertTrue(true); //To avoid warning about skipped test
+            return;
+        }
+
         $date = new \DateTime('2017-06-13');
 
         $object = $this->buildObject();
@@ -126,6 +140,12 @@ trait ObjectTestTrait
 
     public function testSetDeletedAtExceptionOnBadArgument()
     {
+        $object = $this->buildObject();
+        if (!$object instanceof DeletableInterface) {
+            self::assertTrue(true); //To avoid warning about skipped test
+            return;
+        }
+
         $this->expectException(\Throwable::class);
         $this->buildObject()->setDeletedAt(new \stdClass());
     }

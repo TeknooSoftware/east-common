@@ -1,5 +1,9 @@
 # Teknoo Software - Website - Change Log
 
+## [7.0.1] - 2022-03-05
+### Stable Release
+- Disable test on soft deletable object with `ObjectTestTrait` if the object is not softdeletable
+
 ## [7.0.0] - 2022-03-05
 ### Stable Release
 - Support Recipe 4.1.1+

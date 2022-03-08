@@ -1,5 +1,9 @@
 # Teknoo Software - Website - Change Log
 
+## [7.0.2] - 2022-03-08
+### Stable Release
+- Require Immutable 3.0.1 or later
+
 ## [7.0.1] - 2022-03-05
 ### Stable Release
 - Disable test on soft deletable object with `ObjectTestTrait` if the object is not softdeletable

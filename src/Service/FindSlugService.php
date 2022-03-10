@@ -53,6 +53,8 @@ class FindSlugService
     }
 
     /**
+     * @param LoaderInterface<SluggableInterface<ObjectInterface>> $loader
+     * @param SluggableInterface<ObjectInterface> $sluggable
      * @param array<string|int, mixed> $parts
      */
     public function process(
@@ -77,22 +79,25 @@ class FindSlugService
                 $object = $sluggable;
             }
 
-            $loader->query(
+            /** @var Promise<SluggableInterface<ObjectInterface>, mixed, mixed> $sluggableFetchedPromise */
+            $sluggableFetchedPromise = new Promise(
+                function () use (&$counter) {
+                    $counter++;
+                },
+                function () use ($sluggable, $candidate, &$candidateAccepted) {
+                    $sluggable->setSlug($candidate);
+                    $candidateAccepted = true;
+                }
+            );
+
+            $loader->fetch(
                 new FindBySlugQuery(
                     $slugField,
                     $candidate,
                     $sluggable instanceof DeletableInterface,
                     $object
                 ),
-                new Promise(
-                    function () use (&$counter) {
-                        $counter++;
-                    },
-                    function () use ($sluggable, $candidate, &$candidateAccepted) {
-                        $sluggable->setSlug($candidate);
-                        $candidateAccepted = true;
-                    }
-                )
+                $sluggableFetchedPromise
             );
         } while (false === $candidateAccepted);
 

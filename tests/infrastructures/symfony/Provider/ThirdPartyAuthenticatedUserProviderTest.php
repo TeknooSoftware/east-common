@@ -70,7 +70,7 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
 
         $this->getLoader()
             ->expects(self::once())
-            ->method('query')
+            ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
                 $promise->fail(new \DomainException());
@@ -89,7 +89,7 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
 
         $this->getLoader()
             ->expects(self::once())
-            ->method('query')
+            ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
                 $promise->success($user);
@@ -113,7 +113,7 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
 
         $this->getLoader()
             ->expects(self::once())
-            ->method('query')
+            ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
                 $promise->success($user);
@@ -131,7 +131,7 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
 
         $this->getLoader()
             ->expects(self::once())
-            ->method('query')
+            ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
                 $promise->fail(new \DomainException());
@@ -150,7 +150,7 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
 
         $this->getLoader()
             ->expects(self::once())
-            ->method('query')
+            ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
                 $promise->success($user);
@@ -174,7 +174,7 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
 
         $this->getLoader()
             ->expects(self::once())
-            ->method('query')
+            ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
                 $promise->success($user);
@@ -192,7 +192,7 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
 
         $this->getLoader()
             ->expects(self::once())
-            ->method('query')
+            ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
                 $promise->fail(new \DomainException());
@@ -216,7 +216,7 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
 
         $this->getLoader()
             ->expects(self::once())
-            ->method('query')
+            ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
                 $promise->success($user);

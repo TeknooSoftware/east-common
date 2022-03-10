@@ -23,33 +23,33 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Object;
+namespace Teknoo\East\Website\Query;
 
+use Teknoo\Recipe\Promise\PromiseInterface;
+use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
-use Teknoo\East\Website\Service\FindSlugService;
 
 /**
- * Interface to define object can be identified by a string slug to be selected easily in a request.
+ * Interface to define query to fetch persisted objects from a database. E
+ * ach query must be implemented into a specific class.
+ * These query must return a collection of objects
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  *
  * @template TSuccessArgType
  */
-interface SluggableInterface
+interface QueryCollectionInterface extends QueryInterface
 {
     /**
-     * @param LoaderInterface<SluggableInterface<TSuccessArgType>> $loader
-     * @return SluggableInterface<TSuccessArgType>
+     * @param LoaderInterface<TSuccessArgType> $loader
+     * @param RepositoryInterface<TSuccessArgType> $repository
+     * @param PromiseInterface<iterable<TSuccessArgType>, mixed> $promise
+     * @return QueryCollectionInterface<TSuccessArgType>
      */
-    public function prepareSlugNear(
+    public function execute(
         LoaderInterface $loader,
-        FindSlugService $findSlugService,
-        string $slugField
-    ): SluggableInterface;
-
-    /**
-     * @return SluggableInterface<TSuccessArgType>
-     */
-    public function setSlug(string $slug): SluggableInterface;
+        RepositoryInterface $repository,
+        PromiseInterface $promise
+    ): QueryCollectionInterface;
 }

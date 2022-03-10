@@ -33,6 +33,7 @@ use RuntimeException;
 use Teknoo\East\Website\DBSource\ManagerInterface;
 use Teknoo\East\Website\Doctrine\Translatable\ObjectManager\AdapterInterface;
 use Teknoo\East\Website\Doctrine\Translatable\TranslatableListener;
+use Teknoo\East\Website\Object\ObjectInterface;
 use Teknoo\East\Website\Object\TranslatableInterface;
 
 use function spl_object_hash;
@@ -105,7 +106,7 @@ class ODM implements AdapterInterface
     }
 
     /**
-     * @param BaseClassMetadata<ClassMetadata> $metadata
+     * @param BaseClassMetadata<ObjectInterface> $metadata
      */
     public function recomputeSingleObjectChangeSet(
         BaseClassMetadata $metadata,

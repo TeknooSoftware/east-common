@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\DBSource\Common;
 
+use Teknoo\East\Website\Doctrine\Object\Translation;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 
 /**
@@ -35,8 +36,13 @@ use Teknoo\East\Website\DBSource\RepositoryInterface;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @implements RepositoryInterface<Translation>
  */
 class TranslationRepository implements RepositoryInterface
 {
+    /**
+     * @use RepositoryTrait<Translation>
+     */
     use RepositoryTrait;
 }

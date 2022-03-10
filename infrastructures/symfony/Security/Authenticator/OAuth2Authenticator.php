@@ -74,6 +74,9 @@ class OAuth2Authenticator extends BaseAuthenticator
         return !empty($request->attributes->get('_oauth_client_key', false));
     }
 
+    /**
+     * @param PromiseInterface<ThirdPartyAuthenticatedUser, UserInterface> $promise
+     */
     public function registerToken(User $user, string $provider, string $accessToken, PromiseInterface $promise): self
     {
         $thirdPartyAuth = null;
@@ -155,7 +158,7 @@ class OAuth2Authenticator extends BaseAuthenticator
 
                     $extractEmailPromise = new Promise(
                         function (string $email, PromiseInterface $next) {
-                            $this->loader->query(
+                            $this->loader->fetch(
                                 new UserByEmailQuery($email),
                                 $next
                             );
@@ -166,20 +169,21 @@ class OAuth2Authenticator extends BaseAuthenticator
                         true,
                     );
 
-                    $this->userConverter->extractEmail(
-                        $oauthUser,
-                        $promise = $extractEmailPromise->next(
-                            $fetchingPromise->next(
-                                $registerTokenPromise->next(
-                                    $returnPromise
-                                )
+                    /** @var Promise<string, UserInterface, mixed> $promise */
+                    $promise = $extractEmailPromise->next(
+                        $fetchingPromise->next(
+                            $registerTokenPromise->next(
+                                $returnPromise
                             )
                         )
                     );
 
-                    /** @var UserInterface $user */
-                    $user = $promise->fetchResult();
-                    return $user;
+                    $this->userConverter->extractEmail(
+                        $oauthUser,
+                        $promise,
+                    );
+
+                    return $promise->fetchResult();
                 }
             )
         );

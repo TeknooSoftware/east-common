@@ -28,8 +28,9 @@ namespace Teknoo\East\Website\Query\Content;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
+use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Query\Expr\In;
-use Teknoo\East\Website\Query\QueryInterface;
+use Teknoo\East\Website\Query\QueryCollectionInterface;
 use Teknoo\Immutable\ImmutableInterface;
 use Teknoo\Immutable\ImmutableTrait;
 
@@ -39,8 +40,10 @@ use Teknoo\Immutable\ImmutableTrait;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @implements QueryCollectionInterface<Content>
  */
-class PublishedContentFromIdsQuery implements QueryInterface, ImmutableInterface
+class PublishedContentFromIdsQuery implements QueryCollectionInterface, ImmutableInterface
 {
     use ImmutableTrait;
 
@@ -57,7 +60,7 @@ class PublishedContentFromIdsQuery implements QueryInterface, ImmutableInterface
         LoaderInterface $loader,
         RepositoryInterface $repository,
         PromiseInterface $promise
-    ): QueryInterface {
+    ): QueryCollectionInterface {
         $repository->findBy(
             [
                 'id' => new In($this->ids),

@@ -41,6 +41,7 @@ use Teknoo\East\Website\Doctrine\Translatable\Mapping\ExtensionMetadataFactory;
 use Teknoo\East\Website\Doctrine\Translatable\Wrapper\FactoryInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Wrapper\WrapperInterface;
 use Teknoo\East\Website\Object\TranslatableInterface;
+use Teknoo\East\Website\Object\ObjectInterface;
 
 use function array_flip;
 use function get_parent_class;
@@ -120,7 +121,7 @@ class TranslatableListener implements EventSubscriber
      *          fields: array<int, string>,
      *          fallback: array<string, string>
      *      },
-     *      3:\Doctrine\Persistence\Mapping\ClassMetadata<\Doctrine\ODM\MongoDB\Mapping\ClassMetadata>
+     *      3:\Doctrine\Persistence\Mapping\ClassMetadata<ObjectInterface>
      *     }>
      * >
      */
@@ -143,7 +144,7 @@ class TranslatableListener implements EventSubscriber
 
     /**
      * List of cached class metadata from doctrine manager
-     * @var array<string, ClassMetadata>
+     * @var array<string, ClassMetadata<ObjectInterface>>
      */
     private array $classMetadata = [];
 
@@ -177,7 +178,7 @@ class TranslatableListener implements EventSubscriber
     }
 
     /**
-     * @return ClassMetadata
+     * @return ClassMetadata<ObjectInterface>
      */
     private function getClassMetadata(string $className): ClassMetadata
     {
@@ -195,7 +196,7 @@ class TranslatableListener implements EventSubscriber
     }
 
     /**
-     * @param ClassMetadata $classMetadata
+     * @param ClassMetadata<ObjectInterface> $classMetadata
      */
     public function registerClassMetadata(string $className, ClassMetadata $classMetadata): self
     {
@@ -225,7 +226,7 @@ class TranslatableListener implements EventSubscriber
     }
 
     /**
-     * @param ClassMetadata $metadata
+     * @param ClassMetadata<ObjectInterface> $metadata
      */
     private function wrap(TranslatableInterface $translatable, ClassMetadata $metadata): WrapperInterface
     {
@@ -233,7 +234,7 @@ class TranslatableListener implements EventSubscriber
     }
 
     /**
-     * @param ClassMetadata $metadata
+     * @param ClassMetadata<ObjectInterface> $metadata
      */
     private function loadMetadataForObjectClass(ClassMetadata $metadata): void
     {
@@ -241,7 +242,7 @@ class TranslatableListener implements EventSubscriber
     }
 
     /**
-     * @param ClassMetadata $metadata
+     * @param ClassMetadata<ObjectInterface> $metadata
      * @param array{
      *        useObjectClass: string,
      *        translationClass: string,
@@ -259,7 +260,7 @@ class TranslatableListener implements EventSubscriber
     }
 
     /**
-     * @param ClassMetadata $metadata
+     * @param ClassMetadata<ObjectInterface> $metadata
      * @return array{
      *        useObjectClass: string,
      *        translationClass: string,
@@ -313,7 +314,7 @@ class TranslatableListener implements EventSubscriber
      *     fields: array<int, string>|null,
      *     fallback: array<string, string>
      * } $config
-     * @param ClassMetadata $metaData
+     * @param ClassMetadata<ObjectInterface> $metaData
      */
     private function loadAllTranslations(
         WrapperInterface $wrapper,

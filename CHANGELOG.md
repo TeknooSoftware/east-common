@@ -1,5 +1,10 @@
 # Teknoo Software - Website - Change Log
 
+## [7.0.3] - 2022-03-10
+### Stable Release
+- Require Recipe 4.1.2+ or later
+- Improve PHPStan analyse
+
 ## [7.0.2] - 2022-03-08
 ### Stable Release
 - Require Immutable 3.0.1 or later

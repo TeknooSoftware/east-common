@@ -49,7 +49,7 @@ class FindSlugServiceTest extends TestCase
         $sluggable = $this->createMock(SluggableInterface::class);
 
         $loader->expects(self::once())
-            ->method('query')
+            ->method('fetch')
             ->with(new FindBySlugQuery('slugField', 'foo-bar'))
             ->willReturnCallback(
                 function ($query, PromiseInterface $promise) use ($loader) {
@@ -99,7 +99,7 @@ class FindSlugServiceTest extends TestCase
         };
 
         $loader->expects(self::once())
-            ->method('query')
+            ->method('fetch')
             ->with(new FindBySlugQuery('slugField', 'foo-bar', false, $sluggable))
             ->willReturnCallback(
                 function ($query, PromiseInterface $promise) use ($loader) {
@@ -127,7 +127,7 @@ class FindSlugServiceTest extends TestCase
 
         $counter=0;
         $loader->expects(self::exactly(3))
-            ->method('query')
+            ->method('fetch')
             ->withConsecutive(
                 [new FindBySlugQuery('slugField', 'foo-bar')],
                 [new FindBySlugQuery('slugField', 'foo-bar-2')],

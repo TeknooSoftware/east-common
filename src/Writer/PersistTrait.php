@@ -37,6 +37,8 @@ use Throwable;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @template TSuccessArgType
  */
 trait PersistTrait
 {
@@ -47,6 +49,8 @@ trait PersistTrait
     }
 
     /**
+     * @param TSuccessArgType $object
+     * @param PromiseInterface<TSuccessArgType, mixed>|null $promise
      * @throws Throwable
      */
     private function persist(ObjectInterface $object, ?PromiseInterface $promise = null): self
@@ -74,6 +78,8 @@ trait PersistTrait
     }
 
     /**
+     * @param TSuccessArgType $object
+     * @param PromiseInterface<TSuccessArgType, mixed>|null $promise
      * @throws Throwable
      */
     public function remove(ObjectInterface $object, PromiseInterface $promise = null): WriterInterface

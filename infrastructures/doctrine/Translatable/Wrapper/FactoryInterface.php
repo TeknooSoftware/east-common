@@ -27,6 +27,7 @@ namespace Teknoo\East\Website\Doctrine\Translatable\Wrapper;
 
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\ODM\MongoDB\Mapping\ClassMetadata as ClassMetadataODM;
+use Teknoo\East\Website\Object\ObjectInterface;
 use Teknoo\East\Website\Object\TranslatableInterface;
 
 /**
@@ -39,7 +40,7 @@ use Teknoo\East\Website\Object\TranslatableInterface;
 interface FactoryInterface
 {
     /**
-     * @param ClassMetadata $metadata
+     * @param ClassMetadata<ObjectInterface> $metadata
      */
     public function __invoke(TranslatableInterface $object, ClassMetadata $metadata): WrapperInterface;
 }

@@ -31,29 +31,38 @@ use Teknoo\Recipe\Promise\PromiseInterface;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @template TSuccessArgType
  */
 interface RepositoryInterface
 {
-    /*
+    /**
      * Finds an object by its primary key / identifier.
+     *
+     * @param PromiseInterface<TSuccessArgType, mixed> $promise
+     * @return RepositoryInterface<TSuccessArgType>
      */
     public function find(string $id, PromiseInterface $promise): RepositoryInterface;
 
-    /*
+    /**
      * Finds all objects in the repository.
+     *
+     * @param PromiseInterface<iterable<TSuccessArgType>, mixed> $promise
+     * @return RepositoryInterface<TSuccessArgType>
      */
     public function findAll(PromiseInterface $promise): RepositoryInterface;
 
-    /*
+    /**
      * Finds objects by a set of criteria.
      *
      * Optionally sorting and limiting details can be passed. An implementation may throw
      * an UnexpectedValueException if certain values of the sorting or limiting details are
      * not supported.
-     */
-     /**
+     *
      * @param array<string, mixed> $criteria
+     * @param PromiseInterface<iterable<TSuccessArgType>, mixed> $promise
      * @param array<string, Direction>|null $orderBy
+     * @return RepositoryInterface<TSuccessArgType>
      */
     public function findBy(
         array $criteria,
@@ -67,6 +76,8 @@ interface RepositoryInterface
      * Count objects with criteria compatible
      *
      * @param array<string, mixed> $criteria The criteria.
+     * @param PromiseInterface<int, mixed> $promise
+     * @return RepositoryInterface<TSuccessArgType>
      */
     public function count(array $criteria, PromiseInterface $promise): RepositoryInterface;
 
@@ -74,6 +85,8 @@ interface RepositoryInterface
      * Finds a single object by a set of criteria.
      *
      * @param array<string|int, mixed> $criteria The criteria.
+     * @param PromiseInterface<TSuccessArgType, mixed> $promise
+     * @return RepositoryInterface<TSuccessArgType>
      */
     public function findOneBy(array $criteria, PromiseInterface $promise): RepositoryInterface;
 }

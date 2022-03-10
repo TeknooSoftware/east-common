@@ -34,7 +34,13 @@ use Teknoo\Recipe\Promise\PromiseInterface;
  */
 interface UserConverterInterface
 {
+    /**
+     * @param PromiseInterface<string, mixed> $promise
+     */
     public function extractEmail(ResourceOwnerInterface $owner, PromiseInterface $promise): UserConverterInterface;
 
+    /**
+     * @param PromiseInterface<mixed, mixed> $promise
+     */
     public function convertToUser(ResourceOwnerInterface $owner, PromiseInterface $promise): UserConverterInterface;
 }

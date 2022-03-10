@@ -59,26 +59,29 @@ class LoadContent
             $manager->error($error);
         };
 
-        $this->contentLoader->query(
+        /** @var Promise<Content, mixed, mixed> $fetchPromise */
+        $fetchPromise = new Promise(
+            static function (Content $content) use ($manager, $error) {
+                $type = $content->getType();
+                if (null === $type) {
+                    $error(new RuntimeException('Content type is not available'));
+
+                    return;
+                }
+
+                $manager->updateWorkPlan([
+                    Content::class => $content,
+                    'objectInstance' => $content,
+                    'objectViewKey' => 'content',
+                    'template' => $type->getTemplate(),
+                ]);
+            },
+            $error
+        );
+
+        $this->contentLoader->fetch(
             new PublishedContentFromSlugQuery($slug),
-            new Promise(
-                static function (Content $content) use ($manager, $error) {
-                    $type = $content->getType();
-                    if (null === $type) {
-                        $error(new RuntimeException('Content type is not available'));
-
-                        return;
-                    }
-
-                    $manager->updateWorkPlan([
-                        Content::class => $content,
-                        'objectInstance' => $content,
-                        'objectViewKey' => 'content',
-                        'template' => $type->getTemplate(),
-                    ]);
-                },
-                $error
-            )
+            $fetchPromise
         );
 
         return $this;

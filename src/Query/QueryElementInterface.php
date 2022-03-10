@@ -23,33 +23,33 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Object;
+namespace Teknoo\East\Website\Query;
 
+use Teknoo\Recipe\Promise\PromiseInterface;
+use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
-use Teknoo\East\Website\Service\FindSlugService;
 
 /**
- * Interface to define object can be identified by a string slug to be selected easily in a request.
+ * Interface to define query to fetch persisted objects from a database.
+ * Each query must be implemented into a specific class.
+ * These query must return a single instance of an object or a scalar value
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  *
  * @template TSuccessArgType
  */
-interface SluggableInterface
+interface QueryElementInterface extends QueryInterface
 {
     /**
-     * @param LoaderInterface<SluggableInterface<TSuccessArgType>> $loader
-     * @return SluggableInterface<TSuccessArgType>
+     * @param LoaderInterface<TSuccessArgType> $loader
+     * @param RepositoryInterface<TSuccessArgType> $repository
+     * @param PromiseInterface<TSuccessArgType, mixed> $promise
+     * @return QueryElementInterface<TSuccessArgType>
      */
-    public function prepareSlugNear(
+    public function fetch(
         LoaderInterface $loader,
-        FindSlugService $findSlugService,
-        string $slugField
-    ): SluggableInterface;
-
-    /**
-     * @return SluggableInterface<TSuccessArgType>
-     */
-    public function setSlug(string $slug): SluggableInterface;
+        RepositoryInterface $repository,
+        PromiseInterface $promise
+    ): QueryElementInterface;
 }

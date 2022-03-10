@@ -29,6 +29,7 @@ use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\ODM\MongoDB\Mapping\ClassMetadata as ClassMetadataODM;
 use Teknoo\East\Website\Doctrine\Translatable\TranslationInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Wrapper\WrapperInterface;
+use Teknoo\East\Website\Object\ObjectInterface;
 
 /**
  * Interface to define adapter able to load and write translated value into a `TranslationInterface` implementation for
@@ -67,7 +68,7 @@ interface AdapterInterface
     ): AdapterInterface;
 
     /**
-     * @param ClassMetadata $metadata
+     * @param ClassMetadata<ObjectInterface> $metadata
      */
     public function updateTranslationRecord(
         WrapperInterface $wrapped,
@@ -77,7 +78,7 @@ interface AdapterInterface
     ): AdapterInterface;
 
     /**
-     * @param ClassMetadata $metadata
+     * @param ClassMetadata<ObjectInterface> $metadata
      */
     public function setTranslatedValue(
         WrapperInterface $wrapped,

@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Loader;
 
 use Teknoo\East\Website\DBSource\Repository\ItemRepositoryInterface;
+use Teknoo\East\Website\Object\Item;
 
 /**
  * Object loader in charge of object `Teknoo\East\Website\Object\Item`.
@@ -33,9 +34,14 @@ use Teknoo\East\Website\DBSource\Repository\ItemRepositoryInterface;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @implements LoaderInterface<Item>
  */
 class ItemLoader implements LoaderInterface
 {
+    /**
+     * @use LoaderTrait<Item>
+     */
     use LoaderTrait;
 
     public function __construct(ItemRepositoryInterface $repository)

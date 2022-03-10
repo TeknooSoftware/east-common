@@ -41,6 +41,8 @@ use Teknoo\East\WebsiteBundle\Object\PasswordAuthenticatedUser;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @implements WriterInterface<BaseUser>
  */
 class SymfonyUserWriter implements WriterInterface
 {

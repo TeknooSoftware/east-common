@@ -23,6 +23,8 @@
 
 namespace Teknoo\Tests\East\Website\Loader;
 
+use Teknoo\East\Website\Query\QueryCollectionInterface;
+use Teknoo\East\Website\Query\QueryElementInterface;
 use Teknoo\Recipe\Promise\Promise;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
@@ -113,7 +115,7 @@ trait LoaderTestTrait
     public function testQueryBadPromise()
     {
         $this->expectException(\Throwable::class);
-        $this->buildLoader()->query($this->createMock(QueryInterface::class), new \stdClass());
+        $this->buildLoader()->query($this->createMock(QueryCollectionInterface::class), new \stdClass());
     }
 
     public function testQuery()
@@ -131,7 +133,7 @@ trait LoaderTestTrait
         /**
          * @var \PHPUnit\Framework\MockObject\MockObject $queryMock
          */
-        $queryMock = $this->createMock(QueryInterface::class);
+        $queryMock = $this->createMock(QueryCollectionInterface::class);
         $queryMock->expects(self::once())
             ->method('execute')
             ->with($loader, $this->getRepositoryMock(), $promiseMock);
@@ -139,6 +141,44 @@ trait LoaderTestTrait
         self::assertInstanceOf(
             LoaderInterface::class,
             $loader->query($queryMock, $promiseMock)
+        );
+    }
+
+    public function testFetchBadFetch()
+    {
+        $this->expectException(\Throwable::class);
+        $this->buildLoader()->fetch(new \stdClass(), new Promise());
+    }
+
+    public function testFetchBadPromise()
+    {
+        $this->expectException(\Throwable::class);
+        $this->buildLoader()->fetch($this->createMock(QueryElementInterface::class), new \stdClass());
+    }
+
+    public function testFetch()
+    {
+        /**
+         * @var \PHPUnit\Framework\MockObject\MockObject $promiseMock
+         *
+         */
+        $promiseMock = $this->createMock(Promise::class);
+        $promiseMock->expects(self::never())->method('success');
+        $promiseMock->expects(self::never())->method('fail');
+
+        $loader = $this->buildLoader();
+
+        /**
+         * @var \PHPUnit\Framework\MockObject\MockObject $fetchMock
+         */
+        $fetchMock = $this->createMock(QueryElementInterface::class);
+        $fetchMock->expects(self::once())
+            ->method('fetch')
+            ->with($loader, $this->getRepositoryMock(), $promiseMock);
+
+        self::assertInstanceOf(
+            LoaderInterface::class,
+            $loader->fetch($fetchMock, $promiseMock)
         );
     }
 }

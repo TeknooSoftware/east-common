@@ -24,13 +24,14 @@
 namespace Teknoo\Tests\East\Website\Query\Content;
 
 use PHPUnit\Framework\TestCase;
+use Teknoo\East\Website\Query\QueryElementInterface;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Query\Content\PublishedContentFromSlugQuery;
 use Teknoo\East\Website\Query\QueryInterface;
-use Teknoo\Tests\East\Website\Query\QueryTestTrait;
+use Teknoo\Tests\East\Website\Query\QueryElementTestTrait;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -39,17 +40,17 @@ use Teknoo\Tests\East\Website\Query\QueryTestTrait;
  */
 class PublishedContentFromSlugQueryTest extends TestCase
 {
-    use QueryTestTrait;
+    use QueryElementTestTrait;
 
     /**
      * @inheritDoc
      */
-    public function buildQuery(): QueryInterface
+    public function buildQuery(): QueryElementInterface
     {
         return new PublishedContentFromSlugQuery('fooBar');
     }
 
-    public function testExecute()
+    public function testFetch()
     {
         $loader = $this->createMock(LoaderInterface::class);
         $repository = $this->createMock(RepositoryInterface::class);
@@ -66,11 +67,11 @@ class PublishedContentFromSlugQueryTest extends TestCase
 
         self::assertInstanceOf(
             PublishedContentFromSlugQuery::class,
-            $this->buildQuery()->execute($loader, $repository, $promise)
+            $this->buildQuery()->fetch($loader, $repository, $promise)
         );
     }
 
-    public function testExecuteFailing()
+    public function testFetchFailing()
     {
         $loader = $this->createMock(LoaderInterface::class);
         $repository = $this->createMock(RepositoryInterface::class);
@@ -89,11 +90,11 @@ class PublishedContentFromSlugQueryTest extends TestCase
 
         self::assertInstanceOf(
             PublishedContentFromSlugQuery::class,
-            $this->buildQuery()->execute($loader, $repository, $promise)
+            $this->buildQuery()->fetch($loader, $repository, $promise)
         );
     }
 
-    public function testExecuteNotPublishable()
+    public function testFetchNotPublishable()
     {
         $loader = $this->createMock(LoaderInterface::class);
         $repository = $this->createMock(RepositoryInterface::class);
@@ -112,11 +113,11 @@ class PublishedContentFromSlugQueryTest extends TestCase
 
         self::assertInstanceOf(
             PublishedContentFromSlugQuery::class,
-            $this->buildQuery()->execute($loader, $repository, $promise)
+            $this->buildQuery()->fetch($loader, $repository, $promise)
         );
     }
 
-    public function testExecuteNotPublished()
+    public function testFetchNotPublished()
     {
         $loader = $this->createMock(LoaderInterface::class);
         $repository = $this->createMock(RepositoryInterface::class);
@@ -139,11 +140,11 @@ class PublishedContentFromSlugQueryTest extends TestCase
 
         self::assertInstanceOf(
             PublishedContentFromSlugQuery::class,
-            $this->buildQuery()->execute($loader, $repository, $promise)
+            $this->buildQuery()->fetch($loader, $repository, $promise)
         );
     }
 
-    public function testExecutePublished()
+    public function testFetchPublished()
     {
         $loader = $this->createMock(LoaderInterface::class);
         $repository = $this->createMock(RepositoryInterface::class);
@@ -168,7 +169,7 @@ class PublishedContentFromSlugQueryTest extends TestCase
 
         self::assertInstanceOf(
             PublishedContentFromSlugQuery::class,
-            $this->buildQuery()->execute($loader, $repository, $promise)
+            $this->buildQuery()->fetch($loader, $repository, $promise)
         );
     }
 }

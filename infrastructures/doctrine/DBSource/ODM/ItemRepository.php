@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\DBSource\ODM;
 
+use Teknoo\East\Website\Object\Item;
 use Teknoo\East\Website\DBSource\Repository\ItemRepositoryInterface;
 
 /**
@@ -36,5 +37,8 @@ use Teknoo\East\Website\DBSource\Repository\ItemRepositoryInterface;
  */
 class ItemRepository implements ItemRepositoryInterface
 {
+    /**
+     * @use RepositoryTrait<Item>
+     */
     use RepositoryTrait;
 }

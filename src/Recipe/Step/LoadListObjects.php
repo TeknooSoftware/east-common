@@ -28,6 +28,7 @@ namespace Teknoo\East\Website\Recipe\Step;
 use Countable;
 use RuntimeException;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
+use Teknoo\East\Website\Contracts\ObjectInterface;
 use Teknoo\East\Website\Query\Enum\Direction;
 use Teknoo\Recipe\Promise\Promise;
 use Teknoo\East\Website\Loader\LoaderInterface;
@@ -90,6 +91,7 @@ class LoadListObjects
     }
 
     /**
+     * @param LoaderInterface<ObjectInterface> $loader
      * @param array<string, Direction> $order
      * @param array<string, string> $criteria
      */
@@ -109,6 +111,24 @@ class LoadListObjects
             return $this;
         }
 
+        /** @var Promise<iterable<ObjectInterface>, mixed, mixed> $executePromise */
+        $executePromise = new Promise(
+            static function ($objects) use ($itemsPerPage, $manager) {
+                $pageCount = 1;
+                if ($objects instanceof Countable) {
+                    $pageCount = (int) ceil($objects->count() / $itemsPerPage);
+                }
+
+                $manager->updateWorkPlan(
+                    [
+                        'objectsCollection' => $objects,
+                        'pageCount' => $pageCount
+                    ]
+                );
+            },
+            $manager->error(...)
+        );
+
         $loader->query(
             new PaginationQuery(
                 $criteria,
@@ -116,22 +136,7 @@ class LoadListObjects
                 $itemsPerPage,
                 ($page - 1) * $itemsPerPage
             ),
-            new Promise(
-                static function ($objects) use ($itemsPerPage, $manager) {
-                    $pageCount = 1;
-                    if ($objects instanceof Countable) {
-                        $pageCount = (int) ceil($objects->count() / $itemsPerPage);
-                    }
-
-                    $manager->updateWorkPlan(
-                        [
-                            'objectsCollection' => $objects,
-                            'pageCount' => $pageCount
-                        ]
-                    );
-                },
-                $manager->error(...)
-            )
+            $executePromise
         );
 
         return $this;

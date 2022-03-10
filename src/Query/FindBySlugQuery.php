@@ -29,6 +29,7 @@ use Teknoo\East\Website\Object\ObjectInterface;
 use Teknoo\East\Website\Query\Expr\NotEqual;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
+use Teknoo\East\Website\Object\SluggableInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\Immutable\ImmutableInterface;
 use Teknoo\Immutable\ImmutableTrait;
@@ -39,8 +40,10 @@ use Teknoo\Immutable\ImmutableTrait;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @implements QueryElementInterface<SluggableInterface<ObjectInterface>>
  */
-class FindBySlugQuery implements QueryInterface, ImmutableInterface
+class FindBySlugQuery implements QueryElementInterface, ImmutableInterface
 {
     use ImmutableTrait;
 
@@ -53,11 +56,11 @@ class FindBySlugQuery implements QueryInterface, ImmutableInterface
         $this->uniqueConstructorCheck();
     }
 
-    public function execute(
+    public function fetch(
         LoaderInterface $loader,
         RepositoryInterface $repository,
         PromiseInterface $promise
-    ): QueryInterface {
+    ): QueryElementInterface {
         $filters = [$this->slugField => $this->slugValue];
 
         if (!$this->includeDeleted) {

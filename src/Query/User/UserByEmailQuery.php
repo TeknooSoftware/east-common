@@ -29,7 +29,8 @@ use Teknoo\East\Website\Query\Expr\InclusiveOr;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
-use Teknoo\East\Website\Query\QueryInterface;
+use Teknoo\East\Website\Object\User;
+use Teknoo\East\Website\Query\QueryElementInterface;
 use Teknoo\Immutable\ImmutableInterface;
 use Teknoo\Immutable\ImmutableTrait;
 
@@ -39,8 +40,10 @@ use Teknoo\Immutable\ImmutableTrait;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @implements QueryElementInterface<User>
  */
-class UserByEmailQuery implements QueryInterface, ImmutableInterface
+class UserByEmailQuery implements QueryElementInterface, ImmutableInterface
 {
     use ImmutableTrait;
 
@@ -50,11 +53,11 @@ class UserByEmailQuery implements QueryInterface, ImmutableInterface
         $this->uniqueConstructorCheck();
     }
 
-    public function execute(
+    public function fetch(
         LoaderInterface $loader,
         RepositoryInterface $repository,
         PromiseInterface $promise
-    ): QueryInterface {
+    ): QueryElementInterface {
         $repository->findOneBy(
             [
                 'email' => $this->email,

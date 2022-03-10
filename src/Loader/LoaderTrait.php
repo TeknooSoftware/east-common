@@ -25,9 +25,10 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Loader;
 
+use Teknoo\East\Website\Query\QueryCollectionInterface;
+use Teknoo\East\Website\Query\QueryElementInterface;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
-use Teknoo\East\Website\Query\QueryInterface;
 use Throwable;
 
 /**
@@ -35,12 +36,19 @@ use Throwable;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @mixin LoaderInterface
+ *
+ * @template TSuccessArgType
  */
 trait LoaderTrait
 {
+    /**
+     * @var RepositoryInterface<TSuccessArgType>
+     */
     protected RepositoryInterface $repository;
 
+    /**
+     * @return RepositoryInterface<TSuccessArgType>
+     */
     protected function getRepository(): RepositoryInterface
     {
         return $this->repository;
@@ -62,7 +70,14 @@ trait LoaderTrait
         return $this;
     }
 
-    public function query(QueryInterface $query, PromiseInterface $promise): LoaderInterface
+    public function fetch(QueryElementInterface $query, PromiseInterface $promise): LoaderInterface
+    {
+        $query->fetch($this, $this->getRepository(), $promise);
+
+        return $this;
+    }
+
+    public function query(QueryCollectionInterface $query, PromiseInterface $promise): LoaderInterface
     {
         $query->execute($this, $this->getRepository(), $promise);
 

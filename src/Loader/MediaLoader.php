@@ -25,11 +25,13 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Loader;
 
+use Teknoo\East\Website\Object\Media;
+use Teknoo\East\Website\Query\QueryCollectionInterface;
+use Teknoo\East\Website\Query\QueryElementInterface;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\Repository\MediaRepositoryInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Query\Expr\InclusiveOr;
-use Teknoo\East\Website\Query\QueryInterface;
 use Throwable;
 
 /**
@@ -39,9 +41,14 @@ use Throwable;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @implements LoaderInterface<Media>
  */
 class MediaLoader implements LoaderInterface
 {
+    /**
+     * @var RepositoryInterface<Media>
+     */
     private RepositoryInterface $repository;
 
     public function __construct(MediaRepositoryInterface $repository)
@@ -67,7 +74,14 @@ class MediaLoader implements LoaderInterface
         return $this;
     }
 
-    public function query(QueryInterface $query, PromiseInterface $promise): LoaderInterface
+    public function fetch(QueryElementInterface $query, PromiseInterface $promise): LoaderInterface
+    {
+        $query->fetch($this, $this->repository, $promise);
+
+        return $this;
+    }
+
+    public function query(QueryCollectionInterface $query, PromiseInterface $promise): LoaderInterface
     {
         $query->execute($this, $this->repository, $promise);
 

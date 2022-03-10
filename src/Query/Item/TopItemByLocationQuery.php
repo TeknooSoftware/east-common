@@ -29,7 +29,8 @@ use Teknoo\East\Website\Query\Enum\Direction;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
-use Teknoo\East\Website\Query\QueryInterface;
+use Teknoo\East\Website\Object\Item;
+use Teknoo\East\Website\Query\QueryCollectionInterface;
 use Teknoo\Immutable\ImmutableInterface;
 use Teknoo\Immutable\ImmutableTrait;
 
@@ -38,8 +39,10 @@ use Teknoo\Immutable\ImmutableTrait;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @implements QueryCollectionInterface<Item>
  */
-class TopItemByLocationQuery implements QueryInterface, ImmutableInterface
+class TopItemByLocationQuery implements QueryCollectionInterface, ImmutableInterface
 {
     use ImmutableTrait;
 
@@ -53,7 +56,7 @@ class TopItemByLocationQuery implements QueryInterface, ImmutableInterface
         LoaderInterface $loader,
         RepositoryInterface $repository,
         PromiseInterface $promise
-    ): QueryInterface {
+    ): QueryCollectionInterface {
         $repository->findBy(
             [
                 'location' => $this->location,

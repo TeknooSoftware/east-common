@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Loader;
 
+use Teknoo\East\Website\Query\QueryCollectionInterface;
+use Teknoo\East\Website\Query\QueryElementInterface;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\Query\QueryInterface;
 
@@ -34,10 +36,28 @@ use Teknoo\East\Website\Query\QueryInterface;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @template TSuccessArgType
  */
 interface LoaderInterface
 {
+    /**
+     * @param PromiseInterface<TSuccessArgType, mixed> $promise
+     * @return LoaderInterface<TSuccessArgType>
+     */
     public function load(string $id, PromiseInterface $promise): LoaderInterface;
 
-    public function query(QueryInterface $query, PromiseInterface $promise): LoaderInterface;
+    /**
+     * @param QueryElementInterface<TSuccessArgType> $query
+     * @param PromiseInterface<TSuccessArgType, mixed> $promise
+     * @return LoaderInterface<TSuccessArgType>
+     */
+    public function fetch(QueryElementInterface $query, PromiseInterface $promise): LoaderInterface;
+
+    /**
+     * @param QueryCollectionInterface<TSuccessArgType> $query
+     * @param PromiseInterface<iterable<TSuccessArgType>, mixed> $promise
+     * @return LoaderInterface<TSuccessArgType>
+     */
+    public function query(QueryCollectionInterface $query, PromiseInterface $promise): LoaderInterface;
 }

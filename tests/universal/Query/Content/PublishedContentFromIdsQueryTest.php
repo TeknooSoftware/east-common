@@ -24,6 +24,7 @@
 namespace Teknoo\Tests\East\Website\Query\Content;
 
 use PHPUnit\Framework\TestCase;
+use Teknoo\East\Website\Query\QueryCollectionInterface;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
@@ -31,7 +32,7 @@ use Teknoo\East\Website\Query\Expr\In;
 use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Query\Content\PublishedContentFromIdsQuery;
 use Teknoo\East\Website\Query\QueryInterface;
-use Teknoo\Tests\East\Website\Query\QueryTestTrait;
+use Teknoo\Tests\East\Website\Query\QueryCollectionTestTrait;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -40,12 +41,12 @@ use Teknoo\Tests\East\Website\Query\QueryTestTrait;
  */
 class PublishedContentFromIdsQueryTest extends TestCase
 {
-    use QueryTestTrait;
+    use QueryCollectionTestTrait;
 
     /**
      * @inheritDoc
      */
-    public function buildQuery(): QueryInterface
+    public function buildQuery(): QueryCollectionInterface
     {
         return new PublishedContentFromIdsQuery(['fooBar']);
     }

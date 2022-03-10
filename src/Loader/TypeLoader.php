@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Loader;
 
 use Teknoo\East\Website\DBSource\Repository\TypeRepositoryInterface;
+use Teknoo\East\Website\Object\Type;
 
 /**
  * Object loader in charge of object `Teknoo\East\Website\Object\Type`.
@@ -33,9 +34,14 @@ use Teknoo\East\Website\DBSource\Repository\TypeRepositoryInterface;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @implements LoaderInterface<Type>
  */
 class TypeLoader implements LoaderInterface
 {
+    /**
+     * @use LoaderTrait<Type>
+     */
     use LoaderTrait;
 
     public function __construct(TypeRepositoryInterface $repository)

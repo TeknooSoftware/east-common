@@ -34,10 +34,22 @@ use Teknoo\East\Website\Contracts\ObjectInterface;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @template TSuccessArgType of ObjectInterface
  */
 interface WriterInterface
 {
+    /**
+     * @param TSuccessArgType $object
+     * @param PromiseInterface<TSuccessArgType, mixed>|null $promise
+     * @return WriterInterface<TSuccessArgType>
+     */
     public function save(ObjectInterface $object, PromiseInterface $promise = null): WriterInterface;
 
+    /**
+     * @param TSuccessArgType $object
+     * @param PromiseInterface<TSuccessArgType, mixed>|null $promise
+     * @return WriterInterface<TSuccessArgType>
+     */
     public function remove(ObjectInterface $object, PromiseInterface $promise = null): WriterInterface;
 }

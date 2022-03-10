@@ -39,6 +39,7 @@ use ProxyManager\Proxy\GhostObjectInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use RuntimeException;
 use SimpleXMLElement;
+use Teknoo\East\Website\Object\ObjectInterface;
 use Teknoo\East\Website\Object\User;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\Contracts\Recipe\Step\GetStreamFromMediaInterface;
@@ -131,6 +132,9 @@ return [
             $translatableManagerAdapter,
             $persistence,
             new class implements WrapperFactory {
+                /**
+                 * @param ClassMetadata<ObjectInterface> $metadata
+                 */
                 public function __invoke(TranslatableInterface $object, ClassMetadata $metadata): WrapperInterface
                 {
                     if (!$metadata instanceof OdmClassMetadata) {

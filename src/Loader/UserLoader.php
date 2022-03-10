@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Loader;
 
 use Teknoo\East\Website\DBSource\Repository\UserRepositoryInterface;
+use Teknoo\East\Website\Object\User;
 
 /**
  * Object loader in charge of object `Teknoo\East\Website\Object\User`.
@@ -33,9 +34,14 @@ use Teknoo\East\Website\DBSource\Repository\UserRepositoryInterface;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @implements LoaderInterface<User>
  */
 class UserLoader implements LoaderInterface
 {
+    /**
+     * @use LoaderTrait<User>
+     */
     use LoaderTrait;
 
     public function __construct(UserRepositoryInterface $repository)

@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\Loader;
 
 use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
+use Teknoo\East\Website\Object\Content;
 
 /**
  * Object loader in charge of object `Teknoo\East\Website\Object\Content`.
@@ -33,9 +34,14 @@ use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @implements LoaderInterface<Content>
  */
 class ContentLoader implements LoaderInterface
 {
+    /**
+     * @use LoaderTrait<Content>
+     */
     use LoaderTrait;
 
     public function __construct(ContentRepositoryInterface $repository)

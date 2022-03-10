@@ -26,12 +26,15 @@ declare(strict_types=1);
 namespace Teknoo\East\Website\DBSource\Repository;
 
 use Teknoo\East\Website\DBSource\RepositoryInterface;
+use Teknoo\East\Website\Object\Type;
 
 /**
  * Interface to define repository in charge of object `Teknoo\East\Website\Object\Type`.
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @extends RepositoryInterface<Type>
  */
 interface TypeRepositoryInterface extends RepositoryInterface
 {

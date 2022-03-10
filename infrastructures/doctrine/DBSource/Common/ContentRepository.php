@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\DBSource\Common;
 
+use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
 
 /**
@@ -38,5 +39,8 @@ use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
  */
 class ContentRepository implements ContentRepositoryInterface
 {
+    /**
+     * @use RepositoryTrait<Content>
+     */
     use RepositoryTrait;
 }

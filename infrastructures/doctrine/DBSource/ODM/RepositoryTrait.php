@@ -38,11 +38,16 @@ use Throwable;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @template ObjectClass
  */
 trait RepositoryTrait
 {
     use ExprConversionTrait;
 
+    /**
+     * @param DocumentRepository<ObjectClass> $repository
+     */
     public function __construct(
         private DocumentRepository $repository
     ) {
@@ -102,7 +107,9 @@ trait RepositoryTrait
 
         $query = $queryBuilder->getQuery();
 
-        $promise->success($query->execute());
+        /** @var iterable<ObjectClass> $result */
+        $result = $query->execute();
+        $promise->success($result);
 
         return $this;
     }
@@ -120,7 +127,9 @@ trait RepositoryTrait
 
         $query = $queryBuilder->getQuery();
 
-        $promise->success($query->execute());
+        /** @var int $result */
+        $result = $query->execute();
+        $promise->success($result);
 
         return $this;
     }

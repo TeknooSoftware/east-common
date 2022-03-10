@@ -259,7 +259,7 @@ class OAuth2AuthenticatorTest extends TestCase
 
         $this->getLoader()
             ->expects(self::any())
-            ->method('query')
+            ->method('fetch')
             ->willReturnCallback(
                 function ($query, PromiseInterface $promise) {
                     $promise->success(new User());
@@ -321,7 +321,7 @@ class OAuth2AuthenticatorTest extends TestCase
 
         $this->getLoader()
             ->expects(self::any())
-            ->method('query')
+            ->method('fetch')
             ->willReturnCallback(
                 function ($query, PromiseInterface $promise) {
                     $promise->fail(new \DomainException());
@@ -376,7 +376,7 @@ class OAuth2AuthenticatorTest extends TestCase
 
         $this->getLoader()
             ->expects(self::any())
-            ->method('query')
+            ->method('fetch')
             ->willReturnCallback(
                 function ($query, PromiseInterface $promise) {
                     $promise->fail(new \RuntimeException());

@@ -40,26 +40,32 @@ use Teknoo\East\Website\Writer\WriterInterface;
  */
 class SaveObject
 {
+    /**
+     * @param WriterInterface<ObjectInterface> $writer
+     */
     public function __invoke(
         WriterInterface $writer,
         ObjectInterface $object,
         ManagerInterface $manager,
     ): self {
+        /** @var Promise<ObjectInterface, mixed, mixed> $savedPromise */
+        $savedPromise = new Promise(
+            static function (ObjectInterface $object) use ($manager) {
+                if ($object instanceof ObjectWithId) {
+                    $manager->updateWorkPlan([
+                        'id' => $object->getId(),
+                        'parameters' => [
+                            'id' => $object->getId(),
+                        ],
+                    ]);
+                }
+            },
+            $manager->error(...)
+        );
+
         $writer->save(
             $object,
-            new Promise(
-                static function (ObjectInterface $object) use ($manager) {
-                    if ($object instanceof ObjectWithId) {
-                        $manager->updateWorkPlan([
-                            'id' => $object->getId(),
-                            'parameters' => [
-                                'id' => $object->getId(),
-                            ],
-                        ]);
-                    }
-                },
-                $manager->error(...)
-            )
+            $savedPromise
         );
 
         return $this;

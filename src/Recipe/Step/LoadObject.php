@@ -41,23 +41,29 @@ use Throwable;
  */
 class LoadObject
 {
+    /**
+     * @param LoaderInterface<ObjectInterface> $loader
+     */
     public function __invoke(
         LoaderInterface $loader,
         string $id,
         ManagerInterface $manager,
         string $workPlanKey = ObjectInterface::class,
     ): self {
+        /** @var Promise<ObjectInterface, mixed, mixed> $fetchPromise */
+        $fetchPromise = new Promise(
+            static function (ObjectInterface $object) use ($manager, $workPlanKey) {
+                $manager->updateWorkPlan([$workPlanKey => $object]);
+            },
+            static function (Throwable $error) use ($manager) {
+                $error = new DomainException($error->getMessage(), 404, $error);
+                $manager->error($error);
+            }
+        );
+
         $loader->load(
             $id,
-            new Promise(
-                static function (ObjectInterface $object) use ($manager, $workPlanKey) {
-                    $manager->updateWorkPlan([$workPlanKey => $object]);
-                },
-                static function (Throwable $error) use ($manager) {
-                    $error = new DomainException($error->getMessage(), 404, $error);
-                    $manager->error($error);
-                }
-            )
+            $fetchPromise
         );
 
         return $this;

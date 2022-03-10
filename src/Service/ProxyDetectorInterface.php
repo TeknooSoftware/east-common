@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Service;
 
+use Teknoo\East\Website\Contracts\ObjectInterface;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
@@ -37,5 +38,8 @@ use Teknoo\Recipe\Promise\PromiseInterface;
  */
 interface ProxyDetectorInterface
 {
+    /**
+     * @param PromiseInterface<ObjectInterface, mixed> $promise
+     */
     public function checkIfInstanceBehindProxy(object $object, PromiseInterface $promise): ProxyDetectorInterface;
 }

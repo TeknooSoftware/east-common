@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Service;
 
+use Teknoo\East\Website\Contracts\ObjectInterface;
+use Teknoo\East\Website\Object\Content;
 use Teknoo\Recipe\Promise\Promise;
 use Teknoo\East\Website\Loader\ContentLoader;
 use Teknoo\East\Website\Loader\ItemLoader;
@@ -69,11 +71,14 @@ class MenuGenerator
         $itemsSorting = function (iterable $items) use (&$itemsStacks, &$contentsStacks) {
             foreach ($items as $item) {
                 if (null !== $this->proxyDetector && null !== ($content = $item->getContent())) {
+                    /** @var Promise<ObjectInterface, mixed, mixed> $contentFetchedPromise */
+                    $contentFetchedPromise = new Promise(function ($content) use (&$contentsStacks, $item) {
+                        $contentsStacks[$content->getId()] = $item;
+                    });
+
                     $this->proxyDetector->checkIfInstanceBehindProxy(
                         $content,
-                        new Promise(function ($content) use (&$contentsStacks, $item) {
-                            $contentsStacks[$content->getId()] = $item;
-                        })
+                        $contentFetchedPromise
                     );
                 }
 
@@ -90,22 +95,26 @@ class MenuGenerator
                 return;
             }
 
+            /** @var Promise<iterable<Content>, mixed, mixed> $fetchedPromise */
+            $fetchedPromise = new Promise(function (iterable $contents) use (&$contentsStacks) {
+                foreach ($contents as $content) {
+                    $cId = $content->getId();
+
+                    if (!isset($contentsStacks[$cId])) {
+                        continue;
+                    }
+
+                    $contentsStacks[$cId]->setContent($content);
+                }
+            });
+
             $this->contentLoader->query(
                 new PublishedContentFromIdsQuery(array_keys($contentsStacks)),
-                new Promise(function (iterable $contents) use (&$contentsStacks) {
-                    foreach ($contents as $content) {
-                        $cId = $content->getId();
-
-                        if (!isset($contentsStacks[$cId])) {
-                            continue;
-                        }
-
-                        $contentsStacks[$cId]->setContent($content);
-                    }
-                })
+                $fetchedPromise
             );
         };
 
+        /** @var Promise<iterable<Item>, mixed, mixed> $promise */
         $promise = new Promise($itemsSorting);
 
         $this->itemLoader->query(new TopItemByLocationQuery($location), $promise);

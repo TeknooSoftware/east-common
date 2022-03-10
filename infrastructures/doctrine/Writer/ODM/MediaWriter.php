@@ -41,9 +41,14 @@ use Teknoo\East\Website\Writer\MediaWriter as OriginalWriter;
  *  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @implements WriterInterface<Media>
  */
 class MediaWriter implements WriterInterface
 {
+    /**
+     * @param GridFSRepository<Media> $repository
+     */
     public function __construct(
         private GridFSRepository $repository,
         private OriginalWriter $writer,
@@ -64,6 +69,7 @@ class MediaWriter implements WriterInterface
         $options->metadata = $object->getMetadata();
         $options->chunkSizeBytes = $object->getLength();
 
+        /** @var Media $media */
         $media = $this->repository->uploadFromFile(
             $object->getMetadata()->getLocalPath(),
             $object->getName(),

@@ -47,18 +47,21 @@ class LoadMedia
 
     public function __invoke(string $id, ManagerInterface $manager): self
     {
+        /** @var Promise<Media, mixed, mixed> $fetchPromise */
+        $fetchPromise = new Promise(
+            static function (Media $media) use ($manager) {
+                $manager->updateWorkPlan([Media::class => $media]);
+            },
+            static function (Throwable $error) use ($manager) {
+                $error = new DomainException($error->getMessage(), 404, $error);
+
+                $manager->error($error);
+            }
+        );
+
         $this->mediaLoader->load(
             $id,
-            new Promise(
-                static function (Media $media) use ($manager) {
-                    $manager->updateWorkPlan([Media::class => $media]);
-                },
-                static function (Throwable $error) use ($manager) {
-                    $error = new DomainException($error->getMessage(), 404, $error);
-
-                    $manager->error($error);
-                }
-            )
+            $fetchPromise
         );
 
         return $this;

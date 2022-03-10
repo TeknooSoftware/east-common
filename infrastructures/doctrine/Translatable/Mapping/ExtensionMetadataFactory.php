@@ -35,6 +35,7 @@ use Doctrine\Persistence\ObjectManager;
 use Doctrine\ODM\MongoDB\Mapping\ClassMetadata as ClassMetadataODM;
 use Teknoo\East\Website\Doctrine\Exception\InvalidMappingException;
 use Teknoo\East\Website\Doctrine\Translatable\TranslatableListener;
+use Teknoo\East\Website\Object\ObjectInterface;
 
 use function array_reverse;
 use function class_parents;
@@ -51,7 +52,7 @@ use function is_callable;
 class ExtensionMetadataFactory
 {
     /**
-     * @param AbstractClassMetadataFactory<ClassMetadataODM> $classMetadataFactory
+     * @param AbstractClassMetadataFactory<ClassMetadataODM<ObjectInterface>> $classMetadataFactory
      */
     public function __construct(
         private ObjectManager $objectManager,
@@ -88,7 +89,7 @@ class ExtensionMetadataFactory
     }
 
     /**
-     * @param ClassMetadata $metaData
+     * @param ClassMetadata<ObjectInterface> $metaData
      */
     public function loadExtensionMetadata(
         ClassMetadata $metaData,

@@ -28,6 +28,7 @@ namespace Teknoo\East\Website\Doctrine\DBSource\Common;
 use Doctrine\Persistence\ObjectRepository;
 use DomainException;
 use RuntimeException;
+use Teknoo\East\Website\Contracts\ObjectInterface;
 use Teknoo\East\Website\Query\Enum\Direction;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
@@ -42,6 +43,8 @@ use function array_walk;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @template ObjectClass
  */
 trait RepositoryTrait
 {
@@ -57,6 +60,7 @@ trait RepositoryTrait
 
     public function find(string $id, PromiseInterface $promise): RepositoryInterface
     {
+        /** @var ObjectClass|null $result */
         $result = $this->repository->find($id);
 
         if (!empty($result)) {
@@ -70,7 +74,9 @@ trait RepositoryTrait
 
     public function findAll(PromiseInterface $promise): RepositoryInterface
     {
-        $promise->success($this->repository->findAll());
+        /** @var iterable<ObjectClass> $result */
+        $result = $this->repository->findAll();
+        $promise->success($result);
 
         return $this;
     }
@@ -94,14 +100,15 @@ trait RepositoryTrait
         }
 
         /** @var array<string, 'asc'|'ASC'|'desc'|'DESC'>|null $orderBy */
-        $promise->success(
-            $this->repository->findBy(
-                $criteria,
-                $orderBy,
-                $limit,
-                $offset
-            )
+        /** @var iterable<ObjectClass> $result */
+        $result = $this->repository->findBy(
+            $criteria,
+            $orderBy,
+            $limit,
+            $offset
         );
+
+        $promise->success($result);
 
         return $this;
     }
@@ -123,6 +130,7 @@ trait RepositoryTrait
     {
         $error = null;
         try {
+            /** @var ObjectClass|null $result */
             $result = $this->repository->findOneBy(self::convert($criteria));
 
             if (!empty($result)) {

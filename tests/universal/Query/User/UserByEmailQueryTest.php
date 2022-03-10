@@ -25,12 +25,13 @@ namespace Teknoo\Tests\East\Website\Query\User;
 
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Website\Query\Expr\InclusiveOr;
+use Teknoo\East\Website\Query\QueryElementInterface;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Query\QueryInterface;
 use Teknoo\East\Website\Query\User\UserByEmailQuery;
-use Teknoo\Tests\East\Website\Query\QueryTestTrait;
+use Teknoo\Tests\East\Website\Query\QueryElementTestTrait;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -39,17 +40,17 @@ use Teknoo\Tests\East\Website\Query\QueryTestTrait;
  */
 class UserByEmailQueryTest extends TestCase
 {
-    use QueryTestTrait;
+    use QueryElementTestTrait;
 
     /**
      * @inheritDoc
      */
-    public function buildQuery(): QueryInterface
+    public function buildQuery(): QueryElementInterface
     {
         return new UserByEmailQuery('foo@bar');
     }
 
-    public function testExecute()
+    public function testFetch()
     {
         $loader = $this->createMock(LoaderInterface::class);
         $repository = $this->createMock(RepositoryInterface::class);
@@ -72,7 +73,7 @@ class UserByEmailQueryTest extends TestCase
 
         self::assertInstanceOf(
             UserByEmailQuery::class,
-            $this->buildQuery()->execute($loader, $repository, $promise)
+            $this->buildQuery()->fetch($loader, $repository, $promise)
         );
     }
 }

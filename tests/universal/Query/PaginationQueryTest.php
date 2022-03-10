@@ -24,6 +24,7 @@
 namespace Teknoo\Tests\East\Website\Query;
 
 use PHPUnit\Framework\TestCase;
+use Teknoo\East\Website\Query\QueryCollectionInterface;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
@@ -37,12 +38,12 @@ use Teknoo\East\Website\Query\QueryInterface;
  */
 class PaginationQueryTest extends TestCase
 {
-    use QueryTestTrait;
+    use QueryCollectionTestTrait;
 
     /**
      * @inheritDoc
      */
-    public function buildQuery(): QueryInterface
+    public function buildQuery(): QueryCollectionInterface
     {
         return new PaginationQuery(['foo' => 'bar'], ['foo' => 'ASC'], 12, 20);
     }

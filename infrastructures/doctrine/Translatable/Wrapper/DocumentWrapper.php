@@ -31,6 +31,7 @@ use ProxyManager\Proxy\GhostObjectInterface;
 use Teknoo\East\Website\Doctrine\Translatable\ObjectManager\AdapterInterface as ManagerAdapterInterface;
 use Teknoo\East\Website\Doctrine\Translatable\Persistence\AdapterInterface;
 use Teknoo\East\Website\Doctrine\Translatable\TranslationInterface;
+use Teknoo\East\Website\Object\ObjectInterface;
 use Teknoo\East\Website\Object\TranslatableInterface;
 
 use function spl_object_hash;
@@ -47,6 +48,9 @@ use function spl_object_hash;
  */
 class DocumentWrapper implements WrapperInterface
 {
+    /**
+     * @param ClassMetadata<ObjectInterface> $meta
+     */
     public function __construct(
         private TranslatableInterface $object,
         private ClassMetadata $meta,

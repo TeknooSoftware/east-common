@@ -31,8 +31,9 @@ use Teknoo\Recipe\Promise\Promise;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
+use Teknoo\East\Website\Object\Content;
 use Teknoo\East\Website\Object\PublishableInterface;
-use Teknoo\East\Website\Query\QueryInterface;
+use Teknoo\East\Website\Query\QueryElementInterface;
 use Teknoo\Immutable\ImmutableInterface;
 use Teknoo\Immutable\ImmutableTrait;
 use Throwable;
@@ -43,8 +44,10 @@ use Throwable;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @implements QueryElementInterface<Content>
  */
-class PublishedContentFromSlugQuery implements QueryInterface, ImmutableInterface
+class PublishedContentFromSlugQuery implements QueryElementInterface, ImmutableInterface
 {
     use ImmutableTrait;
 
@@ -54,11 +57,12 @@ class PublishedContentFromSlugQuery implements QueryInterface, ImmutableInterfac
         $this->uniqueConstructorCheck();
     }
 
-    public function execute(
+    public function fetch(
         LoaderInterface $loader,
         RepositoryInterface $repository,
         PromiseInterface $promise
-    ): QueryInterface {
+    ): QueryElementInterface {
+        /** @var Promise<Content, mixed, Content> $fetchingPromise */
         $fetchingPromise = new Promise(
             static function ($object, PromiseInterface $next) {
                 if (

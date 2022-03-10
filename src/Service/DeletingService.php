@@ -40,6 +40,9 @@ use Teknoo\East\Website\Writer\WriterInterface;
  */
 class DeletingService
 {
+    /**
+     * @param WriterInterface<ObjectInterface> $writer
+     */
     public function __construct(
         private WriterInterface $writer,
         private DatesService $datesService,

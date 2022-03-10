@@ -23,46 +23,43 @@
 
 namespace Teknoo\Tests\East\Website\Query;
 
+use Teknoo\East\Website\Query\QueryElementInterface;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
-use Teknoo\East\Website\Query\QueryInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-trait QueryTestTrait
+trait QueryElementTestTrait
 {
-    /**
-     * @return QueryInterface
-     */
-    abstract public function buildQuery(): QueryInterface;
+    abstract public function buildQuery(): QueryElementInterface;
 
-    public function testExecuteBadLoader()
+    public function testFetchBadLoader()
     {
         $this->expectException(\TypeError::class);
-        $this->buildQuery()->execute(
+        $this->buildQuery()->fetch(
             new \stdClass(),
             $this->createMock(RepositoryInterface::class),
             $this->createMock(PromiseInterface::class)
         );
     }
 
-    public function testExecuteBadRepository()
+    public function testFetchBadRepository()
     {
         $this->expectException(\TypeError::class);
-        $this->buildQuery()->execute(
+        $this->buildQuery()->fetch(
             $this->createMock(LoaderInterface::class),
             new \stdClass(),
             $this->createMock(PromiseInterface::class)
         );
     }
 
-    public function testExecuteBadPromise()
+    public function testFetchBadPromise()
     {
         $this->expectException(\TypeError::class);
-        $this->buildQuery()->execute(
+        $this->buildQuery()->fetch(
             $this->createMock(LoaderInterface::class),
             $this->createMock(RepositoryInterface::class),
             new \stdClass()

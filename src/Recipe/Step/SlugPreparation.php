@@ -44,12 +44,16 @@ class SlugPreparation
     ) {
     }
 
+    /**
+     * @param LoaderInterface<SluggableInterface<ObjectInterface>> $loader
+     */
     public function __invoke(LoaderInterface $loader, ObjectInterface $object, ?string $slugField = null): self
     {
         if (!$object instanceof SluggableInterface || null === $slugField) {
             return $this;
         }
 
+        /** @var SluggableInterface<ObjectInterface> $object */
         $object->prepareSlugNear(
             $loader,
             $this->findSlugService,

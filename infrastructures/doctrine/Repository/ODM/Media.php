@@ -29,6 +29,7 @@ use Doctrine\ODM\MongoDB\DocumentNotFoundException;
 use Doctrine\ODM\MongoDB\Repository\DefaultGridFSRepository;
 use MongoDB\GridFS\Bucket;
 use MongoDB\GridFS\Exception\FileNotFoundException;
+use Teknoo\East\Website\Doctrine\Object\Media as ObjectMedia;
 
 use function strlen;
 
@@ -38,6 +39,8 @@ use function strlen;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @extends DefaultGridFSRepository<ObjectMedia>
  */
 class Media extends DefaultGridFSRepository
 {

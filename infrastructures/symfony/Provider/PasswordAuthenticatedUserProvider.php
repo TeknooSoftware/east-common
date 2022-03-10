@@ -71,17 +71,20 @@ class PasswordAuthenticatedUserProvider implements UserProviderInterface, Passwo
 
     protected function fetchUserByUsername(string $username): UserInterface
     {
-        $this->loader->query(
-            new UserByEmailQuery($username),
-            $promise = new Promise(static function (User $user) {
-                foreach ($user->getAuthData() as $authData) {
-                    if (!$authData instanceof StoredPassword) {
-                        continue;
-                    }
-
-                    return new PasswordAuthenticatedUser($user, $authData);
+        /** @var Promise<User, PasswordAuthenticatedUser, mixed> $promise */
+        $promise = new Promise(static function (User $user) {
+            foreach ($user->getAuthData() as $authData) {
+                if (!$authData instanceof StoredPassword) {
+                    continue;
                 }
-            })
+
+                return new PasswordAuthenticatedUser($user, $authData);
+            }
+        });
+
+        $this->loader->fetch(
+            new UserByEmailQuery($username),
+            $promise,
         );
 
         $loadedUser = $promise->fetchResult();

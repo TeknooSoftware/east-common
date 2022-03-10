@@ -26,12 +26,12 @@ namespace Teknoo\Tests\East\Website\Query;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Website\Object\ObjectInterface;
 use Teknoo\East\Website\Query\Expr\NotEqual;
+use Teknoo\East\Website\Query\QueryElementInterface;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\DBSource\RepositoryInterface;
 use Teknoo\East\Website\Loader\LoaderInterface;
 use Teknoo\East\Website\Query\FindBySlugQuery;
 use Teknoo\East\Website\Query\QueryInterface;
-use Teknoo\Tests\East\Website\Query\QueryTestTrait;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -40,17 +40,17 @@ use Teknoo\Tests\East\Website\Query\QueryTestTrait;
  */
 class FindBySlugQueryTest extends TestCase
 {
-    use QueryTestTrait;
+    use QueryElementTestTrait;
 
     /**
      * @inheritDoc
      */
-    public function buildQuery(bool $includedDeleted = false, mixed $object = null): QueryInterface
+    public function buildQuery(bool $includedDeleted = false, mixed $object = null): QueryElementInterface
     {
         return new FindBySlugQuery('fooBarName', 'HelloWorld', $includedDeleted, $object);
     }
 
-    public function testExecute()
+    public function testFetch()
     {
         $loader = $this->createMock(LoaderInterface::class);
         $repository = $this->createMock(RepositoryInterface::class);
@@ -67,11 +67,11 @@ class FindBySlugQueryTest extends TestCase
 
         self::assertInstanceOf(
             FindBySlugQuery::class,
-            $this->buildQuery()->execute($loader, $repository, $promise)
+            $this->buildQuery()->fetch($loader, $repository, $promise)
         );
     }
 
-    public function testExecuteWithDeleted()
+    public function testFetchWithDeleted()
     {
         $loader = $this->createMock(LoaderInterface::class);
         $repository = $this->createMock(RepositoryInterface::class);
@@ -88,11 +88,11 @@ class FindBySlugQueryTest extends TestCase
 
         self::assertInstanceOf(
             FindBySlugQuery::class,
-            $this->buildQuery(true)->execute($loader, $repository, $promise)
+            $this->buildQuery(true)->fetch($loader, $repository, $promise)
         );
     }
 
-    public function testExecuteWithNonSavedObject()
+    public function testFetchWithNonSavedObject()
     {
         $loader = $this->createMock(LoaderInterface::class);
         $repository = $this->createMock(RepositoryInterface::class);
@@ -111,11 +111,11 @@ class FindBySlugQueryTest extends TestCase
 
         self::assertInstanceOf(
             FindBySlugQuery::class,
-            $this->buildQuery(true, $object)->execute($loader, $repository, $promise)
+            $this->buildQuery(true, $object)->fetch($loader, $repository, $promise)
         );
     }
 
-    public function testExecuteWithSavedObject()
+    public function testFetchWithSavedObject()
     {
         $loader = $this->createMock(LoaderInterface::class);
         $repository = $this->createMock(RepositoryInterface::class);
@@ -135,11 +135,11 @@ class FindBySlugQueryTest extends TestCase
 
         self::assertInstanceOf(
             FindBySlugQuery::class,
-            $this->buildQuery(true, $object)->execute($loader, $repository, $promise)
+            $this->buildQuery(true, $object)->fetch($loader, $repository, $promise)
         );
     }
 
-    public function testExecuteFailing()
+    public function testFetchFailing()
     {
         $loader = $this->createMock(LoaderInterface::class);
         $repository = $this->createMock(RepositoryInterface::class);
@@ -158,7 +158,7 @@ class FindBySlugQueryTest extends TestCase
 
         self::assertInstanceOf(
             FindBySlugQuery::class,
-            $this->buildQuery()->execute($loader, $repository, $promise)
+            $this->buildQuery()->fetch($loader, $repository, $promise)
         );
     }
 }

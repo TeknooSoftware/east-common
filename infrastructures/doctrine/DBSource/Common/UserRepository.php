@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Website\Doctrine\DBSource\Common;
 
+use Teknoo\East\Website\Object\User;
 use Teknoo\East\Website\DBSource\Repository\UserRepositoryInterface;
 
 /**
@@ -38,5 +39,8 @@ use Teknoo\East\Website\DBSource\Repository\UserRepositoryInterface;
  */
 class UserRepository implements UserRepositoryInterface
 {
+    /**
+     * @use RepositoryTrait<User>
+     */
     use RepositoryTrait;
 }

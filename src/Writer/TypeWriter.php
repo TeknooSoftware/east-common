@@ -27,6 +27,7 @@ namespace Teknoo\East\Website\Writer;
 
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Website\Contracts\ObjectInterface;
+use Teknoo\East\Website\Object\Type;
 use Throwable;
 
 /**
@@ -37,9 +38,14 @@ use Throwable;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @implements WriterInterface<Type>
  */
 class TypeWriter implements WriterInterface
 {
+    /**
+     * @use PersistTrait<Type>
+     */
     use PersistTrait;
 
     /**

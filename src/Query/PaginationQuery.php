@@ -44,8 +44,10 @@ use Traversable;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @implements QueryCollectionInterface<ObjectInterface>
  */
-class PaginationQuery implements QueryInterface, ImmutableInterface
+class PaginationQuery implements QueryCollectionInterface, ImmutableInterface
 {
     use ImmutableTrait;
 
@@ -66,7 +68,7 @@ class PaginationQuery implements QueryInterface, ImmutableInterface
         LoaderInterface $loader,
         RepositoryInterface $repository,
         PromiseInterface $promise
-    ): QueryInterface {
+    ): QueryCollectionInterface {
         $criteria = $this->criteria;
         $criteria['deletedAt'] = null;
 
@@ -74,46 +76,52 @@ class PaginationQuery implements QueryInterface, ImmutableInterface
             $promise->fail($error);
         };
 
+        /** @var Promise<iterable<ObjectInterface>, mixed, mixed> $findPromise */
+        $findPromise = new Promise(
+            static function ($result) use ($criteria, $promise, $repository, $failClosure) {
+                /** @var Promise<int, mixed, mixed> $countPromise */
+                $countPromise = new Promise(
+                    static function (int $count) use ($promise, $result) {
+                        $iterator = new class ($count, $result) implements Countable, IteratorAggregate {
+                            /**
+                             * @param Traversable<ObjectInterface> $iterator
+                             */
+                            public function __construct(
+                                private readonly int $count,
+                                private readonly Traversable $iterator,
+                            ) {
+                            }
+
+                            /**
+                             * @return Traversable<ObjectInterface>
+                             */
+                            public function getIterator(): Traversable
+                            {
+                                return $this->iterator;
+                            }
+
+                            public function count(): int
+                            {
+                                return $this->count;
+                            }
+                        };
+
+                        $promise->success($iterator);
+                    },
+                    $failClosure
+                );
+
+                $repository->count(
+                    $criteria,
+                    $countPromise
+                );
+            },
+            $failClosure
+        );
+
         $repository->findBy(
             $criteria,
-            new Promise(
-                static function ($result) use ($criteria, $promise, $repository, $failClosure) {
-                    $repository->count(
-                        $criteria,
-                        new Promise(
-                            static function ($count) use ($promise, $result) {
-                                $iterator = new class ($count, $result) implements Countable, IteratorAggregate {
-                                    /**
-                                     * @param Traversable<ObjectInterface> $iterator
-                                     */
-                                    public function __construct(
-                                        private readonly int $count,
-                                        private readonly Traversable $iterator,
-                                    ) {
-                                    }
-
-                                    /**
-                                     * @return Traversable<ObjectInterface>
-                                     */
-                                    public function getIterator(): Traversable
-                                    {
-                                        return $this->iterator;
-                                    }
-
-                                    public function count(): int
-                                    {
-                                        return $this->count;
-                                    }
-                                };
-
-                                $promise->success($iterator);
-                            },
-                            $failClosure
-                        )
-                    );
-                },
-                $failClosure
-            ),
+            $findPromise,
             $this->order,
             $this->limit,
             $this->offset

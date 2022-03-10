@@ -94,7 +94,7 @@ class LoadContentTest extends TestCase
 
         $this->getContentLoader()
             ->expects(self::any())
-            ->method('query')
+            ->method('fetch')
             ->willReturnCallback(
                 function ($query, PromiseInterface $promise) use ($content) {
                     $promise->success($content);
@@ -124,7 +124,7 @@ class LoadContentTest extends TestCase
 
         $this->getContentLoader()
             ->expects(self::any())
-            ->method('query')
+            ->method('fetch')
             ->willReturnCallback(
                 function ($query, PromiseInterface $promise) use ($content) {
                     $promise->success($content);
@@ -152,7 +152,7 @@ class LoadContentTest extends TestCase
 
         $this->getContentLoader()
             ->expects(self::any())
-            ->method('query')
+            ->method('fetch')
             ->willReturnCallback(
                 function ($query, PromiseInterface $promise) {
                     $promise->fail(new \DomainException('foo'));

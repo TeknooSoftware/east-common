@@ -183,7 +183,7 @@ class OAuth2Authenticator extends BaseAuthenticator
                         $promise,
                     );
 
-                    return $promise->fetchResult();
+                    return $promise->fetchResult() ?? throw new AuthenticationException('User unavailable');
                 }
             )
         );

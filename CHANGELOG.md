@@ -26,6 +26,10 @@
 - Remove support of deprecated features removed in `Symfony 6.0` (`Salt`, `LegacyUser`)
 - Use `(...)` notation instead array notation for callable
 - Enable fiber support in front endpoint
+- `QueryInterface` has been splitted to `QueryElementInterface` and `QueryCollectionInterface` to differentiate
+  queries fetching only one element, or a scalar value, and queries for collections of objects.
+- `LoaderInterface::query` method is only dedicated for `QueryCollectionInterface` queries.
+- a new method `LoaderInterface::fetch` is dedicated for `QueryElementInterface` queries.
 
 * Warning * : All legacy user are not supported from this version. User's salt are also
 not supported, all users' passwords must be converted before switching to this version.

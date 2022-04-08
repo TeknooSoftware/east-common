@@ -29,7 +29,7 @@ use Countable;
 use IteratorAggregate;
 use Teknoo\East\Common\Contracts\DBSource\RepositoryInterface;
 use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
-use Teknoo\East\Common\Contracts\ObjectInterface;
+use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Common\Contracts\Query\QueryCollectionInterface;
 use Teknoo\East\Common\Query\Enum\Direction;
 use Teknoo\Immutable\ImmutableInterface;

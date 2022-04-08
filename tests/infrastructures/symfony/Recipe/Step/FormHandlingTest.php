@@ -31,7 +31,6 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
 use Teknoo\East\Common\Contracts\Object\PublishableInterface;
-use Teknoo\East\Common\Contracts\ObjectInterface;
 use Teknoo\East\Common\Service\DatesService;
 use Teknoo\East\CommonBundle\Recipe\Step\FormHandling;
 use Teknoo\East\Foundation\Manager\ManagerInterface;

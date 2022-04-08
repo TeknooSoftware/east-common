@@ -26,8 +26,8 @@ declare(strict_types=1);
 namespace Teknoo\East\Common\Contracts\Recipe\Step;
 
 use Psr\Http\Message\MessageInterface;
+use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
-use Teknoo\East\Common\Contracts\ObjectInterface;
 
 /**
  * Interface to define step to use into a Recipe to implement ACL checking on a list of objects instance
@@ -38,7 +38,7 @@ use Teknoo\East\Common\Contracts\ObjectInterface;
 interface ListObjectsAccessControlInterface
 {
     /**
-     * @param iterable<ObjectInterface> $objectsCollection
+     * @param iterable<\Teknoo\East\Common\Contracts\Object\ObjectInterface> $objectsCollection
      */
     public function __invoke(
         ManagerInterface $manager,

@@ -25,9 +25,9 @@ namespace Teknoo\Tests\East\Common\Recipe\Step;
 
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface as ObjectWithId;
-use Teknoo\East\Common\Contracts\ObjectInterface;
+use Teknoo\East\Common\Contracts\Object\ObjectInterface;
+use Teknoo\East\Common\Contracts\Writer\WriterInterface;
 use Teknoo\East\Common\Recipe\Step\SaveObject;
-use Teknoo\East\Common\Writer\WriterInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\Recipe\Promise\PromiseInterface;
 

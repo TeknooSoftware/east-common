@@ -26,8 +26,8 @@ declare(strict_types=1);
 namespace Teknoo\East\Common\Recipe\Step;
 
 use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
+use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Common\Contracts\Object\SluggableInterface;
-use Teknoo\East\Common\Contracts\ObjectInterface;
 use Teknoo\East\Common\Service\FindSlugService;
 
 /**
@@ -53,7 +53,7 @@ class SlugPreparation
             return $this;
         }
 
-        /** @var SluggableInterface<ObjectInterface> $object */
+        /** @var SluggableInterface<\Teknoo\East\Common\Contracts\Object\ObjectInterface> $object */
         $object->prepareSlugNear(
             $loader,
             $this->findSlugService,

@@ -23,9 +23,9 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Common\Service;
+namespace Teknoo\East\Common\Contracts\Service;
 
-use Teknoo\East\Common\Contracts\ObjectInterface;
+use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**

@@ -26,8 +26,8 @@ declare(strict_types=1);
 namespace Teknoo\East\Common\Recipe\Step;
 
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface as ObjectWithId;
-use Teknoo\East\Common\Contracts\ObjectInterface;
-use Teknoo\East\Common\Writer\WriterInterface;
+use Teknoo\East\Common\Contracts\Object\ObjectInterface;
+use Teknoo\East\Common\Contracts\Writer\WriterInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\Recipe\Promise\Promise;
 
@@ -41,14 +41,14 @@ use Teknoo\Recipe\Promise\Promise;
 class SaveObject
 {
     /**
-     * @param WriterInterface<ObjectInterface> $writer
+     * @param WriterInterface<\Teknoo\East\Common\Contracts\Object\ObjectInterface> $writer
      */
     public function __invoke(
         WriterInterface $writer,
         ObjectInterface $object,
         ManagerInterface $manager,
     ): self {
-        /** @var Promise<ObjectInterface, mixed, mixed> $savedPromise */
+        /** @var Promise<\Teknoo\East\Common\Contracts\Object\ObjectInterface, mixed, mixed> $savedPromise */
         $savedPromise = new Promise(
             static function (ObjectInterface $object) use ($manager) {
                 if ($object instanceof ObjectWithId) {

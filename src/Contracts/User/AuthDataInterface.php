@@ -26,7 +26,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Common\Contracts\User;
 
-use Teknoo\East\Common\Contracts\ObjectInterface;
+use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 
 /**
  * Interface defining set of data able to authenticate an user on a web app thanks to a authentication provider

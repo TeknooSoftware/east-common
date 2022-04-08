@@ -28,7 +28,7 @@ namespace Teknoo\East\Common\Recipe\Step;
 use Countable;
 use RuntimeException;
 use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
-use Teknoo\East\Common\Contracts\ObjectInterface;
+use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Common\Contracts\Query\Expr\ExprInterface;
 use Teknoo\East\Common\Query\Enum\Direction;
 use Teknoo\East\Common\Query\PaginationQuery;

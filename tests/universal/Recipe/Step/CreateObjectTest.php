@@ -24,10 +24,10 @@
 namespace Teknoo\Tests\East\Common\Recipe\Step;
 
 use PHPUnit\Framework\TestCase;
-use Teknoo\East\Common\Contracts\ObjectInterface;
-use Teknoo\East\Foundation\Manager\ManagerInterface;
+use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Common\Object\Type;
 use Teknoo\East\Common\Recipe\Step\CreateObject;
+use Teknoo\East\Foundation\Manager\ManagerInterface;
 use function get_class;
 
 /**

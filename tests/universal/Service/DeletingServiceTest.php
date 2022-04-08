@@ -26,9 +26,9 @@ namespace Teknoo\Tests\East\Common\Service;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\Object\DeletableInterface;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
+use Teknoo\East\Common\Contracts\Writer\WriterInterface;
 use Teknoo\East\Common\Service\DatesService;
 use Teknoo\East\Common\Service\DeletingService;
-use Teknoo\East\Common\Writer\WriterInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -38,7 +38,7 @@ use Teknoo\East\Common\Writer\WriterInterface;
 class DeletingServiceTest extends TestCase
 {
     /**
-     * @var WriterInterface
+     * @var \Teknoo\East\Common\Contracts\Writer\WriterInterface
      */
     private $writer;
 

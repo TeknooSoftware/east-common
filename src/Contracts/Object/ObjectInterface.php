@@ -24,7 +24,7 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Common\Contracts;
+namespace Teknoo\East\Common\Contracts\Object;
 
 /**
  * Base interface defining an object can be manipulated by a East Common's component, like a form, a loader or a

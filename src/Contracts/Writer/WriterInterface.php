@@ -23,10 +23,10 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Common\Writer;
+namespace Teknoo\East\Common\Contracts\Writer;
 
+use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\Recipe\Promise\PromiseInterface;
-use Teknoo\East\Common\Contracts\ObjectInterface;
 
 /**
  * Interface defining methods to implement in writer in charge of persisted objects, to save or delete persisted objects

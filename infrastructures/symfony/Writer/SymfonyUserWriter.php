@@ -27,13 +27,13 @@ namespace Teknoo\East\CommonBundle\Writer;
 
 use RuntimeException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Teknoo\East\Common\Contracts\Object\ObjectInterface;
+use Teknoo\East\Common\Contracts\Writer\WriterInterface;
 use Teknoo\East\Common\Object\StoredPassword;
-use Teknoo\Recipe\Promise\PromiseInterface;
-use Teknoo\East\Common\Contracts\ObjectInterface;
 use Teknoo\East\Common\Object\User as BaseUser;
-use Teknoo\East\Common\Writer\WriterInterface;
 use Teknoo\East\Common\Writer\UserWriter as UniversalWriter;
 use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
+use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
  * East Common writer to manager persistent operations on Symfony version of East Common's User class.

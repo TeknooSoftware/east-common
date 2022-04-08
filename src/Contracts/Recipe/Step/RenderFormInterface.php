@@ -26,8 +26,8 @@ declare(strict_types=1);
 namespace Teknoo\East\Common\Contracts\Recipe\Step;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Foundation\Client\ClientInterface;
-use Teknoo\East\Common\Contracts\ObjectInterface;
 
 /**
  * Interface to define step to use into a HTTP EndPoint Recipe to render thanks to a template engine the form instance

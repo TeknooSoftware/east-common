@@ -25,8 +25,8 @@ namespace Teknoo\Tests\East\Common\Writer;
 
 use Teknoo\East\Common\Contracts\DBSource\ManagerInterface;
 use Teknoo\East\Common\Contracts\Object\TimestampableInterface;
+use Teknoo\East\Common\Contracts\Writer\WriterInterface;
 use Teknoo\East\Common\Service\DatesService;
-use Teknoo\East\Common\Writer\WriterInterface;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
@@ -72,7 +72,7 @@ trait PersistTestTrait
     /**
      * @return WriterInterface
      */
-    abstract public function buildWriter(): WriterInterface;
+    abstract public function buildWriter(): \Teknoo\East\Common\Contracts\Writer\WriterInterface;
 
     /**
      * @return object
@@ -92,7 +92,7 @@ trait PersistTestTrait
             ->expects(self::once())
             ->method('flush');
 
-        self::assertInstanceOf(WriterInterface::class, $this->buildWriter()->save($object));
+        self::assertInstanceOf(\Teknoo\East\Common\Contracts\Writer\WriterInterface::class, $this->buildWriter()->save($object));
     }
 
     public function testSaveWithPromiseSuccess()
@@ -136,7 +136,7 @@ trait PersistTestTrait
                 ->method('passMeTheDate');
         }
 
-        self::assertInstanceOf(WriterInterface::class, $this->buildWriter()->save($object, $promise));
+        self::assertInstanceOf(\Teknoo\East\Common\Contracts\Writer\WriterInterface::class, $this->buildWriter()->save($object, $promise));
     }
 
     public function testSaveWithPromiseFailure()
@@ -164,7 +164,7 @@ trait PersistTestTrait
             ->with($error)
             ->willReturnSelf();
 
-        self::assertInstanceOf(WriterInterface::class, $this->buildWriter()->save($object, $promise));
+        self::assertInstanceOf(\Teknoo\East\Common\Contracts\Writer\WriterInterface::class, $this->buildWriter()->save($object, $promise));
     }
 
     public function testSaveWithoutPromiseFailure()
@@ -184,7 +184,7 @@ trait PersistTestTrait
             ->method('flush')
             ->willThrowException($error);
 
-        self::assertInstanceOf(WriterInterface::class, $this->buildWriter()->save($object));
+        self::assertInstanceOf(\Teknoo\East\Common\Contracts\Writer\WriterInterface::class, $this->buildWriter()->save($object));
     }
     
     public function testRemove()
@@ -200,7 +200,7 @@ trait PersistTestTrait
             ->expects(self::once())
             ->method('flush');
 
-        self::assertInstanceOf(WriterInterface::class, $this->buildWriter()->remove($object));
+        self::assertInstanceOf(\Teknoo\East\Common\Contracts\Writer\WriterInterface::class, $this->buildWriter()->remove($object));
     }
 
     public function testRemoveWithPromiseSuccess()
@@ -224,7 +224,7 @@ trait PersistTestTrait
         $promise->expects(self::never())
             ->method('fail');
 
-        self::assertInstanceOf(WriterInterface::class, $this->buildWriter()->remove($object, $promise));
+        self::assertInstanceOf(\Teknoo\East\Common\Contracts\Writer\WriterInterface::class, $this->buildWriter()->remove($object, $promise));
     }
 
     public function testRemoveWithPromiseFailure()
@@ -252,7 +252,7 @@ trait PersistTestTrait
             ->with($error)
             ->willReturnSelf();
 
-        self::assertInstanceOf(WriterInterface::class, $this->buildWriter()->remove($object, $promise));
+        self::assertInstanceOf(\Teknoo\East\Common\Contracts\Writer\WriterInterface::class, $this->buildWriter()->remove($object, $promise));
     }
 
     public function testRemoveWithoutPromiseFailure()

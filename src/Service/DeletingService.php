@@ -26,8 +26,8 @@ declare(strict_types=1);
 namespace Teknoo\East\Common\Service;
 
 use Teknoo\East\Common\Contracts\Object\DeletableInterface;
-use Teknoo\East\Common\Contracts\ObjectInterface;
-use Teknoo\East\Common\Writer\WriterInterface;
+use Teknoo\East\Common\Contracts\Object\ObjectInterface;
+use Teknoo\East\Common\Contracts\Writer\WriterInterface;
 
 /**
  * Generic deleting service to delete an object (soft deletable or not) thanks to dedicated writer service to the

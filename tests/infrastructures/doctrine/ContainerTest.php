@@ -32,8 +32,8 @@ use PHPUnit\Framework\TestCase;
 use ProxyManager\Proxy\GhostObjectInterface;
 use Teknoo\East\Common\Contracts\DBSource\ManagerInterface;
 use Teknoo\East\Common\Contracts\DBSource\Repository\UserRepositoryInterface;
+use Teknoo\East\Common\Contracts\Service\ProxyDetectorInterface;
 use Teknoo\East\Common\Object\User;
-use Teknoo\East\Common\Service\ProxyDetectorInterface;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**

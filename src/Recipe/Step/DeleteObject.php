@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Common\Recipe\Step;
 
-use Teknoo\East\Common\Contracts\ObjectInterface;
+use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Common\Service\DeletingService;
 
 /**

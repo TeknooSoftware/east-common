@@ -27,8 +27,8 @@ namespace Teknoo\East\Common\Recipe\Step;
 
 use DomainException;
 use RuntimeException;
+use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
-use Teknoo\East\Common\Contracts\ObjectInterface;
 
 use function class_exists;
 use function is_array;

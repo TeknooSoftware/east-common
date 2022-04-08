@@ -26,7 +26,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Common\Contracts\Object;
 
-use Teknoo\East\Common\Contracts\ObjectInterface as BaseInterface;
+use Teknoo\East\Common\Contracts\Object\ObjectInterface as BaseInterface;
 
 /**
  * Interface defining an persisted object can be manipulated by a East Common's component, like a form, a loader or a

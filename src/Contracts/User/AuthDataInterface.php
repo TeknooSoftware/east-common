@@ -2,7 +2,7 @@
 
 /*
 /*
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -16,7 +16,7 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -24,9 +24,9 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Contracts\User;
+namespace Teknoo\East\Common\Contracts\User;
 
-use Teknoo\East\Website\Contracts\ObjectInterface;
+use Teknoo\East\Common\Contracts\ObjectInterface;
 
 /**
  * Interface defining set of data able to authenticate an user on a web app thanks to a authentication provider

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,21 +15,21 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Query\Expr;
+namespace Teknoo\Tests\East\Common\Query\Expr;
 
 use PHPUnit\Framework\TestCase;
-use Teknoo\East\Website\Query\Expr\In;
+use Teknoo\East\Common\Query\Expr\In;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Query\Expr\In
+ * @covers \Teknoo\East\Common\Query\Expr\In
  */
 class InTest extends TestCase
 {

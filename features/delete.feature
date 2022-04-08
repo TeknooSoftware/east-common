@@ -1,27 +1,9 @@
 Feature: Delete an element, from the dbms server via an HTTP request
-  Scenario: Delete a type
+  Scenario: Delete an object
     Given I have DI With Symfony initialized
     And a twig templating engine
-    And a object of type "Teknoo\East\Website\Object\Type" with id "foo"
-    When Symfony will receive the DELETE request "https://foo.com/admin/type/delete/foo"
+    And a object with id "foo"
+    When Symfony will receive the DELETE request "https://foo.com/my_object/delete/foo"
     Then The client must accept a response
-    And It is redirect to "/admin/types/"
-    And the last object updated must be deleted
-
-  Scenario: Delete a content
-    Given I have DI With Symfony initialized
-    And a twig templating engine
-    And a object of type "Teknoo\East\Website\Doctrine\Object\Content" with id "foo"
-    When Symfony will receive the DELETE request "https://foo.com/admin/content/delete/foo"
-    Then The client must accept a response
-    And It is redirect to "/admin/contents/"
-    And the last object updated must be deleted
-
-  Scenario: Delete an item
-    Given I have DI With Symfony initialized
-    And a twig templating engine
-    And a object of type "Teknoo\East\Website\Doctrine\Object\Item" with id "foo"
-    When Symfony will receive the DELETE request "https://foo.com/admin/item/delete/foo"
-    Then The client must accept a response
-    And It is redirect to "/admin/items/"
+    And It is redirect to "/my_objects/"
     And the last object updated must be deleted

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,26 +15,26 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Service;
+namespace Teknoo\Tests\East\Common\Service;
 
 use PHPUnit\Framework\TestCase;
+use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
+use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
+use Teknoo\East\Common\Contracts\Object\SluggableInterface;
+use Teknoo\East\Common\Query\FindBySlugQuery;
+use Teknoo\East\Common\Service\FindSlugService;
 use Teknoo\Recipe\Promise\PromiseInterface;
-use Teknoo\East\Website\Loader\LoaderInterface;
-use Teknoo\East\Website\Object\ObjectInterface;
-use Teknoo\East\Website\Object\SluggableInterface;
-use Teknoo\East\Website\Query\FindBySlugQuery;
-use Teknoo\East\Website\Service\FindSlugService;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Service\FindSlugService
+ * @covers \Teknoo\East\Common\Service\FindSlugService
  */
 class FindSlugServiceTest extends TestCase
 {
@@ -78,7 +78,7 @@ class FindSlugServiceTest extends TestCase
     public function testProcessSlugAvailableWithObject()
     {
         $loader = $this->createMock(LoaderInterface::class);
-        $sluggable = new class implements SluggableInterface, ObjectInterface {
+        $sluggable = new class implements SluggableInterface, IdentifiedObjectInterface {
             public function getId(): string
             {
                 return 'foo';
@@ -136,7 +136,7 @@ class FindSlugServiceTest extends TestCase
             ->willReturnCallback(
                 function ($query, PromiseInterface $promise) use ($loader, &$counter) {
                     if ($counter++ < 2) {
-                        $promise->success($this->createMock(ObjectInterface::class));
+                        $promise->success($this->createMock(IdentifiedObjectInterface::class));
                     } else {
                         $promise->fail(new \DomainException('Not Found'));
                     }

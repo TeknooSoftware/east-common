@@ -1,7 +1,7 @@
 <?php
 
 /*
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,7 +15,7 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -23,17 +23,17 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Recipe\Step;
+namespace Teknoo\East\Common\Recipe\Step;
 
 use Countable;
 use RuntimeException;
+use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
+use Teknoo\East\Common\Contracts\ObjectInterface;
+use Teknoo\East\Common\Contracts\Query\Expr\ExprInterface;
+use Teknoo\East\Common\Query\Enum\Direction;
+use Teknoo\East\Common\Query\PaginationQuery;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
-use Teknoo\East\Website\Contracts\ObjectInterface;
-use Teknoo\East\Website\Query\Enum\Direction;
 use Teknoo\Recipe\Promise\Promise;
-use Teknoo\East\Website\Loader\LoaderInterface;
-use Teknoo\East\Website\Query\Expr\ExprInterface;
-use Teknoo\East\Website\Query\PaginationQuery;
 use Throwable;
 
 use function ceil;

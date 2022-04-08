@@ -5,7 +5,7 @@
                         xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
                                             http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
 
-    <document name="Teknoo\East\Website\Object\User" collection="users" inheritance-type="COLLECTION_PER_CLASS">
+    <document name="Teknoo\East\Common\Object\User" collection="users" inheritance-type="COLLECTION_PER_CLASS">
         <id type="string" strategy="UUID"/>
         <field field-name="firstName" name="first_name" type="string" />
         <field field-name="lastName" name="last_name" type="string" />

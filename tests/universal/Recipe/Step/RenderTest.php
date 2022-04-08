@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,14 +15,16 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Recipe\Step;
+namespace Teknoo\Tests\East\Common\Recipe\Step;
 
+use DateTimeImmutable;
+use DateTimeInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\MessageInterface;
@@ -31,21 +33,21 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
+use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
+use Teknoo\East\Common\Contracts\Object\PublishableInterface;
+use Teknoo\East\Common\Recipe\Step\Render;
 use Teknoo\East\Foundation\Client\ClientInterface;
 use Teknoo\East\Foundation\Http\Message\CallbackStreamInterface;
-use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Foundation\Template\ResultInterface;
-use Teknoo\East\Website\Object\Content;
-use Teknoo\East\Website\Object\ObjectInterface;
-use Teknoo\East\Website\Recipe\Step\Render;
+use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Recipe\Step\Traits\TemplateTrait
- * @covers \Teknoo\East\Website\Recipe\Step\Traits\ResponseTrait
- * @covers \Teknoo\East\Website\Recipe\Step\Render
+ * @covers \Teknoo\East\Common\Recipe\Step\Traits\TemplateTrait
+ * @covers \Teknoo\East\Common\Recipe\Step\Traits\ResponseTrait
+ * @covers \Teknoo\East\Common\Recipe\Step\Render
  */
 class RenderTest extends TestCase
 {
@@ -117,7 +119,7 @@ class RenderTest extends TestCase
             new \stdClass(),
             'foo',
             'bar',
-            $this->createMock(ObjectInterface::class)
+            $this->createMock(IdentifiedObjectInterface::class)
         );
     }
 
@@ -130,7 +132,7 @@ class RenderTest extends TestCase
             $this->createMock(ClientInterface::class),
             new \stdClass(),
             'foo',
-            $this->createMock(ObjectInterface::class)
+            $this->createMock(IdentifiedObjectInterface::class)
         );
     }
 
@@ -143,7 +145,7 @@ class RenderTest extends TestCase
             $this->createMock(ClientInterface::class),
             'foo',
             new \stdClass(),
-            $this->createMock(ObjectInterface::class)
+            $this->createMock(IdentifiedObjectInterface::class)
         );
     }
 
@@ -188,7 +190,7 @@ class RenderTest extends TestCase
                 $client,
                 'foo',
                 'bar',
-                $this->createMock(ObjectInterface::class)
+                $this->createMock(IdentifiedObjectInterface::class)
             )
         );
     }
@@ -233,7 +235,7 @@ class RenderTest extends TestCase
                 $client,
                 'foo',
                 'bar',
-                $this->createMock(ObjectInterface::class)
+                $this->createMock(IdentifiedObjectInterface::class)
             )
         );
     }
@@ -279,7 +281,27 @@ class RenderTest extends TestCase
                 $client,
                 'foo',
                 'bar',
-                (new Content())->setUpdatedAt(new \DateTimeImmutable('2021-01-21'))
+                new class implements IdentifiedObjectInterface, PublishableInterface {
+                    public function getId(): string
+                    {
+                        return 123;
+                    }
+
+                    public function updatedAt(): DateTimeInterface
+                    {
+                        return new DateTimeImmutable('2021-01-21');
+                    }
+
+                    public function getPublishedAt(): ?DateTimeInterface
+                    {
+                        return new DateTimeImmutable('2021-01-21');
+                    }
+
+                    public function setPublishedAt(DateTimeInterface $dateTime): PublishableInterface
+                    {
+                        return $this;
+                    }
+                }
             )
         );
     }
@@ -325,7 +347,7 @@ class RenderTest extends TestCase
                 $client,
                 'foo',
                 'bar',
-                $this->createMock(ObjectInterface::class)
+                $this->createMock(IdentifiedObjectInterface::class)
             )
         );
     }
@@ -379,7 +401,7 @@ class RenderTest extends TestCase
                 $client,
                 'foo',
                 'bar',
-                $this->createMock(ObjectInterface::class)
+                $this->createMock(IdentifiedObjectInterface::class)
             )
         );
     }

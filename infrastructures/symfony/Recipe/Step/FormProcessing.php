@@ -1,7 +1,7 @@
 <?php
 
 /*
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,7 +15,7 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -23,11 +23,11 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\WebsiteBundle\Recipe\Step;
+namespace Teknoo\East\CommonBundle\Recipe\Step;
 
 use Symfony\Component\Form\FormInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
-use Teknoo\East\Website\Contracts\Recipe\Step\FormProcessingInterface;
+use Teknoo\East\Common\Contracts\Recipe\Step\FormProcessingInterface;
 
 /**
  * Recipe step to define step to use into a HTTP EndPoint Recipe to skip some recipe's steps if the form is not validate

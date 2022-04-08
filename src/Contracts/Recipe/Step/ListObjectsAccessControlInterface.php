@@ -1,7 +1,7 @@
 <?php
 
 /*
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,7 +15,7 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -23,11 +23,11 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Contracts\Recipe\Step;
+namespace Teknoo\East\Common\Contracts\Recipe\Step;
 
 use Psr\Http\Message\MessageInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
-use Teknoo\East\Website\Contracts\ObjectInterface;
+use Teknoo\East\Common\Contracts\ObjectInterface;
 
 /**
  * Interface to define step to use into a Recipe to implement ACL checking on a list of objects instance

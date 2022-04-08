@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,20 +15,20 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\WebsiteBundle\Object;
+namespace Teknoo\Tests\East\CommonBundle\Object;
 
 use ArrayIterator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Teknoo\East\Website\Object\User;
-use Teknoo\East\WebsiteBundle\Object\AbstractUser;
-use Teknoo\East\Website\Object\User as BaseUser;
+use Teknoo\East\Common\Object\User;
+use Teknoo\East\CommonBundle\Object\AbstractUser;
+use Teknoo\East\Common\Object\User as BaseUser;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License

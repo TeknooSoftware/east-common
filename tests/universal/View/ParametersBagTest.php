@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,22 +15,22 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\View;
+namespace Teknoo\Tests\East\Common\View;
 
 use PHPUnit\Framework\TestCase;
-use Teknoo\East\Website\View\ParametersBag;
+use Teknoo\East\Common\View\ParametersBag;
 use Teknoo\Recipe\Ingredient\MergeableInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\View\ParametersBag
+ * @covers \Teknoo\East\Common\View\ParametersBag
  */
 class ParametersBagTest extends TestCase
 {

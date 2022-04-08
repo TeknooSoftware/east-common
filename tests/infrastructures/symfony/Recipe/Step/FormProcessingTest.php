@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,23 +15,23 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\WebsiteBundle\Recipe\Step;
+namespace Teknoo\Tests\East\CommonBundle\Recipe\Step;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\FormInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
-use Teknoo\East\WebsiteBundle\Recipe\Step\FormProcessing;
+use Teknoo\East\CommonBundle\Recipe\Step\FormProcessing;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers      \Teknoo\East\WebsiteBundle\Recipe\Step\FormProcessing
+ * @covers      \Teknoo\East\CommonBundle\Recipe\Step\FormProcessing
  */
 class FormProcessingTest extends TestCase
 {

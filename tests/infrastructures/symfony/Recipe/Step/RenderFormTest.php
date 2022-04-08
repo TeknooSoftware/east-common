@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,13 +15,13 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\WebsiteBundle\Recipe\Step;
+namespace Teknoo\Tests\East\CommonBundle\Recipe\Step;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -31,19 +31,19 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 use Symfony\Component\Form\FormInterface;
+use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
+use Teknoo\East\Common\Contracts\Object\PublishableInterface;
+use Teknoo\East\CommonBundle\Recipe\Step\RenderForm;
 use Teknoo\East\Foundation\Client\ClientInterface;
 use Teknoo\East\Foundation\Http\Message\CallbackStreamInterface;
-use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Foundation\Template\ResultInterface;
-use Teknoo\East\Website\Object\Content;
-use Teknoo\East\Website\Object\ObjectInterface;
-use Teknoo\East\WebsiteBundle\Recipe\Step\RenderForm;
+use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers      \Teknoo\East\WebsiteBundle\Recipe\Step\RenderForm
+ * @covers      \Teknoo\East\CommonBundle\Recipe\Step\RenderForm
  */
 class RenderFormTest extends TestCase
 {
@@ -142,7 +142,7 @@ class RenderFormTest extends TestCase
                 $client,
                 $form,
                 'foo',
-                $this->createMock(ObjectInterface::class)
+                $this->createMock(IdentifiedObjectInterface::class)
             )
         );
     }
@@ -183,6 +183,23 @@ class RenderFormTest extends TestCase
                 }
             );
 
+        $object = new class implements IdentifiedObjectInterface, PublishableInterface {
+            public function getId(): string
+            {
+                return 123;
+            }
+
+            public function getPublishedAt(): ?\DateTimeInterface
+            {
+                return new \DateTimeImmutable('2021-01-21');
+            }
+
+            public function setPublishedAt(\DateTimeInterface $dateTime): PublishableInterface
+            {
+                return $this;
+            }
+        };
+
         self::assertInstanceOf(
             RenderForm::class,
             $this->buildStep()(
@@ -190,7 +207,7 @@ class RenderFormTest extends TestCase
                 $client,
                 $form,
                 'foo',
-                (new Content())->setUpdatedAt(new \DateTimeImmutable('2021-01-21')),
+                $object,
                 true
             )
         );
@@ -239,7 +256,7 @@ class RenderFormTest extends TestCase
                 $client,
                 $form,
                 'foo',
-                $this->createMock(ObjectInterface::class)
+                $this->createMock(IdentifiedObjectInterface::class)
             )
         );
     }
@@ -295,7 +312,7 @@ class RenderFormTest extends TestCase
                 $client,
                 $form,
                 'foo',
-                $this->createMock(ObjectInterface::class)
+                $this->createMock(IdentifiedObjectInterface::class)
             )
         );
     }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,23 +15,25 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Recipe\Step;
+namespace Teknoo\Tests\East\Common\Recipe\Step;
 
 use PHPUnit\Framework\TestCase;
+use Teknoo\East\Common\Contracts\ObjectInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
-use Teknoo\East\Website\Object\Type;
-use Teknoo\East\Website\Recipe\Step\CreateObject;
+use Teknoo\East\Common\Object\Type;
+use Teknoo\East\Common\Recipe\Step\CreateObject;
+use function get_class;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Recipe\Step\CreateObject
+ * @covers \Teknoo\East\Common\Recipe\Step\CreateObject
  */
 class CreateObjectTest extends TestCase
 {
@@ -92,7 +94,7 @@ class CreateObjectTest extends TestCase
 
         self::assertInstanceOf(
             CreateObject::class,
-            $this->buildStep()(Type::class, $manager)
+            $this->buildStep()(get_class(new class implements ObjectInterface{}), $manager)
         );
     }
 
@@ -104,7 +106,7 @@ class CreateObjectTest extends TestCase
 
         self::assertInstanceOf(
             CreateObject::class,
-            $this->buildStep()(Type::class, $manager, ['foo', 'bar'])
+            $this->buildStep()(get_class(new class implements ObjectInterface{}), $manager, ['foo', 'bar'])
         );
     }
 
@@ -116,7 +118,7 @@ class CreateObjectTest extends TestCase
 
         self::assertInstanceOf(
             CreateObject::class,
-            $this->buildStep()(Type::class, $manager, 'foo', 'bar')
+            $this->buildStep()(get_class(new class implements ObjectInterface{}), $manager, 'foo', 'bar')
         );
     }
 }

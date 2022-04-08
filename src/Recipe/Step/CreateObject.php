@@ -1,7 +1,7 @@
 <?php
 
 /*
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,7 +15,7 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -23,20 +23,20 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Recipe\Step;
+namespace Teknoo\East\Common\Recipe\Step;
 
 use DomainException;
 use RuntimeException;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
-use Teknoo\East\Website\Contracts\ObjectInterface;
+use Teknoo\East\Common\Contracts\ObjectInterface;
 
 use function class_exists;
 use function is_array;
 
 /**
- * Recipe step to create a new `Teknoo\East\Website\Contracts\ObjectInterface` to be use/populate in next step of
- * recipes (in a form, a view, etc...). The object will be put in the manager's workplan at the key `$workPlanKey`
- * (by default  ObjectInterface::class).
+ * Recipe step to create a new `Teknoo\East\Common\Contracts\IdentifiedObjectInterface` to be use/populate in next step
+ * of recipes (in a form, a view, etc...). The object will be put in the manager's workplan at the key `$workPlanKey`
+ * (by default  IdentifiedObjectInterface::class).
  *
  * Constructor Arguments can be passed as`$constructorArguments` (If several arguments must be passed, they must be
  * passed as array).
@@ -74,7 +74,7 @@ class CreateObject
         }
 
         if (!$object instanceof ObjectInterface) {
-            $error = new RuntimeException("Error $objectClass is not a ObjectInterface");
+            $error = new RuntimeException("Error $objectClass is not a IdentifiedObjectInterface");
 
             $manager->error($error);
 

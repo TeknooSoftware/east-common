@@ -4,38 +4,8 @@ parameters:
             message: '#Cannot cast mixed to string#'
             path: infrastructures
         -
-            message: '#ClassMetadataFactory#'
-            path: infrastructures/doctrine/di.php
-        -
             message: '#mixed#'
             path: infrastructures/doctrine/di.php
-        -
-            message: '#Call to an undefined method [a-zA-Z0-9\\_]+::createQueryBuilder\(\)#'
-            path: infrastructures/doctrine/Form/Type/*
-        -
-            message: '#Teknoo\\East\\Website\\Doctrine\\Object\\Translation::\$[a-zA-Z0-9]+ is never read, only written#'
-            path: infrastructures/doctrine/Object/Translation.php
-        -
-            message: '#does not exist on SimpleXMLElement\|null#'
-            path: infrastructures/doctrine/Translatable/Mapping/Driver/Xml.php
-        -
-            message: "#Offset 'name'#"
-            path: infrastructures/doctrine/Translatable/Persistence/Adapter/ODM.php
-        -
-            message: '#does not accept non-empty-array#'
-            path: infrastructures/doctrine/Translatable/TranslatableListener.php
-        -
-            message: '#ClassMetadata<object>#'
-            path: infrastructures/doctrine/Translatable/
-        -
-            message: '#[a-zA-Z0-9\\_]+::cook\(\) expects \(callable\(\): mixed\)|[a-zA-Z0-9\\_]+#'
-            path: infrastructures/symfony/Resources/config/di.php
-        -
-            message: '#Creating callable from a non-native method stdClass#'
-            path: infrastructures/symfony/Recipe/Step/FormHandling.php
-        -
-            message: '#Cannot cast mixed to string#'
-            path: src
         -
             message: '#[a-zA-Z0-9\\_]+::cook\(\) expects \(callable\(\): mixed\)|[a-zA-Z0-9\\_]+#'
             path: src/di.php

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,7 +15,7 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -23,7 +23,7 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\WebsiteBundle\Security\Authenticator;
+namespace Teknoo\East\CommonBundle\Security\Authenticator;
 
 use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator as BaseAuthenticator;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
@@ -35,13 +35,13 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
-use Teknoo\East\Website\Loader\UserLoader;
-use Teknoo\East\Website\Object\ThirdPartyAuth;
-use Teknoo\East\Website\Object\User;
-use Teknoo\East\Website\Query\User\UserByEmailQuery;
-use Teknoo\East\WebsiteBundle\Contracts\Security\Authenticator\UserConverterInterface;
-use Teknoo\East\WebsiteBundle\Object\ThirdPartyAuthenticatedUser;
-use Teknoo\East\WebsiteBundle\Writer\SymfonyUserWriter;
+use Teknoo\East\Common\Loader\UserLoader;
+use Teknoo\East\Common\Object\ThirdPartyAuth;
+use Teknoo\East\Common\Object\User;
+use Teknoo\East\Common\Query\User\UserByEmailQuery;
+use Teknoo\East\CommonBundle\Contracts\Security\Authenticator\UserConverterInterface;
+use Teknoo\East\CommonBundle\Object\ThirdPartyAuthenticatedUser;
+use Teknoo\East\CommonBundle\Writer\SymfonyUserWriter;
 use Teknoo\Recipe\Promise\Promise;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Throwable;
@@ -50,7 +50,7 @@ use function strtr;
 
 /**
  * Symfony Authenticator build on KNPU OAuth2 client bundlle to create/update, thanks to a provided
- * implementation of `UserConverterInterface`, a East Website User instance and complete User's AuthParts
+ * implementation of `UserConverterInterface`, a East Common User instance and complete User's AuthParts
  * with a ThirdPartyAuth to store the access token.
  * If the user is not already present in the database (fetch from its email), it will be imported.
  *

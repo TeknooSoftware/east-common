@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,13 +15,13 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\WebsiteBundle\EndPoint;
+namespace Teknoo\Tests\East\CommonBundle\EndPoint;
 
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Client\OAuth2ClientInterface;
@@ -37,14 +37,14 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Teknoo\East\Foundation\Client\ClientInterface;
 use Teknoo\East\Foundation\Session\SessionInterface;
-use Teknoo\East\WebsiteBundle\Command\CreateUserCommand;
-use Teknoo\East\Website\Writer\UserWriter;
-use Teknoo\East\WebsiteBundle\EndPoint\ConnectEndPoint;
+use Teknoo\East\CommonBundle\Command\CreateUserCommand;
+use Teknoo\East\Common\Writer\UserWriter;
+use Teknoo\East\CommonBundle\EndPoint\ConnectEndPoint;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers      \Teknoo\East\WebsiteBundle\EndPoint\ConnectEndPoint
+ * @covers      \Teknoo\East\CommonBundle\EndPoint\ConnectEndPoint
  */
 class ConnectEndPointTest extends TestCase
 {

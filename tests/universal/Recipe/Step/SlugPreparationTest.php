@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,26 +15,26 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Recipe\Step;
+namespace Teknoo\Tests\East\Common\Recipe\Step;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Teknoo\East\Website\Loader\LoaderInterface;
-use Teknoo\East\Website\Object\Content;
-use Teknoo\East\Website\Object\ObjectInterface;
-use Teknoo\East\Website\Recipe\Step\SlugPreparation;
-use Teknoo\East\Website\Service\FindSlugService;
+use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
+use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
+use Teknoo\East\Common\Contracts\Object\SluggableInterface;
+use Teknoo\East\Common\Recipe\Step\SlugPreparation;
+use Teknoo\East\Common\Service\FindSlugService;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Recipe\Step\SlugPreparation
+ * @covers \Teknoo\East\Common\Recipe\Step\SlugPreparation
  */
 class SlugPreparationTest extends TestCase
 {
@@ -63,7 +63,7 @@ class SlugPreparationTest extends TestCase
 
         $this->buildStep()(
             new \stdClass(),
-            $this->createMock(ObjectInterface::class),
+            $this->createMock(IdentifiedObjectInterface::class),
             'foo'
         );
     }
@@ -83,20 +83,60 @@ class SlugPreparationTest extends TestCase
     {
         $this->expectException(\TypeError::class);
 
+        $object = new class implements IdentifiedObjectInterface, SluggableInterface {
+            public function getId(): string
+            {
+                return 123;
+            }
+
+            public function prepareSlugNear(
+                LoaderInterface $loader,
+                FindSlugService $findSlugService,
+                string $slugField
+            ): SluggableInterface {
+                return $this;
+            }
+
+            public function setSlug(string $slug): SluggableInterface
+            {
+                return $this;
+            }
+        };
+
         $this->buildStep()(
             $this->createMock(LoaderInterface::class),
-            $this->createMock(ObjectInterface::class),
+            $object,
             new \stdClass()
         );
     }
 
     public function testInvokeWithNonSluggable()
     {
+        $object = new class implements IdentifiedObjectInterface, SluggableInterface {
+            public function getId(): string
+            {
+                return 123;
+            }
+
+            public function prepareSlugNear(
+                LoaderInterface $loader,
+                FindSlugService $findSlugService,
+                string $slugField
+            ): SluggableInterface {
+                return $this;
+            }
+
+            public function setSlug(string $slug): SluggableInterface
+            {
+                return $this;
+            }
+        };
+
         self::assertInstanceOf(
             SlugPreparation::class,
             $this->buildStep()(
                 $this->createMock(LoaderInterface::class),
-                $this->createMock(ObjectInterface::class),
+                $object,
                 'slug'
             )
         );
@@ -104,11 +144,31 @@ class SlugPreparationTest extends TestCase
 
     public function testInvokeWithNonSlugField()
     {
+        $object = new class implements IdentifiedObjectInterface, SluggableInterface {
+            public function getId(): string
+            {
+                return 123;
+            }
+
+            public function prepareSlugNear(
+                LoaderInterface $loader,
+                FindSlugService $findSlugService,
+                string $slugField
+            ): SluggableInterface {
+                return $this;
+            }
+
+            public function setSlug(string $slug): SluggableInterface
+            {
+                return $this;
+            }
+        };
+
         self::assertInstanceOf(
             SlugPreparation::class,
             $this->buildStep()(
                 $this->createMock(LoaderInterface::class),
-                $this->createMock(Content::class),
+                $object,
                 null
             )
         );
@@ -116,11 +176,31 @@ class SlugPreparationTest extends TestCase
 
     public function testInvokeWithSlugField()
     {
+        $object = new class implements IdentifiedObjectInterface, SluggableInterface {
+            public function getId(): string
+            {
+                return 123;
+            }
+
+            public function prepareSlugNear(
+                LoaderInterface $loader,
+                FindSlugService $findSlugService,
+                string $slugField
+            ): SluggableInterface {
+                return $this;
+            }
+
+            public function setSlug(string $slug): SluggableInterface
+            {
+                return $this;
+            }
+        };
+
         self::assertInstanceOf(
             SlugPreparation::class,
             $this->buildStep()(
                 $this->createMock(LoaderInterface::class),
-                $this->createMock(Content::class),
+                $object,
                 'slug'
             )
         );

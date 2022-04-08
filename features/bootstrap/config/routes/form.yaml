@@ -1,0 +1,47 @@
+# myObject
+_teknoo_common_admin_my_object_list:
+    path: '/my_objects/'
+    methods:  ['GET', 'POST']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.crud.list'
+        loader: '@Teknoo\Tests\East\Common\Behat\Loader\MyObjectLoader'
+        defaultOrderDirection: 'ASC'
+        itemsPerPage: 20
+        template: '@@TeknooEastCommon/AdminMyObject/list.html.twig'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+
+_teknoo_common_admin_my_object_edit:
+    path: '/my_object/edit/{id}'
+    methods:  ['GET', 'POST', 'PUT']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.crud.edit'
+        loader: '@Teknoo\Tests\East\Common\Behat\Loader\MyObjectLoader'
+        writer: '@Teknoo\Tests\East\Common\Behat\Writer\MyObjectWriter'
+        formClass: 'Teknoo\Tests\East\Common\Behat\Form\Type\MyObjectType'
+        template: '@@TeknooEastCommon/AdminMyObject/edit.html.twig'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+        formOptions: { }
+
+_teknoo_common_admin_my_object_new:
+    path: '/my_object/new'
+    methods:  ['GET', 'POST', 'PUT']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.crud.new'
+        loader: '@Teknoo\Tests\East\Common\Behat\Loader\MyObjectLoader'
+        writer: '@Teknoo\Tests\East\Common\Behat\Writer\MyObjectWriter'
+        objectClass: 'Teknoo\Tests\East\Common\Behat\Object\MyObject'
+        formClass: 'Teknoo\Tests\East\Common\Behat\Form\Type\MyObjectType'
+        template: '@@TeknooEastCommon/AdminMyObject/new.html.twig'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+        route: '_teknoo_common_admin_my_object_edit'
+        formOptions: { }
+
+_teknoo_common_admin_my_object_delete:
+    path: '/my_object/delete/{id}'
+    methods:  ['GET', 'DELETE']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.crud.delete'
+        loader: '@Teknoo\Tests\East\Common\Behat\Loader\MyObjectLoader'
+        deleter: '@teknoo.east.common.deleting.my_object'
+        route: '_teknoo_common_admin_my_object_list'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,13 +15,13 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\WebsiteBundle\Security\Authenticator;
+namespace Teknoo\Tests\East\CommonBundle\Security\Authenticator;
 
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Client\OAuth2ClientInterface;
@@ -34,19 +34,19 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
-use Teknoo\East\Website\Loader\UserLoader;
-use Teknoo\East\Website\Object\ThirdPartyAuth;
-use Teknoo\East\Website\Object\User;
-use Teknoo\East\WebsiteBundle\Contracts\Security\Authenticator\UserConverterInterface;
-use Teknoo\East\WebsiteBundle\Object\ThirdPartyAuthenticatedUser;
-use Teknoo\East\WebsiteBundle\Security\Authenticator\OAuth2Authenticator;
-use Teknoo\East\WebsiteBundle\Writer\SymfonyUserWriter;
+use Teknoo\East\Common\Loader\UserLoader;
+use Teknoo\East\Common\Object\ThirdPartyAuth;
+use Teknoo\East\Common\Object\User;
+use Teknoo\East\CommonBundle\Contracts\Security\Authenticator\UserConverterInterface;
+use Teknoo\East\CommonBundle\Object\ThirdPartyAuthenticatedUser;
+use Teknoo\East\CommonBundle\Security\Authenticator\OAuth2Authenticator;
+use Teknoo\East\CommonBundle\Writer\SymfonyUserWriter;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers      \Teknoo\East\WebsiteBundle\Security\Authenticator\OAuth2Authenticator
+ * @covers      \Teknoo\East\CommonBundle\Security\Authenticator\OAuth2Authenticator
  */
 class OAuth2AuthenticatorTest extends TestCase
 {

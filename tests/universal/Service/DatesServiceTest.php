@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,22 +15,22 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Service;
+namespace Teknoo\Tests\East\Common\Service;
 
 use PHPUnit\Framework\TestCase;
-use Teknoo\East\Website\Object\ObjectInterface;
-use Teknoo\East\Website\Service\DatesService;
+use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
+use Teknoo\East\Common\Service\DatesService;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Service\DatesService
+ * @covers \Teknoo\East\Common\Service\DatesService
  */
 class DatesServiceTest extends TestCase
 {
@@ -41,7 +41,7 @@ class DatesServiceTest extends TestCase
 
     public function testPassMeTheDateWithNoDefinedDate()
     {
-        $object = new class implements ObjectInterface {
+        $object = new class implements IdentifiedObjectInterface {
             private $date;
             public function getDate(): ?\DateTimeInterface
             {
@@ -75,7 +75,7 @@ class DatesServiceTest extends TestCase
     {
         $date = new \DateTime('2017-01-01');
 
-        $object = new class implements ObjectInterface {
+        $object = new class implements IdentifiedObjectInterface {
             private $date;
             public function getDate(): ?\DateTimeInterface
             {
@@ -110,7 +110,7 @@ class DatesServiceTest extends TestCase
     {
         $date = new \DateTime('2017-01-01');
 
-        $object = new class implements ObjectInterface {
+        $object = new class implements IdentifiedObjectInterface {
             private $date;
             public function getDate(): ?\DateTimeInterface
             {

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,22 +15,22 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Object;
+namespace Teknoo\Tests\East\Common\Object;
 
 use PHPUnit\Framework\TestCase;
-use Teknoo\East\Website\Object\ThirdPartyAuth;
-use Teknoo\Tests\East\Website\Object\Traits\PopulateObjectTrait;
+use Teknoo\East\Common\Object\ThirdPartyAuth;
+use Teknoo\Tests\East\Common\Object\Traits\PopulateObjectTrait;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Object\ThirdPartyAuth
+ * @covers \Teknoo\East\Common\Object\ThirdPartyAuth
  */
 class ThirdPartyAuthTest extends TestCase
 {

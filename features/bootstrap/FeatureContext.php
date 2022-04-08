@@ -17,8 +17,6 @@ use PHPUnit\Framework\Assert;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\StreamFactoryInterface;
-use Psr\Http\Message\StreamInterface;
 use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
@@ -27,10 +25,13 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder as SfContainerBuilder;
 use Symfony\Component\HttpFoundation\Request as SfRequest;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
-use Symfony\Component\PasswordHasher\Hasher\Pbkdf2PasswordHasher;
 use Symfony\Component\PasswordHasher\Hasher\SodiumPasswordHasher;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Teknoo\DI\SymfonyBridge\DIBridgeBundle;
+use Teknoo\East\Common\Object\StoredPassword;
+use Teknoo\East\Common\Object\User;
+use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
+use Teknoo\East\CommonBundle\TeknooEastCommonBundle;
 use Teknoo\East\Foundation\Client\ClientInterface;
 use Teknoo\East\Foundation\Client\ResponseInterface as EastResponse;
 use Teknoo\East\Foundation\EndPoint\RecipeEndPoint;
@@ -43,27 +44,8 @@ use Teknoo\East\Foundation\Router\RouterInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Foundation\Template\ResultInterface;
 use Teknoo\East\FoundationBundle\EastFoundationBundle;
-use Teknoo\East\Website\Contracts\Recipe\Step\GetStreamFromMediaInterface;
-use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
-use Teknoo\East\Website\Doctrine\Object\Content;
-use Teknoo\East\Website\Object\User;
-use Teknoo\East\Website\Loader\ContentLoader;
-use Teknoo\East\Website\Loader\ItemLoader;
-use Teknoo\East\Website\Loader\MediaLoader;
-use Teknoo\East\Website\Loader\TypeLoader;
-use Teknoo\East\Website\Object\Block;
-use Teknoo\East\Website\Object\BlockType;
-use Teknoo\East\Website\Object\Media;
-use Teknoo\East\Website\Object\Media as BaseMedia;
-use Teknoo\East\Website\Object\StoredPassword;
-use Teknoo\East\Website\Object\Type;
-use Teknoo\East\Website\Recipe\Cookbook\RenderDynamicContentEndPoint;
-use Teknoo\East\Website\Recipe\Cookbook\RenderMediaEndPoint;
-use Teknoo\East\Website\Recipe\Cookbook\RenderStaticContentEndPoint;
-use Teknoo\Tests\East\Website\Behat\GetTokenStorageService;
-use Teknoo\East\WebsiteBundle\Object\PasswordAuthenticatedUser;
-use Teknoo\East\WebsiteBundle\TeknooEastWebsiteBundle;
-use Teknoo\Recipe\Promise\PromiseInterface;
+use Teknoo\Tests\East\Common\Behat\GetTokenStorageService;
+use Teknoo\Tests\East\Common\Behat\Object\MyObject;
 use Twig\Environment;
 
 /**
@@ -77,19 +59,9 @@ class FeatureContext implements Context
 
     private ?RouterInterface $router = null;
 
-    public string $locale = 'en';
-
     private ?ClientInterface $client = null;
 
-    public array $objectRepository = [];
-
-    private ?MediaLoader $mediaLoader = null;
-
-    private ?ContentLoader $contentLoader = null;
-
-    private ?ItemLoader $itemLoader = null;
-
-    private ?TypeLoader $typeLoader = null;
+    public ?ObjectRepository $objectRepository = null;
 
     /**
      * @var RecipeEndPoint
@@ -105,8 +77,6 @@ class FeatureContext implements Context
      * @var RecipeEndPoint
      */
     private ?RecipeEndPoint $staticEndPoint = null;
-
-    private ?Type $type = null;
 
     public ?EngineInterface $templating = null;
 
@@ -130,7 +100,7 @@ class FeatureContext implements Context
     public function iHaveDiInitialized(): void
     {
         $containerDefinition = new ContainerBuilder();
-        $rootDir = \dirname(__DIR__, 2);
+        $rootDir = dirname(__DIR__, 2);
         $containerDefinition->addDefinitions(
             include $rootDir.'/vendor/teknoo/east-foundation/src/di.php'
         );
@@ -170,24 +140,24 @@ class FeatureContext implements Context
 
             public function getProjectDir(): string
             {
-                return \dirname(__DIR__, 2);
+                return dirname(__DIR__, 2);
             }
 
             public function getCacheDir(): string
             {
-                return \dirname(__DIR__, 2).'/tests/var/cache';
+                return dirname(__DIR__, 2).'/tests/var/cache';
             }
 
             public function getLogDir(): string
             {
-                return \dirname(__DIR__, 2).'/tests/var/logs';
+                return dirname(__DIR__, 2).'/tests/var/logs';
             }
 
             public function registerBundles(): iterable
             {
                 yield new FrameworkBundle();
                 yield new EastFoundationBundle();
-                yield new TeknooEastWebsiteBundle();
+                yield new TeknooEastCommonBundle();
                 yield new DIBridgeBundle();
                 yield new SecurityBundle();
             }
@@ -203,7 +173,7 @@ class FeatureContext implements Context
 
             protected function configureRoutes($routes): void
             {
-                $rootDir = \dirname(__DIR__, 2);
+                $rootDir = dirname(__DIR__, 2);
                 if ($routes instanceof RoutingConfigurator) {
                     $routes->import($rootDir . '/infrastructures/symfony/Resources/config/admin_*.yml', 'glob')
                         ->prefix('/admin');
@@ -221,7 +191,7 @@ class FeatureContext implements Context
                 $characters = 'abcdefghijklmnopqrstuvwxyz';
                 $str = '';
                 for ($i = 0; $i < 10; $i++) {
-                    $str .= $characters[\rand(0, \strlen($characters) - 1)];
+                    $str .= $characters[rand(0, strlen($characters) - 1)];
                 }
 
                 return $str;
@@ -248,18 +218,17 @@ class FeatureContext implements Context
             }
 
             /**
-             * @param \Teknoo\East\Website\Object\ObjectInterface $object
+             * @param \Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface $object
              */
             public function persist($object)
             {
                 if ($id = $object->getId()) {
                     $this->featureContext->updatedObjects[$id] = $object;
                 } else {
-                    $object->setId(\uniqid());
-                    $class = \explode('\\', \get_class($object));
-                    $this->featureContext->createdObjects[\array_pop($class)][] = $object;
+                    $object->id = uniqid('eastcommon', true);
+                    $this->featureContext->createdObjects[] = $object;
 
-                    $this->featureContext->getObjectRepository(\get_class($object))->setObject(['id' => $object->getId()], $object);
+                    $this->featureContext->getObjectRepository()->setObject(['id' => $object->getId()], $object);
                 }
             }
 
@@ -289,7 +258,7 @@ class FeatureContext implements Context
 
             public function getRepository($className)
             {
-                return $this->featureContext->getObjectRepository($className);
+                return $this->featureContext->getObjectRepository();
             }
 
             public function getClassMetadata($className)
@@ -310,23 +279,19 @@ class FeatureContext implements Context
         };
     }
 
-    public function getObjectRepository(string $className): ObjectRepository
+    public function getObjectRepository(): ObjectRepository
     {
-        return $this->objectRepository[$className] ?? $this->objectRepository[$className] =
-                new class($className) implements ObjectRepository {
-            private string $className;
+        if (null !== $this->objectRepository) {
+            return $this->objectRepository;
+        }
 
+        $this->objectRepository = new class implements ObjectRepository {
             /**
              * @var object
              */
             private $object;
 
             private array $criteria;
-
-            public function __construct(string $className)
-            {
-                $this->className = $className;
-            }
 
             /**
              * @param array $criteria
@@ -379,102 +344,10 @@ class FeatureContext implements Context
                 return $this->className;
             }
         };
+
+        return $this->objectRepository;
     }
 
-    /**
-     * @Given a Media Loader
-     */
-    public function aMediaLoader(): void
-    {
-        $this->mediaLoader = $this->container->get(MediaLoader::class);
-    }
-    
-    /**
-     * @Given a Item Loader
-     */
-    public function aItemLoader(): void
-    {
-        $this->itemLoader = $this->container->get(ItemLoader::class);
-    }
-
-    /**
-     * @Given a Type Loader
-     */
-    public function aTypeLoader(): void
-    {
-        $this->typeLoader = $this->container->get(TypeLoader::class);
-    }
-
-    /**
-     * @Given an available image called :name
-     */
-    public function anAvailableImageCalled(string $name): void
-    {
-        $media = new class extends Media {
-            /**
-             * @inheritDoc
-             */
-            public function getResource()
-            {
-                $hf = \fopen('php://memory', 'rw');
-                fwrite($hf, 'fooBar');
-                fseek($hf, 0);
-
-                return $hf;
-            }
-        };
-
-        \current($this->objectRepository)->setObject(
-            [
-                'or' => [
-                    ['id' => $name],
-                    ['metadata.legacyId' => $name,]
-                ]
-            ],
-            $media->setId($name)
-                ->setName($name)
-        );
-    }
-
-    /**
-     * @Given a Endpoint able to serve resource from database.
-     */
-    public function aEndpointAbleToServeResourceFromDatabase(): void
-    {
-        $this->container->set(
-            GetStreamFromMediaInterface::class,
-            new class($this->container->get(StreamFactoryInterface::class)) implements GetStreamFromMediaInterface {
-                protected StreamFactoryInterface $streamFactory;
-
-                public function __construct(StreamFactoryInterface $streamFactory)
-                {
-                    $this->streamFactory = $streamFactory;
-                }
-
-                public function __invoke(
-                    BaseMedia $media,
-                    ManagerInterface $manager
-                ): GetStreamFromMediaInterface {
-                    $hf = fopen('php://memory', 'rw+');
-                    fwrite($hf, 'fooBar');
-                    fseek($hf, 0);
-
-                    $stream = $this->streamFactory->createStreamFromResource($hf);
-
-                    $manager->updateWorkPlan([
-                        StreamInterface::class => $stream,
-                    ]);
-
-                    return $this;
-                }
-            }
-        );
-
-        $this->mediaEndPoint = new RecipeEndPoint(
-            $this->container->get(RenderMediaEndPoint::class),
-            $this->container
-        );
-    }
 
     /**
      * @Given I register a router
@@ -509,7 +382,7 @@ class FeatureContext implements Context
 
                 foreach ($this->routes as $route => $endpoint) {
                     $values = [];
-                    if (\preg_match($route, $path, $values)) {
+                    if (preg_match($route, $path, $values)) {
                         $result = new Result($endpoint);
                         $request = $request->withAttribute(RouterInterface::ROUTER_RESULT_KEY, $result);
 
@@ -546,15 +419,9 @@ class FeatureContext implements Context
         $controller = null;
         $params = [];
         switch ($controllerName) {
-            case 'contentEndPoint':
-                $controller = $this->contentEndPoint;
-                break;
             case 'staticEndPoint':
                 $params = ['template' => 'Acme:MyBundle:template.html.twig'];
                 $controller = $this->staticEndPoint;
-                break;
-            case 'mediaEndPoint':
-                $controller = $this->mediaEndPoint;
                 break;
         }
 
@@ -695,63 +562,6 @@ class FeatureContext implements Context
         Assert::assertInstanceOf(\Throwable::class, $this->error);
     }
 
-    /**
-     * @Given a Content Loader
-     */
-    public function aContentLoader(): void
-    {
-        $this->contentLoader = new ContentLoader(
-            $this->container->get(ContentRepositoryInterface::class)
-        );
-    }
-
-    /**
-     * @Given a type of page, called :name with :blockNumber blocks :blocks and template :template with :config
-     */
-    public function aTypeOfPageCalledWithBlocksAndTemplateWith(
-        string $name,
-        int $blockNumber,
-        string $blocks,
-        string $template,
-        string $config
-    ) :void {
-        $this->type = new Type();
-        $this->type->setName($name);
-        $blocksList = [];
-        foreach (\explode(',', $blocks) as $blockName) {
-            $blocksList[] = new Block($blockName, BlockType::Text);
-        }
-        $this->type->setBlocks($blocksList);
-        $this->type->setTemplate($template);
-        $this->templateToCall = $template;
-        $this->templateContent = $config;
-    }
-
-    /**
-     * @Given an available page with the slug :slug of type :type
-     */
-    public function anAvailablePageWithTheSlugOfType(string $slug, string $type): void
-    {
-        $this->getObjectRepository(Content::class)->setObject(
-            ['slug' => $slug],
-            (new Content())->setSlug($type)
-                ->setType($this->type)
-                ->setParts(['block1' => 'hello', 'block2' => 'world'])
-                ->setPublishedAt(new \DateTime('2017-11-25'))
-        );
-    }
-
-    /**
-     * @Given a Endpoint able to render and serve page.
-     */
-    public function aEndpointAbleToRenderAndServePage(): void
-    {
-        $this->contentEndPoint = new RecipeEndPoint(
-            $this->container->get(RenderDynamicContentEndPoint::class),
-            $this->container
-        );
-    }
-
     public function buildResultObject (string $body): ResultInterface
     {
         return $result = new class ($body) implements ResultInterface {
@@ -808,90 +618,17 @@ class FeatureContext implements Context
                     $final[$rp->getName()] = $rp->getValue($object);
                 }
 
-                return \json_encode($final);
+                return json_encode($final);
             }
         };
     }
 
     /**
-     * @Given a templating engine
+     * @Then An object must be persisted
      */
-    public function aTemplatingEngine(): void
+    public function anObjectMustBePersisted()
     {
-        $this->templating = new class($this) implements EngineInterface {
-            private $context;
-
-            /**
-             * @param FeatureContext $context
-             */
-            public function __construct(FeatureContext $context)
-            {
-                $this->context = $context;
-            }
-
-            public function render(PromiseInterface $promise, $name, array $parameters = array()): EngineInterface
-            {
-                if ('404-error' === $name) {
-                    $promise->fail(new \Exception('Error 404'));
-
-                    return $this;
-                }
-
-                Assert::assertEquals($this->context->templateToCall, $name);
-
-                $keys = [];
-                $values = [];
-                if (isset($parameters['content']) && $parameters['content'] instanceof Content) {
-                    foreach ($parameters['content']->getParts() as $key=>$value) {
-                        $keys[] = '{'.$key.'}';
-                        $values[] = $value;
-                    }
-                }
-
-                $result = $this->context->buildResultObject(\str_replace($keys, $values, $this->context->templateContent));
-                $promise->success($result);
-
-                return $this;
-            }
-
-            public function exists($name)
-            {
-            }
-
-            public function supports($name)
-            {
-            }
-        };
-
-        $this->container->set(EngineInterface::class, $this->templating);
-    }
-
-    /**
-     * @Given a template :template with :content
-     */
-    public function aTemplateWith(string $template, string $content): void
-    {
-        $this->templateToCall = $template;
-        $this->templateContent = $content;
-    }
-
-    /**
-     * @Given a Endpoint able to render and serve this template.
-     */
-    public function aEndpointAbleToRenderAndServeThisTemplate(): void
-    {
-        $this->staticEndPoint = new RecipeEndPoint(
-            $this->container->get(RenderStaticContentEndPoint::class),
-            $this->container
-        );
-    }
-
-    /**
-     * @Then An object :class must be persisted
-     */
-    public function anObjectMustBePersisted(string $class)
-    {
-        Assert::assertNotEmpty($this->createdObjects[$class]);
+        Assert::assertNotEmpty($this->createdObjects);
     }
 
     private function runSymfony(SFRequest $serverRequest)
@@ -927,7 +664,7 @@ class FeatureContext implements Context
      */
     public function theClientfollowsTheRedirection()
     {
-        $url = \current($this->response->getHeader('location'));
+        $url = current($this->response->getHeader('location'));
         $serverRequest = SfRequest::create($url, 'GET');
 
         $this->runSymfony($serverRequest);
@@ -938,7 +675,7 @@ class FeatureContext implements Context
      */
     public function theLastObjectUpdatedMustBeDeleted()
     {
-        Assert::assertNotEmpty(\current($this->updatedObjects)->getDeletedAt());
+        Assert::assertNotEmpty(current($this->updatedObjects)->getDeletedAt());
     }
 
     /**
@@ -956,9 +693,9 @@ class FeatureContext implements Context
     {
         Assert::assertInstanceOf(ResponseInterface::class, $this->response);
         Assert::assertEquals(302, $this->response->getStatusCode());
-        $location = \current($this->response->getHeader('location'));
+        $location = current($this->response->getHeader('location'));
 
-        Assert::assertGreaterThan(0, \preg_match("#$url#i", $location));
+        Assert::assertGreaterThan(0, preg_match("#$url#i", $location));
     }
 
     /**
@@ -966,9 +703,9 @@ class FeatureContext implements Context
      */
     public function iShouldGetInTheForm(string $body): void
     {
-        $expectedBody = \json_decode($body, true);
+        $expectedBody = json_decode($body, true);
 
-        $actualBody = \json_decode((string) $this->response->getBody(), true);
+        $actualBody = json_decode((string) $this->response->getBody(), true);
 
         Assert::assertEquals($expectedBody, $actualBody);
     }
@@ -996,38 +733,23 @@ class FeatureContext implements Context
     }
 
     /**
-     * @Given a object of type :class with id :id
+     * @Given a object with id :id
      */
-    public function aObjectOfTypeWithId($class, $id)
+    public function aObjectOfTypeWithId($id)
     {
-        $object = new $class;
-        $object->setId($id);
+        $object = new MyObject($id);
 
-        $this->getObjectRepository($class)->setObject(['id' => $id], $object);
+        $this->getObjectRepository()->setObject(['id' => $id], $object);
     }
 
     /**
-     * @Given a object of type :class with id :id and :properties
+     * @Given a object with id :id and :properties
      */
-    public function aObjectOfTypeWithIdAnd($class, $id, $properties)
+    public function aObjectOfTypeWithIdAnd($id, $properties)
     {
-        $object = new $class;
-        $object->setId($id);
+        $object = new MyObject($id, $properties['name'] ?? '', $properties['slug'] ?? '');
 
-        $ro = new \ReflectionObject($object);
-        foreach (\json_decode($properties, true) as $name=>$value) {
-            if (!$ro->hasProperty($name)) {
-                continue;
-            }
-
-            $rp = $ro->getProperty($name);
-            $isAccessible = !($rp->isPrivate() || $rp->isProtected());
-            $rp->setAccessible(true);
-            $rp->setValue($object, $value);
-            $rp->setAccessible($isAccessible);
-        }
-
-        $this->getObjectRepository($class)->setObject(['id' => $id], $object);
+        $this->getObjectRepository()->setObject(['id' => $id], $object);
     }
 
     /**
@@ -1082,14 +804,6 @@ class FeatureContext implements Context
             ->setLastName('min')
             ->setAuthData([$storedPassword]);
 
-        $this->getObjectRepository(User::class)->setObject(['email' => 'admin@teknoo.software'], $object);
-    }
-
-    /**
-     * @Given an empty locale
-     */
-    public function anEmptyLocale()
-    {
-        $this->locale = '';
+        $this->getObjectRepository()->setObject(['email' => 'admin@teknoo.software'], $object);
     }
 }

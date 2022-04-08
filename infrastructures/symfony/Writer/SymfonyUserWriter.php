@@ -1,7 +1,7 @@
 <?php
 
 /*
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,7 +15,7 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -23,20 +23,20 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\WebsiteBundle\Writer;
+namespace Teknoo\East\CommonBundle\Writer;
 
 use RuntimeException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Teknoo\East\Website\Object\StoredPassword;
+use Teknoo\East\Common\Object\StoredPassword;
 use Teknoo\Recipe\Promise\PromiseInterface;
-use Teknoo\East\Website\Contracts\ObjectInterface;
-use Teknoo\East\Website\Object\User as BaseUser;
-use Teknoo\East\Website\Writer\WriterInterface;
-use Teknoo\East\Website\Writer\UserWriter as UniversalWriter;
-use Teknoo\East\WebsiteBundle\Object\PasswordAuthenticatedUser;
+use Teknoo\East\Common\Contracts\ObjectInterface;
+use Teknoo\East\Common\Object\User as BaseUser;
+use Teknoo\East\Common\Writer\WriterInterface;
+use Teknoo\East\Common\Writer\UserWriter as UniversalWriter;
+use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
 
 /**
- * East Website writer to manager persistent operations on Symfony version of East Website's User class.
+ * East Common writer to manager persistent operations on Symfony version of East Common's User class.
  * This writer is able to manage users'passwords, and hash them before persist data via Symfony's hashers.
  *
  * @license     http://teknoo.software/license/mit         MIT License

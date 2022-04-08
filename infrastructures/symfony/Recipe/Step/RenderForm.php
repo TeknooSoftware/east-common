@@ -1,7 +1,7 @@
 <?php
 
 /*
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,7 +15,7 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -23,7 +23,7 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\WebsiteBundle\Recipe\Step;
+namespace Teknoo\East\CommonBundle\Recipe\Step;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -31,10 +31,10 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Teknoo\East\Foundation\Client\ClientInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
-use Teknoo\East\Website\Contracts\Recipe\Step\RenderFormInterface;
-use Teknoo\East\Website\Contracts\ObjectInterface;
-use Teknoo\East\Website\Recipe\Step\Traits\TemplateTrait;
-use Teknoo\East\Website\View\ParametersBag;
+use Teknoo\East\Common\Contracts\Recipe\Step\RenderFormInterface;
+use Teknoo\East\Common\Contracts\ObjectInterface;
+use Teknoo\East\Common\Recipe\Step\Traits\TemplateTrait;
+use Teknoo\East\Common\View\ParametersBag;
 use Teknoo\Recipe\Ingredient\Attributes\Transform;
 
 /**

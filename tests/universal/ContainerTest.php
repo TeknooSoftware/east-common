@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,81 +15,58 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website;
+namespace Teknoo\Tests\East\Common;
 
-use PHPUnit\Framework\TestCase;
 use DI\Container;
 use DI\ContainerBuilder;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
+use Teknoo\East\Common\Contracts\DBSource\ManagerInterface as DbManagerInterface;
+use Teknoo\East\Common\Contracts\DBSource\Repository\UserRepositoryInterface;
+use Teknoo\East\Common\Contracts\Recipe\Cookbook\CreateObjectEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Cookbook\DeleteObjectEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Cookbook\EditObjectEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Cookbook\ListObjectEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderStaticContentEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Step\FormHandlingInterface;
+use Teknoo\East\Common\Contracts\Recipe\Step\FormProcessingInterface;
+use Teknoo\East\Common\Contracts\Recipe\Step\ListObjectsAccessControlInterface;
+use Teknoo\East\Common\Contracts\Recipe\Step\ObjectAccessControlInterface;
+use Teknoo\East\Common\Contracts\Recipe\Step\RedirectClientInterface;
+use Teknoo\East\Common\Contracts\Recipe\Step\RenderFormInterface;
+use Teknoo\East\Common\Contracts\Recipe\Step\SearchFormLoaderInterface;
+use Teknoo\East\Common\Loader\UserLoader;
+use Teknoo\East\Common\Recipe\Cookbook\CreateObjectEndPoint;
+use Teknoo\East\Common\Recipe\Cookbook\DeleteObjectEndPoint;
+use Teknoo\East\Common\Recipe\Cookbook\EditObjectEndPoint;
+use Teknoo\East\Common\Recipe\Cookbook\ListObjectEndPoint;
+use Teknoo\East\Common\Recipe\Cookbook\RenderStaticContentEndPoint;
+use Teknoo\East\Common\Recipe\Step\CreateObject;
+use Teknoo\East\Common\Recipe\Step\DeleteObject;
+use Teknoo\East\Common\Recipe\Step\ExtractOrder;
+use Teknoo\East\Common\Recipe\Step\ExtractPage;
+use Teknoo\East\Common\Recipe\Step\ExtractSlug;
+use Teknoo\East\Common\Recipe\Step\LoadListObjects;
+use Teknoo\East\Common\Recipe\Step\LoadObject;
+use Teknoo\East\Common\Recipe\Step\Render;
+use Teknoo\East\Common\Recipe\Step\RenderError;
+use Teknoo\East\Common\Recipe\Step\RenderList;
+use Teknoo\East\Common\Recipe\Step\SaveObject;
+use Teknoo\East\Common\Recipe\Step\SlugPreparation;
+use Teknoo\East\Common\Service\DeletingService;
+use Teknoo\East\Common\Writer\UserWriter;
 use Teknoo\East\Foundation\Manager\Manager;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Router\RouterInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
-use Teknoo\East\Website\Contracts\Recipe\Cookbook\CreateContentEndPointInterface;
-use Teknoo\East\Website\Contracts\Recipe\Cookbook\DeleteContentEndPointInterface;
-use Teknoo\East\Website\Contracts\Recipe\Cookbook\EditContentEndPointInterface;
-use Teknoo\East\Website\Contracts\Recipe\Cookbook\ListContentEndPointInterface;
-use Teknoo\East\Website\Contracts\Recipe\Cookbook\RenderDynamicContentEndPointInterface;
-use Teknoo\East\Website\Contracts\Recipe\Cookbook\RenderMediaEndPointInterface;
-use Teknoo\East\Website\Contracts\Recipe\Cookbook\RenderStaticContentEndPointInterface;
-use Teknoo\East\Website\Contracts\Recipe\Step\FormHandlingInterface;
-use Teknoo\East\Website\Contracts\Recipe\Step\FormProcessingInterface;
-use Teknoo\East\Website\Contracts\Recipe\Step\GetStreamFromMediaInterface;
-use Teknoo\East\Website\Contracts\Recipe\Step\ListObjectsAccessControlInterface;
-use Teknoo\East\Website\Contracts\Recipe\Step\ObjectAccessControlInterface;
-use Teknoo\East\Website\Contracts\Recipe\Step\RedirectClientInterface;
-use Teknoo\East\Website\Contracts\Recipe\Step\RenderFormInterface;
-use Teknoo\East\Website\Contracts\Recipe\Step\SearchFormLoaderInterface;
-use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
-use Teknoo\East\Website\DBSource\Repository\ItemRepositoryInterface;
-use Teknoo\East\Website\DBSource\Repository\MediaRepositoryInterface;
-use Teknoo\East\Website\DBSource\Repository\TypeRepositoryInterface;
-use Teknoo\East\Website\DBSource\Repository\UserRepositoryInterface;
-use Teknoo\East\Website\DBSource\ManagerInterface as DbManagerInterface;
-use Teknoo\East\Website\Loader\ItemLoader;
-use Teknoo\East\Website\Loader\ContentLoader;
-use Teknoo\East\Website\Loader\MediaLoader;
-use Teknoo\East\Website\Loader\TypeLoader;
-use Teknoo\East\Website\Loader\UserLoader;
-use Teknoo\East\Website\Middleware\MenuMiddleware;
-use Teknoo\East\Website\Recipe\Cookbook\CreateContentEndPoint;
-use Teknoo\East\Website\Recipe\Cookbook\DeleteContentEndPoint;
-use Teknoo\East\Website\Recipe\Cookbook\EditContentEndPoint;
-use Teknoo\East\Website\Recipe\Cookbook\ListContentEndPoint;
-use Teknoo\East\Website\Recipe\Cookbook\RenderDynamicContentEndPoint;
-use Teknoo\East\Website\Recipe\Cookbook\RenderMediaEndPoint;
-use Teknoo\East\Website\Recipe\Cookbook\RenderStaticContentEndPoint;
-use Teknoo\East\Website\Recipe\Step\CreateObject;
-use Teknoo\East\Website\Recipe\Step\DeleteObject;
-use Teknoo\East\Website\Recipe\Step\ExtractOrder;
-use Teknoo\East\Website\Recipe\Step\ExtractPage;
-use Teknoo\East\Website\Recipe\Step\ExtractSlug;
-use Teknoo\East\Website\Recipe\Step\LoadContent;
-use Teknoo\East\Website\Recipe\Step\LoadListObjects;
-use Teknoo\East\Website\Recipe\Step\LoadMedia;
-use Teknoo\East\Website\Recipe\Step\LoadObject;
-use Teknoo\East\Website\Recipe\Step\Render;
-use Teknoo\East\Website\Recipe\Step\RenderError;
-use Teknoo\East\Website\Recipe\Step\RenderList;
-use Teknoo\East\Website\Recipe\Step\SaveObject;
-use Teknoo\East\Website\Recipe\Step\SearchFormHandling;
-use Teknoo\East\Website\Recipe\Step\SendMedia;
-use Teknoo\East\Website\Recipe\Step\SlugPreparation;
-use Teknoo\East\Website\Service\DeletingService;
-use Teknoo\East\Website\Service\MenuGenerator;
-use Teknoo\East\Website\Writer\ItemWriter;
-use Teknoo\East\Website\Writer\ContentWriter;
-use Teknoo\East\Website\Writer\MediaWriter;
-use Teknoo\East\Website\Writer\TypeWriter;
-use Teknoo\East\Website\Writer\UserWriter;
 use Teknoo\Recipe\RecipeInterface as OriginalRecipeInterface;
 
 /**
@@ -132,26 +109,6 @@ class ContainerTest extends TestCase
         );
     }
 
-    public function testItemLoader()
-    {
-        $this->generateTestForLoader(ItemLoader::class, ItemRepositoryInterface::class);
-    }
-
-    public function testContentLoader()
-    {
-        $this->generateTestForLoader(ContentLoader::class, ContentRepositoryInterface::class);
-    }
-
-    public function testMediaLoader()
-    {
-        $this->generateTestForLoader(MediaLoader::class, MediaRepositoryInterface::class);
-    }
-
-    public function testTypeLoader()
-    {
-        $this->generateTestForLoader(TypeLoader::class, TypeRepositoryInterface::class);
-    }
-
     public function testUserLoader()
     {
         $this->generateTestForLoader(UserLoader::class, UserRepositoryInterface::class);
@@ -169,26 +126,6 @@ class ContainerTest extends TestCase
             $className,
             $loader
         );
-    }
-
-    public function testItemWriter()
-    {
-        $this->generateTestForWriter(ItemWriter::class);
-    }
-
-    public function testContentWriter()
-    {
-        $this->generateTestForWriter(ContentWriter::class);
-    }
-
-    public function testMediaWriter()
-    {
-        $this->generateTestForWriter(MediaWriter::class);
-    }
-
-    public function testTypeWriter()
-    {
-        $this->generateTestForWriter(TypeWriter::class);
     }
 
     public function testUserWriter()
@@ -210,55 +147,9 @@ class ContainerTest extends TestCase
         );
     }
 
-    public function testItemDelete()
-    {
-        $this->generateTestForDelete('teknoo.east.website.deleting.item');
-    }
-
-    public function testContentDelete()
-    {
-        $this->generateTestForDelete('teknoo.east.website.deleting.content');
-    }
-
-    public function testMediaDelete()
-    {
-        $this->generateTestForDelete('teknoo.east.website.deleting.media');
-    }
-
-    public function testTypeDelete()
-    {
-        $this->generateTestForDelete('teknoo.east.website.deleting.type');
-    }
-
     public function testUserDelete()
     {
-        $this->generateTestForDelete('teknoo.east.website.deleting.user');
-    }
-
-    public function testMenuGenerator()
-    {
-        $container = $this->buildContainer();
-        $container->set(ItemRepositoryInterface::class, $this->createMock(ItemRepositoryInterface::class));
-        $container->set(ContentRepositoryInterface::class, $this->createMock(ContentRepositoryInterface::class));
-        $loader = $container->get(MenuGenerator::class);
-
-        self::assertInstanceOf(
-            MenuGenerator::class,
-            $loader
-        );
-    }
-
-    public function testMenuMiddleware()
-    {
-        $container = $this->buildContainer();
-        $container->set(ItemRepositoryInterface::class, $this->createMock(ItemRepositoryInterface::class));
-        $container->set(ContentRepositoryInterface::class, $this->createMock(ContentRepositoryInterface::class));
-        $loader = $container->get(MenuMiddleware::class);
-
-        self::assertInstanceOf(
-            MenuMiddleware::class,
-            $loader
-        );
+        $this->generateTestForDelete('teknoo.east.common.deleting.user');
     }
 
     public function testEastManagerMiddlewareInjection()
@@ -271,8 +162,6 @@ class ContainerTest extends TestCase
 
         $container->set(LoggerInterface::class, $this->createMock(LoggerInterface::class));
         $container->set(RouterInterface::class, $this->createMock(RouterInterface::class));
-        $container->set(ItemRepositoryInterface::class, $this->createMock(ItemRepositoryInterface::class));
-        $container->set(ContentRepositoryInterface::class, $this->createMock(ContentRepositoryInterface::class));
 
         $manager1 = $container->get(Manager::class);
         $manager2 = $container->get(ManagerInterface::class);
@@ -340,17 +229,6 @@ class ContainerTest extends TestCase
         );
     }
 
-    public function testLoadContent()
-    {
-        $container = $this->buildContainer();
-        $container->set(ContentRepositoryInterface::class, $this->createMock(ContentRepositoryInterface::class));
-
-        self::assertInstanceOf(
-            LoadContent::class,
-            $container->get(LoadContent::class)
-        );
-    }
-
     public function testLoadListObjects()
     {
         $container = $this->buildContainer();
@@ -358,17 +236,6 @@ class ContainerTest extends TestCase
         self::assertInstanceOf(
             LoadListObjects::class,
             $container->get(LoadListObjects::class)
-        );
-    }
-
-    public function testLoadMedia()
-    {
-        $container = $this->buildContainer();
-        $container->set(MediaRepositoryInterface::class, $this->createMock(MediaRepositoryInterface::class));
-
-        self::assertInstanceOf(
-            LoadMedia::class,
-            $container->get(LoadMedia::class)
         );
     }
 
@@ -431,17 +298,6 @@ class ContainerTest extends TestCase
         );
     }
 
-    public function testSendMedia()
-    {
-        $container = $this->buildContainer();
-        $container->set(ResponseFactoryInterface::class, $this->createMock(ResponseFactoryInterface::class));
-
-        self::assertInstanceOf(
-            SendMedia::class,
-            $container->get(SendMedia::class)
-        );
-    }
-
     public function testSlugPreparation()
     {
         $container = $this->buildContainer();
@@ -466,13 +322,13 @@ class ContainerTest extends TestCase
         $container->set(RenderError::class, $this->createMock(RenderError::class));
 
         self::assertInstanceOf(
-            CreateContentEndPoint::class,
-            $container->get(CreateContentEndPoint::class)
+            CreateObjectEndPoint::class,
+            $container->get(CreateObjectEndPoint::class)
         );
 
         self::assertInstanceOf(
-            CreateContentEndPointInterface::class,
-            $container->get(CreateContentEndPointInterface::class)
+            CreateObjectEndPointInterface::class,
+            $container->get(CreateObjectEndPointInterface::class)
         );
     }
 
@@ -491,13 +347,13 @@ class ContainerTest extends TestCase
         $container->set(ObjectAccessControlInterface::class, $this->createMock(ObjectAccessControlInterface::class));
 
         self::assertInstanceOf(
-            CreateContentEndPoint::class,
-            $container->get(CreateContentEndPoint::class)
+            CreateObjectEndPoint::class,
+            $container->get(CreateObjectEndPoint::class)
         );
 
         self::assertInstanceOf(
-            CreateContentEndPointInterface::class,
-            $container->get(CreateContentEndPointInterface::class)
+            CreateObjectEndPointInterface::class,
+            $container->get(CreateObjectEndPointInterface::class)
         );
     }
 
@@ -511,13 +367,13 @@ class ContainerTest extends TestCase
         $container->set(RenderError::class, $this->createMock(RenderError::class));
 
         self::assertInstanceOf(
-            DeleteContentEndPoint::class,
-            $container->get(DeleteContentEndPoint::class)
+            DeleteObjectEndPoint::class,
+            $container->get(DeleteObjectEndPoint::class)
         );
 
         self::assertInstanceOf(
-            DeleteContentEndPointInterface::class,
-            $container->get(DeleteContentEndPointInterface::class)
+            DeleteObjectEndPointInterface::class,
+            $container->get(DeleteObjectEndPointInterface::class)
         );
     }
 
@@ -532,13 +388,13 @@ class ContainerTest extends TestCase
         $container->set(ObjectAccessControlInterface::class, $this->createMock(ObjectAccessControlInterface::class));
 
         self::assertInstanceOf(
-            DeleteContentEndPoint::class,
-            $container->get(DeleteContentEndPoint::class)
+            DeleteObjectEndPoint::class,
+            $container->get(DeleteObjectEndPoint::class)
         );
 
         self::assertInstanceOf(
-            DeleteContentEndPointInterface::class,
-            $container->get(DeleteContentEndPointInterface::class)
+            DeleteObjectEndPointInterface::class,
+            $container->get(DeleteObjectEndPointInterface::class)
         );
     }
 
@@ -555,13 +411,13 @@ class ContainerTest extends TestCase
         $container->set(RenderError::class, $this->createMock(RenderError::class));
 
         self::assertInstanceOf(
-            EditContentEndPoint::class,
-            $container->get(EditContentEndPoint::class)
+            EditObjectEndPoint::class,
+            $container->get(EditObjectEndPoint::class)
         );
 
         self::assertInstanceOf(
-            EditContentEndPointInterface::class,
-            $container->get(EditContentEndPointInterface::class)
+            EditObjectEndPointInterface::class,
+            $container->get(EditObjectEndPointInterface::class)
         );
     }
 
@@ -579,13 +435,13 @@ class ContainerTest extends TestCase
         $container->set(ObjectAccessControlInterface::class, $this->createMock(ObjectAccessControlInterface::class));
 
         self::assertInstanceOf(
-            EditContentEndPoint::class,
-            $container->get(EditContentEndPoint::class)
+            EditObjectEndPoint::class,
+            $container->get(EditObjectEndPoint::class)
         );
 
         self::assertInstanceOf(
-            EditContentEndPointInterface::class,
-            $container->get(EditContentEndPointInterface::class)
+            EditObjectEndPointInterface::class,
+            $container->get(EditObjectEndPointInterface::class)
         );
     }
 
@@ -600,13 +456,13 @@ class ContainerTest extends TestCase
         $container->set(RenderError::class, $this->createMock(RenderError::class));
 
         self::assertInstanceOf(
-            ListContentEndPoint::class,
-            $container->get(ListContentEndPoint::class)
+            ListObjectEndPoint::class,
+            $container->get(ListObjectEndPoint::class)
         );
 
         self::assertInstanceOf(
-            ListContentEndPointInterface::class,
-            $container->get(ListContentEndPointInterface::class)
+            ListObjectEndPointInterface::class,
+            $container->get(ListObjectEndPointInterface::class)
         );
     }
 
@@ -622,13 +478,13 @@ class ContainerTest extends TestCase
         $container->set(SearchFormLoaderInterface::class, $this->createMock(SearchFormLoaderInterface::class));
 
         self::assertInstanceOf(
-            ListContentEndPoint::class,
-            $container->get(ListContentEndPoint::class)
+            ListObjectEndPoint::class,
+            $container->get(ListObjectEndPoint::class)
         );
 
         self::assertInstanceOf(
-            ListContentEndPointInterface::class,
-            $container->get(ListContentEndPointInterface::class)
+            ListObjectEndPointInterface::class,
+            $container->get(ListObjectEndPointInterface::class)
         );
     }
 
@@ -644,53 +500,13 @@ class ContainerTest extends TestCase
         $container->set(ListObjectsAccessControlInterface::class, $this->createMock(ListObjectsAccessControlInterface::class));
 
         self::assertInstanceOf(
-            ListContentEndPoint::class,
-            $container->get(ListContentEndPoint::class)
+            ListObjectEndPoint::class,
+            $container->get(ListObjectEndPoint::class)
         );
 
         self::assertInstanceOf(
-            ListContentEndPointInterface::class,
-            $container->get(ListContentEndPointInterface::class)
-        );
-    }
-
-    public function testRenderDynamicContentEndPoint()
-    {
-        $container = $this->buildContainer();
-        $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
-        $container->set(ExtractSlug::class, $this->createMock(ExtractSlug::class));
-        $container->set(LoadContent::class, $this->createMock(LoadContent::class));
-        $container->set(Render::class, $this->createMock(Render::class));
-        $container->set(RenderError::class, $this->createMock(RenderError::class));
-
-        self::assertInstanceOf(
-            RenderDynamicContentEndPoint::class,
-            $container->get(RenderDynamicContentEndPoint::class)
-        );
-
-        self::assertInstanceOf(
-            RenderDynamicContentEndPointInterface::class,
-            $container->get(RenderDynamicContentEndPointInterface::class)
-        );
-    }
-
-    public function testRenderMediaEndPoint()
-    {
-        $container = $this->buildContainer();
-        $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
-        $container->set(LoadMedia::class, $this->createMock(LoadMedia::class));
-        $container->set(GetStreamFromMediaInterface::class, $this->createMock(GetStreamFromMediaInterface::class));
-        $container->set(SendMedia::class, $this->createMock(SendMedia::class));
-        $container->set(RenderError::class, $this->createMock(RenderError::class));
-
-        self::assertInstanceOf(
-            RenderMediaEndPoint::class,
-            $container->get(RenderMediaEndPoint::class)
-        );
-
-        self::assertInstanceOf(
-            RenderMediaEndPointInterface::class,
-            $container->get(RenderMediaEndPointInterface::class)
+            ListObjectEndPointInterface::class,
+            $container->get(ListObjectEndPointInterface::class)
         );
     }
 

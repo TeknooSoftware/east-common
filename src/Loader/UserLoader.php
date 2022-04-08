@@ -1,7 +1,7 @@
 <?php
 
 /*
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,7 +15,7 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -23,13 +23,14 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Loader;
+namespace Teknoo\East\Common\Loader;
 
-use Teknoo\East\Website\DBSource\Repository\UserRepositoryInterface;
-use Teknoo\East\Website\Object\User;
+use Teknoo\East\Common\Contracts\DBSource\Repository\UserRepositoryInterface;
+use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
+use Teknoo\East\Common\Object\User;
 
 /**
- * Object loader in charge of object `Teknoo\East\Website\Object\User`.
+ * Object loader in charge of object `Teknoo\East\Common\Object\User`.
  * Must provide an implementation of `UserRepositoryInterface` to be able work.
  *
  * @license     http://teknoo.software/license/mit         MIT License

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,7 +15,7 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -23,12 +23,12 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Recipe\Cookbook;
+namespace Teknoo\East\Common\Recipe\Cookbook;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Teknoo\East\Website\Contracts\Recipe\Cookbook\RenderStaticContentEndPointInterface;
-use Teknoo\East\Website\Recipe\Step\Render;
-use Teknoo\East\Website\Recipe\Step\RenderError;
+use Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderStaticContentEndPointInterface;
+use Teknoo\East\Common\Recipe\Step\Render;
+use Teknoo\East\Common\Recipe\Step\RenderError;
 use Teknoo\Recipe\Bowl\Bowl;
 use Teknoo\Recipe\Cookbook\BaseCookbookTrait;
 use Teknoo\Recipe\Ingredient\Ingredient;

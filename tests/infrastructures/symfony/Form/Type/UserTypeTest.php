@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,28 +15,28 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\WebsiteBundle\Form\Type;
+namespace Teknoo\Tests\East\CommonBundle\Form\Type;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormInterface;
-use Teknoo\East\Website\Contracts\User\AuthDataInterface;
-use Teknoo\East\Website\Object\StoredPassword;
-use Teknoo\East\Website\Object\User;
-use Teknoo\East\WebsiteBundle\Form\Type\UserType;
+use Teknoo\East\Common\Contracts\User\AuthDataInterface;
+use Teknoo\East\Common\Object\StoredPassword;
+use Teknoo\East\Common\Object\User;
+use Teknoo\East\CommonBundle\Form\Type\UserType;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers      \Teknoo\East\WebsiteBundle\Form\Type\UserType
+ * @covers      \Teknoo\East\CommonBundle\Form\Type\UserType
  */
 class UserTypeTest extends TestCase
 {

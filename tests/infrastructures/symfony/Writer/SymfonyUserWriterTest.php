@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,30 +15,30 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\WebsiteBundle\Writer;
+namespace Teknoo\Tests\East\CommonBundle\Writer;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Teknoo\East\Website\Contracts\User\AuthDataInterface;
-use Teknoo\East\Website\Object\StoredPassword;
-use Teknoo\East\WebsiteBundle\Object\PasswordAuthenticatedUser;
+use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
+use Teknoo\East\Common\Contracts\User\AuthDataInterface;
+use Teknoo\East\Common\Object\StoredPassword;
+use Teknoo\East\Common\Object\User as BaseUser;
+use Teknoo\East\Common\Writer\UserWriter as UniversalWriter;
+use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
+use Teknoo\East\CommonBundle\Writer\SymfonyUserWriter;
 use Teknoo\Recipe\Promise\PromiseInterface;
-use Teknoo\East\Website\Object\ObjectInterface;
-use Teknoo\East\WebsiteBundle\Writer\SymfonyUserWriter;
-use Teknoo\East\Website\Writer\UserWriter as UniversalWriter;
-use Teknoo\East\Website\Object\User as BaseUser;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers      \Teknoo\East\WebsiteBundle\Writer\SymfonyUserWriter
+ * @covers      \Teknoo\East\CommonBundle\Writer\SymfonyUserWriter
  */
 class SymfonyUserWriterTest extends TestCase
 {
@@ -106,7 +106,7 @@ class SymfonyUserWriterTest extends TestCase
     public function testSaveWithWrongObject()
     {
         $promise = $this->createMock(PromiseInterface::class);
-        $object = $this->createMock(ObjectInterface::class);
+        $object = $this->createMock(IdentifiedObjectInterface::class);
 
         $this->getUniversalWriter()
             ->expects(self::never())
@@ -214,7 +214,7 @@ class SymfonyUserWriterTest extends TestCase
 
     public function testRemove()
     {
-        $object = $this->createMock(ObjectInterface::class);
+        $object = $this->createMock(IdentifiedObjectInterface::class);
         $promise = $this->createMock(PromiseInterface::class);
 
         $this->getUniversalWriter()

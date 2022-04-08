@@ -12,7 +12,7 @@
     </exclude>
   </coverage>
   <testsuites>
-    <testsuite name="Teknoo Software/East Website Test Suite">
+    <testsuite name="Teknoo Software/East Common Test Suite">
       <directory suffix="Test.php">tests/</directory>
     </testsuite>
   </testsuites>

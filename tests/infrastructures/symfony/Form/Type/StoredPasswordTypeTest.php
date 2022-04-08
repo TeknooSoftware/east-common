@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,22 +15,22 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\WebsiteBundle\Form\Type;
+namespace Teknoo\Tests\East\CommonBundle\Form\Type;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Teknoo\East\WebsiteBundle\Form\Type\StoredPasswordType;
+use Teknoo\East\CommonBundle\Form\Type\StoredPasswordType;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers      \Teknoo\East\WebsiteBundle\Form\Type\StoredPasswordType
+ * @covers      \Teknoo\East\CommonBundle\Form\Type\StoredPasswordType
  */
 class StoredPasswordTypeTest extends TestCase
 {

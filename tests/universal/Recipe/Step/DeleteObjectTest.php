@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,23 +15,23 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Recipe\Step;
+namespace Teknoo\Tests\East\Common\Recipe\Step;
 
 use PHPUnit\Framework\TestCase;
-use Teknoo\East\Website\Object\ObjectInterface;
-use Teknoo\East\Website\Recipe\Step\DeleteObject;
-use Teknoo\East\Website\Service\DeletingService;
+use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
+use Teknoo\East\Common\Recipe\Step\DeleteObject;
+use Teknoo\East\Common\Service\DeletingService;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Recipe\Step\DeleteObject
+ * @covers \Teknoo\East\Common\Recipe\Step\DeleteObject
  */
 class DeleteObjectTest extends TestCase
 {
@@ -46,7 +46,7 @@ class DeleteObjectTest extends TestCase
 
         $this->buildStep()(
             new \stdClass(),
-            $this->createMock(ObjectInterface::class)
+            $this->createMock(IdentifiedObjectInterface::class)
         );
     }
 
@@ -66,7 +66,7 @@ class DeleteObjectTest extends TestCase
             DeleteObject::class,
             $this->buildStep()(
                 $this->createMock(DeletingService::class),
-                $this->createMock(ObjectInterface::class)
+                $this->createMock(IdentifiedObjectInterface::class)
             )
         );
     }

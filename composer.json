@@ -75,8 +75,6 @@
         "symfony/security-http": "^6.0",
         "symfony/security-bundle": "^6.0",
         "symfony/templating": "^6.0",
-        "symfony/yaml": "^6.0",
-        "symfony/var-dumper": "^6.0",
         "twig/twig": "^3.3",
         "laminas/laminas-diactoros": "^2.8",
         "doctrine/common": "^3.2.1",

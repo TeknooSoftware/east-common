@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,22 +15,22 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Doctrine\DBSource\ODM;
+namespace Teknoo\Tests\East\Common\Doctrine\DBSource\ODM;
 
 use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
-use Teknoo\East\Website\Doctrine\DBSource\Common\Manager;
+use Teknoo\East\Common\Doctrine\DBSource\Common\Manager;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Doctrine\DBSource\Common\Manager
+ * @covers \Teknoo\East\Common\Doctrine\DBSource\Common\Manager
  */
 class ManagerTest extends TestCase
 {

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,13 +15,13 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\WebsiteBundle\Recipe\Step;
+namespace Teknoo\Tests\East\CommonBundle\Recipe\Step;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -30,12 +30,12 @@ use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Teknoo\East\Foundation\Client\ClientInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
-use Teknoo\East\WebsiteBundle\Recipe\Step\RedirectClient;
+use Teknoo\East\CommonBundle\Recipe\Step\RedirectClient;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers      \Teknoo\East\WebsiteBundle\Recipe\Step\RedirectClient
+ * @covers      \Teknoo\East\CommonBundle\Recipe\Step\RedirectClient
  */
 class RedirectClientTest extends TestCase
 {

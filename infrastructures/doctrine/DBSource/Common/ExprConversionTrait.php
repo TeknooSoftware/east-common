@@ -1,7 +1,7 @@
 <?php
 
 /*
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,7 +15,7 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -23,17 +23,17 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Doctrine\DBSource\Common;
+namespace Teknoo\East\Common\Doctrine\DBSource\Common;
 
 use RuntimeException;
-use Teknoo\East\Website\Query\Expr\ExprInterface;
-use Teknoo\East\Website\Query\Expr\In;
-use Teknoo\East\Website\Query\Expr\InclusiveOr;
-use Teknoo\East\Website\Query\Expr\NotEqual;
-use Teknoo\East\Website\Query\Expr\ObjectReference;
+use Teknoo\East\Common\Contracts\Query\Expr\ExprInterface;
+use Teknoo\East\Common\Query\Expr\In;
+use Teknoo\East\Common\Query\Expr\InclusiveOr;
+use Teknoo\East\Common\Query\Expr\NotEqual;
+use Teknoo\East\Common\Query\Expr\ObjectReference;
 
 /**
- * Default implementation dedicated to generic Doctrine component to convert East Website
+ * Default implementation dedicated to generic Doctrine component to convert East Common
  * Queries expressions to Doctrines generic queries.
  * Usable with ORM or ODM, but a optimized version dedicated to ODM is available into `ODM`
  * namespace.

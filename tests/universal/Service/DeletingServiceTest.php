@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,25 +15,25 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Service;
+namespace Teknoo\Tests\East\Common\Service;
 
 use PHPUnit\Framework\TestCase;
-use Teknoo\East\Website\Object\DeletableInterface;
-use Teknoo\East\Website\Object\ObjectInterface;
-use Teknoo\East\Website\Service\DatesService;
-use Teknoo\East\Website\Service\DeletingService;
-use Teknoo\East\Website\Writer\WriterInterface;
+use Teknoo\East\Common\Contracts\Object\DeletableInterface;
+use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
+use Teknoo\East\Common\Service\DatesService;
+use Teknoo\East\Common\Service\DeletingService;
+use Teknoo\East\Common\Writer\WriterInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Service\DeletingService
+ * @covers \Teknoo\East\Common\Service\DeletingService
  */
 class DeletingServiceTest extends TestCase
 {
@@ -80,7 +80,7 @@ class DeletingServiceTest extends TestCase
     {
         $date = new \DateTime('2017-01-01');
 
-        $object = new class implements ObjectInterface, DeletableInterface {
+        $object = new class implements IdentifiedObjectInterface, DeletableInterface {
             private $date;
             public function getDeletedAt(): ?\DateTimeInterface
             {
@@ -129,7 +129,7 @@ class DeletingServiceTest extends TestCase
 
     public function testDeleteWithNonDeletable()
     {
-        $object = new class implements ObjectInterface {
+        $object = new class implements IdentifiedObjectInterface {
             public function getId(): string
             {
             }

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,7 +15,7 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -23,18 +23,18 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Recipe\Step;
+namespace Teknoo\East\Common\Recipe\Step;
 
 use DomainException;
+use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
+use Teknoo\East\Common\Contracts\ObjectInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\Recipe\Promise\Promise;
-use Teknoo\East\Website\Loader\LoaderInterface;
-use Teknoo\East\Website\Contracts\ObjectInterface;
 use Throwable;
 
 /**
  * Generic step recipe to load, from its id, a persisted object thank to its loader and put it into the workplan
- * at key defined in the ingredient $workPlanKey (by default `ObjectInterface::class`)
+ * at key defined in the ingredient $workPlanKey (by default `IdentifiedObjectInterface::class`)
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -42,7 +42,7 @@ use Throwable;
 class LoadObject
 {
     /**
-     * @param LoaderInterface<ObjectInterface> $loader
+     * @param \Teknoo\East\Common\Contracts\Loader\LoaderInterface<ObjectInterface> $loader
      */
     public function __invoke(
         LoaderInterface $loader,

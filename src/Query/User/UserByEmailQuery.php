@@ -1,7 +1,7 @@
 <?php
 
 /*
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,7 +15,7 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -23,16 +23,16 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Query\User;
+namespace Teknoo\East\Common\Query\User;
 
-use Teknoo\East\Website\Query\Expr\InclusiveOr;
-use Teknoo\Recipe\Promise\PromiseInterface;
-use Teknoo\East\Website\DBSource\RepositoryInterface;
-use Teknoo\East\Website\Loader\LoaderInterface;
-use Teknoo\East\Website\Object\User;
-use Teknoo\East\Website\Query\QueryElementInterface;
+use Teknoo\East\Common\Contracts\DBSource\RepositoryInterface;
+use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
+use Teknoo\East\Common\Contracts\Query\QueryElementInterface;
+use Teknoo\East\Common\Query\Expr\InclusiveOr;
+use Teknoo\East\Common\Object\User;
 use Teknoo\Immutable\ImmutableInterface;
 use Teknoo\Immutable\ImmutableTrait;
+use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
  * Class implementing query to load a non deleted user from its email, and pass result to the

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,26 +15,26 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Recipe\Step;
+namespace Teknoo\Tests\East\Common\Recipe\Step;
 
 use PHPUnit\Framework\TestCase;
+use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
+use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
+use Teknoo\East\Common\Contracts\Query\Expr\ExprInterface;
+use Teknoo\East\Common\Recipe\Step\LoadListObjects;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\Recipe\Promise\PromiseInterface;
-use Teknoo\East\Website\Loader\LoaderInterface;
-use Teknoo\East\Website\Object\Content;
-use Teknoo\East\Website\Query\Expr\ExprInterface;
-use Teknoo\East\Website\Recipe\Step\LoadListObjects;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Recipe\Step\LoadListObjects
+ * @covers \Teknoo\East\Common\Recipe\Step\LoadListObjects
  */
 class LoadListObjectsTest extends TestCase
 {
@@ -110,12 +110,20 @@ class LoadListObjectsTest extends TestCase
 
     public function testInvokeFoundWithNoCountable()
     {
-        $objects = new class implements \IteratorAggregate {
+        $objects = new class($this->createMock(...)) implements \IteratorAggregate {
+            private $createMock;
+
+            public function __construct(
+                callable $createMock,
+            ) {
+                $this->createMock = $createMock;
+            }
+
             public function getIterator(): \Traversable
             {
                 return new \ArrayIterator([
-                    new Content(),
-                    new Content()
+                    ($this->createMock)(IdentifiedObjectInterface::class),
+                    ($this->createMock)(IdentifiedObjectInterface::class),
                 ]);
             }
         };

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,7 +15,7 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -23,12 +23,12 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\WebsiteBundle\Object;
+namespace Teknoo\East\CommonBundle\Object;
 
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherAwareInterface;
 
 /**
- * Symfony user implentation to wrap a East Website user instance authenticated via a password hashed by a modern
+ * Symfony user implentation to wrap a East Common user instance authenticated via a password hashed by a modern
  * algo like sodium, without salt. Authenticating data are stored into a StoredPassword instance.
  *
  * @license     http://teknoo.software/license/mit         MIT License

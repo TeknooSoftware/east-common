@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,21 +15,21 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Query\Expr;
+namespace Teknoo\Tests\East\Common\Query\Expr;
 
 use PHPUnit\Framework\TestCase;
-use Teknoo\East\Website\Query\Expr\InclusiveOr;
+use Teknoo\East\Common\Query\Expr\InclusiveOr;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Query\Expr\InclusiveOr
+ * @covers \Teknoo\East\Common\Query\Expr\InclusiveOr
  */
 class InclusiveOrTest extends TestCase
 {

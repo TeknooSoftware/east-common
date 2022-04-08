@@ -1,7 +1,7 @@
 <?php
 
 /*
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,7 +15,7 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -23,14 +23,14 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\WebsiteBundle\Object;
+namespace Teknoo\East\CommonBundle\Object;
 
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Teknoo\East\Website\Object\StoredPassword;
-use Teknoo\East\Website\Object\User as BaseUser;
+use Teknoo\East\Common\Object\StoredPassword;
+use Teknoo\East\Common\Object\User as BaseUser;
 
 /**
- * Abstract Symfony user implentation to wrap a East Website user instance authenticated via a password.
+ * Abstract Symfony user implentation to wrap a East Common user instance authenticated via a password.
  * Authenticating data are stored into a StoredPassword instance.
  *
  * @license     http://teknoo.software/license/mit         MIT License

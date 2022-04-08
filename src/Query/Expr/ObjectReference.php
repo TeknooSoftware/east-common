@@ -1,7 +1,7 @@
 <?php
 
 /*
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,7 +15,7 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -23,9 +23,10 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Query\Expr;
+namespace Teknoo\East\Common\Query\Expr;
 
-use Teknoo\East\Website\Object\ObjectInterface;
+use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
+use Teknoo\East\Common\Contracts\Query\Expr\ExprInterface;
 use Teknoo\Immutable\ImmutableInterface;
 use Teknoo\Immutable\ImmutableTrait;
 
@@ -40,12 +41,12 @@ class ObjectReference implements ExprInterface, ImmutableInterface
     use ImmutableTrait;
 
     public function __construct(
-        private readonly ObjectInterface $object,
+        private readonly IdentifiedObjectInterface $object,
     ) {
         $this->uniqueConstructorCheck();
     }
 
-    public function getObject(): ObjectInterface
+    public function getObject(): IdentifiedObjectInterface
     {
         return $this->object;
     }

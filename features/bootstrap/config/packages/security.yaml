@@ -6,11 +6,11 @@ security:
 
     providers:
         with_password:
-            id: 'Teknoo\East\WebsiteBundle\Provider\PasswordAuthenticatedUserProvider'
+            id: 'Teknoo\East\CommonBundle\Provider\PasswordAuthenticatedUserProvider'
 
     password_hashers:
-        Teknoo\East\WebsiteBundle\Object\PasswordAuthenticatedUser:
-            algorithm: '%teknoo.east.website.bundle.password_authenticated_user_provider.default_algo%'
+        Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser:
+            algorithm: '%teknoo.east.common.bundle.password_authenticated_user_provider.default_algo%'
 
     firewalls:
         user_login:
@@ -22,9 +22,9 @@ security:
             pattern: '^/user'
             form_login:
                 provider: 'with_password'
-                check_path: 'user_website_check'
-                login_path: 'user_website_login'
-                default_target_path: 'user_website_home'
+                check_path: 'user_common_check'
+                login_path: 'user_common_login'
+                default_target_path: 'user_common_home'
                 enable_csrf: false
 
     access_control:

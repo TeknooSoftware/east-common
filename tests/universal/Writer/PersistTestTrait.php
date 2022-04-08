@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,19 +15,19 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Writer;
+namespace Teknoo\Tests\East\Common\Writer;
 
+use Teknoo\East\Common\Contracts\DBSource\ManagerInterface;
+use Teknoo\East\Common\Contracts\Object\TimestampableInterface;
+use Teknoo\East\Common\Service\DatesService;
+use Teknoo\East\Common\Writer\WriterInterface;
 use Teknoo\Recipe\Promise\PromiseInterface;
-use Teknoo\East\Website\DBSource\ManagerInterface;
-use Teknoo\East\Website\Object\TimestampableInterface;
-use Teknoo\East\Website\Service\DatesService;
-use Teknoo\East\Website\Writer\WriterInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -36,7 +36,7 @@ use Teknoo\East\Website\Writer\WriterInterface;
 trait PersistTestTrait
 {
     /**
-     * @var ManagerInterface
+     * @var \Teknoo\East\Common\Contracts\DBSource\ManagerInterface
      */
     private $manager;
 

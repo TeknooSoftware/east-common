@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,13 +15,13 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\WebsiteBundle\Recipe\Step;
+namespace Teknoo\Tests\East\CommonBundle\Recipe\Step;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -29,16 +29,17 @@ use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
+use Teknoo\East\Common\Contracts\Object\PublishableInterface;
+use Teknoo\East\Common\Contracts\ObjectInterface;
+use Teknoo\East\Common\Service\DatesService;
+use Teknoo\East\CommonBundle\Recipe\Step\FormHandling;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
-use Teknoo\East\Website\Object\Content;
-use Teknoo\East\Website\Object\ObjectInterface;
-use Teknoo\East\Website\Service\DatesService;
-use Teknoo\East\WebsiteBundle\Recipe\Step\FormHandling;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers      \Teknoo\East\WebsiteBundle\Recipe\Step\FormHandling
+ * @covers      \Teknoo\East\CommonBundle\Recipe\Step\FormHandling
  */
 class FormHandlingTest extends TestCase
 {
@@ -89,7 +90,7 @@ class FormHandlingTest extends TestCase
         $manager = $this->createMock(ManagerInterface::class);
         $formClass = 'Foo/Bar';
         $formOptions = [];
-        $object = $this->createMock(Content::class);
+        $object = $this->createMock(IdentifiedObjectInterface::class);
 
         $this->getFormFactory()
             ->expects(self::any())
@@ -123,7 +124,7 @@ class FormHandlingTest extends TestCase
         $manager = $this->createMock(ManagerInterface::class);
         $formClass = 'Foo/Bar';
         $formOptions = [];
-        $object = $this->createMock(ObjectInterface::class);
+        $object = $this->createMock(IdentifiedObjectInterface::class);
 
         $this->getDatesService()
             ->expects(self::never())
@@ -158,7 +159,22 @@ class FormHandlingTest extends TestCase
         $manager = $this->createMock(ManagerInterface::class);
         $formClass = 'Foo/Bar';
         $formOptions = [];
-        $object = $this->createMock(Content::class);
+        $object = new class implements IdentifiedObjectInterface, PublishableInterface {
+            public function getId(): string
+            {
+                // TODO: Implement getId() method.
+            }
+
+            public function getPublishedAt(): ?\DateTimeInterface
+            {
+                // TODO: Implement getPublishedAt() method.
+            }
+
+            public function setPublishedAt(\DateTimeInterface $dateTime): PublishableInterface
+            {
+                // TODO: Implement setPublishedAt() method.
+            }
+        };
 
         $this->getFormFactory()
             ->expects(self::any())
@@ -193,7 +209,7 @@ class FormHandlingTest extends TestCase
         $manager = $this->createMock(ManagerInterface::class);
         $formClass = 'Foo/Bar';
         $formOptions = [];
-        $object = $this->createMock(ObjectInterface::class);
+        $object = $this->createMock(IdentifiedObjectInterface::class);
 
         $this->getDatesService()
             ->expects(self::never())

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,20 +15,19 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Loader;
+namespace Teknoo\Tests\East\Common\Loader;
 
-use Teknoo\East\Website\Query\QueryCollectionInterface;
-use Teknoo\East\Website\Query\QueryElementInterface;
+use Teknoo\East\Common\Contracts\DBSource\RepositoryInterface;
+use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
+use Teknoo\East\Common\Contracts\Query\QueryCollectionInterface;
+use Teknoo\East\Common\Contracts\Query\QueryElementInterface;
 use Teknoo\Recipe\Promise\Promise;
-use Teknoo\East\Website\DBSource\RepositoryInterface;
-use Teknoo\East\Website\Loader\LoaderInterface;
-use Teknoo\East\Website\Query\QueryInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -37,14 +36,14 @@ use Teknoo\East\Website\Query\QueryInterface;
 trait LoaderTestTrait
 {
     /**
-     * @return RepositoryInterface|\PHPUnit\Framework\MockObject\MockObject
+     * @return \Teknoo\East\Common\Contracts\DBSource\RepositoryInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     abstract public function getRepositoryMock(): RepositoryInterface;
 
     /**
-     * @return LoaderInterface
+     * @return \Teknoo\East\Common\Contracts\Loader\LoaderInterface
      */
-    abstract public function buildLoader(): LoaderInterface;
+    abstract public function buildLoader(): \Teknoo\East\Common\Contracts\Loader\LoaderInterface;
 
     /**
      * @return object
@@ -101,7 +100,7 @@ trait LoaderTestTrait
             ->with(['id'=>'fooBar', 'deletedAt'=>null], $promiseMock);
 
         self::assertInstanceOf(
-            LoaderInterface::class,
+            \Teknoo\East\Common\Contracts\Loader\LoaderInterface::class,
             $this->buildLoader()->load('fooBar', $promiseMock)
         );
     }
@@ -139,7 +138,7 @@ trait LoaderTestTrait
             ->with($loader, $this->getRepositoryMock(), $promiseMock);
 
         self::assertInstanceOf(
-            LoaderInterface::class,
+            \Teknoo\East\Common\Contracts\Loader\LoaderInterface::class,
             $loader->query($queryMock, $promiseMock)
         );
     }
@@ -177,7 +176,7 @@ trait LoaderTestTrait
             ->with($loader, $this->getRepositoryMock(), $promiseMock);
 
         self::assertInstanceOf(
-            LoaderInterface::class,
+            \Teknoo\East\Common\Contracts\Loader\LoaderInterface::class,
             $loader->fetch($fetchMock, $promiseMock)
         );
     }

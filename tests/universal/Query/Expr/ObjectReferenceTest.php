@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,29 +15,28 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Query\Expr;
+namespace Teknoo\Tests\East\Common\Query\Expr;
 
 use PHPUnit\Framework\TestCase;
-use Teknoo\East\Website\Object\ObjectInterface;
-use Teknoo\East\Website\Query\Expr\In;
-use Teknoo\East\Website\Query\Expr\ObjectReference;
+use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
+use Teknoo\East\Common\Query\Expr\ObjectReference;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Query\Expr\ObjectReference
+ * @covers \Teknoo\East\Common\Query\Expr\ObjectReference
  */
 class ObjectReferenceTest extends TestCase
 {
  public function testExecute()
     {
-        $obj = new ObjectReference($this->createMock(ObjectInterface::class));
-        self::assertInstanceOf(ObjectInterface::class, $obj->getObject());
+        $obj = new ObjectReference($this->createMock(IdentifiedObjectInterface::class));
+        self::assertInstanceOf(IdentifiedObjectInterface::class, $obj->getObject());
     }
 }

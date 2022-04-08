@@ -1,7 +1,7 @@
 <?php
 
 /*
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,7 +15,7 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -23,17 +23,17 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\WebsiteBundle\Command;
+namespace Teknoo\East\CommonBundle\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Teknoo\East\Website\Object\StoredPassword;
-use Teknoo\East\Website\Object\User as BaseUser;
-use Teknoo\East\Website\Writer\UserWriter;
-use Teknoo\East\WebsiteBundle\Object\PasswordAuthenticatedUser;
+use Teknoo\East\Common\Object\StoredPassword;
+use Teknoo\East\Common\Object\User as BaseUser;
+use Teknoo\East\Common\Writer\UserWriter;
+use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
 
 /**
  * Symfony App Console to put a new administrator into the Website's database. By example, to use to create the first
@@ -53,8 +53,8 @@ class CreateUserCommand extends Command
 
     protected function configure(): void
     {
-        $this->setName('teknoo:website:create-admin')
-            ->setDescription('Creates a new admin user in the website package')
+        $this->setName('teknoo:common:create-admin')
+            ->setDescription('Creates a new admin user in the common package')
             ->addArgument('email', InputArgument::REQUIRED, 'Who do you want to greet?')
             ->addArgument('password', InputArgument::REQUIRED, 'Your password?')
             ->addArgument('last_name', InputArgument::OPTIONAL, 'Your last name?')

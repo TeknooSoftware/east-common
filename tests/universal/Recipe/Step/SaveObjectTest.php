@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,26 +15,26 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Recipe\Step;
+namespace Teknoo\Tests\East\Common\Recipe\Step;
 
 use PHPUnit\Framework\TestCase;
+use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface as ObjectWithId;
+use Teknoo\East\Common\Contracts\ObjectInterface;
+use Teknoo\East\Common\Recipe\Step\SaveObject;
+use Teknoo\East\Common\Writer\WriterInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\Recipe\Promise\PromiseInterface;
-use Teknoo\East\Website\Object\ObjectInterface as ObjectWithId;
-use Teknoo\East\Website\Contracts\ObjectInterface;
-use Teknoo\East\Website\Recipe\Step\SaveObject;
-use Teknoo\East\Website\Writer\WriterInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Recipe\Step\SaveObject
+ * @covers \Teknoo\East\Common\Recipe\Step\SaveObject
  */
 class SaveObjectTest extends TestCase
 {

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,25 +15,25 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Doctrine\DBSource\ODM;
+namespace Teknoo\Tests\East\Common\Doctrine\DBSource\ODM;
 
 use Doctrine\Persistence\ObjectRepository;
 use PHPUnit\Framework\TestCase;
-use Teknoo\East\Website\DBSource\RepositoryInterface;
-use Teknoo\East\Website\Doctrine\DBSource\ODM\UserRepository;
+use Teknoo\East\Common\Contracts\DBSource\RepositoryInterface;
+use Teknoo\East\Common\Doctrine\DBSource\ODM\UserRepository;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Doctrine\DBSource\ODM\UserRepository
- * @covers \Teknoo\East\Website\Doctrine\DBSource\ODM\RepositoryTrait
- * @covers \Teknoo\East\Website\Doctrine\DBSource\ODM\ExprConversionTrait
+ * @covers \Teknoo\East\Common\Doctrine\DBSource\ODM\UserRepository
+ * @covers \Teknoo\East\Common\Doctrine\DBSource\ODM\RepositoryTrait
+ * @covers \Teknoo\East\Common\Doctrine\DBSource\ODM\ExprConversionTrait
  */
 class UserRepositoryTest extends TestCase
 {

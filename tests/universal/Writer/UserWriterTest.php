@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,24 +15,24 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Writer;
+namespace Teknoo\Tests\East\Common\Writer;
 
 use PHPUnit\Framework\TestCase;
-use Teknoo\East\Website\Object\User;
-use Teknoo\East\Website\Writer\UserWriter;
-use Teknoo\East\Website\Writer\WriterInterface;
+use Teknoo\East\Common\Object\User;
+use Teknoo\East\Common\Writer\UserWriter;
+use Teknoo\East\Common\Writer\WriterInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Writer\UserWriter
- * @covers \Teknoo\East\Website\Writer\PersistTrait
+ * @covers \Teknoo\East\Common\Writer\UserWriter
+ * @covers \Teknoo\East\Common\Writer\PersistTrait
  */
 class UserWriterTest extends TestCase
 {

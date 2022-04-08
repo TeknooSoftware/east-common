@@ -1,9 +1,9 @@
 {
-    "name": "teknoo/east-website",
+    "name": "teknoo/east-common",
     "type": "library",
-    "description": "Universal package, following the #East programming philosophy, build on Teknoo/East-Foundation (and Teknoo/Recipe), and implementing a basic CMS to display dynamics pages with different types and templates.",
-    "keywords": ["east","website","cms"],
-    "homepage": "http://teknoo.software/website",
+    "description": "Universal package, following the #East programming philosophy, build on Teknoo/East-Foundation (and Teknoo/Recipe), providing components (user management, object persistence, template rendering, ..) for the creation of web application or website.",
+    "keywords": ["east","common"],
+    "homepage": "http://teknoo.software/common",
     "license": "MIT",
     "authors": [
         {
@@ -13,8 +13,8 @@
         }
     ],
     "support": {
-        "issues": "https://github.com/TeknooSoftware/east-website/issues",
-        "source": "https://github.com/TeknooSoftware/east-website"
+        "issues": "https://github.com/TeknooSoftware/east-common/issues",
+        "source": "https://github.com/TeknooSoftware/east-common"
     },
     "funding": [
         {
@@ -28,22 +28,21 @@
     ],
     "autoload": {
         "psr-4": {
-            "Teknoo\\East\\Website\\": "src/",
-            "Teknoo\\East\\WebsiteBundle\\": "infrastructures/symfony",
-            "Teknoo\\East\\Website\\Doctrine\\": "infrastructures/doctrine",
-            "Teknoo\\Tests\\East\\Website\\": "tests/universal",
-            "Teknoo\\Tests\\East\\WebsiteBundle\\": "tests/infrastructures/symfony",
-            "Teknoo\\Tests\\East\\Website\\Doctrine\\": "tests/infrastructures/doctrine"
+            "Teknoo\\East\\Common\\": "src/",
+            "Teknoo\\East\\CommonBundle\\": "infrastructures/symfony",
+            "Teknoo\\East\\Common\\Doctrine\\": "infrastructures/doctrine",
+            "Teknoo\\Tests\\East\\Common\\": "tests/universal",
+            "Teknoo\\Tests\\East\\CommonBundle\\": "tests/infrastructures/symfony",
+            "Teknoo\\Tests\\East\\Common\\Doctrine\\": "tests/infrastructures/doctrine"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Teknoo\\Tests\\East\\Website\\Behat\\": "tests/behat"
+            "Teknoo\\Tests\\East\\Common\\Behat\\": "tests/behat"
         }
     },
     "require": {
         "php": "^8.1",
-        "ext-json": "*",
         "php-di/php-di": "^6.3.5",
         "teknoo/immutable": "^3.0.1",
         "teknoo/states": "^6.0.1",
@@ -51,7 +50,6 @@
         "teknoo/east-foundation": "^6.0.3"
     },
     "require-dev": {
-        "ext-simplexml" : "*",
         "ext-mongodb" : "*",
         "roave/security-advisories": "dev-master",
         "phpunit/phpunit": "^9.5.13",
@@ -81,7 +79,6 @@
         "symfony/security-http": "^6.0",
         "symfony/security-bundle": "^6.0",
         "symfony/templating": "^6.0",
-        "symfony/translation": "^6.0",
         "symfony/yaml": "^6.0",
         "symfony/var-dumper": "^6.0",
         "twig/twig": "^3.3",

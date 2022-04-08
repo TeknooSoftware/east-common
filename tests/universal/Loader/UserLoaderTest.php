@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,33 +15,33 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Loader;
+namespace Teknoo\Tests\East\Common\Loader;
 
 use PHPUnit\Framework\TestCase;
-use Teknoo\East\Website\DBSource\Repository\UserRepositoryInterface;
-use Teknoo\East\Website\DBSource\RepositoryInterface;
-use Teknoo\East\Website\Object\User;
-use Teknoo\East\Website\Loader\LoaderInterface;
-use Teknoo\East\Website\Loader\UserLoader;
+use Teknoo\East\Common\Contracts\DBSource\Repository\UserRepositoryInterface;
+use Teknoo\East\Common\Contracts\DBSource\RepositoryInterface;
+use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
+use Teknoo\East\Common\Loader\UserLoader;
+use Teknoo\East\Common\Object\User;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers      \Teknoo\East\Website\Loader\UserLoader
- * @covers      \Teknoo\East\Website\Loader\LoaderTrait
+ * @covers      \Teknoo\East\Common\Loader\UserLoader
+ * @covers      \Teknoo\East\Common\Loader\LoaderTrait
  */
 class UserLoaderTest extends TestCase
 {
     use LoaderTestTrait;
 
     /**
-     * @var RepositoryInterface
+     * @var \Teknoo\East\Common\Contracts\DBSource\RepositoryInterface
      */
     private $repository;
 
@@ -58,9 +58,9 @@ class UserLoaderTest extends TestCase
     }
 
     /**
-     * @return LoaderInterface|UserLoader
+     * @return \Teknoo\East\Common\Contracts\Loader\LoaderInterface|UserLoader
      */
-    public function buildLoader(): LoaderInterface
+    public function buildLoader(): \Teknoo\East\Common\Contracts\Loader\LoaderInterface
     {
         $repository = $this->getRepositoryMock();
         return new UserLoader($repository);

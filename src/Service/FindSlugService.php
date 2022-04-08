@@ -1,7 +1,7 @@
 <?php
 
 /*
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,7 +15,7 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -23,14 +23,14 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Service;
+namespace Teknoo\East\Common\Service;
 
-use Teknoo\East\Website\Object\ObjectInterface;
+use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
+use Teknoo\East\Common\Contracts\Object\DeletableInterface;
+use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
+use Teknoo\East\Common\Contracts\Object\SluggableInterface;
+use Teknoo\East\Common\Query\FindBySlugQuery;
 use Teknoo\Recipe\Promise\Promise;
-use Teknoo\East\Website\Loader\LoaderInterface;
-use Teknoo\East\Website\Object\DeletableInterface;
-use Teknoo\East\Website\Object\SluggableInterface;
-use Teknoo\East\Website\Query\FindBySlugQuery;
 
 use function array_map;
 use function implode;
@@ -53,8 +53,8 @@ class FindSlugService
     }
 
     /**
-     * @param LoaderInterface<SluggableInterface<ObjectInterface>> $loader
-     * @param SluggableInterface<ObjectInterface> $sluggable
+     * @param LoaderInterface<SluggableInterface<IdentifiedObjectInterface>> $loader
+     * @param SluggableInterface<IdentifiedObjectInterface> $sluggable
      * @param array<string|int, mixed> $parts
      */
     public function process(
@@ -75,11 +75,11 @@ class FindSlugService
             $candidate = implode($glue, array_map($this->sluggify(...), $candidateParts));
 
             $object = null;
-            if ($sluggable instanceof ObjectInterface) {
+            if ($sluggable instanceof IdentifiedObjectInterface) {
                 $object = $sluggable;
             }
 
-            /** @var Promise<SluggableInterface<ObjectInterface>, mixed, mixed> $sluggableFetchedPromise */
+            /** @var Promise<SluggableInterface<IdentifiedObjectInterface>, mixed, mixed> $sluggableFetchedPromise */
             $sluggableFetchedPromise = new Promise(
                 function () use (&$counter) {
                     $counter++;

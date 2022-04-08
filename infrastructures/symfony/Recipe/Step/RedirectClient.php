@@ -1,7 +1,7 @@
 <?php
 
 /*
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,7 +15,7 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -23,15 +23,15 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\WebsiteBundle\Recipe\Step;
+namespace Teknoo\East\CommonBundle\Recipe\Step;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Teknoo\East\Foundation\Client\ClientInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
-use Teknoo\East\Website\Contracts\Recipe\Step\RedirectClientInterface;
-use Teknoo\East\Website\Recipe\Step\Traits\ResponseTrait;
+use Teknoo\East\Common\Contracts\Recipe\Step\RedirectClientInterface;
+use Teknoo\East\Common\Recipe\Step\Traits\ResponseTrait;
 
 /**
  * Recipe Step to use into a HTTP EndPoint Recipe to create PSR11 response to redirect the client to a new

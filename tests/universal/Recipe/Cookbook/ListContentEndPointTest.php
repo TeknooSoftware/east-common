@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,31 +15,31 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Recipe\Cookbook;
+namespace Teknoo\Tests\East\Common\Recipe\Cookbook;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Teknoo\East\Website\Contracts\Recipe\Step\ListObjectsAccessControlInterface;
-use Teknoo\East\Website\Contracts\Recipe\Step\SearchFormLoaderInterface;
-use Teknoo\East\Website\Recipe\Cookbook\ListContentEndPoint;
-use Teknoo\East\Website\Recipe\Step\ExtractOrder;
-use Teknoo\East\Website\Recipe\Step\ExtractPage;
-use Teknoo\East\Website\Recipe\Step\LoadListObjects;
-use Teknoo\East\Website\Recipe\Step\RenderError;
-use Teknoo\East\Website\Recipe\Step\RenderList;
+use Teknoo\East\Common\Contracts\Recipe\Step\ListObjectsAccessControlInterface;
+use Teknoo\East\Common\Contracts\Recipe\Step\SearchFormLoaderInterface;
+use Teknoo\East\Common\Recipe\Cookbook\ListObjectEndPoint;
+use Teknoo\East\Common\Recipe\Step\ExtractOrder;
+use Teknoo\East\Common\Recipe\Step\ExtractPage;
+use Teknoo\East\Common\Recipe\Step\LoadListObjects;
+use Teknoo\East\Common\Recipe\Step\RenderError;
+use Teknoo\East\Common\Recipe\Step\RenderList;
 use Teknoo\Recipe\RecipeInterface;
 use Teknoo\Tests\Recipe\Cookbook\BaseCookbookTestTrait;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Recipe\Cookbook\ListContentEndPoint
+ * @covers \Teknoo\East\Common\Recipe\Cookbook\ListObjectEndPoint
  */
 class ListContentEndPointTest extends TestCase
 {
@@ -157,9 +157,9 @@ class ListContentEndPointTest extends TestCase
         return $this->listObjectsAccessControl;
     }
 
-    public function buildCookbook(): ListContentEndPoint
+    public function buildCookbook(): ListObjectEndPoint
     {
-        return new ListContentEndPoint(
+        return new ListObjectEndPoint(
             $this->getRecipe(),
             $this->getExtractPage(),
             $this->getExtractOrder(),

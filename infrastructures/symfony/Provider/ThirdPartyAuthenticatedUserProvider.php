@@ -1,7 +1,7 @@
 <?php
 
 /*
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,7 +15,7 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -23,21 +23,21 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\WebsiteBundle\Provider;
+namespace Teknoo\East\CommonBundle\Provider;
 
 use ReflectionException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Teknoo\East\Website\Object\ThirdPartyAuth;
-use Teknoo\East\Website\Object\User;
-use Teknoo\East\WebsiteBundle\Object\ThirdPartyAuthenticatedUser;
+use Teknoo\East\Common\Object\ThirdPartyAuth;
+use Teknoo\East\Common\Object\User;
+use Teknoo\East\CommonBundle\Object\ThirdPartyAuthenticatedUser;
 use Teknoo\Recipe\Promise\Promise;
-use Teknoo\East\Website\Loader\UserLoader;
-use Teknoo\East\Website\Query\User\UserByEmailQuery;
+use Teknoo\East\Common\Loader\UserLoader;
+use Teknoo\East\Common\Query\User\UserByEmailQuery;
 
 /**
- * Symfony user provider to load East Website's user authenticated thanks to OAuth2Authenticator, or any third party
+ * Symfony user provider to load East Common's user authenticated thanks to OAuth2Authenticator, or any third party
  * authenticated. It can manage only ThirdPartyAuthenticatedUser.
  *
  * @license     http://teknoo.software/license/mit         MIT License

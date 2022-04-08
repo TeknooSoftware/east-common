@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,29 +15,29 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Recipe\Cookbook;
+namespace Teknoo\Tests\East\Common\Recipe\Cookbook;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Teknoo\East\Website\Contracts\Recipe\Step\ObjectAccessControlInterface;
-use Teknoo\East\Website\Contracts\Recipe\Step\RedirectClientInterface;
-use Teknoo\East\Website\Recipe\Cookbook\DeleteContentEndPoint;
-use Teknoo\East\Website\Recipe\Step\DeleteObject;
-use Teknoo\East\Website\Recipe\Step\LoadObject;
-use Teknoo\East\Website\Recipe\Step\RenderError;
+use Teknoo\East\Common\Contracts\Recipe\Step\ObjectAccessControlInterface;
+use Teknoo\East\Common\Contracts\Recipe\Step\RedirectClientInterface;
+use Teknoo\East\Common\Recipe\Cookbook\DeleteObjectEndPoint;
+use Teknoo\East\Common\Recipe\Step\DeleteObject;
+use Teknoo\East\Common\Recipe\Step\LoadObject;
+use Teknoo\East\Common\Recipe\Step\RenderError;
 use Teknoo\Recipe\RecipeInterface;
 use Teknoo\Tests\Recipe\Cookbook\BaseCookbookTestTrait;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Recipe\Cookbook\DeleteContentEndPoint
+ * @covers \Teknoo\East\Common\Recipe\Cookbook\DeleteObjectEndPoint
  */
 class DeleteContentEndPointTest extends TestCase
 {
@@ -127,9 +127,9 @@ class DeleteContentEndPointTest extends TestCase
         return $this->objectAccessControl;
     }
 
-    public function buildCookbook(): DeleteContentEndPoint
+    public function buildCookbook(): DeleteObjectEndPoint
     {
-        return new DeleteContentEndPoint(
+        return new DeleteObjectEndPoint(
             $this->getRecipe(),
             $this->getLoadObject(),
             $this->getDeleteObject(),

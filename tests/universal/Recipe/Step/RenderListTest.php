@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,13 +15,13 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Recipe\Step;
+namespace Teknoo\Tests\East\Common\Recipe\Step;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -35,14 +35,14 @@ use Teknoo\East\Foundation\Http\Message\CallbackStreamInterface;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Foundation\Template\ResultInterface;
-use Teknoo\East\Website\Recipe\Step\RenderList;
+use Teknoo\East\Common\Recipe\Step\RenderList;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Recipe\Step\Traits\TemplateTrait
- * @covers \Teknoo\East\Website\Recipe\Step\Traits\ResponseTrait
- * @covers \Teknoo\East\Website\Recipe\Step\RenderList
+ * @covers \Teknoo\East\Common\Recipe\Step\Traits\TemplateTrait
+ * @covers \Teknoo\East\Common\Recipe\Step\Traits\ResponseTrait
+ * @covers \Teknoo\East\Common\Recipe\Step\RenderList
  */
 class RenderListTest extends TestCase
 {

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,13 +15,13 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\WebsiteBundle;
+namespace Teknoo\Tests\East\CommonBundle;
 
 use DI\Container;
 use DI\ContainerBuilder;
@@ -34,21 +34,21 @@ use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
 use Teknoo\East\Foundation\Router\RouterInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
-use Teknoo\East\Website\Contracts\Recipe\Step\FormProcessingInterface;
-use Teknoo\East\Website\Contracts\Recipe\Step\RenderFormInterface;
-use Teknoo\East\Website\DBSource\Repository\ContentRepositoryInterface;
-use Teknoo\East\Website\DBSource\Repository\ItemRepositoryInterface;
-use Teknoo\East\Website\Loader\UserLoader;
-use Teknoo\East\Website\Object\StoredPassword;
-use Teknoo\East\Website\Object\User as BaseUser;
-use Teknoo\East\Website\Query\User\UserByEmailQuery;
-use Teknoo\East\WebsiteBundle\Middleware\LocaleMiddleware;
-use Teknoo\East\WebsiteBundle\Object\LegacyUser;
-use Teknoo\East\WebsiteBundle\Object\PasswordAuthenticatedUser;
-use Teknoo\East\WebsiteBundle\Object\User;
-use Teknoo\East\WebsiteBundle\Provider\UserProvider;
-use Teknoo\East\WebsiteBundle\Recipe\Step\FormProcessing;
-use Teknoo\East\WebsiteBundle\Recipe\Step\RenderForm;
+use Teknoo\East\Common\Contracts\Recipe\Step\FormProcessingInterface;
+use Teknoo\East\Common\Contracts\Recipe\Step\RenderFormInterface;
+use Teknoo\East\Common\DBSource\Repository\ContentRepositoryInterface;
+use Teknoo\East\Common\DBSource\Repository\ItemRepositoryInterface;
+use Teknoo\East\Common\Loader\UserLoader;
+use Teknoo\East\Common\Object\StoredPassword;
+use Teknoo\East\Common\Object\User as BaseUser;
+use Teknoo\East\Common\Query\User\UserByEmailQuery;
+use Teknoo\East\CommonBundle\Middleware\LocaleMiddleware;
+use Teknoo\East\CommonBundle\Object\LegacyUser;
+use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
+use Teknoo\East\CommonBundle\Object\User;
+use Teknoo\East\CommonBundle\Provider\UserProvider;
+use Teknoo\East\CommonBundle\Recipe\Step\FormProcessing;
+use Teknoo\East\CommonBundle\Recipe\Step\RenderForm;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
 use function interface_exists;
@@ -77,36 +77,6 @@ class ContainerTest extends TestCase
         $containerDefinition->useAutowiring(false);
         
         return $containerDefinition->build();
-    }
-
-    public function testLocaleMiddleware()
-    {
-        $container = $this->buildContainer();
-        $translatableListener = $this->createMock(LocaleAwareInterface::class);
-
-        $container->set('translator', $translatableListener);
-        $loader = $container->get(LocaleMiddleware::class);
-
-        self::assertInstanceOf(
-            LocaleMiddleware::class,
-            $loader
-        );
-    }
-
-    public function testEastManagerMiddlewareInjection()
-    {
-        $container = $this->buildContainer();
-
-        $container->set(LoggerInterface::class, $this->createMock(LoggerInterface::class));
-        $container->set(RouterInterface::class, $this->createMock(RouterInterface::class));
-        $container->set(ItemRepositoryInterface::class, $this->createMock(ItemRepositoryInterface::class));
-        $container->set(ContentRepositoryInterface::class, $this->createMock(ContentRepositoryInterface::class));
-        $container->set('translator', $this->createMock(LocaleAwareInterface::class));
-
-        self::assertInstanceOf(
-            RecipeInterface::class,
-            $container->get(RecipeInterface::class)
-        );
     }
 
     public function testFormProcessing()

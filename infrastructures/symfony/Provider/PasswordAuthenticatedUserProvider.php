@@ -1,7 +1,7 @@
 <?php
 
 /*
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,7 +15,7 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -23,7 +23,7 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\WebsiteBundle\Provider;
+namespace Teknoo\East\CommonBundle\Provider;
 
 use ReflectionClass;
 use ReflectionException;
@@ -32,17 +32,17 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Teknoo\East\Website\Object\StoredPassword;
-use Teknoo\East\Website\Object\User;
-use Teknoo\East\WebsiteBundle\Object\AbstractPasswordAuthUser;
-use Teknoo\East\WebsiteBundle\Writer\SymfonyUserWriter;
+use Teknoo\East\Common\Object\StoredPassword;
+use Teknoo\East\Common\Object\User;
+use Teknoo\East\CommonBundle\Object\AbstractPasswordAuthUser;
+use Teknoo\East\CommonBundle\Writer\SymfonyUserWriter;
 use Teknoo\Recipe\Promise\Promise;
-use Teknoo\East\Website\Loader\UserLoader;
-use Teknoo\East\Website\Query\User\UserByEmailQuery;
-use Teknoo\East\WebsiteBundle\Object\PasswordAuthenticatedUser;
+use Teknoo\East\Common\Loader\UserLoader;
+use Teknoo\East\Common\Query\User\UserByEmailQuery;
+use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
 
 /**
- * Symfony user provider to load East Website's user from email.
+ * Symfony user provider to load East Common's user from email.
  * Use the standard User Loader, and wrap user fetched into a PasswordAuthenticatedUser or a LegacyUser.
  * A LegacyUser is returned when the user is authenticated with the legacy couple of salt+password hashed thanks to
  * pbkdf2.

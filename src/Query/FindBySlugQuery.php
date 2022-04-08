@@ -1,7 +1,7 @@
 <?php
 
 /*
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,7 +15,7 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -23,16 +23,17 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Query;
+namespace Teknoo\East\Common\Query;
 
-use Teknoo\East\Website\Object\ObjectInterface;
-use Teknoo\East\Website\Query\Expr\NotEqual;
-use Teknoo\Recipe\Promise\PromiseInterface;
-use Teknoo\East\Website\DBSource\RepositoryInterface;
-use Teknoo\East\Website\Object\SluggableInterface;
-use Teknoo\East\Website\Loader\LoaderInterface;
+use Teknoo\East\Common\Contracts\DBSource\RepositoryInterface;
+use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
+use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
+use Teknoo\East\Common\Contracts\Object\SluggableInterface;
+use Teknoo\East\Common\Contracts\Query\QueryElementInterface;
+use Teknoo\East\Common\Query\Expr\NotEqual;
 use Teknoo\Immutable\ImmutableInterface;
 use Teknoo\Immutable\ImmutableTrait;
+use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
  * Generic class implementing query to load any sluggable instance from its slug, and pass result to the
@@ -41,7 +42,7 @@ use Teknoo\Immutable\ImmutableTrait;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  *
- * @implements QueryElementInterface<SluggableInterface<ObjectInterface>>
+ * @implements QueryElementInterface<SluggableInterface<IdentifiedObjectInterface>>
  */
 class FindBySlugQuery implements QueryElementInterface, ImmutableInterface
 {
@@ -51,7 +52,7 @@ class FindBySlugQuery implements QueryElementInterface, ImmutableInterface
         private readonly string $slugField,
         private readonly string $slugValue,
         private readonly bool $includeDeleted = false,
-        private readonly ?ObjectInterface $sluggable = null
+        private readonly ?IdentifiedObjectInterface $sluggable = null
     ) {
         $this->uniqueConstructorCheck();
     }
@@ -68,7 +69,7 @@ class FindBySlugQuery implements QueryElementInterface, ImmutableInterface
         }
 
         if (
-            $this->sluggable instanceof ObjectInterface
+            $this->sluggable instanceof IdentifiedObjectInterface
             && !empty($id = $this->sluggable->getId())
         ) {
             $filters['id'] = new NotEqual($id);

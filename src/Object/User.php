@@ -1,7 +1,7 @@
 <?php
 
 /*
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,7 +15,7 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -23,10 +23,13 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Object;
+namespace Teknoo\East\Common\Object;
 
-use Teknoo\East\Website\Contracts\User\AuthDataInterface;
-use Teknoo\East\Website\Contracts\User\UserInterface;
+use Teknoo\East\Common\Contracts\Object\DeletableInterface;
+use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
+use Teknoo\East\Common\Contracts\Object\TimestampableInterface;
+use Teknoo\East\Common\Contracts\User\AuthDataInterface;
+use Teknoo\East\Common\Contracts\User\UserInterface;
 
 use function is_array;
 use function iterator_to_array;
@@ -39,7 +42,7 @@ use function trim;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class User implements ObjectInterface, UserInterface, DeletableInterface, TimestampableInterface
+class User implements IdentifiedObjectInterface, UserInterface, DeletableInterface, TimestampableInterface
 {
     use ObjectTrait;
 

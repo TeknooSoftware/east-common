@@ -4,7 +4,7 @@ parameters:
   locale: 'en'
   router.request_context.host: 'teknoo.software'
   router.request_context.scheme: 'https'
-  teknoo.east.website.form_type.doctrine.class: 'MockDoctrineType'
+  teknoo.east.common.form_type.doctrine.class: 'MockDoctrineType'
 
 services:
   Doctrine\Persistence\ObjectRepository:
@@ -25,7 +25,7 @@ services:
   Psr\Http\Message\UploadedFileFactoryInterface:
     class: 'Laminas\Diactoros\UploadedFileFactory'
 
-  teknoo.east.website.endpoint.media.stream.factory:
+  teknoo.east.common.endpoint.media.stream.factory:
     class: 'Laminas\Diactoros\StreamFactory'
 
   twig:
@@ -34,7 +34,7 @@ services:
 
   Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorageFactory: ~
 
-  Teknoo\Tests\East\Website\Behat\GetTokenStorageService:
+  Teknoo\Tests\East\Common\Behat\GetTokenStorageService:
     public: true
     arguments:
       - '@?security.token_storage'

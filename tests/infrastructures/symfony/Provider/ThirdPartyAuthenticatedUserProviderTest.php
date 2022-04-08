@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,30 +15,30 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\WebsiteBundle\Provider;
+namespace Teknoo\Tests\East\CommonBundle\Provider;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Teknoo\East\Website\Contracts\User\AuthDataInterface;
-use Teknoo\East\Website\Loader\UserLoader;
-use Teknoo\East\Website\Object\ThirdPartyAuth;
-use Teknoo\East\Website\Query\User\UserByEmailQuery;
-use Teknoo\East\WebsiteBundle\Object\ThirdPartyAuthenticatedUser;
-use Teknoo\East\WebsiteBundle\Provider\ThirdPartyAuthenticatedUserProvider;
+use Teknoo\East\Common\Contracts\User\AuthDataInterface;
+use Teknoo\East\Common\Loader\UserLoader;
+use Teknoo\East\Common\Object\ThirdPartyAuth;
+use Teknoo\East\Common\Query\User\UserByEmailQuery;
+use Teknoo\East\CommonBundle\Object\ThirdPartyAuthenticatedUser;
+use Teknoo\East\CommonBundle\Provider\ThirdPartyAuthenticatedUserProvider;
 use Teknoo\Recipe\Promise\PromiseInterface;
-use Teknoo\East\Website\Object\User as BaseUser;
+use Teknoo\East\Common\Object\User as BaseUser;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers      \Teknoo\East\WebsiteBundle\Provider\ThirdPartyAuthenticatedUserProvider
+ * @covers      \Teknoo\East\CommonBundle\Provider\ThirdPartyAuthenticatedUserProvider
  */
 class ThirdPartyAuthenticatedUserProviderTest extends TestCase
 {

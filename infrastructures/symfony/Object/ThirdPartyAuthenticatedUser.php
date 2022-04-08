@@ -1,7 +1,7 @@
 <?php
 
 /*
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,7 +15,7 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -23,13 +23,13 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\WebsiteBundle\Object;
+namespace Teknoo\East\CommonBundle\Object;
 
-use Teknoo\East\Website\Object\ThirdPartyAuth;
-use Teknoo\East\Website\Object\User as BaseUser;
+use Teknoo\East\Common\Object\ThirdPartyAuth;
+use Teknoo\East\Common\Object\User as BaseUser;
 
 /**
- * Symfony user implentation to wrap a East Website user instance authenticated via a third party, like
+ * Symfony user implentation to wrap a East Common user instance authenticated via a third party, like
  * OAuth2Authenticator. Authenticating data are stored into a ThirdPartyAuth instance.
  *
  * @license     http://teknoo.software/license/mit         MIT License

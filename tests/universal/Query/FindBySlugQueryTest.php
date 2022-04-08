@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,28 +15,26 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Query;
+namespace Teknoo\Tests\East\Common\Query;
 
 use PHPUnit\Framework\TestCase;
-use Teknoo\East\Website\Object\ObjectInterface;
-use Teknoo\East\Website\Query\Expr\NotEqual;
-use Teknoo\East\Website\Query\QueryElementInterface;
+use Teknoo\East\Common\Contracts\DBSource\RepositoryInterface;
+use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
+use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
+use Teknoo\East\Common\Query\Expr\NotEqual;
+use Teknoo\East\Common\Query\FindBySlugQuery;
 use Teknoo\Recipe\Promise\PromiseInterface;
-use Teknoo\East\Website\DBSource\RepositoryInterface;
-use Teknoo\East\Website\Loader\LoaderInterface;
-use Teknoo\East\Website\Query\FindBySlugQuery;
-use Teknoo\East\Website\Query\QueryInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Query\FindBySlugQuery
+ * @covers \Teknoo\East\Common\Query\FindBySlugQuery
  */
 class FindBySlugQueryTest extends TestCase
 {
@@ -45,7 +43,7 @@ class FindBySlugQueryTest extends TestCase
     /**
      * @inheritDoc
      */
-    public function buildQuery(bool $includedDeleted = false, mixed $object = null): QueryElementInterface
+    public function buildQuery(bool $includedDeleted = false, mixed $object = null): \Teknoo\East\Common\Contracts\Query\QueryElementInterface
     {
         return new FindBySlugQuery('fooBarName', 'HelloWorld', $includedDeleted, $object);
     }
@@ -101,7 +99,7 @@ class FindBySlugQueryTest extends TestCase
         $promise->expects(self::never())->method('success');
         $promise->expects(self::never())->method('fail');
 
-        $object = $this->createMock(ObjectInterface::class);
+        $object = $this->createMock(IdentifiedObjectInterface::class);
 
         $repository->expects(self::once())
             ->method('findOneBy')
@@ -124,7 +122,7 @@ class FindBySlugQueryTest extends TestCase
         $promise->expects(self::never())->method('success');
         $promise->expects(self::never())->method('fail');
 
-        $object = $this->createMock(ObjectInterface::class);
+        $object = $this->createMock(IdentifiedObjectInterface::class);
         $object->expects(self::any())->method('getId')->willReturn('foo');
 
         $repository->expects(self::once())

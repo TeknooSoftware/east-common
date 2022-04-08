@@ -1,7 +1,7 @@
 <?php
 
 /*
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,7 +15,7 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -23,9 +23,9 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Website\Object;
+namespace Teknoo\East\Common\Object;
 
-use Teknoo\East\Website\Contracts\User\AuthDataInterface;
+use Teknoo\East\Common\Contracts\User\AuthDataInterface;
 
 /**
  * Class to defined persisted user's password to authenticate it on a website

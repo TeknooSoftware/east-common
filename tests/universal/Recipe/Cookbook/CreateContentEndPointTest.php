@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,33 +15,33 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Website\Recipe\Cookbook;
+namespace Teknoo\Tests\East\Common\Recipe\Cookbook;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Teknoo\East\Website\Contracts\Recipe\Step\FormHandlingInterface;
-use Teknoo\East\Website\Contracts\Recipe\Step\FormProcessingInterface;
-use Teknoo\East\Website\Contracts\Recipe\Step\ObjectAccessControlInterface;
-use Teknoo\East\Website\Contracts\Recipe\Step\RedirectClientInterface;
-use Teknoo\East\Website\Contracts\Recipe\Step\RenderFormInterface;
-use Teknoo\East\Website\Recipe\Cookbook\CreateContentEndPoint;
-use Teknoo\East\Website\Recipe\Step\CreateObject;
-use Teknoo\East\Website\Recipe\Step\RenderError;
-use Teknoo\East\Website\Recipe\Step\SaveObject;
-use Teknoo\East\Website\Recipe\Step\SlugPreparation;
+use Teknoo\East\Common\Contracts\Recipe\Step\FormHandlingInterface;
+use Teknoo\East\Common\Contracts\Recipe\Step\FormProcessingInterface;
+use Teknoo\East\Common\Contracts\Recipe\Step\ObjectAccessControlInterface;
+use Teknoo\East\Common\Contracts\Recipe\Step\RedirectClientInterface;
+use Teknoo\East\Common\Contracts\Recipe\Step\RenderFormInterface;
+use Teknoo\East\Common\Recipe\Cookbook\CreateObjectEndPoint;
+use Teknoo\East\Common\Recipe\Step\CreateObject;
+use Teknoo\East\Common\Recipe\Step\RenderError;
+use Teknoo\East\Common\Recipe\Step\SaveObject;
+use Teknoo\East\Common\Recipe\Step\SlugPreparation;
 use Teknoo\Recipe\RecipeInterface;
 use Teknoo\Tests\Recipe\Cookbook\BaseCookbookTestTrait;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Website\Recipe\Cookbook\CreateContentEndPoint
+ * @covers \Teknoo\East\Common\Recipe\Cookbook\CreateObjectEndPoint
  */
 class CreateContentEndPointTest extends TestCase
 {
@@ -187,9 +187,9 @@ class CreateContentEndPointTest extends TestCase
         return $this->objectAccessControl;
     }
 
-    public function buildCookbook(): CreateContentEndPoint
+    public function buildCookbook(): CreateObjectEndPoint
     {
-        return new CreateContentEndPoint(
+        return new CreateObjectEndPoint(
             $this->getRecipe(),
             $this->getCreateObject(),
             $this->getFormHandling(),

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,22 +15,22 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\WebsiteBundle\DependencyInjection;
+namespace Teknoo\Tests\East\CommonBundle\DependencyInjection;
 
 use PHPUnit\Framework\TestCase;
-use Teknoo\East\WebsiteBundle\DependencyInjection\Configuration;
+use Teknoo\East\CommonBundle\DependencyInjection\Configuration;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers      \Teknoo\East\WebsiteBundle\DependencyInjection\Configuration
+ * @covers      \Teknoo\East\CommonBundle\DependencyInjection\Configuration
  */
 class ConfigurationTest extends TestCase
 {

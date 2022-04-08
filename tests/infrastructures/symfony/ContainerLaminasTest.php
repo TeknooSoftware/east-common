@@ -1,7 +1,7 @@
 <?php
 
 /**
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -15,13 +15,13 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\WebsiteBundle;
+namespace Teknoo\Tests\East\CommonBundle;
 
 use DI\Container;
 use DI\ContainerBuilder;
@@ -60,16 +60,6 @@ class ContainerLaminasTest extends TestCase
         self::assertInstanceOf(
             StreamFactory::class,
             $container->get(StreamFactory::class)
-        );
-    }
-
-    public function testMediaEndPointStreamFactory()
-    {
-        $container = $this->buildContainer();
-
-        self::assertInstanceOf(
-            StreamFactory::class,
-            $container->get('teknoo.east.website.endpoint.media.stream.factory')
         );
     }
 }

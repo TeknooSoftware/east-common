@@ -34,11 +34,11 @@ use Psr\Container\ContainerInterface;
 use RuntimeException;
 use Teknoo\East\Common\Contracts\DBSource\ManagerInterface;
 use Teknoo\East\Common\Contracts\DBSource\Repository\UserRepositoryInterface;
+use Teknoo\East\Common\Contracts\Service\ProxyDetectorInterface;
 use Teknoo\East\Common\Doctrine\DBSource\Common\Manager;
 use Teknoo\East\Common\Doctrine\DBSource\Common\UserRepository;
 use Teknoo\East\Common\Doctrine\DBSource\ODM\UserRepository as OdmUserRepository;
 use Teknoo\East\Common\Object\User;
-use Teknoo\East\Common\Service\ProxyDetectorInterface;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
 use function DI\get;

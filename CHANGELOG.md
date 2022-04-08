@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [1.0.0-beta2] - 2022-04-08
+### Stable Release
+- Migrate all interfaces in `Teknoo\East\Common` to `Teknoo\East\Common\Contracts`
+
 ## [1.0.0-beta1] - 2022-04-08
 ### Stable Release
 - Fork from `East Website 7.0.3`

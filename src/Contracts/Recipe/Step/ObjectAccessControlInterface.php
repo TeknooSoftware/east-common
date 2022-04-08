@@ -26,8 +26,8 @@ declare(strict_types=1);
 namespace Teknoo\East\Common\Contracts\Recipe\Step;
 
 use Psr\Http\Message\MessageInterface;
+use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
-use Teknoo\East\Common\Contracts\ObjectInterface;
 
 /**
  * Interface to define step to use into a Recipe to implement ACL checking on a an object instance

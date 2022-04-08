@@ -25,8 +25,9 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Common\Writer;
 
+use Teknoo\East\Common\Contracts\Object\ObjectInterface;
+use Teknoo\East\Common\Contracts\Writer\WriterInterface;
 use Teknoo\Recipe\Promise\PromiseInterface;
-use Teknoo\East\Common\Contracts\ObjectInterface;
 use Teknoo\East\Common\Object\User;
 use Throwable;
 

@@ -25,12 +25,11 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Behat\Writer;
 
-use Teknoo\East\Common\Contracts\ObjectInterface;
+use Teknoo\East\Common\Contracts\Object\ObjectInterface;
+use Teknoo\East\Common\Contracts\Writer\WriterInterface;
 use Teknoo\East\Common\Writer\PersistTrait;
-use Teknoo\East\Common\Writer\WriterInterface;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Throwable;
-use Teknoo\Tests\East\Common\Behat\Object\MyObject;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -48,7 +47,7 @@ class MyObjectWriter implements WriterInterface
     /**
      * @throws Throwable
      */
-    public function save(ObjectInterface $object, PromiseInterface $promise = null): WriterInterface
+    public function save(ObjectInterface $object, PromiseInterface $promise = null): \Teknoo\East\Common\Contracts\Writer\WriterInterface
     {
         $this->persist($object, $promise);
 

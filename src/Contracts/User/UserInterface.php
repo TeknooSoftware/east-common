@@ -26,7 +26,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Common\Contracts\User;
 
-use Teknoo\East\Common\Contracts\ObjectInterface;
+use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 
 /**
  * Base interface defining an user on a webapp/website (a visitor, an admin, an author, a subscriber, ...)

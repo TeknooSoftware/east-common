@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Common\Contracts\DBSource;
 
-use Teknoo\East\Common\Contracts\ObjectInterface;
+use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License

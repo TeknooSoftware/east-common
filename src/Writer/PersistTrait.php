@@ -26,8 +26,9 @@ declare(strict_types=1);
 namespace Teknoo\East\Common\Writer;
 
 use Teknoo\East\Common\Contracts\DBSource\ManagerInterface;
+use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Common\Contracts\Object\TimestampableInterface;
-use Teknoo\East\Common\Contracts\ObjectInterface;
+use Teknoo\East\Common\Contracts\Writer\WriterInterface;
 use Teknoo\East\Common\Service\DatesService;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Throwable;

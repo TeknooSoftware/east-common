@@ -26,7 +26,6 @@ namespace Teknoo\Tests\East\Common\Writer;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Object\User;
 use Teknoo\East\Common\Writer\UserWriter;
-use Teknoo\East\Common\Writer\WriterInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -38,7 +37,7 @@ class UserWriterTest extends TestCase
 {
     use PersistTestTrait;
 
-    public function buildWriter(): WriterInterface
+    public function buildWriter(): \Teknoo\East\Common\Contracts\Writer\WriterInterface
     {
         return new UserWriter($this->getObjectManager(), $this->getDatesServiceMock());
     }

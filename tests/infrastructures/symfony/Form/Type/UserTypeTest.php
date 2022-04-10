@@ -28,6 +28,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Teknoo\East\Common\Contracts\User\AuthDataInterface;
 use Teknoo\East\Common\Object\StoredPassword;
 use Teknoo\East\Common\Object\User;
@@ -159,6 +160,16 @@ class UserTypeTest extends TestCase
         self::assertInstanceOf(
             AbstractType::class,
             $this->buildForm()->buildForm($builder, [])
+        );
+    }
+
+    public function testConfigureOptions()
+    {
+        self::assertInstanceOf(
+            UserType::class,
+            $this->buildForm()->configureOptions(
+                $this->createMock(OptionsResolver::class)
+            )
         );
     }
 }

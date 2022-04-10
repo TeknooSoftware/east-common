@@ -33,6 +33,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Teknoo\East\Common\Object\StoredPassword;
 use Teknoo\East\Common\Object\User;
 use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
@@ -93,6 +94,17 @@ class UserType extends AbstractType
                 $user->addAuthData($authData);
             }
         );
+
+        return $this;
+    }
+
+    public function configureOptions(OptionsResolver $resolver): self
+    {
+        parent::configureOptions($resolver);
+
+        $resolver->setDefaults([
+            'data_class' => User::class,
+        ]);
 
         return $this;
     }

@@ -50,7 +50,7 @@ trait RepositoryTrait
     use ExprConversionTrait;
 
     /**
-     * @param ObjectRepository<mixed> $repository
+     * @param ObjectRepository<ObjectClass> $repository
      */
     public function __construct(
         private ObjectRepository $repository,

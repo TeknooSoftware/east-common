@@ -1,5 +1,10 @@
 # Teknoo Software - Common - Change Log
 
+## [1.0.2] - 2022-04-11
+### Stable Release
+- Fix `Common\RepositoryTrait::$repository` definition
+- Upgrade dev libs requirements
+
 ## [1.0.1] - 2022-04-10
 ### Stable Release
 - Fix `UserType` form to be use as subform *(missed `data_class`) option. 

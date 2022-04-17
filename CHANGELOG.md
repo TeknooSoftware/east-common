@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [1.0.3] - 2022-04-17
+### Stable Release
+- Rename `.yml` files to `.yaml`
+
 ## [1.0.2] - 2022-04-11
 ### Stable Release
 - Fix `Common\RepositoryTrait::$repository` definition

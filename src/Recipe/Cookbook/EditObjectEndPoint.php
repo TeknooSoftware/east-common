@@ -58,7 +58,7 @@ class EditObjectEndPoint implements EditObjectEndPointInterface
         private LoadObject $loadObject,
         private FormHandlingInterface $formHandling,
         private FormProcessingInterface $formProcessing,
-        private SlugPreparation $slugPreparation,
+        private ?SlugPreparation $slugPreparation,
         private SaveObject $saveObject,
         private RenderFormInterface $renderForm,
         private RenderError $renderError,
@@ -87,7 +87,9 @@ class EditObjectEndPoint implements EditObjectEndPointInterface
 
         $recipe = $recipe->cook($this->formProcessing, FormProcessingInterface::class, [], 40);
 
-        $recipe = $recipe->cook($this->slugPreparation, SlugPreparation::class, [], 50);
+        if (null !== $this->slugPreparation) {
+            $recipe = $recipe->cook($this->slugPreparation, SlugPreparation::class, [], 50);
+        }
 
         $recipe = $recipe->cook($this->saveObject, SaveObject::class, [], 60);
 

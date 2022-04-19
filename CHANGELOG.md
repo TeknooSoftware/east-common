@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [1.0.4] - 2022-04-19
+### Stable Release
+- `SlugPreparation` is not mandatory for cookbooks `CreateObjectEndPoint` and `EditObjectEndPoint`
+
 ## [1.0.3] - 2022-04-17
 ### Stable Release
 - Rename `.yml` files to `.yaml`

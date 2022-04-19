@@ -58,7 +58,7 @@ class CreateObjectEndPoint implements CreateObjectEndPointInterface
         private CreateObject $createObject,
         private FormHandlingInterface $formHandling,
         private FormProcessingInterface $formProcessing,
-        private SlugPreparation $slugPreparation,
+        private ?SlugPreparation $slugPreparation,
         private SaveObject $saveObject,
         private RedirectClientInterface $redirectClient,
         private RenderFormInterface $renderForm,
@@ -84,7 +84,9 @@ class CreateObjectEndPoint implements CreateObjectEndPointInterface
 
         $recipe = $recipe->cook($this->formProcessing, FormProcessingInterface::class, [], 30);
 
-        $recipe = $recipe->cook($this->slugPreparation, SlugPreparation::class, [], 40);
+        if (null !== $this->slugPreparation) {
+            $recipe = $recipe->cook($this->slugPreparation, SlugPreparation::class, [], 40);
+        }
 
         if (null !== $this->objectAccessControl) {
             $recipe = $recipe->cook($this->objectAccessControl, ObjectAccessControlInterface::class, [], 50);

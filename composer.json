@@ -78,7 +78,7 @@
         "twig/twig": "^3.3",
         "laminas/laminas-diactoros": "^2.8",
         "doctrine/common": "^3.2.1",
-        "doctrine/persistence": "^2.5.0",
+        "doctrine/persistence": "^2.5||^3.0",
         "doctrine/mongodb-odm": "^2.3.2",
         "doctrine/mongodb-odm-bundle": "^4.4.2",
         "league/oauth2-client": "^2.6.1",

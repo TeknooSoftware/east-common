@@ -53,6 +53,9 @@ class EditObjectEndPoint implements EditObjectEndPointInterface
 {
     use BaseCookbookTrait;
 
+    /**
+     * @param array<string, string> $loadObjectWiths
+     */
     public function __construct(
         RecipeInterface $recipe,
         private LoadObject $loadObject,
@@ -63,6 +66,8 @@ class EditObjectEndPoint implements EditObjectEndPointInterface
         private RenderFormInterface $renderForm,
         private RenderError $renderError,
         private ?ObjectAccessControlInterface $objectAccessControl = null,
+        private ?string $defaultErrorTemplate = null,
+        private array $loadObjectWiths = [],
     ) {
         $this->fill($recipe);
     }
@@ -77,7 +82,7 @@ class EditObjectEndPoint implements EditObjectEndPointInterface
         $recipe = $recipe->require(new Ingredient('array', 'formOptions'));
         $recipe = $recipe->require(new Ingredient('string', 'template'));
 
-        $recipe = $recipe->cook($this->loadObject, LoadObject::class, [], 10);
+        $recipe = $recipe->cook($this->loadObject, LoadObject::class, $this->loadObjectWiths, 10);
 
         if (null !== $this->objectAccessControl) {
             $recipe = $recipe->cook($this->objectAccessControl, ObjectAccessControlInterface::class, [], 20);
@@ -98,6 +103,10 @@ class EditObjectEndPoint implements EditObjectEndPointInterface
         $recipe = $recipe->onError(new Bowl($this->renderError, []));
 
         $this->addToWorkplan('nextStep', RenderFormInterface::class);
+
+        if (null !== $this->defaultErrorTemplate) {
+            $this->addToWorkplan('errorTemplate', $this->defaultErrorTemplate);
+        }
 
         return $recipe;
     }

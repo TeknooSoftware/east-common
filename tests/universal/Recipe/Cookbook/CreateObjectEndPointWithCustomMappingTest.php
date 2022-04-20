@@ -43,7 +43,7 @@ use Teknoo\Tests\Recipe\Cookbook\BaseCookbookTestTrait;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers \Teknoo\East\Common\Recipe\Cookbook\CreateObjectEndPoint
  */
-class CreateContentEndPointTest extends TestCase
+class CreateObjectEndPointWithCustomMappingTest extends TestCase
 {
     use BaseCookbookTestTrait;
 
@@ -199,7 +199,9 @@ class CreateContentEndPointTest extends TestCase
             $this->getRedirectClient(),
             $this->getRenderForm(),
             $this->getRenderError(),
-            $this->getObjectAccessControl()
+            $this->getObjectAccessControl(),
+            'foo.template',
+            ['foo' => 'bar'],
         );
     }
 }

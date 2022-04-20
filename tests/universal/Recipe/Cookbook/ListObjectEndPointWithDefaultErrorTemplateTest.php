@@ -41,7 +41,7 @@ use Teknoo\Tests\Recipe\Cookbook\BaseCookbookTestTrait;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers \Teknoo\East\Common\Recipe\Cookbook\ListObjectEndPoint
  */
-class ListContentEndPointTest extends TestCase
+class ListObjectEndPointWithDefaultErrorTemplateTest extends TestCase
 {
     use BaseCookbookTestTrait;
 
@@ -167,7 +167,8 @@ class ListContentEndPointTest extends TestCase
             $this->getRenderList(),
             $this->getRenderError(),
             $this->getSearchFormLoader(),
-            $this->getListObjectsAccessControl()
+            $this->getListObjectsAccessControl(),
+            'foo.template',
         );
     }
 }

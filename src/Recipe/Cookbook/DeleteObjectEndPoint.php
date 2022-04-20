@@ -49,6 +49,9 @@ class DeleteObjectEndPoint implements DeleteObjectEndPointInterface
 {
     use BaseCookbookTrait;
 
+    /**
+     * @param array<string, string> $loadObjectWiths
+     */
     public function __construct(
         RecipeInterface $recipe,
         private LoadObject $loadObject,
@@ -56,6 +59,8 @@ class DeleteObjectEndPoint implements DeleteObjectEndPointInterface
         private RedirectClientInterface $redirectClient,
         private RenderError $renderError,
         private ?ObjectAccessControlInterface $objectAccessControl = null,
+        private ?string $defaultErrorTemplate = null,
+        private array $loadObjectWiths = [],
     ) {
         $this->fill($recipe);
     }
@@ -67,7 +72,7 @@ class DeleteObjectEndPoint implements DeleteObjectEndPointInterface
         $recipe = $recipe->require(new Ingredient('string', 'id'));
         $recipe = $recipe->require(new Ingredient('string', 'route'));
 
-        $recipe = $recipe->cook($this->loadObject, LoadObject::class, [], 10);
+        $recipe = $recipe->cook($this->loadObject, LoadObject::class, $this->loadObjectWiths, 10);
 
         if (null !== $this->objectAccessControl) {
             $recipe = $recipe->cook($this->objectAccessControl, ObjectAccessControlInterface::class, [], 20);
@@ -78,6 +83,10 @@ class DeleteObjectEndPoint implements DeleteObjectEndPointInterface
         $recipe = $recipe->cook($this->redirectClient, RedirectClientInterface::class, [], 40);
 
         $recipe = $recipe->onError(new Bowl($this->renderError, []));
+
+        if (null !== $this->defaultErrorTemplate) {
+            $this->addToWorkplan('errorTemplate', $this->defaultErrorTemplate);
+        }
 
         return $recipe;
     }

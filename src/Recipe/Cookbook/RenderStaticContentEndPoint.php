@@ -47,7 +47,8 @@ class RenderStaticContentEndPoint implements RenderStaticContentEndPointInterfac
     public function __construct(
         RecipeInterface $recipe,
         private Render $render,
-        private RenderError $renderError
+        private RenderError $renderError,
+        private ?string $defaultErrorTemplate = null,
     ) {
         $this->fill($recipe);
     }
@@ -56,10 +57,15 @@ class RenderStaticContentEndPoint implements RenderStaticContentEndPointInterfac
     {
         $recipe = $recipe->require(new Ingredient(ServerRequestInterface::class, 'request'));
         $recipe = $recipe->require(new Ingredient('string', 'template'));
+        $recipe = $recipe->require(new Ingredient('string', 'errorTemplate'));
 
         $recipe = $recipe->cook($this->render, Render::class, [], 10);
 
         $recipe = $recipe->onError(new Bowl($this->renderError, []));
+
+        if (null !== $this->defaultErrorTemplate) {
+            $this->addToWorkplan('errorTemplate', $this->defaultErrorTemplate);
+        }
 
         return $recipe;
     }

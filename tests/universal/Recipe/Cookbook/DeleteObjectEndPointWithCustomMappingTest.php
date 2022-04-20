@@ -39,7 +39,7 @@ use Teknoo\Tests\Recipe\Cookbook\BaseCookbookTestTrait;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers \Teknoo\East\Common\Recipe\Cookbook\DeleteObjectEndPoint
  */
-class DeleteContentEndPointTest extends TestCase
+class DeleteContentEndPointWithDefaultErrorTemplateTest extends TestCase
 {
     use BaseCookbookTestTrait;
 
@@ -135,7 +135,9 @@ class DeleteContentEndPointTest extends TestCase
             $this->getDeleteObject(),
             $this->getRedirectClient(),
             $this->getRenderError(),
-            $this->getObjectAccessControl()
+            $this->getObjectAccessControl(),
+            'foo.template',
+            ['foo' => 'bar']
         );
     }
 }

@@ -320,6 +320,7 @@ class ContainerTest extends TestCase
         $container->set(RedirectClientInterface::class, $this->createMock(RedirectClientInterface::class));
         $container->set(RenderFormInterface::class, $this->createMock(RenderFormInterface::class));
         $container->set(RenderError::class, $this->createMock(RenderError::class));
+        $container->set('teknoo.east.common.cookbook.default_error_template', 'foo.template');
 
         self::assertInstanceOf(
             CreateObjectEndPoint::class,
@@ -365,6 +366,7 @@ class ContainerTest extends TestCase
         $container->set(DeleteObject::class, $this->createMock(DeleteObject::class));
         $container->set(RedirectClientInterface::class, $this->createMock(RedirectClientInterface::class));
         $container->set(RenderError::class, $this->createMock(RenderError::class));
+        $container->set('teknoo.east.common.cookbook.default_error_template', 'foo.template');
 
         self::assertInstanceOf(
             DeleteObjectEndPoint::class,
@@ -409,6 +411,7 @@ class ContainerTest extends TestCase
         $container->set(SaveObject::class, $this->createMock(SaveObject::class));
         $container->set(RenderFormInterface::class, $this->createMock(RenderFormInterface::class));
         $container->set(RenderError::class, $this->createMock(RenderError::class));
+        $container->set('teknoo.east.common.cookbook.default_error_template', 'foo.template');
 
         self::assertInstanceOf(
             EditObjectEndPoint::class,
@@ -454,6 +457,7 @@ class ContainerTest extends TestCase
         $container->set(LoadListObjects::class, $this->createMock(LoadListObjects::class));
         $container->set(RenderList::class, $this->createMock(RenderList::class));
         $container->set(RenderError::class, $this->createMock(RenderError::class));
+        $container->set('teknoo.east.common.cookbook.default_error_template', 'foo.template');
 
         self::assertInstanceOf(
             ListObjectEndPoint::class,
@@ -516,6 +520,7 @@ class ContainerTest extends TestCase
         $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
         $container->set(Render::class, $this->createMock(Render::class));
         $container->set(RenderError::class, $this->createMock(RenderError::class));
+        $container->set('teknoo.east.common.cookbook.default_error_template', 'foo.template');
 
         self::assertInstanceOf(
             RenderStaticContentEndPoint::class,

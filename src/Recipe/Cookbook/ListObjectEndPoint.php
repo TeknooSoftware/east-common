@@ -51,6 +51,9 @@ class ListObjectEndPoint implements ListObjectEndPointInterface
 {
     use BaseCookbookTrait;
 
+    /**
+     * @param array<string, string> $loadListObjectsWiths
+     */
     public function __construct(
         RecipeInterface $recipe,
         private ExtractPage $extractPage,
@@ -59,7 +62,9 @@ class ListObjectEndPoint implements ListObjectEndPointInterface
         private RenderList $renderList,
         private RenderError $renderError,
         private ?SearchFormLoaderInterface $searchFormLoader = null,
-        private ?ListObjectsAccessControlInterface $listObjectsAccessControl = null
+        private ?ListObjectsAccessControlInterface $listObjectsAccessControl = null,
+        private ?string $defaultErrorTemplate = null,
+        private array $loadListObjectsWiths = [],
     ) {
         $this->fill($recipe);
     }
@@ -80,7 +85,7 @@ class ListObjectEndPoint implements ListObjectEndPointInterface
             $recipe = $recipe->cook($this->searchFormLoader, SearchFormLoaderInterface::class, [], 20);
         }
 
-        $recipe = $recipe->cook($this->loadListObjects, LoadListObjects::class, [], 30);
+        $recipe = $recipe->cook($this->loadListObjects, LoadListObjects::class, $this->loadListObjectsWiths, 30);
 
         if (null !== $this->listObjectsAccessControl) {
             $recipe = $recipe->cook(
@@ -94,6 +99,10 @@ class ListObjectEndPoint implements ListObjectEndPointInterface
         $recipe = $recipe->cook($this->renderList, RenderList::class, [], 50);
 
         $recipe = $recipe->onError(new Bowl($this->renderError, []));
+
+        if (null !== $this->defaultErrorTemplate) {
+            $this->addToWorkplan('errorTemplate', $this->defaultErrorTemplate);
+        }
 
         return $recipe;
     }

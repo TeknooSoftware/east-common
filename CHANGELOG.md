@@ -1,5 +1,15 @@
 # Teknoo Software - Common - Change Log
 
+## [1.1.0] - 2022-04-20
+### Stable Release
+- All cookbooks provided by Common accepts a new argument in constructorm called `defaultErrorTemplate` to set in the
+  initial workplan the `errorTemplate` ingredient to avoid to set for each use.
+- This variable can be set in the DI via the special key `teknoo.east.common.cookbook.default_error_template`
+- `ListObjectEndPoint` accepts `$loadListObjectWiths` in constructor to define mapping for `LoadListObjects` step.
+- `EditObjectEndPoint` accepts `$loadObjectWiths` in constructor to define mapping for `LoadObject` step.
+- `DeleteObjectEndPoint` accepts `$loadObjectWiths` in constructor to define mapping for `LoadObject` step.
+- `CreateObjectEndPoint` accepts `$createObjectWiths` in constructor to define mapping for `CreateObject` step.
+
 ## [1.0.4] - 2022-04-19
 ### Stable Release
 - `SlugPreparation` is not mandatory for cookbooks `CreateObjectEndPoint` and `EditObjectEndPoint`

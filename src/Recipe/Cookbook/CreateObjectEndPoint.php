@@ -53,6 +53,9 @@ class CreateObjectEndPoint implements CreateObjectEndPointInterface
 {
     use BaseCookbookTrait;
 
+    /**
+     * @param array<string, string> $createObjectWiths
+     */
     public function __construct(
         RecipeInterface $recipe,
         private CreateObject $createObject,
@@ -64,6 +67,8 @@ class CreateObjectEndPoint implements CreateObjectEndPointInterface
         private RenderFormInterface $renderForm,
         private RenderError $renderError,
         private ?ObjectAccessControlInterface $objectAccessControl = null,
+        private ?string $defaultErrorTemplate = null,
+        private array $createObjectWiths = [],
     ) {
         $this->fill($recipe);
     }
@@ -78,7 +83,7 @@ class CreateObjectEndPoint implements CreateObjectEndPointInterface
         $recipe = $recipe->require(new Ingredient('array', 'formOptions'));
         $recipe = $recipe->require(new Ingredient('string', 'template'));
 
-        $recipe = $recipe->cook($this->createObject, CreateObject::class, [], 10);
+        $recipe = $recipe->cook($this->createObject, CreateObject::class, $this->createObjectWiths, 10);
 
         $recipe = $recipe->cook($this->formHandling, FormHandlingInterface::class, [], 20);
 
@@ -101,6 +106,10 @@ class CreateObjectEndPoint implements CreateObjectEndPointInterface
         $recipe = $recipe->onError(new Bowl($this->renderError, []));
 
         $this->addToWorkplan('nextStep', RenderFormInterface::class);
+
+        if (null !== $this->defaultErrorTemplate) {
+            $this->addToWorkplan('errorTemplate', $this->defaultErrorTemplate);
+        }
 
         return $recipe;
     }

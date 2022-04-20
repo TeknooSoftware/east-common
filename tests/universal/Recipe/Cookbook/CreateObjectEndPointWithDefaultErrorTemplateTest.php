@@ -28,9 +28,10 @@ use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormHandlingInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormProcessingInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\ObjectAccessControlInterface;
+use Teknoo\East\Common\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RenderFormInterface;
-use Teknoo\East\Common\Recipe\Cookbook\EditObjectEndPoint;
-use Teknoo\East\Common\Recipe\Step\LoadObject;
+use Teknoo\East\Common\Recipe\Cookbook\CreateObjectEndPoint;
+use Teknoo\East\Common\Recipe\Step\CreateObject;
 use Teknoo\East\Common\Recipe\Step\RenderError;
 use Teknoo\East\Common\Recipe\Step\SaveObject;
 use Teknoo\East\Common\Recipe\Step\SlugPreparation;
@@ -40,25 +41,27 @@ use Teknoo\Tests\Recipe\Cookbook\BaseCookbookTestTrait;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Common\Recipe\Cookbook\EditObjectEndPoint
+ * @covers \Teknoo\East\Common\Recipe\Cookbook\CreateObjectEndPoint
  */
-class EditContentEndPointTest extends TestCase
+class CreateObjectEndPointWithDefaultErrorTemplateTest extends TestCase
 {
     use BaseCookbookTestTrait;
 
     private ?RecipeInterface $recipe = null;
 
-    private ?LoadObject $loadObject = null;
-
-    private ?ObjectAccessControlInterface $objectAccessControl = null;
-
     private ?FormHandlingInterface $formHandling = null;
+
+    private ?CreateObject $createObject = null;
 
     private ?FormProcessingInterface $formProcessing = null;
 
     private ?SlugPreparation $slugPreparation = null;
 
+    private ?ObjectAccessControlInterface $objectAccessControl = null;
+
     private ?SaveObject $saveObject = null;
+
+    private ?RedirectClientInterface $redirectClient = null;
 
     private ?RenderFormInterface $renderForm = null;
 
@@ -77,18 +80,6 @@ class EditContentEndPointTest extends TestCase
     }
 
     /**
-     * @return LoadObject|MockObject
-     */
-    public function getLoadObject(): LoadObject
-    {
-        if (null === $this->loadObject) {
-            $this->loadObject = $this->createMock(LoadObject::class);
-        }
-
-        return $this->loadObject;
-    }
-
-    /**
      * @return FormHandlingInterface|MockObject
      */
     public function getFormHandling(): FormHandlingInterface
@@ -98,6 +89,18 @@ class EditContentEndPointTest extends TestCase
         }
 
         return $this->formHandling;
+    }
+
+    /**
+     * @return CreateObject|MockObject
+     */
+    public function getCreateObject(): CreateObject
+    {
+        if (null === $this->createObject) {
+            $this->createObject = $this->createMock(CreateObject::class);
+        }
+
+        return $this->createObject;
     }
 
     /**
@@ -137,6 +140,18 @@ class EditContentEndPointTest extends TestCase
     }
 
     /**
+     * @return RedirectClientInterface|MockObject
+     */
+    public function getRedirectClient(): RedirectClientInterface
+    {
+        if (null === $this->redirectClient) {
+            $this->redirectClient = $this->createMock(RedirectClientInterface::class);
+        }
+
+        return $this->redirectClient;
+    }
+
+    /**
      * @return RenderFormInterface|MockObject
      */
     public function getRenderForm(): RenderFormInterface
@@ -172,18 +187,20 @@ class EditContentEndPointTest extends TestCase
         return $this->objectAccessControl;
     }
 
-    public function buildCookbook(): EditObjectEndPoint
+    public function buildCookbook(): CreateObjectEndPoint
     {
-        return new EditObjectEndPoint(
+        return new CreateObjectEndPoint(
             $this->getRecipe(),
-            $this->getLoadObject(),
+            $this->getCreateObject(),
             $this->getFormHandling(),
             $this->getFormProcessing(),
             $this->getSlugPreparation(),
             $this->getSaveObject(),
+            $this->getRedirectClient(),
             $this->getRenderForm(),
             $this->getRenderError(),
-            $this->getObjectAccessControl()
+            $this->getObjectAccessControl(),
+            'foo.template',
         );
     }
 }

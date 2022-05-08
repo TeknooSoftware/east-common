@@ -91,7 +91,7 @@ trait RepositoryTrait
         if (!empty($orderBy)) {
             array_walk(
                 $orderBy,
-                fn(Direction &$item) => $item = $item->value
+                fn (Direction &$item): string => $item = $item->value
             );
 
             $queryBuilder->sort($orderBy);

@@ -23,44 +23,36 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Common\Doctrine\DBSource\Common;
+namespace Teknoo\East\Common\Query\Expr;
 
-use Doctrine\Persistence\ObjectManager;
-use Teknoo\East\Common\Contracts\DBSource\ManagerInterface;
+use Teknoo\East\Common\Contracts\Query\Expr\ExprInterface;
+use Teknoo\Immutable\ImmutableInterface;
+use Teknoo\Immutable\ImmutableTrait;
 
 /**
- * Default implementation of `ManagerInterface` wrapping Doctrine's object manager,
- * following generic Doctrine interfaces.
- * Usable with ORM or ODM.
+ * Operator to add a constraint to check if a value is NOT present in an set of other values
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class Manager implements ManagerInterface
+class NotIn implements ExprInterface, ImmutableInterface
 {
+    use ImmutableTrait;
+
+    /**
+     * @param array<int, string|int> $values
+     */
     public function __construct(
-        private ObjectManager $objectManager,
+        private readonly array $values,
     ) {
+        $this->uniqueConstructorCheck();
     }
 
-    public function persist(object $object): ManagerInterface
+    /**
+     * @return array<int, string|int>
+     */
+    public function getValues(): array
     {
-        $this->objectManager->persist($object);
-
-        return $this;
-    }
-
-    public function remove(object $object): ManagerInterface
-    {
-        $this->objectManager->remove($object);
-
-        return $this;
-    }
-
-    public function flush(): ManagerInterface
-    {
-        $this->objectManager->flush();
-
-        return $this;
+        return $this->values;
     }
 }

@@ -1,5 +1,18 @@
 # Teknoo Software - Common - Change Log
 
+## [1.2.0] - 2022-05-15
+### Stable Release
+- Add `NotIn` query expression
+- Add `BatchManipulationManagerInterface` contract, extending `ManagerInterface` to define manager able to perform 
+  batch data manipulations.
+- Add `BatchManipulationManager` (in `Doctrine\ODM`) implementing `BatchManipulationManagerInterface` with fallback to
+ `Manager` (in `Doctrine\Common`) for individual persisting operations.
+- Add `UpdatingQueryInterface` contract to perform batch object updates.
+- Add `DeletingQueryInterface` contract to perform batch object deletes.
+- Add `QueryExecutorInterface` contract to translate previous queries (update and delete) to the Data layer query in 
+  adapter.
+- Add `QueryExecutor` in (`Doctrine\ODM`) to transform east query to Doctrine ODM query.
+
 ## [1.1.0] - 2022-04-20
 ### Stable Release
 - All cookbooks provided by Common accepts a new argument in constructorm called `defaultErrorTemplate` to set in the

@@ -30,6 +30,7 @@ use Teknoo\East\Common\Doctrine\DBSource\Common\ExprConversionTrait as CommonTra
 use Teknoo\East\Common\Query\Expr\In;
 use Teknoo\East\Common\Query\Expr\InclusiveOr;
 use Teknoo\East\Common\Query\Expr\NotEqual;
+use Teknoo\East\Common\Query\Expr\NotIn;
 use Teknoo\East\Common\Query\Expr\ObjectReference;
 
 use function is_array;
@@ -67,6 +68,15 @@ trait ExprConversionTrait
     private static function processInExpr(array &$final, string $key, ExprInterface $expr): void
     {
         $final[$key] = ['$in' => $expr->getValues()];
+    }
+
+    /**
+     * @param array<string, mixed> $final
+     * @param NotIn $expr
+     */
+    private static function processNotInExpr(array &$final, string $key, ExprInterface $expr): void
+    {
+        $final[$key] = ['$nin' => $expr->getValues()];
     }
 
     /**

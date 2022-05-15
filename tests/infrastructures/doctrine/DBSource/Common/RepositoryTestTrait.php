@@ -31,6 +31,7 @@ use Teknoo\East\Common\Query\Enum\Direction;
 use Teknoo\East\Common\Query\Expr\In;
 use Teknoo\East\Common\Query\Expr\InclusiveOr;
 use Teknoo\East\Common\Query\Expr\NotEqual;
+use Teknoo\East\Common\Query\Expr\NotIn;
 use Teknoo\East\Common\Query\Expr\ObjectReference;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
@@ -259,6 +260,7 @@ trait RepositoryTestTrait
             ->with([
                 'foo' => 'bar',
                 'bar' => ['foo'],
+                'notIn' => ['bar2' => ['foo']],
                 'notEqual' => ['bwrNot' =>'foo'],
                 'or' => [
                     ['foo' => 'bar'],
@@ -274,6 +276,7 @@ trait RepositoryTestTrait
                 [
                     'foo' => 'bar',
                     'bar' => new In(['foo']),
+                    'bar2' => new NotIn(['foo']),
                     'bwrNot' => new NotEqual('foo'),
                     new InclusiveOr(
                         ['foo' => 'bar'],

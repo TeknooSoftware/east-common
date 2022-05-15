@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * East Common.
  *
  * LICENSE
@@ -21,46 +21,21 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-declare(strict_types=1);
+namespace Teknoo\Tests\East\Common\Query\Expr;
 
-namespace Teknoo\East\Common\Doctrine\DBSource\Common;
-
-use Doctrine\Persistence\ObjectManager;
-use Teknoo\East\Common\Contracts\DBSource\ManagerInterface;
+use PHPUnit\Framework\TestCase;
+use Teknoo\East\Common\Query\Expr\NotIn;
 
 /**
- * Default implementation of `ManagerInterface` wrapping Doctrine's object manager,
- * following generic Doctrine interfaces.
- * Usable with ORM or ODM.
- *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ * @covers \Teknoo\East\Common\Query\Expr\NotIn
  */
-class Manager implements ManagerInterface
+class NotInTest extends TestCase
 {
-    public function __construct(
-        private ObjectManager $objectManager,
-    ) {
-    }
-
-    public function persist(object $object): ManagerInterface
+ public function testExecute()
     {
-        $this->objectManager->persist($object);
-
-        return $this;
-    }
-
-    public function remove(object $object): ManagerInterface
-    {
-        $this->objectManager->remove($object);
-
-        return $this;
-    }
-
-    public function flush(): ManagerInterface
-    {
-        $this->objectManager->flush();
-
-        return $this;
+        $in = new NotIn(['foo']);
+        self::assertEquals(['foo'], $in->getValues());
     }
 }

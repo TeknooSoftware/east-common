@@ -26,6 +26,8 @@ declare(strict_types=1);
 namespace Teknoo\East\Common\Contracts\Writer;
 
 use Teknoo\East\Common\Contracts\Object\ObjectInterface;
+use Teknoo\East\Common\Contracts\Query\DeletingQueryInterface;
+use Teknoo\East\Common\Contracts\Query\UpdatingQueryInterface;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**

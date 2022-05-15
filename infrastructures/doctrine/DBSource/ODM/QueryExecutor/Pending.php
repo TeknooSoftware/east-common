@@ -23,44 +23,31 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Common\Doctrine\DBSource\Common;
+namespace Teknoo\East\Common\Doctrine\DBSource\ODM\QueryExecutor;
 
-use Doctrine\Persistence\ObjectManager;
-use Teknoo\East\Common\Contracts\DBSource\ManagerInterface;
+use Closure;
+use RuntimeException;
+use Teknoo\East\Common\Doctrine\DBSource\ODM\QueryExecutor;
+use Teknoo\Recipe\Promise\PromiseInterface;
+use Teknoo\States\State\StateInterface;
+use Teknoo\States\State\StateTrait;
 
 /**
- * Default implementation of `ManagerInterface` wrapping Doctrine's object manager,
- * following generic Doctrine interfaces.
- * Usable with ORM or ODM.
+ * Default state of QueryExecutor until the document class is not set via the method `filterOn`
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @mixin QueryExecutor
  */
-class Manager implements ManagerInterface
+class Pending implements StateInterface
 {
-    public function __construct(
-        private ObjectManager $objectManager,
-    ) {
-    }
+    use StateTrait;
 
-    public function persist(object $object): ManagerInterface
+    private function run(): Closure
     {
-        $this->objectManager->persist($object);
-
-        return $this;
-    }
-
-    public function remove(object $object): ManagerInterface
-    {
-        $this->objectManager->remove($object);
-
-        return $this;
-    }
-
-    public function flush(): ManagerInterface
-    {
-        $this->objectManager->flush();
-
-        return $this;
+        return function (PromiseInterface $promise): void {
+            $promise->fail(new RuntimeException('The query is not configured'));
+        };
     }
 }

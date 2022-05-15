@@ -30,6 +30,7 @@ use Teknoo\East\Common\Contracts\Query\Expr\ExprInterface;
 use Teknoo\East\Common\Query\Expr\In;
 use Teknoo\East\Common\Query\Expr\InclusiveOr;
 use Teknoo\East\Common\Query\Expr\NotEqual;
+use Teknoo\East\Common\Query\Expr\NotIn;
 use Teknoo\East\Common\Query\Expr\ObjectReference;
 
 /**
@@ -43,12 +44,14 @@ use Teknoo\East\Common\Query\Expr\ObjectReference;
  */
 trait ExprConversionTrait
 {
+    //Can not use self::processXXX(...)
     /**
      * @var array<string, callable>
      */
     private static $exprMappings = [
         NotEqual::class => [self::class, 'processNotEqualExpr'],
         In::class => [self::class, 'processInExpr'],
+        NotIn::class => [self::class, 'processNotInExpr'],
         InclusiveOr::class => [self::class, 'processInclusiveOrExpr'],
         ObjectReference::class => [self::class, 'processObjectReferenceExpr'],
     ];
@@ -74,6 +77,15 @@ trait ExprConversionTrait
     private static function processInExpr(array &$final, string $key, ExprInterface $expr): void
     {
         $final[$key] = $expr->getValues();
+    }
+
+    /**
+     * @param array<string, mixed> $final
+     * @param NotIn $expr
+     */
+    private static function processNotInExpr(array &$final, string $key, ExprInterface $expr): void
+    {
+        $final['notIn'] = [$key => (array) $expr->getValues()];
     }
 
     /**

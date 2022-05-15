@@ -30,9 +30,11 @@ use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
 use PHPUnit\Framework\TestCase;
 use ProxyManager\Proxy\GhostObjectInterface;
+use Teknoo\East\Common\Contracts\DBSource\BatchManipulationManagerInterface;
 use Teknoo\East\Common\Contracts\DBSource\ManagerInterface;
 use Teknoo\East\Common\Contracts\DBSource\Repository\UserRepositoryInterface;
 use Teknoo\East\Common\Contracts\Service\ProxyDetectorInterface;
+use Teknoo\East\Common\Doctrine\DBSource\ODM\BatchManipulationManager;
 use Teknoo\East\Common\Object\User;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
@@ -68,6 +70,17 @@ class ContainerTest extends TestCase
 
         $container->set(ObjectManager::class, $objectManager);
         self::assertInstanceOf(ManagerInterface::class, $container->get(ManagerInterface::class));
+    }
+
+    public function testBatchManager()
+    {
+        $container = $this->buildContainer();
+        $objectManager = $this->createMock(ObjectManager::class);
+        $batchManager = $this->createMock(BatchManipulationManager::class);
+
+        $container->set(ObjectManager::class, $objectManager);
+        $container->set(BatchManipulationManager::class, $batchManager);
+        self::assertInstanceOf(BatchManipulationManagerInterface::class, $container->get(BatchManipulationManagerInterface::class));
     }
 
     private function generateTestForRepository(string $objectClass, string $repositoryClass, string $repositoryType)

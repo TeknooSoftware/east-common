@@ -23,44 +23,28 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Common\Doctrine\DBSource\Common;
+namespace Teknoo\East\Common\Contracts\Query;
 
-use Doctrine\Persistence\ObjectManager;
-use Teknoo\East\Common\Contracts\DBSource\ManagerInterface;
+use Teknoo\East\Common\Contracts\DBSource\QueryExecutorInterface;
+use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
- * Default implementation of `ManagerInterface` wrapping Doctrine's object manager,
- * following generic Doctrine interfaces.
- * Usable with ORM or ODM.
+ * Interface to define query to update one or several objects / documents
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @template TPersistedObject
  */
-class Manager implements ManagerInterface
+interface UpdatingQueryInterface
 {
-    public function __construct(
-        private ObjectManager $objectManager,
-    ) {
-    }
-
-    public function persist(object $object): ManagerInterface
-    {
-        $this->objectManager->persist($object);
-
-        return $this;
-    }
-
-    public function remove(object $object): ManagerInterface
-    {
-        $this->objectManager->remove($object);
-
-        return $this;
-    }
-
-    public function flush(): ManagerInterface
-    {
-        $this->objectManager->flush();
-
-        return $this;
-    }
+    /**
+     * @param QueryExecutorInterface<TPersistedObject> $queryBuilder
+     * @param PromiseInterface<TPersistedObject, mixed> $promise
+     * @return UpdatingQueryInterface<TPersistedObject>
+     */
+    public function update(
+        QueryExecutorInterface $queryBuilder,
+        PromiseInterface $promise,
+    ): UpdatingQueryInterface;
 }

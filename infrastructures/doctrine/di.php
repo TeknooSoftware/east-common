@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Common\Doctrine;
 
+use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
@@ -32,23 +33,31 @@ use Exception;
 use ProxyManager\Proxy\GhostObjectInterface;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
+use Teknoo\East\Common\Contracts\DBSource\BatchManipulationManagerInterface;
 use Teknoo\East\Common\Contracts\DBSource\ManagerInterface;
 use Teknoo\East\Common\Contracts\DBSource\Repository\UserRepositoryInterface;
 use Teknoo\East\Common\Contracts\Service\ProxyDetectorInterface;
 use Teknoo\East\Common\Doctrine\DBSource\Common\Manager;
 use Teknoo\East\Common\Doctrine\DBSource\Common\UserRepository;
+use Teknoo\East\Common\Doctrine\DBSource\ODM\BatchManipulationManager;
 use Teknoo\East\Common\Doctrine\DBSource\ODM\UserRepository as OdmUserRepository;
 use Teknoo\East\Common\Object\User;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
+use function DI\create;
 use function DI\get;
 
 return [
     ManagerInterface::class => get(Manager::class),
-    Manager::class => static function (ContainerInterface $container): Manager {
-        $objectManager = $container->get(ObjectManager::class);
-        return new Manager($objectManager);
-    },
+    Manager::class => create()->constructor(
+        get(ObjectManager::class),
+    ),
+
+    BatchManipulationManagerInterface::class => get(BatchManipulationManager::class),
+    BatchManipulationManager::class => create()->constructor(
+        get(ManagerInterface::class),
+        get('doctrine_mongodb.odm.default_document_manager'),
+    ),
 
     UserRepositoryInterface::class => static function (ContainerInterface $container): UserRepositoryInterface {
         $repository = $container->get(ObjectManager::class)->getRepository(User::class);

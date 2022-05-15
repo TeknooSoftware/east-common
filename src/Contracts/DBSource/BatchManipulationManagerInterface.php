@@ -26,31 +26,37 @@ declare(strict_types=1);
 namespace Teknoo\East\Common\Contracts\DBSource;
 
 use Teknoo\East\Common\Contracts\Object\ObjectInterface;
+use Teknoo\East\Common\Contracts\Query\DeletingQueryInterface;
+use Teknoo\East\Common\Contracts\Query\UpdatingQueryInterface;
+use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
- * To define manager about unitaries operations on persisteds objects
+ * Extension of manager about batchs operations on persisted objects
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-interface ManagerInterface
+interface BatchManipulationManagerInterface extends ManagerInterface
 {
-    /*
-     * Tells the Manager to make an instance managed and persistent.
+    /**
+     * To update several object in a same time
      *
-     * The object will be entered into the database as a result of the flush operation.
+     * @param UpdatingQueryInterface<ObjectInterface> $query
+     * @param PromiseInterface<ObjectInterface, mixed> $promise
      */
-    public function persist(ObjectInterface $object): ManagerInterface;
+    public function updateQuery(
+        UpdatingQueryInterface $query,
+        PromiseInterface $promise,
+    ): BatchManipulationManagerInterface;
 
-    /*
-     * Tells the Manager to remove an instance managed
+    /**
+     * To delete several objet in a same time
+     *
+     * @param DeletingQueryInterface<ObjectInterface> $query
+     * @param PromiseInterface<ObjectInterface, mixed> $promise
      */
-    public function remove(ObjectInterface $object): ManagerInterface;
-
-    /*
-     * Flushes all changes to objects that have been queued up to now to the database.
-     * This effectively synchronizes the in-memory state of managed objects with the
-     * database.
-     */
-    public function flush(): ManagerInterface;
+    public function deleteQuery(
+        DeletingQueryInterface $query,
+        PromiseInterface $promise,
+    ): BatchManipulationManagerInterface;
 }

@@ -1,6 +1,6 @@
 # user
 _teknoo_common_admin_user_list:
-    path: '/users/'
+    path: '/users'
     methods:  ['GET', 'POST']
     defaults:
         _controller: 'teknoo.east.common.endpoint.crud.list'

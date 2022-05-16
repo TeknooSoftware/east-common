@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [1.2.1] - 2022-05-16
+### Stable Release
+- Fix admin list route
+
 ## [1.2.0] - 2022-05-15
 ### Stable Release
 - Add `NotIn` query expression

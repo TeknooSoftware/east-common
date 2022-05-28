@@ -73,13 +73,9 @@ class PaginationQuery implements QueryCollectionInterface, ImmutableInterface
         $criteria = $this->criteria;
         $criteria['deletedAt'] = null;
 
-        $failClosure = static function (Throwable $error) use ($promise) {
-            $promise->fail($error);
-        };
-
         /** @var Promise<iterable<ObjectInterface>, mixed, mixed> $findPromise */
         $findPromise = new Promise(
-            static function ($result) use ($criteria, $promise, $repository, $failClosure) {
+            static function ($result) use ($criteria, $promise, $repository) {
                 /** @var Promise<int, mixed, mixed> $countPromise */
                 $countPromise = new Promise(
                     static function (int $count) use ($promise, $result) {
@@ -109,7 +105,7 @@ class PaginationQuery implements QueryCollectionInterface, ImmutableInterface
 
                         $promise->success($iterator);
                     },
-                    $failClosure
+                    $promise->fail(...)
                 );
 
                 $repository->count(
@@ -117,7 +113,7 @@ class PaginationQuery implements QueryCollectionInterface, ImmutableInterface
                     $countPromise
                 );
             },
-            $failClosure
+            $promise->fail(...)
         );
 
         $repository->findBy(

@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [1.2.2] - 2022-05-28
+### Stable Release
+- Promise simplification in PaginationQuery
+
 ## [1.2.1] - 2022-05-16
 ### Stable Release
 - Fix admin list route

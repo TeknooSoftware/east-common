@@ -47,9 +47,9 @@ class ConnectEndPoint implements RedirectingInterface
      * @param array<int|string, string> $scope
      */
     public function __construct(
-        private ClientRegistry $clientRegistry,
-        private string $provider,
-        private array $scope = [],
+        private readonly ClientRegistry $clientRegistry,
+        private readonly string $provider,
+        private readonly array $scope = [],
     ) {
     }
 

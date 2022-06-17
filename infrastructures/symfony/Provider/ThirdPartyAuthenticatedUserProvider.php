@@ -46,7 +46,7 @@ use Teknoo\East\Common\Query\User\UserByEmailQuery;
 class ThirdPartyAuthenticatedUserProvider implements UserProviderInterface
 {
     public function __construct(
-        private UserLoader $loader,
+        private readonly UserLoader $loader,
     ) {
     }
 

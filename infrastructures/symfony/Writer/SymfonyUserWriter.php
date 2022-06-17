@@ -47,8 +47,8 @@ use Teknoo\Recipe\Promise\PromiseInterface;
 class SymfonyUserWriter implements WriterInterface
 {
     public function __construct(
-        private UniversalWriter $universalWriter,
-        private UserPasswordHasherInterface $passwordHasher,
+        private readonly UniversalWriter $universalWriter,
+        private readonly UserPasswordHasherInterface $passwordHasher,
     ) {
     }
 

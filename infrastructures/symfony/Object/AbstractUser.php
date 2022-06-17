@@ -44,7 +44,7 @@ abstract class AbstractUser implements
     EquatableInterface
 {
     public function __construct(
-        private BaseUser $user,
+        private readonly BaseUser $user,
     ) {
     }
 

@@ -58,14 +58,10 @@ class ExtractOrder
         $queryParams = $request->getQueryParams();
         $direction = $defaultOrderDirection;
         if (isset($queryParams['direction'])) {
-            switch ($value = strtoupper($queryParams['direction'])) {
-                case 'ASC':
-                case 'DESC':
-                    $direction = Direction::from($value);
-                    break;
-                default:
-                    throw new InvalidArgumentException('Invalid direction value %value');
-            }
+            $direction = match ($value = strtoupper((string) $queryParams['direction'])) {
+                'ASC', 'DESC' => Direction::from($value),
+                default => throw new InvalidArgumentException('Invalid direction value %value'),
+            };
         }
 
         if (!empty($queryParams['order'])) {

@@ -48,8 +48,8 @@ use function is_callable;
 class FormHandling implements FormHandlingInterface
 {
     public function __construct(
-        private DatesService $datesService,
-        private FormFactoryInterface $formFactory
+        private readonly DatesService $datesService,
+        private readonly FormFactoryInterface $formFactory
     ) {
     }
 

@@ -27,11 +27,11 @@ error_reporting(E_ALL | E_STRICT);
 
 ini_set('memory_limit', '128M');
 
-include 'fakeQuery.php';
-include 'fakeUOW.php';
-include 'fakeRuntimeException.php';
-include 'fakeObjectId.php';
-include 'fakeLegacyPasswordAuthenticatedUserInterface.php';
+include __DIR__ . '/fakeQuery.php';
+include __DIR__ . '/fakeUOW.php';
+include __DIR__ . '/fakeRuntimeException.php';
+include __DIR__ . '/fakeObjectId.php';
+include __DIR__ . '/fakeLegacyPasswordAuthenticatedUserInterface.php';
 include __DIR__.'/../vendor/autoload.php';
 
 if (!\class_exists(\MongoGridFSFile::class)) {

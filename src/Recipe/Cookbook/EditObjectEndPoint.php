@@ -58,16 +58,16 @@ class EditObjectEndPoint implements EditObjectEndPointInterface
      */
     public function __construct(
         RecipeInterface $recipe,
-        private LoadObject $loadObject,
-        private FormHandlingInterface $formHandling,
-        private FormProcessingInterface $formProcessing,
-        private ?SlugPreparation $slugPreparation,
-        private SaveObject $saveObject,
-        private RenderFormInterface $renderForm,
-        private RenderError $renderError,
-        private ?ObjectAccessControlInterface $objectAccessControl = null,
-        private ?string $defaultErrorTemplate = null,
-        private array $loadObjectWiths = [],
+        private readonly LoadObject $loadObject,
+        private readonly FormHandlingInterface $formHandling,
+        private readonly FormProcessingInterface $formProcessing,
+        private readonly ?SlugPreparation $slugPreparation,
+        private readonly SaveObject $saveObject,
+        private readonly RenderFormInterface $renderForm,
+        private readonly RenderError $renderError,
+        private readonly ?ObjectAccessControlInterface $objectAccessControl = null,
+        private readonly ?string $defaultErrorTemplate = null,
+        private readonly array $loadObjectWiths = [],
     ) {
         $this->fill($recipe);
     }

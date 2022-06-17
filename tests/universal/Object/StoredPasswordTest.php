@@ -64,7 +64,7 @@ class StoredPasswordTest extends TestCase
     {
         $object = $this->buildObject();
         self::assertInstanceOf(
-            \get_class($object),
+            $object::class,
             $object->setPassword('fooBar')
         );
 
@@ -76,7 +76,7 @@ class StoredPasswordTest extends TestCase
         self::assertTrue($object->mustHashPassword());
 
         self::assertInstanceOf(
-            \get_class($object),
+            $object::class,
             $object->setPassword(null)
         );
 
@@ -86,7 +86,7 @@ class StoredPasswordTest extends TestCase
         );
 
         self::assertInstanceOf(
-            \get_class($object),
+            $object::class,
             $object->setPassword('')
         );
 
@@ -100,7 +100,7 @@ class StoredPasswordTest extends TestCase
     {
         $object = $this->buildObject();
         self::assertInstanceOf(
-            \get_class($object),
+            $object::class,
             $object->setHashedPassword('fooBar')
         );
 
@@ -112,7 +112,7 @@ class StoredPasswordTest extends TestCase
         self::assertFalse($object->mustHashPassword());
 
         self::assertInstanceOf(
-            \get_class($object),
+            $object::class,
             $object->setHashedPassword(null)
         );
 
@@ -125,7 +125,7 @@ class StoredPasswordTest extends TestCase
     {
         $object = $this->buildObject();
         self::assertInstanceOf(
-            \get_class($object),
+            $object::class,
             $object->setPassword('fooBar')
         );
 
@@ -135,7 +135,7 @@ class StoredPasswordTest extends TestCase
         );
 
         self::assertInstanceOf(
-            \get_class($object),
+            $object::class,
             $object->setPassword('fooBar2')
         );
 
@@ -145,7 +145,7 @@ class StoredPasswordTest extends TestCase
         );
 
         self::assertInstanceOf(
-            \get_class($object),
+            $object::class,
             $object->eraseCredentials()
         );
 
@@ -170,7 +170,7 @@ class StoredPasswordTest extends TestCase
     {
         $object = $this->buildObject();
         self::assertInstanceOf(
-            \get_class($object),
+            $object::class,
             $object->setAlgo('fooBar')
         );
 

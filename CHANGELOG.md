@@ -1,5 +1,10 @@
 # Teknoo Software - Common - Change Log
 
+## [1.2.3] - 2022-06-17
+### Stable Release
+- Clean code and test thanks to Rector
+- Update libs requirements
+
 ## [1.2.2] - 2022-05-28
 ### Stable Release
 - Promise simplification in PaginationQuery

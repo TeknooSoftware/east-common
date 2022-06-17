@@ -94,7 +94,7 @@ class CreateObjectTest extends TestCase
 
         self::assertInstanceOf(
             CreateObject::class,
-            $this->buildStep()(get_class(new class implements ObjectInterface{}), $manager)
+            $this->buildStep()((new class implements ObjectInterface{})::class, $manager)
         );
     }
 
@@ -106,7 +106,7 @@ class CreateObjectTest extends TestCase
 
         self::assertInstanceOf(
             CreateObject::class,
-            $this->buildStep()(get_class(new class implements ObjectInterface{}), $manager, ['foo', 'bar'])
+            $this->buildStep()((new class implements ObjectInterface{})::class, $manager, ['foo', 'bar'])
         );
     }
 
@@ -118,7 +118,7 @@ class CreateObjectTest extends TestCase
 
         self::assertInstanceOf(
             CreateObject::class,
-            $this->buildStep()(get_class(new class implements ObjectInterface{}), $manager, 'foo', 'bar')
+            $this->buildStep()((new class implements ObjectInterface{})::class, $manager, 'foo', 'bar')
         );
     }
 }

@@ -49,8 +49,8 @@ class SearchFormLoader implements SearchFormLoaderInterface
      * @param array<string, array<string, class-string>> $formsInstances
      */
     public function __construct(
-        private FormFactoryInterface $formFactory,
-        private array $formsInstances,
+        private readonly FormFactoryInterface $formFactory,
+        private readonly array $formsInstances,
     ) {
     }
 
@@ -64,23 +64,22 @@ class SearchFormLoader implements SearchFormLoaderInterface
             return $this;
         }
 
-        $instances = &$this->formsInstances;
-        if (!isset($instances[$template]) && !isset($instances[self::ANY_TEMPLATE])) {
+        if (!isset($this->formsInstances[$template]) && !isset($this->formsInstances[self::ANY_TEMPLATE])) {
             return $this;
         }
 
         $formName = key($params);
 
         if (
-            !isset($instances[$template][$formName])
-            && !isset($instances[self::ANY_TEMPLATE][$formName])
+            !isset($this->formsInstances[$template][$formName])
+            && !isset($this->formsInstances[self::ANY_TEMPLATE][$formName])
         ) {
             return $this;
         }
 
-        $formClass = $instances[$template][$formName] ?? $instances[self::ANY_TEMPLATE][$formName];
+        $fClass = $this->formsInstances[$template][$formName] ?? $this->formsInstances[self::ANY_TEMPLATE][$formName];
         $form = $this->formFactory->create(
-            $formClass,
+            $fClass,
             null,
             [
                 'manager' => $manager

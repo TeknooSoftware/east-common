@@ -56,15 +56,15 @@ class ListObjectEndPoint implements ListObjectEndPointInterface
      */
     public function __construct(
         RecipeInterface $recipe,
-        private ExtractPage $extractPage,
-        private ExtractOrder $extractOrder,
-        private LoadListObjects $loadListObjects,
-        private RenderList $renderList,
-        private RenderError $renderError,
-        private ?SearchFormLoaderInterface $searchFormLoader = null,
-        private ?ListObjectsAccessControlInterface $listObjectsAccessControl = null,
-        private ?string $defaultErrorTemplate = null,
-        private array $loadListObjectsWiths = [],
+        private readonly ExtractPage $extractPage,
+        private readonly ExtractOrder $extractOrder,
+        private readonly LoadListObjects $loadListObjects,
+        private readonly RenderList $renderList,
+        private readonly RenderError $renderError,
+        private readonly ?SearchFormLoaderInterface $searchFormLoader = null,
+        private readonly ?ListObjectsAccessControlInterface $listObjectsAccessControl = null,
+        private readonly ?string $defaultErrorTemplate = null,
+        private readonly array $loadListObjectsWiths = [],
     ) {
         $this->fill($recipe);
     }

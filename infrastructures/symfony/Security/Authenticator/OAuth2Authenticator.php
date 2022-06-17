@@ -62,10 +62,10 @@ class OAuth2Authenticator extends BaseAuthenticator
     private const PROTOCOL = 'oauth2';
 
     public function __construct(
-        private ClientRegistry $clientRegistry,
-        private UserLoader $loader,
-        private SymfonyUserWriter $userWriter,
-        private UserConverterInterface $userConverter,
+        private readonly ClientRegistry $clientRegistry,
+        private readonly UserLoader $loader,
+        private readonly SymfonyUserWriter $userWriter,
+        private readonly UserConverterInterface $userConverter,
     ) {
     }
 
@@ -123,10 +123,8 @@ class OAuth2Authenticator extends BaseAuthenticator
                     $oauthUser = $client->fetchUserFromToken($accessToken);
 
                     $returnPromise = new Promise(
-                        static function (ThirdPartyAuthenticatedUser $user): ThirdPartyAuthenticatedUser {
-                            return $user;
-                        },
-                        static function (Throwable $error) {
+                        static fn(ThirdPartyAuthenticatedUser $user): ThirdPartyAuthenticatedUser => $user,
+                        static function (Throwable $error): never {
                             throw $error;
                         }
                     );
@@ -163,7 +161,7 @@ class OAuth2Authenticator extends BaseAuthenticator
                                 $next
                             );
                         },
-                        static function (Throwable $error) {
+                        static function (Throwable $error): never {
                             throw $error;
                         },
                         true,

@@ -44,8 +44,8 @@ class DeletingService
      * @param WriterInterface<ObjectInterface> $writer
      */
     public function __construct(
-        private WriterInterface $writer,
-        private DatesService $datesService,
+        private readonly WriterInterface $writer,
+        private readonly DatesService $datesService,
     ) {
     }
 

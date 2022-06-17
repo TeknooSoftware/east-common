@@ -39,7 +39,7 @@ use Teknoo\East\Common\Contracts\DBSource\ManagerInterface;
 class Manager implements ManagerInterface
 {
     public function __construct(
-        private ObjectManager $objectManager,
+        private readonly ObjectManager $objectManager,
     ) {
     }
 

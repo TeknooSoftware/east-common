@@ -40,10 +40,7 @@ trait LoaderTestTrait
      */
     abstract public function getRepositoryMock(): RepositoryInterface;
 
-    /**
-     * @return \Teknoo\East\Common\Contracts\Loader\LoaderInterface
-     */
-    abstract public function buildLoader(): \Teknoo\East\Common\Contracts\Loader\LoaderInterface;
+    abstract public function buildLoader(): LoaderInterface;
 
     /**
      * @return object

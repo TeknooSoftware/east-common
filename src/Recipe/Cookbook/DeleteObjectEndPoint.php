@@ -54,13 +54,13 @@ class DeleteObjectEndPoint implements DeleteObjectEndPointInterface
      */
     public function __construct(
         RecipeInterface $recipe,
-        private LoadObject $loadObject,
-        private DeleteObject $deleteObject,
-        private RedirectClientInterface $redirectClient,
-        private RenderError $renderError,
-        private ?ObjectAccessControlInterface $objectAccessControl = null,
-        private ?string $defaultErrorTemplate = null,
-        private array $loadObjectWiths = [],
+        private readonly LoadObject $loadObject,
+        private readonly DeleteObject $deleteObject,
+        private readonly RedirectClientInterface $redirectClient,
+        private readonly RenderError $renderError,
+        private readonly ?ObjectAccessControlInterface $objectAccessControl = null,
+        private readonly ?string $defaultErrorTemplate = null,
+        private readonly array $loadObjectWiths = [],
     ) {
         $this->fill($recipe);
     }

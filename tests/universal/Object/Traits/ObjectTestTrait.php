@@ -45,7 +45,7 @@ trait ObjectTestTrait
     {
         $Object = $this->buildObject();
         self::assertInstanceOf(
-            \get_class($Object),
+            $Object::class,
             $Object->setId('fooBar')
         );
 
@@ -85,7 +85,7 @@ trait ObjectTestTrait
 
         $object = $this->buildObject();
         self::assertInstanceOf(
-            \get_class($object),
+            $object::class,
             $object->setUpdatedAt($date)
         );
 
@@ -128,7 +128,7 @@ trait ObjectTestTrait
 
         $object = $this->buildObject();
         self::assertInstanceOf(
-            \get_class($object),
+            $object::class,
             $object->setDeletedAt($date)
         );
 

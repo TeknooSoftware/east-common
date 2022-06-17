@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Common\Object;
 
+use Stringable;
 use Teknoo\East\Common\Contracts\Object\DeletableInterface;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
 use Teknoo\East\Common\Contracts\Object\TimestampableInterface;
@@ -42,7 +43,7 @@ use function trim;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class User implements IdentifiedObjectInterface, UserInterface, DeletableInterface, TimestampableInterface
+class User implements IdentifiedObjectInterface, UserInterface, DeletableInterface, TimestampableInterface, Stringable
 {
     use ObjectTrait;
 
@@ -88,7 +89,7 @@ class User implements IdentifiedObjectInterface, UserInterface, DeletableInterfa
         return $this;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return trim($this->getFirstName() . ' ' . $this->getLastName());
     }

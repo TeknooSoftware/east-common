@@ -45,8 +45,8 @@ use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
 class CreateUserCommand extends Command
 {
     public function __construct(
-        private UserWriter $writer,
-        private UserPasswordHasherInterface $passwordHasher,
+        private readonly UserWriter $writer,
+        private readonly UserPasswordHasherInterface $passwordHasher,
     ) {
         parent::__construct();
     }

@@ -72,7 +72,7 @@ class QueryExecutor implements QueryExecutorInterface, AutomatedInterface
     private array $fields = [];
 
     public function __construct(
-        private DocumentManager $documentManager,
+        private readonly DocumentManager $documentManager,
         callable $queryTypeInitializer,
     ) {
         //Init vars

@@ -69,12 +69,12 @@ class CreateUserCommandTest extends TestCase
             $this->userPasswordHasher = new class implements UserPasswordHasherInterface {
                 public function isPasswordValid(PasswordAuthenticatedUserInterface $user, string $plainPassword): bool
                 {
-                    // TODO: Implement isPasswordValid() method.
+
                 }
 
                 public function needsRehash(PasswordAuthenticatedUserInterface $user): bool
                 {
-                    // TODO: Implement needsRehash() method.
+
                 }
 
                 public function hashPassword(PasswordAuthenticatedUserInterface $user, string $plainPassword): string

@@ -68,7 +68,7 @@ class UserTest extends TestCase
     {
         $object = $this->buildObject();
         self::assertInstanceOf(
-            \get_class($object),
+            $object::class,
             $object->setFirstName('fooBar')
         );
 
@@ -96,7 +96,7 @@ class UserTest extends TestCase
     {
         $object = $this->buildObject();
         self::assertInstanceOf(
-            \get_class($object),
+            $object::class,
             $object->setLastName('fooBar')
         );
 
@@ -132,7 +132,7 @@ class UserTest extends TestCase
     {
         $object = $this->buildObject();
         self::assertInstanceOf(
-            \get_class($object),
+            $object::class,
             $object->setEmail('fooBar')
         );
 
@@ -160,7 +160,7 @@ class UserTest extends TestCase
     {
         $object = $this->buildObject();
         self::assertInstanceOf(
-            \get_class($object),
+            $object::class,
             $object->setRoles(['foo'=>'bar'])
         );
 
@@ -188,7 +188,7 @@ class UserTest extends TestCase
     {
         $object = $this->buildObject();
         self::assertInstanceOf(
-            \get_class($object),
+            $object::class,
             $object->setAuthData([$this->createMock(AuthDataInterface::class)])
         );
 
@@ -202,7 +202,7 @@ class UserTest extends TestCase
     {
         $object = $this->buildObject();
         self::assertInstanceOf(
-            \get_class($object),
+            $object::class,
             $object->addAuthData(
                 $ad1 = $this->createMock(AuthDataInterface::class)
             )
@@ -214,7 +214,7 @@ class UserTest extends TestCase
         );
 
         self::assertInstanceOf(
-            \get_class($object),
+            $object::class,
             $object->addAuthData(
                 $ad2 = $this->createMock(AuthDataInterface::class)
             )
@@ -237,7 +237,7 @@ class UserTest extends TestCase
         );
 
         self::assertInstanceOf(
-            \get_class($object),
+            $object::class,
             $object->addAuthData(
                 $ad2 = $this->createMock(AuthDataInterface::class)
             )
@@ -272,7 +272,7 @@ class UserTest extends TestCase
     {
         $object = $this->buildObject();
         self::assertInstanceOf(
-            \get_class($object),
+            $object::class,
             $object->setActive(true)
         );
 
@@ -281,7 +281,7 @@ class UserTest extends TestCase
         );
 
         self::assertInstanceOf(
-            \get_class($object),
+            $object::class,
             $object->setActive(false)
         );
 

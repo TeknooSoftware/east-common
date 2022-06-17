@@ -59,9 +59,7 @@ class FindBySlugQueryTest extends TestCase
 
         $repository->expects(self::once())
             ->method('findOneBy')
-            ->with(['fooBarName' => 'HelloWorld', 'deletedAt' => null,], $this->callback(function ($pr) {
-                return $pr instanceof PromiseInterface;
-            }));
+            ->with(['fooBarName' => 'HelloWorld', 'deletedAt' => null,], $this->callback(fn($pr) => $pr instanceof PromiseInterface));
 
         self::assertInstanceOf(
             FindBySlugQuery::class,
@@ -80,9 +78,7 @@ class FindBySlugQueryTest extends TestCase
 
         $repository->expects(self::once())
             ->method('findOneBy')
-            ->with(['fooBarName' => 'HelloWorld',], $this->callback(function ($pr) {
-                return $pr instanceof PromiseInterface;
-            }));
+            ->with(['fooBarName' => 'HelloWorld',], $this->callback(fn($pr) => $pr instanceof PromiseInterface));
 
         self::assertInstanceOf(
             FindBySlugQuery::class,
@@ -103,9 +99,7 @@ class FindBySlugQueryTest extends TestCase
 
         $repository->expects(self::once())
             ->method('findOneBy')
-            ->with(['fooBarName' => 'HelloWorld',], $this->callback(function ($pr) {
-                return $pr instanceof PromiseInterface;
-            }));
+            ->with(['fooBarName' => 'HelloWorld',], $this->callback(fn($pr) => $pr instanceof PromiseInterface));
 
         self::assertInstanceOf(
             FindBySlugQuery::class,
@@ -127,9 +121,7 @@ class FindBySlugQueryTest extends TestCase
 
         $repository->expects(self::once())
             ->method('findOneBy')
-            ->with(['fooBarName' => 'HelloWorld', 'id' => new NotEqual('foo')], $this->callback(function ($pr) {
-                return $pr instanceof PromiseInterface;
-            }));
+            ->with(['fooBarName' => 'HelloWorld', 'id' => new NotEqual('foo')], $this->callback(fn($pr) => $pr instanceof PromiseInterface));
 
         self::assertInstanceOf(
             FindBySlugQuery::class,

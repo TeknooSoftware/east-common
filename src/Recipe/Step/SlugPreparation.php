@@ -40,7 +40,7 @@ use Teknoo\East\Common\Service\FindSlugService;
 class SlugPreparation
 {
     public function __construct(
-        private FindSlugService $findSlugService,
+        private readonly FindSlugService $findSlugService,
     ) {
     }
 

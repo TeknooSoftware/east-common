@@ -56,7 +56,7 @@ class ThirdPartyAuthTest extends TestCase
     {
         $object = $this->buildObject();
         self::assertInstanceOf(
-            \get_class($object),
+            $object::class,
             $object->setProtocol('fooBar')
         );
 
@@ -78,7 +78,7 @@ class ThirdPartyAuthTest extends TestCase
     {
         $object = $this->buildObject();
         self::assertInstanceOf(
-            \get_class($object),
+            $object::class,
             $object->setProvider('fooBar')
         );
 
@@ -100,7 +100,7 @@ class ThirdPartyAuthTest extends TestCase
     {
         $object = $this->buildObject();
         self::assertInstanceOf(
-            \get_class($object),
+            $object::class,
             $object->setToken('fooBar')
         );
 
@@ -122,7 +122,7 @@ class ThirdPartyAuthTest extends TestCase
     {
         $object = $this->buildObject();
         self::assertInstanceOf(
-            \get_class($object),
+            $object::class,
             $object->setUserIdentifier('fooBar')
         );
 

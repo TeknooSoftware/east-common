@@ -46,8 +46,8 @@ use Teknoo\Recipe\Promise\PromiseInterface;
 class BatchManipulationManager implements BatchManipulationManagerInterface
 {
     public function __construct(
-        private ManagerInterface $baseManager,
-        private DocumentManager $documentManager,
+        private readonly ManagerInterface $baseManager,
+        private readonly DocumentManager $documentManager,
     ) {
     }
 

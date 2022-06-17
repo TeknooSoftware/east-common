@@ -46,9 +46,9 @@ class RenderStaticContentEndPoint implements RenderStaticContentEndPointInterfac
 
     public function __construct(
         RecipeInterface $recipe,
-        private Render $render,
-        private RenderError $renderError,
-        private ?string $defaultErrorTemplate = null,
+        private readonly Render $render,
+        private readonly RenderError $renderError,
+        private readonly ?string $defaultErrorTemplate = null,
     ) {
         $this->fill($recipe);
     }

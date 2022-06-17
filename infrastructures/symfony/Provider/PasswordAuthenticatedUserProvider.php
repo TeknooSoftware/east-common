@@ -54,8 +54,8 @@ use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
 class PasswordAuthenticatedUserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
     public function __construct(
-        private UserLoader $loader,
-        private SymfonyUserWriter $userWriter,
+        private readonly UserLoader $loader,
+        private readonly SymfonyUserWriter $userWriter,
     ) {
     }
 

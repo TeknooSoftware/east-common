@@ -149,17 +149,17 @@ class ContainerTest extends TestCase
         self::assertInstanceOf(
             ProxyDetectorInterface::class,
             $proxyDetector->checkIfInstanceBehindProxy(new class implements GhostObjectInterface {
-                public function setProxyInitializer(?\Closure $initializer = null)
+                public function setProxyInitializer(?\Closure $initializer = null): never
                 {
                     throw new \RuntimeException('Must not be called');
                 }
 
-                public function getProxyInitializer(): ?\Closure
+                public function getProxyInitializer(): never
                 {
                     throw new \RuntimeException('Must not be called');
                 }
 
-                public function initializeProxy(): bool
+                public function initializeProxy(): never
                 {
                     throw new \RuntimeException('Must not be called');
                 }
@@ -178,17 +178,17 @@ class ContainerTest extends TestCase
         self::assertInstanceOf(
             ProxyDetectorInterface::class,
             $proxyDetector->checkIfInstanceBehindProxy(new class implements GhostObjectInterface {
-                public function setProxyInitializer(?\Closure $initializer = null)
+                public function setProxyInitializer(?\Closure $initializer = null): never
                 {
                     throw new \RuntimeException('Must not be called');
                 }
 
-                public function getProxyInitializer(): ?\Closure
+                public function getProxyInitializer(): never
                 {
                     throw new \RuntimeException('Must not be called');
                 }
 
-                public function initializeProxy(): bool
+                public function initializeProxy(): never
                 {
                     throw new \RuntimeException('Must not be called');
                 }

@@ -57,12 +57,10 @@ class PaginationQueryTest extends TestCase
             ->method('success')
             ->with(
                 self::callback(
-                    function ($r) {
-                        return $r instanceof \Countable
-                            && $r instanceof \IteratorAggregate
-                            && 20 === $r->count()
-                            && $r->getIterator() instanceof \Iterator;
-                    }
+                    fn($r) => $r instanceof \Countable
+                        && $r instanceof \IteratorAggregate
+                        && 20 === $r->count()
+                        && $r->getIterator() instanceof \Iterator
                 )
             );
         $promise->expects(self::never())->method('fail');
@@ -72,7 +70,7 @@ class PaginationQueryTest extends TestCase
             ->with(
                 ['foo' => 'bar', 'deletedAt' => null,],
                 self::callback(
-                    function ($p) { return $p instanceof PromiseInterface;}
+                    fn($p) => $p instanceof PromiseInterface
                 )
             )->willReturnCallback(function (array $criteria, PromiseInterface $promise) use ($repository) {
                 $promise->success(20);
@@ -86,7 +84,7 @@ class PaginationQueryTest extends TestCase
             ->with(
                 ['foo' => 'bar', 'deletedAt' => null,],
                 self::callback(
-                    function ($p) { return $p instanceof PromiseInterface;}
+                    fn($p) => $p instanceof PromiseInterface
                 ),
                 ['foo' => 'ASC'],
                 12,
@@ -118,7 +116,7 @@ class PaginationQueryTest extends TestCase
             ->with(
                 ['foo' => 'bar', 'deletedAt' => null,],
                 self::callback(
-                    function ($p) { return $p instanceof PromiseInterface;}
+                    fn($p) => $p instanceof PromiseInterface
                 )
             )->willReturnCallback(function (array $criteria, PromiseInterface $promise) use ($repository) {
                 $promise->fail(new \Exception());
@@ -132,7 +130,7 @@ class PaginationQueryTest extends TestCase
             ->with(
                 ['foo' => 'bar', 'deletedAt' => null,],
                 self::callback(
-                    function ($p) { return $p instanceof PromiseInterface;}
+                    fn($p) => $p instanceof PromiseInterface
                 ),
                 ['foo' => 'ASC'],
                 12,
@@ -164,7 +162,7 @@ class PaginationQueryTest extends TestCase
             ->with(
                 ['foo' => 'bar', 'deletedAt' => null,],
                 self::callback(
-                    function ($p) { return $p instanceof PromiseInterface;}
+                    fn($p) => $p instanceof PromiseInterface
                 )
             )->willReturnCallback(function (array $criteria, PromiseInterface $promise) use ($repository) {
                 $promise->fail(new \Exception());
@@ -178,7 +176,7 @@ class PaginationQueryTest extends TestCase
             ->with(
                 ['foo' => 'bar', 'deletedAt' => null,],
                 self::callback(
-                    function ($p) { return $p instanceof PromiseInterface;}
+                    fn($p) => $p instanceof PromiseInterface
                 ),
                 ['foo' => 'ASC'],
                 12,

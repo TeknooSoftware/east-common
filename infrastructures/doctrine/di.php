@@ -82,13 +82,13 @@ return [
                 PromiseInterface $promise
             ): ProxyDetectorInterface {
                 if (!$object instanceof GhostObjectInterface) {
-                    $promise->fail(new Exception('Object is not behind a proxy'));
+                    $promise->fail(new Exception('Object is not behind a proxy', 500));
 
                     return $this;
                 }
 
                 if ($object->isProxyInitialized()) {
-                    $promise->fail(new Exception('Proxy is already initialized'));
+                    $promise->fail(new Exception('Proxy is already initialized', 500));
 
                     return $this;
                 }

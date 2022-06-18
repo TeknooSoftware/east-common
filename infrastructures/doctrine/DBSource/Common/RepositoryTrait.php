@@ -65,7 +65,7 @@ trait RepositoryTrait
         if (!empty($result)) {
             $promise->success($result);
         } else {
-            $promise->fail(new DomainException('Object not found'));
+            $promise->fail(new DomainException('Object not found', 404));
         }
 
         return $this;
@@ -117,7 +117,9 @@ trait RepositoryTrait
      */
     public function count(array $criteria, PromiseInterface $promise): RepositoryInterface
     {
-        $promise->fail(new RuntimeException('Error, this method is not available with this repository'));
+        $promise->fail(
+            new RuntimeException('Error, this method is not available with this repository', 500)
+        );
 
         return $this;
     }

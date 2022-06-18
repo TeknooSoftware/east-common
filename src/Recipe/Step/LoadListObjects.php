@@ -101,7 +101,9 @@ class LoadListObjects
         array $order,
         int $itemsPerPage,
         int $page,
-        array $criteria = []
+        array $criteria = [],
+        string $errorMessage = 'Error while executing select query',
+        int $errorCode = 500,
     ): self {
         try {
             $criteria = $this->sanitizeCriteria($criteria);
@@ -126,7 +128,13 @@ class LoadListObjects
                     ]
                 );
             },
-            $manager->error(...)
+            static fn (Throwable $error) => $manager->error(
+                new RuntimeException(
+                    message: $errorMessage,
+                    code: $errorCode,
+                    previous: $error,
+                )
+            ),
         );
 
         $loader->query(

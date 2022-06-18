@@ -1,5 +1,10 @@
 # Teknoo Software - Common - Change Log
 
+## [1.2.4] - 2022-06-18
+### Stable Release
+- Improve exception message and code in steps
+- Set exception's code when they are throwed
+
 ## [1.2.3] - 2022-06-17
 ### Stable Release
 - Clean code and test thanks to Rector

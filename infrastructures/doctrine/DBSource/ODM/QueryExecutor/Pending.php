@@ -47,7 +47,7 @@ class Pending implements StateInterface
     private function run(): Closure
     {
         return function (PromiseInterface $promise): void {
-            $promise->fail(new RuntimeException('The query is not configured'));
+            $promise->fail(new RuntimeException('The query is not configured', 400));
         };
     }
 }

@@ -54,6 +54,7 @@ class CreateObject
         ManagerInterface $manager,
         mixed $constructorArguments = null,
         string $workPlanKey = ObjectInterface::class,
+        int $errorCode = 400,
     ): self {
         if (!class_exists($objectClass)) {
             $error = new DomainException("Error class $objectClass is not available");
@@ -74,7 +75,10 @@ class CreateObject
         }
 
         if (!$object instanceof ObjectInterface) {
-            $error = new RuntimeException("Error $objectClass is not a IdentifiedObjectInterface");
+            $error = new RuntimeException(
+                "Error $objectClass is not a IdentifiedObjectInterface",
+                400,
+            );
 
             $manager->error($error);
 

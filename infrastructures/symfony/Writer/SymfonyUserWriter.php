@@ -69,7 +69,9 @@ class SymfonyUserWriter implements WriterInterface
         if (!$object instanceof BaseUser) {
             if (null !== $promise) {
                 $objectClass = $object::class;
-                $promise->fail(new RuntimeException("The class $objectClass is not managed by this writer"));
+                $promise->fail(
+                    new RuntimeException("The class $objectClass is not managed by this writer", 500)
+                );
             }
 
             return $this;

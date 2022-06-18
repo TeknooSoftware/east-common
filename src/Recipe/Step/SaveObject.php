@@ -25,11 +25,13 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Common\Recipe\Step;
 
+use RuntimeException;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface as ObjectWithId;
 use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Common\Contracts\Writer\WriterInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\Recipe\Promise\Promise;
+use Throwable;
 
 /**
  * Recipe step to save/persist a persistable object into a database thanks to its dedicated writer passed also as
@@ -47,6 +49,8 @@ class SaveObject
         WriterInterface $writer,
         ObjectInterface $object,
         ManagerInterface $manager,
+        string $errorMessage = 'Error during object persistence',
+        int $errorCode = 500,
     ): self {
         /** @var Promise<\Teknoo\East\Common\Contracts\Object\ObjectInterface, mixed, mixed> $savedPromise */
         $savedPromise = new Promise(
@@ -60,7 +64,13 @@ class SaveObject
                     ]);
                 }
             },
-            $manager->error(...)
+            static fn (Throwable $error) => $manager->error(
+                new RuntimeException(
+                    code: $errorCode,
+                    message: $errorMessage,
+                    previous: $error,
+                )
+            )
         );
 
         $writer->save(

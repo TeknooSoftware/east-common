@@ -49,16 +49,21 @@ class LoadObject
         string $id,
         ManagerInterface $manager,
         string $workPlanKey = ObjectInterface::class,
+        ?string $errorMessage = null,
+        ?int $errorCode = null,
     ): self {
         /** @var Promise<ObjectInterface, mixed, mixed> $fetchPromise */
         $fetchPromise = new Promise(
             static function (ObjectInterface $object) use ($manager, $workPlanKey) {
                 $manager->updateWorkPlan([$workPlanKey => $object]);
             },
-            static function (Throwable $error) use ($manager) {
-                $error = new DomainException($error->getMessage(), 404, $error);
-                $manager->error($error);
-            }
+            static fn (Throwable $error) => $manager->error(
+                new DomainException(
+                    message: $errorMessage ?? $error->getMessage(),
+                    code: $errorCode ?? (int) ($error->getCode() > 0 ? $error->getCode() : 404),
+                    previous: $error,
+                )
+            ),
         );
 
         $loader->load(

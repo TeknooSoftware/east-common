@@ -60,7 +60,7 @@ trait RepositoryTrait
         if (!empty($result)) {
             $promise->success($result);
         } else {
-            $promise->fail(new DomainException('Object not found'));
+            $promise->fail(new DomainException('Object not found', 404));
         }
 
         return $this;

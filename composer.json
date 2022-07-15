@@ -51,7 +51,7 @@
     },
     "require-dev": {
         "ext-mongodb" : "*",
-        "roave/security-advisories": "dev-master",
+        "roave/security-advisories": "dev-latest",
         "phpunit/phpunit": "^9.5.20",
         "squizlabs/php_codesniffer": "^3.7",
         "sebastian/phpcpd": "^6.0.3",

@@ -62,7 +62,7 @@ class DatesService
         if (false === $preferRealDate) {
             $setter(clone $this->getCurrentDate());
         } else {
-            $setter(new DateTime());
+            $setter($this->currentDate = new DateTime());
         }
 
         return $this;

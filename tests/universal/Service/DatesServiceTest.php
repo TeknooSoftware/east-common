@@ -140,4 +140,49 @@ class DatesServiceTest extends TestCase
 
         self::assertNotEquals($date, $object->getDate());
     }
+
+    public function testPassMeTheDateWithRealDateAndRefresInternalDate()
+    {
+        $date = new \DateTime('2017-01-01');
+
+        $object = new class implements IdentifiedObjectInterface {
+            private $date;
+            public function getDate(): ?\DateTimeInterface
+            {
+                return $this->date;
+            }
+            public function setDate(\DateTimeInterface $date): self
+            {
+                $this->date = $date;
+                return $this;
+            }
+            public function getId(): string
+            {
+            }
+        };
+
+        $service = $this->buildService();
+
+        self::assertInstanceOf(
+            DatesService::class,
+            $service->setCurrentDate($date)
+        );
+
+        $object2 = clone $object;
+        self::assertInstanceOf(
+            DatesService::class,
+            $service->passMeTheDate([$object, 'setDate'], true)
+        );
+
+        self::assertNotEquals($date, $object->getDate());
+
+        self::assertInstanceOf(
+            DatesService::class,
+            $service->passMeTheDate([$object2, 'setDate'])
+        );
+
+        self::assertNotEquals($date, $object2->getDate());
+        self::assertNotSame($object->getDate(), $object2->getDate());
+        self::assertEquals($object->getDate(), $object2->getDate());
+    }
 }

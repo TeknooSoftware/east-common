@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [1.2.5] - 2022-08-06
+### Stable Release
+- Fix composer 
+
 ## [1.2.5] - 2022-08-01
 ### Stable Release
 - Fix DatesService, update internal date instance when the real date is claimed in `passMeTheDate`

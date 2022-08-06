@@ -1,6 +1,6 @@
 # Teknoo Software - Common - Change Log
 
-## [1.2.5] - 2022-08-06
+## [1.2.6] - 2022-08-06
 ### Stable Release
 - Fix composer 
 

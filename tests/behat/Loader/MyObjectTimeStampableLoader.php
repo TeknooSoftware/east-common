@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * East Common.
  *
  * LICENSE
@@ -15,35 +15,36 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/common Project website
+ * @link        http://teknoo.software/east/website Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Common\Writer;
+declare(strict_types=1);
 
-use PHPUnit\Framework\TestCase;
-use Teknoo\East\Common\Object\User;
-use Teknoo\East\Common\Writer\UserWriter;
+namespace Teknoo\Tests\East\Common\Behat\Loader;
+
+use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
+use Teknoo\East\Common\Loader\LoaderTrait;
+use Teknoo\Tests\East\Common\Behat\Object\MyObjectTimeStampable;
+use Teknoo\Tests\East\Common\Behat\Repository\MyObjectRepository;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers \Teknoo\East\Common\Writer\UserWriter
- * @covers \Teknoo\East\Common\Writer\PersistTrait
+ *
+ * @implements LoaderInterface<MyObjectTimeStampable>
  */
-class UserWriterTest extends TestCase
+class MyObjectTimeStampableLoader implements LoaderInterface
 {
-    use PersistTestTrait;
+    /**
+     * @use LoaderTrait<MyObjectTimeStampable>
+     */
+    use LoaderTrait;
 
-    public function buildWriter(bool $prefereRealDateOnUpdate = false,): \Teknoo\East\Common\Contracts\Writer\WriterInterface
+    public function __construct(MyObjectRepository $repository)
     {
-        return new UserWriter($this->getObjectManager(), $this->getDatesServiceMock(), $prefereRealDateOnUpdate);
-    }
-
-    public function getObject()
-    {
-        return new User();
+        $this->repository = $repository;
     }
 }

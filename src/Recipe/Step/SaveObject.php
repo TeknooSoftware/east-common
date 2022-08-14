@@ -51,6 +51,7 @@ class SaveObject
         ManagerInterface $manager,
         string $errorMessage = 'Error during object persistence',
         int $errorCode = 500,
+        ?bool $prefereRealDateOnUpdate = null,
     ): self {
         /** @var Promise<\Teknoo\East\Common\Contracts\Object\ObjectInterface, mixed, mixed> $savedPromise */
         $savedPromise = new Promise(
@@ -74,8 +75,9 @@ class SaveObject
         );
 
         $writer->save(
-            $object,
-            $savedPromise
+            object: $object,
+            promise: $savedPromise,
+            prefereRealDateOnUpdate: $prefereRealDateOnUpdate,
         );
 
         return $this;

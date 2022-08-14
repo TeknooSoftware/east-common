@@ -15,7 +15,7 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/common Project website
+ * @link        http://teknoo.software/east/website Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -23,39 +23,38 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Common\Contracts\Writer;
+namespace Teknoo\Tests\East\Common\Behat\Writer;
 
 use Teknoo\East\Common\Contracts\Object\ObjectInterface;
-use Teknoo\East\Common\Contracts\Query\DeletingQueryInterface;
-use Teknoo\East\Common\Contracts\Query\UpdatingQueryInterface;
+use Teknoo\East\Common\Contracts\Writer\WriterInterface;
+use Teknoo\East\Common\Writer\PersistTrait;
 use Teknoo\Recipe\Promise\PromiseInterface;
+use Teknoo\Tests\East\Common\Behat\Object\MyObjectTimeStampable;
+use Throwable;
 
 /**
- * Interface defining methods to implement in writer in charge of persisted objects, to save or delete persisted objects
- * to be used into recipes of this library.
- *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  *
- * @template TSuccessArgType of ObjectInterface
+ * @implements WriterInterface<MyObjectTimeStampable>
  */
-interface WriterInterface
+class MyObjectTimeStampableWriter implements WriterInterface
 {
     /**
-     * @param TSuccessArgType $object
-     * @param PromiseInterface<TSuccessArgType, mixed>|null $promise
-     * @return WriterInterface<TSuccessArgType>
+     * @use PersistTrait<MyObjectTimeStampable>
+     */
+    use PersistTrait;
+
+    /**
+     * @throws Throwable
      */
     public function save(
         ObjectInterface $object,
         PromiseInterface $promise = null,
         ?bool $prefereRealDateOnUpdate = null,
-    ): WriterInterface;
+    ): WriterInterface {
+        $this->persist($object, $promise, $prefereRealDateOnUpdate);
 
-    /**
-     * @param TSuccessArgType $object
-     * @param PromiseInterface<TSuccessArgType, mixed>|null $promise
-     * @return WriterInterface<TSuccessArgType>
-     */
-    public function remove(ObjectInterface $object, PromiseInterface $promise = null): WriterInterface;
+        return $this;
+    }
 }

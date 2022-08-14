@@ -1,5 +1,12 @@
 # Teknoo Software - Common - Change Log
 
+## [1.3.0] - 2022-08-14
+### Stable Release
+- Add parameter `$prefereRealDateOnUpdate` to method `WriterInterface::save()` to pass the real date instead of the 
+  date in cache when a `TimestampableInterface` instance is passed.
+- Add property `PersistTrait::$prefereRealDateOnUpdate` to set the default behavior for a writer about date to pass
+  to a `TimestampableInterface` instance.
+
 ## [1.2.6] - 2022-08-06
 ### Stable Release
 - Fix composer 

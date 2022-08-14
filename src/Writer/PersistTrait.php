@@ -46,6 +46,7 @@ trait PersistTrait
     public function __construct(
         private ManagerInterface $manager,
         private ?DatesService $datesService = null,
+        protected bool $prefereRealDateOnUpdate = false,
     ) {
     }
 
@@ -54,11 +55,17 @@ trait PersistTrait
      * @param PromiseInterface<TSuccessArgType, mixed>|null $promise
      * @throws Throwable
      */
-    private function persist(ObjectInterface $object, ?PromiseInterface $promise = null): self
-    {
+    private function persist(
+        ObjectInterface $object,
+        ?PromiseInterface $promise = null,
+        ?bool $prefereRealDateOnUpdate = null,
+    ): self {
         try {
             if ($object instanceof TimestampableInterface && $this->datesService instanceof DatesService) {
-                $this->datesService->passMeTheDate($object->setUpdatedAt(...));
+                $this->datesService->passMeTheDate(
+                    setter: $object->setUpdatedAt(...),
+                    preferRealDate: $prefereRealDateOnUpdate ?? $this->prefereRealDateOnUpdate,
+                );
             }
 
             $this->manager->persist($object);

@@ -1,0 +1,60 @@
+# MyObjectTimeStampable
+_teknoo_common_admin_my_object_timestampable_list:
+    path: '/my_objects_timestampables/'
+    methods:  ['GET', 'POST']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.crud.list'
+        loader: '@Teknoo\Tests\East\Common\Behat\Loader\MyObjectTimeStampableLoader'
+        defaultOrderDirection: 'ASC'
+        itemsPerPage: 20
+        template: '@@TeknooEastCommon/AdminMyObjectTimeStampable/list.html.twig'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+
+_teknoo_common_admin_my_object_timestampable_edit:
+    path: '/my_object_timestampable/edit/{id}'
+    methods:  ['GET', 'POST', 'PUT']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.crud.edit'
+        loader: '@Teknoo\Tests\East\Common\Behat\Loader\MyObjectTimeStampableLoader'
+        writer: '@Teknoo\Tests\East\Common\Behat\Writer\MyObjectTimeStampableWriter'
+        formClass: 'Teknoo\Tests\East\Common\Behat\Form\Type\MyObjectType'
+        template: '@@TeknooEastCommon/AdminMyObjectTimeStampable/edit.html.twig'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+        formOptions: { }
+
+_teknoo_common_admin_my_object_timestampable_edit_real_date:
+    path: '/my_object_timestampable/edit_real_date/{id}'
+    methods:  ['GET', 'POST', 'PUT']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.crud.edit'
+        loader: '@Teknoo\Tests\East\Common\Behat\Loader\MyObjectTimeStampableLoader'
+        writer: '@Teknoo\Tests\East\Common\Behat\Writer\MyObjectTimeStampableWriter'
+        formClass: 'Teknoo\Tests\East\Common\Behat\Form\Type\MyObjectType'
+        template: '@@TeknooEastCommon/AdminMyObjectTimeStampable/edit.html.twig'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+        formOptions: { }
+        prefereRealDateOnUpdate: true
+
+_teknoo_common_admin_my_object_timestampable_new:
+    path: '/my_object_timestampable/new'
+    methods:  ['GET', 'POST', 'PUT']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.crud.new'
+        loader: '@Teknoo\Tests\East\Common\Behat\Loader\MyObjectTimeStampableLoader'
+        writer: '@Teknoo\Tests\East\Common\Behat\Writer\MyObjectTimeStampableWriter'
+        objectClass: 'Teknoo\Tests\East\Common\Behat\Object\MyObjectTimeStampable'
+        formClass: 'Teknoo\Tests\East\Common\Behat\Form\Type\MyObjectType'
+        template: '@@TeknooEastCommon/AdminMyObjectTimeStampable/new.html.twig'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+        route: '_teknoo_common_admin_my_object_timestampable_edit'
+        formOptions: { }
+
+_teknoo_common_admin_my_object_timestampable_delete:
+    path: '/my_object_timestampable/delete/{id}'
+    methods:  ['GET', 'DELETE']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.crud.delete'
+        loader: '@Teknoo\Tests\East\Common\Behat\Loader\MyObjectTimeStampableLoader'
+        deleter: '@teknoo.east.common.deleting.my_object_timestampable'
+        route: '_teknoo_common_admin_my_object_timestampable_list'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'

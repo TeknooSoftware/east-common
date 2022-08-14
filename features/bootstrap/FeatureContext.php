@@ -30,6 +30,7 @@ use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Teknoo\DI\SymfonyBridge\DIBridgeBundle;
 use Teknoo\East\Common\Object\StoredPassword;
 use Teknoo\East\Common\Object\User;
+use Teknoo\East\Common\Service\DatesService;
 use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
 use Teknoo\East\CommonBundle\TeknooEastCommonBundle;
 use Teknoo\East\Foundation\Client\ClientInterface;
@@ -46,6 +47,7 @@ use Teknoo\East\Foundation\Template\ResultInterface;
 use Teknoo\East\FoundationBundle\EastFoundationBundle;
 use Teknoo\Tests\East\Common\Behat\GetTokenStorageService;
 use Teknoo\Tests\East\Common\Behat\Object\MyObject;
+use Teknoo\Tests\East\Common\Behat\Object\MyObjectTimeStampable;
 use Twig\Environment;
 
 /**
@@ -286,10 +288,7 @@ class FeatureContext implements Context
         }
 
         $this->objectRepository = new class implements ObjectRepository {
-            /**
-             * @var object
-             */
-            private $object;
+            private ?object $object;
 
             private array $criteria;
 
@@ -342,6 +341,11 @@ class FeatureContext implements Context
             public function getClassName()
             {
                 return $this->className;
+            }
+
+            public function getObject(): ?object
+            {
+                return $this->object;
             }
         };
 
@@ -753,6 +757,16 @@ class FeatureContext implements Context
     }
 
     /**
+     * @Given a timestampable object with id :id and :properties
+     */
+    public function aTimestampableObjectOfTypeWithIdAnd($id, $properties)
+    {
+        $object = new MyObjectTimeStampable($id, $properties['name'] ?? '', $properties['slug'] ?? '');
+
+        $this->getObjectRepository()->setObject(['id' => $id], $object);
+    }
+
+    /**
      * @Then no session must be opened
      */
     public function noSessionMustBeOpened()
@@ -805,5 +819,36 @@ class FeatureContext implements Context
             ->setAuthData([$storedPassword]);
 
         $this->getObjectRepository()->setObject(['email' => 'admin@teknoo.software'], $object);
+    }
+
+    /**
+     * @When the date in object must be :date
+     */
+    public function theDateInObjectMustBe($date)
+    {
+        Assert::assertEquals(
+            $this->getObjectRepository()->getObject()->updatedAt,
+            new DateTimeImmutable($date)
+        );
+    }
+
+    /**
+     * @Then the date in object must be newer than :arg1
+     */
+    public function theDateInObjectMustBeNewerThan($date)
+    {
+        Assert::assertLessThan(
+            $this->getObjectRepository()->getObject()->updatedAt,
+            new DateTimeImmutable($date)
+        );
+    }
+
+    /**
+     * @Given set current datetime to :date
+     */
+    public function setCurrentDatetimeTo($date)
+    {
+        $this->symfonyKernel->boot();
+        $this->symfonyKernel->getContainer()->get(DatesService::class)?->setCurrentDate(new DateTime($date));
     }
 }

@@ -31,8 +31,10 @@ use Teknoo\East\Common\Contracts\DBSource\ManagerInterface;
 use Teknoo\East\Common\Service\DatesService;
 use Teknoo\East\Common\Service\DeletingService;
 use Teknoo\Tests\East\Common\Behat\Loader\MyObjectLoader;
+use Teknoo\Tests\East\Common\Behat\Loader\MyObjectTimeStampableLoader;
 use Teknoo\Tests\East\Common\Behat\Object\MyObject;
 use Teknoo\Tests\East\Common\Behat\Repository\MyObjectRepository;
+use Teknoo\Tests\East\Common\Behat\Writer\MyObjectTimeStampableWriter;
 use Teknoo\Tests\East\Common\Behat\Writer\MyObjectWriter;
 use function DI\create;
 use function DI\get;
@@ -63,4 +65,18 @@ return [
 
     'teknoo.east.common.deleting.my_object' => create(DeletingService::class)
         ->constructor(get(MyObjectWriter::class), get(DatesService::class)),
+
+    MyObjectTimeStampableLoader::class => create()
+        ->constructor(
+            get(MyObjectRepository::class),
+        ),
+
+    MyObjectTimeStampableWriter::class => create()
+        ->constructor(
+            get(ManagerInterface::class),
+            get(DatesService::class),
+        ),
+
+    'teknoo.east.common.deleting.my_object_timestampable' => create(DeletingService::class)
+        ->constructor(get(MyObjectTimeStampableWriter::class), get(DatesService::class)),
 ];

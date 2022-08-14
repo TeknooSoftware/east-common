@@ -64,8 +64,11 @@ class SymfonyUserWriter implements WriterInterface
         );
     }
 
-    public function save(ObjectInterface $object, PromiseInterface $promise = null): WriterInterface
-    {
+    public function save(
+        ObjectInterface $object,
+        PromiseInterface $promise = null,
+        ?bool $prefereRealDateOnUpdate = null,
+    ): WriterInterface {
         if (!$object instanceof BaseUser) {
             if (null !== $promise) {
                 $objectClass = $object::class;
@@ -87,7 +90,7 @@ class SymfonyUserWriter implements WriterInterface
             }
         }
 
-        $this->universalWriter->save($object, $promise);
+        $this->universalWriter->save($object, $promise, $prefereRealDateOnUpdate);
 
         return $this;
     }

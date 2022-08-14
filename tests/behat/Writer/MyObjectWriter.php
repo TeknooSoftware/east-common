@@ -29,6 +29,7 @@ use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Common\Contracts\Writer\WriterInterface;
 use Teknoo\East\Common\Writer\PersistTrait;
 use Teknoo\Recipe\Promise\PromiseInterface;
+use Teknoo\Tests\East\Common\Behat\Object\MyObject;
 use Throwable;
 
 /**
@@ -47,9 +48,12 @@ class MyObjectWriter implements WriterInterface
     /**
      * @throws Throwable
      */
-    public function save(ObjectInterface $object, PromiseInterface $promise = null): \Teknoo\East\Common\Contracts\Writer\WriterInterface
-    {
-        $this->persist($object, $promise);
+    public function save(
+        ObjectInterface $object,
+        PromiseInterface $promise = null,
+        ?bool $prefereRealDateOnUpdate = null,
+    ): WriterInterface {
+        $this->persist($object, $promise, $prefereRealDateOnUpdate);
 
         return $this;
     }

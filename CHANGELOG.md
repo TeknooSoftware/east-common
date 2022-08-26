@@ -1,5 +1,11 @@
 # Teknoo Software - Common - Change Log
 
+## [1.4.0] - 2022-08-26
+### Stable Release
+- Add `$hydrate` arguments to auto load all persisted objects linked to fetched main object, from the name of the 
+  relation in the main object. (Not available with the common doctrine implementation)
+- Implement the previous behavior on Doctrine ODM thanks to [Doctrine priming reference](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/2.3/reference/priming-references.html) feature.
+
 ## [1.3.0] - 2022-08-14
 ### Stable Release
 - Add parameter `$prefereRealDateOnUpdate` to method `WriterInterface::save()` to pass the real date instead of the 

@@ -109,6 +109,27 @@ trait RepositoryTestTrait
         );
     }
 
+    public function testFindOneThingWithPrime()
+    {
+        $object = new \stdClass();
+        $promise = $this->createMock(PromiseInterface::class);
+        $promise->expects(self::once())->method('success')->with($object);
+        $promise->expects(self::never())->method('fail');
+
+        $this->getDoctrineObjectRepositoryMock()
+            ->expects(self::once())
+            ->method('find')
+            ->with('abc')
+            ->willReturn($object);
+
+        $this->expectNotice();
+
+        self::assertInstanceOf(
+            RepositoryInterface::class,
+            $this->buildRepository()->find('abc', $promise, ['foo'],)
+        );
+    }
+
     public function testFindAllBadPromise()
     {
         $this->expectException(\TypeError::class);
@@ -130,6 +151,26 @@ trait RepositoryTestTrait
         self::assertInstanceOf(
             RepositoryInterface::class,
             $this->buildRepository()->findAll($promise)
+        );
+    }
+
+    public function testFindAllWithPrime()
+    {
+        $object = [new \stdClass()];
+        $promise = $this->createMock(PromiseInterface::class);
+        $promise->expects(self::once())->method('success')->with($object);
+        $promise->expects(self::never())->method('fail');
+
+        $this->getDoctrineObjectRepositoryMock()
+            ->expects(self::once())
+            ->method('findAll')
+            ->willReturn($object);
+
+        $this->expectNotice();
+
+        self::assertInstanceOf(
+            RepositoryInterface::class,
+            $this->buildRepository()->findAll($promise, ['foo'],)
         );
     }
 
@@ -186,6 +227,34 @@ trait RepositoryTestTrait
                 ['foo' => 'bar'],
                 $promise,
                 ['foo' => Direction::Asc]
+            )
+        );
+    }
+
+    public function testFindByWithPrime()
+    {
+        $object = [new \stdClass()];
+        $promise = $this->createMock(PromiseInterface::class);
+        $promise->expects(self::once())->method('success')->with($object);
+        $promise->expects(self::never())->method('fail');
+
+        $this->getDoctrineObjectRepositoryMock()
+            ->expects(self::once())
+            ->method('findBy')
+            ->with(['foo' => 'bar'])
+            ->willReturn($object);
+
+        $this->expectNotice();
+
+        self::assertInstanceOf(
+            RepositoryInterface::class,
+            $this->buildRepository()->findBy(
+                ['foo' => 'bar'],
+                $promise,
+                ['foo' => Direction::Asc],
+                null,
+                null,
+                ['foo'],
             )
         );
     }
@@ -276,6 +345,51 @@ trait RepositoryTestTrait
                     'hello' => new ObjectReference($this->createMock(IdentifiedObjectInterface::class))
                 ],
                 $promise
+            )
+        );
+    }
+
+    public function testFindOneByOneThingWithPrime()
+    {
+        $object = new \stdClass();
+        $promise = $this->createMock(PromiseInterface::class);
+        $promise->expects(self::once())->method('success')->with($object);
+        $promise->expects(self::never())->method('fail');
+
+        $this->getDoctrineObjectRepositoryMock()
+            ->expects(self::once())
+            ->method('findOneBy')
+            ->with([
+                'foo' => 'bar',
+                'bar' => ['foo'],
+                'notIn' => ['bar2' => ['foo']],
+                'notEqual' => ['bwrNot' =>'foo'],
+                'or' => [
+                    ['foo' => 'bar'],
+                    ['bar' => 'foo']
+                ],
+                'hello.id' => '',
+            ])
+            ->willReturn($object);
+
+        $this->expectNotice();
+
+        self::assertInstanceOf(
+            RepositoryInterface::class,
+            $this->buildRepository()->findOneBy(
+                [
+                    'foo' => 'bar',
+                    'bar' => new In(['foo']),
+                    'bar2' => new NotIn(['foo']),
+                    'bwrNot' => new NotEqual('foo'),
+                    new InclusiveOr(
+                        ['foo' => 'bar'],
+                        ['bar' => 'foo']
+                    ),
+                    'hello' => new ObjectReference($this->createMock(IdentifiedObjectInterface::class))
+                ],
+                $promise,
+                ['foo'],
             )
         );
     }

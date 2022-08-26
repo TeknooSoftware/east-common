@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Common\Doctrine\DBSource\ODM;
 
+use Doctrine\ODM\MongoDB\Query\Builder;
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 use DomainException;
 use Teknoo\East\Common\Contracts\DBSource\RepositoryInterface;
@@ -53,12 +54,36 @@ trait RepositoryTrait
     ) {
     }
 
-    public function find(string $id, PromiseInterface $promise): RepositoryInterface
+    /**
+     * @param string[] $hydrate list of fields hosting a reference to hydrate
+     */
+    private function primeReference(Builder $qb, array $hydrate = [],): void
     {
-        $result = $this->repository->find($id);
+        foreach ($hydrate as $fieldName) {
+            $qb->field($fieldName)->prime(true);
+        }
+    }
+
+    public function find(
+        string $id,
+        PromiseInterface $promise,
+        array $hydrate = [],
+    ): RepositoryInterface {
+        $qb = $this->repository->createQueryBuilder();
+        $qb->equals(['_id' => $id]);
+
+        $this->primeReference($qb, $hydrate);
+
+        $query = $qb->getQuery();
+
+        /** @var iterable<ObjectClass>|null $result */
+        $result = $query->execute();
 
         if (!empty($result)) {
-            $promise->success($result);
+            foreach ($result as $row) {
+                $promise->success($row);
+                break;
+            }
         } else {
             $promise->fail(new DomainException('Object not found', 404));
         }
@@ -66,9 +91,19 @@ trait RepositoryTrait
         return $this;
     }
 
-    public function findAll(PromiseInterface $promise): RepositoryInterface
-    {
-        $promise->success($this->repository->findAll());
+    public function findAll(
+        PromiseInterface $promise,
+        array $hydrate = [],
+    ): RepositoryInterface {
+        $queryBuilder = $this->repository->createQueryBuilder();
+
+        $this->primeReference($queryBuilder, $hydrate);
+
+        $query = $queryBuilder->getQuery();
+
+        /** @var ObjectClass[] $result */
+        $result = $query->execute();
+        $promise->success($result);
 
         return $this;
     }
@@ -82,11 +117,14 @@ trait RepositoryTrait
         PromiseInterface $promise,
         array $orderBy = null,
         ?int $limit = null,
-        ?int $offset = null
+        ?int $offset = null,
+        array $hydrate = [],
     ): RepositoryInterface {
         $queryBuilder = $this->repository->createQueryBuilder();
 
         $queryBuilder->equals(self::convert($criteria));
+
+        $this->primeReference($queryBuilder, $hydrate);
 
         if (!empty($orderBy)) {
             array_walk(
@@ -137,14 +175,31 @@ trait RepositoryTrait
     /**
      * @param array<int|string, mixed> $criteria
      */
-    public function findOneBy(array $criteria, PromiseInterface $promise): RepositoryInterface
-    {
+    public function findOneBy(
+        array $criteria,
+        PromiseInterface $promise,
+        array $hydrate = [],
+    ): RepositoryInterface {
         $error = null;
         try {
-            $result = $this->repository->findOneBy(self::convert($criteria));
+            $queryBuilder = $this->repository->createQueryBuilder();
+
+            $queryBuilder->equals(self::convert($criteria));
+
+            $this->primeReference($queryBuilder, $hydrate);
+
+            $queryBuilder->limit(1);
+
+            $query = $queryBuilder->getQuery();
+
+            /** @var iterable<ObjectClass>|null $result */
+            $result = $query->execute();
 
             if (!empty($result)) {
-                $promise->success($result);
+                foreach ($result as $row) {
+                    $promise->success($row);
+                    break;
+                }
             } else {
                 $error = new DomainException('Object not found');
             }

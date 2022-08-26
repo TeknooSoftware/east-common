@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Common\Contracts\DBSource;
 
+use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Common\Query\Enum\Direction;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
@@ -40,17 +41,26 @@ interface RepositoryInterface
      * Finds an object by its primary key / identifier.
      *
      * @param PromiseInterface<TSuccessArgType, mixed> $promise
+     * @param string[] $hydrate list of fields hosting a reference to hydrate
      * @return RepositoryInterface<TSuccessArgType>
      */
-    public function find(string $id, PromiseInterface $promise): RepositoryInterface;
+    public function find(
+        string $id,
+        PromiseInterface $promise,
+        array $hydrate = [],
+    ): RepositoryInterface;
 
     /**
      * Finds all objects in the repository.
      *
      * @param PromiseInterface<iterable<TSuccessArgType>, mixed> $promise
+     * @param string[] $hydrate list of fields hosting a reference to hydrate
      * @return RepositoryInterface<TSuccessArgType>
      */
-    public function findAll(PromiseInterface $promise): RepositoryInterface;
+    public function findAll(
+        PromiseInterface $promise,
+        array $hydrate = [],
+    ): RepositoryInterface;
 
     /**
      * Finds objects by a set of criteria.
@@ -62,6 +72,7 @@ interface RepositoryInterface
      * @param array<string, mixed> $criteria
      * @param PromiseInterface<iterable<TSuccessArgType>, mixed> $promise
      * @param array<string, Direction>|null $orderBy
+     * @param string[] $hydrate list of fields hosting a reference to hydrate
      * @return RepositoryInterface<TSuccessArgType>
      */
     public function findBy(
@@ -69,7 +80,8 @@ interface RepositoryInterface
         PromiseInterface $promise,
         array $orderBy = null,
         ?int $limit = null,
-        ?int $offset = null
+        ?int $offset = null,
+        array $hydrate = [],
     ): RepositoryInterface;
 
     /**
@@ -79,14 +91,22 @@ interface RepositoryInterface
      * @param PromiseInterface<int, mixed> $promise
      * @return RepositoryInterface<TSuccessArgType>
      */
-    public function count(array $criteria, PromiseInterface $promise): RepositoryInterface;
+    public function count(
+        array $criteria,
+        PromiseInterface $promise,
+    ): RepositoryInterface;
 
     /**
      * Finds a single object by a set of criteria.
      *
      * @param array<string|int, mixed> $criteria The criteria.
      * @param PromiseInterface<TSuccessArgType, mixed> $promise
+     * @param string[] $hydrate list of fields hosting a reference to hydrate
      * @return RepositoryInterface<TSuccessArgType>
      */
-    public function findOneBy(array $criteria, PromiseInterface $promise): RepositoryInterface;
+    public function findOneBy(
+        array $criteria,
+        PromiseInterface $promise,
+        array $hydrate = [],
+    ): RepositoryInterface;
 }

@@ -34,6 +34,9 @@ use Teknoo\Recipe\Promise\PromiseInterface;
 use Throwable;
 
 use function array_walk;
+use function trigger_error;
+
+use const E_USER_NOTICE;
 
 /**
  * Default repository implementation of generic doctrine repositories.
@@ -57,8 +60,11 @@ trait RepositoryTrait
     ) {
     }
 
-    public function find(string $id, PromiseInterface $promise): RepositoryInterface
-    {
+    public function find(
+        string $id,
+        PromiseInterface $promise,
+        array $hydrate = [],
+    ): RepositoryInterface {
         /** @var ObjectClass|null $result */
         $result = $this->repository->find($id);
 
@@ -68,14 +74,24 @@ trait RepositoryTrait
             $promise->fail(new DomainException('Object not found', 404));
         }
 
+        if (!empty($hydrate)) {
+            trigger_error('$hydrate behavior is not available with common doctrine implementation', E_USER_NOTICE);
+        }
+
         return $this;
     }
 
-    public function findAll(PromiseInterface $promise): RepositoryInterface
-    {
+    public function findAll(
+        PromiseInterface $promise,
+        array $hydrate = [],
+    ): RepositoryInterface {
         /** @var iterable<ObjectClass> $result */
         $result = $this->repository->findAll();
         $promise->success($result);
+
+        if (!empty($hydrate)) {
+            trigger_error('$hydrate behavior is not available with common doctrine implementation', E_USER_NOTICE);
+        }
 
         return $this;
     }
@@ -89,7 +105,8 @@ trait RepositoryTrait
         PromiseInterface $promise,
         array $orderBy = null,
         ?int $limit = null,
-        ?int $offset = null
+        ?int $offset = null,
+        array $hydrate = [],
     ): RepositoryInterface {
         if (null !== $orderBy) {
             array_walk(
@@ -109,6 +126,10 @@ trait RepositoryTrait
 
         $promise->success($result);
 
+        if (!empty($hydrate)) {
+            trigger_error('$hydrate behavior is not available with common doctrine implementation', E_USER_NOTICE);
+        }
+
         return $this;
     }
 
@@ -127,8 +148,11 @@ trait RepositoryTrait
     /**
      * @param array<int|string, mixed> $criteria
      */
-    public function findOneBy(array $criteria, PromiseInterface $promise): RepositoryInterface
-    {
+    public function findOneBy(
+        array $criteria,
+        PromiseInterface $promise,
+        array $hydrate = [],
+    ): RepositoryInterface {
         $error = null;
         try {
             /** @var ObjectClass|null $result */
@@ -145,6 +169,10 @@ trait RepositoryTrait
             if (null !== $error) {
                 $promise->fail($error);
             }
+        }
+
+        if (!empty($hydrate)) {
+            trigger_error('$hydrate behavior is not available with common doctrine implementation', E_USER_NOTICE);
         }
 
         return $this;

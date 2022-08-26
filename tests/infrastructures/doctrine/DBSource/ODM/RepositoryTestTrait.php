@@ -28,6 +28,7 @@ use Doctrine\ODM\MongoDB\Query\Query;
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 use Teknoo\East\Common\Contracts\DBSource\RepositoryInterface;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
+use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Common\Query\Enum\Direction;
 use Teknoo\East\Common\Query\Expr\In;
 use Teknoo\East\Common\Query\Expr\NotIn;
@@ -82,11 +83,24 @@ trait RepositoryTestTrait
         $promise->expects(self::never())->method('success');
         $promise->expects(self::once())->method('fail')->with($this->callback(fn($value) => $value instanceof \DomainException));
 
+        $query = $this->createMock(Query::class);
+        $query->expects(self::once())->method('execute')->willReturn(null);
+
+        $queryBuilderMock = $this->createMock(Builder::class);
+
+        $queryBuilderMock->expects(self::any())
+            ->method('equals')
+            ->with(['_id' => 'abc'])
+            ->willReturnSelf();
+
+        $queryBuilderMock->expects(self::any())
+            ->method('getQuery')
+            ->willReturn($query);
+
         $this->getDoctrineObjectRepositoryMock()
             ->expects(self::once())
-            ->method('find')
-            ->with('abc')
-            ->willReturn(null);
+            ->method('createQueryBuilder')
+            ->willReturn($queryBuilderMock);
 
         self::assertInstanceOf(
             RepositoryInterface::class,
@@ -101,15 +115,70 @@ trait RepositoryTestTrait
         $promise->expects(self::once())->method('success')->with($object);
         $promise->expects(self::never())->method('fail');
 
+        $query = $this->createMock(Query::class);
+        $query->expects(self::once())->method('execute')->willReturn([$object]);
+
+        $queryBuilderMock = $this->createMock(Builder::class);
+
+        $queryBuilderMock->expects(self::any())
+            ->method('equals')
+            ->with(['_id' => 'abc'])
+            ->willReturnSelf();
+
+        $queryBuilderMock->expects(self::any())
+            ->method('getQuery')
+            ->willReturn($query);
+
         $this->getDoctrineObjectRepositoryMock()
             ->expects(self::once())
-            ->method('find')
-            ->with('abc')
-            ->willReturn($object);
+            ->method('createQueryBuilder')
+            ->willReturn($queryBuilderMock);
 
         self::assertInstanceOf(
             RepositoryInterface::class,
             $this->buildRepository()->find('abc', $promise)
+        );
+    }
+
+    public function testFindOneThingWithPrime()
+    {
+        $object = new \stdClass();
+        $promise = $this->createMock(PromiseInterface::class);
+        $promise->expects(self::once())->method('success')->with($object);
+        $promise->expects(self::never())->method('fail');
+
+        $query = $this->createMock(Query::class);
+        $query->expects(self::once())->method('execute')->willReturn([$object]);
+
+        $queryBuilderMock = $this->createMock(Builder::class);
+
+        $queryBuilderMock->expects(self::any())
+            ->method('equals')
+            ->with(['_id' => 'abc'])
+            ->willReturnSelf();
+
+        $queryBuilderMock->expects(self::any())
+            ->method('field')
+            ->with('foo')
+            ->willReturnSelf();
+
+        $queryBuilderMock->expects(self::any())
+            ->method('prime')
+            ->with(true)
+            ->willReturnSelf();
+
+        $queryBuilderMock->expects(self::any())
+            ->method('getQuery')
+            ->willReturn($query);
+
+        $this->getDoctrineObjectRepositoryMock()
+            ->expects(self::once())
+            ->method('createQueryBuilder')
+            ->willReturn($queryBuilderMock);
+
+        self::assertInstanceOf(
+            RepositoryInterface::class,
+            $this->buildRepository()->find('abc', $promise, ['foo'])
         );
     }
 
@@ -126,14 +195,59 @@ trait RepositoryTestTrait
         $promise->expects(self::once())->method('success')->with($object);
         $promise->expects(self::never())->method('fail');
 
+        $query = $this->createMock(Query::class);
+        $query->expects(self::once())->method('execute')->willReturn($object);
+
+        $queryBuilderMock = $this->createMock(Builder::class);
+        $queryBuilderMock->expects(self::any())
+            ->method('getQuery')
+            ->willReturn($query);
+
         $this->getDoctrineObjectRepositoryMock()
             ->expects(self::once())
-            ->method('findAll')
-            ->willReturn($object);
+            ->method('createQueryBuilder')
+            ->willReturn($queryBuilderMock);
 
         self::assertInstanceOf(
             RepositoryInterface::class,
             $this->buildRepository()->findAll($promise)
+        );
+    }
+
+    public function testFindAllWithPrime()
+    {
+        $object = [new \stdClass()];
+        $promise = $this->createMock(PromiseInterface::class);
+        $promise->expects(self::once())->method('success')->with($object);
+        $promise->expects(self::never())->method('fail');
+
+        $query = $this->createMock(Query::class);
+        $query->expects(self::once())->method('execute')->willReturn($object);
+
+        $queryBuilderMock = $this->createMock(Builder::class);
+
+        $queryBuilderMock->expects(self::any())
+            ->method('field')
+            ->with('foo')
+            ->willReturnSelf();
+
+        $queryBuilderMock->expects(self::any())
+            ->method('prime')
+            ->with(true)
+            ->willReturnSelf();
+
+        $queryBuilderMock->expects(self::any())
+            ->method('getQuery')
+            ->willReturn($query);
+
+        $this->getDoctrineObjectRepositoryMock()
+            ->expects(self::once())
+            ->method('createQueryBuilder')
+            ->willReturn($queryBuilderMock);
+
+        self::assertInstanceOf(
+            RepositoryInterface::class,
+            $this->buildRepository()->findAll($promise, ['foo'])
         );
     }
 
@@ -178,6 +292,56 @@ trait RepositoryTestTrait
         self::assertInstanceOf(
             RepositoryInterface::class,
             $this->buildRepository()->findBy(['foo' => 'bar', 'bar' => new In(['foo'])], $promise, ['foo'=>Direction::Asc], 1, 2)
+        );
+    }
+
+    public function testFindByWithPrime()
+    {
+        $this->objectRepository = $this->createMock(DocumentRepository::class);
+
+        $object = [new \stdClass()];
+        $promise = $this->createMock(PromiseInterface::class);
+        $promise->expects(self::once())->method('success')->with($object);
+        $promise->expects(self::never())->method('fail');
+
+        $this->objectRepository
+            ->expects(self::never())
+            ->method('findBy');
+
+        $query = $this->createMock(Query::class);
+        $query->expects(self::once())->method('execute')->willReturn($object);
+
+        $queryBuilderMock = $this->createMock(Builder::class);
+
+        $queryBuilderMock->expects(self::any())
+            ->method('field')
+            ->with('foo')
+            ->willReturnSelf();
+
+        $queryBuilderMock->expects(self::any())
+            ->method('prime')
+            ->with(true)
+            ->willReturnSelf();
+
+        $queryBuilderMock->expects(self::any())
+            ->method('getQuery')
+            ->willReturn($query);
+
+        $this->objectRepository
+            ->expects(self::once())
+            ->method('createQueryBuilder')
+            ->willReturn($queryBuilderMock);
+
+        self::assertInstanceOf(
+            RepositoryInterface::class,
+            $this->buildRepository()->findBy(
+                ['foo' => 'bar', 'bar' => new In(['foo'])],
+                $promise,
+                ['foo'=>Direction::Asc],
+                1,
+                2,
+                ['foo'],
+            )
         );
     }
 
@@ -241,11 +405,23 @@ trait RepositoryTestTrait
         $promise->expects(self::never())->method('success');
         $promise->expects(self::once())->method('fail')->with($this->callback(fn($value) => $value instanceof \DomainException));
 
+        $query = $this->createMock(Query::class);
+        $query->expects(self::once())->method('execute')->willReturn(null);
+
+        $queryBuilderMock = $this->createMock(Builder::class);
+        $queryBuilderMock->expects(self::any())
+            ->method('equals')
+            ->with(['foo' => 'bar'])
+            ->willReturnSelf();
+
+        $queryBuilderMock->expects(self::any())
+            ->method('getQuery')
+            ->willReturn($query);
+
         $this->getDoctrineObjectRepositoryMock()
             ->expects(self::once())
-            ->method('findOneBy')
-            ->with(['foo' => 'bar'])
-            ->willReturn(null);
+            ->method('createQueryBuilder')
+            ->willReturn($queryBuilderMock);
 
         self::assertInstanceOf(
             RepositoryInterface::class,
@@ -259,11 +435,23 @@ trait RepositoryTestTrait
         $promise->expects(self::never())->method('success');
         $promise->expects(self::once())->method('fail')->with($this->callback(fn($value) => $value instanceof \RuntimeException));
 
+        $query = $this->createMock(Query::class);
+        $query->expects(self::once())->method('execute')->willThrowException(new \RuntimeException());
+
+        $queryBuilderMock = $this->createMock(Builder::class);
+        $queryBuilderMock->expects(self::any())
+            ->method('equals')
+            ->with(['foo' => 'bar'])
+            ->willReturnSelf();
+
+        $queryBuilderMock->expects(self::any())
+            ->method('getQuery')
+            ->willReturn($query);
+
         $this->getDoctrineObjectRepositoryMock()
             ->expects(self::once())
-            ->method('findOneBy')
-            ->with(['foo' => 'bar'])
-            ->willThrowException(new \RuntimeException());
+            ->method('createQueryBuilder')
+            ->willReturn($queryBuilderMock);
 
         self::assertInstanceOf(
             RepositoryInterface::class,
@@ -278,9 +466,12 @@ trait RepositoryTestTrait
         $promise->expects(self::once())->method('success')->with($object);
         $promise->expects(self::never())->method('fail');
 
-        $this->getDoctrineObjectRepositoryMock()
-            ->expects(self::once())
-            ->method('findOneBy')
+        $query = $this->createMock(Query::class);
+        $query->expects(self::once())->method('execute')->willReturn([$object]);
+
+        $queryBuilderMock = $this->createMock(Builder::class);
+        $queryBuilderMock->expects(self::any())
+            ->method('equals')
             ->with([
                 'foo' => 'bar',
                 'bar' => ['$in' => ['foo']],
@@ -292,7 +483,16 @@ trait RepositoryTestTrait
                 ],
                 'hello.$id' => '',
             ])
-            ->willReturn($object);
+            ->willReturnSelf();
+
+        $queryBuilderMock->expects(self::any())
+            ->method('getQuery')
+            ->willReturn($query);
+
+        $this->getDoctrineObjectRepositoryMock()
+            ->expects(self::once())
+            ->method('createQueryBuilder')
+            ->willReturn($queryBuilderMock);
 
         self::assertInstanceOf(
             RepositoryInterface::class,
@@ -309,6 +509,72 @@ trait RepositoryTestTrait
                     'hello' => new ObjectReference($this->createMock(IdentifiedObjectInterface::class))
                 ],
                 $promise
+            )
+        );
+    }
+
+    public function testFindOneByOneThingWithPrime()
+    {
+        $object = new \stdClass();
+        $promise = $this->createMock(PromiseInterface::class);
+        $promise->expects(self::once())->method('success')->with($object);
+        $promise->expects(self::never())->method('fail');
+
+        $query = $this->createMock(Query::class);
+        $query->expects(self::once())->method('execute')->willReturn([$object]);
+
+        $queryBuilderMock = $this->createMock(Builder::class);
+
+        $queryBuilderMock->expects(self::any())
+            ->method('field')
+            ->with('foo')
+            ->willReturnSelf();
+
+        $queryBuilderMock->expects(self::any())
+            ->method('prime')
+            ->with(true)
+            ->willReturnSelf();
+
+        $queryBuilderMock->expects(self::any())
+            ->method('equals')
+            ->with([
+                'foo' => 'bar',
+                'bar' => ['$in' => ['foo']],
+                'bar2' => ['$nin' => ['foo']],
+                '$ne' => ['barNot' => ['foo']],
+                '$or' => [
+                    ['foo' => 'bar'],
+                    ['bar' => 'foo']
+                ],
+                'hello.$id' => '',
+            ])
+            ->willReturnSelf();
+
+        $queryBuilderMock->expects(self::any())
+            ->method('getQuery')
+            ->willReturn($query);
+
+        $this->getDoctrineObjectRepositoryMock()
+            ->expects(self::once())
+            ->method('createQueryBuilder')
+            ->willReturn($queryBuilderMock);
+
+        self::assertInstanceOf(
+            RepositoryInterface::class,
+            $this->buildRepository()->findOneBy(
+                [
+                    'foo' => 'bar',
+                    'bar' => new In(['foo']),
+                    'bar2' => new NotIn(['foo']),
+                    'barNot' => new NotEqual(['foo']),
+                    new InclusiveOr(
+                        ['foo' => 'bar'],
+                        ['bar' => 'foo']
+                    ),
+                    'hello' => new ObjectReference($this->createMock(IdentifiedObjectInterface::class))
+                ],
+                $promise,
+                ['foo']
             )
         );
     }

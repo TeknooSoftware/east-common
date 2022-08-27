@@ -84,7 +84,7 @@ trait RepositoryTestTrait
         $promise->expects(self::once())->method('fail')->with($this->callback(fn($value) => $value instanceof \DomainException));
 
         $query = $this->createMock(Query::class);
-        $query->expects(self::once())->method('execute')->willReturn(null);
+        $query->expects(self::once())->method('getSingleResult')->willReturn(null);
 
         $queryBuilderMock = $this->createMock(Builder::class);
 
@@ -116,7 +116,7 @@ trait RepositoryTestTrait
         $promise->expects(self::never())->method('fail');
 
         $query = $this->createMock(Query::class);
-        $query->expects(self::once())->method('execute')->willReturn([$object]);
+        $query->expects(self::once())->method('getSingleResult')->willReturn($object);
 
         $queryBuilderMock = $this->createMock(Builder::class);
 
@@ -148,7 +148,7 @@ trait RepositoryTestTrait
         $promise->expects(self::never())->method('fail');
 
         $query = $this->createMock(Query::class);
-        $query->expects(self::once())->method('execute')->willReturn([$object]);
+        $query->expects(self::once())->method('getSingleResult')->willReturn($object);
 
         $queryBuilderMock = $this->createMock(Builder::class);
 
@@ -406,7 +406,7 @@ trait RepositoryTestTrait
         $promise->expects(self::once())->method('fail')->with($this->callback(fn($value) => $value instanceof \DomainException));
 
         $query = $this->createMock(Query::class);
-        $query->expects(self::once())->method('execute')->willReturn(null);
+        $query->expects(self::once())->method('getSingleResult')->willReturn(null);
 
         $queryBuilderMock = $this->createMock(Builder::class);
         $queryBuilderMock->expects(self::any())
@@ -436,7 +436,7 @@ trait RepositoryTestTrait
         $promise->expects(self::once())->method('fail')->with($this->callback(fn($value) => $value instanceof \RuntimeException));
 
         $query = $this->createMock(Query::class);
-        $query->expects(self::once())->method('execute')->willThrowException(new \RuntimeException());
+        $query->expects(self::once())->method('getSingleResult')->willThrowException(new \RuntimeException());
 
         $queryBuilderMock = $this->createMock(Builder::class);
         $queryBuilderMock->expects(self::any())
@@ -467,7 +467,7 @@ trait RepositoryTestTrait
         $promise->expects(self::never())->method('fail');
 
         $query = $this->createMock(Query::class);
-        $query->expects(self::once())->method('execute')->willReturn([$object]);
+        $query->expects(self::once())->method('getSingleResult')->willReturn($object);
 
         $queryBuilderMock = $this->createMock(Builder::class);
         $queryBuilderMock->expects(self::any())
@@ -521,7 +521,7 @@ trait RepositoryTestTrait
         $promise->expects(self::never())->method('fail');
 
         $query = $this->createMock(Query::class);
-        $query->expects(self::once())->method('execute')->willReturn([$object]);
+        $query->expects(self::once())->method('getSingleResult')->willReturn($object);
 
         $queryBuilderMock = $this->createMock(Builder::class);
 

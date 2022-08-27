@@ -76,14 +76,11 @@ trait RepositoryTrait
 
         $query = $qb->getQuery();
 
-        /** @var iterable<ObjectClass>|null $result */
-        $result = $query->execute();
+        /** @var ObjectClass|null $result */
+        $result = $query->getSingleResult();
 
         if (!empty($result)) {
-            foreach ($result as $row) {
-                $promise->success($row);
-                break;
-            }
+            $promise->success($result);
         } else {
             $promise->fail(new DomainException('Object not found', 404));
         }
@@ -192,14 +189,11 @@ trait RepositoryTrait
 
             $query = $queryBuilder->getQuery();
 
-            /** @var iterable<ObjectClass>|null $result */
-            $result = $query->execute();
+            /** @var ObjectClass|null $result */
+            $result = $query->getSingleResult();
 
             if (!empty($result)) {
-                foreach ($result as $row) {
-                    $promise->success($row);
-                    break;
-                }
+                $promise->success($result);
             } else {
                 $error = new DomainException('Object not found');
             }

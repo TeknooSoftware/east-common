@@ -19,12 +19,14 @@ if (!\class_exists(Query::class, false)) {
         final public const HINT_READ_PREFERENCE = 3;
         final public const HINT_READ_ONLY       = 5;
 
+        public $resultToReturn = [];
+
         /**
          * @var iterable|int
          */
         public function execute()
         {
-            return [];
+            return $this->resultToReturn;
         }
 
         /**

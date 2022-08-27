@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [1.4.1] - 2022-08-27
+### Stable Release
+- Use `getSingleResult` instead of `execute` for single result 
+
 ## [1.4.0] - 2022-08-26
 ### Stable Release
 - Add `$hydrate` arguments to auto load all persisted objects linked to fetched main object, from the name of the 

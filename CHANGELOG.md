@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [1.4.2] - 2022-09-18
+### Stable Release
+- Add `VisitableInterface` to expose indirectly internal values / attributes to an method. 
+
 ## [1.4.1] - 2022-08-27
 ### Stable Release
 - Use `getSingleResult` instead of `execute` for single result 

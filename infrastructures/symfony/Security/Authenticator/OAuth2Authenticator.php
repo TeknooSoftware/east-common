@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\CommonBundle\Security\Authenticator;
 
+use DomainException;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator as BaseAuthenticator;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use Symfony\Component\HttpFoundation\Request;
@@ -142,8 +143,10 @@ class OAuth2Authenticator extends BaseAuthenticator
                             $next->success($user);
                         },
                         function (Throwable $error, PromiseInterface $next) use ($oauthUser) {
-                            if (!$error instanceof \DomainException) {
+                            if (!$error instanceof DomainException) {
                                 $next->fail($error);
+
+                                return;
                             }
 
                             $this->userConverter->convertToUser(
@@ -168,13 +171,10 @@ class OAuth2Authenticator extends BaseAuthenticator
                     );
 
                     /** @var Promise<string, UserInterface, mixed> $promise */
-                    $promise = $extractEmailPromise->next(
-                        $fetchingPromise->next(
-                            $registerTokenPromise->next(
-                                $returnPromise
-                            )
-                        )
-                    );
+                    $promise = $extractEmailPromise
+                        ->next(promise: $fetchingPromise)
+                        ->next(promise: $registerTokenPromise)
+                        ->next(promise: $returnPromise);
 
                     $this->userConverter->extractEmail(
                         $oauthUser,

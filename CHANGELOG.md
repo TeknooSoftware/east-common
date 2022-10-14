@@ -1,8 +1,12 @@
 # Teknoo Software - Common - Change Log
 
+## [1.4.3] - 2022-10-14
+### Stable Release
+- Support Recipe 4.2+
+
 ## [1.4.2] - 2022-09-18
 ### Stable Release
-- Add `VisitableInterface` to expose indirectly internal values / attributes to an method. 
+- Add `VisitableInterface` to expose indirectly internal values / attributes to an method.
 
 ## [1.4.1] - 2022-08-27
 ### Stable Release

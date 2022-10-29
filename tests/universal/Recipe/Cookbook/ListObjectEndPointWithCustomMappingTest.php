@@ -41,7 +41,7 @@ use Teknoo\Tests\Recipe\Cookbook\BaseCookbookTestTrait;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers \Teknoo\East\Common\Recipe\Cookbook\ListObjectEndPoint
  */
-class ListContentEndPointWithDefaultErrorTemplateTest extends TestCase
+class ListObjectEndPointWithCustomMappingTest extends TestCase
 {
     use BaseCookbookTestTrait;
 

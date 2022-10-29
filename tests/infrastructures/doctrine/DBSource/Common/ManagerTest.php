@@ -21,7 +21,7 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests\East\Common\Doctrine\DBSource\ODM;
+namespace Teknoo\Tests\East\Common\Doctrine\DBSource\Common;
 
 use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;

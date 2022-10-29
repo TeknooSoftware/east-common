@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [1.4.4] - 2022-10-29
+### Stable Release
+- Fix PSR4 error in Test namespace
+
 ## [1.4.3] - 2022-10-14
 ### Stable Release
 - Support Recipe 4.2+

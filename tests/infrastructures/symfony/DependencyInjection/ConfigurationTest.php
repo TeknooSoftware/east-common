@@ -19,7 +19,9 @@
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- */
+  */
+
+declare(strict_types=1);
 
 namespace Teknoo\Tests\East\CommonBundle\DependencyInjection;
 

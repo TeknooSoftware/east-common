@@ -1,12 +1,38 @@
 <?php
 
+/*
+ * East Common.
+ *
+ * LICENSE
+ *
+ * This source file is subject to the MIT license
+ * license that are bundled with this package in the folder licences
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to richarddeloge@gmail.com so we can send you a copy immediately.
+ *
+ *
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/east/common Project website
+ *
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
+
 declare(strict_types=1);
+
+namespace Teknoo\Tests\East\Common\Behat;
 
 use Behat\Behat\Context\Context;
 use DI\Container;
 use DI\ContainerBuilder;
+use DateTime;
+use DateTimeImmutable;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
+use Exception;
 use Laminas\Diactoros\ResponseFactory;
 use Laminas\Diactoros\ServerRequest;
 use Laminas\Diactoros\ServerRequestFactory;
@@ -17,6 +43,7 @@ use PHPUnit\Framework\Assert;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use ReflectionObject;
 use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
@@ -28,11 +55,13 @@ use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\PasswordHasher\Hasher\SodiumPasswordHasher;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Teknoo\DI\SymfonyBridge\DIBridgeBundle;
+use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
+use Teknoo\East\CommonBundle\TeknooEastCommonBundle;
+use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
 use Teknoo\East\Common\Object\StoredPassword;
 use Teknoo\East\Common\Object\User;
 use Teknoo\East\Common\Service\DatesService;
-use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
-use Teknoo\East\CommonBundle\TeknooEastCommonBundle;
+use Teknoo\East\FoundationBundle\EastFoundationBundle;
 use Teknoo\East\Foundation\Client\ClientInterface;
 use Teknoo\East\Foundation\Client\ResponseInterface as EastResponse;
 use Teknoo\East\Foundation\EndPoint\RecipeEndPoint;
@@ -41,14 +70,22 @@ use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Middleware\MiddlewareInterface;
 use Teknoo\East\Foundation\Recipe\CookbookInterface;
 use Teknoo\East\Foundation\Router\Result;
+use Teknoo\East\Foundation\Router\ResultInterface as RouterResultInterface;
 use Teknoo\East\Foundation\Router\RouterInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Foundation\Template\ResultInterface;
-use Teknoo\East\FoundationBundle\EastFoundationBundle;
-use Teknoo\Tests\East\Common\Behat\GetTokenStorageService;
+use Teknoo\East\Twig\Template\Engine;
 use Teknoo\Tests\East\Common\Behat\Object\MyObject;
 use Teknoo\Tests\East\Common\Behat\Object\MyObjectTimeStampable;
+use Throwable;
 use Twig\Environment;
+
+use function array_key_exists;
+use function in_array;
+use function is_numeric;
+use function parse_str;
+use function random_int;
+use function strlen;
 
 /**
  * Defines application features from the specific context.
@@ -90,7 +127,7 @@ class FeatureContext implements Context
 
     public ?ResponseInterface $response = null;
 
-    public ?\Throwable $error = null;
+    public ?Throwable $error = null;
 
     public $createdObjects = [];
 
@@ -147,12 +184,12 @@ class FeatureContext implements Context
 
             public function getCacheDir(): string
             {
-                return dirname(__DIR__, 2).'/tests/var/cache';
+                return dirname(__DIR__).'/var/cache';
             }
 
             public function getLogDir(): string
             {
-                return dirname(__DIR__, 2).'/tests/var/logs';
+                return dirname(__DIR__).'/var/logs';
             }
 
             public function registerBundles(): iterable
@@ -175,15 +212,16 @@ class FeatureContext implements Context
 
             protected function configureRoutes($routes): void
             {
+                $thisDir = __DIR__;
                 $rootDir = dirname(__DIR__, 2);
                 if ($routes instanceof RoutingConfigurator) {
                     $routes->import($rootDir . '/infrastructures/symfony/Resources/config/admin_*.yaml', 'glob')
                         ->prefix('/admin');
-                    $routes->import($rootDir . '/features/bootstrap/config/routes/*.yaml', 'glob');
+                    $routes->import($thisDir . '/config/routes/*.yaml', 'glob');
                     $routes->import($rootDir . '/infrastructures/symfony/Resources/config/r*.yaml', 'glob');
                 } else {
                     $routes->import($rootDir . '/infrastructures/symfony/Resources/config/admin_*.yaml', '/admin', 'glob');
-                    $routes->import($rootDir . '/features/bootstrap/config/routes/*.yaml', '/', 'glob');
+                    $routes->import($thisDir . '/config/routes/*.yaml', '/', 'glob');
                     $routes->import($rootDir . '/infrastructures/symfony/Resources/config/r*.yaml', '/', 'glob');
                 }
             }
@@ -193,7 +231,7 @@ class FeatureContext implements Context
                 $characters = 'abcdefghijklmnopqrstuvwxyz';
                 $str = '';
                 for ($i = 0; $i < 10; $i++) {
-                    $str .= $characters[rand(0, strlen($characters) - 1)];
+                    $str .= $characters[random_int(0, strlen($characters) - 1)];
                 }
 
                 return $str;
@@ -220,7 +258,7 @@ class FeatureContext implements Context
             }
 
             /**
-             * @param \Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface $object
+             * @param IdentifiedObjectInterface $object
              */
             public function persist($object)
             {
@@ -319,7 +357,7 @@ class FeatureContext implements Context
 
             public function findOneBy(array $criteria)
             {
-                if (\array_key_exists('deletedAt', $criteria)) {
+                if (array_key_exists('deletedAt', $criteria)) {
                     unset($criteria['deletedAt']);
                 }
 
@@ -328,7 +366,7 @@ class FeatureContext implements Context
                 }
                 
                 if (isset($criteria['slug']) && 'page-with-error' === $criteria['slug']) {
-                    throw new \Exception('Error', 404);
+                    throw new Exception('Error', 404);
                 }
 
                 if ($this->criteria == $criteria) {
@@ -391,7 +429,7 @@ class FeatureContext implements Context
                         $request = $request->withAttribute(RouterInterface::ROUTER_RESULT_KEY, $result);
 
                         foreach ($values as $key=>$value) {
-                            if (!\is_numeric($key)) {
+                            if (!is_numeric($key)) {
                                 $request = $request->withAttribute($key, $value);
                             }
                         }
@@ -400,7 +438,7 @@ class FeatureContext implements Context
                             $request = $request->withAttribute($key, $value);
                         }
 
-                        $manager->updateWorkPlan([\Teknoo\East\Foundation\Router\ResultInterface::class => $result]);
+                        $manager->updateWorkPlan([RouterResultInterface::class => $result]);
 
                         $manager->continueExecution($client, $request);
 
@@ -486,7 +524,7 @@ class FeatureContext implements Context
             /**
              * @inheritDoc
              */
-            public function errorInRequest(\Throwable $throwable, bool $silently = false): ClientInterface
+            public function errorInRequest(Throwable $throwable, bool $silently = false): ClientInterface
             {
                 $this->context->error = $throwable;
 
@@ -534,7 +572,7 @@ class FeatureContext implements Context
         $request = $request->withMethod('GET');
         $request = $request->withUri(new Uri($url));
         $query = [];
-        \parse_str($request->getUri()->getQuery(), $query);
+        parse_str($request->getUri()->getQuery(), $query);
         $request = $request->withQueryParams($query);
 
         $this->buildManager($request);
@@ -563,7 +601,7 @@ class FeatureContext implements Context
     public function theClientMustAcceptAnError(): void
     {
         Assert::assertNull($this->response);
-        Assert::assertInstanceOf(\Throwable::class, $this->error);
+        Assert::assertInstanceOf(Throwable::class, $this->error);
     }
 
     public function buildResultObject (string $body): ResultInterface
@@ -599,9 +637,9 @@ class FeatureContext implements Context
 
                 //To avoid to manage templating view for crud
                 $final = [];
-                $ro = new \ReflectionObject($object = $parameters['objectInstance']);
+                $ro = new ReflectionObject($object = $parameters['objectInstance']);
                 foreach ($ro->getProperties() as $rp) {
-                    if (\in_array($rp->getName(), [
+                    if (in_array($rp->getName(), [
                         'id',
                         'createdAt',
                         'updatedAt',
@@ -646,7 +684,7 @@ class FeatureContext implements Context
 
         $container->set(
             EngineInterface::class,
-            new \Teknoo\East\Twig\Template\Engine($this->twig)
+            new Engine($this->twig)
         );
 
         $response = $this->symfonyKernel->handle($serverRequest);
@@ -720,7 +758,7 @@ class FeatureContext implements Context
     public function symfonyWillReceiveThePostRequestWith($url, $body)
     {
         $expectedBody = [];
-        \parse_str($body, $expectedBody);
+        parse_str($body, $expectedBody);
         $serverRequest = SfRequest::create($url, 'POST', $expectedBody);
 
         $this->runSymfony($serverRequest);

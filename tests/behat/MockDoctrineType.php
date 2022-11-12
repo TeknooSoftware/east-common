@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * East Common.
  *
  * LICENSE
@@ -19,37 +19,26 @@
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
-  */
+ */
 
 declare(strict_types=1);
 
-namespace Teknoo\Tests\East\CommonBundle\Form\Type;
+namespace Teknoo\Tests\East\Common\Behat;
 
-use PHPUnit\Framework\TestCase;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Teknoo\East\CommonBundle\Form\Type\StoredPasswordType;
 
-/**
- * @license     http://teknoo.software/license/mit         MIT License
- * @author      Richard Déloge <richarddeloge@gmail.com>
- * @covers      \Teknoo\East\CommonBundle\Form\Type\StoredPasswordType
- */
-class StoredPasswordTypeTest extends TestCase
+class MockDoctrineType extends ChoiceType
 {
-    use FormTestTrait;
-
-    public function buildForm(): StoredPasswordType
+    public function configureOptions(OptionsResolver $resolver): self
     {
-        return new StoredPasswordType();
-    }
+        parent::configureOptions($resolver);
 
-    public function testConfigureOptions()
-    {
-        self::assertInstanceOf(
-            StoredPasswordType::class,
-            $this->buildForm()->configureOptions(
-                $this->createMock(OptionsResolver::class)
-            )
-        );
+        $resolver->setDefaults(array(
+            'class' => '',
+            'query_builder' => '',
+        ));
+
+        return $this;
     }
 }

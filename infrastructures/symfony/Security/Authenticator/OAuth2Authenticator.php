@@ -143,16 +143,16 @@ class OAuth2Authenticator extends BaseAuthenticator
                             $next->success($user);
                         },
                         function (Throwable $error, PromiseInterface $next) use ($oauthUser) {
-                            if (!$error instanceof DomainException) {
-                                $next->fail($error);
+                            if ($error instanceof DomainException) {
+                                $this->userConverter->convertToUser(
+                                    $oauthUser,
+                                    $next
+                                );
 
                                 return;
                             }
 
-                            $this->userConverter->convertToUser(
-                                $oauthUser,
-                                $next
-                            );
+                            $next->fail($error);
                         },
                         true,
                     );

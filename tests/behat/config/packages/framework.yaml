@@ -7,3 +7,5 @@ framework:
   http_method_override: true
   csrf_protection:
     enabled: false
+  router:
+    default_uri: 'https://teknoo.software/'

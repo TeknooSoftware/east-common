@@ -1,5 +1,11 @@
 # Teknoo Software - Common - Change Log
 
+## [1.4.5] - 2022-11-25
+### Stable Release
+- Update symfony configuration for behat
+- Migrate Behat's bootstrap into tests directory
+- Add strict_types=1 to all tests
+
 ## [1.4.4] - 2022-10-29
 ### Stable Release
 - Fix PSR4 error in Test namespace

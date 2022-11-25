@@ -2,8 +2,6 @@
 # http://symfony.com/doc/current/service_container.html
 parameters:
   locale: 'en'
-  router.request_context.host: 'teknoo.software'
-  router.request_context.scheme: 'https'
   teknoo.east.common.form_type.doctrine.class: 'Teknoo\Tests\East\Common\Behat\MockDoctrineType'
 
 services:

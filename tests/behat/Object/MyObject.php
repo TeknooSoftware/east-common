@@ -41,6 +41,7 @@ class MyObject implements IdentifiedObjectInterface, DeletableInterface
         public ?string $id = null,
         public ?string $name = null,
         public ?string $slug = null,
+        public ?string $saved = null,
     ) {
     }
 

@@ -55,6 +55,10 @@ class MyObjectTimeStampableWriter implements WriterInterface
     ): WriterInterface {
         $this->persist($object, $promise, $prefereRealDateOnUpdate);
 
+        if ($object instanceof MyObjectTimeStampable) {
+            $object->saved = 'foo';
+        }
+
         return $this;
     }
 }

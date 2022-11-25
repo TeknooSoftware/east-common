@@ -43,6 +43,7 @@ class MyObjectTimeStampable implements IdentifiedObjectInterface, DeletableInter
         public ?string $name = null,
         public ?string $slug = null,
         public ?DateTimeInterface $updatedAt = null,
+        public ?string $saved = null,
     ) {
     }
 

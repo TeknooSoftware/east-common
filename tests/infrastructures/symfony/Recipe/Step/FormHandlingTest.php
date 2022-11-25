@@ -93,10 +93,13 @@ class FormHandlingTest extends TestCase
         $formOptions = [];
         $object = $this->createMock(IdentifiedObjectInterface::class);
 
+        $form = $this->createMock(FormInterface::class);
+        $form->expects(self::once())->method('handleRequest');
+
         $this->getFormFactory()
             ->expects(self::any())
             ->method('create')
-            ->willReturn($this->createMock(FormInterface::class));
+            ->willReturn($form);
 
         $this->getDatesService()
             ->expects(self::never())
@@ -110,6 +113,44 @@ class FormHandlingTest extends TestCase
                 $formClass,
                 $formOptions,
                 $object
+            )
+        );
+    }
+
+    public function testInvokeWithPublishableAndNotPublishWithHandlingDisabled()
+    {
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->expects(self::any())->method('getAttribute')->willReturn(
+            $this->createMock(Request::class)
+        );
+        $request->expects(self::any())->method('getParsedBody')->willReturn([
+        ]);
+        $manager = $this->createMock(ManagerInterface::class);
+        $formClass = 'Foo/Bar';
+        $formOptions = [];
+        $object = $this->createMock(IdentifiedObjectInterface::class);
+
+        $form = $this->createMock(FormInterface::class);
+        $form->expects(self::never())->method('handleRequest');
+
+        $this->getFormFactory()
+            ->expects(self::any())
+            ->method('create')
+            ->willReturn($form);
+
+        $this->getDatesService()
+            ->expects(self::never())
+            ->method('passMeTheDate');
+
+        self::assertInstanceOf(
+            FormHandling::class,
+            $this->buildStep()(
+                $request,
+                $manager,
+                $formClass,
+                $formOptions,
+                $object,
+                false
             )
         );
     }
@@ -131,10 +172,13 @@ class FormHandlingTest extends TestCase
             ->expects(self::never())
             ->method('passMeTheDate');
 
+        $form = $this->createMock(FormInterface::class);
+        $form->expects(self::once())->method('handleRequest');
+
         $this->getFormFactory()
             ->expects(self::any())
             ->method('create')
-            ->willReturn($this->createMock(FormInterface::class));
+            ->willReturn($form);
 
         self::assertInstanceOf(
             FormHandling::class,
@@ -161,26 +205,20 @@ class FormHandlingTest extends TestCase
         $formClass = 'Foo/Bar';
         $formOptions = [];
         $object = new class implements IdentifiedObjectInterface, PublishableInterface {
-            public function getId(): string
-            {
-                // TODO: Implement getId() method.
-            }
+            public function getId(): string {}
 
-            public function getPublishedAt(): ?\DateTimeInterface
-            {
-                // TODO: Implement getPublishedAt() method.
-            }
+            public function getPublishedAt(): ?\DateTimeInterface {}
 
-            public function setPublishedAt(\DateTimeInterface $dateTime): PublishableInterface
-            {
-                // TODO: Implement setPublishedAt() method.
-            }
+            public function setPublishedAt(\DateTimeInterface $dateTime): PublishableInterface {}
         };
+
+        $form = $this->createMock(FormInterface::class);
+        $form->expects(self::once())->method('handleRequest');
 
         $this->getFormFactory()
             ->expects(self::any())
             ->method('create')
-            ->willReturn($this->createMock(FormInterface::class));
+            ->willReturn($form);
 
         $this->getDatesService()
             ->expects(self::once())
@@ -216,10 +254,13 @@ class FormHandlingTest extends TestCase
             ->expects(self::never())
             ->method('passMeTheDate');
 
+        $form = $this->createMock(FormInterface::class);
+        $form->expects(self::once())->method('handleRequest');
+
         $this->getFormFactory()
             ->expects(self::any())
             ->method('create')
-            ->willReturn($this->createMock(FormInterface::class));
+            ->willReturn($form);
 
         self::assertInstanceOf(
             FormHandling::class,

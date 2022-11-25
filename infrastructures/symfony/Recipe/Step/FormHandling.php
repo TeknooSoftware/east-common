@@ -70,7 +70,8 @@ class FormHandling implements FormHandlingInterface
         ManagerInterface $manager,
         string $formClass,
         array $formOptions,
-        ObjectInterface $object
+        ObjectInterface $object,
+        bool $formHandleRequest = true,
     ): FormHandlingInterface {
         $parsedBody = (array) $request->getParsedBody();
         if (
@@ -82,7 +83,9 @@ class FormHandling implements FormHandlingInterface
         }
 
         $form = $this->createForm($formClass, $object, $formOptions);
-        $form->handleRequest($request->getAttribute('request'));
+        if (!empty($formHandleRequest)) {
+            $form->handleRequest($request->getAttribute('request'));
+        }
 
         $manager->updateWorkPlan([
             'form' => $form,

@@ -8,7 +8,7 @@ Feature: Create an element, with slug or not stored into a the dbms server via a
     And An object must be persisted
     And It is redirect to "/my_object/edit/[a-zA-Z0-9]+"
     When the client follows the redirection
-    And I should get in the form '{"name":"foo","slug":"bar"}'
+    And I should get in the form '{"name":"foo","slug":"bar","saved":"foo"}'
 
   Scenario: Create a timestampable object
     Given I have DI With Symfony initialized
@@ -19,5 +19,5 @@ Feature: Create an element, with slug or not stored into a the dbms server via a
     And An object must be persisted
     And It is redirect to "/my_object_timestampable/edit/[a-zA-Z0-9]+"
     When the client follows the redirection
-    And I should get in the form '{"name":"foo","slug":"bar"}'
+    And I should get in the form '{"name":"foo","slug":"bar","saved":"foo"}'
     And the date in object must be "2022-08-14 01:02:03"

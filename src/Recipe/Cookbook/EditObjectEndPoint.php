@@ -98,6 +98,8 @@ class EditObjectEndPoint implements EditObjectEndPointInterface
 
         $recipe = $recipe->cook($this->saveObject, SaveObject::class, [], 60);
 
+        $recipe = $recipe->cook($this->formHandling, FormHandlingInterface::class . ':refresh', [], 69);
+
         $recipe = $recipe->cook($this->renderForm, RenderFormInterface::class, [], 70);
 
         $recipe = $recipe->onError(new Bowl($this->renderError, []));

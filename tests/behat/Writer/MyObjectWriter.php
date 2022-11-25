@@ -55,6 +55,10 @@ class MyObjectWriter implements WriterInterface
     ): WriterInterface {
         $this->persist($object, $promise, $prefereRealDateOnUpdate);
 
+        if ($object instanceof MyObject) {
+            $object->saved = 'foo';
+        }
+
         return $this;
     }
 }

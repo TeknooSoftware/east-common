@@ -44,6 +44,7 @@ class MyObjectType extends AbstractType
     {
         $builder->add('name', TextType::class, ['required' => true]);
         $builder->add('slug', TextType::class, ['required' => true]);
+        $builder->add('saved', TextType::class, ['required' => false]);
 
         return $this;
     }

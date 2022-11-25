@@ -62,6 +62,7 @@ class SaveObject
                         'parameters' => [
                             'id' => $object->getId(),
                         ],
+                        'formHandleRequest' => false
                     ]);
                 }
             },

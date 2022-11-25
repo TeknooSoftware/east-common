@@ -799,7 +799,12 @@ class FeatureContext implements Context
      */
     public function aTimestampableObjectOfTypeWithIdAnd($id, $properties)
     {
-        $object = new MyObjectTimeStampable($id, $properties['name'] ?? '', $properties['slug'] ?? '');
+        $object = new MyObjectTimeStampable(
+            id: $id,
+            name: $properties['name'] ?? '',
+            slug: $properties['slug'] ?? '',
+            saved: $properties['saved'] ?? '',
+        );
 
         $this->getObjectRepository()->setObject(['id' => $id], $object);
     }

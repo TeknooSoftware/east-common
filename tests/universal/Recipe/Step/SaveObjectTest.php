@@ -92,6 +92,7 @@ class SaveObjectTest extends TestCase
             'parameters' => [
                 'id' => 'foo',
             ],
+            'formHandleRequest' => false,
         ]);
 
         $writer->expects(self::any())

@@ -133,6 +133,8 @@ class FeatureContext implements Context
 
     public $updatedObjects = [];
 
+    private $locale = null;
+
     /**
      * @Given I have DI initialized
      */

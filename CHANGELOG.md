@@ -1,5 +1,10 @@
 # Teknoo Software - Common - Change Log
 
+## [1.4.7] - 2022-12-13
+### Stable Release
+- Add `OriginalRecipeInterface::class . ':CRUD'` in DI to allow custom Recipe for CRUD
+- Add `OriginalRecipeInterface::class . ':Static'` in DI to allow custom Recipe for Static
+
 ## [1.4.6] - 2022-11-25
 ### Stable Release
 - `FormHandlingInterface` step is recalled in `EditObjectEndPoint` before re-rendering form when the form has been

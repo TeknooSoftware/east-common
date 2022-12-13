@@ -142,6 +142,8 @@ return [
         ),
 
     //Base recipe
+    OriginalRecipeInterface::class . ':CRUD' => get(OriginalRecipeInterface::class),
+    OriginalRecipeInterface::class . ':Static' => get(OriginalRecipeInterface::class),
     OriginalRecipeInterface::class => get(Recipe::class),
     Recipe::class => create(),
 
@@ -159,7 +161,7 @@ return [
         }
 
         return new CreateObjectEndPoint(
-            $container->get(OriginalRecipeInterface::class),
+            $container->get(OriginalRecipeInterface::class . ':CRUD'),
             $container->get(CreateObject::class),
             $container->get(FormHandlingInterface::class),
             $container->get(FormProcessingInterface::class),
@@ -185,7 +187,7 @@ return [
         }
 
         return new DeleteObjectEndPoint(
-            $container->get(OriginalRecipeInterface::class),
+            $container->get(OriginalRecipeInterface::class . ':CRUD'),
             $container->get(LoadObject::class),
             $container->get(DeleteObject::class),
             $container->get(RedirectClientInterface::class),
@@ -207,7 +209,7 @@ return [
         }
 
         return new EditObjectEndPoint(
-            $container->get(OriginalRecipeInterface::class),
+            $container->get(OriginalRecipeInterface::class . ':CRUD'),
             $container->get(LoadObject::class),
             $container->get(FormHandlingInterface::class),
             $container->get(FormProcessingInterface::class),
@@ -237,7 +239,7 @@ return [
         }
 
         return new ListObjectEndPoint(
-            $container->get(OriginalRecipeInterface::class),
+            $container->get(OriginalRecipeInterface::class . ':CRUD'),
             $container->get(ExtractPage::class),
             $container->get(ExtractOrder::class),
             $container->get(LoadListObjects::class),
@@ -256,7 +258,7 @@ return [
         }
 
         return new RenderStaticContentEndPoint(
-            $container->get(OriginalRecipeInterface::class),
+            $container->get(OriginalRecipeInterface::class . ':Static'),
             $container->get(Render::class),
             $container->get(RenderError::class),
             $defaultErrorMapping,

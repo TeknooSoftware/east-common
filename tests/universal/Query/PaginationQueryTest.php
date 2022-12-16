@@ -35,6 +35,7 @@ use Teknoo\Recipe\Promise\PromiseInterface;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ * @covers \Teknoo\East\Common\Query\Enum\Direction
  * @covers \Teknoo\East\Common\Query\PaginationQuery
  */
 class PaginationQueryTest extends TestCase

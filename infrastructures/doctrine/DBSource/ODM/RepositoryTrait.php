@@ -126,7 +126,7 @@ trait RepositoryTrait
         if (!empty($orderBy)) {
             array_walk(
                 $orderBy,
-                fn (Direction &$item): string => $item = $item->value
+                static fn(Direction &$item): string => $item = $item->value
             );
 
             $queryBuilder->sort($orderBy);

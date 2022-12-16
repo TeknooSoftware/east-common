@@ -33,6 +33,7 @@ use Teknoo\East\Common\Contracts\Query\Expr\ExprInterface;
 use Teknoo\East\Common\Query\Enum\Direction;
 use Teknoo\East\Common\Query\PaginationQuery;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
+use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\Promise\Promise;
 use Throwable;
 
@@ -115,7 +116,7 @@ class LoadListObjects
 
         /** @var Promise<iterable<ObjectInterface>, mixed, mixed> $executePromise */
         $executePromise = new Promise(
-            static function ($objects) use ($itemsPerPage, $manager) {
+            static function ($objects) use ($itemsPerPage, $manager): void {
                 $pageCount = 1;
                 if ($objects instanceof Countable) {
                     $pageCount = (int) ceil($objects->count() / $itemsPerPage);
@@ -128,11 +129,11 @@ class LoadListObjects
                     ]
                 );
             },
-            static fn (Throwable $error) => $manager->error(
+            static fn (Throwable $throwable): ChefInterface => $manager->error(
                 new RuntimeException(
                     message: $errorMessage,
                     code: $errorCode,
-                    previous: $error,
+                    previous: $throwable,
                 )
             ),
         );

@@ -57,7 +57,7 @@ class BatchManipulationManager implements BatchManipulationManagerInterface
     ): BatchManipulationManagerInterface {
         $executor = new QueryExecutor(
             $this->documentManager,
-            fn (Builder $builder) => $builder->updateMany(),
+            static fn(Builder $builder): Builder => $builder->updateMany(),
         );
 
         $query->update($executor, $promise);
@@ -71,7 +71,7 @@ class BatchManipulationManager implements BatchManipulationManagerInterface
     ): BatchManipulationManagerInterface {
         $executor = new QueryExecutor(
             $this->documentManager,
-            fn (Builder $builder) => $builder->remove(),
+            static fn(Builder $builder): Builder => $builder->remove(),
         );
 
         $query->delete($executor, $promise);

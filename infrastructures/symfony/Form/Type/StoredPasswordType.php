@@ -66,9 +66,7 @@ class StoredPasswordType extends AbstractType
     {
         parent::configureOptions($resolver);
 
-        $resolver->setDefaults(array(
-            'data_class' => StoredPassword::class,
-        ));
+        $resolver->setDefaults(['data_class' => StoredPassword::class]);
 
         return $this;
     }

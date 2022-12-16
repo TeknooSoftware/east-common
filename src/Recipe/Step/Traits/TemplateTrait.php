@@ -60,7 +60,7 @@ trait TemplateTrait
     private function render(
         ClientInterface $client,
         string $view,
-        array $parameters = array(),
+        array $parameters = [],
         int $status = 200,
         array $headers = []
     ): void {
@@ -72,9 +72,9 @@ trait TemplateTrait
 
         $this->templating->render(
             new Promise(
-                static function (ResultInterface $result) use ($stream, $client, $response) {
+                static function (ResultInterface $result) use ($stream, $client, $response): void {
                     if ($stream instanceof CallbackStreamInterface) {
-                        $stream->bind(static fn() => (string) $result);
+                        $stream->bind(static fn(): string => (string) $result);
                     } else {
                         $stream->write((string) $result);
                     }
@@ -83,7 +83,7 @@ trait TemplateTrait
 
                     $client->acceptResponse($response);
                 },
-                static fn (Throwable $error) => $client->errorInRequest($error, false),
+                static fn (Throwable $error): ClientInterface => $client->errorInRequest($error, false),
             ),
             $view,
             $parameters

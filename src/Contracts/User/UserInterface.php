@@ -36,7 +36,7 @@ use Teknoo\East\Common\Contracts\Object\ObjectInterface;
  */
 interface UserInterface extends ObjectInterface
 {
-    public function __toString();
+    public function __toString(): string;
 
     /**
      * @return iterable<string>

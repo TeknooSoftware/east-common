@@ -29,6 +29,7 @@ use DomainException;
 use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
 use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
+use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\Promise\Promise;
 use Throwable;
 
@@ -54,10 +55,10 @@ class LoadObject
     ): self {
         /** @var Promise<ObjectInterface, mixed, mixed> $fetchPromise */
         $fetchPromise = new Promise(
-            static function (ObjectInterface $object) use ($manager, $workPlanKey) {
+            static function (ObjectInterface $object) use ($manager, $workPlanKey): void {
                 $manager->updateWorkPlan([$workPlanKey => $object]);
             },
-            static fn (Throwable $error) => $manager->error(
+            static fn (Throwable $error): ChefInterface => $manager->error(
                 new DomainException(
                     message: $errorMessage ?? $error->getMessage(),
                     code: $errorCode ?? (int) ($error->getCode() > 0 ? $error->getCode() : 404),

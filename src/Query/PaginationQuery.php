@@ -75,10 +75,10 @@ class PaginationQuery implements QueryCollectionInterface, ImmutableInterface
 
         /** @var Promise<iterable<ObjectInterface>, mixed, mixed> $findPromise */
         $findPromise = new Promise(
-            static function ($result) use ($criteria, $promise, $repository) {
+            static function ($result) use ($criteria, $promise, $repository): void {
                 /** @var Promise<int, mixed, mixed> $countPromise */
                 $countPromise = new Promise(
-                    static function (int $count) use ($promise, $result) {
+                    static function (int $count) use ($promise, $result): void {
                         $iterator = new class ($count, $result) implements Countable, IteratorAggregate {
                             /**
                              * @param Traversable<ObjectInterface> $iterator

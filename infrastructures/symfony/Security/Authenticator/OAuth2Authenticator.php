@@ -131,18 +131,18 @@ class OAuth2Authenticator extends BaseAuthenticator
                     );
 
                     $registerTokenPromise = new Promise(
-                        function (User $user, PromiseInterface $next) use ($accessToken, $provider) {
+                        function (User $user, PromiseInterface $next) use ($accessToken, $provider): void {
                             $this->registerToken($user, (string) $provider, $accessToken->getToken(), $next);
                         },
-                        fn (Throwable $error, PromiseInterface $next) => $next->fail($error),
+                        static fn(Throwable $error, PromiseInterface $next): PromiseInterface => $next->fail($error),
                         true
                     );
 
                     $fetchingPromise = new Promise(
-                        static function (User $user, PromiseInterface $next) {
+                        static function (User $user, PromiseInterface $next): void {
                             $next->success($user);
                         },
-                        function (Throwable $error, PromiseInterface $next) use ($oauthUser) {
+                        function (Throwable $error, PromiseInterface $next) use ($oauthUser): void {
                             if ($error instanceof DomainException) {
                                 $this->userConverter->convertToUser(
                                     $oauthUser,
@@ -158,7 +158,7 @@ class OAuth2Authenticator extends BaseAuthenticator
                     );
 
                     $extractEmailPromise = new Promise(
-                        function (string $email, PromiseInterface $next) {
+                        function (string $email, PromiseInterface $next): void {
                             $this->loader->fetch(
                                 new UserByEmailQuery($email),
                                 $next

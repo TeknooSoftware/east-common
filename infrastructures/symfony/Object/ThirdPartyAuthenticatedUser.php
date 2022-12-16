@@ -49,10 +49,7 @@ class ThirdPartyAuthenticatedUser extends AbstractUser
         return $this->auth;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getPassword()
+    public function getPassword(): ?string
     {
         return $this->auth->getToken();
     }

@@ -111,7 +111,7 @@ trait RepositoryTrait
         if (null !== $orderBy) {
             array_walk(
                 $orderBy,
-                fn(Direction &$item) => $item = $item->value
+                static fn(Direction &$item) => $item = $item->value
             );
         }
 

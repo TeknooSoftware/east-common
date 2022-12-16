@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * East Common.
  *
  * LICENSE
@@ -23,14 +23,28 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Common\Query\Enum;
+namespace Teknoo\Tests\East\Common\Query\Enum;
+
+use PHPUnit\Framework\TestCase;
+use Teknoo\East\Common\Query\Enum\Direction;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ * @covers \Teknoo\East\Common\Query\Enum\Direction
  */
-enum Direction: string
+class DirectionTest extends TestCase
 {
-    case Asc = 'ASC';
-    case Desc = 'DESC';
+    public function testEnums()
+    {
+        self::assertEquals(
+            Direction::Asc,
+            Direction::from('ASC'),
+        );
+
+        self::assertEquals(
+            Direction::Desc,
+            Direction::from('DESC'),
+        );
+    }
 }

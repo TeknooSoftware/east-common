@@ -73,7 +73,7 @@ class UserType extends AbstractType
 
         $builder->addEventListener(
             FormEvents::POST_SET_DATA,
-            static function (FormEvent $event) {
+            static function (FormEvent $event): void {
                 /**
                  * @var User $user
                  */

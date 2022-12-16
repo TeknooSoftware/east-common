@@ -47,7 +47,7 @@ class RedirectClient implements RedirectClientInterface
 
     public function __construct(
         ResponseFactoryInterface $responseFactory,
-        private UrlGeneratorInterface $router,
+        private readonly UrlGeneratorInterface $router,
     ) {
         $this->responseFactory = $responseFactory;
     }
@@ -83,7 +83,7 @@ class RedirectClient implements RedirectClientInterface
         ClientInterface $client,
         string $route,
         int $status = 302,
-        array $parameters = array()
+        array $parameters = []
     ): RedirectClientInterface {
         $response = $this->redirect(
             $client,

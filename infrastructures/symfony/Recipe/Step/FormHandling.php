@@ -60,7 +60,7 @@ class FormHandling implements FormHandlingInterface
     private function createForm(
         string $formClass,
         ObjectInterface $data,
-        array $options = array()
+        array $options = []
     ): FormInterface {
         return $this->formFactory->create($formClass, $data, $options);
     }

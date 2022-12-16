@@ -30,6 +30,7 @@ use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface as ObjectWithI
 use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Common\Contracts\Writer\WriterInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
+use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\Promise\Promise;
 use Throwable;
 
@@ -55,7 +56,7 @@ class SaveObject
     ): self {
         /** @var Promise<\Teknoo\East\Common\Contracts\Object\ObjectInterface, mixed, mixed> $savedPromise */
         $savedPromise = new Promise(
-            static function (ObjectInterface $object) use ($manager) {
+            static function (ObjectInterface $object) use ($manager): void {
                 if ($object instanceof ObjectWithId) {
                     $manager->updateWorkPlan([
                         'id' => $object->getId(),
@@ -66,7 +67,7 @@ class SaveObject
                     ]);
                 }
             },
-            static fn (Throwable $error) => $manager->error(
+            static fn (Throwable $error): ChefInterface => $manager->error(
                 new RuntimeException(
                     code: $errorCode,
                     message: $errorMessage,

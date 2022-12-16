@@ -35,6 +35,7 @@ use Teknoo\East\Common\Recipe\Step\ExtractOrder;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  * @covers \Teknoo\East\Common\Recipe\Step\ExtractOrder
+ * @covers \Teknoo\East\Common\Query\Enum\Direction
  */
 class ExtractOrderTest extends TestCase
 {

@@ -49,7 +49,7 @@ class FindSlugService
 {
     private function sluggify(string $text): string
     {
-        return strtolower(trim((string) preg_replace('/[^A-Za-z0-9-]+/', '-', $text)));
+        return strtolower(trim((string) preg_replace('#[^A-Za-z0-9-]+#', '-', $text)));
     }
 
     /**
@@ -81,10 +81,10 @@ class FindSlugService
 
             /** @var Promise<SluggableInterface<IdentifiedObjectInterface>, mixed, mixed> $sluggableFetchedPromise */
             $sluggableFetchedPromise = new Promise(
-                function () use (&$counter) {
-                    $counter++;
+                static function () use (&$counter): void {
+                    ++$counter;
                 },
-                function () use ($sluggable, $candidate, &$candidateAccepted) {
+                static function () use ($sluggable, $candidate, &$candidateAccepted): void {
                     $sluggable->setSlug($candidate);
                     $candidateAccepted = true;
                 }

@@ -47,7 +47,7 @@
         "teknoo/immutable": "^3.0.12",
         "teknoo/states": "^6.0.12",
         "teknoo/recipe": "^4.2.1",
-        "teknoo/east-foundation": "^6.1.0"
+        "teknoo/east-foundation": "^6.2"
     },
     "require-dev": {
         "ext-mongodb" : "*",

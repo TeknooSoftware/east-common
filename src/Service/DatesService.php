@@ -27,6 +27,7 @@ namespace Teknoo\East\Common\Service;
 
 use DateTime;
 use DateTimeInterface;
+use Teknoo\East\Foundation\Time\DatesService as BaseService;
 
 /**
  * Simple service to manage date and hour in a recipe to return always the same date during the request and avoid
@@ -37,34 +38,6 @@ use DateTimeInterface;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class DatesService
+class DatesService extends BaseService
 {
-    private ?DateTimeInterface $currentDate = null;
-
-    public function setCurrentDate(DateTimeInterface $currentDate): DatesService
-    {
-        $this->currentDate = $currentDate;
-
-        return $this;
-    }
-
-    private function getCurrentDate(): DateTimeInterface
-    {
-        if ($this->currentDate instanceof DateTimeInterface) {
-            return $this->currentDate;
-        }
-
-        return $this->currentDate = new DateTime();
-    }
-
-    public function passMeTheDate(callable $setter, bool $preferRealDate = false): self
-    {
-        if (false === $preferRealDate) {
-            $setter(clone $this->getCurrentDate());
-        } else {
-            $setter($this->currentDate = new DateTime());
-        }
-
-        return $this;
-    }
 }

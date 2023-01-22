@@ -1,5 +1,10 @@
 # Teknoo Software - Common - Change Log
 
+## [1.6.0] - 2023-01-22
+### Stable Release
+- Support East Foundation 6.2
+- `DatesService` reuse Foundation's Dates Service 
+
 ## [1.5.0] - 2022-12-16
 ### Stable Release
 - Some QA fixes

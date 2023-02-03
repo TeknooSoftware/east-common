@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [1.6.1] - 2023-02-03
+### Stable Release
+- Update dev libs to support PHPUnit 10 and remove unused phploc
+
 ## [1.6.0] - 2023-01-22
 ### Stable Release
 - Support East Foundation 6.2

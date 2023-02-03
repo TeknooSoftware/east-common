@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\Tests\East\Common\Doctrine\DBSource\Common;
 
 use Doctrine\Persistence\ObjectRepository;
+use PHPUnit\Framework\AssertionFailedError;
 use Teknoo\East\Common\Contracts\DBSource\RepositoryInterface;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
 use Teknoo\East\Common\Contracts\Query\Expr\ExprInterface;
@@ -36,6 +37,7 @@ use Teknoo\East\Common\Query\Expr\NotEqual;
 use Teknoo\East\Common\Query\Expr\NotIn;
 use Teknoo\East\Common\Query\Expr\ObjectReference;
 use Teknoo\Recipe\Promise\PromiseInterface;
+use Throwable;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -124,12 +126,16 @@ trait RepositoryTestTrait
             ->with('abc')
             ->willReturn($object);
 
-        $this->expectNotice();
-
-        self::assertInstanceOf(
-            RepositoryInterface::class,
-            $this->buildRepository()->find('abc', $promise, ['foo'],)
-        );
+        try {
+            self::assertInstanceOf(
+                RepositoryInterface::class,
+                $this->buildRepository()->find('abc', $promise, ['foo'],)
+            );
+            self::fail('Notice must be thrown');
+        } catch (AssertionFailedError $error) {
+            throw $error;
+        } catch (Throwable) {
+        }
     }
 
     public function testFindAllBadPromise()
@@ -168,12 +174,16 @@ trait RepositoryTestTrait
             ->method('findAll')
             ->willReturn($object);
 
-        $this->expectNotice();
-
-        self::assertInstanceOf(
-            RepositoryInterface::class,
-            $this->buildRepository()->findAll($promise, ['foo'],)
-        );
+        try {
+            self::assertInstanceOf(
+                RepositoryInterface::class,
+                $this->buildRepository()->findAll($promise, ['foo'],)
+            );
+            self::fail('Notice must be thrown');
+        } catch (AssertionFailedError $error) {
+            throw $error;
+        } catch (Throwable) {
+        }
     }
 
     public function testCountNotImplemented()
@@ -246,19 +256,23 @@ trait RepositoryTestTrait
             ->with(['foo' => 'bar'])
             ->willReturn($object);
 
-        $this->expectNotice();
-
-        self::assertInstanceOf(
-            RepositoryInterface::class,
-            $this->buildRepository()->findBy(
-                ['foo' => 'bar'],
-                $promise,
-                ['foo' => Direction::Asc],
-                null,
-                null,
-                ['foo'],
-            )
-        );
+        try {
+            self::assertInstanceOf(
+                RepositoryInterface::class,
+                $this->buildRepository()->findBy(
+                    ['foo' => 'bar'],
+                    $promise,
+                    ['foo' => Direction::Asc],
+                    null,
+                    null,
+                    ['foo'],
+                )
+            );
+            self::fail('Notice must be thrown');
+        } catch (AssertionFailedError $error) {
+            throw $error;
+        } catch (Throwable) {
+        }
     }
 
     public function testFindOneByBadCriteria()
@@ -374,26 +388,30 @@ trait RepositoryTestTrait
             ])
             ->willReturn($object);
 
-        $this->expectNotice();
-
-        self::assertInstanceOf(
-            RepositoryInterface::class,
-            $this->buildRepository()->findOneBy(
-                [
-                    'foo' => 'bar',
-                    'bar' => new In(['foo']),
-                    'bar2' => new NotIn(['foo']),
-                    'bwrNot' => new NotEqual('foo'),
-                    new InclusiveOr(
-                        ['foo' => 'bar'],
-                        ['bar' => 'foo']
-                    ),
-                    'hello' => new ObjectReference($this->createMock(IdentifiedObjectInterface::class))
-                ],
-                $promise,
-                ['foo'],
-            )
-        );
+        try {
+            self::assertInstanceOf(
+                RepositoryInterface::class,
+                $this->buildRepository()->findOneBy(
+                    [
+                        'foo' => 'bar',
+                        'bar' => new In(['foo']),
+                        'bar2' => new NotIn(['foo']),
+                        'bwrNot' => new NotEqual('foo'),
+                        new InclusiveOr(
+                            ['foo' => 'bar'],
+                            ['bar' => 'foo']
+                        ),
+                        'hello' => new ObjectReference($this->createMock(IdentifiedObjectInterface::class))
+                    ],
+                    $promise,
+                    ['foo'],
+                )
+            );
+            self::fail('Notice must be thrown');
+        } catch (AssertionFailedError $error) {
+            throw $error;
+        } catch (Throwable) {
+        }
     }
 
     public function testConvertExprWithoutManaged()

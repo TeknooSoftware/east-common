@@ -36,7 +36,7 @@ use Teknoo\East\Common\Object\User as BaseUser;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-abstract class AbstractUserTest extends TestCase
+abstract class AbstractUserTests extends TestCase
 {
     private ?BaseUser $user = null;
 

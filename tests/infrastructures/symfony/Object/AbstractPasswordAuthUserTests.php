@@ -35,7 +35,7 @@ use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-abstract class AbstractPasswordAuthUserTest extends AbstractUserTest
+abstract class AbstractPasswordAuthUserTests extends AbstractUserTests
 {
     private ?StoredPassword $storedPassword = null;
 

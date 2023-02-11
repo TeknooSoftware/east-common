@@ -130,10 +130,21 @@ class FindSlugServiceTest extends TestCase
         $counter=0;
         $loader->expects(self::exactly(3))
             ->method('fetch')
-            ->withConsecutive(
-                [new FindBySlugQuery('slugField', 'foo-bar')],
-                [new FindBySlugQuery('slugField', 'foo-bar-2')],
-                [new FindBySlugQuery('slugField', 'foo-bar-3')],
+            ->with(
+                $this->callback(
+                    function ($value): bool {
+                        if ($value == (new FindBySlugQuery('slugField', 'foo-bar'))) {
+                            return true;
+                        }
+                        if ($value == (new FindBySlugQuery('slugField', 'foo-bar-2'))) {
+                            return true;
+                        }
+                        if ($value == (new FindBySlugQuery('slugField', 'foo-bar-3'))) {
+                            return true;
+                        }
+                        return false;
+                    }
+                )
             )
             ->willReturnCallback(
                 function ($query, PromiseInterface $promise) use ($loader, &$counter) {

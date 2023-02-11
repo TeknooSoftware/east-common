@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Doctrine\DBSource\Common;
 
+use PHPUnit\Framework\Error\Notice;
 use Doctrine\Persistence\ObjectRepository;
 use PHPUnit\Framework\AssertionFailedError;
 use Teknoo\East\Common\Contracts\DBSource\RepositoryInterface;
@@ -131,7 +132,6 @@ trait RepositoryTestTrait
                 RepositoryInterface::class,
                 $this->buildRepository()->find('abc', $promise, ['foo'],)
             );
-            self::fail('Notice must be thrown');
         } catch (AssertionFailedError $error) {
             throw $error;
         } catch (Throwable) {
@@ -174,16 +174,32 @@ trait RepositoryTestTrait
             ->method('findAll')
             ->willReturn($object);
 
+        $fail = false;
+        $previous = null;
+        if (!class_exists(Notice::class)) {
+            $previous = set_error_handler(
+                function () use (&$fail) {
+                    $fail = true;
+                },
+                \E_USER_NOTICE
+            );
+        }
+
         try {
             self::assertInstanceOf(
                 RepositoryInterface::class,
                 $this->buildRepository()->findAll($promise, ['foo'],)
             );
-            self::fail('Notice must be thrown');
         } catch (AssertionFailedError $error) {
             throw $error;
         } catch (Throwable) {
+            $fail = true;
         }
+
+        if (null !== $previous) {
+            set_error_handler($previous);
+        }
+        self::assertTrue($fail, 'Notice must be Thrown');
     }
 
     public function testCountNotImplemented()
@@ -256,6 +272,17 @@ trait RepositoryTestTrait
             ->with(['foo' => 'bar'])
             ->willReturn($object);
 
+        $fail = false;
+        $previous = null;
+        if (!class_exists(Notice::class)) {
+            $previous = set_error_handler(
+                function () use (&$fail) {
+                    $fail = true;
+                },
+                \E_USER_NOTICE
+            );
+        }
+
         try {
             self::assertInstanceOf(
                 RepositoryInterface::class,
@@ -268,11 +295,16 @@ trait RepositoryTestTrait
                     ['foo'],
                 )
             );
-            self::fail('Notice must be thrown');
         } catch (AssertionFailedError $error) {
             throw $error;
         } catch (Throwable) {
+            $fail = true;
         }
+
+        if (null !== $previous) {
+            set_error_handler($previous);
+        }
+        self::assertTrue($fail, 'Notice must be Thrown');
     }
 
     public function testFindOneByBadCriteria()
@@ -388,6 +420,17 @@ trait RepositoryTestTrait
             ])
             ->willReturn($object);
 
+        $fail = false;
+        $previous = null;
+        if (!class_exists(Notice::class)) {
+            $previous = set_error_handler(
+                function () use (&$fail) {
+                    $fail = true;
+                },
+                \E_USER_NOTICE
+            );
+        }
+
         try {
             self::assertInstanceOf(
                 RepositoryInterface::class,
@@ -407,11 +450,16 @@ trait RepositoryTestTrait
                     ['foo'],
                 )
             );
-            self::fail('Notice must be thrown');
         } catch (AssertionFailedError $error) {
             throw $error;
         } catch (Throwable) {
+            $fail = true;
         }
+
+        if (null !== $previous) {
+            set_error_handler($previous);
+        }
+        self::assertTrue($fail, 'Notice must be Thrown');
     }
 
     public function testConvertExprWithoutManaged()

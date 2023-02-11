@@ -40,7 +40,7 @@ use Teknoo\East\Common\Object\User as BaseUser;
  * @covers      \Teknoo\East\CommonBundle\Object\AbstractPasswordAuthUser
  * @covers      \Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser
  */
-class PasswordAuthenticatedUserTest extends AbstractPasswordAuthUserTest
+class PasswordAuthenticatedUserTest extends AbstractPasswordAuthUserTests
 {
     private ?BaseUser $user = null;
 

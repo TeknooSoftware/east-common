@@ -36,7 +36,7 @@ use Teknoo\East\Common\Object\User as BaseUser;
  * @covers      \Teknoo\East\CommonBundle\Object\AbstractUser
  * @covers      \Teknoo\East\CommonBundle\Object\ThirdPartyAuthenticatedUser
  */
-class ThirdPartyAuthenticatedUserTest extends AbstractUserTest
+class ThirdPartyAuthenticatedUserTest extends AbstractUserTests
 {
     private ?BaseUser $user = null;
 

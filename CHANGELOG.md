@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [1.6.2] - 2023-02-11
+### Stable Release
+- Remove phpcpd and upgrade phpunit.xml
+
 ## [1.6.1] - 2023-02-03
 ### Stable Release
 - Update dev libs to support PHPUnit 10 and remove unused phploc

@@ -127,6 +127,17 @@ trait RepositoryTestTrait
             ->with('abc')
             ->willReturn($object);
 
+        $fail = false;
+        $previous = null;
+        if (!class_exists(Notice::class)) {
+            $previous = set_error_handler(
+                function () use (&$fail) {
+                    $fail = true;
+                },
+                \E_USER_NOTICE
+            );
+        }
+
         try {
             self::assertInstanceOf(
                 RepositoryInterface::class,
@@ -135,7 +146,13 @@ trait RepositoryTestTrait
         } catch (AssertionFailedError $error) {
             throw $error;
         } catch (Throwable) {
+            $fail = true;
         }
+
+        if (null !== $previous) {
+            set_error_handler($previous);
+        }
+        self::assertTrue($fail, 'Notice must be Thrown');
     }
 
     public function testFindAllBadPromise()

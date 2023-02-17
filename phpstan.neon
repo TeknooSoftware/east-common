@@ -21,8 +21,6 @@ parameters:
         -
             message: '#Closure\(string\): string given#'
             path: src/Service/FindSlugService.php
-        -   '#but returns \$this#'
-        -   '#\$this\([a-zA-Z0-9\\_]+\) given#'
 
 services:
     -

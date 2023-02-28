@@ -38,6 +38,9 @@ class ThirdPartyAuth implements AuthDataInterface
 {
     private string $type = self::class;
 
+    //Constructor promoted properties are not defined when object is created without calling constructor
+    //(like with doctrine)
+
     private ?string $protocol = '';
 
     private ?string $provider = '';
@@ -45,6 +48,18 @@ class ThirdPartyAuth implements AuthDataInterface
     private ?string $token = '';
 
     private ?string $userIdentifier = '';
+
+    public function __construct(
+        ?string $protocol = '',
+        ?string $provider = '',
+        ?string $token = '',
+        ?string $userIdentifier = '',
+    ) {
+        $this->protocol = $protocol;
+        $this->provider = $provider;
+        $this->token = $token;
+        $this->userIdentifier = $userIdentifier;
+    }
 
     public function getProtocol(): ?string
     {

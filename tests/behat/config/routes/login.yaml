@@ -16,3 +16,19 @@ user_common_home:
 user_common_check:
     path: '/user/check'
     methods: ['POST']
+
+user_index:
+    path: '/'
+    methods: ['GET']
+
+2fa_login:
+    path: '/user/2fa'
+    defaults:
+        _controller: "scheb_two_factor.form_controller::form"
+
+2fa_login_check:
+    path: '/user/2fa/check'
+
+2fa_common:
+    resource: '@TeknooEastCommonBundle/Resources/config/2fa_routing.yaml'
+    prefix: '/user/common'

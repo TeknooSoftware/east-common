@@ -25,8 +25,20 @@ declare(strict_types=1);
 
 namespace Teknoo\East\CommonBundle\Resources\config;
 
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Teknoo\East\Common\Recipe\Step\CreateObject;
+use Teknoo\East\Common\Recipe\Step\RenderError;
+use Teknoo\East\CommonBundle\Contracts\Recipe\Step\BuildQrCodeInterface;
+use Teknoo\East\CommonBundle\Recipe\Cookbook\Disable2FA;
+use Teknoo\East\CommonBundle\Recipe\Cookbook\Enable2FA;
+use Teknoo\East\CommonBundle\Recipe\Cookbook\GenerateQRCode;
+use Teknoo\East\CommonBundle\Recipe\Cookbook\Validate2FA;
+use Teknoo\East\CommonBundle\Recipe\Step\DisableTOTP;
+use Teknoo\East\CommonBundle\Recipe\Step\EnableTOTP;
+use Teknoo\East\CommonBundle\Recipe\Step\GenerateQRCodeTextForTOTP;
+use Teknoo\East\CommonBundle\Recipe\Step\ValidateTOTP;
 use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormHandlingInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormProcessingInterface;
@@ -38,20 +50,25 @@ use Teknoo\East\CommonBundle\Recipe\Step\FormProcessing;
 use Teknoo\East\CommonBundle\Recipe\Step\RedirectClient;
 use Teknoo\East\CommonBundle\Recipe\Step\RenderForm;
 use Teknoo\East\CommonBundle\Recipe\Step\SearchFormLoader;
+use Teknoo\Recipe\RecipeInterface as OriginalRecipeInterface;
 
 use function DI\create;
 use function DI\get;
 
 return [
+    //Search
     SearchFormLoaderInterface::class => get(SearchFormLoader::class),
 
+    //Form
     FormHandlingInterface::class => get(FormHandling::class),
 
     FormProcessingInterface::class => get(FormProcessing::class),
     FormProcessing::class => create(),
 
+    //Redirect
     RedirectClientInterface::class => get(RedirectClient::class),
 
+    //Rendering
     RenderFormInterface::class => get(RenderForm::class),
     RenderForm::class => create()
         ->constructor(
@@ -59,4 +76,62 @@ return [
             get(StreamFactoryInterface::class),
             get(ResponseFactoryInterface::class)
         ),
+
+    //TOTP Cookbook
+    Enable2FA::class => static function (ContainerInterface $container): Enable2FA {
+        $defaultErrorTemplate = null;
+        if ($container->has('teknoo.east.common.cookbook.default_error_template')) {
+            $defaultErrorTemplate = $container->get('teknoo.east.common.cookbook.default_error_template');
+        }
+
+        return new Enable2FA(
+            recipe: $container->get(OriginalRecipeInterface::class),
+            enableTOTP: $container->get(EnableTOTP::class),
+            createObject: $container->get(CreateObject::class),
+            formHandling: $container->get(FormHandlingInterface::class),
+            renderForm: $container->get(RenderFormInterface::class),
+            renderError: $container->get(RenderError::class),
+            defaultErrorTemplate: $defaultErrorTemplate,
+        );
+    },
+    Disable2FA::class => static function (ContainerInterface $container): Disable2FA {
+        $defaultErrorTemplate = null;
+        if ($container->has('teknoo.east.common.cookbook.default_error_template')) {
+            $defaultErrorTemplate = $container->get('teknoo.east.common.cookbook.default_error_template');
+        }
+
+        return new Disable2FA(
+            recipe: $container->get(OriginalRecipeInterface::class),
+            disableTOTP: $container->get(DisableTOTP::class),
+            redirectClient: $container->get(RedirectClientInterface::class),
+            renderError: $container->get(RenderError::class),
+            defaultErrorTemplate: $defaultErrorTemplate,
+        );
+    },
+    GenerateQRCode::class => static function (ContainerInterface $container): GenerateQRCode {
+        return new GenerateQRCode(
+            $container->get(OriginalRecipeInterface::class),
+            $container->get(GenerateQRCodeTextForTOTP::class),
+            $container->get(BuildQrCodeInterface::class),
+            $container->get(RenderError::class),
+        );
+    },
+    Validate2FA::class => static function (ContainerInterface $container): Validate2FA {
+        $defaultErrorTemplate = null;
+        if ($container->has('teknoo.east.common.cookbook.default_error_template')) {
+            $defaultErrorTemplate = $container->get('teknoo.east.common.cookbook.default_error_template');
+        }
+
+        return new Validate2FA(
+            recipe: $container->get(OriginalRecipeInterface::class),
+            createObject: $container->get(CreateObject::class),
+            formHandling: $container->get(FormHandlingInterface::class),
+            formProcessing: $container->get(FormProcessingInterface::class),
+            validateTOTP: $container->get(ValidateTOTP::class),
+            redirectClient: $container->get(RedirectClientInterface::class),
+            renderForm: $container->get(RenderFormInterface::class),
+            renderError: $container->get(RenderError::class),
+            defaultErrorTemplate: $defaultErrorTemplate,
+        );
+    },
 ];

@@ -155,9 +155,9 @@ return [
             $accessControl = $container->get(ObjectAccessControlInterface::class);
         }
 
-        $defaultErrorMapping = null;
+        $defaultErrorTemplate = null;
         if ($container->has('teknoo.east.common.cookbook.default_error_template')) {
-            $defaultErrorMapping = $container->get('teknoo.east.common.cookbook.default_error_template');
+            $defaultErrorTemplate = $container->get('teknoo.east.common.cookbook.default_error_template');
         }
 
         return new CreateObjectEndPoint(
@@ -171,7 +171,7 @@ return [
             $container->get(RenderFormInterface::class),
             $container->get(RenderError::class),
             $accessControl,
-            $defaultErrorMapping,
+            $defaultErrorTemplate,
         );
     },
     DeleteObjectEndPointInterface::class => get(DeleteObjectEndPoint::class),
@@ -181,9 +181,9 @@ return [
             $accessControl = $container->get(ObjectAccessControlInterface::class);
         }
 
-        $defaultErrorMapping = null;
+        $defaultErrorTemplate = null;
         if ($container->has('teknoo.east.common.cookbook.default_error_template')) {
-            $defaultErrorMapping = $container->get('teknoo.east.common.cookbook.default_error_template');
+            $defaultErrorTemplate = $container->get('teknoo.east.common.cookbook.default_error_template');
         }
 
         return new DeleteObjectEndPoint(
@@ -193,7 +193,7 @@ return [
             $container->get(RedirectClientInterface::class),
             $container->get(RenderError::class),
             $accessControl,
-            $defaultErrorMapping,
+            $defaultErrorTemplate,
         );
     },
     EditObjectEndPointInterface::class => get(EditObjectEndPoint::class),
@@ -203,9 +203,9 @@ return [
             $accessControl = $container->get(ObjectAccessControlInterface::class);
         }
 
-        $defaultErrorMapping = null;
+        $defaultErrorTemplate = null;
         if ($container->has('teknoo.east.common.cookbook.default_error_template')) {
-            $defaultErrorMapping = $container->get('teknoo.east.common.cookbook.default_error_template');
+            $defaultErrorTemplate = $container->get('teknoo.east.common.cookbook.default_error_template');
         }
 
         return new EditObjectEndPoint(
@@ -218,7 +218,7 @@ return [
             $container->get(RenderFormInterface::class),
             $container->get(RenderError::class),
             $accessControl,
-            $defaultErrorMapping,
+            $defaultErrorTemplate,
         );
     },
     ListObjectEndPointInterface::class => get(ListObjectEndPoint::class),
@@ -233,9 +233,9 @@ return [
             $accessControl = $container->get(ListObjectsAccessControlInterface::class);
         }
 
-        $defaultErrorMapping = null;
+        $defaultErrorTemplate = null;
         if ($container->has('teknoo.east.common.cookbook.default_error_template')) {
-            $defaultErrorMapping = $container->get('teknoo.east.common.cookbook.default_error_template');
+            $defaultErrorTemplate = $container->get('teknoo.east.common.cookbook.default_error_template');
         }
 
         return new ListObjectEndPoint(
@@ -247,21 +247,21 @@ return [
             $container->get(RenderError::class),
             $formLoader,
             $accessControl,
-            $defaultErrorMapping,
+            $defaultErrorTemplate,
         );
     },
     RenderStaticContentEndPointInterface::class => get(RenderStaticContentEndPoint::class),
     RenderStaticContentEndPoint::class => static function (ContainerInterface $container): RenderStaticContentEndPoint {
-        $defaultErrorMapping = null;
+        $defaultErrorTemplate = null;
         if ($container->has('teknoo.east.common.cookbook.default_error_template')) {
-            $defaultErrorMapping = $container->get('teknoo.east.common.cookbook.default_error_template');
+            $defaultErrorTemplate = $container->get('teknoo.east.common.cookbook.default_error_template');
         }
 
         return new RenderStaticContentEndPoint(
             $container->get(OriginalRecipeInterface::class . ':Static'),
             $container->get(Render::class),
             $container->get(RenderError::class),
-            $defaultErrorMapping,
+            $defaultErrorTemplate,
         );
     },
 ];

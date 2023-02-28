@@ -1,6 +1,6 @@
 # Teknoo Software - Common - Change Log
 
-## [1.7.0] - 2023-02-288
+## [1.7.0] - 2023-02-28
 ### Stable Release
 - Support 2FA with TOTP (like Google Authenticator) credentials in common namespace
   - Add `TOTPAuth` class as `AuthDataInterface`

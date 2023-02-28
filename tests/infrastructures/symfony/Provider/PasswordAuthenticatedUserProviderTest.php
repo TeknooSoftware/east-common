@@ -26,13 +26,17 @@ declare(strict_types=1);
 namespace Teknoo\Tests\East\CommonBundle\Provider;
 
 use PHPUnit\Framework\TestCase;
+use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface as GoogleTwoFactorInterface;
+use Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface as TotpTwoFactorInterface;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Teknoo\East\Common\Contracts\User\AuthDataInterface;
 use Teknoo\East\Common\Loader\UserLoader;
 use Teknoo\East\Common\Object\StoredPassword;
+use Teknoo\East\Common\Object\TOTPAuth;
 use Teknoo\East\Common\Object\User;
 use Teknoo\East\Common\Query\User\UserByEmailQuery;
+use Teknoo\East\CommonBundle\Contracts\Object\UserWithTOTPAuthInterface;
 use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
 use Teknoo\East\CommonBundle\Provider\PasswordAuthenticatedUserProvider;
 use Teknoo\East\CommonBundle\Writer\SymfonyUserWriter;
@@ -42,6 +46,7 @@ use Teknoo\East\Common\Object\User as BaseUser;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
  * @covers      \Teknoo\East\CommonBundle\Provider\PasswordAuthenticatedUserProvider
  */
 class PasswordAuthenticatedUserProviderTest extends TestCase
@@ -123,6 +128,100 @@ class PasswordAuthenticatedUserProviderTest extends TestCase
         self::assertEquals(
             $loadedUser,
             $this->buildProvider()->loadUserByUsername('foo@bar')
+        );
+    }
+
+    public function testLoadUserByUsernameFoundWithGoogleAuthenticator()
+    {
+        $user = new BaseUser();
+        $user->setEmail('foo@bar');
+        $user->setAuthData(
+            [
+                $storedPassword = new StoredPassword(),
+                $totp = new TOTPAuth(
+                    provider: TOTPAuth::PROVIDER_GOOGLE_AUTHENTICATOR,
+                    algorithm: 'sha1',
+                    period: 30,
+                    digits: 6,
+                    enabled: true,
+                ),
+            ],
+        );
+
+        $this->getLoader()
+            ->expects(self::once())
+            ->method('fetch')
+            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
+                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
+                $promise->success($user);
+
+                return $this->getLoader();
+            });
+
+        $loadedUser = new PasswordAuthenticatedUser($user, $storedPassword);
+
+        self::assertTrue(
+            $loadedUser->isEqualTo(
+                $builtUser = $this->buildProvider()
+                    ->loadUserByUsername('foo@bar')
+            )
+        );
+
+        self::assertInstanceOf(
+            GoogleTwoFactorInterface::class,
+            $builtUser,
+        );
+
+        self::assertInstanceOf(
+            UserWithTOTPAuthInterface::class,
+            $builtUser,
+        );
+    }
+
+    public function testLoadUserByUsernameFoundWithTOTP()
+    {
+        $user = new BaseUser();
+        $user->setEmail('foo@bar');
+        $user->setAuthData(
+            [
+                $storedPassword = new StoredPassword(),
+                $totp = new TOTPAuth(
+                    provider: 'aTotp',
+                    algorithm: 'sha1',
+                    period: 30,
+                    digits: 6,
+                    enabled: true,
+                ),
+            ]
+        );
+
+        $this->getLoader()
+            ->expects(self::once())
+            ->method('fetch')
+            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
+                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
+                $promise->success($user);
+
+                return $this->getLoader();
+            });
+
+        $loadedUser = new PasswordAuthenticatedUser($user, $storedPassword);
+
+        self::assertTrue(
+            $loadedUser->isEqualTo(
+                $builtUser = $this->buildProvider()
+                    ->loadUserByUsername('foo@bar')
+            )
+        );
+
+        self::assertInstanceOf(
+            TotpTwoFactorInterface::class,
+            $builtUser,
+        );
+
+        self::assertInstanceOf(
+            UserWithTOTPAuthInterface::class,
+            $builtUser,
         );
     }
 

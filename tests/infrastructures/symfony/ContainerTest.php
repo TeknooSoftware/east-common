@@ -29,30 +29,27 @@ use DI\Container;
 use DI\ContainerBuilder;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
-use Psr\Log\LoggerInterface;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Security\Core\User\LegacyPasswordAuthenticatedUserInterface;
-use Symfony\Contracts\Translation\LocaleAwareInterface;
-use Teknoo\East\Foundation\Recipe\RecipeInterface;
-use Teknoo\East\Foundation\Router\RouterInterface;
+use Teknoo\East\Common\Contracts\Recipe\Step\FormHandlingInterface;
+use Teknoo\East\Common\Contracts\Recipe\Step\RedirectClientInterface;
+use Teknoo\East\Common\Recipe\Step\CreateObject;
+use Teknoo\East\Common\Recipe\Step\RenderError;
+use Teknoo\East\CommonBundle\Contracts\Recipe\Step\BuildQrCodeInterface;
+use Teknoo\East\CommonBundle\Recipe\Cookbook\Disable2FA;
+use Teknoo\East\CommonBundle\Recipe\Cookbook\Enable2FA;
+use Teknoo\East\CommonBundle\Recipe\Cookbook\GenerateQRCode;
+use Teknoo\East\CommonBundle\Recipe\Cookbook\Validate2FA;
+use Teknoo\East\CommonBundle\Recipe\Step\DisableTOTP;
+use Teknoo\East\CommonBundle\Recipe\Step\EnableTOTP;
+use Teknoo\East\CommonBundle\Recipe\Step\GenerateQRCodeTextForTOTP;
+use Teknoo\East\CommonBundle\Recipe\Step\ValidateTOTP;
 use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormProcessingInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RenderFormInterface;
-use Teknoo\East\Common\DBSource\Repository\ContentRepositoryInterface;
-use Teknoo\East\Common\DBSource\Repository\ItemRepositoryInterface;
-use Teknoo\East\Common\Loader\UserLoader;
-use Teknoo\East\Common\Object\StoredPassword;
-use Teknoo\East\Common\Object\User as BaseUser;
-use Teknoo\East\Common\Query\User\UserByEmailQuery;
-use Teknoo\East\CommonBundle\Middleware\LocaleMiddleware;
-use Teknoo\East\CommonBundle\Object\LegacyUser;
-use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
-use Teknoo\East\CommonBundle\Object\User;
-use Teknoo\East\CommonBundle\Provider\UserProvider;
 use Teknoo\East\CommonBundle\Recipe\Step\FormProcessing;
 use Teknoo\East\CommonBundle\Recipe\Step\RenderForm;
-use Teknoo\Recipe\Promise\PromiseInterface;
 
+use Teknoo\Recipe\RecipeInterface as OriginalRecipeInterface;
 use function interface_exists;
 /**
  * Class DefinitionProviderTest.
@@ -112,6 +109,80 @@ class ContainerTest extends TestCase
         self::assertInstanceOf(
             RenderForm::class,
             $container->get(RenderForm::class)
+        );
+    }
+
+    public function testEnable2FA()
+    {
+        $container = $this->buildContainer();
+
+        $container->set('teknoo.east.common.cookbook.default_error_template', 'foo');
+
+        $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
+        $container->set(EnableTOTP::class, $this->createMock(EnableTOTP::class));
+        $container->set(CreateObject::class, $this->createMock(CreateObject::class));
+        $container->set(FormHandlingInterface::class, $this->createMock(FormHandlingInterface::class));
+        $container->set(RenderFormInterface::class, $this->createMock(RenderFormInterface::class));
+        $container->set(RenderError::class, $this->createMock(RenderError::class));
+
+        self::assertInstanceOf(
+            Enable2FA::class,
+            $container->get(Enable2FA::class)
+        );
+    }
+
+    public function testDisable2FA()
+    {
+        $container = $this->buildContainer();
+
+        $container->set('teknoo.east.common.cookbook.default_error_template', 'foo');
+
+        $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
+        $container->set(DisableTOTP::class, $this->createMock(DisableTOTP::class));
+        $container->set(RedirectClientInterface::class, $this->createMock(RedirectClientInterface::class));
+        $container->set(RenderError::class, $this->createMock(RenderError::class));
+
+        self::assertInstanceOf(
+            Disable2FA::class,
+            $container->get(Disable2FA::class)
+        );
+    }
+
+    public function testGenerateQRCode()
+    {
+        $container = $this->buildContainer();
+
+        $container->set('teknoo.east.common.cookbook.default_error_template', 'foo');
+
+        $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
+        $container->set(GenerateQRCodeTextForTOTP::class, $this->createMock(GenerateQRCodeTextForTOTP::class));
+        $container->set(BuildQrCodeInterface::class, $this->createMock(BuildQrCodeInterface::class));
+        $container->set(RenderError::class, $this->createMock(RenderError::class));
+
+        self::assertInstanceOf(
+            GenerateQRCode::class,
+            $container->get(GenerateQRCode::class)
+        );
+    }
+
+    public function testValidate2FA()
+    {
+        $container = $this->buildContainer();
+
+        $container->set('teknoo.east.common.cookbook.default_error_template', 'foo');
+
+        $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
+        $container->set(CreateObject::class, $this->createMock(CreateObject::class));
+        $container->set(FormHandlingInterface::class, $this->createMock(FormHandlingInterface::class));
+        $container->set(FormProcessingInterface::class, $this->createMock(FormProcessingInterface::class));
+        $container->set(ValidateTOTP::class, $this->createMock(ValidateTOTP::class));
+        $container->set(RedirectClientInterface::class, $this->createMock(RedirectClientInterface::class));
+        $container->set(RenderFormInterface::class, $this->createMock(RenderFormInterface::class));
+        $container->set(RenderError::class, $this->createMock(RenderError::class));
+
+        self::assertInstanceOf(
+            Validate2FA::class,
+            $container->get(Validate2FA::class)
         );
     }
 }

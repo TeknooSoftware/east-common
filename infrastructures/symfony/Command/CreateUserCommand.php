@@ -71,6 +71,7 @@ class CreateUserCommand extends Command
         $user->setRoles(['ROLE_USER', 'ROLE_ADMIN']);
 
         $storedPassword = new StoredPassword();
+        $storedPassword->setAlgo(PasswordAuthenticatedUser::class);
         $storedPassword->setHashedPassword(
             $this->passwordHasher->hashPassword(
                 new PasswordAuthenticatedUser(

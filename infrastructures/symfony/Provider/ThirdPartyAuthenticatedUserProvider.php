@@ -26,15 +26,22 @@ declare(strict_types=1);
 namespace Teknoo\East\CommonBundle\Provider;
 
 use ReflectionException;
+use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface as GoogleTwoFactorInterface;
+use Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface as TotpTwoFactorInterface;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Teknoo\East\Common\Object\ThirdPartyAuth;
-use Teknoo\East\Common\Object\User;
-use Teknoo\East\CommonBundle\Object\ThirdPartyAuthenticatedUser;
-use Teknoo\Recipe\Promise\Promise;
 use Teknoo\East\Common\Loader\UserLoader;
+use Teknoo\East\Common\Object\ThirdPartyAuth;
+use Teknoo\East\Common\Object\TOTPAuth;
+use Teknoo\East\Common\Object\User;
 use Teknoo\East\Common\Query\User\UserByEmailQuery;
+use Teknoo\East\CommonBundle\Object\ThirdPartyAuthenticatedUser;
+use Teknoo\East\CommonBundle\Object\TOTP\GoogleAuthThirdPartyAuthenticatedUser;
+use Teknoo\East\CommonBundle\Object\TOTP\TOTPThirdPartyAuthenticatedUser;
+use Teknoo\Recipe\Promise\Promise;
+
+use function interface_exists;
 
 /**
  * Symfony user provider to load East Common's user authenticated thanks to OAuth2Authenticator, or any third party
@@ -63,14 +70,50 @@ class ThirdPartyAuthenticatedUserProvider implements UserProviderInterface
     protected function fetchUserByUsername(string $username): UserInterface
     {
         /** @var Promise<User, ThirdPartyAuthenticatedUser, mixed> $promise */
-        $promise = new Promise(static function (User $user) {
+        $promise = new Promise(static function (User $user): ?ThirdPartyAuthenticatedUser {
+            $totpAuth = null;
+            $thirdPartyAuth = null;
+
             foreach ($user->getAuthData() as $authData) {
-                if (!$authData instanceof ThirdPartyAuth) {
-                    continue;
+                if ($authData instanceof TOTPAuth) {
+                    $totpAuth = $authData;
                 }
 
-                return new ThirdPartyAuthenticatedUser($user, $authData);
+                if ($authData instanceof ThirdPartyAuth) {
+                    $thirdPartyAuth = $authData;
+                }
             }
+
+            if (null === $thirdPartyAuth) {
+                return null;
+            }
+
+            if (
+                $totpAuth instanceof TOTPAuth
+                && (
+                    interface_exists(GoogleTwoFactorInterface::class)
+                    || interface_exists(TotpTwoFactorInterface::class)
+                )
+            ) {
+                if (
+                    interface_exists(GoogleTwoFactorInterface::class)
+                    && TOTPAuth::PROVIDER_GOOGLE_AUTHENTICATOR === $totpAuth->getProvider()
+                ) {
+                    $user = new GoogleAuthThirdPartyAuthenticatedUser(
+                        $user,
+                        $thirdPartyAuth,
+                    );
+                } else {
+                    $user = new TOTPThirdPartyAuthenticatedUser(
+                        $user,
+                        $thirdPartyAuth,
+                    );
+                }
+
+                return $user->setTOTPAuth($totpAuth);
+            }
+
+            return new ThirdPartyAuthenticatedUser($user, $thirdPartyAuth);
         });
 
         $this->loader->fetch(

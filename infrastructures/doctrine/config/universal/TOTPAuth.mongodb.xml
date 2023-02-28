@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--infrastructures/doctrine/config/doctrine/StoredPassword.mongodb.yml-->
+<doctrine-mongo-mapping xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"
+                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                        xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
+                                            http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
+
+    <embedded-document name="Teknoo\East\Common\Object\TOTPAuth">
+        <field field-name="provider" name="provider" type="string" nullable="false"/>
+        <field field-name="topSecret" name="top_secret" type="string" nullable="false"/>
+        <field field-name="algorithm" name="algorithm" type="string" nullable="false"/>
+        <field field-name="period" name="period" type="string" nullable="false"/>
+        <field field-name="digits" name="digits" type="string" nullable="false"/>
+        <field field-name="enabled" name="enabled" type="boolean" nullable="false"/>
+    </embedded-document>
+</doctrine-mongo-mapping>

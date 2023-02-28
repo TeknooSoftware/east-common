@@ -39,11 +39,14 @@ use Laminas\Diactoros\ServerRequestFactory;
 use Laminas\Diactoros\StreamFactory;
 use Laminas\Diactoros\UploadedFileFactory;
 use Laminas\Diactoros\Uri;
+use OTPHP\TOTP;
+use ParagonIE\ConstantTime\Base32;
 use PHPUnit\Framework\Assert;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use ReflectionObject;
+use Scheb\TwoFactorBundle\SchebTwoFactorBundle;
 use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
@@ -51,10 +54,12 @@ use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder as SfContainerBuilder;
 use Symfony\Component\HttpFoundation\Request as SfRequest;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\PasswordHasher\Hasher\SodiumPasswordHasher;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Teknoo\DI\SymfonyBridge\DIBridgeBundle;
+use Teknoo\East\Common\Object\TOTPAuth;
 use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
 use Teknoo\East\CommonBundle\TeknooEastCommonBundle;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
@@ -83,8 +88,11 @@ use Twig\Environment;
 use function array_key_exists;
 use function in_array;
 use function is_numeric;
+use function json_encode;
 use function parse_str;
 use function random_int;
+use function str_replace;
+use function str_starts_with;
 use function strlen;
 
 /**
@@ -105,25 +113,13 @@ class FeatureContext implements Context
     /**
      * @var RecipeEndPoint
      */
-    private ?RecipeEndPoint $mediaEndPoint = null;
-
-    /**
-     * @var RecipeEndPoint
-     */
-    private ?RecipeEndPoint $contentEndPoint = null;
-
-    /**
-     * @var RecipeEndPoint
-     */
     private ?RecipeEndPoint $staticEndPoint = null;
 
     public ?EngineInterface $templating = null;
 
     public ?Environment $twig = null;
 
-    public ?string $templateToCall = null;
-
-    public ?string $templateContent = null;
+    public ?Response $sfResponse = null;
 
     public ?ResponseInterface $response = null;
 
@@ -133,7 +129,9 @@ class FeatureContext implements Context
 
     public $updatedObjects = [];
 
-    private $locale = null;
+    private ?User $user = null;
+
+    private array $cookies = [];
 
     /**
      * @Given I have DI initialized
@@ -165,7 +163,8 @@ class FeatureContext implements Context
      */
     public function iHaveDiWithSymfonyInitialized(): void
     {
-        $this->locale = 'en';
+        $this->user = null;
+        $this->cookies = [];
         $this->symfonyKernel = new class($this, 'test') extends BaseKernel
         {
             use MicroKernelTrait;
@@ -196,18 +195,18 @@ class FeatureContext implements Context
 
             public function registerBundles(): iterable
             {
-                yield new FrameworkBundle();
+                yield new DIBridgeBundle();
                 yield new EastFoundationBundle();
                 yield new TeknooEastCommonBundle();
-                yield new DIBridgeBundle();
+                yield new FrameworkBundle();
                 yield new SecurityBundle();
+                yield new SchebTwoFactorBundle();
             }
 
             protected function configureContainer(SfContainerBuilder $container, LoaderInterface $loader)
             {
                 $loader->load(__DIR__.'/config/packages/*.yaml', 'glob');
                 $loader->load(__DIR__.'/config/services.yaml');
-
                 $container->setParameter('container.autowiring.strict_mode', true);
                 $container->setParameter('container.dumper.inline_class_loader', true);
             }
@@ -587,6 +586,10 @@ class FeatureContext implements Context
     {
         Assert::assertInstanceOf(ResponseInterface::class, $this->response);
         Assert::assertNull($this->error);
+
+        foreach ($this->sfResponse->headers->getCookies() as $cookie) {
+            $this->cookies[$cookie->getName()] = $cookie->getValue();
+        }
     }
 
     /**
@@ -633,6 +636,16 @@ class FeatureContext implements Context
 
             public function render($name, array $parameters = []): string
             {
+                if (isset($parameters['totpAuth']) && ($totpAuth = $parameters['totpAuth']) instanceof TOTPAuth) {
+                    return json_encode(
+                        [
+                            'topSecret' => $totpAuth->getTopSecret(),
+                            'provider' => $totpAuth->getProvider(),
+                            'enabled' => $totpAuth->isEnabled(),
+                        ]
+                    );
+                }
+
                 if (empty($parameters['objectInstance'])) {
                     return 'non-object-view';
                 }
@@ -689,7 +702,7 @@ class FeatureContext implements Context
             new Engine($this->twig)
         );
 
-        $response = $this->symfonyKernel->handle($serverRequest);
+        $this->sfResponse = $this->symfonyKernel->handle($serverRequest);
 
         $psrFactory = new PsrHttpFactory(
             new ServerRequestFactory(),
@@ -698,9 +711,9 @@ class FeatureContext implements Context
             new ResponseFactory()
         );
 
-        $this->response = $psrFactory->createResponse($response);
+        $this->response = $psrFactory->createResponse($this->sfResponse);
 
-        $this->symfonyKernel->terminate($serverRequest, $response);
+        $this->symfonyKernel->terminate($serverRequest, $this->sfResponse);
     }
 
     /**
@@ -709,7 +722,14 @@ class FeatureContext implements Context
     public function theClientfollowsTheRedirection()
     {
         $url = current($this->response->getHeader('location'));
-        $serverRequest = SfRequest::create($url, 'GET');
+        if (!str_starts_with($url, 'https://')) {
+            $url = 'https://foo.com' . $url;
+        }
+        $serverRequest = SfRequest::create(
+            uri: $url,
+            method: 'GET',
+            cookies: $this->cookies,
+        );
 
         $this->runSymfony($serverRequest);
     }
@@ -730,6 +750,15 @@ class FeatureContext implements Context
         Assert::assertNotEmpty($this->updatedObjects[$id]);
     }
 
+    private function getLocation(): string
+    {
+        return str_replace(
+            'https://foo.com',
+            '',
+            current($this->response->getHeader('location')),
+        );
+    }
+
     /**
      * @Then It is redirect to :url
      */
@@ -737,7 +766,7 @@ class FeatureContext implements Context
     {
         Assert::assertInstanceOf(ResponseInterface::class, $this->response);
         Assert::assertEquals(302, $this->response->getStatusCode());
-        $location = current($this->response->getHeader('location'));
+        $location = $this->getLocation();
 
         Assert::assertGreaterThan(0, preg_match("#$url#i", $location));
     }
@@ -762,6 +791,42 @@ class FeatureContext implements Context
         $expectedBody = [];
         parse_str($body, $expectedBody);
         $serverRequest = SfRequest::create($url, 'POST', $expectedBody);
+
+        $this->runSymfony($serverRequest);
+    }
+
+    /**
+     * @When Symfony will receive a wrong 2FA Code
+     */
+    public function symfonyWillReceiveAWrongFaCode()
+    {
+        $serverRequest = SfRequest::create(
+            uri: 'https://foo.com/user/2fa/check',
+            method: 'POST',
+            cookies: $this->cookies,
+            parameters: [
+                '_auth_code' => '000000',
+            ],
+        );
+
+        $this->runSymfony($serverRequest);
+    }
+
+    /**
+     * @When Symfony will receive a valid 2FA Code
+     */
+    public function symfonyWillReceiveAValidFaCode()
+    {
+        $serverRequest = SfRequest::create(
+            uri: 'https://foo.com/user/2fa/check',
+            method: 'POST',
+            cookies: $this->cookies,
+            parameters: [
+                '_auth_code' => TOTP::createFromSecret(
+                    secret: (string) $this->user?->getOneAuthData(TOTPAuth::class)->getTopSecret()
+                )->now(),
+            ],
+        );
 
         $this->runSymfony($serverRequest);
     }
@@ -861,9 +926,45 @@ class FeatureContext implements Context
         $object->setEmail('admin@teknoo.software')
             ->setFirstName('ad')
             ->setLastName('min')
+            ->setRoles(['ROLE_USER'])
             ->setAuthData([$storedPassword]);
 
+        $this->user = $object;
         $this->getObjectRepository()->setObject(['email' => 'admin@teknoo.software'], $object);
+    }
+
+    /**
+     * @Given an 2FA authentication with a TOTP provider not enabled
+     */
+    public function anFaAuthenticationWithATotpProviderNotEnabled()
+    {
+        $this->user?->addAuthData(
+            new TOTPAuth(
+                provider: 'foo',
+                topSecret: Base32::encodeUpperUnpadded(random_bytes(32)),
+                period: 30,
+                algorithm: 'sha1',
+                digits: 6,
+                enabled: false,
+            )
+        );
+    }
+
+    /**
+     * @Given an 2FA authentication with a TOTP provider enabled
+     */
+    public function anFaAuthenticationWithATotpProviderEnabled()
+    {
+        $this->user?->addAuthData(
+            new TOTPAuth(
+                provider: 'foo',
+                topSecret: 'bar',
+                period: 30,
+                algorithm: 'sha1',
+                digits: 6,
+                enabled: true,
+            )
+        );
     }
 
     /**
@@ -895,5 +996,68 @@ class FeatureContext implements Context
     {
         $this->symfonyKernel->boot();
         $this->symfonyKernel->getContainer()->get(DatesService::class)?->setCurrentDate(new DateTime($date));
+    }
+
+    /**
+     * @When Symfony will receive a request to enable 2FA
+     */
+    public function symfonyWillReceiveARequestToEnableFa()
+    {
+        $serverRequest = SfRequest::create(
+            uri: 'https://foo.com/user/common/2fa/enable',
+            method: 'GET',
+            cookies: $this->cookies,
+        );
+
+        $this->runSymfony($serverRequest);
+    }
+
+    /**
+     * @Then the user have a disabled TOTPAuth configuration
+     */
+    public function theUserHaveADisabledTotpauthConfiguration()
+    {
+        Assert::assertInstanceOf(ResponseInterface::class, $this->response);
+        Assert::assertEquals(200, $this->response->getStatusCode());
+
+        $json = \json_decode((string) $this->response->getBody(), true);
+        Assert::assertNotEmpty($json['topSecret'] ?? '');
+        Assert::assertEquals('totp_custom', $json['provider'] ?? '');
+        Assert::assertFalse($json['enabled'] ?? 'error');
+    }
+
+    /**
+     * @When Symfony will receive a valid 2FA Confirmation
+     */
+    public function symfonyWillReceiveAValidFaConfirmation()
+    {
+        $serverRequest = SfRequest::create(
+            uri: 'https://foo.com/user/common/2fa/validate',
+            method: 'POST',
+            cookies: $this->cookies,
+            parameters: [
+                'totp' => [
+                    'code' => TOTP::createFromSecret(
+                        secret: (string) $this->user?->getOneAuthData(TOTPAuth::class)->getTopSecret()
+                    )->now()
+                ],
+            ],
+        );
+
+        $this->runSymfony($serverRequest);
+    }
+
+    /**
+     * @Then the user have an enabled TOTPAuth configuration
+     */
+    public function theUserHaveAnEnabledTotpauthConfiguration()
+    {
+        Assert::assertInstanceOf(ResponseInterface::class, $this->response);
+        Assert::assertEquals(200, $this->response->getStatusCode());
+
+        $json = \json_decode((string) $this->response->getBody(), true);
+        Assert::assertNotEmpty($json['topSecret'] ?? '');
+        Assert::assertEquals('totp_custom', $json['provider'] ?? '');
+        Assert::assertTrue($json['enabled'] ?? 'error');
     }
 }

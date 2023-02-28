@@ -186,6 +186,30 @@ class UserTest extends TestCase
         );
     }
 
+    public function testGetOneAuthData()
+    {
+        self::assertNull(
+            $this->generateObjectPopulated(['authData' => []])->getOneAuthData(
+                StoredPassword::class,
+            )
+        );
+        self::assertNull(
+            $this->generateObjectPopulated(['authData' => [
+                new ThirdPartyAuth()
+            ]])->getOneAuthData(
+                StoredPassword::class,
+            )
+        );
+        self::assertInstanceOf(
+            StoredPassword::class,
+            $this->generateObjectPopulated(['authData' => [
+                new StoredPassword()
+            ]])->getOneAuthData(
+                StoredPassword::class,
+            )
+        );
+    }
+
     public function testSetAuthData()
     {
         $object = $this->buildObject();
@@ -218,12 +242,24 @@ class UserTest extends TestCase
         self::assertInstanceOf(
             $object::class,
             $object->addAuthData(
-                $ad2 = $this->createMock(AuthDataInterface::class)
+                $ad1b = $this->createMock(AuthDataInterface::class)
             )
         );
 
         self::assertEquals(
-            [$ad1, $ad2],
+            [$ad1b],
+            $object->getAuthData()
+        );
+
+        self::assertInstanceOf(
+            $object::class,
+            $object->addAuthData(
+                $ad2 = $this->createMock(StoredPassword::class)
+            )
+        );
+
+        self::assertEquals(
+            [$ad1b, $ad2],
             $object->getAuthData()
         );
     }
@@ -241,7 +277,7 @@ class UserTest extends TestCase
         self::assertInstanceOf(
             $object::class,
             $object->addAuthData(
-                $ad2 = $this->createMock(AuthDataInterface::class)
+                $ad2 = $this->createMock(StoredPassword::class)
             )
         );
 

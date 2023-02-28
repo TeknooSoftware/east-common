@@ -1,5 +1,25 @@
 # Teknoo Software - Common - Change Log
 
+## [1.7.0] - 2023-02-288
+### Stable Release
+- Support 2FA with TOTP (like Google Authenticator) credentials in common namespace
+  - Add `TOTPAuth` class as `AuthDataInterface`
+  - Add `getOneAuthData` to return a specific instance of `AuthData`
+  - Fix bug to allow one instance of `AuthData` type per user
+- Support official 2FA Bundle provided by Sheb for Symfony
+- Update Users providers in Symfony Bundle to return user with `UserWithTOTPAuthInterface`
+  and sheb's interfaces, and use its bundle out of the box without any adaptation for this bundle.
+- Add, in Symfony bundle, endpoints and step to enable or disable TOTP and QRCode generation : 
+  - Cookbook `Enable2FA`
+  - Cookbook `Disable2FA`
+  - Cookbook `GenerateQRCode`
+  - Step `EnableTOTP`
+  - Step `DisableTOTP`
+  - Step`GenerateQRCodeTextFORTOTP`
+  - Step interface `BuildQrCodeInterface` to implement response with image from QRCode.
+  - Step `ValidateTOTP`
+- Add routing file `2fa_routing.yaml`.
+
 ## [1.6.2] - 2023-02-11
 ### Stable Release
 - Remove phpcpd and upgrade phpunit.xml

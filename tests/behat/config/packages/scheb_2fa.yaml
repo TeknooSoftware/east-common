@@ -1,0 +1,13 @@
+scheb_two_factor:
+    security_tokens:
+        - Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken
+        - Symfony\Component\Security\Http\Authenticator\Token\PostAuthenticationToken
+
+    totp:
+        enabled: true
+        server_name: 'foo.com'
+        issuer: SASU Teknoo Software
+        window: 1
+        parameters:
+            image: 'https://teknoo.software/img/logo.svg'
+        template: '@TeknooEastCommon/2fa/login.html.twig'

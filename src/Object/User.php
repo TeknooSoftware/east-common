@@ -32,6 +32,7 @@ use Teknoo\East\Common\Contracts\Object\TimestampableInterface;
 use Teknoo\East\Common\Contracts\User\AuthDataInterface;
 use Teknoo\East\Common\Contracts\User\UserInterface;
 
+use function array_values;
 use function is_array;
 use function iterator_to_array;
 use function trim;
@@ -134,25 +135,44 @@ class User implements IdentifiedObjectInterface, UserInterface, DeletableInterfa
      */
     public function setAuthData(iterable $authData): User
     {
-        $this->authData = $authData;
+        $set = [];
+        foreach ($authData as $instance) {
+            if (!isset($set[$instance::class])) {
+                $set[$instance::class] = $instance;
+            }
+        }
+
+        $this->authData = array_values($set);
 
         return $this;
     }
 
     public function addAuthData(AuthDataInterface $authData): User
     {
-        if (!is_array($this->authData)) {
-            $this->authData = iterator_to_array($this->authData);
+        $set = $this->authData;
+        if (!is_array($set)) {
+            $set = iterator_to_array($set);
         }
 
-        $this->authData[] = $authData;
+        $set[] = $authData;
 
-        return $this;
+        return $this->setAuthData($set);
     }
 
     public function getAuthData(): iterable
     {
         return $this->authData;
+    }
+
+    public function getOneAuthData(string $className): ?AuthDataInterface
+    {
+        foreach ($this->getAuthData() as $authData) {
+            if ($className === $authData::class) {
+                return $authData;
+            }
+        }
+
+        return null;
     }
 
     public function isActive(): bool

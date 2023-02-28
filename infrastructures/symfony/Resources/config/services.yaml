@@ -20,7 +20,11 @@ parameters:
     teknoo.east.common.bundle.allowed_forms: []
 
     #Bowls
-    teknoo.east.common.endpoint.media.static.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
+    teknoo.east.common.endpoint.media.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
+    teknoo.east.common.endpoint.2fa_totp_enable.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
+    teknoo.east.common.endpoint.2fa_totp_disable.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
+    teknoo.east.common.endpoint.2fa_totp_qrcode.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
+    teknoo.east.common.endpoint.2fa_totp_validate.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
     teknoo.east.common.endpoint.crud.delete.bowl.class: 'Teknoo\Recipe\Bowl\RecipeBowl'
     teknoo.east.common.endpoint.crud.edit.bowl.class: 'Teknoo\Recipe\Bowl\RecipeBowl'
     teknoo.east.common.endpoint.crud.list.bowl.class: 'Teknoo\Recipe\Bowl\RecipeBowl'
@@ -28,8 +32,8 @@ parameters:
 
 services:
     #Generic Endpoints
-    teknoo.east.common.endpoint.static.bowl:
-        class: '%teknoo.east.common.endpoint.media.static.class%'
+    teknoo.east.common.endpoint.media.bowl:
+        class: '%teknoo.east.common.endpoint.media.class%'
         arguments:
             - '@Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderStaticContentEndPointInterface'
             - 0
@@ -38,7 +42,60 @@ services:
         class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
         public: true
         arguments:
-            - '@teknoo.east.common.endpoint.static.bowl'
+            - '@teknoo.east.common.endpoint.media.bowl'
+            - '@service_container'
+
+    #2FA
+    teknoo.east.common.endpoint.2fa_totp_enable.bowl:
+        class: '%teknoo.east.common.endpoint.2fa_totp_enable.class%'
+        arguments:
+            - '@Teknoo\East\CommonBundle\Recipe\Cookbook\Enable2FA'
+            - 0
+
+    teknoo.east.common.endpoint.2fa_totp_enable:
+        class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
+        public: true
+        arguments:
+            - '@teknoo.east.common.endpoint.2fa_totp_enable.bowl'
+            - '@service_container'
+
+    teknoo.east.common.endpoint.2fa_totp_disable.bowl:
+        class: '%teknoo.east.common.endpoint.2fa_totp_disable.class%'
+        arguments:
+            - '@Teknoo\East\CommonBundle\Recipe\Cookbook\Disable2FA'
+            - 0
+
+    teknoo.east.common.endpoint.2fa_totp_disable:
+        class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
+        public: true
+        arguments:
+            - '@teknoo.east.common.endpoint.2fa_totp_disable.bowl'
+            - '@service_container'
+
+    teknoo.east.common.endpoint.2fa_totp_qrcode.bowl:
+        class: '%teknoo.east.common.endpoint.2fa_totp_qrcode.class%'
+        arguments:
+            - '@Teknoo\East\CommonBundle\Recipe\Cookbook\GenerateQRCode'
+            - 0
+
+    teknoo.east.common.endpoint.2fa_totp_qrcode:
+        class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
+        public: true
+        arguments:
+            - '@teknoo.east.common.endpoint.2fa_totp_qrcode.bowl'
+            - '@service_container'
+
+    teknoo.east.common.endpoint.2fa_totp_validate.bowl:
+        class: '%teknoo.east.common.endpoint.2fa_totp_validate.class%'
+        arguments:
+            - '@Teknoo\East\CommonBundle\Recipe\Cookbook\Validate2FA'
+            - 0
+
+    teknoo.east.common.endpoint.2fa_totp_validate:
+        class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
+        public: true
+        arguments:
+            - '@teknoo.east.common.endpoint.2fa_totp_validate.bowl'
             - '@service_container'
     
     #CRUD endpoints
@@ -117,6 +174,33 @@ services:
             - '@router'
         public: true
 
+    Teknoo\East\CommonBundle\Recipe\Step\EnableTOTP:
+        class: 'Teknoo\East\CommonBundle\Recipe\Step\EnableTOTP'
+        public: true
+        arguments:
+            - '@Teknoo\East\CommonBundle\Writer\SymfonyUserWriter'
+            - '@security.token_storage'
+
+    Teknoo\East\CommonBundle\Recipe\Step\DisableTOTP:
+        class: 'Teknoo\East\CommonBundle\Recipe\Step\DisableTOTP'
+        public: true
+        arguments:
+            - '@Teknoo\East\CommonBundle\Writer\SymfonyUserWriter'
+            - '@security.token_storage'
+
+    Teknoo\East\CommonBundle\Recipe\Step\GenerateQRCodeTextForTOTP:
+        class: 'Teknoo\East\CommonBundle\Recipe\Step\GenerateQRCodeTextForTOTP'
+        public: true
+        arguments:
+            - '@security.token_storage'
+
+    Teknoo\East\CommonBundle\Recipe\Step\ValidateTOTP:
+        class: 'Teknoo\East\CommonBundle\Recipe\Step\ValidateTOTP'
+        public: true
+        arguments:
+            - '@Teknoo\East\CommonBundle\Writer\SymfonyUserWriter'
+            - '@security.token_storage'
+
     #Provider
     Teknoo\East\CommonBundle\Provider\PasswordAuthenticatedUserProvider:
         class: '%teknoo.east.common.bundle.password_authenticated_user_provider.class%'
@@ -159,3 +243,13 @@ services:
             - '@Teknoo\East\Common\Writer\UserWriter'
             - '@security.user_password_hasher'
         public: true
+
+    #Form
+    Teknoo\East\CommonBundle\Form\Type\TOTPType:
+        class: 'Teknoo\East\CommonBundle\Form\Type\TOTPType'
+        arguments:
+            - '@security.token_storage'
+            - '@?scheb_two_factor.security.totp_authenticator'
+            - '@?scheb_two_factor.security.google_authenticator'
+        tags:
+            - { name: form.type }

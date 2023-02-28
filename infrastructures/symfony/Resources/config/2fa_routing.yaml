@@ -1,0 +1,84 @@
+_teknoo_common_2fa_totp_enable:
+    path: '/2fa/enable'
+    methods:  ['GET']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.2fa_totp_enable'
+        authenticator: '@scheb_two_factor.security.totp_authenticator'
+        objectClass: 'Teknoo\East\CommonBundle\Form\Model\TOTP'
+        formClass: 'Teknoo\East\CommonBundle\Form\Type\TOTPType'
+        template: '@@TeknooEastCommon/2fa/enabling.html.twig'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+        totpProvider: 'totp_custom'
+        formOptions: {}
+
+_teknoo_common_2fa_google_enable:
+    path: '/2fa/google/enable'
+    methods:  ['GET']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.2fa_totp_enable'
+        authenticator: '@scheb_two_factor.security.google_authenticator'
+        objectClass: 'Teknoo\East\CommonBundle\Form\Model\TOTP'
+        formClass: 'Teknoo\East\CommonBundle\Form\Type\TOTPType'
+        template: '@@TeknooEastCommon/2fa/enabling.html.twig'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+        formOptions: {}
+
+_teknoo_common_2fa_totp_disable:
+    path: '/2fa/disable'
+    methods:  ['GET']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.2fa_totp_disable'
+        template: '@@TeknooEastCommon/2fa/enabling.html.twig'
+        route: '_teknoo_common_2fa_totp_enable'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+
+_teknoo_common_2fa_google_disable:
+    path: '/2fa/google/disable'
+    methods:  ['GET']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.2fa_totp_disable'
+        route: '_teknoo_common_2fa_google_enable'
+        template: '@@TeknooEastCommon/2fa/enabling.html.twig'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+
+_teknoo_common_2fa_totp_qrcode:
+    path: '/2fa/qrcode'
+    methods:  ['GET']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.2fa_totp_qrcode'
+        authenticator: '@scheb_two_factor.security.totp_authenticator'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+
+_teknoo_common_2fa_google_qrcode:
+    path: '/2fa/google/qrcode'
+    methods:  ['GET']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.2fa_totp_qrcode'
+        authenticator: '@scheb_two_factor.security.google_authenticator'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+
+_teknoo_common_2fa_totp_validate:
+    path: '/2fa/validate'
+    methods:  ['GET', 'POST']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.2fa_totp_validate'
+        authenticator: '@scheb_two_factor.security.totp_authenticator'
+        objectClass: 'Teknoo\East\CommonBundle\Form\Model\TOTP'
+        formClass: 'Teknoo\East\CommonBundle\Form\Type\TOTPType'
+        template: '@@TeknooEastCommon/2fa/validated.html.twig'
+        route: '_teknoo_common_2fa_totp_enable'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+        formOptions: {}
+
+_teknoo_common_2fa_google_validate:
+    path: '/2fa/google/validate'
+    methods:  ['GET', 'POST']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.2fa_totp_validate'
+        authenticator: '@scheb_two_factor.security.google_authenticator'
+        objectClass: 'Teknoo\East\CommonBundle\Form\Model\TOTP'
+        formClass: 'Teknoo\East\CommonBundle\Form\Type\TOTPType'
+        template: '@@TeknooEastCommon/2fa/validated.html.twig'
+        route: '_teknoo_common_2fa_google_enable'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+        formOptions: {}

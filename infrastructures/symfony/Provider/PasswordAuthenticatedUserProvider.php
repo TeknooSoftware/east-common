@@ -27,19 +27,26 @@ namespace Teknoo\East\CommonBundle\Provider;
 
 use ReflectionClass;
 use ReflectionException;
+use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface as GoogleTwoFactorInterface;
+use Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface as TotpTwoFactorInterface;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Teknoo\East\Common\Object\StoredPassword;
+use Teknoo\East\Common\Object\TOTPAuth;
 use Teknoo\East\Common\Object\User;
 use Teknoo\East\CommonBundle\Object\AbstractPasswordAuthUser;
+use Teknoo\East\CommonBundle\Object\TOTP\GoogleAuthPasswordAuthenticatedUser;
+use Teknoo\East\CommonBundle\Object\TOTP\TOTPPasswordAuthenticatedUser;
 use Teknoo\East\CommonBundle\Writer\SymfonyUserWriter;
 use Teknoo\Recipe\Promise\Promise;
 use Teknoo\East\Common\Loader\UserLoader;
 use Teknoo\East\Common\Query\User\UserByEmailQuery;
 use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
+
+use function interface_exists;
 
 /**
  * Symfony user provider to load East Common's user from email.
@@ -72,14 +79,49 @@ class PasswordAuthenticatedUserProvider implements UserProviderInterface, Passwo
     protected function fetchUserByUsername(string $username): UserInterface
     {
         /** @var Promise<User, PasswordAuthenticatedUser, mixed> $promise */
-        $promise = new Promise(static function (User $user) {
+        $promise = new Promise(static function (User $user): ?PasswordAuthenticatedUser {
+            $totpAuth = null;
+            $storedPassword = null;
             foreach ($user->getAuthData() as $authData) {
-                if (!$authData instanceof StoredPassword) {
-                    continue;
+                if ($authData instanceof TOTPAuth) {
+                    $totpAuth = $authData;
                 }
 
-                return new PasswordAuthenticatedUser($user, $authData);
+                if ($authData instanceof StoredPassword) {
+                    $storedPassword = $authData;
+                }
             }
+
+            if (null === $storedPassword) {
+                return null;
+            }
+
+            if (
+                $totpAuth instanceof TOTPAuth
+                && (
+                    interface_exists(GoogleTwoFactorInterface::class)
+                    || interface_exists(TotpTwoFactorInterface::class)
+                )
+            ) {
+                if (
+                    interface_exists(GoogleTwoFactorInterface::class)
+                    && TOTPAuth::PROVIDER_GOOGLE_AUTHENTICATOR === $totpAuth->getProvider()
+                ) {
+                    $user = new GoogleAuthPasswordAuthenticatedUser(
+                        $user,
+                        $storedPassword,
+                    );
+                } else {
+                    $user = new TOTPPasswordAuthenticatedUser(
+                        $user,
+                        $storedPassword,
+                    );
+                }
+
+                return $user->setTOTPAuth($totpAuth);
+            }
+
+            return new PasswordAuthenticatedUser($user, $storedPassword);
         });
 
         $this->loader->fetch(
@@ -125,7 +167,6 @@ class PasswordAuthenticatedUserProvider implements UserProviderInterface, Passwo
      */
     public function supportsClass($class): bool
     {
-        $reflection = new ReflectionClass($class);
-        return $reflection->isSubclassOf(AbstractPasswordAuthUser::class);
+        return (new ReflectionClass($class))->isSubclassOf(AbstractPasswordAuthUser::class);
     }
 }

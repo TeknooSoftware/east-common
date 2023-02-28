@@ -37,11 +37,24 @@ class StoredPassword implements AuthDataInterface
 {
     private string $type = self::class;
 
+    //Constructor promoted properties are not defined when object is created without calling constructor
+    //(like with doctrine)
+
     private ?string $algo = '';
 
     private bool $unhashedPassword = false;
 
     private ?string $hash = null;
+
+    public function __construct(
+        ?string $algo = '',
+        bool $unhashedPassword = false,
+        ?string $hash = null,
+    ) {
+        $this->algo = $algo;
+        $this->unhashedPassword = $unhashedPassword;
+        $this->hash = $hash;
+    }
 
     public function getAlgo(): ?string
     {

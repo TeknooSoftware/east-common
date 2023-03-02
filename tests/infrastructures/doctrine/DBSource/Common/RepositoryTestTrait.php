@@ -508,7 +508,7 @@ trait RepositoryTestTrait
     {
         $expr = $this->createMock(ExprInterface::class);
 
-        $class = \get_class($this->buildRepository());
+        $class = $this->buildRepository()::class;
         $class::addExprMappingConversion(
             $expr::class,
             static function (array &$final, string $key, ExprInterface $expr) {

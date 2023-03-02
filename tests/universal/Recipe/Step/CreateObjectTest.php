@@ -30,8 +30,6 @@ use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Common\Recipe\Step\CreateObject;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 
-use function get_class;
-
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>

@@ -11,6 +11,6 @@
         <field field-name="algorithm" name="algorithm" type="string" nullable="false"/>
         <field field-name="period" name="period" type="string" nullable="false"/>
         <field field-name="digits" name="digits" type="string" nullable="false"/>
-        <field field-name="enabled" name="enabled" type="boolean" nullable="false"/>
+        <field field-name="enabled" name="enabled" type="bool" nullable="false"/>
     </embedded-document>
 </doctrine-mongo-mapping>

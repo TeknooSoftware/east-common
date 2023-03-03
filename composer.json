@@ -79,7 +79,7 @@
         "laminas/laminas-diactoros": "^2.24",
         "doctrine/common": "^3.4.3",
         "doctrine/persistence": "^3.1.4",
-        "doctrine/mongodb-odm": "^2.4.3",
+        "doctrine/mongodb-odm": "^2.5",
         "doctrine/mongodb-odm-bundle": "^4.5.2",
         "league/oauth2-client": "^2.6.1",
         "knpuniversity/oauth2-client-bundle": "^2.13.1",

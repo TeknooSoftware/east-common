@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [1.7.1] - 2023-03-03
+### Stable Release
+- Fix deprecated in Doctrine ODM
+
 ## [1.7.0] - 2023-02-28
 ### Stable Release
 - Support 2FA with TOTP (like Google Authenticator) credentials in common namespace

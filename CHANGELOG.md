@@ -1,5 +1,10 @@
 # Teknoo Software - Common - Change Log
 
+## [1.8.0] - 2023-03-03
+### Stable Release
+- Add `LazyLoadableCollection` to create lazy collection from Common Queries.
+- Add `EmptyObject`.
+
 ## [1.7.1] - 2023-03-03
 ### Stable Release
 - Fix deprecated in Doctrine ODM

@@ -29,6 +29,7 @@ use RuntimeException;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface as ObjectWithId;
 use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Common\Contracts\Writer\WriterInterface;
+use Teknoo\East\Common\View\ParametersBag;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\Promise\Promise;
@@ -50,22 +51,29 @@ class SaveObject
         WriterInterface $writer,
         ObjectInterface $object,
         ManagerInterface $manager,
+        ParametersBag $parametersBag,
         string $errorMessage = 'Error during object persistence',
         int $errorCode = 500,
         ?bool $prefereRealDateOnUpdate = null,
     ): self {
         /** @var Promise<\Teknoo\East\Common\Contracts\Object\ObjectInterface, mixed, mixed> $savedPromise */
         $savedPromise = new Promise(
-            static function (ObjectInterface $object) use ($manager): void {
+            static function (ObjectInterface $object) use ($manager, $parametersBag): void {
+                $workplan = [
+                    'formHandleRequest' => false,
+                    'objectSaved' => true,
+                ];
+
+                $parametersBag->set('objectSaved', true);
+
                 if ($object instanceof ObjectWithId) {
-                    $manager->updateWorkPlan([
+                    $workplan['id'] = $object->getId();
+                    $workplan['parameters'] = [
                         'id' => $object->getId(),
-                        'parameters' => [
-                            'id' => $object->getId(),
-                        ],
-                        'formHandleRequest' => false
-                    ]);
+                    ];
                 }
+
+                $manager->updateWorkPlan($workplan);
             },
             static fn (Throwable $error): ChefInterface => $manager->error(
                 new RuntimeException(

@@ -30,6 +30,7 @@ use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface as ObjectWithI
 use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Common\Contracts\Writer\WriterInterface;
 use Teknoo\East\Common\Recipe\Step\SaveObject;
+use Teknoo\East\Common\View\ParametersBag;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
@@ -93,6 +94,7 @@ class SaveObjectTest extends TestCase
                 'id' => 'foo',
             ],
             'formHandleRequest' => false,
+            'objectSaved' => true,
         ]);
 
         $writer->expects(self::any())
@@ -110,7 +112,8 @@ class SaveObjectTest extends TestCase
             $this->buildStep()(
                 $writer,
                 $object,
-                $manager
+                $manager,
+                $this->createMock(ParametersBag::class),
             )
         );
     }
@@ -122,7 +125,10 @@ class SaveObjectTest extends TestCase
         $manager = $this->createMock(ManagerInterface::class);
 
         $manager->expects(self::never())->method('error');
-        $manager->expects(self::never())->method('updateWorkPlan');
+        $manager->expects(self::once())->method('updateWorkPlan')->with([
+            'formHandleRequest' => false,
+            'objectSaved' => true,
+        ]);
 
         $writer->expects(self::any())
             ->method('save')
@@ -139,7 +145,8 @@ class SaveObjectTest extends TestCase
             $this->buildStep()(
                 $writer,
                 $object,
-                $manager
+                $manager,
+                $this->createMock(ParametersBag::class),
             )
         );
     }
@@ -170,7 +177,8 @@ class SaveObjectTest extends TestCase
             $this->buildStep()(
                 $writer,
                 $object,
-                $manager
+                $manager,
+                $this->createMock(ParametersBag::class),
             )
         );
     }
@@ -202,7 +210,8 @@ class SaveObjectTest extends TestCase
             $this->buildStep()(
                 $writer,
                 $object,
-                $manager
+                $manager,
+                $this->createMock(ParametersBag::class),
             )
         );
     }

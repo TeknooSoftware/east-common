@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [1.8.1] - 2023-03-08
+### Stable Release
+- When an object is saved entry `objectSaved` is set a true into workplan and view
+
 ## [1.8.0] - 2023-03-03
 ### Stable Release
 - Add `LazyLoadableCollection` to create lazy collection from Common Queries.

@@ -26,13 +26,16 @@ declare(strict_types=1);
 namespace Teknoo\East\Common\Contracts\Writer;
 
 use Teknoo\East\Common\Contracts\Object\ObjectInterface;
-use Teknoo\East\Common\Contracts\Query\DeletingQueryInterface;
-use Teknoo\East\Common\Contracts\Query\UpdatingQueryInterface;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
  * Interface defining methods to implement in writer in charge of persisted objects, to save or delete persisted objects
  * to be used into recipes of this library.
+ *
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/states Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>

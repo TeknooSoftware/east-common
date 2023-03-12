@@ -42,6 +42,11 @@ use function trim;
  * Service to find a uniq slug about an object, in its class domain, thanks to its dedicated loader, and loop until it
  * found a non used slug and update the object with a valid slug.
  *
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/states Project website
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

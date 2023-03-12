@@ -26,15 +26,20 @@ declare(strict_types=1);
 namespace Teknoo\East\Common\Object\Collection;
 
 use IteratorAggregate;
-use RuntimeException;
 use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
 use Teknoo\East\Common\Contracts\Query\QueryCollectionInterface;
+use Teknoo\East\Common\Query\Exception\NonFetchedCollectionException;
 use Teknoo\Recipe\Promise\Promise;
 use Throwable;
 use Traversable;
 
 /**
  * Collection of objects to fetch only at first iteration, on demand
+ *
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/states Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -80,7 +85,7 @@ class LazyLoadableCollection implements IteratorAggregate
 
     /**
      * @return Traversable<ObjectClassInCollection>
-     * @throws RuntimeException
+     * @throws NonFetchedCollectionException
      */
     public function getIterator(): Traversable
     {
@@ -89,7 +94,7 @@ class LazyLoadableCollection implements IteratorAggregate
         }
 
         if (null === $this->fetchedCollection) {
-            throw new RuntimeException('Error no collection fetched');
+            throw new NonFetchedCollectionException('Error no collection fetched');
         }
 
         yield from $this->fetchedCollection;

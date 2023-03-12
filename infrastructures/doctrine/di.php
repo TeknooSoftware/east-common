@@ -25,20 +25,19 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Common\Doctrine;
 
-use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
 use Exception;
 use ProxyManager\Proxy\GhostObjectInterface;
 use Psr\Container\ContainerInterface;
-use RuntimeException;
 use Teknoo\East\Common\Contracts\DBSource\BatchManipulationManagerInterface;
 use Teknoo\East\Common\Contracts\DBSource\ManagerInterface;
 use Teknoo\East\Common\Contracts\DBSource\Repository\UserRepositoryInterface;
 use Teknoo\East\Common\Contracts\Service\ProxyDetectorInterface;
 use Teknoo\East\Common\Doctrine\DBSource\Common\Manager;
 use Teknoo\East\Common\Doctrine\DBSource\Common\UserRepository;
+use Teknoo\East\Common\Doctrine\DBSource\Exception\NonManagedRepositoryException;
 use Teknoo\East\Common\Doctrine\DBSource\ODM\BatchManipulationManager;
 use Teknoo\East\Common\Doctrine\DBSource\ODM\UserRepository as OdmUserRepository;
 use Teknoo\East\Common\Object\User;
@@ -69,7 +68,7 @@ return [
             return new UserRepository($repository);
         }
 
-        throw new RuntimeException(sprintf(
+        throw new NonManagedRepositoryException(sprintf(
             "Error, repository of class %s are not currently managed",
             $repository::class
         ));

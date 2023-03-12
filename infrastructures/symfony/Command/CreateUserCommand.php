@@ -39,6 +39,11 @@ use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
  * Symfony App Console to put a new administrator into the Website's database. By example, to use to create the first
  * administrator to configure it online.
  *
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/states Project website
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

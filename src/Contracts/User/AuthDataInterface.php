@@ -31,6 +31,11 @@ use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 /**
  * Interface defining set of data able to authenticate an user on a web app thanks to a authentication provider
  *
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/states Project website
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

@@ -25,15 +25,20 @@ declare(strict_types=1);
 
 namespace Teknoo\East\CommonBundle\Recipe\Step;
 
-use RuntimeException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Teknoo\East\Common\Object\TOTPAuth;
 use Teknoo\East\CommonBundle\Object\AbstractUser;
+use Teknoo\East\CommonBundle\Security\Exception\WrongUserException;
 use Teknoo\East\CommonBundle\Writer\SymfonyUserWriter;
 
 /**
  * Step to disable TOTP/Google Authenticator for an user. The User must be an East Common bundle user, wrapping
  * an East Common user
+ *
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/states Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -52,7 +57,7 @@ class DisableTOTP
     {
         $user = $this->getUser();
         if (!$user instanceof AbstractUser) {
-            throw new RuntimeException('User instance is not a East Common bundle user instance');
+            throw new WrongUserException('User instance is not a East Common bundle user instance');
         }
 
         $wrappedUsed = $user->getWrappedUser();

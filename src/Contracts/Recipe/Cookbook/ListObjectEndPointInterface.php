@@ -31,6 +31,11 @@ use Teknoo\Recipe\CookbookInterface;
  * Interface defining a HTTP EndPoint Recipe able to list or browse persisted objects implementing the class
  * `Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface`.
  *
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/states Project website
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

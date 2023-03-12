@@ -33,6 +33,11 @@ use Teknoo\Recipe\Promise\PromiseInterface;
  * object instance is ghosted by a proxy class by the abstract layer, and return the real instance to the promise,
  * or return directly the instance to the promise
  *
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/states Project website
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

@@ -33,6 +33,11 @@ use Teknoo\Immutable\ImmutableTrait;
  * Operator to add a meta-constraint to require at least once sub constraint is valided to be validated (aka the
  * "OR" operator in SQL)
  *
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/states Project website
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

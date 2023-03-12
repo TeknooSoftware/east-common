@@ -37,6 +37,11 @@ use Throwable;
  * This state implement the run behavior, to create the query via the Dotrine ODM Query builder and execute it.
  * The result is passed to the promise
  *
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/states Project website
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  *

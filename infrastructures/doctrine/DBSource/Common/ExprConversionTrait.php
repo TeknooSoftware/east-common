@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Common\Doctrine\DBSource\Common;
 
-use RuntimeException;
 use Teknoo\East\Common\Contracts\Query\Expr\ExprInterface;
+use Teknoo\East\Common\Doctrine\DBSource\Exception\NonManagedClassException;
 use Teknoo\East\Common\Query\Expr\In;
 use Teknoo\East\Common\Query\Expr\InclusiveOr;
 use Teknoo\East\Common\Query\Expr\NotEqual;
@@ -38,6 +38,11 @@ use Teknoo\East\Common\Query\Expr\ObjectReference;
  * Queries expressions to Doctrines generic queries.
  * Usable with ORM or ODM, but a optimized version dedicated to ODM is available into `ODM`
  * namespace.
+ *
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/states Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -123,7 +128,7 @@ trait ExprConversionTrait
 
             $exprClass = $value::class;
             if (!isset(self::$exprMappings[$exprClass])) {
-                throw new RuntimeException("$exprClass is not managed by this repository");
+                throw new NonManagedClassException("$exprClass is not managed by this repository");
             }
 
             $callable = self::$exprMappings[$exprClass];

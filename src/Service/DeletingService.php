@@ -35,6 +35,11 @@ use Teknoo\East\Common\Contracts\Writer\WriterInterface;
  * If the object is soft deletable, it will be flagged with a timestamp to its deletedAt property,
  * else the method "remove" of its writter will be called.
  *
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/states Project website
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

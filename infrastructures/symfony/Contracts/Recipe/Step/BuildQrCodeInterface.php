@@ -32,6 +32,11 @@ use Teknoo\East\Foundation\Manager\ManagerInterface;
  * Contract defining a step able generate a QRCode image (PNG or other image) in a PSR7 Request from a
  * QRCode string value
  *
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/states Project website
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

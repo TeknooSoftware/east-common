@@ -32,6 +32,11 @@ use Teknoo\East\Foundation\Manager\ManagerInterface;
  * Interface to define step to use into a HTTP EndPoint Recipe to load and inject into workplan a form dedicated to
  * search in a objects lists
  *
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/states Project website
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Teknoo\East\CommonBundle\Recipe\Step;
 
-use RuntimeException;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface as GoogleTwoFactorInterface;
 use Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface as TotpTwoFactorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticatorInterface;
@@ -33,10 +32,16 @@ use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Totp\TotpAuthenticatorInte
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Teknoo\East\CommonBundle\Contracts\Object\UserWithTOTPAuthInterface;
 use Teknoo\East\CommonBundle\Form\Model\TOTP;
+use Teknoo\East\CommonBundle\Security\Exception\WrongUserException;
 use Teknoo\East\CommonBundle\Writer\SymfonyUserWriter;
 
 /**
  * Step to validate from code input by user from its TOTP App and enable 2FA at login for this user
+ *
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/states Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -64,7 +69,7 @@ class ValidateTOTP
                 && !$user instanceof TotpTwoFactorInterface
             )
         ) {
-            throw new RuntimeException('User instance is not a East Common bundle user instance');
+            throw new WrongUserException('User instance is not a East Common bundle user instance');
         }
 
         $validated = $authenticator->checkCode($user, $object->code);

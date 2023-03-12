@@ -33,6 +33,11 @@ use Teknoo\East\Foundation\Manager\ManagerInterface;
  * Interface to define step to use into a HTTP EndPoint Recipe to create a form instance and handle the current request.
  * The form must be put into the manager's workplan.
  *
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/states Project website
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

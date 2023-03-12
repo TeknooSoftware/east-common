@@ -32,6 +32,11 @@ use Teknoo\East\Common\Object\TOTPAuth;
 /**
  * Trait to manage TOTP interfaces implementation for Scheb\TwoFactorBundle\*\TwoFactorInterface
  *
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/states Project website
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
@@ -39,9 +44,9 @@ trait TOTPAuthTrait
 {
     private ?TOTPAuth $totpAuth = null;
 
-    public function setTOTPAuth(?TOTPAuth $TOTPAuth): self
+    public function setTOTPAuth(?TOTPAuth $totpAuth): self
     {
-        $this->totpAuth = $TOTPAuth;
+        $this->totpAuth = $totpAuth;
 
         return $this;
     }

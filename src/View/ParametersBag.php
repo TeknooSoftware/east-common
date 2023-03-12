@@ -36,6 +36,11 @@ use Teknoo\Recipe\Ingredient\TransformableInterface;
  * Two bag in a workplan can be merged via the manager's method `merge`
  * A bag can be transformed to an array before to be passed to a step by using the recipe attribute `Transform`
  *
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/states Project website
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

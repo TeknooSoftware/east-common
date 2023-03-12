@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [1.8.2] - 2023-03-12
+### Stable Release
+- Q/A
+
 ## [1.8.1] - 2023-03-08
 ### Stable Release
 - When an object is saved entry `objectSaved` is set a true into workplan and view

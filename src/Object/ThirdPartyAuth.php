@@ -31,6 +31,11 @@ use Teknoo\East\Common\Contracts\User\AuthDataInterface;
  * Class to defined persisted user's tokens and ids on a third party auth provider
  * This class is not dedicated to a specific protocol.
  *
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/states Project website
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

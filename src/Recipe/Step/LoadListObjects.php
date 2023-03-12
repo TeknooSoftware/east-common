@@ -26,11 +26,12 @@ declare(strict_types=1);
 namespace Teknoo\East\Common\Recipe\Step;
 
 use Countable;
-use RuntimeException;
 use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
 use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Common\Contracts\Query\Expr\ExprInterface;
 use Teknoo\East\Common\Query\Enum\Direction;
+use Teknoo\East\Common\Query\Exception\LoadingException;
+use Teknoo\East\Common\Query\Exception\WrongCriteriaException;
 use Teknoo\East\Common\Query\PaginationQuery;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\Recipe\ChefInterface;
@@ -49,6 +50,11 @@ use function preg_match;
  * Criteria are sanitized before to be passed to the query (accept only `^[a-zA-Z0-9\-_]+` keys and only
  * `^[\p{Sm}\p{Sc}\p{L}\p{N}\p{Z}_\-\.\@,]+` string, or a ExprInterface instance, or an array following this same rules
  *
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/states Project website
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
@@ -66,14 +72,14 @@ class LoadListObjects
                 !is_string($key)
                 || 0 === preg_match('#^[a-zA-Z0-9\-_]+$#S', $key)
             ) {
-                throw new RuntimeException('Wrong key in criteria, must follow [a-zA-Z0-9\-_]+', 400);
+                throw new WrongCriteriaException('Wrong key in criteria, must follow [a-zA-Z0-9\-_]+', 400);
             }
 
             if (
                 is_object($value)
                 && !$value instanceof ExprInterface
             ) {
-                throw new RuntimeException("Wrong value in criteria for $key", 400);
+                throw new WrongCriteriaException("Wrong value in criteria for $key", 400);
             }
 
             if (is_array($value)) {
@@ -82,7 +88,7 @@ class LoadListObjects
                 is_string($value)
                 && 0 === preg_match("#^[\p{Sm}\p{Sc}\p{L}\p{N}\p{Z}_\-\.\@,]+$#uS", $value)
             ) {
-                throw new RuntimeException("Wrong value in criteria for $key", 400);
+                throw new WrongCriteriaException("Wrong value in criteria for $key", 400);
             }
 
             $final[$key] = $value;
@@ -130,7 +136,7 @@ class LoadListObjects
                 );
             },
             static fn (Throwable $throwable): ChefInterface => $manager->error(
-                new RuntimeException(
+                new LoadingException(
                     message: $errorMessage,
                     code: $errorCode,
                     previous: $throwable,

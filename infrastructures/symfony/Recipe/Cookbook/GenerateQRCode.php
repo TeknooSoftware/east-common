@@ -39,6 +39,11 @@ use Teknoo\Recipe\RecipeInterface;
  * Cookbook endpoint to generate a QRCode image to register an user into you TOTP app/Google
  * Authenticator
  *
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/states Project website
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

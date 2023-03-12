@@ -32,13 +32,18 @@ use Teknoo\East\Foundation\Manager\ManagerInterface;
 /**
  * Interface to define step to use into a Recipe to implement ACL checking on a list of objects instance
  *
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/states Project website
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 interface ListObjectsAccessControlInterface
 {
     /**
-     * @param iterable<\Teknoo\East\Common\Contracts\Object\ObjectInterface> $objectsCollection
+     * @param iterable<ObjectInterface> $objectsCollection
      */
     public function __invoke(
         ManagerInterface $manager,

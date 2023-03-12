@@ -31,12 +31,17 @@ use Teknoo\East\Common\Object\User;
 /**
  * Contact defining Symfony users classes able to support an 2FA authentication with TOTP protocoles
  *
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/states Project website
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 interface UserWithTOTPAuthInterface
 {
-    public function setTOTPAuth(?TOTPAuth $TOTPAuth): UserWithTOTPAuthInterface;
+    public function setTOTPAuth(?TOTPAuth $totpAuth): UserWithTOTPAuthInterface;
 
     public function getTOTPAuth(): ?TOTPAuth;
 

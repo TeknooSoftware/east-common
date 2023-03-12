@@ -45,15 +45,15 @@ trait ObjectTestTrait
 
     public function testSetId()
     {
-        $Object = $this->buildObject();
+        $object = $this->buildObject();
         self::assertInstanceOf(
-            $Object::class,
-            $Object->setId('fooBar')
+            $object::class,
+            $object->setId('fooBar')
         );
 
         self::assertEquals(
             'fooBar',
-            $Object->getId()
+            $object->getId()
         );
     }
 

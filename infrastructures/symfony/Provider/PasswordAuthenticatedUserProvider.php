@@ -55,6 +55,11 @@ use function interface_exists;
  * pbkdf2.
  * A PasswordAuthenticatedUser is returned for all user authenticated thanks to a modern hash method like sodium.
  *
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/states Project website
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

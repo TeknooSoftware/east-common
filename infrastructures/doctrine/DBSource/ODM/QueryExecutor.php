@@ -43,6 +43,11 @@ use Teknoo\States\Proxy\ProxyTrait;
  * Adapter for Doctrine ODM to able query business to translate operations to Doctrine ODM specification and run it.
  * This adapter is a stated class, the query is not runnable until its method "filterOn" is not called.
  *
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/states Project website
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  *

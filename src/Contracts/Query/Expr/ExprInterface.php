@@ -29,6 +29,11 @@ namespace Teknoo\East\Common\Contracts\Query\Expr;
  * Base interface to define an expression operator can be used in query. The expression can be converted to the
  * good database operator according to the implemention.
  *
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/states Project website
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

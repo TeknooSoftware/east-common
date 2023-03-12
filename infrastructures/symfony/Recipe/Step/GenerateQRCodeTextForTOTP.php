@@ -38,6 +38,11 @@ use UnexpectedValueException;
  * Step to generate QRCode value as string, to build in a next step the QRCOde image.
  * The QRCode is generated thanks to Scheb TwoFactorBundle.
  *
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/states Project website
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */

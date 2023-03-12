@@ -33,6 +33,11 @@ use Teknoo\Recipe\Promise\PromiseInterface;
  * Interface defining methods to implement in loader in charge of persisted objects, to load of find via queries,
  * objects to be used into recipes of this library.
  *
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/states Project website
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  *

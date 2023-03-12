@@ -42,6 +42,11 @@ use function str_replace;
  * Recipe step to render errors page when an error or exception has been thrown during the recipe's execution.
  * Like Render step, Views parameters are fetched from the Parameters Bag and transformed to an array.
  *
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/states Project website
+ *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
@@ -78,15 +83,15 @@ class RenderError
             $errorCode = 500;
         }
 
-        $errorView = 'server';
-        switch ($errorCode) {
-            case 400:
-            case 401:
-            case 402:
-            case 403:
-            case 404:
-                $errorView = (string) $errorCode;
-        }
+        $errorView = match ($errorCode) {
+            400 => (string) $errorCode,
+            401 => (string) $errorCode,
+            402 => (string) $errorCode,
+            403 => (string) $errorCode,
+            404 => (string) $errorCode,
+            500 => (string) $errorCode,
+            default => 'server',
+        };
 
         $errorTemplate = str_replace('<error>', $errorView, $errorTemplate);
 

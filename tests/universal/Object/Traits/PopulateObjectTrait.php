@@ -46,25 +46,25 @@ trait PopulateObjectTrait
     protected function generateObjectPopulated($data = array())
     {
         //Build a new instance of this object
-        $ObjectObject = $this->buildObject();
+        $object = $this->buildObject();
 
         if (!empty($data)) {
             //We must populate the object's var, we use ReflectionClass api to bypass visibility scope constraints
-            $reflectionClassObject = new \ReflectionClass($ObjectObject);
+            $reflectionClassObject = new \ReflectionClass($object);
 
             foreach ($data as $fieldName => $value) {
                 if ($reflectionClassObject->hasProperty($fieldName)) {
                     $propertyObject = $reflectionClassObject->getProperty($fieldName);
                     $propertyObject->setAccessible(true);
-                    $propertyObject->setValue($ObjectObject, $value);
+                    $propertyObject->setValue($object, $value);
                 } elseif ($reflectionClassObject->getParentClass()->hasProperty($fieldName)) {
                     $propertyObject = $reflectionClassObject->getParentClass()->getProperty($fieldName);
                     $propertyObject->setAccessible(true);
-                    $propertyObject->setValue($ObjectObject, $value);
+                    $propertyObject->setValue($object, $value);
                 }
             }
         }
 
-        return $ObjectObject;
+        return $object;
     }
 }

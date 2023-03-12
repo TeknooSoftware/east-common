@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Teknoo\East\CommonBundle\Recipe\Step;
 
-use RuntimeException;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface as GoogleTwoFactorInterface;
 use Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface as TotpTwoFactorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticatorInterface;
@@ -34,6 +33,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Teknoo\East\Common\Object\TOTPAuth;
 use Teknoo\East\Common\View\ParametersBag;
 use Teknoo\East\CommonBundle\Object\AbstractUser;
+use Teknoo\East\CommonBundle\Security\Exception\WrongUserException;
 use Teknoo\East\CommonBundle\Writer\SymfonyUserWriter;
 
 /**
@@ -41,6 +41,11 @@ use Teknoo\East\CommonBundle\Writer\SymfonyUserWriter;
  * an East Common user. The authenticator is pass as ingredient to this step and must be defined before in the
  * workplan. The TOTPAuth instance is injected into ParameterBag after.  The 2FA is only prepared, but not validated
  * until user as confirmed a code with its TOTP app.
+ *
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/states Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -65,7 +70,7 @@ class EnableTOTP
     ): self {
         $user = $this->getUser();
         if (!$user instanceof AbstractUser) {
-            throw new RuntimeException('User instance is not a East Common bundle user instance');
+            throw new WrongUserException('User instance is not a East Common bundle user instance');
         }
 
         $wrappedUsed = $user->getWrappedUser();

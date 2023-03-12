@@ -25,8 +25,6 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Common\Service;
 
-use DateTime;
-use DateTimeInterface;
 use Teknoo\East\Foundation\Time\DatesService as BaseService;
 
 /**
@@ -34,6 +32,11 @@ use Teknoo\East\Foundation\Time\DatesService as BaseService;
  * differences between two datetime instance.
  *
  * You can override the date to pass by calling "setCurrentDate"
+ *
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/states Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>

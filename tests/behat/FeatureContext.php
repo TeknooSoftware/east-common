@@ -124,6 +124,11 @@ class FeatureContext implements Context
      */
     private ?RecipeEndPoint $staticEndPoint = null;
 
+    /**
+     * @var RecipeEndPoint
+     */
+    private ?RecipeEndPoint $mediaEndPoint = null;
+
     public ?EngineInterface $templating = null;
 
     public ?Environment $twig = null;

@@ -31,6 +31,6 @@ use function DI\create;
 use function DI\get;
 
 return [
-  StreamFactory::class => create(),
+    StreamFactory::class => create(),
     'teknoo.east.common.endpoint.media.stream.factory' => get(StreamFactory::class),
 ];

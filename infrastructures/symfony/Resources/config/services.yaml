@@ -20,8 +20,6 @@ parameters:
     teknoo.east.common.bundle.allowed_forms: []
 
     #Bowls
-    teknoo.east.common.endpoint.static.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
-    teknoo.east.common.endpoint.media.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
     teknoo.east.common.endpoint.2fa_totp_enable.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
     teknoo.east.common.endpoint.2fa_totp_disable.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
     teknoo.east.common.endpoint.2fa_totp_qrcode.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
@@ -30,12 +28,13 @@ parameters:
     teknoo.east.common.endpoint.crud.edit.bowl.class: 'Teknoo\Recipe\Bowl\RecipeBowl'
     teknoo.east.common.endpoint.crud.list.bowl.class: 'Teknoo\Recipe\Bowl\RecipeBowl'
     teknoo.east.common.endpoint.crud.new.bowl.class: 'Teknoo\Recipe\Bowl\RecipeBowl'
+    teknoo.east.common.endpoint.static.bowl.class: 'Teknoo\Recipe\Bowl\RecipeBowl'
     teknoo.east.common.endpoint.media.bowl.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
 
 services:
     #Generic Endpoints
     teknoo.east.common.endpoint.static.bowl:
-        class: '%teknoo.east.common.endpoint.static.class%'
+        class: '%teknoo.east.common.endpoint.static.bowl.class%'
         arguments:
             - '@Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderStaticContentEndPointInterface'
             - 0
@@ -45,6 +44,20 @@ services:
         public: true
         arguments:
             - '@teknoo.east.common.endpoint.static.bowl'
+            - '@service_container'
+
+    #Media
+    teknoo.east.common.endpoint.media.bowl:
+        class: '%teknoo.east.common.endpoint.media.bowl.class%'
+        arguments:
+            - '@Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderMediaEndPointInterface'
+            - 0
+
+    teknoo.east.common.endpoint.media:
+        class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
+        public: true
+        arguments:
+            - '@teknoo.east.common.endpoint.media.bowl'
             - '@service_container'
 
     #2FA
@@ -255,17 +268,3 @@ services:
             - '@?scheb_two_factor.security.google_authenticator'
         tags:
             - { name: form.type }
-    
-    #Media
-    teknoo.east.common.endpoint.media.bowl:
-        class: '%teknoo.east.common.endpoint.media.bowl.class%'
-        arguments:
-            - '@Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderMediaEndPointInterface'
-            - 0
-
-    teknoo.east.common.endpoint.media:
-        class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
-        public: true
-        arguments:
-            - '@teknoo.east.common.endpoint.media.bowl'
-            - '@service_container'

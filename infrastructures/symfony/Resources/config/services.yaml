@@ -20,6 +20,7 @@ parameters:
     teknoo.east.common.bundle.allowed_forms: []
 
     #Bowls
+    teknoo.east.common.endpoint.static.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
     teknoo.east.common.endpoint.media.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
     teknoo.east.common.endpoint.2fa_totp_enable.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
     teknoo.east.common.endpoint.2fa_totp_disable.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
@@ -33,11 +34,17 @@ parameters:
 
 services:
     #Generic Endpoints
+    teknoo.east.common.endpoint.static.bowl:
+        class: '%teknoo.east.common.endpoint.static.class%'
+        arguments:
+            - '@Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderStaticContentEndPointInterface'
+            - 0
+
     teknoo.east.common.endpoint.static:
         class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
         public: true
         arguments:
-            - '@teknoo.east.common.endpoint.media.bowl'
+            - '@teknoo.east.common.endpoint.static.bowl'
             - '@service_container'
 
     #2FA

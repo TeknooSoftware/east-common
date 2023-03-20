@@ -67,6 +67,14 @@ use Teknoo\East\Foundation\Recipe\RecipeInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderStaticContentEndPointInterface;
 use Teknoo\East\Common\Recipe\Cookbook\RenderStaticContentEndPoint;
+use Teknoo\East\Common\Contracts\DBSource\Repository\MediaRepositoryInterface;
+use Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderMediaEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Step\GetStreamFromMediaInterface;
+use Teknoo\East\Common\Loader\MediaLoader;
+use Teknoo\East\Common\Recipe\Cookbook\RenderMediaEndPoint;
+use Teknoo\East\Common\Recipe\Step\LoadMedia;
+use Teknoo\East\Common\Recipe\Step\SendMedia;
+use Teknoo\East\Common\Writer\MediaWriter;
 use Teknoo\Recipe\Recipe;
 use Teknoo\Recipe\RecipeInterface as OriginalRecipeInterface;
 
@@ -78,14 +86,20 @@ return [
     //Loaders
     UserLoader::class => create(UserLoader::class)
         ->constructor(get(UserRepositoryInterface::class)),
+    MediaLoader::class => create(MediaLoader::class)
+        ->constructor(get(MediaRepositoryInterface::class)),
 
     //Writer
     UserWriter::class => create(UserWriter::class)
+        ->constructor(get(ManagerInterface::class), get(DatesService::class)),
+    MediaWriter::class => create(MediaWriter::class)
         ->constructor(get(ManagerInterface::class), get(DatesService::class)),
 
     //Deleting
     'teknoo.east.common.deleting.user' => create(DeletingService::class)
         ->constructor(get(UserWriter::class), get(DatesService::class)),
+    'teknoo.east.common.deleting.media' => create(DeletingService::class)
+        ->constructor(get(MediaWriter::class), get(DatesService::class)),
 
     //Service
     FindSlugService::class => create(FindSlugService::class),
@@ -116,6 +130,10 @@ return [
     ExtractSlug::class => create(),
     InitParametersBag::class => create(),
     LoadListObjects::class => create(),
+    LoadMedia::class => create()
+        ->constructor(
+            get(MediaLoader::class)
+        ),
     LoadObject::class => create(),
     Render::class => create()
         ->constructor(
@@ -136,6 +154,10 @@ return [
             get(ResponseFactoryInterface::class)
         ),
     SaveObject::class => create(),
+    SendMedia::class => create()
+        ->constructor(
+            get(ResponseFactoryInterface::class)
+        ),
     SlugPreparation::class => create()
         ->constructor(
             get(FindSlugService::class)
@@ -264,4 +286,14 @@ return [
             $defaultErrorTemplate,
         );
     },
+
+    RenderMediaEndPointInterface::class => get(RenderMediaEndPoint::class),
+    RenderMediaEndPoint::class => create()
+        ->constructor(
+            get(OriginalRecipeInterface::class),
+            get(LoadMedia::class),
+            get(GetStreamFromMediaInterface::class),
+            get(SendMedia::class),
+            get(RenderError::class)
+        ),
 ];

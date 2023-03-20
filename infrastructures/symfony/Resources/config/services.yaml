@@ -29,15 +29,10 @@ parameters:
     teknoo.east.common.endpoint.crud.edit.bowl.class: 'Teknoo\Recipe\Bowl\RecipeBowl'
     teknoo.east.common.endpoint.crud.list.bowl.class: 'Teknoo\Recipe\Bowl\RecipeBowl'
     teknoo.east.common.endpoint.crud.new.bowl.class: 'Teknoo\Recipe\Bowl\RecipeBowl'
+    teknoo.east.common.endpoint.media.bowl.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
 
 services:
     #Generic Endpoints
-    teknoo.east.common.endpoint.media.bowl:
-        class: '%teknoo.east.common.endpoint.media.class%'
-        arguments:
-            - '@Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderStaticContentEndPointInterface'
-            - 0
-
     teknoo.east.common.endpoint.static:
         class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
         public: true
@@ -253,3 +248,17 @@ services:
             - '@?scheb_two_factor.security.google_authenticator'
         tags:
             - { name: form.type }
+    
+    #Media
+    teknoo.east.common.endpoint.media.bowl:
+        class: '%teknoo.east.common.endpoint.media.bowl.class%'
+        arguments:
+            - '@Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderMediaEndPointInterface'
+            - 0
+
+    teknoo.east.common.endpoint.media:
+        class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
+        public: true
+        arguments:
+            - '@teknoo.east.common.endpoint.media.bowl'
+            - '@service_container'

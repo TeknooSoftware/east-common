@@ -64,4 +64,14 @@ class ContainerLaminasTest extends TestCase
             $container->get(StreamFactory::class)
         );
     }
+
+    public function testMediaEndPointStreamFactory()
+    {
+        $container = $this->buildContainer();
+
+        self::assertInstanceOf(
+            StreamFactory::class,
+            $container->get('teknoo.east.common.endpoint.media.stream.factory')
+        );
+    }
 }

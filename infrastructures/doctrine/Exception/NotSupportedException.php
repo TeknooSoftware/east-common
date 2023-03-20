@@ -1,7 +1,7 @@
 <?php
 
 /*
- * East Common.
+ * East Website.
  *
  * LICENSE
  *
@@ -15,7 +15,7 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
- * @link        http://teknoo.software/east/common Project website
+ * @link        http://teknoo.software/east/website Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
@@ -23,14 +23,19 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\CommonBundle\Resources\config;
+namespace Teknoo\East\Common\Doctrine\Exception;
 
-use Laminas\Diactoros\StreamFactory;
+use RuntimeException;
 
-use function DI\create;
-use function DI\get;
-
-return [
-  StreamFactory::class => create(),
-    'teknoo.east.common.endpoint.media.stream.factory' => get(StreamFactory::class),
-];
+/**
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/states Project website
+ *
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
+class NotSupportedException extends RuntimeException
+{
+}

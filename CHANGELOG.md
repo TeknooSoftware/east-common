@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [1.9.0] - 2023-03-20
+### Stable Release
+- Migrate Website Media into Common namespace
+
 ## [1.8.2] - 2023-03-12
 ### Stable Release
 - Q/A
@@ -171,7 +175,7 @@
 - Fork from `East Website 7.0.3`
 - Remove all CMS features (`Content`, `Item`, `Media`, `Type`)
 - Remove all Doctrine translation extension
-- Rename `Teknoo\East\Website` to `Teknoo\East\Common`
+- Rename `Teknoo\East\Common` to `Teknoo\East\Common`
 - Migrate all interfaces in `Teknoo\East\Common` to `Teknoo\East\Common\Contracts`
 
 ## [1.0.0-beta2] - 2022-04-08
@@ -183,5 +187,5 @@
 - Fork from `East Website 7.0.3`
 - Remove all CMS features (`Content`, `Item`, `Media`, `Type`)
 - Remove all Doctrine translation extension
-- Rename `Teknoo\East\Website` to `Teknoo\East\Common`
+- Rename `Teknoo\East\Common` to `Teknoo\East\Common`
 - Migrate all interfaces in `Teknoo\East\Common` to `Teknoo\East\Common\Contracts`

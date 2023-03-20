@@ -45,3 +45,39 @@ _teknoo_common_admin_user_delete:
         deleter: '@teknoo.east.common.deleting.user'
         route: '_teknoo_common_admin_user_list'
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+
+# media
+_teknoo_common_admin_media_list:
+    path: '/media'
+    methods:  ['GET', 'POST']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.crud.list'
+        loader: '@Teknoo\East\Common\Loader\MediaLoader'
+        defaultOrderDirection: 'ASC'
+        itemsPerPage: 20
+        template: '@@TeknooEastWebsite/AdminMedia/list.html.twig'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+
+_teknoo_common_admin_media_new:
+    path: '/media/new'
+    methods:  ['GET', 'POST', 'PUT']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.crud.new'
+        loader: '@Teknoo\East\Common\Loader\MediaLoader'
+        writer: '@Teknoo\East\Common\Doctrine\Writer\ODM\MediaWriter'
+        objectClass: 'Teknoo\East\Common\Doctrine\Object\Media'
+        formClass: 'Teknoo\East\CommonBundle\Form\Type\MediaType'
+        template: '@@TeknooEastWebsite/AdminMedia/new.html.twig'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+        formOptions: { }
+        route: '_teknoo_common_admin_media_list'
+
+_teknoo_common_admin_media_delete:
+    path: '/media/delete/{id}'
+    methods:  ['GET', 'DELETE']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.crud.delete'
+        loader: '@Teknoo\East\Common\Loader\MediaLoader'
+        deleter: '@teknoo.east.common.deleting.media'
+        route: '_teknoo_common_admin_media_list'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'

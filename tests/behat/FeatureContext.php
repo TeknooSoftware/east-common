@@ -40,11 +40,13 @@ use Laminas\Diactoros\StreamFactory;
 use Laminas\Diactoros\UploadedFileFactory;
 use Laminas\Diactoros\Uri;
 use OTPHP\TOTP;
-use ParagonIE\ConstantTime\Base32;
 use PHPUnit\Framework\Assert;
+use ParagonIE\ConstantTime\Base32;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\StreamInterface;
 use ReflectionObject;
 use Scheb\TwoFactorBundle\SchebTwoFactorBundle;
 use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
@@ -59,12 +61,18 @@ use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\PasswordHasher\Hasher\SodiumPasswordHasher;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Teknoo\DI\SymfonyBridge\DIBridgeBundle;
-use Teknoo\East\Common\Object\TOTPAuth;
 use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
 use Teknoo\East\CommonBundle\TeknooEastCommonBundle;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
+use Teknoo\East\Common\Contracts\Recipe\Step\GetStreamFromMediaInterface;
+use Teknoo\East\Common\Doctrine\Object\Content;
+use Teknoo\East\Common\Loader\MediaLoader;
+use Teknoo\East\Common\Object\Media as BaseMedia;
+use Teknoo\East\Common\Object\Media;
 use Teknoo\East\Common\Object\StoredPassword;
+use Teknoo\East\Common\Object\TOTPAuth;
 use Teknoo\East\Common\Object\User;
+use Teknoo\East\Common\Recipe\Cookbook\RenderMediaEndPoint;
 use Teknoo\East\Common\Service\DatesService;
 use Teknoo\East\FoundationBundle\EastFoundationBundle;
 use Teknoo\East\Foundation\Client\ClientInterface;
@@ -80,6 +88,7 @@ use Teknoo\East\Foundation\Router\RouterInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Foundation\Template\ResultInterface;
 use Teknoo\East\Twig\Template\Engine;
+use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\Tests\East\Common\Behat\Object\MyObject;
 use Teknoo\Tests\East\Common\Behat\Object\MyObjectTimeStampable;
 use Throwable;
@@ -132,6 +141,8 @@ class FeatureContext implements Context
     private ?User $user = null;
 
     private array $cookies = [];
+
+    private ?MediaLoader $mediaLoader = null;
 
     /**
      * @Given I have DI initialized
@@ -365,7 +376,7 @@ class FeatureContext implements Context
                 if (isset($criteria['or'][0]['active'])) {
                     unset($criteria['or']);
                 }
-                
+
                 if (isset($criteria['slug']) && 'page-with-error' === $criteria['slug']) {
                     throw new Exception('Error', 404);
                 }
@@ -391,6 +402,131 @@ class FeatureContext implements Context
         return $this->objectRepository;
     }
 
+    /**
+     * @Given a templating engine
+     */
+    public function aTemplatingEngine(): void
+    {
+        $this->templating = new class($this) implements EngineInterface {
+            private $context;
+
+            /**
+             * @param \Teknoo\Tests\East\Common\Behat\FeatureContext $context
+             */
+            public function __construct(FeatureContext $context)
+            {
+                $this->context = $context;
+            }
+
+            public function render(PromiseInterface $promise, $name, array $parameters = array()): EngineInterface
+            {
+                if ('404-error' === $name) {
+                    $promise->fail(new Exception('Error 404'));
+
+                    return $this;
+                }
+
+                Assert::assertEquals($this->context->templateToCall, $name);
+
+                $keys = [];
+                $values = [];
+
+                $result = $this->context->buildResultObject(str_replace($keys, $values, $this->context->templateContent));
+                $promise->success($result);
+
+                return $this;
+            }
+
+            public function exists($name)
+            {
+            }
+
+            public function supports($name)
+            {
+            }
+        };
+
+        $this->container->set(EngineInterface::class, $this->templating);
+    }
+
+    /**
+     * @Given a Media Loader
+     */
+    public function aMediaLoader(): void
+    {
+        $this->mediaLoader = $this->container->get(MediaLoader::class);
+    }
+
+    /**
+     * @Given an available image called :name
+     */
+    public function anAvailableImageCalled(string $name): void
+    {
+        $media = new class extends Media {
+            /**
+             * @inheritDoc
+             */
+            public function getResource()
+            {
+                $hf = \fopen('php://memory', 'rw');
+                fwrite($hf, 'fooBar');
+                fseek($hf, 0);
+
+                return $hf;
+            }
+        };
+
+        $this->getObjectRepository()->setObject(
+            [
+                'or' => [
+                    ['id' => $name],
+                    ['metadata.legacyId' => $name,]
+                ]
+            ],
+            $media->setId($name)
+                ->setName($name)
+        );
+    }
+
+    /**
+     * @Given a Endpoint able to serve resource from database.
+     */
+    public function aEndpointAbleToServeResourceFromDatabase(): void
+    {
+        $this->container->set(
+            GetStreamFromMediaInterface::class,
+            new class($this->container->get(StreamFactoryInterface::class)) implements GetStreamFromMediaInterface {
+                protected StreamFactoryInterface $streamFactory;
+
+                public function __construct(StreamFactoryInterface $streamFactory)
+                {
+                    $this->streamFactory = $streamFactory;
+                }
+
+                public function __invoke(
+                    BaseMedia $media,
+                    ManagerInterface $manager
+                ): GetStreamFromMediaInterface {
+                    $hf = fopen('php://memory', 'rw+');
+                    fwrite($hf, 'fooBar');
+                    fseek($hf, 0);
+
+                    $stream = $this->streamFactory->createStreamFromResource($hf);
+
+                    $manager->updateWorkPlan([
+                        StreamInterface::class => $stream,
+                    ]);
+
+                    return $this;
+                }
+            }
+        );
+
+        $this->mediaEndPoint = new RecipeEndPoint(
+            $this->container->get(RenderMediaEndPoint::class),
+            $this->container
+        );
+    }
 
     /**
      * @Given I register a router
@@ -465,6 +601,9 @@ class FeatureContext implements Context
             case 'staticEndPoint':
                 $params = ['template' => 'Acme:MyBundle:template.html.twig'];
                 $controller = $this->staticEndPoint;
+                break;
+            case 'mediaEndPoint':
+                $controller = $this->mediaEndPoint;
                 break;
         }
 
@@ -587,8 +726,10 @@ class FeatureContext implements Context
         Assert::assertInstanceOf(ResponseInterface::class, $this->response);
         Assert::assertNull($this->error);
 
-        foreach ($this->sfResponse->headers->getCookies() as $cookie) {
-            $this->cookies[$cookie->getName()] = $cookie->getValue();
+        if (null !== $this->sfResponse) {
+            foreach ($this->sfResponse->headers->getCookies() as $cookie) {
+                $this->cookies[$cookie->getName()] = $cookie->getValue();
+            }
         }
     }
 

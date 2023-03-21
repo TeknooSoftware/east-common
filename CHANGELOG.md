@@ -3,6 +3,7 @@
 ## [1.9.0] - 2023-03-20
 ### Stable Release
 - Migrate Website Media into Common namespace
+- Migrate Website LocalMiddleware into Common namespace
 
 ## [1.8.2] - 2023-03-12
 ### Stable Release

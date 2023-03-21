@@ -29,23 +29,31 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Teknoo\East\Common\Contracts\DBSource\ManagerInterface;
+use Teknoo\East\Common\Contracts\DBSource\Repository\MediaRepositoryInterface;
 use Teknoo\East\Common\Contracts\DBSource\Repository\UserRepositoryInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\CreateObjectEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\DeleteObjectEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\EditObjectEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\ListObjectEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderMediaEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderStaticContentEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormHandlingInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormProcessingInterface;
+use Teknoo\East\Common\Contracts\Recipe\Step\GetStreamFromMediaInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\ListObjectsAccessControlInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\ObjectAccessControlInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RenderFormInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\SearchFormLoaderInterface;
+use Teknoo\East\Common\Loader\MediaLoader;
 use Teknoo\East\Common\Loader\UserLoader;
+use Teknoo\East\Common\Middleware\LocaleMiddleware;
 use Teknoo\East\Common\Recipe\Cookbook\CreateObjectEndPoint;
 use Teknoo\East\Common\Recipe\Cookbook\DeleteObjectEndPoint;
 use Teknoo\East\Common\Recipe\Cookbook\EditObjectEndPoint;
 use Teknoo\East\Common\Recipe\Cookbook\ListObjectEndPoint;
+use Teknoo\East\Common\Recipe\Cookbook\RenderMediaEndPoint;
+use Teknoo\East\Common\Recipe\Cookbook\RenderStaticContentEndPoint;
 use Teknoo\East\Common\Recipe\Step\CreateObject;
 use Teknoo\East\Common\Recipe\Step\DeleteObject;
 use Teknoo\East\Common\Recipe\Step\ExtractOrder;
@@ -53,28 +61,21 @@ use Teknoo\East\Common\Recipe\Step\ExtractPage;
 use Teknoo\East\Common\Recipe\Step\ExtractSlug;
 use Teknoo\East\Common\Recipe\Step\InitParametersBag;
 use Teknoo\East\Common\Recipe\Step\LoadListObjects;
+use Teknoo\East\Common\Recipe\Step\LoadMedia;
 use Teknoo\East\Common\Recipe\Step\LoadObject;
 use Teknoo\East\Common\Recipe\Step\Render;
 use Teknoo\East\Common\Recipe\Step\RenderError;
 use Teknoo\East\Common\Recipe\Step\RenderList;
 use Teknoo\East\Common\Recipe\Step\SaveObject;
+use Teknoo\East\Common\Recipe\Step\SendMedia;
 use Teknoo\East\Common\Recipe\Step\SlugPreparation;
 use Teknoo\East\Common\Service\DatesService;
 use Teknoo\East\Common\Service\DeletingService;
 use Teknoo\East\Common\Service\FindSlugService;
+use Teknoo\East\Common\Writer\MediaWriter;
 use Teknoo\East\Common\Writer\UserWriter;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
-use Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderStaticContentEndPointInterface;
-use Teknoo\East\Common\Recipe\Cookbook\RenderStaticContentEndPoint;
-use Teknoo\East\Common\Contracts\DBSource\Repository\MediaRepositoryInterface;
-use Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderMediaEndPointInterface;
-use Teknoo\East\Common\Contracts\Recipe\Step\GetStreamFromMediaInterface;
-use Teknoo\East\Common\Loader\MediaLoader;
-use Teknoo\East\Common\Recipe\Cookbook\RenderMediaEndPoint;
-use Teknoo\East\Common\Recipe\Step\LoadMedia;
-use Teknoo\East\Common\Recipe\Step\SendMedia;
-use Teknoo\East\Common\Writer\MediaWriter;
 use Teknoo\Recipe\Recipe;
 use Teknoo\Recipe\RecipeInterface as OriginalRecipeInterface;
 
@@ -113,6 +114,15 @@ return [
                 InitParametersBag::class,
                 [],
                 4
+            );
+        }
+
+        if ($container->has(LocaleMiddleware::class)) {
+            $previous = $previous->cook(
+                [$container->get(LocaleMiddleware::class), 'execute'],
+                LocaleMiddleware::class,
+                [],
+                LocaleMiddleware::MIDDLEWARE_PRIORITY
             );
         }
 

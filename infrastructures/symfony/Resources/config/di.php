@@ -28,34 +28,55 @@ namespace Teknoo\East\CommonBundle\Resources\config;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
-use Teknoo\East\Common\Recipe\Step\CreateObject;
-use Teknoo\East\Common\Recipe\Step\RenderError;
 use Teknoo\East\CommonBundle\Contracts\Recipe\Step\BuildQrCodeInterface;
+use Teknoo\East\CommonBundle\Middleware\LocaleMiddleware;
 use Teknoo\East\CommonBundle\Recipe\Cookbook\Disable2FA;
 use Teknoo\East\CommonBundle\Recipe\Cookbook\Enable2FA;
 use Teknoo\East\CommonBundle\Recipe\Cookbook\GenerateQRCode;
 use Teknoo\East\CommonBundle\Recipe\Cookbook\Validate2FA;
 use Teknoo\East\CommonBundle\Recipe\Step\DisableTOTP;
 use Teknoo\East\CommonBundle\Recipe\Step\EnableTOTP;
+use Teknoo\East\CommonBundle\Recipe\Step\FormHandling;
+use Teknoo\East\CommonBundle\Recipe\Step\FormProcessing;
 use Teknoo\East\CommonBundle\Recipe\Step\GenerateQRCodeTextForTOTP;
+use Teknoo\East\CommonBundle\Recipe\Step\RedirectClient;
+use Teknoo\East\CommonBundle\Recipe\Step\RenderForm;
+use Teknoo\East\CommonBundle\Recipe\Step\SearchFormLoader;
 use Teknoo\East\CommonBundle\Recipe\Step\ValidateTOTP;
-use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormHandlingInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormProcessingInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RenderFormInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\SearchFormLoaderInterface;
-use Teknoo\East\CommonBundle\Recipe\Step\FormHandling;
-use Teknoo\East\CommonBundle\Recipe\Step\FormProcessing;
-use Teknoo\East\CommonBundle\Recipe\Step\RedirectClient;
-use Teknoo\East\CommonBundle\Recipe\Step\RenderForm;
-use Teknoo\East\CommonBundle\Recipe\Step\SearchFormLoader;
+use Teknoo\East\Common\Recipe\Step\CreateObject;
+use Teknoo\East\Common\Recipe\Step\RenderError;
+use Teknoo\East\Foundation\Recipe\RecipeInterface;
+use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\Recipe\RecipeInterface as OriginalRecipeInterface;
 
 use function DI\create;
+use function DI\decorate;
 use function DI\get;
 
 return [
+    //Middleware
+    LocaleMiddleware::class => static function (ContainerInterface $container): LocaleMiddleware {
+        return new LocaleMiddleware($container->get('translator'));
+    },
+
+    RecipeInterface::class => decorate(static function ($previous, ContainerInterface $container) {
+        if ($previous instanceof RecipeInterface) {
+            $previous = $previous->cook(
+                [$container->get(LocaleMiddleware::class), 'execute'],
+                LocaleMiddleware::class,
+                [],
+                LocaleMiddleware::MIDDLEWARE_PRIORITY
+            );
+        }
+
+        return $previous;
+    }),
+
     //Search
     SearchFormLoaderInterface::class => get(SearchFormLoader::class),
 

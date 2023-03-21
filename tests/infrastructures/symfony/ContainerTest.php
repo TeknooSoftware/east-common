@@ -30,11 +30,14 @@ use DI\ContainerBuilder;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
+use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormHandlingInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Common\Recipe\Step\CreateObject;
 use Teknoo\East\Common\Recipe\Step\RenderError;
 use Teknoo\East\CommonBundle\Contracts\Recipe\Step\BuildQrCodeInterface;
+use Teknoo\East\CommonBundle\Middleware\LocaleMiddleware;
 use Teknoo\East\CommonBundle\Recipe\Cookbook\Disable2FA;
 use Teknoo\East\CommonBundle\Recipe\Cookbook\Enable2FA;
 use Teknoo\East\CommonBundle\Recipe\Cookbook\GenerateQRCode;
@@ -43,12 +46,16 @@ use Teknoo\East\CommonBundle\Recipe\Step\DisableTOTP;
 use Teknoo\East\CommonBundle\Recipe\Step\EnableTOTP;
 use Teknoo\East\CommonBundle\Recipe\Step\GenerateQRCodeTextForTOTP;
 use Teknoo\East\CommonBundle\Recipe\Step\ValidateTOTP;
+use Teknoo\East\Foundation\Recipe\RecipeInterface;
+use Teknoo\East\Foundation\Router\RouterInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormProcessingInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RenderFormInterface;
 use Teknoo\East\CommonBundle\Recipe\Step\FormProcessing;
 use Teknoo\East\CommonBundle\Recipe\Step\RenderForm;
 
+use Teknoo\East\Common\Contracts\DBSource\Repository\ContentRepositoryInterface;
+use Teknoo\East\Common\Contracts\DBSource\Repository\ItemRepositoryInterface;
 use Teknoo\Recipe\RecipeInterface as OriginalRecipeInterface;
 use function interface_exists;
 /**
@@ -183,6 +190,34 @@ class ContainerTest extends TestCase
         self::assertInstanceOf(
             Validate2FA::class,
             $container->get(Validate2FA::class)
+        );
+    }
+
+    public function testLocaleMiddleware()
+    {
+        $container = $this->buildContainer();
+        $translatableListener = $this->createMock(LocaleAwareInterface::class);
+
+        $container->set('translator', $translatableListener);
+        $loader = $container->get(LocaleMiddleware::class);
+
+        self::assertInstanceOf(
+            LocaleMiddleware::class,
+            $loader
+        );
+    }
+
+    public function testEastManagerMiddlewareInjection()
+    {
+        $container = $this->buildContainer();
+
+        $container->set(LoggerInterface::class, $this->createMock(LoggerInterface::class));
+        $container->set(RouterInterface::class, $this->createMock(RouterInterface::class));
+        $container->set('translator', $this->createMock(LocaleAwareInterface::class));
+
+        self::assertInstanceOf(
+            RecipeInterface::class,
+            $container->get(RecipeInterface::class)
         );
     }
 }

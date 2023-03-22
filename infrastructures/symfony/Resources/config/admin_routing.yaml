@@ -55,7 +55,7 @@ _teknoo_common_admin_media_list:
         loader: '@Teknoo\East\Common\Loader\MediaLoader'
         defaultOrderDirection: 'ASC'
         itemsPerPage: 20
-        template: '@@TeknooEastWebsite/AdminMedia/list.html.twig'
+        template: '@@TeknooEastCommon/AdminMedia/list.html.twig'
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
 
 _teknoo_common_admin_media_new:
@@ -67,7 +67,7 @@ _teknoo_common_admin_media_new:
         writer: '@Teknoo\East\Common\Doctrine\Writer\ODM\MediaWriter'
         objectClass: 'Teknoo\East\Common\Doctrine\Object\Media'
         formClass: 'Teknoo\East\CommonBundle\Form\Type\MediaType'
-        template: '@@TeknooEastWebsite/AdminMedia/new.html.twig'
+        template: '@@TeknooEastCommon/AdminMedia/new.html.twig'
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
         formOptions: { }
         route: '_teknoo_common_admin_media_list'

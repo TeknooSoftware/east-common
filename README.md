@@ -282,7 +282,7 @@ This library requires PHP 8.1 or newer and it's only compatible with Symfony 6.0
 Credits
 -------
 
-Richard Déloge - <richarddeloge@gmail.com> - Lead developer.
+Richard Déloge - <richard@teknoo.software> - Lead developer.
 Teknoo Software - <https://teknoo.software>
 
 About Teknoo Software

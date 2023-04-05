@@ -9,16 +9,16 @@
  * license that are bundled with this package in the folder licences
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to richarddeloge@gmail.com so we can send you a copy immediately.
+ * to richard@teknoo.software so we can send you a copy immediately.
  *
  *
- * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) EIRL Richard Déloge (richard@teknoo.software)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
  * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
- * @author      Richard Déloge <richarddeloge@gmail.com>
+ * @author      Richard Déloge <richard@teknoo.software>
  */
 
 declare(strict_types=1);
@@ -42,10 +42,10 @@ use Teknoo\East\CommonBundle\Writer\SymfonyUserWriter;
  * workplan. The TOTPAuth instance is injected into ParameterBag after.  The 2FA is only prepared, but not validated
  * until user as confirmed a code with its TOTP app.
  *
- * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) EIRL Richard Déloge (richard@teknoo.software)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
- * @author      Richard Déloge <richarddeloge@gmail.com>
+ * @author      Richard Déloge <richard@teknoo.software>
  */
 class EnableTOTP
 {

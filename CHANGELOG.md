@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [1.9.1] - 2023-04-11
+### Stable Release
+- Allow psr/http-message 2
+
 ## [1.9.0] - 2023-03-20
 ### Stable Release
 - Migrate Website Media into Common namespace

@@ -92,6 +92,7 @@ class SaveObjectTest extends TestCase
             'id' => 'foo',
             'parameters' => [
                 'id' => 'foo',
+                'objectSaved' => true
             ],
             'formHandleRequest' => false,
             'objectSaved' => true,

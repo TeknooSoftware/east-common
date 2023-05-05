@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [1.9.3] - 2023-05-05
+### Stable Release
+- savedObject var is also set for created object and not only for updated object
+
 ## [1.9.2] - 2023-04-16
 ### Stable Release
 - Update dev lib requirements

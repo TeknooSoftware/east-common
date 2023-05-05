@@ -72,6 +72,7 @@ class RenderForm implements RenderFormInterface
         ObjectInterface $object,
         bool $isTranslatable = false,
         #[Transform(ParametersBag::class)] array $viewParameters = [],
+        bool|string|null $objectSaved = null,
     ): RenderFormInterface {
         $parameters = [
             'objectInstance' => $object,
@@ -79,6 +80,13 @@ class RenderForm implements RenderFormInterface
             'formView' => null,
             'isTranslatable' => $isTranslatable
         ];
+
+        if (
+            !isset($viewParameters['objectSaved'])
+            && null !== $objectSaved
+        ) {
+            $viewParameters['objectSaved'] = !empty($objectSaved);
+        }
 
         if ($form instanceof FormInterface) {
             $parameters['formView'] = $form->createView();

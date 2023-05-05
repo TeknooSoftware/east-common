@@ -72,6 +72,7 @@ class SaveObject
                     $workplan['id'] = $object->getId();
                     $workplan['parameters'] = [
                         'id' => $object->getId(),
+                        'objectSaved' => true,
                     ];
                 }
 

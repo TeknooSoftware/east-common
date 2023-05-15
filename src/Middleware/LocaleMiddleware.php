@@ -12,8 +12,8 @@
  * to richard@teknoo.software so we can send you a copy immediately.
  *
  *
- * @copyright   Copyright (c) EIRL Richard Déloge (richard@teknoo.software)
- * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  *
  * @link        http://teknoo.software/east/website Project website
  *
@@ -41,8 +41,8 @@ use function is_callable;
  * And register it into the session for next requests, add it as message attribute and workplan's ingredient.
  * Register also it into the view parameters bags.
  *
- * @copyright   Copyright (c) EIRL Richard Déloge (richard@teknoo.software)
- * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */

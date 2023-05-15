@@ -12,8 +12,8 @@
  * to richard@teknoo.software so we can send you a copy immediately.
  *
  *
- * @copyright   Copyright (c) EIRL Richard Déloge (richard@teknoo.software)
- * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  *
  * @link        http://teknoo.software/east/common Project website
  *
@@ -42,8 +42,8 @@ use Teknoo\East\CommonBundle\Writer\SymfonyUserWriter;
  * workplan. The TOTPAuth instance is injected into ParameterBag after.  The 2FA is only prepared, but not validated
  * until user as confirmed a code with its TOTP app.
  *
- * @copyright   Copyright (c) EIRL Richard Déloge (richard@teknoo.software)
- * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */

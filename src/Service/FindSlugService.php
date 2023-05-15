@@ -12,8 +12,8 @@
  * to richard@teknoo.software so we can send you a copy immediately.
  *
  *
- * @copyright   Copyright (c) EIRL Richard Déloge (richard@teknoo.software)
- * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  *
  * @link        http://teknoo.software/east/common Project website
  *
@@ -42,8 +42,8 @@ use function trim;
  * Service to find a uniq slug about an object, in its class domain, thanks to its dedicated loader, and loop until it
  * found a non used slug and update the object with a valid slug.
  *
- * @copyright   Copyright (c) EIRL Richard Déloge (richard@teknoo.software)
- * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */

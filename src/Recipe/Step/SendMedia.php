@@ -12,8 +12,8 @@
  * to richard@teknoo.software so we can send you a copy immediately.
  *
  *
- * @copyright   Copyright (c) EIRL Richard Déloge (richard@teknoo.software)
- * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  *
  * @link        http://teknoo.software/east/website Project website
  *
@@ -36,8 +36,8 @@ use Teknoo\East\Foundation\Client\ClientInterface;
  * This step will also update reponses's headers to add content type and filename if they are defined in the media.
  * The lenght of the stream will be also put into headers.
  *
- * @copyright   Copyright (c) EIRL Richard Déloge (richard@teknoo.software)
- * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */

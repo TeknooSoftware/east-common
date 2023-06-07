@@ -1,5 +1,10 @@
 # Teknoo Software - Common - Change Log
 
+## [1.9.5] - 2023-06-07
+### Stable Release
+- Update Teknoo libs
+- Require Symfony 6.3 or newer
+
 ## [1.9.4] - 2023-05-15
 ### Stable Release
 - Update dev lib requirements

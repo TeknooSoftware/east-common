@@ -243,7 +243,7 @@ sharing knowledge and skills.
 
 License
 -------
-Space is licensed under the MIT License - see the licenses folder for details.
+East Common is licensed under the MIT License - see the licenses folder for details.
 
 Installation & Requirements
 ---------------------------

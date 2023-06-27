@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [1.9.6] - 2023-06-27
+### Stable Release
+- Fix PSR4 issue with MediaTest file. (Tests can be reused in others libaries)
+
 ## [1.9.5] - 2023-06-07
 ### Stable Release
 - Update Teknoo libs

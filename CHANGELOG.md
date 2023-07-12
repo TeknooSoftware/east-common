@@ -1,5 +1,10 @@
 # Teknoo Software - Common - Change Log
 
+## [2.0.0-beta1] - 2023-07-12
+### Stable Release
+- Support PHP-DI 7.0+
+- Support Laminas Diactoros 3.0+
+
 ## [1.9.6] - 2023-06-27
 ### Stable Release
 - Fix PSR4 issue with MediaTest file. (Tests can be reused in others libaries)

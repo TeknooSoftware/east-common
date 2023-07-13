@@ -47,7 +47,7 @@
         "teknoo/immutable": "^3.0.16",
         "teknoo/states": "^6.1.2",
         "teknoo/recipe": "^4.2.8",
-        "teknoo/east-foundation": "^7.0.0-beta1"
+        "teknoo/east-foundation": "^7.0.0"
     },
     "require-dev": {
         "ext-mongodb" : "*",
@@ -59,7 +59,7 @@
         "icanhazstring/composer-unused": "^0.8.10",
         "nikic/php-parser": "^4.16",
         "behat/behat": "^3.13",
-        "teknoo/bridge-phpdi-symfony": "^6.0.0-beta1",
+        "teknoo/bridge-phpdi-symfony": "^6.0.0",
         "symfony/config": "^6.3",
         "symfony/console": "^6.3",
         "symfony/dependency-injection": "^6.3",

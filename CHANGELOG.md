@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [2.0.1] - 2023-08-06
+### Stable Release
+- Reorder options in Symfony Routes
+
 ## [2.0.0] - 2023-07-13
 ### Stable Release
 - Support PHP-DI 7.0+

@@ -47,7 +47,7 @@ interface FormHandlingInterface
         ServerRequestInterface $request,
         ManagerInterface $manager,
         string $formClass,
-        array $formOptions,
-        ObjectInterface $object
+        ObjectInterface $object,
+        array $formOptions = [],
     ): FormHandlingInterface;
 }

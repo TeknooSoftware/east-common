@@ -111,8 +111,8 @@ class FormHandlingTest extends TestCase
                 $request,
                 $manager,
                 $formClass,
+                $object,
                 $formOptions,
-                $object
             )
         );
     }
@@ -148,8 +148,8 @@ class FormHandlingTest extends TestCase
                 $request,
                 $manager,
                 $formClass,
-                $formOptions,
                 $object,
+                $formOptions,
                 false
             )
         );
@@ -186,8 +186,8 @@ class FormHandlingTest extends TestCase
                 $request,
                 $manager,
                 $formClass,
+                $object,
                 $formOptions,
-                $object
             )
         );
     }
@@ -230,8 +230,8 @@ class FormHandlingTest extends TestCase
                 $request,
                 $manager,
                 $formClass,
+                $object,
                 $formOptions,
-                $object
             )
         );
     }
@@ -268,8 +268,8 @@ class FormHandlingTest extends TestCase
                 $request,
                 $manager,
                 $formClass,
+                $object,
                 $formOptions,
-                $object
             )
         );
     }

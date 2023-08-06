@@ -71,8 +71,8 @@ class FormHandling implements FormHandlingInterface
         ServerRequestInterface $request,
         ManagerInterface $manager,
         string $formClass,
-        array $formOptions,
         ObjectInterface $object,
+        array $formOptions = [],
         bool $formHandleRequest = true,
     ): FormHandlingInterface {
         $parsedBody = (array) $request->getParsedBody();

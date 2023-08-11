@@ -58,3 +58,14 @@ _teknoo_common_admin_my_object_timestampable_delete:
         deleter: '@teknoo.east.common.deleting.my_object_timestampable'
         route: '_teknoo_common_admin_my_object_timestampable_list'
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+
+_teknoo_common_api_my_object_timestampable_delete:
+    path: '/api/my_object_timestampable/delete/{id}'
+    methods:  ['GET', 'DELETE']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.crud.delete'
+        loader: '@Teknoo\Tests\East\Common\Behat\Loader\MyObjectTimeStampableLoader'
+        deleter: '@teknoo.east.common.deleting.my_object_timestampable'
+        api: 'json'
+        template: '@@TeknooEastCommon/Api/delete.json.twig'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.json.twig'

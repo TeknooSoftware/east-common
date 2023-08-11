@@ -782,6 +782,15 @@ class FeatureContext implements Context
 
             public function render($name, array $parameters = []): string
             {
+                $apiTemplate = [
+                    '@TeknooEastCommon/Api/delete.json.twig',
+
+                ];
+
+                if (in_array($name, $apiTemplate)) {
+                    return json_encode(['success' => true]);
+                }
+
                 if (isset($parameters['totpAuth']) && ($totpAuth = $parameters['totpAuth']) instanceof TOTPAuth) {
                     return json_encode(
                         [
@@ -919,8 +928,9 @@ class FeatureContext implements Context
 
     /**
      * @Then I should get in the form :body
+     * @Then I should get in the response :body
      */
-    public function iShouldGetInTheForm(string $body): void
+    public function iShouldGetInThe(string $body): void
     {
         $expectedBody = json_decode($body, true);
 

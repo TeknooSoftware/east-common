@@ -31,7 +31,9 @@ use Teknoo\East\Common\Contracts\Recipe\Step\ObjectAccessControlInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Common\Recipe\Cookbook\DeleteObjectEndPoint;
 use Teknoo\East\Common\Recipe\Step\DeleteObject;
+use Teknoo\East\Common\Recipe\Step\JumpIf;
 use Teknoo\East\Common\Recipe\Step\LoadObject;
+use Teknoo\East\Common\Recipe\Step\Render;
 use Teknoo\East\Common\Recipe\Step\RenderError;
 use Teknoo\Recipe\RecipeInterface;
 use Teknoo\Tests\Recipe\Cookbook\BaseCookbookTestTrait;
@@ -51,16 +53,17 @@ class DeleteObjectEndPointWithDefaultErrorTemplateTest extends TestCase
 
     private ?ObjectAccessControlInterface $objectAccessControl = null;
 
+    private ?JumpIf $jumpIf = null;
+
     private ?DeleteObject $deleteObject = null;
 
     private ?RedirectClientInterface $redirectClient = null;
 
+    private ?Render $render = null;
+
     private ?RenderError $renderError = null;
 
-    /**
-     * @return RecipeInterface|MockObject
-     */
-    public function getRecipe(): RecipeInterface
+    public function getRecipe(): RecipeInterface&MockObject
     {
         if (null === $this->recipe) {
             $this->recipe = $this->createMock(RecipeInterface::class);
@@ -69,10 +72,7 @@ class DeleteObjectEndPointWithDefaultErrorTemplateTest extends TestCase
         return $this->recipe;
     }
 
-    /**
-     * @return LoadObject|MockObject
-     */
-    public function getLoadObject(): LoadObject
+    public function getLoadObject(): LoadObject&MockObject
     {
         if (null === $this->loadObject) {
             $this->loadObject = $this->createMock(LoadObject::class);
@@ -81,10 +81,16 @@ class DeleteObjectEndPointWithDefaultErrorTemplateTest extends TestCase
         return $this->loadObject;
     }
 
-    /**
-     * @return DeleteObject|MockObject
-     */
-    public function getDeleteObject(): DeleteObject
+    public function getJumpIf(): JumpIf&MockObject
+    {
+        if (null === $this->jumpIf) {
+            $this->jumpIf = $this->createMock(JumpIf::class);
+        }
+
+        return $this->jumpIf;
+    }
+
+    public function getDeleteObject(): DeleteObject&MockObject
     {
         if (null === $this->deleteObject) {
             $this->deleteObject = $this->createMock(DeleteObject::class);
@@ -93,10 +99,7 @@ class DeleteObjectEndPointWithDefaultErrorTemplateTest extends TestCase
         return $this->deleteObject;
     }
 
-    /**
-     * @return RedirectClientInterface|MockObject
-     */
-    public function getRedirectClient(): RedirectClientInterface
+    public function getRedirectClient(): RedirectClientInterface&MockObject
     {
         if (null === $this->redirectClient) {
             $this->redirectClient = $this->createMock(RedirectClientInterface::class);
@@ -105,10 +108,16 @@ class DeleteObjectEndPointWithDefaultErrorTemplateTest extends TestCase
         return $this->redirectClient;
     }
 
-    /**
-     * @return RenderError|MockObject
-     */
-    public function getRenderError(): RenderError
+    public function getRender(): Render&MockObject
+    {
+        if (null === $this->render) {
+            $this->render = $this->createMock(Render::class);
+        }
+
+        return $this->render;
+    }
+
+    public function getRenderError(): RenderError&MockObject
     {
         if (null === $this->renderError) {
             $this->renderError = $this->createMock(RenderError::class);
@@ -117,10 +126,7 @@ class DeleteObjectEndPointWithDefaultErrorTemplateTest extends TestCase
         return $this->renderError;
     }
 
-    /**
-     * @return ObjectAccessControlInterface|MockObject
-     */
-    public function getObjectAccessControl(): ObjectAccessControlInterface
+    public function getObjectAccessControl(): ObjectAccessControlInterface&MockObject
     {
         if (null === $this->objectAccessControl) {
             $this->objectAccessControl = $this->createMock(ObjectAccessControlInterface::class);
@@ -135,7 +141,9 @@ class DeleteObjectEndPointWithDefaultErrorTemplateTest extends TestCase
             $this->getRecipe(),
             $this->getLoadObject(),
             $this->getDeleteObject(),
+            $this->getJumpIf(),
             $this->getRedirectClient(),
+            $this->getRender(),
             $this->getRenderError(),
             $this->getObjectAccessControl(),
             'foo.template',

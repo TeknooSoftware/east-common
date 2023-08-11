@@ -45,3 +45,14 @@ _teknoo_common_admin_my_object_delete:
         deleter: '@teknoo.east.common.deleting.my_object'
         route: '_teknoo_common_admin_my_object_list'
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+
+_teknoo_common_api_my_object_delete:
+    path: '/api/my_object/delete/{id}'
+    methods:  ['GET', 'DELETE']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.crud.delete'
+        loader: '@Teknoo\Tests\East\Common\Behat\Loader\MyObjectLoader'
+        deleter: '@teknoo.east.common.deleting.my_object'
+        api: 'json'
+        template: '@@TeknooEastCommon/Api/delete.json.twig'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.json.twig'

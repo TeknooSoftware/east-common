@@ -60,6 +60,7 @@ use Teknoo\East\Common\Recipe\Step\ExtractOrder;
 use Teknoo\East\Common\Recipe\Step\ExtractPage;
 use Teknoo\East\Common\Recipe\Step\ExtractSlug;
 use Teknoo\East\Common\Recipe\Step\InitParametersBag;
+use Teknoo\East\Common\Recipe\Step\JumpIf;
 use Teknoo\East\Common\Recipe\Step\LoadListObjects;
 use Teknoo\East\Common\Recipe\Step\LoadMedia;
 use Teknoo\East\Common\Recipe\Step\LoadObject;
@@ -139,6 +140,7 @@ return [
     ExtractPage::class => create(),
     ExtractSlug::class => create(),
     InitParametersBag::class => create(),
+    JumpIf::class => create(),
     LoadListObjects::class => create(),
     LoadMedia::class => create()
         ->constructor(
@@ -222,7 +224,9 @@ return [
             $container->get(OriginalRecipeInterface::class . ':CRUD'),
             $container->get(LoadObject::class),
             $container->get(DeleteObject::class),
+            $container->get(JumpIf::class),
             $container->get(RedirectClientInterface::class),
+            $container->get(Render::class),
             $container->get(RenderError::class),
             $accessControl,
             $defaultErrorTemplate,

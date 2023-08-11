@@ -413,6 +413,7 @@ class ContainerTest extends TestCase
         $container->set(LoadObject::class, $this->createMock(LoadObject::class));
         $container->set(DeleteObject::class, $this->createMock(DeleteObject::class));
         $container->set(RedirectClientInterface::class, $this->createMock(RedirectClientInterface::class));
+        $container->set(Render::class, $this->createMock(Render::class));
         $container->set(RenderError::class, $this->createMock(RenderError::class));
         $container->set('teknoo.east.common.cookbook.default_error_template', 'foo.template');
 
@@ -434,6 +435,7 @@ class ContainerTest extends TestCase
         $container->set(LoadObject::class, $this->createMock(LoadObject::class));
         $container->set(DeleteObject::class, $this->createMock(DeleteObject::class));
         $container->set(RedirectClientInterface::class, $this->createMock(RedirectClientInterface::class));
+        $container->set(Render::class, $this->createMock(Render::class));
         $container->set(RenderError::class, $this->createMock(RenderError::class));
         $container->set(ObjectAccessControlInterface::class, $this->createMock(ObjectAccessControlInterface::class));
 

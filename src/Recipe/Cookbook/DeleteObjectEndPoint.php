@@ -27,15 +27,19 @@ namespace Teknoo\East\Common\Recipe\Cookbook;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
+use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\DeleteObjectEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\ObjectAccessControlInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Common\Recipe\Step\DeleteObject;
+use Teknoo\East\Common\Recipe\Step\JumpIf;
 use Teknoo\East\Common\Recipe\Step\LoadObject;
+use Teknoo\East\Common\Recipe\Step\Render;
 use Teknoo\East\Common\Recipe\Step\RenderError;
 use Teknoo\Recipe\Bowl\Bowl;
 use Teknoo\Recipe\Cookbook\BaseCookbookTrait;
 use Teknoo\Recipe\Ingredient\Ingredient;
+use Teknoo\Recipe\Ingredient\IngredientWithCondition;
 use Teknoo\Recipe\RecipeInterface;
 
 /**
@@ -58,7 +62,9 @@ class DeleteObjectEndPoint implements DeleteObjectEndPointInterface
         RecipeInterface $recipe,
         private readonly LoadObject $loadObject,
         private readonly DeleteObject $deleteObject,
+        private readonly JumpIf $jumpIf,
         private readonly RedirectClientInterface $redirectClient,
+        private readonly Render $render,
         private readonly RenderError $renderError,
         private readonly ?ObjectAccessControlInterface $objectAccessControl = null,
         private readonly ?string $defaultErrorTemplate = null,
@@ -72,7 +78,13 @@ class DeleteObjectEndPoint implements DeleteObjectEndPointInterface
         $recipe = $recipe->require(new Ingredient(ServerRequestInterface::class, 'request'));
         $recipe = $recipe->require(new Ingredient(LoaderInterface::class, 'loader'));
         $recipe = $recipe->require(new Ingredient('string', 'id'));
-        $recipe = $recipe->require(new Ingredient('string', 'route'));
+        $recipe = $recipe->require(
+            new IngredientWithCondition(
+                conditionCallback: fn (array &$workplan) => empty($workplan['api']),
+                requiredType: 'string',
+                name: 'route'
+            )
+        );
 
         $recipe = $recipe->cook($this->loadObject, LoadObject::class, $this->loadObjectWiths, 10);
 
@@ -82,9 +94,29 @@ class DeleteObjectEndPoint implements DeleteObjectEndPointInterface
 
         $recipe = $recipe->cook($this->deleteObject, DeleteObject::class, [], 30);
 
+        $recipe = $recipe->cook(
+            $this->jumpIf,
+            JumpIf::class,
+            [
+                'testValue' => 'api',
+            ],
+            39,
+        );
+
         $recipe = $recipe->cook($this->redirectClient, RedirectClientInterface::class, [], 40);
 
+        $recipe = $recipe->cook(
+            $this->render,
+            Render::class,
+            [
+                'objectInstance' => ObjectInterface::class,
+            ],
+            50,
+        );
+
         $recipe = $recipe->onError(new Bowl($this->renderError, []));
+
+        $this->addToWorkplan('nextStep', Render::class);
 
         if (null !== $this->defaultErrorTemplate) {
             $this->addToWorkplan('errorTemplate', $this->defaultErrorTemplate);

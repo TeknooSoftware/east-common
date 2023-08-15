@@ -22,11 +22,39 @@ _teknoo_common_admin_my_object_edit:
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
         formOptions: { }
 
+_teknoo_common_api_my_object_edit:
+    path: '/api/my_object/edit/{id}'
+    methods:  ['GET', 'POST', 'PUT']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.crud.edit'
+        loader: '@Teknoo\Tests\East\Common\Behat\Loader\MyObjectLoader'
+        writer: '@Teknoo\Tests\East\Common\Behat\Writer\MyObjectWriter'
+        formClass: 'Teknoo\Tests\East\Common\Behat\Form\Type\MyObjectType'
+        template: '@@TeknooEastCommon/AdminMyObject/edit.html.twig'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+        formOptions: { }
+        api: 'json'
+
 _teknoo_common_admin_my_object_new:
     path: '/my_object/new'
     methods:  ['GET', 'POST', 'PUT']
     defaults:
         _controller: 'teknoo.east.common.endpoint.crud.new'
+        loader: '@Teknoo\Tests\East\Common\Behat\Loader\MyObjectLoader'
+        writer: '@Teknoo\Tests\East\Common\Behat\Writer\MyObjectWriter'
+        objectClass: 'Teknoo\Tests\East\Common\Behat\Object\MyObject'
+        formClass: 'Teknoo\Tests\East\Common\Behat\Form\Type\MyObjectType'
+        template: '@@TeknooEastCommon/AdminMyObject/new.html.twig'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+        route: '_teknoo_common_admin_my_object_edit'
+        formOptions: { }
+
+_teknoo_common_api_my_object_new:
+    path: '/api/my_object/new'
+    methods:  ['GET', 'POST', 'PUT']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.crud.new'
+        api: 'json'
         loader: '@Teknoo\Tests\East\Common\Behat\Loader\MyObjectLoader'
         writer: '@Teknoo\Tests\East\Common\Behat\Writer\MyObjectWriter'
         objectClass: 'Teknoo\Tests\East\Common\Behat\Object\MyObject'

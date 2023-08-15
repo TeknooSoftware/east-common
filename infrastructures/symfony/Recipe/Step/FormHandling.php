@@ -35,6 +35,9 @@ use Teknoo\East\Common\Service\DatesService;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 
 use function is_callable;
+use function json_decode;
+
+use const JSON_THROW_ON_ERROR;
 
 /**
  * Recipe step to use into a HTTP EndPoint Recipe to create a form instance and handle the current request.
@@ -64,7 +67,11 @@ class FormHandling implements FormHandlingInterface
         ObjectInterface $data,
         array $options = []
     ): FormInterface {
-        return $this->formFactory->create($formClass, $data, $options);
+        return $this->formFactory->create(
+            $formClass,
+            $data,
+            $options,
+        );
     }
 
     public function __invoke(
@@ -75,7 +82,15 @@ class FormHandling implements FormHandlingInterface
         array $formOptions = [],
         bool $formHandleRequest = true,
     ): FormHandlingInterface {
-        $parsedBody = (array) $request->getParsedBody();
+        $parsedBody = [];
+
+        //To avoid argument injection from HTTP request
+        $api = $request->getAttribute('api', false);
+
+        if (['application/json'] !== $request->getHeader('Content-Type')) {
+            $parsedBody = (array) $request->getParsedBody();
+        }
+
         if (
             $object instanceof PublishableInterface
             && isset($parsedBody['publish'])
@@ -84,9 +99,26 @@ class FormHandling implements FormHandlingInterface
             $this->datesService->passMeTheDate($object->setPublishedAt(...));
         }
 
+        if (!empty($api)) {
+            $formOptions['csrf_protection'] = false;
+        }
+
         $form = $this->createForm($formClass, $object, $formOptions);
         if (!empty($formHandleRequest)) {
             $form->handleRequest($request->getAttribute('request'));
+
+            if (!$form->isSubmitted() && !empty($api)) {
+                $values = [];
+                if (['application/json'] === $request->getHeader('Content-Type')) {
+                    $values = (array) json_decode(
+                        json: (string) $request->getBody(),
+                        associative: true,
+                        flags: JSON_THROW_ON_ERROR,
+                    );
+                }
+
+                $form->submit($values, false);
+            }
         }
 
         $manager->updateWorkPlan([

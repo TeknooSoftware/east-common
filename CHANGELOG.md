@@ -1,12 +1,15 @@
 # Teknoo Software - Common - Change Log
 
-## [2.1.0] - 2023-08-14
+## [2.1.0] - 2023-08-15
 ### Stable Release
-- Update DeleteObjectEndPoint to support operations from API
+- Update DeleteObjectEndPoint to support operations from API.
   - Add `api` option in route `_defaults` or request attribute to disable redirection and render a template
-    defined in the option `template`
+    defined in the option `template`.
 - Add `JumIf` step to implement a conditional jump according to a presence or an ingredient/variable in the workplan, 
-  or according to the value of this ingredient
+  or according to the value of this ingredient.
+- Support API call in Symfony Form's recipe step, to disable CSRF protection
+  - This query can be pushed in GET, POST or PUT, with `application/x-www-form-urlencoded`, `multipart/form-data` 
+    or `application/json`
 
 ## [2.0.1] - 2023-08-06
 ### Stable Release

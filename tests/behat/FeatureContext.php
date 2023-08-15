@@ -952,6 +952,23 @@ class FeatureContext implements Context
     }
 
     /**
+     * @When Symfony will receive the JSON request :url with :body
+     */
+    public function symfonyWillReceiveTheJsonRequestWith($url, $body)
+    {
+        $serverRequest = SfRequest::create(
+            uri: $url,
+            method: 'POST',
+            server: [
+                'CONTENT_TYPE' => 'application/json'
+            ],
+            content: $body,
+        );
+
+        $this->runSymfony($serverRequest);
+    }
+
+    /**
      * @When Symfony will receive a wrong 2FA Code
      */
     public function symfonyWillReceiveAWrongFaCode()

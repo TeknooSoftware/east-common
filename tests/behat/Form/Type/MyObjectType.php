@@ -28,6 +28,7 @@ namespace Teknoo\Tests\East\Common\Behat\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Teknoo\Tests\East\Common\Behat\Object\MyObject;
 
 /**
@@ -48,4 +49,14 @@ class MyObjectType extends AbstractType
 
         return $this;
     }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+
+        $resolver->setDefaults([
+            'csrf_protection' => false,
+        ]);
+    }
+
 }

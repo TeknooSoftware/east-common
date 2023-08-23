@@ -71,6 +71,7 @@ class RenderError
         Throwable $error,
         ManagerInterface $manager,
         #[Transform(ParametersBag::class)] array $viewParameters = [],
+        ?string $api = null,
     ): self {
         $manager->stopErrorReporting();
         $viewParameters = ['error' => $error] + $viewParameters;
@@ -95,10 +96,11 @@ class RenderError
         $client->errorInRequest($error, true);
 
         $this->render(
-            $client,
-            $errorTemplate,
-            $viewParameters,
-            $errorCode
+            client: $client,
+            view: $errorTemplate,
+            parameters: $viewParameters,
+            status: $errorCode,
+            api: $api,
         );
 
         return $this;

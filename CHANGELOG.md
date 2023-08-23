@@ -1,5 +1,10 @@
 # Teknoo Software - Common - Change Log
 
+## [2.2.0] - 2023-08-15
+### Stable Release
+- `Render`, `RenderError`, `RenderList`, `RenderForm`, and `TemplateTrait` support api json and return 
+ the content type `application/json` when api is at json
+
 ## [2.1.0] - 2023-08-15
 ### Stable Release
 - Update DeleteObjectEndPoint to support operations from API.

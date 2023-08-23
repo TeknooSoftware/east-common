@@ -73,18 +73,19 @@ class RenderList
         string $template,
         mixed $searchForm = null,
         #[Transform(ParametersBag::class)] array $viewParameters = [],
+        ?string $api = null,
     ): self {
         $this->render(
-            $client,
-            $template,
-            [
+            client: $client,
+            view: $template,
+            parameters: [
                 'objectsCollection' => $objectsCollection,
                 'page' => $page,
                 'pageCount' => $pageCount,
                 'queryParams' => $request->getQueryParams(),
                 'searchForm' => $searchForm
-            ]
-            + $viewParameters,
+            ] + $viewParameters,
+            api: $api,
         );
 
         return $this;

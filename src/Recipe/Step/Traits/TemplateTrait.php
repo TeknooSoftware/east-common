@@ -64,10 +64,15 @@ trait TemplateTrait
         string $view,
         array $parameters = [],
         int $status = 200,
-        array $headers = []
+        array $headers = [],
+        ?string $api = null,
     ): void {
         $response = $this->responseFactory->createResponse($status);
-        $headers['content-type'] = 'text/html; charset=utf-8';
+
+        $headers['content-type'] = match ($api) {
+            'json' => 'application/json; charset=utf-8',
+            default => 'text/html; charset=utf-8',
+        };
 
         $response = $this->addHeadersIntoResponse($response, $headers);
         $stream = $this->streamFactory->createStream();

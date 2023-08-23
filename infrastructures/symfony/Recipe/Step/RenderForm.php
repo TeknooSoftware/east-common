@@ -73,6 +73,7 @@ class RenderForm implements RenderFormInterface
         bool $isTranslatable = false,
         #[Transform(ParametersBag::class)] array $viewParameters = [],
         bool|string|null $objectSaved = null,
+        ?string $api = null,
     ): RenderFormInterface {
         $parameters = [
             'objectInstance' => $object,
@@ -93,10 +94,10 @@ class RenderForm implements RenderFormInterface
         }
 
         $this->render(
-            $client,
-            $template,
-            $parameters
-            + $viewParameters
+            client: $client,
+            view: $template,
+            parameters: $parameters + $viewParameters,
+            api: $api,
         );
 
         return $this;

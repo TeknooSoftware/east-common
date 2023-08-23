@@ -75,6 +75,7 @@ class Render
         ?string $objectViewKey = null,
         mixed $objectInstance = null,
         #[Transform(ParametersBag::class)] array $viewParameters = [],
+        ?string $api = null,
     ): self {
         if (!empty($objectViewKey)) {
             $viewParameters = [$objectViewKey => $objectInstance] + $viewParameters;
@@ -90,11 +91,12 @@ class Render
         }
 
         $this->render(
-            $client,
-            $template,
-            $viewParameters,
-            200,
-            $headers
+            client: $client,
+            view: $template,
+            parameters: $viewParameters,
+            status: 200,
+            headers: $headers,
+            api: $api,
         );
 
         return $this;

@@ -26,10 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\Tests\East\Common\Recipe\Step;
 
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\UriInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
-use Teknoo\East\Common\Recipe\Step\ExtractSlug;
 use Teknoo\East\Common\Recipe\Step\JumpIf;
 
 /**

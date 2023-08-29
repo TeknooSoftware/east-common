@@ -61,6 +61,7 @@ use Teknoo\East\Common\Recipe\Step\DeleteObject;
 use Teknoo\East\Common\Recipe\Step\ExtractOrder;
 use Teknoo\East\Common\Recipe\Step\ExtractPage;
 use Teknoo\East\Common\Recipe\Step\ExtractSlug;
+use Teknoo\East\Common\Recipe\Step\JumpIf;
 use Teknoo\East\Common\Recipe\Step\LoadListObjects;
 use Teknoo\East\Common\Recipe\Step\LoadMedia;
 use Teknoo\East\Common\Recipe\Step\LoadObject;
@@ -70,6 +71,7 @@ use Teknoo\East\Common\Recipe\Step\RenderList;
 use Teknoo\East\Common\Recipe\Step\SaveObject;
 use Teknoo\East\Common\Recipe\Step\SendMedia;
 use Teknoo\East\Common\Recipe\Step\SlugPreparation;
+use Teknoo\East\Common\Recipe\Step\Stop;
 use Teknoo\East\Common\Service\DeletingService;
 use Teknoo\East\Common\Writer\MediaWriter;
 use Teknoo\East\Common\Writer\UserWriter;
@@ -343,6 +345,26 @@ class ContainerTest extends TestCase
         self::assertInstanceOf(
             SaveObject::class,
             $container->get(SaveObject::class)
+        );
+    }
+
+    public function testJumpIf()
+    {
+        $container = $this->buildContainer();
+
+        self::assertInstanceOf(
+            JumpIf::class,
+            $container->get(JumpIf::class)
+        );
+    }
+
+    public function testStop()
+    {
+        $container = $this->buildContainer();
+
+        self::assertInstanceOf(
+            Stop::class,
+            $container->get(Stop::class)
         );
     }
 

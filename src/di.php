@@ -70,6 +70,7 @@ use Teknoo\East\Common\Recipe\Step\RenderList;
 use Teknoo\East\Common\Recipe\Step\SaveObject;
 use Teknoo\East\Common\Recipe\Step\SendMedia;
 use Teknoo\East\Common\Recipe\Step\SlugPreparation;
+use Teknoo\East\Common\Recipe\Step\Stop;
 use Teknoo\East\Common\Service\DatesService;
 use Teknoo\East\Common\Service\DeletingService;
 use Teknoo\East\Common\Service\FindSlugService;
@@ -174,6 +175,7 @@ return [
         ->constructor(
             get(FindSlugService::class)
         ),
+    Stop::class => create(),
 
     //Base recipe
     OriginalRecipeInterface::class . ':CRUD' => get(OriginalRecipeInterface::class),

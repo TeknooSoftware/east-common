@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [2.3.0] - 2023-08-29
+### Stable Release
+- Add `Stop` special step to stop the execution of a recipe.
+
 ## [2.2.0] - 2023-08-15
 ### Stable Release
 - `Render`, `RenderError`, `RenderList`, `RenderForm`, and `TemplateTrait` support api json and return 

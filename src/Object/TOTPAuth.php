@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Common\Object;
 
+use SensitiveParameter;
 use Teknoo\East\Common\Contracts\User\AuthDataInterface;
 
 /**
@@ -58,6 +59,7 @@ class TOTPAuth implements AuthDataInterface
 
     public function __construct(
         ?string $provider = '',
+        #[SensitiveParameter]
         ?string $topSecret = '',
         string $algorithm = 'sha1',
         int $period = 30,

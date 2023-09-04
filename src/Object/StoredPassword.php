@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Common\Object;
 
+use SensitiveParameter;
 use Teknoo\East\Common\Contracts\User\AuthDataInterface;
 
 /**
@@ -50,7 +51,9 @@ class StoredPassword implements AuthDataInterface
 
     public function __construct(
         ?string $algo = '',
+        #[SensitiveParameter]
         bool $unhashedPassword = false,
+        #[SensitiveParameter]
         ?string $hash = null,
     ) {
         $this->algo = $algo;
@@ -85,7 +88,7 @@ class StoredPassword implements AuthDataInterface
      * To clear a password, you must pass an empty hash to setHashedPassword
      * A hash must not be rehashed, be a password must always be hashed before persisted
      */
-    public function setPassword(?string $password): self
+    public function setPassword(#[SensitiveParameter] ?string $password): self
     {
         if (empty($password)) {
             return $this;
@@ -97,7 +100,7 @@ class StoredPassword implements AuthDataInterface
         return $this;
     }
 
-    public function setHashedPassword(?string $hashedPassword): self
+    public function setHashedPassword(#[SensitiveParameter] ?string $hashedPassword): self
     {
         $this->unhashedPassword = false;
         $this->hash = $hashedPassword;

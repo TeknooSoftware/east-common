@@ -73,8 +73,6 @@ doctrine_mongodb:
 //In security.yaml
 security:
     //...
-    enable_authenticator_manager: true
-
     providers:
         with_password:
             id: 'Teknoo\East\CommonBundle\Provider\PasswordAuthenticatedUserProvider'

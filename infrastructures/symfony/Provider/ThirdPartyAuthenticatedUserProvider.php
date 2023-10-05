@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\CommonBundle\Provider;
 
+use ReflectionClass;
 use ReflectionException;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface as GoogleTwoFactorInterface;
 use Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface as TotpTwoFactorInterface;
@@ -146,6 +147,7 @@ class ThirdPartyAuthenticatedUserProvider implements UserProviderInterface
      */
     public function supportsClass($class): bool
     {
-        return ThirdPartyAuthenticatedUser::class === $class;
+        return ThirdPartyAuthenticatedUser::class === $class
+            || (new ReflectionClass($class))->isSubclassOf(ThirdPartyAuthenticatedUser::class);
     }
 }

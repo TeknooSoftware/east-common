@@ -37,6 +37,8 @@ use Teknoo\East\Common\Object\TOTPAuth;
 use Teknoo\East\Common\Query\User\UserByEmailQuery;
 use Teknoo\East\CommonBundle\Contracts\Object\UserWithTOTPAuthInterface;
 use Teknoo\East\CommonBundle\Object\ThirdPartyAuthenticatedUser;
+use Teknoo\East\CommonBundle\Object\TOTP\GoogleAuthThirdPartyAuthenticatedUser;
+use Teknoo\East\CommonBundle\Object\TOTP\TOTPThirdPartyAuthenticatedUser;
 use Teknoo\East\CommonBundle\Provider\ThirdPartyAuthenticatedUserProvider;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Common\Object\User as BaseUser;
@@ -347,6 +349,8 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
     public function testSupportsClass()
     {
         self::assertTrue($this->buildProvider()->supportsClass(ThirdPartyAuthenticatedUser::class));
+        self::assertTrue($this->buildProvider()->supportsClass(GoogleAuthThirdPartyAuthenticatedUser::class));
+        self::assertTrue($this->buildProvider()->supportsClass(TOTPThirdPartyAuthenticatedUser::class));
         self::assertFalse($this->buildProvider()->supportsClass(BaseUser::class));
         self::assertFalse($this->buildProvider()->supportsClass(\DateTime::class));
     }

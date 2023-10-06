@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [2.3.2] - 2023-10-06
+### Stable Release
+- Fix issues with `PHPUnit 10.4+`
+
 ## [2.3.1] - 2023-10-05
 ### Stable Release
 - Fix `ThirdPartyAuthenticatedUserProvider` to be used with TOTP

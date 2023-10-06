@@ -37,6 +37,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 use Teknoo\East\Common\Object\TOTPAuth;
 use Teknoo\East\Common\Object\User;
 use Teknoo\East\CommonBundle\Form\Type\TOTPType;
@@ -122,9 +123,13 @@ class TOTPTypeTest extends TestCase
             ->method('add')
             ->willReturnCallback(
                 function ($name, $type, $options) use ($builder) {
+                    $violation = $this->createMock(ConstraintViolationBuilderInterface::class);
+                    $violation->expects(self::any())->method('atPath')->willReturnSelf();
+
                     $context = $this->createMock(ExecutionContextInterface::class);
                     $context->expects(self::once())
-                        ->method('buildViolation');
+                        ->method('buildViolation')
+                        ->willReturn($violation);
 
                     /** @var Callback $constraintCallback */
                     $constraintCallback = $options['constraints'][0];
@@ -161,9 +166,13 @@ class TOTPTypeTest extends TestCase
             ->method('add')
             ->willReturnCallback(
                 function ($name, $type, $options) use ($builder) {
+                    $violation = $this->createMock(ConstraintViolationBuilderInterface::class);
+                    $violation->expects(self::any())->method('atPath')->willReturnSelf();
+
                     $context = $this->createMock(ExecutionContextInterface::class);
                     $context->expects(self::once())
-                        ->method('buildViolation');
+                        ->method('buildViolation')
+                        ->willReturn($violation);
 
                     /** @var Callback $constraintCallback */
                     $constraintCallback = $options['constraints'][0];
@@ -200,9 +209,13 @@ class TOTPTypeTest extends TestCase
             ->method('add')
             ->willReturnCallback(
                 function ($name, $type, $options) use ($builder) {
+                    $violation = $this->createMock(ConstraintViolationBuilderInterface::class);
+                    $violation->expects(self::any())->method('atPath')->willReturnSelf();
+
                     $context = $this->createMock(ExecutionContextInterface::class);
                     $context->expects(self::once())
-                        ->method('buildViolation');
+                        ->method('buildViolation')
+                        ->willReturn($violation);
 
                     /** @var Callback $constraintCallback */
                     $constraintCallback = $options['constraints'][0];
@@ -239,9 +252,13 @@ class TOTPTypeTest extends TestCase
             ->method('add')
             ->willReturnCallback(
                 function ($name, $type, $options) use ($builder) {
+                    $violation = $this->createMock(ConstraintViolationBuilderInterface::class);
+                    $violation->expects(self::any())->method('atPath')->willReturnSelf();
+
                     $context = $this->createMock(ExecutionContextInterface::class);
                     $context->expects(self::once())
-                        ->method('buildViolation');
+                        ->method('buildViolation')
+                        ->willReturn($violation);
 
                     /** @var Callback $constraintCallback */
                     $constraintCallback = $options['constraints'][0];
@@ -278,9 +295,13 @@ class TOTPTypeTest extends TestCase
             ->method('add')
             ->willReturnCallback(
                 function ($name, $type, $options) use ($builder) {
+                    $violation = $this->createMock(ConstraintViolationBuilderInterface::class);
+                    $violation->expects(self::any())->method('atPath')->willReturnSelf();
+
                     $context = $this->createMock(ExecutionContextInterface::class);
                     $context->expects(self::once())
-                        ->method('buildViolation');
+                        ->method('buildViolation')
+                        ->willReturn($violation);
 
                     /** @var Callback $constraintCallback */
                     $constraintCallback = $options['constraints'][0];
@@ -333,9 +354,13 @@ class TOTPTypeTest extends TestCase
             ->method('add')
             ->willReturnCallback(
                 function ($name, $type, $options) use ($builder) {
+                    $violation = $this->createMock(ConstraintViolationBuilderInterface::class);
+                    $violation->expects(self::any())->method('atPath')->willReturnSelf();
+
                     $context = $this->createMock(ExecutionContextInterface::class);
                     $context->expects(self::once())
-                        ->method('buildViolation');
+                        ->method('buildViolation')
+                        ->willReturn($violation);
 
                     /** @var Callback $constraintCallback */
                     $constraintCallback = $options['constraints'][0];
@@ -388,9 +413,13 @@ class TOTPTypeTest extends TestCase
             ->method('add')
             ->willReturnCallback(
                 function ($name, $type, $options) use ($builder) {
+                    $violation = $this->createMock(ConstraintViolationBuilderInterface::class);
+                    $violation->expects(self::any())->method('atPath')->willReturnSelf();
+
                     $context = $this->createMock(ExecutionContextInterface::class);
                     $context->expects(self::once())
-                        ->method('buildViolation');
+                        ->method('buildViolation')
+                        ->willReturn($violation);
 
                     /** @var Callback $constraintCallback */
                     $constraintCallback = $options['constraints'][0];

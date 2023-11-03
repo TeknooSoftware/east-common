@@ -32,7 +32,7 @@ namespace Teknoo\East\Common\Contracts\Minify;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-interface LoaderInterface
+interface SourceLoaderInterface
 {
-    public function load(string $setName, callable $holder): LoaderInterface;
+    public function load(string $setName, callable $holder): SourceLoaderInterface;
 }

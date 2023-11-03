@@ -1,7 +1,7 @@
 <?php
 
 /*
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Common\Flysystem\Minify;
 
 use League\Flysystem\Filesystem;
-use Teknoo\East\Common\Contracts\Minify\LoaderInterface;
+use Teknoo\East\Common\Contracts\Minify\SourceLoaderInterface;
 use Teknoo\East\Common\Minify\Exception\UnkownSetNameException;
 use Teknoo\East\Common\Minify\File;
 use Teknoo\East\Common\Minify\FilesSet;
@@ -38,7 +38,7 @@ use Teknoo\East\Common\Minify\FileType;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-class Loader implements LoaderInterface
+class SourceLoader implements SourceLoaderInterface
 {
     public function __construct(
         private readonly Filesystem $filesystem,
@@ -47,7 +47,7 @@ class Loader implements LoaderInterface
     ) {
     }
 
-    public function load(string $setName, callable $holder): LoaderInterface
+    public function load(string $setName, callable $holder): SourceLoaderInterface
     {
         if (!isset($this->definedSets[$setName])) {
             throw new UnkownSetNameException("The set `$setName` is not defined for `{$this->type->value}`");

@@ -15,7 +15,7 @@
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  *
- * @link        http://teknoo.software/east/website Project website
+ * @link        http://teknoo.software/east/common Project website
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>

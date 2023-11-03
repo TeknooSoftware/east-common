@@ -41,7 +41,7 @@ use Teknoo\Recipe\Ingredient\Ingredient;
 use Teknoo\Recipe\RecipeInterface;
 
 /**
- * Interface defining a HTTP EndPoint Recipe able to list or browse persisted objects implementing the class
+ * HTTP EndPoint Recipe able to list or browse persisted objects implementing the class
  * `Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface`.
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)

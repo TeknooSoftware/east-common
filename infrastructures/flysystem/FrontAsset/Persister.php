@@ -23,16 +23,32 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Common\Contracts\FrontAsset;
+namespace Teknoo\East\Common\Flysystem\FrontAsset;
+
+use League\Flysystem\Filesystem;
+use Teknoo\East\Common\Contracts\FrontAsset\FileInterface;
+use Teknoo\East\Common\Contracts\FrontAsset\PersisterInterface;
 
 /**
- *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-interface WriterInterface
+class Persister implements PersisterInterface
 {
-    public function write(FileInterface $file): WriterInterface;
+    public function __construct(
+        private readonly Filesystem $filesystem,
+    ) {
+    }
+
+    public function write(FileInterface $file): PersisterInterface
+    {
+        $this->filesystem->write(
+            $file->getPath(),
+            $file->getContent(),
+        );
+
+        return $this;
+    }
 }

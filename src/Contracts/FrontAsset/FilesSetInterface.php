@@ -23,30 +23,20 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Common\MMMinify\Css;
+namespace Teknoo\East\Common\Contracts\FrontAsset;
 
-use Teknoo\East\Common\Contracts\Minify\FilesSetInterface;
-use Teknoo\East\Common\Contracts\Minify\ProcessorInterface;
-use Teknoo\East\Common\Minify\FileType;
-use Teknoo\East\Common\MMMinify\AbstractMinifier;
+use IteratorAggregate;
 
 /**
+ *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
+ *
+ * @extends IteratorAggregate<FileInterface>
  */
-class Processor extends AbstractMinifier
+interface FilesSetInterface extends IteratorAggregate
 {
-    public function minify(FilesSetInterface $set, string $fileName, callable $holder): ProcessorInterface
-    {
-        $this->process(
-            set: $set,
-            holder: $holder,
-            type: FileType::CSS,
-            path: $fileName,
-        );
-
-        return $this;
-    }
+    public function add(FileInterface $file): FilesSetInterface;
 }

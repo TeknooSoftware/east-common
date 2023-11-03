@@ -23,32 +23,22 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Common\Flysystem\Minify;
+namespace Teknoo\East\Common\Contracts\FrontAsset;
 
-use League\Flysystem\Filesystem;
-use Teknoo\East\Common\Contracts\Minify\FileInterface;
-use Teknoo\East\Common\Contracts\Minify\WriterInterface;
+use Teknoo\East\Common\FrontAsset\FileType;
 
 /**
+ *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-class Writer implements WriterInterface
+interface FileInterface
 {
-    public function __construct(
-        private readonly Filesystem $filesystem,
-    ) {
-    }
+    public function &getContent(): string;
 
-    public function write(FileInterface $file): WriterInterface
-    {
-        $this->filesystem->write(
-            $file->getPath(),
-            $file->getContent(),
-        );
+    public function getPath(): string;
 
-        return $this;
-    }
+    public function getType(): FileType;
 }

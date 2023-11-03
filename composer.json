@@ -41,12 +41,12 @@
             "Teknoo\\East\\CommonBundle\\": "infrastructures/symfony",
             "Teknoo\\East\\Common\\Doctrine\\": "infrastructures/doctrine",
             "Teknoo\\East\\Common\\Flysystem\\": "infrastructures/flysystem",
-            "Teknoo\\East\\Common\\MMMinify\\": "infrastructures/minify",
+            "Teknoo\\East\\Common\\Minify\\": "infrastructures/minify",
             "Teknoo\\Tests\\East\\Common\\": "tests/universal",
             "Teknoo\\Tests\\East\\CommonBundle\\": "tests/infrastructures/symfony",
             "Teknoo\\Tests\\East\\Common\\Doctrine\\": "tests/infrastructures/doctrine",
             "Teknoo\\Tests\\East\\Common\\Flysystem\\": "tests/infrastructures/flysystem",
-            "Teknoo\\Tests\\East\\Common\\MMMinify\\": "tests/infrastructures/minify"
+            "Teknoo\\Tests\\East\\Common\\Minify\\": "tests/infrastructures/minify"
         }
     },
     "autoload-dev": {

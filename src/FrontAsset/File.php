@@ -23,49 +23,44 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Common\Flysystem\Minify;
+namespace Teknoo\East\Common\FrontAsset;
 
-use League\Flysystem\Filesystem;
-use Teknoo\East\Common\Contracts\Minify\SourceLoaderInterface;
-use Teknoo\East\Common\Minify\Exception\UnkownSetNameException;
-use Teknoo\East\Common\Minify\File;
-use Teknoo\East\Common\Minify\FilesSet;
-use Teknoo\East\Common\Minify\FileType;
+use Teknoo\East\Common\Contracts\FrontAsset\FileInterface;
 
 /**
+ *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-class SourceLoader implements SourceLoaderInterface
+class File implements FileInterface
 {
+    /**
+     * @var callable
+     */
+    private $contentCallback;
+
     public function __construct(
-        private readonly Filesystem $filesystem,
-        private readonly array $definedSets,
-        private readonly FileType $type,
+        private string $path,
+        private FileType $type,
+        callable $contentCallback,
     ) {
+        $this->contentCallback = $contentCallback;
     }
 
-    public function load(string $setName, callable $holder): SourceLoaderInterface
+    public function &getContent(): string
     {
-        if (!isset($this->definedSets[$setName])) {
-            throw new UnkownSetNameException("The set `$setName` is not defined for `{$this->type->value}`");
-        }
+        return ($this->contentCallback)();
+    }
 
-        $set = new FilesSet();
-        foreach ($this->definedSets[$setName] as $file) {
-            $set->add(
-                new File(
-                    path: $file,
-                    type: $this->type,
-                    contentCallback: fn () => $this->filesystem->read($file),
-                )
-            );
-        }
+    public function getPath(): string
+    {
+        return $this->path;
+    }
 
-        $holder($set);
-
-        return $this;
+    public function getType(): FileType
+    {
+        return $this->type;
     }
 }

@@ -23,40 +23,49 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Common\Minify;
+namespace Teknoo\East\Common\Flysystem\FrontAsset;
 
-use Exception;
-use Teknoo\East\Common\Contracts\Minify\FileInterface;
-use Teknoo\East\Common\Contracts\Minify\FilesSetInterface;
-use Traversable;
+use League\Flysystem\Filesystem;
+use Teknoo\East\Common\Contracts\FrontAsset\SourceLoaderInterface;
+use Teknoo\East\Common\FrontAsset\Exception\UnkownSetNameException;
+use Teknoo\East\Common\FrontAsset\File;
+use Teknoo\East\Common\FrontAsset\FilesSet;
+use Teknoo\East\Common\FrontAsset\FileType;
 
 /**
- *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-class FilesSet implements FilesSetInterface
+class SourceLoader implements SourceLoaderInterface
 {
-    /**
-     * @param FileInterface[] $files
-     */
     public function __construct(
-        private array $files = [],
+        private readonly Filesystem $filesystem,
+        private readonly array $definedSets,
+        private readonly FileType $type,
     ) {
-
     }
 
-    public function add(FileInterface $file): FilesSetInterface
+    public function load(string $setName, callable $holder): SourceLoaderInterface
     {
-        $this->files[] = $file;
+        if (!isset($this->definedSets[$setName])) {
+            throw new UnkownSetNameException("The set `$setName` is not defined for `{$this->type->value}`");
+        }
+
+        $set = new FilesSet();
+        foreach ($this->definedSets[$setName] as $file) {
+            $set->add(
+                new File(
+                    path: $file,
+                    type: $this->type,
+                    contentCallback: fn () => $this->filesystem->read($file),
+                )
+            );
+        }
+
+        $holder($set);
 
         return $this;
-    }
-
-    public function getIterator(): Traversable
-    {
-        yield from $this->files;
     }
 }

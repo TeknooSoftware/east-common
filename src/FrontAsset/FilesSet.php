@@ -23,7 +23,12 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Common\Contracts\Minify;
+namespace Teknoo\East\Common\FrontAsset;
+
+use Exception;
+use Teknoo\East\Common\Contracts\FrontAsset\FileInterface;
+use Teknoo\East\Common\Contracts\FrontAsset\FilesSetInterface;
+use Traversable;
 
 /**
  *
@@ -32,7 +37,26 @@ namespace Teknoo\East\Common\Contracts\Minify;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-interface WriterInterface
+class FilesSet implements FilesSetInterface
 {
-    public function write(FileInterface $file): WriterInterface;
+    /**
+     * @param FileInterface[] $files
+     */
+    public function __construct(
+        private array $files = [],
+    ) {
+
+    }
+
+    public function add(FileInterface $file): FilesSetInterface
+    {
+        $this->files[] = $file;
+
+        return $this;
+    }
+
+    public function getIterator(): Traversable
+    {
+        yield from $this->files;
+    }
 }

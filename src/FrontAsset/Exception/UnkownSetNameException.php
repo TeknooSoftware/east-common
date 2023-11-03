@@ -23,7 +23,7 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Common\Minify\Exception;
+namespace Teknoo\East\Common\FrontAsset\Exception;
 
 use DomainException;
 

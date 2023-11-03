@@ -23,7 +23,7 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Common\Contracts\Minify;
+namespace Teknoo\East\Common\Contracts\FrontAsset;
 
 /**
  *
@@ -32,7 +32,7 @@ namespace Teknoo\East\Common\Contracts\Minify;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-interface ProcessorInterface
+interface MinifierInterface
 {
-    public function minify(FilesSetInterface $set, string $fileName, callable $holder): ProcessorInterface;
+    public function process(FilesSetInterface $set, string $fileName, callable $holder): MinifierInterface;
 }

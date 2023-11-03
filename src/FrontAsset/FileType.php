@@ -23,9 +23,7 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Common\Minify;
-
-use Teknoo\East\Common\Contracts\Minify\FileInterface;
+namespace Teknoo\East\Common\FrontAsset;
 
 /**
  *
@@ -34,33 +32,8 @@ use Teknoo\East\Common\Contracts\Minify\FileInterface;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-class File implements FileInterface
+enum FileType: string
 {
-    /**
-     * @var callable
-     */
-    private $contentCallback;
-
-    public function __construct(
-        private string $path,
-        private FileType $type,
-        callable $contentCallback,
-    ) {
-        $this->contentCallback = $contentCallback;
-    }
-
-    public function &getContent(): string
-    {
-        return ($this->contentCallback)();
-    }
-
-    public function getPath(): string
-    {
-        return $this->path;
-    }
-
-    public function getType(): FileType
-    {
-        return $this->type;
-    }
+    case CSS = 'css';
+    case JS = 'js';
 }

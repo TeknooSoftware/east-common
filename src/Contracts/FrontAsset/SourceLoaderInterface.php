@@ -23,9 +23,7 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Common\Contracts\Minify;
-
-use IteratorAggregate;
+namespace Teknoo\East\Common\Contracts\FrontAsset;
 
 /**
  *
@@ -33,10 +31,8 @@ use IteratorAggregate;
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- *
- * @extends IteratorAggregate<FileInterface>
  */
-interface FilesSetInterface extends IteratorAggregate
+interface SourceLoaderInterface
 {
-    public function add(FileInterface $file): FilesSetInterface;
+    public function load(string $setName, callable $holder): SourceLoaderInterface;
 }

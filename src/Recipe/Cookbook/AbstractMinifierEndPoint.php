@@ -47,7 +47,7 @@ abstract class AbstractMinifierEndPoint
 
     public function __construct(
         RecipeInterface $recipe,
-        private
+
     ) {
         $this->fill($recipe);
     }

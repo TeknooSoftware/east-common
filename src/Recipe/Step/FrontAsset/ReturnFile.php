@@ -57,7 +57,7 @@ class ReturnFile
         $response = $this->responseFactory->createResponse(2000);
 
         $headers = [
-            'content-type' => match ($file) {
+            'content-type' => match ($type) {
                 FileType::JS => 'text/javascript; charset=utf-8',
                 FileType::CSS => 'text/css; charset=utf-8',
             }

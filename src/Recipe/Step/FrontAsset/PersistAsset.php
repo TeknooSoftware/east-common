@@ -44,5 +44,4 @@ class PersistAsset
 
         return $this;
     }
-
 }

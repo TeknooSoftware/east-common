@@ -63,7 +63,7 @@ class MinifierEndPoint implements MinifierEndPointInterface
         RecipeInterface $recipe,
         private ComputePath $computePath,
         private LoadPersistedAsset $loadPersistedAsset,
-        private LoadPersistedAsset $jumpIf,
+        private JumpIf $jumpIf,
         private LoadSource $loadSource,
         private MinifyAssets $minifyAssets,
         private PersistAsset $persistAsset,

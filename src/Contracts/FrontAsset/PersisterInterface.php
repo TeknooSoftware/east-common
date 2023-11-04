@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Common\Contracts\FrontAsset;
 
+use Teknoo\East\Common\FrontAsset\FileType;
+
 /**
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
@@ -34,5 +36,7 @@ namespace Teknoo\East\Common\Contracts\FrontAsset;
  */
 interface PersisterInterface
 {
+    public function load(string $path, FileType $type, callable $holder): PersisterInterface;
+
     public function write(FileInterface $file): PersisterInterface;
 }

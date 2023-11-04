@@ -23,14 +23,12 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Common\Flysystem\FrontAsset;
+namespace Teknoo\East\Common\Recipe\Step\FrontAsset;
 
-use League\Flysystem\Filesystem;
-use Teknoo\East\Common\Contracts\FrontAsset\SourceLoaderInterface;
-use Teknoo\East\Common\FrontAsset\Exception\UnkownSetNameException;
-use Teknoo\East\Common\FrontAsset\File;
-use Teknoo\East\Common\FrontAsset\FilesSet;
+use Teknoo\East\Common\Contracts\FrontAsset\PersisterInterface;
 use Teknoo\East\Common\FrontAsset\FileType;
+use Teknoo\East\Common\FrontAsset\FinalFile;
+use Teknoo\East\Foundation\Manager\ManagerInterface;
 
 /**
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
@@ -38,36 +36,24 @@ use Teknoo\East\Common\FrontAsset\FileType;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-class SourceLoader implements SourceLoaderInterface
+class LoadPersistedAsset
 {
-    /**
-     * @param array<string, string[]> $definedSets
-     */
-    public function __construct(
-        private readonly Filesystem $filesystem,
-        private readonly array $definedSets,
-        private readonly FileType $type,
-    ) {
-    }
-
-    public function load(string $setName, callable $holder): SourceLoaderInterface
-    {
-        if (!isset($this->definedSets[$setName])) {
-            throw new UnkownSetNameException("The set `$setName` is not defined for `{$this->type->value}`");
-        }
-
-        $set = new FilesSet();
-        foreach ($this->definedSets[$setName] as $file) {
-            $set->add(
-                new File(
-                    path: $file,
-                    type: $this->type,
-                    contentCallback: fn () => $this->filesystem->read($file),
-                )
+    public function __invoke(
+        ManagerInterface $manager,
+        string $assetPath,
+        FileType $type,
+        PersisterInterface $persister,
+        bool $noOverwrite = true,
+    ): self {
+        if (true === $noOverwrite) {
+            $persister->load(
+                path: $assetPath,
+                type: $type,
+                holder: fn(FinalFile $file) => $manager->updateWorkPlan([
+                    FinalFile::class => $file,
+                ])
             );
         }
-
-        $holder($set);
 
         return $this;
     }

@@ -41,6 +41,8 @@ class File implements FileInterface
      */
     private $contentCallback;
 
+    private ?string $content = null;
+
     public function __construct(
         private string $path,
         private FileType $type,
@@ -51,7 +53,11 @@ class File implements FileInterface
 
     public function &getContent(): string
     {
-        return ($this->contentCallback)();
+        if (null === $this->content) {
+            $this->content = ($this->contentCallback)();
+        }
+
+        return $this->content;
     }
 
     public function getPath(): string

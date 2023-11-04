@@ -23,39 +23,15 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Common\Recipe\Cookbook;
-
-use Psr\Http\Message\ServerRequestInterface;
-use Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifyCssEndPointInterface;
-use Teknoo\Recipe\Cookbook\BaseCookbookTrait;
-use Teknoo\Recipe\Ingredient\Ingredient;
-use Teknoo\Recipe\RecipeInterface;
+namespace Teknoo\East\Common\FrontAsset;
 
 /**
- * HTTP EndPoint Recipe able to minify a list of css files into an unique file, the file
- *  can be directly served by the HTTP server.
- *  The recipe can directly return the file if it's already generated (behavior defined by the parameter "noOverwrite")
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-abstract class AbstractMinifierEndPoint
+class FinalFile extends File
 {
-    use BaseCookbookTrait;
-
-    public function __construct(
-        RecipeInterface $recipe,
-
-    ) {
-        $this->fill($recipe);
-    }
-
-    protected function populateRecipe(RecipeInterface $recipe): RecipeInterface
-    {
-        $recipe = $recipe->require(new Ingredient(ServerRequestInterface::class, 'request'));
-
-        return $recipe;
-    }
 }

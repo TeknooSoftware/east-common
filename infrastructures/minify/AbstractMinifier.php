@@ -28,7 +28,7 @@ namespace Teknoo\East\Common\Minify;
 use MatthiasMullie\Minify\Minify;
 use Teknoo\East\Common\Contracts\FrontAsset\FilesSetInterface;
 use Teknoo\East\Common\Contracts\FrontAsset\MinifierInterface;
-use Teknoo\East\Common\FrontAsset\File;
+use Teknoo\East\Common\FrontAsset\FinalFile;
 use Teknoo\East\Common\FrontAsset\FileType;
 
 /**
@@ -57,7 +57,7 @@ abstract class AbstractMinifier implements MinifierInterface
         }
 
         $holder(
-            new File(
+            new FinalFile(
                 path: $path,
                 type: $type,
                 contentCallback: fn () => $minifier->execute(),

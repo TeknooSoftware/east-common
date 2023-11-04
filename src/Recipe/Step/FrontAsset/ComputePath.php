@@ -23,38 +23,29 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Common\Recipe\Cookbook;
+namespace Teknoo\East\Common\Recipe\Step\FrontAsset;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifyJsEndPointInterface;
-use Teknoo\Recipe\Cookbook\BaseCookbookTrait;
-use Teknoo\Recipe\Ingredient\Ingredient;
-use Teknoo\Recipe\RecipeInterface;
+use Teknoo\East\Foundation\Manager\ManagerInterface;
 
 /**
- * HTTP EndPoint Recipe able to minify a list of javascripts files into an unique file, the file
- *  can be directly served by the HTTP server.
- *  The recipe can directly return the file if it's already generated (behavior defined by the parameter "noOverwrite
- *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-class MinifyJsEndPoint implements MinifyJsEndPointInterface
+class ComputePath
 {
-    use BaseCookbookTrait;
+    public function __invoke(
+        ManagerInterface $manager,
+        ServerRequestInterface $request,
+    ): self {
+        $path = $request->getUri()->getPath();
 
-    public function __construct(
-        RecipeInterface $recipe,
-    ) {
-        $this->fill($recipe);
-    }
+        $manager->updateWorkPlan([
+            'assetPath' => $path,
+        ]);
 
-    protected function populateRecipe(RecipeInterface $recipe): RecipeInterface
-    {
-        $recipe = $recipe->require(new Ingredient(ServerRequestInterface::class, 'request'));
-
-        return $recipe;
+        return $this;
     }
 }

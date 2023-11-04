@@ -23,20 +23,32 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Common\Contracts\Recipe\Cookbook;
+namespace Teknoo\East\Common\Recipe\Step\FrontAsset;
 
-use Teknoo\Recipe\CookbookInterface;
+use Teknoo\East\Common\Contracts\FrontAsset\FilesSetInterface;
+use Teknoo\East\Common\Contracts\FrontAsset\SourceLoaderInterface;
+use Teknoo\East\Foundation\Manager\ManagerInterface;
 
 /**
- * Interface defining a HTTP EndPoint Recipe able to minify a list of css files into an unique file, the file
- * can be directly served by the HTTP server.
- * The recipe can directly return the file if it's already generated (behavior defined by the parameter "noOverwrite")
- *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-interface MinifyCssEndPointInterface extends CookbookInterface
+class LoadSource
 {
+    public function __invoke(
+        ManagerInterface $manager,
+        SourceLoaderInterface $sourceLoader,
+        string $setName
+    ): self {
+        $sourceLoader->load(
+            setName: $setName,
+            holder: fn (FilesSetInterface $set) => $manager->updateWorkPlan([
+                FilesSetInterface::class => $set,
+            ]),
+        );
+
+        return $this;
+    }
 }

@@ -28,6 +28,8 @@ namespace Teknoo\East\Common\Flysystem\FrontAsset;
 use League\Flysystem\Filesystem;
 use Teknoo\East\Common\Contracts\FrontAsset\FileInterface;
 use Teknoo\East\Common\Contracts\FrontAsset\PersisterInterface;
+use Teknoo\East\Common\FrontAsset\FinalFile;
+use Teknoo\East\Common\FrontAsset\FileType;
 
 /**
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
@@ -40,6 +42,21 @@ class Persister implements PersisterInterface
     public function __construct(
         private readonly Filesystem $filesystem,
     ) {
+    }
+
+    public function load(string $path, FileType $type, callable $holder): PersisterInterface
+    {
+        if ($this->filesystem->fileSize($path)) {
+            $holder(
+                new FinalFile(
+                    path: $path,
+                    type: $type,
+                    contentCallback: fn () => $this->filesystem->read($path),
+                ),
+            );
+        }
+
+        return $this;
     }
 
     public function write(FileInterface $file): PersisterInterface

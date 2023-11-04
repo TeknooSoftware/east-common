@@ -23,14 +23,14 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Common\Flysystem\FrontAsset;
+namespace Teknoo\East\Common\Recipe\Step\FrontAsset;
 
-use League\Flysystem\Filesystem;
-use Teknoo\East\Common\Contracts\FrontAsset\SourceLoaderInterface;
-use Teknoo\East\Common\FrontAsset\Exception\UnkownSetNameException;
-use Teknoo\East\Common\FrontAsset\File;
-use Teknoo\East\Common\FrontAsset\FilesSet;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Teknoo\East\Common\FrontAsset\FileType;
+use Teknoo\East\Common\FrontAsset\FinalFile;
+use Teknoo\East\Common\Recipe\Step\Traits\ResponseTrait;
+use Teknoo\East\Foundation\Client\ClientInterface;
 
 /**
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
@@ -38,36 +38,36 @@ use Teknoo\East\Common\FrontAsset\FileType;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-class SourceLoader implements SourceLoaderInterface
+class ReturnFile
 {
-    /**
-     * @param array<string, string[]> $definedSets
-     */
+    use ResponseTrait;
+
     public function __construct(
-        private readonly Filesystem $filesystem,
-        private readonly array $definedSets,
-        private readonly FileType $type,
+        private StreamFactoryInterface $streamFactory,
+        ResponseFactoryInterface $responseFactory,
     ) {
+        $this->responseFactory = $responseFactory;
     }
 
-    public function load(string $setName, callable $holder): SourceLoaderInterface
-    {
-        if (!isset($this->definedSets[$setName])) {
-            throw new UnkownSetNameException("The set `$setName` is not defined for `{$this->type->value}`");
-        }
+    public function __invoke(
+        ClientInterface $client,
+        FinalFile $file,
+        FileType $type,
+    ): self {
+        $response = $this->responseFactory->createResponse(2000);
 
-        $set = new FilesSet();
-        foreach ($this->definedSets[$setName] as $file) {
-            $set->add(
-                new File(
-                    path: $file,
-                    type: $this->type,
-                    contentCallback: fn () => $this->filesystem->read($file),
-                )
-            );
-        }
+        $headers = [
+            'content-type' => match ($file) {
+                FileType::JS => 'text/javascript; charset=utf-8',
+                FileType::CSS => 'text/css; charset=utf-8',
+            }
+        ];
 
-        $holder($set);
+        $response = $this->addHeadersIntoResponse($response, $headers);
+        $stream = $this->streamFactory->createStream();
+        $stream->write($file->getContent());
+
+        $client->acceptResponse($response);
 
         return $this;
     }

@@ -23,39 +23,26 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Common\FrontAsset;
+namespace Teknoo\East\Common\Recipe\Step\FrontAsset;
 
-use Exception;
-use Teknoo\East\Common\Contracts\FrontAsset\FileInterface;
-use Teknoo\East\Common\Contracts\FrontAsset\FilesSetInterface;
-use Traversable;
+use Teknoo\East\Common\Contracts\FrontAsset\PersisterInterface;
+use Teknoo\East\Common\FrontAsset\FinalFile;
 
 /**
- *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-class FilesSet implements FilesSetInterface
+class PersistAsset
 {
-    /**
-     * @param FileInterface[] $files
-     */
-    public function __construct(
-        private array $files = [],
-    ) {
-    }
-
-    public function add(FileInterface $file): FilesSetInterface
-    {
-        $this->files[] = $file;
+    public function __invoke(
+        FinalFile $file,
+        PersisterInterface $persister,
+    ): self {
+        $persister->write($file);
 
         return $this;
     }
 
-    public function getIterator(): Traversable
-    {
-        yield from $this->files;
-    }
 }

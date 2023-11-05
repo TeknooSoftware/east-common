@@ -1,5 +1,14 @@
 # Teknoo Software - Common - Change Log
 
+## [2.4.0-beta1] - 2023-11-05
+### Stable Release
+- JS and CSS Minifier features from specific HTTP endpoint without webpack
+  - Use `league/flysystem` to perform I/O operations
+  - Use `matthiasmullie/minify` to perform minifing operations
+- To do :
+  - Support version of minified assets compiled
+  - Add CLI command to compile offline
+
 ## [2.3.2] - 2023-10-06
 ### Stable Release
 - Fix issues with `PHPUnit 10.4+`

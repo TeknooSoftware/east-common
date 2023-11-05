@@ -34,6 +34,7 @@ use Teknoo\East\Common\Contracts\FrontAsset\SourceLoaderInterface;
 use Teknoo\East\Common\Flysystem\FrontAsset\Persister;
 use Teknoo\East\Common\Flysystem\FrontAsset\SourceLoader;
 
+use Teknoo\East\Common\FrontAsset\FileType;
 use function DI\get;
 
 return [
@@ -46,7 +47,7 @@ return [
         }
 
         return new Persister(
-            new Filesystem(
+            filesystem: new Filesystem(
                 new LocalFilesystemAdapter(
                     (string) $container->get('teknoo.east.common.assets.destination.css.path'),
                 ),
@@ -55,32 +56,40 @@ return [
     },
 
     SourceLoaderInterface::class . ':css' => get(SourceLoader::class . ':css'),
-    SourceLoader::class . ':css' => static function (ContainerInterface $container): Persister {
-        if (!$container->has('teknoo.east.common.assets.destination.css.path')) {
+    SourceLoader::class . ':css' => static function (ContainerInterface $container): SourceLoader {
+        if (!$container->has('teknoo.east.common.assets.source.css.path')) {
             throw new DomainException(
                 '`teknoo.east.common.assets.source.css.path` is not defined',
             );
         }
 
-        return new Persister(
-            new Filesystem(
+        if (!$container->has('teknoo.east.common.assets.sets.css')) {
+            throw new DomainException(
+                '`teknoo.east.common.assets.sets.css` is not defined',
+            );
+        }
+
+        return new SourceLoader(
+            filesystem: new Filesystem(
                 new LocalFilesystemAdapter(
                     (string) $container->get('teknoo.east.common.assets.source.css.path'),
                 ),
             ),
+            definedSets: $container->get('teknoo.east.common.assets.sets.css'),
+            type: FileType::CSS,
         );
     },
 
     PersisterInterface::class . ':js' => get(Persister::class . ':js'),
     Persister::class . ':js' => static function (ContainerInterface $container): Persister {
-        if (!$container->has('teknoo.east.common.assets.destination.css.path')) {
+        if (!$container->has('teknoo.east.common.assets.destination.js.path')) {
             throw new DomainException(
                 '`teknoo.east.common.assets.destination.js.path` is not defined',
             );
         }
 
         return new Persister(
-            new Filesystem(
+            filesystem: new Filesystem(
                 new LocalFilesystemAdapter(
                     (string) $container->get('teknoo.east.common.assets.destination.js.path'),
                 ),
@@ -89,19 +98,27 @@ return [
     },
 
     SourceLoaderInterface::class . ':js' => get(SourceLoader::class . ':js'),
-    SourceLoader::class . ':js' => static function (ContainerInterface $container): Persister {
-        if (!$container->has('teknoo.east.common.assets.destination.css.path')) {
+    SourceLoader::class . ':js' => static function (ContainerInterface $container): SourceLoader {
+        if (!$container->has('teknoo.east.common.assets.source.js.path')) {
             throw new DomainException(
                 '`teknoo.east.common.assets.source.js.path` is not defined',
             );
         }
 
-        return new Persister(
-            new Filesystem(
+        if (!$container->has('teknoo.east.common.assets.sets.js')) {
+            throw new DomainException(
+                '`teknoo.east.common.assets.sets.js` is not defined',
+            );
+        }
+
+        return new SourceLoader(
+            filesystem: new Filesystem(
                 new LocalFilesystemAdapter(
                     (string) $container->get('teknoo.east.common.assets.source.js.path'),
                 ),
             ),
+            definedSets: $container->get('teknoo.east.common.assets.sets.js'),
+            type: FileType::CSS,
         );
     },
 ];

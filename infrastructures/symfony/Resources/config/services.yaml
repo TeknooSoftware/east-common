@@ -24,12 +24,13 @@ parameters:
     teknoo.east.common.endpoint.2fa_totp_disable.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
     teknoo.east.common.endpoint.2fa_totp_qrcode.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
     teknoo.east.common.endpoint.2fa_totp_validate.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
-    teknoo.east.common.endpoint.crud.delete.bowl.class: 'Teknoo\Recipe\Bowl\RecipeBowl'
-    teknoo.east.common.endpoint.crud.edit.bowl.class: 'Teknoo\Recipe\Bowl\RecipeBowl'
-    teknoo.east.common.endpoint.crud.list.bowl.class: 'Teknoo\Recipe\Bowl\RecipeBowl'
-    teknoo.east.common.endpoint.crud.new.bowl.class: 'Teknoo\Recipe\Bowl\RecipeBowl'
+    teknoo.east.common.endpoint.crud.delete.bowl.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
+    teknoo.east.common.endpoint.crud.edit.bowl.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
+    teknoo.east.common.endpoint.crud.list.bowl.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
+    teknoo.east.common.endpoint.crud.new.bowl.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
     teknoo.east.common.endpoint.static.bowl.class: 'Teknoo\Recipe\Bowl\RecipeBowl'
     teknoo.east.common.endpoint.media.bowl.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
+    teknoo.east.common.endpoint.minifier.bowl.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
 
 services:
     #Generic Endpoints
@@ -58,6 +59,20 @@ services:
         public: true
         arguments:
             - '@teknoo.east.common.endpoint.media.bowl'
+            - '@service_container'
+
+    #Minifier
+    teknoo.east.common.endpoint.minifier.bowl:
+        class: '%teknoo.east.common.endpoint.minifier.bowl.class%'
+        arguments:
+            - '@Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierEndPointInterface'
+            - 0
+
+    teknoo.east.common.endpoint.minifier:
+        class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
+        public: true
+        arguments:
+            - '@teknoo.east.common.endpoint.minifier.bowl'
             - '@service_container'
 
     #2FA

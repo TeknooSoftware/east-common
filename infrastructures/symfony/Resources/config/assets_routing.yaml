@@ -1,0 +1,21 @@
+_teknoo_common_minifier_css:
+    path: '/css/{setName}.min.css'
+    methods:  ['GET']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.minifier'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+        sourceLoader: '@Teknoo\East\Common\Contracts\FrontAsset\SourceLoaderInterface:css'
+        persister: '@Teknoo\East\Common\Contracts\FrontAsset\PersisterInterface:css'
+        minifier: '@Teknoo\East\Common\Contracts\FrontAsset\MinifierInterface:css'
+        type: 'css'
+
+_teknoo_common_minifier_js:
+    path: '/js/{setName}.min.js'
+    methods:  ['GET']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.minifier'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+        sourceLoader: '@Teknoo\East\Common\Contracts\FrontAsset\SourceLoaderInterface:js'
+        persister: '@Teknoo\East\Common\Contracts\FrontAsset\PersisterInterface:js'
+        minifier: '@Teknoo\East\Common\Contracts\FrontAsset\MinifierInterface:js'
+        type: 'js'

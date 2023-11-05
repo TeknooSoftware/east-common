@@ -184,7 +184,16 @@ return [
             get(FindSlugService::class)
         ),
     Stop::class => create(),
-    ComputePath::class => create(),
+    ComputePath::class => static function (ContainerInterface $container): ComputePath {
+        $finalAssetsLocation = '';
+        if ($container->has('teknoo.east.common.assets.final_location')) {
+            $finalAssetsLocation = $container->has('teknoo.east.common.assets.final_location');
+        }
+
+        return new ComputePath(
+            finalAssetsLocation: $finalAssetsLocation,
+        );
+    },
     LoadPersistedAsset::class => create(),
     LoadSource::class => create(),
     MinifyAssets::class => create(),

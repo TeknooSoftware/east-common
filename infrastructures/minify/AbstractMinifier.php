@@ -48,6 +48,7 @@ abstract class AbstractMinifier implements MinifierInterface
         FilesSetInterface $set,
         callable $holder,
         FileType $type,
+        string $fileName,
         string $path,
     ): void {
         $minifier = clone $this->minifier;
@@ -58,9 +59,9 @@ abstract class AbstractMinifier implements MinifierInterface
 
         $holder(
             new FinalFile(
-                path: $path,
+                path: $fileName,
                 type: $type,
-                contentCallback: fn () => $minifier->execute(),
+                contentCallback: fn () => $minifier->execute($path),
             )
         );
     }

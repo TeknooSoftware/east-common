@@ -33,8 +33,8 @@ use Teknoo\East\Common\Contracts\FrontAsset\PersisterInterface;
 use Teknoo\East\Common\Contracts\FrontAsset\SourceLoaderInterface;
 use Teknoo\East\Common\Flysystem\FrontAsset\Persister;
 use Teknoo\East\Common\Flysystem\FrontAsset\SourceLoader;
-
 use Teknoo\East\Common\FrontAsset\FileType;
+
 use function DI\get;
 
 return [
@@ -49,7 +49,8 @@ return [
         return new Persister(
             filesystem: new Filesystem(
                 new LocalFilesystemAdapter(
-                    (string) $container->get('teknoo.east.common.assets.destination.css.path'),
+                    $container->get('kernel.project_dir') . '/' .
+                        $container->get('teknoo.east.common.assets.destination.css.path'),
                 ),
             ),
         );
@@ -72,7 +73,8 @@ return [
         return new SourceLoader(
             filesystem: new Filesystem(
                 new LocalFilesystemAdapter(
-                    (string) $container->get('teknoo.east.common.assets.source.css.path'),
+                    $container->get('kernel.project_dir') . '/' .
+                        $container->get('teknoo.east.common.assets.source.css.path'),
                 ),
             ),
             definedSets: $container->get('teknoo.east.common.assets.sets.css'),
@@ -91,7 +93,8 @@ return [
         return new Persister(
             filesystem: new Filesystem(
                 new LocalFilesystemAdapter(
-                    (string) $container->get('teknoo.east.common.assets.destination.js.path'),
+                    $container->get('kernel.project_dir') . '/' .
+                        $container->get('teknoo.east.common.assets.destination.js.path'),
                 ),
             ),
         );
@@ -114,7 +117,8 @@ return [
         return new SourceLoader(
             filesystem: new Filesystem(
                 new LocalFilesystemAdapter(
-                    (string) $container->get('teknoo.east.common.assets.source.js.path'),
+                    $container->get('kernel.project_dir') . '/' .
+                        $container->get('teknoo.east.common.assets.source.js.path'),
                 ),
             ),
             definedSets: $container->get('teknoo.east.common.assets.sets.js'),

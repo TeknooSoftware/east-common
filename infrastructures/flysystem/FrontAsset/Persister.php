@@ -46,7 +46,7 @@ class Persister implements PersisterInterface
 
     public function load(string $path, FileType $type, callable $holder): PersisterInterface
     {
-        if ($this->filesystem->fileSize($path)) {
+        if ($this->filesystem->fileExists($path)) {
             $holder(
                 new FinalFile(
                     path: $path,

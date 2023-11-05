@@ -34,5 +34,10 @@ namespace Teknoo\East\Common\Contracts\FrontAsset;
  */
 interface MinifierInterface
 {
-    public function process(FilesSetInterface $set, string $fileName, callable $holder): MinifierInterface;
+    public function process(
+        FilesSetInterface $set,
+        string $fileName,
+        callable $holder,
+        string $path = '',
+    ): MinifierInterface;
 }

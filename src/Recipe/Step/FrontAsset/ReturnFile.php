@@ -54,7 +54,7 @@ class ReturnFile
         FinalFile $file,
         FileType $type,
     ): self {
-        $response = $this->responseFactory->createResponse(2000);
+        $response = $this->responseFactory->createResponse(200);
 
         $headers = [
             'content-type' => match ($type) {
@@ -66,6 +66,8 @@ class ReturnFile
         $response = $this->addHeadersIntoResponse($response, $headers);
         $stream = $this->streamFactory->createStream();
         $stream->write($file->getContent());
+
+        $response = $response->withBody($stream);
 
         $client->acceptResponse($response);
 

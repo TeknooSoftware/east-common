@@ -28,6 +28,9 @@ namespace Teknoo\East\Common\Recipe\Step\FrontAsset;
 use Psr\Http\Message\ServerRequestInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 
+use function array_pop;
+use function explode;
+
 /**
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
@@ -36,14 +39,22 @@ use Teknoo\East\Foundation\Manager\ManagerInterface;
  */
 class ComputePath
 {
+    public function __construct(
+        private string $finalAssetsLocation,
+    ) {
+    }
+
     public function __invoke(
         ManagerInterface $manager,
         ServerRequestInterface $request,
     ): self {
         $path = $request->getUri()->getPath();
+        $parts = explode('/', $path);
+        $file = array_pop($parts);
 
         $manager->updateWorkPlan([
-            'assetPath' => $path,
+            'finalAssetsPath' => $file,
+            'finalAssetsLocation' => $this->finalAssetsLocation,
         ]);
 
         return $this;

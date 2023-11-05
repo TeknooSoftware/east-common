@@ -40,14 +40,14 @@ class LoadPersistedAsset
 {
     public function __invoke(
         ManagerInterface $manager,
-        string $assetPath,
+        string $finalAssetsPath,
         FileType $type,
         PersisterInterface $persister,
         bool $noOverwrite = true,
     ): self {
         if (true === $noOverwrite) {
             $persister->load(
-                path: $assetPath,
+                path: $finalAssetsPath,
                 type: $type,
                 holder: fn(FinalFile $file) => $manager->updateWorkPlan([
                     FinalFile::class => $file,

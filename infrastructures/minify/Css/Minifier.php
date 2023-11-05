@@ -38,13 +38,18 @@ use Teknoo\East\Common\Minify\AbstractMinifier;
  */
 class Minifier extends AbstractMinifier
 {
-    public function process(FilesSetInterface $set, string $fileName, callable $holder): MinifierInterface
-    {
+    public function process(
+        FilesSetInterface $set,
+        string $fileName,
+        callable $holder,
+        string $path = '',
+    ): MinifierInterface {
         $this->run(
             set: $set,
             holder: $holder,
             type: FileType::CSS,
-            path: $fileName,
+            fileName: $fileName,
+            path: $path,
         );
 
         return $this;

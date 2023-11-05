@@ -8,6 +8,7 @@
 - To do :
   - Support version of minified assets compiled
   - Add CLI command to compile offline
+  - Support of noOverwrite
 
 ## [2.3.2] - 2023-10-06
 ### Stable Release

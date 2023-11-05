@@ -42,14 +42,16 @@ class MinifyAssets
         ManagerInterface $manager,
         MinifierInterface $minifier,
         FilesSetInterface $set,
-        string $assetPath,
+        string $finalAssetsPath,
+        string $finalAssetsLocation = '',
     ): self {
         $minifier->process(
             set: $set,
-            fileName: $assetPath,
+            fileName: $finalAssetsPath,
             holder: fn (FinalFile $file) => $manager->updateWorkPlan([
                FinalFile::class => $file,
             ]),
+            path: $finalAssetsLocation,
         );
 
         return $this;

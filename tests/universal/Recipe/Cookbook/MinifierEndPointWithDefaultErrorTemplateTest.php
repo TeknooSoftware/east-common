@@ -44,7 +44,7 @@ use Teknoo\Tests\Recipe\Cookbook\BaseCookbookTestTrait;
  * @author      Richard Déloge <richard@teknoo.software>
  * @covers \Teknoo\East\Common\Recipe\Cookbook\MinifierEndPoint
  */
-class MinifierEndPointTest extends TestCase
+class MinifierEndPointWithDefaultErrorTemplateTest extends TestCase
 {
     use BaseCookbookTestTrait;
 
@@ -186,6 +186,7 @@ class MinifierEndPointTest extends TestCase
             $this->getPersistAsset(),
             $this->getReturnFile(),
             $this->getRenderError(),
+            'foo.template',
         );
     }
 }

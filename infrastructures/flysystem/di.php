@@ -38,6 +38,10 @@ use Teknoo\East\Common\FrontAsset\FileType;
 use function DI\get;
 
 return [
+    'teknoo.east.common.assets.flysystem.adapter' => static function (): callable {
+        return fn ($path) => new LocalFilesystemAdapter($path);
+    },
+
     PersisterInterface::class . ':css' => get(Persister::class . ':css'),
     Persister::class . ':css' => static function (ContainerInterface $container): Persister {
         if (!$container->has('teknoo.east.common.assets.destination.css.path')) {
@@ -46,9 +50,11 @@ return [
             );
         }
 
+        $adapterFactory = $container->get('teknoo.east.common.assets.flysystem.adapter');
+
         return new Persister(
             filesystem: new Filesystem(
-                new LocalFilesystemAdapter(
+                $adapterFactory(
                     $container->get('kernel.project_dir') . '/' .
                         $container->get('teknoo.east.common.assets.destination.css.path'),
                 ),
@@ -70,9 +76,11 @@ return [
             );
         }
 
+        $adapterFactory = $container->get('teknoo.east.common.assets.flysystem.adapter');
+
         return new SourceLoader(
             filesystem: new Filesystem(
-                new LocalFilesystemAdapter(
+                $adapterFactory(
                     $container->get('kernel.project_dir') . '/' .
                         $container->get('teknoo.east.common.assets.source.css.path'),
                 ),
@@ -90,9 +98,11 @@ return [
             );
         }
 
+        $adapterFactory = $container->get('teknoo.east.common.assets.flysystem.adapter');
+
         return new Persister(
             filesystem: new Filesystem(
-                new LocalFilesystemAdapter(
+                $adapterFactory(
                     $container->get('kernel.project_dir') . '/' .
                         $container->get('teknoo.east.common.assets.destination.js.path'),
                 ),
@@ -114,9 +124,11 @@ return [
             );
         }
 
+        $adapterFactory = $container->get('teknoo.east.common.assets.flysystem.adapter');
+
         return new SourceLoader(
             filesystem: new Filesystem(
-                new LocalFilesystemAdapter(
+                $adapterFactory(
                     $container->get('kernel.project_dir') . '/' .
                         $container->get('teknoo.east.common.assets.source.js.path'),
                 ),

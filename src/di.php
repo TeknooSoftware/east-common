@@ -187,7 +187,7 @@ return [
     ComputePath::class => static function (ContainerInterface $container): ComputePath {
         $finalAssetsLocation = '';
         if ($container->has('teknoo.east.common.assets.final_location')) {
-            $finalAssetsLocation = $container->has('teknoo.east.common.assets.final_location');
+            $finalAssetsLocation = $container->get('teknoo.east.common.assets.final_location');
         }
 
         return new ComputePath(

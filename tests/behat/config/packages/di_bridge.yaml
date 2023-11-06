@@ -8,4 +8,4 @@ di_bridge:
     - '%kernel.project_dir%/infrastructures/flysystem/di.php'
     - '%kernel.project_dir%/infrastructures/minify/di.php'
     - '%kernel.project_dir%/infrastructures/di.php'
-    - '%kernel.project_dir%/tests/behat/di.php'
+    - '%kernel.project_dir%/tests/behat/config/di.php'

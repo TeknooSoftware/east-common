@@ -38,6 +38,7 @@ use Teknoo\Tests\East\Common\Behat\Object\MyObject;
 use Teknoo\Tests\East\Common\Behat\Repository\MyObjectRepository;
 use Teknoo\Tests\East\Common\Behat\Writer\MyObjectTimeStampableWriter;
 use Teknoo\Tests\East\Common\Behat\Writer\MyObjectWriter;
+
 use function DI\create;
 use function DI\get;
 
@@ -81,4 +82,24 @@ return [
 
     'teknoo.east.common.deleting.my_object_timestampable' => create(DeletingService::class)
         ->constructor(get(MyObjectTimeStampableWriter::class), get(DatesService::class)),
+
+    'teknoo.east.common.assets.destination.css.path' => 'tests/support/build/css',
+    'teknoo.east.common.assets.source.css.path' => 'tests/support',
+    'teknoo.east.common.assets.destination.js.path' => 'tests/support/build/js',
+    'teknoo.east.common.assets.source.js.path' => 'tests/support/js',
+    'teknoo.east.common.assets.final_location' => 'build/',
+
+    'teknoo.east.common.assets.sets.css' => [
+        'main' => [
+            'css/file1.css',
+            'css/file3.css',
+        ],
+    ],
+
+    'teknoo.east.common.assets.sets.js' => [
+        'main' => [
+            'file1.js',
+            'file3.js',
+        ],
+    ],
 ];

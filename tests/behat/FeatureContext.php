@@ -270,6 +270,11 @@ class FeatureContext implements Context
         if (false !== $file && file_exists($file)) {
             unlink($file);
         }
+
+        $file = realpath(__DIR__ . '/../support/build/css/main.2.0.0.min.css');
+        if (false !== $file && file_exists($file)) {
+            unlink($file);
+        }
     }
 
     /**
@@ -279,10 +284,16 @@ class FeatureContext implements Context
     {
         $filePrev = realpath(__DIR__ . '/../support/build/css/prev.min.css');
         $fileMain = realpath(__DIR__ . '/../support/build/css/main.min.css');
-        if (file_exists($fileMain)) {
+        if (false !== $fileMain && file_exists($fileMain)) {
             unlink($fileMain);
         }
+
         copy($filePrev, $fileMain);
+
+        $fileMain = realpath(__DIR__ . '/../support/build/css/main.2.0.0.min.css');
+        if (false !== $fileMain && file_exists($fileMain)) {
+            unlink($fileMain);
+        }
     }
 
     /**
@@ -291,6 +302,11 @@ class FeatureContext implements Context
     public function withJsNonMinifiedFiles()
     {
         $file = realpath(__DIR__ . '/../support/build/js/main.min.js');
+        if (false !== $file && file_exists($file)) {
+            unlink($file);
+        }
+
+        $file = realpath(__DIR__ . '/../support/build/js/main.2.0.0.min.js');
         if (false !== $file && file_exists($file)) {
             unlink($file);
         }
@@ -303,10 +319,16 @@ class FeatureContext implements Context
     {
         $filePrev = realpath(__DIR__ . '/../support/build/js/prev.min.js');
         $fileMain = realpath(__DIR__ . '/../support/build/js/main.min.js');
-        if (file_exists($fileMain)) {
+        if (false !== $fileMain && file_exists($fileMain)) {
             unlink($fileMain);
         }
+
         copy($filePrev, $fileMain);
+
+        $fileMain = realpath(__DIR__ . '/../support/build/js/main.2.0.0.min.js');
+        if (false !== $fileMain && file_exists($fileMain)) {
+            unlink($fileMain);
+        }
     }
 
     public function buildObjectManager(): ObjectManager
@@ -820,10 +842,31 @@ class FeatureContext implements Context
     {
         $fileExpected = realpath(__DIR__ . '/../support/build/css/expected.min.css');
         $fileMain = realpath(__DIR__ . '/../support/build/css/main.min.css');
+        if (false === $fileMain) {
+            $fileMain = realpath(__DIR__ . '/../support/build/css/main.2.0.0.min.css');
+        }
         
         Assert::assertEquals(
-            file_get_contents($fileExpected),
+            $expected = file_get_contents($fileExpected),
             file_get_contents($fileMain),
+        );
+
+        Assert::assertEquals(
+            $expected,
+            (string) $this->response->getBody(),
+        );
+    }
+
+    /**
+     * @Then the content must be the old minified css
+     */
+    public function theContentMustBeTheOldMinifiedCss()
+    {
+        $filePrev = realpath(__DIR__ . '/../support/build/css/main.1.0.0.min.css.exp');
+
+        Assert::assertEquals(
+            file_get_contents($filePrev),
+            (string) $this->response->getBody(),
         );
     }
 
@@ -836,8 +879,13 @@ class FeatureContext implements Context
         $fileMain = realpath(__DIR__ . '/../support/build/css/main.min.css');
 
         Assert::assertEquals(
-            file_get_contents($filePrev),
+            $expected = file_get_contents($filePrev),
             file_get_contents($fileMain),
+        );
+
+        Assert::assertEquals(
+            $expected,
+            (string) $this->response->getBody(),
         );
     }
 
@@ -848,10 +896,31 @@ class FeatureContext implements Context
     {
         $fileExpected = realpath(__DIR__ . '/../support/build/js/expected.min.js');
         $fileMain = realpath(__DIR__ . '/../support/build/js/main.min.js');
+        if (false === $fileMain) {
+            $fileMain = realpath(__DIR__ . '/../support/build/js/main.2.0.0.min.js');
+        }
 
         Assert::assertEquals(
-            file_get_contents($fileExpected),
+            $expected = file_get_contents($fileExpected),
             file_get_contents($fileMain),
+        );
+
+        Assert::assertEquals(
+            $expected,
+            (string) $this->response->getBody(),
+        );
+    }
+
+    /**
+     * @Then the content must be the old minified js
+     */
+    public function theContentMustBeTheOldMinifiedJs()
+    {
+        $filePrev = realpath(__DIR__ . '/../support/build/js/main.1.0.0.min.js.exp');
+
+        Assert::assertEquals(
+            file_get_contents($filePrev),
+            (string) $this->response->getBody(),
         );
     }
 
@@ -864,8 +933,13 @@ class FeatureContext implements Context
         $fileMain = realpath(__DIR__ . '/../support/build/js/main.min.js');
 
         Assert::assertEquals(
-            file_get_contents($filePrev),
+            $expected = file_get_contents($filePrev),
             file_get_contents($fileMain),
+        );
+
+        Assert::assertEquals(
+            $expected,
+            (string) $this->response->getBody(),
         );
     }
 

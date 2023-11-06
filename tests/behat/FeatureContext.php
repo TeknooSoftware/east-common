@@ -154,6 +154,8 @@ class FeatureContext implements Context
 
     private ?MediaLoader $mediaLoader = null;
 
+    public bool $noOverride = true;
+
     /**
      * @Given I have DI initialized
      */
@@ -186,6 +188,7 @@ class FeatureContext implements Context
     {
         $this->user = null;
         $this->cookies = [];
+        $this->noOverride = true;
         $this->symfonyKernel = new class($this, 'test') extends BaseKernel
         {
             use MicroKernelTrait;
@@ -230,6 +233,10 @@ class FeatureContext implements Context
                 $loader->load(__DIR__.'/config/services.yaml');
                 $container->setParameter('container.autowiring.strict_mode', true);
                 $container->setParameter('container.dumper.inline_class_loader', true);
+                $container->setParameter(
+                    'teknoo.east.common.assets.no_overwrite',
+                    $this->context->noOverride,
+                );
             }
 
             protected function configureRoutes($routes): void
@@ -288,7 +295,7 @@ class FeatureContext implements Context
             unlink($fileMain);
         }
 
-        copy($filePrev, $fileMain);
+        copy($filePrev, __DIR__ . '/../support/build/css/main.min.css');
 
         $fileMain = realpath(__DIR__ . '/../support/build/css/main.2.0.0.min.css');
         if (false !== $fileMain && file_exists($fileMain)) {
@@ -329,6 +336,14 @@ class FeatureContext implements Context
         if (false !== $fileMain && file_exists($fileMain)) {
             unlink($fileMain);
         }
+    }
+
+    /**
+     * @Given overriding of minified assets is enabled
+     */
+    public function overridingOfMinifiedAssetsIsEnabled()
+    {
+        $this->noOverride = false;
     }
 
     public function buildObjectManager(): ObjectManager

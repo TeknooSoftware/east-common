@@ -3,6 +3,7 @@
 parameters:
   locale: 'en'
   teknoo.east.common.form_type.doctrine.class: 'Teknoo\Tests\East\Common\Behat\MockDoctrineType'
+  teknoo.east.common.assets.no_overwrite: true
 
 services:
   Doctrine\Persistence\ObjectRepository:

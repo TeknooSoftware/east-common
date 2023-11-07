@@ -47,6 +47,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
+use ReflectionClass;
 use ReflectionObject;
 use Scheb\TwoFactorBundle\SchebTwoFactorBundle;
 use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
@@ -60,6 +61,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\PasswordHasher\Hasher\SodiumPasswordHasher;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
+use Symfony\Component\Routing\Router;
 use Teknoo\DI\SymfonyBridge\DIBridgeBundle;
 use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
 use Teknoo\East\CommonBundle\TeknooEastCommonBundle;
@@ -98,9 +100,11 @@ use function array_key_exists;
 use function copy;
 use function file_exists;
 use function file_get_contents;
+use function function_exists;
 use function in_array;
 use function is_numeric;
 use function json_encode;
+use function opcache_invalidate;
 use function parse_str;
 use function random_int;
 use function realpath;
@@ -182,13 +186,31 @@ class FeatureContext implements Context
     }
 
     /**
-     * @Given I have DI With Symfony initialized
+     * @BeforeScenario
      */
-    public function iHaveDiWithSymfonyInitialized(): void
+    public function clean()
     {
         $this->user = null;
         $this->cookies = [];
         $this->noOverride = true;
+
+        if (file_exists(__DIR__ . '/../var/cache/url_matching_routes.php')) {
+            unlink(__DIR__ . '/../var/cache/url_matching_routes.php');
+        }
+
+        if (function_exists('opcache_invalidate')) {
+            opcache_invalidate(__DIR__ . '/../var/cache/url_matching_routes.php');
+        }
+
+        $routerRc = new ReflectionClass(Router::class);
+        $routerRc->setStaticPropertyValue('cache', []);
+    }
+
+    /**
+     * @Given I have DI With Symfony initialized
+     */
+    public function iHaveDiWithSymfonyInitialized(): void
+    {
         $this->symfonyKernel = new class($this, 'test') extends BaseKernel
         {
             use MicroKernelTrait;

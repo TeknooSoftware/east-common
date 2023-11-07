@@ -29,7 +29,6 @@ use Teknoo\East\Common\Contracts\FrontAsset\PersisterInterface;
 use Teknoo\East\Common\FrontAsset\FileType;
 use Teknoo\East\Common\FrontAsset\FinalFile;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
-use Teknoo\Recipe\Ingredient\Attributes\Transform;
 
 /**
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
@@ -39,18 +38,14 @@ use Teknoo\Recipe\Ingredient\Attributes\Transform;
  */
 class LoadPersistedAsset
 {
-    public function __construct(
-        private bool $noOverwrite = true,
-    ) {
-    }
-
     public function __invoke(
         ManagerInterface $manager,
         string $finalAssetsPath,
         FileType $type,
         PersisterInterface $persister,
+        bool $noOverwrite = true,
     ): self {
-        if (true === $this->noOverwrite) {
+        if (true === $noOverwrite) {
             $persister->load(
                 path: $finalAssetsPath,
                 type: $type,

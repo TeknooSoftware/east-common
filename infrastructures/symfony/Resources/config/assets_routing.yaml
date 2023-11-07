@@ -8,6 +8,7 @@ _teknoo_common_minifier_css:
         persister: '@Teknoo\East\Common\Contracts\FrontAsset\PersisterInterface:css'
         minifier: '@Teknoo\East\Common\Contracts\FrontAsset\MinifierInterface:css'
         type: 'css'
+        noOverwrite: "%teknoo.east.common.assets.no_overwrite%"
 
 _teknoo_common_minifier_css_version:
     path: '/css/{setName}.{version}.min.css'
@@ -21,6 +22,7 @@ _teknoo_common_minifier_css_version:
         persister: '@Teknoo\East\Common\Contracts\FrontAsset\PersisterInterface:css'
         minifier: '@Teknoo\East\Common\Contracts\FrontAsset\MinifierInterface:css'
         type: 'css'
+        noOverwrite: "%teknoo.east.common.assets.no_overwrite%"
 
 _teknoo_common_minifier_js:
     path: '/js/{setName}.min.js'
@@ -32,6 +34,7 @@ _teknoo_common_minifier_js:
         persister: '@Teknoo\East\Common\Contracts\FrontAsset\PersisterInterface:js'
         minifier: '@Teknoo\East\Common\Contracts\FrontAsset\MinifierInterface:js'
         type: 'js'
+        noOverwrite: "%teknoo.east.common.assets.no_overwrite%"
 
 _teknoo_common_minifier_js_version:
     path: '/js/{setName}.{version}.min.js'
@@ -45,3 +48,4 @@ _teknoo_common_minifier_js_version:
         persister: '@Teknoo\East\Common\Contracts\FrontAsset\PersisterInterface:js'
         minifier: '@Teknoo\East\Common\Contracts\FrontAsset\MinifierInterface:js'
         type: 'js'
+        noOverwrite: "%teknoo.east.common.assets.no_overwrite%"

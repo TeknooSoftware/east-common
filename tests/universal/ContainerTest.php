@@ -410,17 +410,6 @@ class ContainerTest extends TestCase
         );
     }
 
-    public function testLoadPersistedAssetWithOverwrite()
-    {
-        $container = $this->buildContainer();
-        $container->set('teknoo.east.common.assets.no_overwrite', false);
-
-        self::assertInstanceOf(
-            LoadPersistedAsset::class,
-            $container->get(LoadPersistedAsset::class)
-        );
-    }
-
     public function testLoadSource()
     {
         $container = $this->buildContainer();

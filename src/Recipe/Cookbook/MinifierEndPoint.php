@@ -82,6 +82,15 @@ class MinifierEndPoint implements MinifierEndPointInterface
         $recipe = $recipe->require(new Ingredient(MinifierInterface::class, 'minifier'));
         $recipe = $recipe->require(new Ingredient(FileType::class, 'type'));
         $recipe = $recipe->require(new Ingredient('string', 'setName'));
+        $recipe = $recipe->require(
+            new Ingredient(
+                requiredType: 'scalar',
+                name: 'noOverwrite',
+                normalizeCallback: fn ($x): bool => !empty($x),
+                mandatory: false,
+                default: true,
+            )
+        );
         $recipe = $recipe->require(new Ingredient('string', 'errorTemplate'));
 
         $recipe = $recipe->cook($this->computePath, ComputePath::class, [], 10);

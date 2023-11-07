@@ -194,16 +194,7 @@ return [
             finalAssetsLocation: $finalAssetsLocation,
         );
     },
-    LoadPersistedAsset::class => static function (ContainerInterface $container): LoadPersistedAsset {
-        $noOverwrite = true;
-        if ($container->has('teknoo.east.common.assets.no_overwrite')) {
-            $noOverwrite = $container->get('teknoo.east.common.assets.no_overwrite');
-        }
-
-        return new LoadPersistedAsset(
-            noOverwrite: $noOverwrite,
-        );
-    },
+    LoadPersistedAsset::class => create(),
     LoadSource::class => create(),
     MinifyAssets::class => create(),
     PersistAsset::class => create(),

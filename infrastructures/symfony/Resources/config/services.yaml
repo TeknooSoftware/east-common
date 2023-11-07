@@ -283,3 +283,14 @@ services:
             - '@?scheb_two_factor.security.google_authenticator'
         tags:
             - { name: form.type }
+
+    #Commands
+    teknoo.east.command.symfony.command.minify_css:
+        parent: 'Teknoo\East\CommonBundle\Command\MinifyCommand:css'
+        tags:
+            - { name: 'console.command' }
+
+    teknoo.east.command.symfony.command.minify_js:
+        parent: 'Teknoo\East\CommonBundle\Command\MinifyCommand:js'
+        tags:
+            - { name: 'console.command' }

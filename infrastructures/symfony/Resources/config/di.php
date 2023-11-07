@@ -28,6 +28,12 @@ namespace Teknoo\East\CommonBundle\Resources\config;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Teknoo\East\Common\Contracts\FrontAsset\MinifierInterface;
+use Teknoo\East\Common\Contracts\FrontAsset\PersisterInterface;
+use Teknoo\East\Common\Contracts\FrontAsset\SourceLoaderInterface;
+use Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierCommandInterface;
+use Teknoo\East\Common\FrontAsset\FileType;
+use Teknoo\East\CommonBundle\Command\MinifyCommand;
 use Teknoo\East\CommonBundle\Contracts\Recipe\Step\BuildQrCodeInterface;
 use Teknoo\East\CommonBundle\Middleware\LocaleMiddleware;
 use Teknoo\East\CommonBundle\Recipe\Cookbook\Disable2FA;
@@ -50,13 +56,17 @@ use Teknoo\East\Common\Contracts\Recipe\Step\RenderFormInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\SearchFormLoaderInterface;
 use Teknoo\East\Common\Recipe\Step\CreateObject;
 use Teknoo\East\Common\Recipe\Step\RenderError;
+use Teknoo\East\Foundation\Command\Executor;
+use Teknoo\East\Foundation\Http\Message\MessageFactoryInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
+use Teknoo\East\FoundationBundle\Command\Client;
 use Teknoo\Recipe\RecipeInterface as OriginalRecipeInterface;
 
 use function DI\create;
 use function DI\decorate;
 use function DI\get;
+use function DI\value;
 
 return [
     //Middleware
@@ -153,6 +163,44 @@ return [
             renderForm: $container->get(RenderFormInterface::class),
             renderError: $container->get(RenderError::class),
             defaultErrorTemplate: $defaultErrorTemplate,
+        );
+    },
+
+    'teknoo.east.common.symfony.command.minify.css.name' => value('teknoo:common:minify:css'),
+    'teknoo.east.common.symfony.command.minify.css.description' => value(
+        'Minify a set of css files into an unique file'
+    ),
+    MinifyCommand::class . ':css' => static function (ContainerInterface $container): MinifyCommand {
+        return new MinifyCommand(
+            $container->get('teknoo.east.common.symfony.command.minify.css.name'),
+            $container->get('teknoo.east.common.symfony.command.minify.css.description'),
+            $container->get(Executor::class),
+            new Client(),
+            $container->get(MinifierCommandInterface::class),
+            $container->get(MessageFactoryInterface::class),
+            $container->get(SourceLoaderInterface::class . ':css'),
+            $container->get(PersisterInterface::class . ':css'),
+            $container->get(MinifierInterface::class . ':css'),
+            FileType::CSS,
+        );
+    },
+
+    'teknoo.east.common.symfony.command.minify.js.name' => value('teknoo:common:minify:js'),
+    'teknoo.east.common.symfony.command.minify.js.description' => value(
+        'Minify a set of javascripts files into an unique file'
+    ),
+    MinifyCommand::class . ':js' => static function (ContainerInterface $container): MinifyCommand {
+        return new MinifyCommand(
+            $container->get('teknoo.east.common.symfony.command.minify.js.name'),
+            $container->get('teknoo.east.common.symfony.command.minify.js.description'),
+            $container->get(Executor::class),
+            new Client(),
+            $container->get(MinifierCommandInterface::class),
+            $container->get(MessageFactoryInterface::class),
+            $container->get(SourceLoaderInterface::class . ':js'),
+            $container->get(PersisterInterface::class . ':js'),
+            $container->get(MinifierInterface::class . ':js'),
+            FileType::JS,
         );
     },
 ];

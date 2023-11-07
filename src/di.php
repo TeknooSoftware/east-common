@@ -35,6 +35,7 @@ use Teknoo\East\Common\Contracts\Recipe\Cookbook\CreateObjectEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\DeleteObjectEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\EditObjectEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\ListObjectEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierCommandInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderMediaEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderStaticContentEndPointInterface;
@@ -53,6 +54,7 @@ use Teknoo\East\Common\Recipe\Cookbook\CreateObjectEndPoint;
 use Teknoo\East\Common\Recipe\Cookbook\DeleteObjectEndPoint;
 use Teknoo\East\Common\Recipe\Cookbook\EditObjectEndPoint;
 use Teknoo\East\Common\Recipe\Cookbook\ListObjectEndPoint;
+use Teknoo\East\Common\Recipe\Cookbook\MinifierCommand;
 use Teknoo\East\Common\Recipe\Cookbook\MinifierEndPoint;
 use Teknoo\East\Common\Recipe\Cookbook\RenderMediaEndPoint;
 use Teknoo\East\Common\Recipe\Cookbook\RenderStaticContentEndPoint;
@@ -315,6 +317,14 @@ return [
             $defaultErrorTemplate,
         );
     },
+    MinifierCommandInterface::class => get(MinifierCommand::class),
+    MinifierCommand::class => create()
+        ->constructor(
+            get(OriginalRecipeInterface::class . ':CRUD'),
+            get(LoadSource::class),
+            get(MinifyAssets::class),
+            get(PersistAsset::class),
+        ),
     MinifierEndPointInterface::class => get(MinifierEndPoint::class),
     MinifierEndPoint::class => static function (ContainerInterface $container): MinifierEndPoint {
         $defaultErrorTemplate = null;

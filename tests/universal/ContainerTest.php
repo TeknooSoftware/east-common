@@ -38,6 +38,7 @@ use Teknoo\East\Common\Contracts\Recipe\Cookbook\CreateObjectEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\DeleteObjectEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\EditObjectEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\ListObjectEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierCommandInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderMediaEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderStaticContentEndPointInterface;
@@ -55,6 +56,7 @@ use Teknoo\East\Common\Recipe\Cookbook\CreateObjectEndPoint;
 use Teknoo\East\Common\Recipe\Cookbook\DeleteObjectEndPoint;
 use Teknoo\East\Common\Recipe\Cookbook\EditObjectEndPoint;
 use Teknoo\East\Common\Recipe\Cookbook\ListObjectEndPoint;
+use Teknoo\East\Common\Recipe\Cookbook\MinifierCommand;
 use Teknoo\East\Common\Recipe\Cookbook\MinifierEndPoint;
 use Teknoo\East\Common\Recipe\Cookbook\RenderMediaEndPoint;
 use Teknoo\East\Common\Recipe\Cookbook\RenderStaticContentEndPoint;
@@ -711,6 +713,25 @@ class ContainerTest extends TestCase
         self::assertInstanceOf(
             MinifierEndPointInterface::class,
             $container->get(MinifierEndPointInterface::class)
+        );
+    }
+
+    public function testMinifierCommand()
+    {
+        $container = $this->buildContainer();
+        $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
+        $container->set(LoadSource::class, $this->createMock(LoadSource::class));
+        $container->set(MinifyAssets::class, $this->createMock(MinifyAssets::class));
+        $container->set(PersistAsset::class, $this->createMock(PersistAsset::class));
+
+        self::assertInstanceOf(
+            MinifierCommand::class,
+            $container->get(MinifierCommand::class)
+        );
+
+        self::assertInstanceOf(
+            MinifierCommandInterface::class,
+            $container->get(MinifierCommandInterface::class)
         );
     }
 

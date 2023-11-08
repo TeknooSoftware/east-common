@@ -28,6 +28,7 @@ namespace Teknoo\East\CommonBundle\Resources\config;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use RuntimeException;
 use Teknoo\East\Common\Contracts\FrontAsset\MinifierInterface;
 use Teknoo\East\Common\Contracts\FrontAsset\PersisterInterface;
 use Teknoo\East\Common\Contracts\FrontAsset\SourceLoaderInterface;
@@ -56,6 +57,7 @@ use Teknoo\East\Common\Contracts\Recipe\Step\RenderFormInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\SearchFormLoaderInterface;
 use Teknoo\East\Common\Recipe\Step\CreateObject;
 use Teknoo\East\Common\Recipe\Step\RenderError;
+use Teknoo\East\Diactoros\MessageFactory;
 use Teknoo\East\Foundation\Command\Executor;
 use Teknoo\East\Foundation\Http\Message\MessageFactoryInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
@@ -171,17 +173,25 @@ return [
         'Minify a set of css files into an unique file'
     ),
     MinifyCommand::class . ':css' => static function (ContainerInterface $container): MinifyCommand {
+        if ($container->has(MessageFactoryInterface::class)) {
+            $messageFactory = $container->get(MessageFactoryInterface::class);
+        } elseif ($container->has(MessageFactory::class)) {
+            $messageFactory = $container->get(MessageFactory::class);
+        } else {
+            throw new RuntimeException('Missing ' . MessageFactoryInterface::class .' instance in container');
+        }
+
         return new MinifyCommand(
             $container->get('teknoo.east.common.symfony.command.minify.css.name'),
             $container->get('teknoo.east.common.symfony.command.minify.css.description'),
             $container->get(Executor::class),
             new Client(),
             $container->get(MinifierCommandInterface::class),
-            $container->get(MessageFactoryInterface::class),
+            $messageFactory,
             $container->get(SourceLoaderInterface::class . ':css'),
             $container->get(PersisterInterface::class . ':css'),
             $container->get(MinifierInterface::class . ':css'),
-            FileType::CSS,
+            FileType::CSS->value,
         );
     },
 
@@ -190,17 +200,25 @@ return [
         'Minify a set of javascripts files into an unique file'
     ),
     MinifyCommand::class . ':js' => static function (ContainerInterface $container): MinifyCommand {
+        if ($container->has(MessageFactoryInterface::class)) {
+            $messageFactory = $container->get(MessageFactoryInterface::class);
+        } elseif ($container->has(MessageFactory::class)) {
+            $messageFactory = $container->get(MessageFactory::class);
+        } else {
+            throw new RuntimeException('Missing ' . MessageFactoryInterface::class .' instance in container');
+        }
+
         return new MinifyCommand(
             $container->get('teknoo.east.common.symfony.command.minify.js.name'),
             $container->get('teknoo.east.common.symfony.command.minify.js.description'),
             $container->get(Executor::class),
             new Client(),
             $container->get(MinifierCommandInterface::class),
-            $container->get(MessageFactoryInterface::class),
+            $messageFactory,
             $container->get(SourceLoaderInterface::class . ':js'),
             $container->get(PersisterInterface::class . ':js'),
             $container->get(MinifierInterface::class . ':js'),
-            FileType::JS,
+            FileType::JS->value,
         );
     },
 ];

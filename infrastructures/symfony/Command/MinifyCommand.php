@@ -33,7 +33,6 @@ use Teknoo\East\Common\Contracts\FrontAsset\MinifierInterface;
 use Teknoo\East\Common\Contracts\FrontAsset\PersisterInterface;
 use Teknoo\East\Common\Contracts\FrontAsset\SourceLoaderInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierCommandInterface;
-use Teknoo\East\Common\FrontAsset\FileType;
 use Teknoo\East\Foundation\Command\Executor;
 use Teknoo\East\Foundation\Http\Message\MessageFactoryInterface;
 use Teknoo\East\FoundationBundle\Command\Client;
@@ -52,11 +51,10 @@ class MinifyCommand extends Command
      * @var string
      */
     private const SETNAME_ARGUMENT_NAME = 'setName';
-
     /**
      * @var string
      */
-    private const VERSION_ARGUMENT_NAME = 'version';
+    private const FILENAME_ARGUMENT_NAME = 'finalAssetsPath';
 
     public function __construct(
         string $name,
@@ -68,7 +66,7 @@ class MinifyCommand extends Command
         private readonly SourceLoaderInterface $sourceLoader,
         private readonly PersisterInterface $persister,
         private readonly MinifierInterface $minifier,
-        private readonly FileType $fileType,
+        private readonly string $fileType,
     ) {
         $this->setDescription($description);
 
@@ -84,10 +82,9 @@ class MinifyCommand extends Command
         );
 
         $this->addArgument(
-            name: self::VERSION_ARGUMENT_NAME,
-            mode: InputArgument::OPTIONAL,
-            description: 'Version to build',
-            default: null
+            name: self::FILENAME_ARGUMENT_NAME,
+            mode: InputArgument::REQUIRED,
+            description: 'File to build',
         );
     }
 
@@ -95,7 +92,7 @@ class MinifyCommand extends Command
     {
         $args = [
             self::SETNAME_ARGUMENT_NAME,
-            self::VERSION_ARGUMENT_NAME,
+            self::FILENAME_ARGUMENT_NAME,
         ];
 
         $workPlan = [

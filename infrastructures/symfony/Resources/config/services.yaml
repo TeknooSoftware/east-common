@@ -16,6 +16,9 @@ parameters:
     #Writer
     teknoo.east.common.bundle.writer.user.class: 'Teknoo\East\CommonBundle\Writer\SymfonyUserWriter'
 
+    #Assets
+    teknoo.east.common.assets.no_overwrite: true
+
     #Steps
     teknoo.east.common.bundle.allowed_forms: []
 

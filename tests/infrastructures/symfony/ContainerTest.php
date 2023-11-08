@@ -31,11 +31,17 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
+use Teknoo\East\Common\Contracts\FrontAsset\MinifierInterface;
+use Teknoo\East\Common\Contracts\FrontAsset\PersisterInterface;
+use Teknoo\East\Common\Contracts\FrontAsset\SourceLoaderInterface;
+use Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierCommandInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormHandlingInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Common\Recipe\Step\CreateObject;
 use Teknoo\East\Common\Recipe\Step\RenderError;
+use Teknoo\East\CommonBundle\Command\MinifyCommand;
 use Teknoo\East\CommonBundle\Contracts\Recipe\Step\BuildQrCodeInterface;
 use Teknoo\East\CommonBundle\Middleware\LocaleMiddleware;
 use Teknoo\East\CommonBundle\Recipe\Cookbook\Disable2FA;
@@ -46,6 +52,9 @@ use Teknoo\East\CommonBundle\Recipe\Step\DisableTOTP;
 use Teknoo\East\CommonBundle\Recipe\Step\EnableTOTP;
 use Teknoo\East\CommonBundle\Recipe\Step\GenerateQRCodeTextForTOTP;
 use Teknoo\East\CommonBundle\Recipe\Step\ValidateTOTP;
+use Teknoo\East\Diactoros\MessageFactory;
+use Teknoo\East\Foundation\Command\Executor;
+use Teknoo\East\Foundation\Http\Message\MessageFactoryInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
 use Teknoo\East\Foundation\Router\RouterInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
@@ -219,5 +228,119 @@ class ContainerTest extends TestCase
             RecipeInterface::class,
             $container->get(RecipeInterface::class)
         );
+    }
+
+    public function testMinifyCommandCssWithMessageFactoryInterface()
+    {
+        $container = $this->buildContainer();
+
+        $container->set('teknoo.east.common.symfony.command.minify.css.name', 'foo');
+        $container->set('teknoo.east.common.symfony.command.minify.css.description', 'foo');
+        $container->set(Executor::class, $this->createMock(Executor::class));
+        $container->set(MinifierCommandInterface::class, $this->createMock(MinifierCommandInterface::class));
+        $container->set(RouterInterface::class, $this->createMock(RouterInterface::class));
+        $container->set(SourceLoaderInterface::class . ':css', $this->createMock(SourceLoaderInterface::class));
+        $container->set(PersisterInterface::class . ':css', $this->createMock(PersisterInterface::class));
+        $container->set(MinifierInterface::class . ':css', $this->createMock(MinifierInterface::class));
+        $container->set(MessageFactoryInterface::class, $this->createMock(MessageFactoryInterface::class));
+
+        self::assertInstanceOf(
+            MinifyCommand::class,
+            $container->get(MinifyCommand::class . ':css')
+        );
+    }
+
+    public function testMinifyCommandCssWith()
+    {
+        $container = $this->buildContainer();
+
+        $container->set('teknoo.east.common.symfony.command.minify.css.name', 'foo');
+        $container->set('teknoo.east.common.symfony.command.minify.css.description', 'foo');
+        $container->set(Executor::class, $this->createMock(Executor::class));
+        $container->set(MinifierCommandInterface::class, $this->createMock(MinifierCommandInterface::class));
+        $container->set(RouterInterface::class, $this->createMock(RouterInterface::class));
+        $container->set(SourceLoaderInterface::class . ':css', $this->createMock(SourceLoaderInterface::class));
+        $container->set(PersisterInterface::class . ':css', $this->createMock(PersisterInterface::class));
+        $container->set(MinifierInterface::class . ':css', $this->createMock(MinifierInterface::class));
+        $container->set(MessageFactory::class, $this->createMock(MessageFactory::class));
+
+        self::assertInstanceOf(
+            MinifyCommand::class,
+            $container->get(MinifyCommand::class . ':css')
+        );
+    }
+
+    public function testMinifyCommandCssWithoutMessageFactory()
+    {
+        $container = $this->buildContainer();
+
+        $container->set('teknoo.east.common.symfony.command.minify.css.name', 'foo');
+        $container->set('teknoo.east.common.symfony.command.minify.css.description', 'foo');
+        $container->set(Executor::class, $this->createMock(Executor::class));
+        $container->set(MinifierCommandInterface::class, $this->createMock(MinifierCommandInterface::class));
+        $container->set(RouterInterface::class, $this->createMock(RouterInterface::class));
+        $container->set(SourceLoaderInterface::class . ':css', $this->createMock(SourceLoaderInterface::class));
+        $container->set(PersisterInterface::class . ':css', $this->createMock(PersisterInterface::class));
+        $container->set(MinifierInterface::class . ':css', $this->createMock(MinifierInterface::class));
+
+        $this->expectException(RuntimeException::class);
+        $container->get(MinifyCommand::class . ':css');
+    }
+
+    public function testMinifyCommandJsWithMessageFactoryInterface()
+    {
+        $container = $this->buildContainer();
+
+        $container->set('teknoo.east.common.symfony.command.minify.js.name', 'foo');
+        $container->set('teknoo.east.common.symfony.command.minify.js.description', 'foo');
+        $container->set(Executor::class, $this->createMock(Executor::class));
+        $container->set(MinifierCommandInterface::class, $this->createMock(MinifierCommandInterface::class));
+        $container->set(RouterInterface::class, $this->createMock(RouterInterface::class));
+        $container->set(SourceLoaderInterface::class . ':js', $this->createMock(SourceLoaderInterface::class));
+        $container->set(PersisterInterface::class . ':js', $this->createMock(PersisterInterface::class));
+        $container->set(MinifierInterface::class . ':js', $this->createMock(MinifierInterface::class));
+        $container->set(MessageFactoryInterface::class, $this->createMock(MessageFactoryInterface::class));
+
+        self::assertInstanceOf(
+            MinifyCommand::class,
+            $container->get(MinifyCommand::class . ':js')
+        );
+    }
+
+    public function testMinifyCommandJsWith()
+    {
+        $container = $this->buildContainer();
+
+        $container->set('teknoo.east.common.symfony.command.minify.js.name', 'foo');
+        $container->set('teknoo.east.common.symfony.command.minify.js.description', 'foo');
+        $container->set(Executor::class, $this->createMock(Executor::class));
+        $container->set(MinifierCommandInterface::class, $this->createMock(MinifierCommandInterface::class));
+        $container->set(RouterInterface::class, $this->createMock(RouterInterface::class));
+        $container->set(SourceLoaderInterface::class . ':js', $this->createMock(SourceLoaderInterface::class));
+        $container->set(PersisterInterface::class . ':js', $this->createMock(PersisterInterface::class));
+        $container->set(MinifierInterface::class . ':js', $this->createMock(MinifierInterface::class));
+        $container->set(MessageFactory::class, $this->createMock(MessageFactory::class));
+
+        self::assertInstanceOf(
+            MinifyCommand::class,
+            $container->get(MinifyCommand::class . ':js')
+        );
+    }
+
+    public function testMinifyCommandJsWithoutMessageFactory()
+    {
+        $container = $this->buildContainer();
+
+        $container->set('teknoo.east.common.symfony.command.minify.js.name', 'foo');
+        $container->set('teknoo.east.common.symfony.command.minify.js.description', 'foo');
+        $container->set(Executor::class, $this->createMock(Executor::class));
+        $container->set(MinifierCommandInterface::class, $this->createMock(MinifierCommandInterface::class));
+        $container->set(RouterInterface::class, $this->createMock(RouterInterface::class));
+        $container->set(SourceLoaderInterface::class . ':js', $this->createMock(SourceLoaderInterface::class));
+        $container->set(PersisterInterface::class . ':js', $this->createMock(PersisterInterface::class));
+        $container->set(MinifierInterface::class . ':js', $this->createMock(MinifierInterface::class));
+
+        $this->expectException(RuntimeException::class);
+        $container->get(MinifyCommand::class . ':js');
     }
 }

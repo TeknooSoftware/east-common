@@ -178,7 +178,7 @@ return [
         } elseif ($container->has(MessageFactory::class)) {
             $messageFactory = $container->get(MessageFactory::class);
         } else {
-            throw new RuntimeException('Missing ' . MessageFactoryInterface::class .' instance in container');
+            throw new RuntimeException('Missing ' . MessageFactoryInterface::class . ' instance in container');
         }
 
         return new MinifyCommand(

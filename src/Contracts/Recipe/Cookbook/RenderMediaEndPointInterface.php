@@ -1,7 +1,7 @@
 <?php
 
 /*
- * East Website.
+ * East Common.
  *
  * LICENSE
  *

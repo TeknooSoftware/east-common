@@ -10,6 +10,9 @@ parameters:
             message: '#mixed#'
             path: infrastructures/symfony/Resources/config/di.php
         -
+            message: '#mixed#'
+            path: infrastructures/flysystem/di.php
+        -
             message: '#\$fieldName of method [a-zA-Z0-9\\_]+::sort\(\)#'
             path: infrastructures/doctrine/DBSource/ODM/RepositoryTrait.php
         -

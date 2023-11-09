@@ -1,7 +1,7 @@
 <?php
 
 /*
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -23,13 +23,13 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Common\MMMinify;
+namespace Teknoo\East\Common\Minify;
 
 use MatthiasMullie\Minify\Minify;
-use Teknoo\East\Common\Contracts\Minify\FilesSetInterface;
-use Teknoo\East\Common\Contracts\Minify\ProcessorInterface;
-use Teknoo\East\Common\Minify\File;
-use Teknoo\East\Common\Minify\FileType;
+use Teknoo\East\Common\Contracts\FrontAsset\FilesSetInterface;
+use Teknoo\East\Common\Contracts\FrontAsset\MinifierInterface;
+use Teknoo\East\Common\FrontAsset\FinalFile;
+use Teknoo\East\Common\FrontAsset\FileType;
 
 /**
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
@@ -37,17 +37,18 @@ use Teknoo\East\Common\Minify\FileType;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-abstract class AbstractMinifier implements ProcessorInterface
+abstract class AbstractMinifier implements MinifierInterface
 {
     public function __construct(
         private readonly Minify $minifier,
     ) {
     }
 
-    protected function process(
+    protected function run(
         FilesSetInterface $set,
         callable $holder,
         FileType $type,
+        string $fileName,
         string $path,
     ): void {
         $minifier = clone $this->minifier;
@@ -57,10 +58,10 @@ abstract class AbstractMinifier implements ProcessorInterface
         }
 
         $holder(
-            new File(
-                path: $path,
+            new FinalFile(
+                path: $fileName,
                 type: $type,
-                contentCallback: fn () => $minifier->execute(),
+                contentCallback: fn () => $minifier->execute($path),
             )
         );
     }

@@ -47,6 +47,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
+use ReflectionClass;
 use ReflectionObject;
 use Scheb\TwoFactorBundle\SchebTwoFactorBundle;
 use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
@@ -60,6 +61,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\PasswordHasher\Hasher\SodiumPasswordHasher;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
+use Symfony\Component\Routing\Router;
 use Teknoo\DI\SymfonyBridge\DIBridgeBundle;
 use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
 use Teknoo\East\CommonBundle\TeknooEastCommonBundle;
@@ -95,14 +97,21 @@ use Throwable;
 use Twig\Environment;
 
 use function array_key_exists;
+use function copy;
+use function file_exists;
+use function file_get_contents;
+use function function_exists;
 use function in_array;
 use function is_numeric;
 use function json_encode;
+use function opcache_invalidate;
 use function parse_str;
 use function random_int;
+use function realpath;
 use function str_replace;
 use function str_starts_with;
 use function strlen;
+use function unlink;
 
 /**
  * Defines application features from the specific context.
@@ -149,6 +158,8 @@ class FeatureContext implements Context
 
     private ?MediaLoader $mediaLoader = null;
 
+    public bool $noOverride = true;
+
     /**
      * @Given I have DI initialized
      */
@@ -175,12 +186,31 @@ class FeatureContext implements Context
     }
 
     /**
+     * @BeforeScenario
+     */
+    public function clean()
+    {
+        $this->user = null;
+        $this->cookies = [];
+        $this->noOverride = true;
+
+        if (file_exists(__DIR__ . '/../var/cache/url_matching_routes.php')) {
+            unlink(__DIR__ . '/../var/cache/url_matching_routes.php');
+        }
+
+        if (function_exists('opcache_invalidate')) {
+            opcache_invalidate(__DIR__ . '/../var/cache/url_matching_routes.php');
+        }
+
+        $routerRc = new ReflectionClass(Router::class);
+        $routerRc->setStaticPropertyValue('cache', []);
+    }
+
+    /**
      * @Given I have DI With Symfony initialized
      */
     public function iHaveDiWithSymfonyInitialized(): void
     {
-        $this->user = null;
-        $this->cookies = [];
         $this->symfonyKernel = new class($this, 'test') extends BaseKernel
         {
             use MicroKernelTrait;
@@ -225,6 +255,10 @@ class FeatureContext implements Context
                 $loader->load(__DIR__.'/config/services.yaml');
                 $container->setParameter('container.autowiring.strict_mode', true);
                 $container->setParameter('container.dumper.inline_class_loader', true);
+                $container->setParameter(
+                    'teknoo.east.common.assets.no_overwrite',
+                    $this->context->noOverride,
+                );
             }
 
             protected function configureRoutes($routes): void
@@ -254,6 +288,84 @@ class FeatureContext implements Context
                 return $str;
             }
         };
+    }
+
+    /**
+     * @Given with css non minified files
+     */
+    public function withCssNonMinifiedFiles()
+    {
+        $file = realpath(__DIR__ . '/../support/build/css/main.min.css');
+        if (false !== $file && file_exists($file)) {
+            unlink($file);
+        }
+
+        $file = realpath(__DIR__ . '/../support/build/css/main.2.0.0.min.css');
+        if (false !== $file && file_exists($file)) {
+            unlink($file);
+        }
+    }
+
+    /**
+     * @Given with css files already minified file into an unique file
+     */
+    public function withCssFilesAlreadyMinifiedFileIntoAnUniqueFile()
+    {
+        $filePrev = realpath(__DIR__ . '/../support/build/css/prev.min.css');
+        $fileMain = realpath(__DIR__ . '/../support/build/css/main.min.css');
+        if (false !== $fileMain && file_exists($fileMain)) {
+            unlink($fileMain);
+        }
+
+        copy($filePrev, __DIR__ . '/../support/build/css/main.min.css');
+
+        $fileMain = realpath(__DIR__ . '/../support/build/css/main.2.0.0.min.css');
+        if (false !== $fileMain && file_exists($fileMain)) {
+            unlink($fileMain);
+        }
+    }
+
+    /**
+     * @Given with js non minified files
+     */
+    public function withJsNonMinifiedFiles()
+    {
+        $file = realpath(__DIR__ . '/../support/build/js/main.min.js');
+        if (false !== $file && file_exists($file)) {
+            unlink($file);
+        }
+
+        $file = realpath(__DIR__ . '/../support/build/js/main.2.0.0.min.js');
+        if (false !== $file && file_exists($file)) {
+            unlink($file);
+        }
+    }
+
+    /**
+     * @Given with js files already minified file into an unique file
+     */
+    public function withJsFilesAlreadyMinifiedFileIntoAnUniqueFile()
+    {
+        $filePrev = realpath(__DIR__ . '/../support/build/js/prev.min.js');
+        $fileMain = realpath(__DIR__ . '/../support/build/js/main.min.js');
+        if (false !== $fileMain && file_exists($fileMain)) {
+            unlink($fileMain);
+        }
+
+        copy($filePrev, $fileMain);
+
+        $fileMain = realpath(__DIR__ . '/../support/build/js/main.2.0.0.min.js');
+        if (false !== $fileMain && file_exists($fileMain)) {
+            unlink($fileMain);
+        }
+    }
+
+    /**
+     * @Given overriding of minified assets is enabled
+     */
+    public function overridingOfMinifiedAssetsIsEnabled()
+    {
+        $this->noOverride = false;
     }
 
     public function buildObjectManager(): ObjectManager
@@ -739,6 +851,136 @@ class FeatureContext implements Context
     }
 
     /**
+     * @Then the response must be a css file
+     */
+    public function theResponseMustBeACssFile()
+    {
+        Assert::assertEquals(
+            'text/css; charset=utf-8',
+            $this->response->getHeader('Content-Type')[0]
+        );
+    }
+
+    /**
+     * @Then the response must be a js file
+     */
+    public function theResponseMustBeAJsFile()
+    {
+        Assert::assertEquals(
+            'text/javascript; charset=utf-8',
+            $this->response->getHeader('Content-Type')[0]
+        );
+    }
+
+    /**
+     * @Then the content must be the new minified css
+     */
+    public function theContentMustBeTheNewMinifiedCss()
+    {
+        $fileExpected = realpath(__DIR__ . '/../support/build/css/expected.min.css');
+        $fileMain = realpath(__DIR__ . '/../support/build/css/main.min.css');
+        if (false === $fileMain) {
+            $fileMain = realpath(__DIR__ . '/../support/build/css/main.2.0.0.min.css');
+        }
+        
+        Assert::assertEquals(
+            $expected = file_get_contents($fileExpected),
+            file_get_contents($fileMain),
+        );
+
+        Assert::assertEquals(
+            $expected,
+            (string) $this->response->getBody(),
+        );
+    }
+
+    /**
+     * @Then the content must be the old minified css
+     */
+    public function theContentMustBeTheOldMinifiedCss()
+    {
+        $filePrev = realpath(__DIR__ . '/../support/build/css/main.1.0.0.min.css.exp');
+
+        Assert::assertEquals(
+            file_get_contents($filePrev),
+            (string) $this->response->getBody(),
+        );
+    }
+
+    /**
+     * @Then the content must be the existing minified css
+     */
+    public function theContentMustBeTheExistingMinifiedCss()
+    {
+        $filePrev = realpath(__DIR__ . '/../support/build/css/prev.min.css');
+        $fileMain = realpath(__DIR__ . '/../support/build/css/main.min.css');
+
+        Assert::assertEquals(
+            $expected = file_get_contents($filePrev),
+            file_get_contents($fileMain),
+        );
+
+        Assert::assertEquals(
+            $expected,
+            (string) $this->response->getBody(),
+        );
+    }
+
+    /**
+     * @Then the content must be the new minified js
+     */
+    public function theContentMustBeTheNewMinifiedJs()
+    {
+        $fileExpected = realpath(__DIR__ . '/../support/build/js/expected.min.js');
+        $fileMain = realpath(__DIR__ . '/../support/build/js/main.min.js');
+        if (false === $fileMain) {
+            $fileMain = realpath(__DIR__ . '/../support/build/js/main.2.0.0.min.js');
+        }
+
+        Assert::assertEquals(
+            $expected = file_get_contents($fileExpected),
+            file_get_contents($fileMain),
+        );
+
+        Assert::assertEquals(
+            $expected,
+            (string) $this->response->getBody(),
+        );
+    }
+
+    /**
+     * @Then the content must be the old minified js
+     */
+    public function theContentMustBeTheOldMinifiedJs()
+    {
+        $filePrev = realpath(__DIR__ . '/../support/build/js/main.1.0.0.min.js.exp');
+
+        Assert::assertEquals(
+            file_get_contents($filePrev),
+            (string) $this->response->getBody(),
+        );
+    }
+
+    /**
+     * @Then the content must be the existing minified js
+     */
+    public function theContentMustBeTheExistingMinifiedJs()
+    {
+        $filePrev = realpath(__DIR__ . '/../support/build/js/prev.min.js');
+        $fileMain = realpath(__DIR__ . '/../support/build/js/main.min.js');
+
+        Assert::assertEquals(
+            $expected = file_get_contents($filePrev),
+            file_get_contents($fileMain),
+        );
+
+        Assert::assertEquals(
+            $expected,
+            (string) $this->response->getBody(),
+        );
+    }
+
+    /**
      * @Then I should get :body
      */
     public function iShouldGet(string $body): void
@@ -851,7 +1093,6 @@ class FeatureContext implements Context
 
         $container->set(ObjectManager::class, $this->buildObjectManager());
         $container->set('twig', $this->twig);
-
         $container->set(
             EngineInterface::class,
             new Engine($this->twig)
@@ -950,6 +1191,17 @@ class FeatureContext implements Context
 
         $this->runSymfony($serverRequest);
     }
+
+    /**
+     * @When Symfony will receive the GET request :url
+     */
+    public function symfonyWillReceiveTheGetRequest($url)
+    {
+        $serverRequest = SfRequest::create($url, 'GET');
+
+        $this->runSymfony($serverRequest);
+    }
+
 
     /**
      * @When Symfony will receive the JSON request :url with :body

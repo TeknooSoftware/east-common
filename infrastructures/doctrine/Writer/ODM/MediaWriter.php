@@ -1,7 +1,7 @@
 <?php
 
 /*
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -36,7 +36,7 @@ use Teknoo\East\Common\Writer\MediaWriter as OriginalWriter;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
- * East Website Writer implementation, dedicated to Media used a Doctrine ODM GridFS Repository.
+ * East Common Writer implementation, dedicated to Media used a Doctrine ODM GridFS Repository.
  * Convert metadata from MediaMetadata to UploadOptions and upload to Mongodb the file downloaded from the client.
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)

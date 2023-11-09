@@ -1,7 +1,7 @@
 <?php
 
 /*
- * East Website.
+ * East Common.
  *
  * LICENSE
  *
@@ -74,7 +74,6 @@ class MediaLoaderTest extends TestCase
      */
     public function getEntity()
     {
-        return new Media();
     }
 
     public function testLoad()

@@ -38,6 +38,8 @@ use Teknoo\East\Common\Contracts\Recipe\Cookbook\CreateObjectEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\DeleteObjectEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\EditObjectEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\ListObjectEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierCommandInterface;
+use Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderMediaEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderStaticContentEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormHandlingInterface;
@@ -54,6 +56,8 @@ use Teknoo\East\Common\Recipe\Cookbook\CreateObjectEndPoint;
 use Teknoo\East\Common\Recipe\Cookbook\DeleteObjectEndPoint;
 use Teknoo\East\Common\Recipe\Cookbook\EditObjectEndPoint;
 use Teknoo\East\Common\Recipe\Cookbook\ListObjectEndPoint;
+use Teknoo\East\Common\Recipe\Cookbook\MinifierCommand;
+use Teknoo\East\Common\Recipe\Cookbook\MinifierEndPoint;
 use Teknoo\East\Common\Recipe\Cookbook\RenderMediaEndPoint;
 use Teknoo\East\Common\Recipe\Cookbook\RenderStaticContentEndPoint;
 use Teknoo\East\Common\Recipe\Step\CreateObject;
@@ -61,6 +65,12 @@ use Teknoo\East\Common\Recipe\Step\DeleteObject;
 use Teknoo\East\Common\Recipe\Step\ExtractOrder;
 use Teknoo\East\Common\Recipe\Step\ExtractPage;
 use Teknoo\East\Common\Recipe\Step\ExtractSlug;
+use Teknoo\East\Common\Recipe\Step\FrontAsset\ComputePath;
+use Teknoo\East\Common\Recipe\Step\FrontAsset\LoadPersistedAsset;
+use Teknoo\East\Common\Recipe\Step\FrontAsset\LoadSource;
+use Teknoo\East\Common\Recipe\Step\FrontAsset\MinifyAssets;
+use Teknoo\East\Common\Recipe\Step\FrontAsset\PersistAsset;
+use Teknoo\East\Common\Recipe\Step\FrontAsset\ReturnFile;
 use Teknoo\East\Common\Recipe\Step\JumpIf;
 use Teknoo\East\Common\Recipe\Step\LoadListObjects;
 use Teknoo\East\Common\Recipe\Step\LoadMedia;
@@ -368,6 +378,82 @@ class ContainerTest extends TestCase
         );
     }
 
+    public function testComputePathWithFinalLocation()
+    {
+        $container = $this->buildContainer();
+        $container->set(
+            'teknoo.east.common.assets.final_location',
+            'foo',
+        );
+
+        self::assertInstanceOf(
+            ComputePath::class,
+            $container->get(ComputePath::class)
+        );
+    }
+
+    public function testComputePath()
+    {
+        $container = $this->buildContainer();
+
+        self::assertInstanceOf(
+            ComputePath::class,
+            $container->get(ComputePath::class)
+        );
+    }
+
+    public function testLoadPersistedAsset()
+    {
+        $container = $this->buildContainer();
+
+        self::assertInstanceOf(
+            LoadPersistedAsset::class,
+            $container->get(LoadPersistedAsset::class)
+        );
+    }
+
+    public function testLoadSource()
+    {
+        $container = $this->buildContainer();
+
+        self::assertInstanceOf(
+            LoadSource::class,
+            $container->get(LoadSource::class)
+        );
+    }
+
+    public function testMinifyAssets()
+    {
+        $container = $this->buildContainer();
+
+        self::assertInstanceOf(
+            MinifyAssets::class,
+            $container->get(MinifyAssets::class)
+        );
+    }
+
+    public function testPersistAsset()
+    {
+        $container = $this->buildContainer();
+
+        self::assertInstanceOf(
+            PersistAsset::class,
+            $container->get(PersistAsset::class)
+        );
+    }
+
+    public function testReturnFile()
+    {
+        $container = $this->buildContainer();
+        $container->set(StreamFactoryInterface::class, $this->createMock(StreamFactoryInterface::class));
+        $container->set(ResponseFactoryInterface::class, $this->createMock(ResponseFactoryInterface::class));
+
+        self::assertInstanceOf(
+            ReturnFile::class,
+            $container->get(ReturnFile::class)
+        );
+    }
+
     public function testSlugPreparation()
     {
         $container = $this->buildContainer();
@@ -602,6 +688,50 @@ class ContainerTest extends TestCase
         self::assertInstanceOf(
             RenderStaticContentEndPointInterface::class,
             $container->get(RenderStaticContentEndPointInterface::class)
+        );
+    }
+
+    public function testMinifierEndPoint()
+    {
+        $container = $this->buildContainer();
+        $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
+        $container->set(ComputePath::class, $this->createMock(ComputePath::class));
+        $container->set(LoadPersistedAsset::class, $this->createMock(LoadPersistedAsset::class));
+        $container->set(JumpIf::class, $this->createMock(JumpIf::class));
+        $container->set(LoadSource::class, $this->createMock(LoadSource::class));
+        $container->set(MinifyAssets::class, $this->createMock(MinifyAssets::class));
+        $container->set(PersistAsset::class, $this->createMock(PersistAsset::class));
+        $container->set(ReturnFile::class, $this->createMock(ReturnFile::class));
+        $container->set(RenderError::class, $this->createMock(RenderError::class));
+        $container->set('teknoo.east.common.cookbook.default_error_template', 'foo.template');
+
+        self::assertInstanceOf(
+            MinifierEndPoint::class,
+            $container->get(MinifierEndPoint::class)
+        );
+
+        self::assertInstanceOf(
+            MinifierEndPointInterface::class,
+            $container->get(MinifierEndPointInterface::class)
+        );
+    }
+
+    public function testMinifierCommand()
+    {
+        $container = $this->buildContainer();
+        $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
+        $container->set(LoadSource::class, $this->createMock(LoadSource::class));
+        $container->set(MinifyAssets::class, $this->createMock(MinifyAssets::class));
+        $container->set(PersistAsset::class, $this->createMock(PersistAsset::class));
+
+        self::assertInstanceOf(
+            MinifierCommand::class,
+            $container->get(MinifierCommand::class)
+        );
+
+        self::assertInstanceOf(
+            MinifierCommandInterface::class,
+            $container->get(MinifierCommandInterface::class)
         );
     }
 

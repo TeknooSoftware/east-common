@@ -5,5 +5,7 @@ di_bridge:
     - '%kernel.project_dir%/src/di.php'
     - '%kernel.project_dir%/infrastructures/doctrine/di.php'
     - '%kernel.project_dir%/infrastructures/symfony/Resources/config/di.php'
+    - '%kernel.project_dir%/infrastructures/flysystem/di.php'
+    - '%kernel.project_dir%/infrastructures/minify/di.php'
     - '%kernel.project_dir%/infrastructures/di.php'
-    - '%kernel.project_dir%/tests/behat/di.php'
+    - '%kernel.project_dir%/tests/behat/config/di.php'

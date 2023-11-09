@@ -18,3 +18,7 @@ composer.lock
 /tests/var/logs/*
 /tests/var/
 /.phpunit.cache/
+/tests/support/build/css/main.min.css
+/tests/support/build/js/main.min.js
+/tests/support/build/css/main.2.0.0.min.css
+/tests/support/build/js/main.2.0.0.min.js

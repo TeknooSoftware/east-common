@@ -35,6 +35,8 @@ use Teknoo\East\Common\Contracts\Recipe\Cookbook\CreateObjectEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\DeleteObjectEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\EditObjectEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\ListObjectEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierCommandInterface;
+use Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderMediaEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderStaticContentEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormHandlingInterface;
@@ -52,6 +54,8 @@ use Teknoo\East\Common\Recipe\Cookbook\CreateObjectEndPoint;
 use Teknoo\East\Common\Recipe\Cookbook\DeleteObjectEndPoint;
 use Teknoo\East\Common\Recipe\Cookbook\EditObjectEndPoint;
 use Teknoo\East\Common\Recipe\Cookbook\ListObjectEndPoint;
+use Teknoo\East\Common\Recipe\Cookbook\MinifierCommand;
+use Teknoo\East\Common\Recipe\Cookbook\MinifierEndPoint;
 use Teknoo\East\Common\Recipe\Cookbook\RenderMediaEndPoint;
 use Teknoo\East\Common\Recipe\Cookbook\RenderStaticContentEndPoint;
 use Teknoo\East\Common\Recipe\Step\CreateObject;
@@ -59,6 +63,12 @@ use Teknoo\East\Common\Recipe\Step\DeleteObject;
 use Teknoo\East\Common\Recipe\Step\ExtractOrder;
 use Teknoo\East\Common\Recipe\Step\ExtractPage;
 use Teknoo\East\Common\Recipe\Step\ExtractSlug;
+use Teknoo\East\Common\Recipe\Step\FrontAsset\ComputePath;
+use Teknoo\East\Common\Recipe\Step\FrontAsset\LoadPersistedAsset;
+use Teknoo\East\Common\Recipe\Step\FrontAsset\LoadSource;
+use Teknoo\East\Common\Recipe\Step\FrontAsset\MinifyAssets;
+use Teknoo\East\Common\Recipe\Step\FrontAsset\PersistAsset;
+use Teknoo\East\Common\Recipe\Step\FrontAsset\ReturnFile;
 use Teknoo\East\Common\Recipe\Step\InitParametersBag;
 use Teknoo\East\Common\Recipe\Step\JumpIf;
 use Teknoo\East\Common\Recipe\Step\LoadListObjects;
@@ -176,6 +186,25 @@ return [
             get(FindSlugService::class)
         ),
     Stop::class => create(),
+    ComputePath::class => static function (ContainerInterface $container): ComputePath {
+        $finalAssetsLocation = '';
+        if ($container->has('teknoo.east.common.assets.final_location')) {
+            $finalAssetsLocation = $container->get('teknoo.east.common.assets.final_location');
+        }
+
+        return new ComputePath(
+            finalAssetsLocation: $finalAssetsLocation,
+        );
+    },
+    LoadPersistedAsset::class => create(),
+    LoadSource::class => create(),
+    MinifyAssets::class => create(),
+    PersistAsset::class => create(),
+    ReturnFile::class => create()
+        ->constructor(
+            get(StreamFactoryInterface::class),
+            get(ResponseFactoryInterface::class),
+        ),
 
     //Base recipe
     OriginalRecipeInterface::class . ':CRUD' => get(OriginalRecipeInterface::class),
@@ -285,6 +314,34 @@ return [
             $container->get(RenderError::class),
             $formLoader,
             $accessControl,
+            $defaultErrorTemplate,
+        );
+    },
+    MinifierCommandInterface::class => get(MinifierCommand::class),
+    MinifierCommand::class => create()
+        ->constructor(
+            get(OriginalRecipeInterface::class . ':CRUD'),
+            get(LoadSource::class),
+            get(MinifyAssets::class),
+            get(PersistAsset::class),
+        ),
+    MinifierEndPointInterface::class => get(MinifierEndPoint::class),
+    MinifierEndPoint::class => static function (ContainerInterface $container): MinifierEndPoint {
+        $defaultErrorTemplate = null;
+        if ($container->has('teknoo.east.common.cookbook.default_error_template')) {
+            $defaultErrorTemplate = $container->get('teknoo.east.common.cookbook.default_error_template');
+        }
+
+        return new MinifierEndPoint(
+            $container->get(OriginalRecipeInterface::class . ':CRUD'),
+            $container->get(ComputePath::class),
+            $container->get(LoadPersistedAsset::class),
+            $container->get(JumpIf::class),
+            $container->get(LoadSource::class),
+            $container->get(MinifyAssets::class),
+            $container->get(PersistAsset::class),
+            $container->get(ReturnFile::class),
+            $container->get(RenderError::class),
             $defaultErrorTemplate,
         );
     },

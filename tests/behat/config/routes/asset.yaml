@@ -1,0 +1,3 @@
+admin_common_assets:
+    resource: '@TeknooEastCommonBundle/Resources/config/assets_routing.yaml'
+    prefix: '/build'

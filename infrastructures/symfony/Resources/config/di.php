@@ -28,12 +28,12 @@ namespace Teknoo\East\CommonBundle\Resources\config;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
-use RuntimeException;
 use Teknoo\East\Common\Contracts\FrontAsset\MinifierInterface;
 use Teknoo\East\Common\Contracts\FrontAsset\PersisterInterface;
 use Teknoo\East\Common\Contracts\FrontAsset\SourceLoaderInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierCommandInterface;
 use Teknoo\East\Common\FrontAsset\FileType;
+use Teknoo\East\CommonBundle\Command\Exception\MissingMessageFactoryException;
 use Teknoo\East\CommonBundle\Command\MinifyCommand;
 use Teknoo\East\CommonBundle\Contracts\Recipe\Step\BuildQrCodeInterface;
 use Teknoo\East\CommonBundle\Middleware\LocaleMiddleware;
@@ -178,7 +178,9 @@ return [
         } elseif ($container->has(MessageFactory::class)) {
             $messageFactory = $container->get(MessageFactory::class);
         } else {
-            throw new RuntimeException('Missing ' . MessageFactoryInterface::class . ' instance in container');
+            throw new MissingMessageFactoryException(
+                'Missing ' . MessageFactoryInterface::class . ' instance in container'
+            );
         }
 
         return new MinifyCommand(
@@ -205,7 +207,9 @@ return [
         } elseif ($container->has(MessageFactory::class)) {
             $messageFactory = $container->get(MessageFactory::class);
         } else {
-            throw new RuntimeException('Missing ' . MessageFactoryInterface::class .' instance in container');
+            throw new MissingMessageFactoryException(
+                'Missing ' . MessageFactoryInterface::class . ' instance in container'
+            );
         }
 
         return new MinifyCommand(

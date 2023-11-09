@@ -23,28 +23,16 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\Tests\East\Common\FrontAsset;
+namespace Teknoo\East\CommonBundle\Command\Exception;
 
-use PHPUnit\Framework\TestCase;
-use Teknoo\East\Common\FrontAsset\FileType;
+use RuntimeException;
 
 /**
+ * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers      \Teknoo\East\Common\FrontAsset\FileType
  */
-class FileTypeTest extends TestCase
+class MissingMessageFactoryException extends RuntimeException
 {
-    public function testEnums()
-    {
-        self::assertEquals(
-            FileType::CSS,
-            FileType::from('css'),
-        );
-
-        self::assertEquals(
-            FileType::JS,
-            FileType::from('js'),
-        );
-    }
 }

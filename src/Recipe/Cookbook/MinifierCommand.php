@@ -52,9 +52,9 @@ class MinifierCommand implements MinifierCommandInterface
 
     public function __construct(
         RecipeInterface $recipe,
-        private LoadSource $loadSource,
-        private MinifyAssets $minifyAssets,
-        private PersistAsset $persistAsset,
+        private readonly LoadSource $loadSource,
+        private readonly MinifyAssets $minifyAssets,
+        private readonly PersistAsset $persistAsset,
     ) {
         $this->fill($recipe);
     }

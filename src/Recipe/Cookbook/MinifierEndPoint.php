@@ -61,13 +61,13 @@ class MinifierEndPoint implements MinifierEndPointInterface
 
     public function __construct(
         RecipeInterface $recipe,
-        private ComputePath $computePath,
-        private LoadPersistedAsset $loadPersistedAsset,
-        private JumpIf $jumpIf,
-        private LoadSource $loadSource,
-        private MinifyAssets $minifyAssets,
-        private PersistAsset $persistAsset,
-        private ReturnFile $returnFile,
+        private readonly ComputePath $computePath,
+        private readonly LoadPersistedAsset $loadPersistedAsset,
+        private readonly JumpIf $jumpIf,
+        private readonly LoadSource $loadSource,
+        private readonly MinifyAssets $minifyAssets,
+        private readonly PersistAsset $persistAsset,
+        private readonly ReturnFile $returnFile,
         private readonly RenderError $renderError,
         private readonly ?string $defaultErrorTemplate = null,
     ) {

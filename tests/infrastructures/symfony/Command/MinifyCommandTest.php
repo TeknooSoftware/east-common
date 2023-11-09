@@ -147,6 +147,7 @@ class MinifyCommandTest extends TestCase
             $this->getPersisterMock(),
             $this->getMinifierMock(),
             'css',
+            '/foo',
         );
     }
 

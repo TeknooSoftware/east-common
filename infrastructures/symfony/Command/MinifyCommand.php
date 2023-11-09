@@ -67,6 +67,7 @@ class MinifyCommand extends Command
         private readonly PersisterInterface $persister,
         private readonly MinifierInterface $minifier,
         private readonly string $fileType,
+        private readonly string $finalAssetsLocation,
     ) {
         $this->setDescription($description);
 
@@ -101,6 +102,7 @@ class MinifyCommand extends Command
             'persister' => $this->persister,
             'minifier' => $this->minifier,
             'type' => $this->fileType,
+            'finalAssetsLocation' => $this->finalAssetsLocation,
         ];
 
         foreach ($args as $arg) {

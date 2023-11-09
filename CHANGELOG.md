@@ -1,5 +1,19 @@
 # Teknoo Software - Common - Change Log
 
+## [2.4.0] - 2023-11-09
+### Stable Release
+- JS and CSS Minifier features from specific HTTP endpoint without webpack
+  - Use `league/flysystem` to perform I/O operations
+  - Use `matthiasmullie/minify` to perform minifing operations
+  - The cookbook implements the interface `Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierEndPointInterface`
+  - Routes available in `infrastructures/symfony/Resources/config/assets_routing.yaml`
+  - Compiled file can be versioned by using `_teknoo_common_minifier_css_version`
+    and `_teknoo_common_minifier_js_version`.
+  - By default, a compiled file is not overwritten but this behavior can be disabled by set the parameter
+    `teknoo.east.common.assets.no_overwrite` to false
+  - With Symfony, command `teknoo:common:minify:css` and `teknoo:common:minify:js` can be used.
+    - The cookbook implements the interface `Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierCommandInterface`
+
 ## [2.4.0-beta2] - 2023-11-09
 ### Stable Release
 - JS and CSS Minifier features from specific HTTP endpoint without webpack

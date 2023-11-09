@@ -40,7 +40,7 @@ use function explode;
 class ComputePath
 {
     public function __construct(
-        private string $finalAssetsLocation,
+        private readonly string $finalAssetsLocation,
     ) {
     }
 

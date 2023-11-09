@@ -236,6 +236,10 @@ class ContainerTest extends TestCase
 
         $container->set('teknoo.east.common.symfony.command.minify.css.name', 'foo');
         $container->set('teknoo.east.common.symfony.command.minify.css.description', 'foo');
+        $container->set(
+            'teknoo.east.common.assets.final_location',
+            'foo',
+        );
         $container->set(Executor::class, $this->createMock(Executor::class));
         $container->set(MinifierCommandInterface::class, $this->createMock(MinifierCommandInterface::class));
         $container->set(RouterInterface::class, $this->createMock(RouterInterface::class));
@@ -250,12 +254,16 @@ class ContainerTest extends TestCase
         );
     }
 
-    public function testMinifyCommandCssWith()
+    public function testMinifyCommandCssWithMessageFactory()
     {
         $container = $this->buildContainer();
 
         $container->set('teknoo.east.common.symfony.command.minify.css.name', 'foo');
         $container->set('teknoo.east.common.symfony.command.minify.css.description', 'foo');
+        $container->set(
+            'teknoo.east.common.assets.final_location',
+            'foo',
+        );
         $container->set(Executor::class, $this->createMock(Executor::class));
         $container->set(MinifierCommandInterface::class, $this->createMock(MinifierCommandInterface::class));
         $container->set(RouterInterface::class, $this->createMock(RouterInterface::class));
@@ -276,6 +284,10 @@ class ContainerTest extends TestCase
 
         $container->set('teknoo.east.common.symfony.command.minify.css.name', 'foo');
         $container->set('teknoo.east.common.symfony.command.minify.css.description', 'foo');
+        $container->set(
+            'teknoo.east.common.assets.final_location',
+            'foo',
+        );
         $container->set(Executor::class, $this->createMock(Executor::class));
         $container->set(MinifierCommandInterface::class, $this->createMock(MinifierCommandInterface::class));
         $container->set(RouterInterface::class, $this->createMock(RouterInterface::class));
@@ -293,6 +305,10 @@ class ContainerTest extends TestCase
 
         $container->set('teknoo.east.common.symfony.command.minify.js.name', 'foo');
         $container->set('teknoo.east.common.symfony.command.minify.js.description', 'foo');
+        $container->set(
+            'teknoo.east.common.assets.final_location',
+            'foo',
+        );
         $container->set(Executor::class, $this->createMock(Executor::class));
         $container->set(MinifierCommandInterface::class, $this->createMock(MinifierCommandInterface::class));
         $container->set(RouterInterface::class, $this->createMock(RouterInterface::class));
@@ -307,12 +323,16 @@ class ContainerTest extends TestCase
         );
     }
 
-    public function testMinifyCommandJsWith()
+    public function testMinifyCommandJsWithMessageFactory()
     {
         $container = $this->buildContainer();
 
         $container->set('teknoo.east.common.symfony.command.minify.js.name', 'foo');
         $container->set('teknoo.east.common.symfony.command.minify.js.description', 'foo');
+        $container->set(
+            'teknoo.east.common.assets.final_location',
+            'foo',
+        );
         $container->set(Executor::class, $this->createMock(Executor::class));
         $container->set(MinifierCommandInterface::class, $this->createMock(MinifierCommandInterface::class));
         $container->set(RouterInterface::class, $this->createMock(RouterInterface::class));
@@ -333,6 +353,10 @@ class ContainerTest extends TestCase
 
         $container->set('teknoo.east.common.symfony.command.minify.js.name', 'foo');
         $container->set('teknoo.east.common.symfony.command.minify.js.description', 'foo');
+        $container->set(
+            'teknoo.east.common.assets.final_location',
+            'foo',
+        );
         $container->set(Executor::class, $this->createMock(Executor::class));
         $container->set(MinifierCommandInterface::class, $this->createMock(MinifierCommandInterface::class));
         $container->set(RouterInterface::class, $this->createMock(RouterInterface::class));

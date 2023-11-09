@@ -183,6 +183,11 @@ return [
             );
         }
 
+        $finalAssetsLocation = '';
+        if ($container->has('teknoo.east.common.assets.final_location')) {
+            $finalAssetsLocation = $container->get('teknoo.east.common.assets.final_location');
+        }
+
         return new MinifyCommand(
             $container->get('teknoo.east.common.symfony.command.minify.css.name'),
             $container->get('teknoo.east.common.symfony.command.minify.css.description'),
@@ -194,6 +199,7 @@ return [
             $container->get(PersisterInterface::class . ':css'),
             $container->get(MinifierInterface::class . ':css'),
             FileType::CSS->value,
+            $finalAssetsLocation,
         );
     },
 
@@ -212,6 +218,11 @@ return [
             );
         }
 
+        $finalAssetsLocation = '';
+        if ($container->has('teknoo.east.common.assets.final_location')) {
+            $finalAssetsLocation = $container->get('teknoo.east.common.assets.final_location');
+        }
+
         return new MinifyCommand(
             $container->get('teknoo.east.common.symfony.command.minify.js.name'),
             $container->get('teknoo.east.common.symfony.command.minify.js.description'),
@@ -223,6 +234,7 @@ return [
             $container->get(PersisterInterface::class . ':js'),
             $container->get(MinifierInterface::class . ':js'),
             FileType::JS->value,
+            $finalAssetsLocation,
         );
     },
 ];

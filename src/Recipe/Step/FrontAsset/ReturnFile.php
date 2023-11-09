@@ -43,7 +43,7 @@ class ReturnFile
     use ResponseTrait;
 
     public function __construct(
-        private StreamFactoryInterface $streamFactory,
+        private readonly StreamFactoryInterface $streamFactory,
         ResponseFactoryInterface $responseFactory,
     ) {
         $this->responseFactory = $responseFactory;

@@ -55,6 +55,7 @@ class RenderForm implements RenderFormInterface
         EngineInterface $templating,
         StreamFactoryInterface $streamFactory,
         ResponseFactoryInterface $responseFactory,
+        private bool $defaultCleanHtml = false,
     ) {
         $this->templating = $templating;
         $this->streamFactory = $streamFactory;
@@ -74,6 +75,7 @@ class RenderForm implements RenderFormInterface
         #[Transform(ParametersBag::class)] array $viewParameters = [],
         bool|string|null $objectSaved = null,
         ?string $api = null,
+        ?bool $cleanHtml = null,
     ): RenderFormInterface {
         $parameters = [
             'objectInstance' => $object,
@@ -98,6 +100,7 @@ class RenderForm implements RenderFormInterface
             view: $template,
             parameters: $parameters + $viewParameters,
             api: $api,
+            cleanHtml: $cleanHtml ?? $this->defaultCleanHtml,
         );
 
         return $this;

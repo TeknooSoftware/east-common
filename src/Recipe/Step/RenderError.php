@@ -55,6 +55,7 @@ class RenderError
         EngineInterface $templating,
         StreamFactoryInterface $streamFactory,
         ResponseFactoryInterface $responseFactory,
+        private bool $defaultCleanHtml = false,
     ) {
         $this->templating = $templating;
         $this->streamFactory = $streamFactory;
@@ -72,6 +73,7 @@ class RenderError
         ManagerInterface $manager,
         #[Transform(ParametersBag::class)] array $viewParameters = [],
         ?string $api = null,
+        ?bool $cleanHtml = null,
     ): self {
         $manager->stopErrorReporting();
         $viewParameters = ['error' => $error] + $viewParameters;
@@ -101,6 +103,7 @@ class RenderError
             parameters: $viewParameters,
             status: $errorCode,
             api: $api,
+            cleanHtml: $cleanHtml ?? $this->defaultCleanHtml,
         );
 
         return $this;

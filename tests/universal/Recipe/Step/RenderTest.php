@@ -43,6 +43,8 @@ use Teknoo\East\Foundation\Http\Message\CallbackStreamInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Foundation\Template\ResultInterface;
 use Teknoo\Recipe\Promise\PromiseInterface;
+use tidy;
+use function class_exists;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -212,19 +214,27 @@ class RenderTest extends TestCase
             ->method('createResponse')
             ->willReturn($response);
 
+        $stream = $this->createMock(StreamInterface::class);
+        $stream->expects(self::once())
+            ->method('write')
+            ->with('<html><body><div><p>hello</p><div></body></html>');
+
         $this->getStreamFactory()
             ->expects(self::any())
             ->method('createStream')
-            ->willReturn($this->createMock(StreamInterface::class));
+            ->willReturn($stream);
 
         $this->getEngine()
             ->expects(self::any())
             ->method('render')
             ->willReturnCallback(
                 function (PromiseInterface $promise) {
-                    $promise->success(
-                        $this->createMock(ResultInterface::class)
-                    );
+                    $result = $this->createMock(ResultInterface::class);
+                    $result->expects(self::any())
+                        ->method('__toString')
+                        ->willReturn('<html><body><div><p>hello</p><div></body></html>');
+
+                    $promise->success($result);
 
                     return $this->getEngine();
                 }
@@ -238,6 +248,143 @@ class RenderTest extends TestCase
                 'foo',
                 'bar',
                 $this->createMock(IdentifiedObjectInterface::class)
+            )
+        );
+    }
+
+    public function testInvokeWithMessageAndCleanOutput()
+    {
+        if (!class_exists(tidy::class)) {
+            self::markTestSkipped('Tidy ext is not available');
+
+            return;
+        }
+
+        $message = $this->createMock(MessageInterface::class);
+
+        $client = $this->createMock(ClientInterface::class);
+        $client->expects(self::once())->method('acceptResponse');
+
+        $response = $this->createMock(ResponseInterface::class);
+        $response->expects(self::any())->method('withHeader')->willReturnSelf();
+        $response->expects(self::any())->method('withBody')->willReturnSelf();
+        $this->getResponseFactory()
+            ->expects(self::any())
+            ->method('createResponse')
+            ->willReturn($response);
+
+$output = <<<EOF
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <div>
+      <p>
+        hello
+      </p>
+    </div>
+  </body>
+</html>
+EOF;
+
+        $stream = $this->createMock(StreamInterface::class);
+        $stream->expects(self::once())
+            ->method('write')
+            ->with($output);
+
+        $this->getStreamFactory()
+            ->expects(self::any())
+            ->method('createStream')
+            ->willReturn($stream);
+
+        $this->getEngine()
+            ->expects(self::any())
+            ->method('render')
+            ->willReturnCallback(
+                function (PromiseInterface $promise) {
+                    $result = $this->createMock(ResultInterface::class);
+                    $result->expects(self::any())
+                        ->method('__toString')
+                        ->willReturn('<html><body><div><p>hello</p><div></body></html>');
+
+                    $promise->success($result);
+
+                    return $this->getEngine();
+                }
+            );
+
+        self::assertInstanceOf(
+            Render::class,
+            actual: $this->buildStep()(
+                $message,
+                $client,
+                'foo',
+                'bar',
+                $this->createMock(IdentifiedObjectInterface::class),
+                cleanHtml: true,
+            )
+        );
+    }
+
+    public function testInvokeWithMessageAndCleanOutputAndApiEnable()
+    {
+        if (!class_exists(tidy::class)) {
+            self::markTestSkipped('Tidy ext is not available');
+
+            return;
+        }
+
+        $message = $this->createMock(MessageInterface::class);
+
+        $client = $this->createMock(ClientInterface::class);
+        $client->expects(self::once())->method('acceptResponse');
+
+        $response = $this->createMock(ResponseInterface::class);
+        $response->expects(self::any())->method('withHeader')->willReturnSelf();
+        $response->expects(self::any())->method('withBody')->willReturnSelf();
+        $this->getResponseFactory()
+            ->expects(self::any())
+            ->method('createResponse')
+            ->willReturn($response);
+
+        $stream = $this->createMock(StreamInterface::class);
+        $stream->expects(self::once())
+            ->method('write')
+            ->with('<html><body><div><p>hello</p><div></body></html>');
+
+        $this->getStreamFactory()
+            ->expects(self::any())
+            ->method('createStream')
+            ->willReturn($stream);
+
+        $this->getEngine()
+            ->expects(self::any())
+            ->method('render')
+            ->willReturnCallback(
+                function (PromiseInterface $promise) {
+                    $result = $this->createMock(ResultInterface::class);
+                    $result->expects(self::any())
+                        ->method('__toString')
+                        ->willReturn('<html><body><div><p>hello</p><div></body></html>');
+
+                    $promise->success($result);
+
+                    return $this->getEngine();
+                }
+            );
+
+        self::assertInstanceOf(
+            Render::class,
+            actual: $this->buildStep()(
+                $message,
+                $client,
+                'foo',
+                'bar',
+                $this->createMock(IdentifiedObjectInterface::class),
+                api: 'json',
+                cleanHtml: true,
             )
         );
     }
@@ -373,7 +520,10 @@ class RenderTest extends TestCase
         $stream = $this->createMock(CallbackStreamInterface::class);
         $stream->expects(self::any())->method('bind')->willReturnCallback(
             function (callable $callback) use ($stream) {
-                $callback();
+                self::assertEquals(
+                    '<html><body><div><p>hello</p><div></body></html>',
+                    $callback()
+                );
                 return $stream;
             }
         );
@@ -388,9 +538,12 @@ class RenderTest extends TestCase
             ->method('render')
             ->willReturnCallback(
                 function (PromiseInterface $promise) {
-                    $promise->success(
-                        $this->createMock(ResultInterface::class)
-                    );
+                    $result = $this->createMock(ResultInterface::class);
+                    $result->expects(self::any())
+                        ->method('__toString')
+                        ->willReturn('<html><body><div><p>hello</p><div></body></html>');
+
+                    $promise->success($result);
 
                     return $this->getEngine();
                 }
@@ -404,6 +557,83 @@ class RenderTest extends TestCase
                 'foo',
                 'bar',
                 $this->createMock(IdentifiedObjectInterface::class)
+            )
+        );
+    }
+
+    public function testInvokeWithStreamCallbackAnddCleanOutput()
+    {
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->expects(self::any())->method('getAttribute')->willReturn([]);
+
+        $client = $this->createMock(ClientInterface::class);
+        $client->expects(self::once())->method('acceptResponse');
+
+        $response = $this->createMock(ResponseInterface::class);
+        $response->expects(self::any())->method('withHeader')->willReturnSelf();
+        $response->expects(self::any())->method('withBody')->willReturnSelf();
+        $this->getResponseFactory()
+            ->expects(self::any())
+            ->method('createResponse')
+            ->willReturn($response);
+
+$output = <<<EOF
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <div>
+      <p>
+        hello
+      </p>
+    </div>
+  </body>
+</html>
+EOF;
+
+        $stream = $this->createMock(CallbackStreamInterface::class);
+        $stream->expects(self::any())->method('bind')->willReturnCallback(
+            function (callable $callback) use ($stream, $output) {
+                self::assertEquals(
+                    $output,
+                    $callback(),
+                );
+                return $stream;
+            }
+        );
+
+        $this->getStreamFactory()
+            ->expects(self::any())
+            ->method('createStream')
+            ->willReturn($stream);
+
+        $this->getEngine()
+            ->expects(self::any())
+            ->method('render')
+            ->willReturnCallback(
+                function (PromiseInterface $promise) {
+                    $result = $this->createMock(ResultInterface::class);
+                    $result->expects(self::any())
+                        ->method('__toString')
+                        ->willReturn('<html><body><div><p>hello</p><div></body></html>');
+
+                    $promise->success($result);
+
+                    return $this->getEngine();
+                }
+            );
+
+        self::assertInstanceOf(
+            Render::class,
+            $this->buildStep()(
+                $request,
+                $client,
+                'foo',
+                'bar',
+                $this->createMock(IdentifiedObjectInterface::class),
+                cleanHtml: true,
             )
         );
     }

@@ -9,6 +9,7 @@ _teknoo_common_admin_user_list:
         itemsPerPage: 20
         loader: '@Teknoo\East\Common\Loader\UserLoader'
         template: '@@TeknooEastCommon/AdminUser/list.html.twig'
+        cleanHtml: "%teknoo.east.common.admin.rendering.clean_html%"
 
 _teknoo_common_admin_user_edit:
     path: '/user/edit/{id}'
@@ -21,6 +22,7 @@ _teknoo_common_admin_user_edit:
         loader: '@Teknoo\East\Common\Loader\UserLoader'
         template: '@@TeknooEastCommon/AdminUser/edit.html.twig'
         writer: '@Teknoo\East\CommonBundle\Writer\SymfonyUserWriter'
+        cleanHtml: "%teknoo.east.common.admin.rendering.clean_html%"
 
 _teknoo_common_admin_user_new:
     path: '/user/new'
@@ -35,6 +37,7 @@ _teknoo_common_admin_user_new:
         route: '_teknoo_common_admin_user_edit'
         template: '@@TeknooEastCommon/AdminUser/new.html.twig'
         writer: '@Teknoo\East\CommonBundle\Writer\SymfonyUserWriter'
+        cleanHtml: "%teknoo.east.common.admin.rendering.clean_html%"
 
 _teknoo_common_admin_user_delete:
     path: '/user/delete/{id}'
@@ -45,6 +48,7 @@ _teknoo_common_admin_user_delete:
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
         loader: '@Teknoo\East\Common\Loader\UserLoader'
         route: '_teknoo_common_admin_user_list'
+        cleanHtml: "%teknoo.east.common.admin.rendering.clean_html%"
 
 # media
 _teknoo_common_admin_media_list:
@@ -57,6 +61,7 @@ _teknoo_common_admin_media_list:
         itemsPerPage: 20
         loader: '@Teknoo\East\Common\Loader\MediaLoader'
         template: '@@TeknooEastCommon/AdminMedia/list.html.twig'
+        cleanHtml: "%teknoo.east.common.admin.rendering.clean_html%"
 
 _teknoo_common_admin_media_new:
     path: '/media/new'
@@ -71,6 +76,7 @@ _teknoo_common_admin_media_new:
         route: '_teknoo_common_admin_media_list'
         template: '@@TeknooEastCommon/AdminMedia/new.html.twig'
         writer: '@Teknoo\East\Common\Doctrine\Writer\ODM\MediaWriter'
+        cleanHtml: "%teknoo.east.common.admin.rendering.clean_html%"
 
 _teknoo_common_admin_media_delete:
     path: '/media/delete/{id}'
@@ -81,3 +87,4 @@ _teknoo_common_admin_media_delete:
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
         loader: '@Teknoo\East\Common\Loader\MediaLoader'
         route: '_teknoo_common_admin_media_list'
+        cleanHtml: "%teknoo.east.common.admin.rendering.clean_html%"

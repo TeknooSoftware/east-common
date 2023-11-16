@@ -32,6 +32,11 @@ use Teknoo\Recipe\Promise\Promise;
 use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Foundation\Template\ResultInterface;
 use Throwable;
+use tidy;
+
+use function class_exists;
+use function function_exists;
+use function tidy_get_output;
 
 /**
  * Trait used into recipe's steps to render a page thanks to template engine and pass the result to the response in a
@@ -51,6 +56,27 @@ trait TemplateTrait
 
     private StreamFactoryInterface $streamFactory;
 
+    private static function cleanOutput(string &$output): string
+    {
+        if (class_exists(tidy::class) && function_exists('tidy_get_output')) {
+            $tidy = new tidy();
+            $tidy->parseString(
+                $output,
+                [
+                    'indent' => true,
+                    'output-xhtml' => true,
+                    'wrap' => 200,
+                ],
+                'utf8',
+            );
+            $tidy->cleanRepair();
+
+            $output = tidy_get_output($tidy);
+        }
+
+        return $output;
+    }
+
     /**
      * Renders a view.
      *
@@ -66,6 +92,7 @@ trait TemplateTrait
         int $status = 200,
         array $headers = [],
         ?string $api = null,
+        bool $cleanHtml = false,
     ): void {
         $response = $this->responseFactory->createResponse($status);
 
@@ -74,26 +101,61 @@ trait TemplateTrait
             default => 'text/html; charset=utf-8',
         };
 
+        if (!empty($api)) {
+            //Prevent issue with API mode
+            $cleanHtml = false;
+        }
+
         $response = $this->addHeadersIntoResponse($response, $headers);
         $stream = $this->streamFactory->createStream();
 
-        $this->templating->render(
-            new Promise(
-                static function (ResultInterface $result) use ($stream, $client, $response): void {
-                    if ($stream instanceof CallbackStreamInterface) {
-                        $stream->bind(static fn(): string => (string) $result);
-                    } else {
-                        $stream->write((string) $result);
-                    }
+        if ($stream instanceof CallbackStreamInterface) {
+            $stream->bind(function () use ($client, &$view, &$parameters, $cleanHtml): string {
+                /** @var Promise<ResultInterface, string, mixed> $promise */
+                $promise = new Promise(
+                    static function (ResultInterface $result): string {
+                        return (string) $result;
+                    },
+                    static fn (Throwable $error): ClientInterface => $client->errorInRequest($error, false),
+                );
 
-                    $response = $response->withBody($stream);
+                $this->templating->render(
+                    $promise,
+                    $view,
+                    $parameters,
+                );
 
-                    $client->acceptResponse($response);
-                },
-                static fn (Throwable $error): ClientInterface => $client->errorInRequest($error, false),
-            ),
-            $view,
-            $parameters
-        );
+                $resultStr = (string) $promise->fetchResult();
+
+                if ($cleanHtml) {
+                    $resultStr = self::cleanOutput($resultStr);
+                }
+
+                return $resultStr;
+            });
+
+            $response = $response->withBody($stream);
+
+            $client->acceptResponse($response);
+        } else {
+            $this->templating->render(
+                new Promise(
+                    static function (ResultInterface $result) use ($stream, $client, $response, $cleanHtml): void {
+                        $resultStr = (string) $result;
+                        if ($cleanHtml) {
+                            $resultStr = self::cleanOutput($resultStr);
+                        }
+
+                        $stream->write($resultStr);
+                        $response = $response->withBody($stream);
+
+                        $client->acceptResponse($response);
+                    },
+                    static fn (Throwable $error): ClientInterface => $client->errorInRequest($error, false),
+                ),
+                $view,
+                $parameters,
+            );
+        }
     }
 }

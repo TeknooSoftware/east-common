@@ -53,6 +53,7 @@ class RenderList
         EngineInterface $templating,
         StreamFactoryInterface $streamFactory,
         ResponseFactoryInterface $responseFactory,
+        private bool $defaultCleanHtml = false,
     ) {
         $this->templating = $templating;
         $this->streamFactory = $streamFactory;
@@ -74,6 +75,7 @@ class RenderList
         mixed $searchForm = null,
         #[Transform(ParametersBag::class)] array $viewParameters = [],
         ?string $api = null,
+        ?bool $cleanHtml = null,
     ): self {
         $this->render(
             client: $client,
@@ -86,6 +88,7 @@ class RenderList
                 'searchForm' => $searchForm
             ] + $viewParameters,
             api: $api,
+            cleanHtml: $cleanHtml ?? $this->defaultCleanHtml,
         );
 
         return $this;

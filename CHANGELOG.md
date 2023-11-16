@@ -1,5 +1,12 @@
 # Teknoo Software - Common - Change Log
 
+## [2.5.0] - 2023-11-16
+### Stable Release
+Add cleaning html feature available for all rendered html template
+To enable this behavior, set in the route attributes, the attribute `cleanHtml` to true
+Or set the parameter `teknoo.east.common.rendering.clean_html` to true in the DI.
+The behavior is available only on environment with the ext tidy enabled (else the output is directly returned).
+
 ## [2.4.0] - 2023-11-09
 ### Stable Release
 - JS and CSS Minifier features from specific HTTP endpoint without webpack

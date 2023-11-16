@@ -162,19 +162,22 @@ return [
         ->constructor(
             get(EngineInterface::class),
             get(StreamFactoryInterface::class),
-            get(ResponseFactoryInterface::class)
+            get(ResponseFactoryInterface::class),
+            get('teknoo.east.common.rendering.clean_html'),
         ),
     RenderError::class => create()
         ->constructor(
             get(EngineInterface::class),
             get(StreamFactoryInterface::class),
-            get(ResponseFactoryInterface::class)
+            get(ResponseFactoryInterface::class),
+            get('teknoo.east.common.rendering.clean_html'),
         ),
     RenderList::class => create()
         ->constructor(
             get(EngineInterface::class),
             get(StreamFactoryInterface::class),
-            get(ResponseFactoryInterface::class)
+            get(ResponseFactoryInterface::class),
+            get('teknoo.east.common.rendering.clean_html'),
         ),
     SaveObject::class => create(),
     SendMedia::class => create()

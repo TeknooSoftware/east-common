@@ -107,7 +107,8 @@ return [
         ->constructor(
             get(EngineInterface::class),
             get(StreamFactoryInterface::class),
-            get(ResponseFactoryInterface::class)
+            get(ResponseFactoryInterface::class),
+            get('teknoo.east.common.rendering.clean_html'),
         ),
 
     //TOTP Cookbook

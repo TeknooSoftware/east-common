@@ -19,6 +19,10 @@ parameters:
     #Assets
     teknoo.east.common.assets.no_overwrite: true
 
+    #Rendering
+    teknoo.east.common.rendering.clean_html: false
+    teknoo.east.common.admin.rendering.clean_html: true
+
     #Steps
     teknoo.east.common.bundle.allowed_forms: []
 

@@ -59,6 +59,7 @@ class Render
         EngineInterface $templating,
         StreamFactoryInterface $streamFactory,
         ResponseFactoryInterface $responseFactory,
+        private bool $defaultCleanHtml = false,
     ) {
         $this->templating = $templating;
         $this->streamFactory = $streamFactory;
@@ -76,6 +77,7 @@ class Render
         mixed $objectInstance = null,
         #[Transform(ParametersBag::class)] array $viewParameters = [],
         ?string $api = null,
+        ?bool $cleanHtml = null,
     ): self {
         if (!empty($objectViewKey)) {
             $viewParameters = [$objectViewKey => $objectInstance] + $viewParameters;
@@ -97,6 +99,7 @@ class Render
             status: 200,
             headers: $headers,
             api: $api,
+            cleanHtml: $cleanHtml ?? $this->defaultCleanHtml,
         );
 
         return $this;

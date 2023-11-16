@@ -94,6 +94,7 @@ use Teknoo\Recipe\RecipeInterface as OriginalRecipeInterface;
 use function DI\create;
 use function DI\decorate;
 use function DI\get;
+use function DI\value;
 
 return [
     //Loaders
@@ -140,6 +141,8 @@ return [
 
         return $previous;
     }),
+
+    'teknoo.east.common.rendering.clean_html' => value(false),
 
     //Steps
     CreateObject::class => create(),

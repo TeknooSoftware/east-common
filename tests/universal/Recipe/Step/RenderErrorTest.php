@@ -410,4 +410,12 @@ class RenderErrorTest extends TestCase
             )
         );
     }
+
+    public function testSetTidyConfig()
+    {
+        self::assertInstanceOf(
+            RenderError::class,
+            $this->buildStep()->setTidyConfig(['foo' => 'bar']),
+        );
+    }
 }

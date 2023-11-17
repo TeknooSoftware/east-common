@@ -284,6 +284,7 @@ $output = <<<EOF
       <p>
         hello
       </p>
+      <div></div>
     </div>
   </body>
 </html>
@@ -588,6 +589,7 @@ $output = <<<EOF
       <p>
         hello
       </p>
+      <div></div>
     </div>
   </body>
 </html>
@@ -635,6 +637,14 @@ EOF;
                 $this->createMock(IdentifiedObjectInterface::class),
                 cleanHtml: true,
             )
+        );
+    }
+
+    public function testSetTidyConfig()
+    {
+        self::assertInstanceOf(
+            Render::class,
+            $this->buildStep()->setTidyConfig(['foo' => 'bar']),
         );
     }
 }

@@ -366,4 +366,12 @@ class RenderFormTest extends TestCase
             )
         );
     }
+
+    public function testSetTidyConfig()
+    {
+        self::assertInstanceOf(
+            RenderForm::class,
+            $this->buildStep()->setTidyConfig(['foo' => 'bar']),
+        );
+    }
 }

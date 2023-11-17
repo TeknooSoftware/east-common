@@ -56,17 +56,27 @@ trait TemplateTrait
 
     private StreamFactoryInterface $streamFactory;
 
-    private static function cleanOutput(string &$output): string
+    private array $tidyConfig = [
+        'drop-empty-elements' => false,
+        'indent' => true,
+        'output-xhtml' => true,
+        'wrap' => 200,
+    ];
+
+    public function setTidyConfig(array $config): self
+    {
+        $this->tidyConfig = $config;
+
+        return $this;
+    }
+
+    private function cleanOutput(string &$output): string
     {
         if (class_exists(tidy::class) && function_exists('tidy_get_output')) {
             $tidy = new tidy();
             $tidy->parseString(
                 $output,
-                [
-                    'indent' => true,
-                    'output-xhtml' => true,
-                    'wrap' => 200,
-                ],
+                $this->tidyConfig,
                 'utf8',
             );
             $tidy->cleanRepair();
@@ -128,7 +138,7 @@ trait TemplateTrait
                 $resultStr = (string) $promise->fetchResult();
 
                 if ($cleanHtml) {
-                    $resultStr = self::cleanOutput($resultStr);
+                    $resultStr = $this->cleanOutput($resultStr);
                 }
 
                 return $resultStr;
@@ -138,12 +148,16 @@ trait TemplateTrait
 
             $client->acceptResponse($response);
         } else {
+            $cleanOuput = null;
+            if ($cleanHtml) {
+                $cleanOuput = $this->cleanOutput(...);
+            }
             $this->templating->render(
                 new Promise(
-                    static function (ResultInterface $result) use ($stream, $client, $response, $cleanHtml): void {
+                    static function (ResultInterface $result) use ($stream, $client, $response, $cleanOuput): void {
                         $resultStr = (string) $result;
-                        if ($cleanHtml) {
-                            $resultStr = self::cleanOutput($resultStr);
+                        if (null !== $cleanOuput) {
+                            $resultStr = $cleanOuput($resultStr);
                         }
 
                         $stream->write($resultStr);

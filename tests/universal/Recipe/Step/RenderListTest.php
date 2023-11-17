@@ -351,4 +351,12 @@ class RenderListTest extends TestCase
             )
         );
     }
+
+    public function testSetTidyConfig()
+    {
+        self::assertInstanceOf(
+            RenderList::class,
+            $this->buildStep()->setTidyConfig(['foo' => 'bar']),
+        );
+    }
 }

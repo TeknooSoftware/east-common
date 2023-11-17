@@ -56,6 +56,9 @@ trait TemplateTrait
 
     private StreamFactoryInterface $streamFactory;
 
+    /**
+     * @var array<string, mixed>
+     */
     private array $tidyConfig = [
         'drop-empty-elements' => false,
         'indent' => true,
@@ -63,6 +66,9 @@ trait TemplateTrait
         'wrap' => 200,
     ];
 
+    /**
+     * @param array<string, mixed> $config
+     */
     public function setTidyConfig(array $config): self
     {
         $this->tidyConfig = $config;

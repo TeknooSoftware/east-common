@@ -75,6 +75,7 @@ class RenderForm implements RenderFormInterface
         #[Transform(ParametersBag::class)] array $viewParameters = [],
         bool|string|null $objectSaved = null,
         ?string $api = null,
+        #[Transform(transformer: 'boolval')]
         ?bool $cleanHtml = null,
     ): RenderFormInterface {
         $parameters = [

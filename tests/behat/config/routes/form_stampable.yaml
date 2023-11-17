@@ -9,6 +9,7 @@ _teknoo_common_admin_my_object_timestampable_list:
         itemsPerPage: 20
         template: '@@TeknooEastCommon/AdminMyObjectTimeStampable/list.html.twig'
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+        cleanHtml: false
 
 _teknoo_common_admin_my_object_timestampable_edit:
     path: '/my_object_timestampable/edit/{id}'
@@ -20,6 +21,7 @@ _teknoo_common_admin_my_object_timestampable_edit:
         formClass: 'Teknoo\Tests\East\Common\Behat\Form\Type\MyObjectType'
         template: '@@TeknooEastCommon/AdminMyObjectTimeStampable/edit.html.twig'
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+        cleanHtml: false
         formOptions: { }
 
 _teknoo_common_admin_my_object_timestampable_edit_real_date:
@@ -32,6 +34,7 @@ _teknoo_common_admin_my_object_timestampable_edit_real_date:
         formClass: 'Teknoo\Tests\East\Common\Behat\Form\Type\MyObjectType'
         template: '@@TeknooEastCommon/AdminMyObjectTimeStampable/edit.html.twig'
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+        cleanHtml: false
         formOptions: { }
         prefereRealDateOnUpdate: true
 
@@ -45,6 +48,7 @@ _teknoo_common_api_my_object_timestampable_edit:
         formClass: 'Teknoo\Tests\East\Common\Behat\Form\Type\MyObjectType'
         template: '@@TeknooEastCommon/AdminMyObjectTimeStampable/edit.html.twig'
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+        cleanHtml: false
         formOptions: { }
         api: 'json'
 
@@ -58,6 +62,7 @@ _teknoo_common_api_my_object_timestampable_edit_real_date:
         formClass: 'Teknoo\Tests\East\Common\Behat\Form\Type\MyObjectType'
         template: '@@TeknooEastCommon/AdminMyObjectTimeStampable/edit.html.twig'
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+        cleanHtml: false
         formOptions: { }
         prefereRealDateOnUpdate: true
         api: 'json'
@@ -74,6 +79,7 @@ _teknoo_common_admin_my_object_timestampable_new:
         template: '@@TeknooEastCommon/AdminMyObjectTimeStampable/new.html.twig'
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
         route: '_teknoo_common_admin_my_object_timestampable_edit'
+        cleanHtml: false
         formOptions: { }
 
 
@@ -89,6 +95,7 @@ _teknoo_common_api_my_object_timestampable_new:
         template: '@@TeknooEastCommon/AdminMyObjectTimeStampable/new.html.twig'
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
         route: '_teknoo_common_admin_my_object_timestampable_edit'
+        cleanHtml: false
         formOptions: { }
         api: 'json'
 

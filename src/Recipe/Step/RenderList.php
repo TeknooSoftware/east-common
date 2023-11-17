@@ -75,6 +75,7 @@ class RenderList
         mixed $searchForm = null,
         #[Transform(ParametersBag::class)] array $viewParameters = [],
         ?string $api = null,
+        #[Transform(transformer: 'boolval')]
         ?bool $cleanHtml = null,
     ): self {
         $this->render(

@@ -9,6 +9,7 @@ _teknoo_common_admin_my_object_list:
         itemsPerPage: 20
         template: '@@TeknooEastCommon/AdminMyObject/list.html.twig'
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+        cleanHtml: false
 
 _teknoo_common_admin_my_object_edit:
     path: '/my_object/edit/{id}'
@@ -20,6 +21,7 @@ _teknoo_common_admin_my_object_edit:
         formClass: 'Teknoo\Tests\East\Common\Behat\Form\Type\MyObjectType'
         template: '@@TeknooEastCommon/AdminMyObject/edit.html.twig'
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+        cleanHtml: false
         formOptions: { }
 
 _teknoo_common_api_my_object_edit:
@@ -32,6 +34,7 @@ _teknoo_common_api_my_object_edit:
         formClass: 'Teknoo\Tests\East\Common\Behat\Form\Type\MyObjectType'
         template: '@@TeknooEastCommon/AdminMyObject/edit.html.twig'
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+        cleanHtml: false
         formOptions: { }
         api: 'json'
 
@@ -47,6 +50,7 @@ _teknoo_common_admin_my_object_new:
         template: '@@TeknooEastCommon/AdminMyObject/new.html.twig'
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
         route: '_teknoo_common_admin_my_object_edit'
+        cleanHtml: false
         formOptions: { }
 
 _teknoo_common_api_my_object_new:
@@ -62,6 +66,7 @@ _teknoo_common_api_my_object_new:
         template: '@@TeknooEastCommon/AdminMyObject/new.html.twig'
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
         route: '_teknoo_common_admin_my_object_edit'
+        cleanHtml: false
         formOptions: { }
 
 _teknoo_common_admin_my_object_delete:

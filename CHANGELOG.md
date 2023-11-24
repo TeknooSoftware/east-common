@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [2.5.1] - 2023-11-24
+### Stable Release
+- Support of Doctrine ODM 2.6.1+
+
 ## [2.5.0] - 2023-11-16
 ### Stable Release
 Add cleaning html feature available for all rendered html template

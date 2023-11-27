@@ -32,6 +32,7 @@ use Teknoo\East\Common\Query\Expr\InclusiveOr;
 use Teknoo\East\Common\Query\Expr\NotEqual;
 use Teknoo\East\Common\Query\Expr\NotIn;
 use Teknoo\East\Common\Query\Expr\ObjectReference;
+use Teknoo\East\Common\Query\Expr\Regex;
 
 /**
  * Default implementation dedicated to generic Doctrine component to convert East Common
@@ -51,11 +52,12 @@ trait ExprConversionTrait
      * @var array<string, callable>
      */
     private static $exprMappings = [
-        NotEqual::class => [self::class, 'processNotEqualExpr'],
         In::class => [self::class, 'processInExpr'],
-        NotIn::class => [self::class, 'processNotInExpr'],
         InclusiveOr::class => [self::class, 'processInclusiveOrExpr'],
+        NotEqual::class => [self::class, 'processNotEqualExpr'],
+        NotIn::class => [self::class, 'processNotInExpr'],
         ObjectReference::class => [self::class, 'processObjectReferenceExpr'],
+        Regex::class => [self::class, 'processRegexExpr'],
     ];
 
     public static function addExprMappingConversion(string $exprClass, callable $conversionFunction): void
@@ -69,7 +71,16 @@ trait ExprConversionTrait
      */
     private static function processNotEqualExpr(array &$final, string $key, ExprInterface $expr): void
     {
-        $final['notEqual'] = [$key => $expr->getValue()];
+        $final['notEqual'] = ($final['notEqual'] ?? []) + [$key => $expr->getValue()];
+    }
+
+    /**
+     * @param array<string, mixed> $final
+     * @param Regex $expr
+     */
+    private static function processRegexExpr(array &$final, string $key, ExprInterface $expr): void
+    {
+        $final[$key] = "/{$expr->getPattern()}/{$expr->getOptions()}";
     }
 
     /**

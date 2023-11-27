@@ -37,6 +37,7 @@ use Teknoo\East\Common\Query\Expr\NotIn;
 use Teknoo\East\Common\Query\Expr\InclusiveOr;
 use Teknoo\East\Common\Query\Expr\NotEqual;
 use Teknoo\East\Common\Query\Expr\ObjectReference;
+use Teknoo\East\Common\Query\Expr\Regex;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
@@ -293,7 +294,8 @@ trait RepositoryTestTrait
 
         self::assertInstanceOf(
             RepositoryInterface::class,
-            $this->buildRepository()->findBy(['foo' => 'bar', 'bar' => new In(['foo'])], $promise, ['foo'=>Direction::Asc], 1, 2)
+            $this->buildRepository()
+                ->findBy(['foo' => 'bar', 'bar' => new In(['foo'])], $promise, ['foo'=>Direction::Asc], 1, 2)
         );
     }
 
@@ -405,7 +407,9 @@ trait RepositoryTestTrait
     {
         $promise = $this->createMock(PromiseInterface::class);
         $promise->expects(self::never())->method('success');
-        $promise->expects(self::once())->method('fail')->with($this->callback(fn($value) => $value instanceof \DomainException));
+        $promise->expects(self::once())
+            ->method('fail')
+            ->with($this->callback(fn($value) => $value instanceof \DomainException));
 
         $query = $this->createMock(Query::class);
         $query->expects(self::once())->method('getSingleResult')->willReturn(null);
@@ -479,6 +483,7 @@ trait RepositoryTestTrait
                 'bar' => ['$in' => ['foo']],
                 'bar2' => ['$nin' => ['foo']],
                 '$ne' => ['barNot' => ['foo']],
+                'barRegex' => new \MongoDB\BSON\Regex('foo', 'i'),
                 '$or' => [
                     ['foo' => 'bar'],
                     ['bar' => 'foo']
@@ -504,6 +509,7 @@ trait RepositoryTestTrait
                     'bar' => new In(['foo']),
                     'bar2' => new NotIn(['foo']),
                     'barNot' => new NotEqual(['foo']),
+                    'barRegex' => new \MongoDB\BSON\Regex('foo', 'i'),
                     new InclusiveOr(
                         ['foo' => 'bar'],
                         ['bar' => 'foo']

@@ -1,5 +1,10 @@
 # Teknoo Software - Common - Change Log
 
+## [2.6.0] - 2023-11-26
+### Stable Release
+- Add regex supper in queries' criteria.
+  - Support $regex in MongoDB's queries
+
 ## [2.5.1] - 2023-11-24
 ### Stable Release
 - Support of Doctrine ODM 2.6.1+

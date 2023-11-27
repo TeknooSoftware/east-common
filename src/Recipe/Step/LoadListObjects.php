@@ -83,7 +83,7 @@ class LoadListObjects
                 $value = $this->sanitizeCriteria($value);
             } elseif (
                 is_string($value)
-                && 0 === preg_match("#^[\p{Sm}\p{Sc}\p{L}\p{N}\p{Z}_\-\.\@,]+$#uS", $value)
+                && 0 === preg_match("#^[\p{Sm}\p{Sc}\p{L}\p{N}\p{Z}_\-\.\@,%*\#\!;\/\(\)]+$#uS", $value)
             ) {
                 throw new WrongCriteriaException("Wrong value in criteria for $key", 400);
             }

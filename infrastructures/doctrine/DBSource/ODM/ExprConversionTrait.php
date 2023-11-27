@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Common\Doctrine\DBSource\ODM;
 
+use MongoDB\BSON\Regex as MongoRegex;
 use Teknoo\East\Common\Contracts\Query\Expr\ExprInterface;
 use Teknoo\East\Common\Doctrine\DBSource\Common\ExprConversionTrait as CommonTrait;
 use Teknoo\East\Common\Query\Expr\In;
@@ -32,6 +33,7 @@ use Teknoo\East\Common\Query\Expr\InclusiveOr;
 use Teknoo\East\Common\Query\Expr\NotEqual;
 use Teknoo\East\Common\Query\Expr\NotIn;
 use Teknoo\East\Common\Query\Expr\ObjectReference;
+use Teknoo\East\Common\Query\Expr\Regex;
 
 use function is_array;
 
@@ -60,7 +62,19 @@ trait ExprConversionTrait
             $values = self::convert($values);
         }
 
-        $final['$ne'] = [$key => $values];
+        $final['$ne'] = ($final['$ne'] ?? []) + [$key => $values];
+    }
+
+    /**
+     * @param array<string, mixed> $final
+     * @param Regex $expr$final[$key] = ['$nin' => $expr->getValues()];
+     */
+    private static function processRegexExpr(array &$final, string $key, ExprInterface $expr): void
+    {
+        $final[$key] = new MongoRegex(
+            pattern: $expr->getPattern(),
+            flags: $expr->getOptions(),
+        );
     }
 
     /**

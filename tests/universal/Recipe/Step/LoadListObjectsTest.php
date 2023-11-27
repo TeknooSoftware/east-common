@@ -397,7 +397,7 @@ class LoadListObjectsTest extends TestCase
                 10,
                 2,
                 [
-                    'foo' => "bar;do"
+                    'foo' => "bar[do"
                 ]
             )
         );

@@ -37,6 +37,7 @@ use Teknoo\East\Common\Query\Expr\InclusiveOr;
 use Teknoo\East\Common\Query\Expr\NotEqual;
 use Teknoo\East\Common\Query\Expr\NotIn;
 use Teknoo\East\Common\Query\Expr\ObjectReference;
+use Teknoo\East\Common\Query\Expr\Regex;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Throwable;
 
@@ -387,6 +388,7 @@ trait RepositoryTestTrait
                 'bar' => ['foo'],
                 'notIn' => ['bar2' => ['foo']],
                 'notEqual' => ['bwrNot' =>'foo'],
+                'bwrRegex' => '/foo/i',
                 'or' => [
                     ['foo' => 'bar'],
                     ['bar' => 'foo']
@@ -403,6 +405,7 @@ trait RepositoryTestTrait
                     'bar' => new In(['foo']),
                     'bar2' => new NotIn(['foo']),
                     'bwrNot' => new NotEqual('foo'),
+                    'bwrRegex' => new Regex('foo'),
                     new InclusiveOr(
                         ['foo' => 'bar'],
                         ['bar' => 'foo']

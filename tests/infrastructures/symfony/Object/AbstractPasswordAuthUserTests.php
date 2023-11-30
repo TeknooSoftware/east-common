@@ -83,10 +83,7 @@ abstract class AbstractPasswordAuthUserTests extends AbstractUserTests
             ->method('eraseCredentials')
             ->willReturnSelf();
 
-        self::assertInstanceOf(
-            PasswordAuthenticatedUserInterface::class,
-            $this->buildObject()->eraseCredentials()
-        );
+        $this->buildObject()->eraseCredentials();
     }
 
     public function testGetWrappedStoredPassword()

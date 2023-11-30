@@ -38,6 +38,7 @@ use Teknoo\East\Common\Object\User;
 use Teknoo\East\Common\Query\User\UserByEmailQuery;
 use Teknoo\East\CommonBundle\Contracts\Object\UserWithTOTPAuthInterface;
 use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
+use Teknoo\East\CommonBundle\Provider\Exception\MissingUserException;
 use Teknoo\East\CommonBundle\Provider\PasswordAuthenticatedUserProvider;
 use Teknoo\East\CommonBundle\Writer\SymfonyUserWriter;
 use Teknoo\Recipe\Promise\PromiseInterface;
@@ -359,9 +360,8 @@ class PasswordAuthenticatedUserProviderTest extends TestCase
 
     public function testRefreshUserNotSupported()
     {
-        self::assertNull(
-            $this->buildProvider()->refreshUser($this->createMock(UserInterface::class))
-        );
+        $this->expectException(MissingUserException::class);
+        $this->buildProvider()->refreshUser($this->createMock(UserInterface::class));
     }
 
     public function testUpgradePasswordNotSupported()

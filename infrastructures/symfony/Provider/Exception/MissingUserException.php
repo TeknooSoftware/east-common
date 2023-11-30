@@ -23,42 +23,16 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\CommonBundle\Object;
+namespace Teknoo\East\CommonBundle\Provider\Exception;
 
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Teknoo\East\Common\Object\StoredPassword;
-use Teknoo\East\Common\Object\User as BaseUser;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 
 /**
- * Abstract Symfony user implentation to wrap a East Common user instance authenticated via a password.
- * Authenticating data are stored into a StoredPassword instance.
- *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
- * @author      Richard Déloge <richard@teknoo.software>
+ * @author      Richard Déloge <richard@teknoo.software>=
  */
-abstract class AbstractPasswordAuthUser extends AbstractUser implements PasswordAuthenticatedUserInterface
+class MissingUserException extends UserNotFoundException
 {
-    public function __construct(
-        BaseUser $user,
-        protected StoredPassword $password,
-    ) {
-        parent::__construct($user);
-    }
-
-    public function getPassword(): string
-    {
-        return $this->password->getHash();
-    }
-
-    public function getWrappedStoredPassword(): StoredPassword
-    {
-        return $this->password;
-    }
-
-    public function eraseCredentials(): void
-    {
-        $this->password->eraseCredentials();
-    }
 }

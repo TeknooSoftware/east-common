@@ -40,6 +40,7 @@ use Teknoo\East\Common\Query\User\UserByEmailQuery;
 use Teknoo\East\CommonBundle\Object\ThirdPartyAuthenticatedUser;
 use Teknoo\East\CommonBundle\Object\TOTP\GoogleAuthThirdPartyAuthenticatedUser;
 use Teknoo\East\CommonBundle\Object\TOTP\TOTPThirdPartyAuthenticatedUser;
+use Teknoo\East\CommonBundle\Provider\Exception\MissingUserException;
 use Teknoo\Recipe\Promise\Promise;
 
 use function interface_exists;
@@ -52,6 +53,8 @@ use function interface_exists;
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
+ *
+ * @implements UserProviderInterface<ThirdPartyAuthenticatedUser>
  */
 class ThirdPartyAuthenticatedUserProvider implements UserProviderInterface
 {
@@ -70,7 +73,7 @@ class ThirdPartyAuthenticatedUserProvider implements UserProviderInterface
         return $this->fetchUserByUsername($username);
     }
 
-    protected function fetchUserByUsername(string $username): UserInterface
+    protected function fetchUserByUsername(string $username): ThirdPartyAuthenticatedUser
     {
         /** @var Promise<User, ThirdPartyAuthenticatedUser, mixed> $promise */
         $promise = new Promise(static function (User $user): ?ThirdPartyAuthenticatedUser {
@@ -132,13 +135,15 @@ class ThirdPartyAuthenticatedUserProvider implements UserProviderInterface
         return $loadedUser;
     }
 
-    public function refreshUser(UserInterface $user): ?UserInterface
+    public function refreshUser(UserInterface $user): UserInterface
     {
         if ($user instanceof ThirdPartyAuthenticatedUser) {
             return $this->fetchUserByUsername($user->getUserIdentifier());
         }
 
-        return null;
+        throw new MissingUserException(
+            "{$user->getUserIdentifier()} is not available with the provider " . self::class,
+        );
     }
 
     /**

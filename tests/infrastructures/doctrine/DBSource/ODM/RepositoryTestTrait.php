@@ -509,7 +509,7 @@ trait RepositoryTestTrait
                     'bar' => new In(['foo']),
                     'bar2' => new NotIn(['foo']),
                     'barNot' => new NotEqual(['foo']),
-                    'barRegex' => new \MongoDB\BSON\Regex('foo', 'i'),
+                    'barRegex' => new Regex('foo', 'i'),
                     new InclusiveOr(
                         ['foo' => 'bar'],
                         ['bar' => 'foo']

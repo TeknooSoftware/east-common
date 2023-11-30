@@ -1,5 +1,10 @@
 # Teknoo Software - Common - Change Log
 
+## [2.6.1] - 2023-11-30
+### Stable Release
+- Update dev lib requirements
+- Support Symfony 6.4+ (7+ comming soon)
+
 ## [2.6.0] - 2023-11-26
 ### Stable Release
 - Add regex supper in queries' criteria.

@@ -56,8 +56,7 @@ class ThirdPartyAuthenticatedUser extends AbstractUser
         return $this->auth->getToken();
     }
 
-    public function eraseCredentials(): self
+    public function eraseCredentials(): void
     {
-        return $this;
     }
 }

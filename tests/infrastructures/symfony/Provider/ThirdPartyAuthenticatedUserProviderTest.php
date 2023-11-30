@@ -39,6 +39,7 @@ use Teknoo\East\CommonBundle\Contracts\Object\UserWithTOTPAuthInterface;
 use Teknoo\East\CommonBundle\Object\ThirdPartyAuthenticatedUser;
 use Teknoo\East\CommonBundle\Object\TOTP\GoogleAuthThirdPartyAuthenticatedUser;
 use Teknoo\East\CommonBundle\Object\TOTP\TOTPThirdPartyAuthenticatedUser;
+use Teknoo\East\CommonBundle\Provider\Exception\MissingUserException;
 use Teknoo\East\CommonBundle\Provider\ThirdPartyAuthenticatedUserProvider;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Common\Object\User as BaseUser;
@@ -341,9 +342,8 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
 
     public function testRefreshUserNotSupported()
     {
-        self::assertNull(
-            $this->buildProvider()->refreshUser($this->createMock(UserInterface::class))
-        );
+        $this->expectException(MissingUserException::class);
+        $this->buildProvider()->refreshUser($this->createMock(UserInterface::class));
     }
 
     public function testSupportsClass()

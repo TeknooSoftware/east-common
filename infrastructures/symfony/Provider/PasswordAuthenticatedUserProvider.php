@@ -40,6 +40,7 @@ use Teknoo\East\Common\Object\User;
 use Teknoo\East\CommonBundle\Object\AbstractPasswordAuthUser;
 use Teknoo\East\CommonBundle\Object\TOTP\GoogleAuthPasswordAuthenticatedUser;
 use Teknoo\East\CommonBundle\Object\TOTP\TOTPPasswordAuthenticatedUser;
+use Teknoo\East\CommonBundle\Provider\Exception\MissingUserException;
 use Teknoo\East\CommonBundle\Writer\SymfonyUserWriter;
 use Teknoo\Recipe\Promise\Promise;
 use Teknoo\East\Common\Loader\UserLoader;
@@ -60,7 +61,7 @@ use function interface_exists;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  *
- * @implements PasswordUpgraderInterface<AbstractPasswordAuthUser>
+ * @implements UserProviderInterface<AbstractPasswordAuthUser>
  */
 class PasswordAuthenticatedUserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
@@ -80,7 +81,7 @@ class PasswordAuthenticatedUserProvider implements UserProviderInterface, Passwo
         return $this->fetchUserByUsername($username);
     }
 
-    protected function fetchUserByUsername(string $username): UserInterface
+    protected function fetchUserByUsername(string $username): PasswordAuthenticatedUser
     {
         /** @var Promise<User, PasswordAuthenticatedUser, mixed> $promise */
         $promise = new Promise(static function (User $user): ?PasswordAuthenticatedUser {
@@ -141,13 +142,15 @@ class PasswordAuthenticatedUserProvider implements UserProviderInterface, Passwo
         return $loadedUser;
     }
 
-    public function refreshUser(UserInterface $user): ?UserInterface
+    public function refreshUser(UserInterface $user): UserInterface
     {
         if ($user instanceof AbstractPasswordAuthUser) {
             return $this->fetchUserByUsername($user->getUserIdentifier());
         }
 
-        return null;
+        throw new MissingUserException(
+            "{$user->getUserIdentifier()} is not available with the provider " . self::class,
+        );
     }
 
     public function upgradePassword(

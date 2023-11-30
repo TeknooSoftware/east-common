@@ -62,7 +62,7 @@ trait TemplateTrait
     private array $tidyConfig = [
         'drop-empty-elements' => false,
         'indent' => true,
-        'output-xhtml' => true,
+        'output-xhtml' => false,
         'wrap' => 200,
     ];
 

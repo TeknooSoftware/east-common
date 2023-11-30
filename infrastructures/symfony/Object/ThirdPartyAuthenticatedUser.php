@@ -58,5 +58,6 @@ class ThirdPartyAuthenticatedUser extends AbstractUser
 
     public function eraseCredentials(): void
     {
+        return;
     }
 }

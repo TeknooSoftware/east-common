@@ -60,7 +60,7 @@
         "teknoo/immutable": "^3.0.17",
         "teknoo/states": "^6.1.5",
         "teknoo/recipe": "^4.5.2",
-        "teknoo/east-foundation": "^7.3.4"
+        "teknoo/east-foundation": "^7.3.6"
     },
     "require-dev": {
         "ext-mongodb" : "*",
@@ -73,7 +73,7 @@
         "icanhazstring/composer-unused": "^0.8.10",
         "nikic/php-parser": "^4.17.1",
         "behat/behat": "^3.13",
-        "teknoo/bridge-phpdi-symfony": "^6.0.3",
+        "teknoo/bridge-phpdi-symfony": "^6.0.4",
         "doctrine/common": "^3.4.3",
         "doctrine/mongodb-odm": "^2.6.1",
         "doctrine/mongodb-odm-bundle": "^4.6.2",
@@ -94,7 +94,7 @@
         "symfony/form": "^6.3",
         "symfony/http-kernel": "^6.3",
         "symfony/password-hasher": "^6.3",
-        "symfony/psr-http-message-bridge": "^2.3.1",
+        "symfony/psr-http-message-bridge": "^2.3.1||^6.4",
         "symfony/routing": "^6.3",
         "symfony/security-bundle": "^6.3",
         "symfony/security-core": "^6.3",

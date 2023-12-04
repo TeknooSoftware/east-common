@@ -7,7 +7,7 @@ scheb_two_factor:
         enabled: true
         server_name: 'foo.com'
         issuer: SASU Teknoo Software
-        window: 1
+        leeway: 1
         parameters:
             image: 'https://teknoo.software/img/logo.svg'
         template: '@TeknooEastCommon/2fa/login.html.twig'

@@ -2,7 +2,7 @@
 
 ## [2.6.3] - 2023-12-04
 ### Stable Release
-- Support Symfony 6.4+
+- Support Symfony 7+
 
 ## [2.6.2] - 2023-12-01
 ### Stable Release

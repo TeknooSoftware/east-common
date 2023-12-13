@@ -19,15 +19,15 @@ Example with Symfony
 --------------------
 
 ```yaml
-//These operations are not required with teknoo/east-common-symfony
+#These operations are not required with teknoo/east-common-symfony
 
-//config/packages/di_bridge.yaml:
+#config/packages/di_bridge.yaml:
 di_bridge:
     compilation_path: '%kernel.project_dir%/var/cache/phpdi'
     definitions:
       - '%kernel.project_dir%/config/di.php'
 
-//config/packages/east_foundation.yaml:
+#config/packages/east_foundation.yaml:
 di_bridge:
     definitions:
         - '%kernel.project_dir%/vendor/teknoo/east-foundation/src/di.php'
@@ -36,7 +36,7 @@ di_bridge:
     import:
         Psr\Log\LoggerInterface: 'logger'
 
-//config/packages/east_common_di.yaml:
+#config/packages/east_common_di.yaml:
 di_bridge:
     definitions:
         - '%kernel.project_dir%/vendor/teknoo/east-common/src/di.php'
@@ -47,13 +47,13 @@ di_bridge:
     import:
         Doctrine\Persistence\ObjectManager: 'doctrine_mongodb.odm.default_document_manager'
 
-//bundles.php
+#bundles.php
 ...
 Teknoo\DI\SymfonyBridge\DIBridgeBundle::class => ['all' => true],
 Teknoo\East\FoundationBundle\EastFoundationBundle::class => ['all' => true],
 Teknoo\East\CommonBundle\TeknooEastCommonBundle::class => ['all' => true],
 
-//In doctrine config (east_common_doctrine_mongodb.yaml)
+#In doctrine config (east_common_doctrine_mongodb.yaml)
 doctrine_mongodb:
     document_managers:
         default:
@@ -70,9 +70,9 @@ doctrine_mongodb:
                     is_bundle: false
                     prefix: 'Teknoo\East\Common\Doctrine\Object'
 
-//In security.yaml
+#In security.yaml
 security:
-    //...
+    #...
     providers:
         with_password:
             id: 'Teknoo\East\CommonBundle\Provider\PasswordAuthenticatedUserProvider'
@@ -82,7 +82,7 @@ security:
             algorithm: '%teknoo.east.common.bundle.password_authenticated_user_provider.default_algo%'
 
 
-//In routes/common.yaml
+#In routes/common.yaml
 admin_common:
     resource: '@TeknooEastCommonBundle/Resources/config/admin_routing.yaml'
     prefix: '/admin'

@@ -28,6 +28,8 @@ namespace Teknoo\East\CommonBundle\Security\Authenticator;
 use DomainException;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator as BaseAuthenticator;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
+use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface as GoogleTwoFactorInterface;
+use Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface as TotpTwoFactorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -38,10 +40,13 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 use Teknoo\East\Common\Loader\UserLoader;
 use Teknoo\East\Common\Object\ThirdPartyAuth;
+use Teknoo\East\Common\Object\TOTPAuth;
 use Teknoo\East\Common\Object\User;
 use Teknoo\East\Common\Query\User\UserByEmailQuery;
 use Teknoo\East\CommonBundle\Contracts\Security\Authenticator\UserConverterInterface;
 use Teknoo\East\CommonBundle\Object\ThirdPartyAuthenticatedUser;
+use Teknoo\East\CommonBundle\Object\TOTP\GoogleAuthThirdPartyAuthenticatedUser;
+use Teknoo\East\CommonBundle\Object\TOTP\TOTPThirdPartyAuthenticatedUser;
 use Teknoo\East\CommonBundle\Writer\SymfonyUserWriter;
 use Teknoo\Recipe\Promise\Promise;
 use Teknoo\Recipe\Promise\PromiseInterface;
@@ -82,18 +87,22 @@ class OAuth2Authenticator extends BaseAuthenticator
      */
     public function registerToken(User $user, string $provider, string $accessToken, PromiseInterface $promise): self
     {
+        $totpAuth = null;
         $thirdPartyAuth = null;
         foreach ($user->getAuthData() as $authData) {
-            if (
-                !$authData instanceof ThirdPartyAuth
-                || $authData->getProvider() !== $provider
-                || $authData->getProtocol() !== self::PROTOCOL
-            ) {
+            if ($authData instanceof TOTPAuth) {
+                $totpAuth = $authData;
+
                 continue;
             }
 
-            $thirdPartyAuth = $authData;
-            break;
+            if (
+                $authData instanceof ThirdPartyAuth
+                && $authData->getProvider() === $provider
+                && $authData->getProtocol() === self::PROTOCOL
+            ) {
+                $thirdPartyAuth = $authData;
+            }
         }
 
         if (null === $thirdPartyAuth) {
@@ -108,7 +117,34 @@ class OAuth2Authenticator extends BaseAuthenticator
 
         $this->userWriter->save($user);
 
-        $promise->success(new ThirdPartyAuthenticatedUser($user, $thirdPartyAuth));
+        if (
+            $totpAuth instanceof TOTPAuth
+            && (
+                interface_exists(GoogleTwoFactorInterface::class)
+                || interface_exists(TotpTwoFactorInterface::class)
+            )
+        ) {
+            if (
+                interface_exists(GoogleTwoFactorInterface::class)
+                && TOTPAuth::PROVIDER_GOOGLE_AUTHENTICATOR === $totpAuth->getProvider()
+            ) {
+                $user = new GoogleAuthThirdPartyAuthenticatedUser(
+                    $user,
+                    $thirdPartyAuth,
+                );
+            } else {
+                $user = new TOTPThirdPartyAuthenticatedUser(
+                    $user,
+                    $thirdPartyAuth,
+                );
+            }
+
+            $finalUser = $user->setTOTPAuth($totpAuth);
+        } else {
+            $finalUser = new ThirdPartyAuthenticatedUser($user, $thirdPartyAuth);
+        }
+
+        $promise->success($finalUser);
 
         return $this;
     }

@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [2.6.4] - 2023-12-19
+### Stable Release
+- Fix 2FA authentication with third party
+
 ## [2.6.3] - 2023-12-04
 ### Stable Release
 - Support Symfony 7+

@@ -38,9 +38,12 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 use Teknoo\East\Common\Loader\UserLoader;
 use Teknoo\East\Common\Object\ThirdPartyAuth;
+use Teknoo\East\Common\Object\TOTPAuth;
 use Teknoo\East\Common\Object\User;
 use Teknoo\East\CommonBundle\Contracts\Security\Authenticator\UserConverterInterface;
 use Teknoo\East\CommonBundle\Object\ThirdPartyAuthenticatedUser;
+use Teknoo\East\CommonBundle\Object\TOTP\GoogleAuthThirdPartyAuthenticatedUser;
+use Teknoo\East\CommonBundle\Object\TOTP\TOTPThirdPartyAuthenticatedUser;
 use Teknoo\East\CommonBundle\Security\Authenticator\OAuth2Authenticator;
 use Teknoo\East\CommonBundle\Writer\SymfonyUserWriter;
 use Teknoo\Recipe\Promise\PromiseInterface;
@@ -139,7 +142,7 @@ class OAuth2AuthenticatorTest extends TestCase
         );
     }
 
-    public function testRegisterTokenWithoutThirdPart()
+    public function testRegisterTokenWithoutThirdParty()
     {
         $user = $this->createMock(User::class);
         $user->expects(self::any())->method('getAuthData')->willReturn([]);
@@ -168,7 +171,7 @@ class OAuth2AuthenticatorTest extends TestCase
         );
     }
 
-    public function testRegisterTokenWithAnotgerProviderThirdPart()
+    public function testRegisterTokenWithAnotherProviderThirdParty()
     {
         $user = $this->createMock(User::class);
         $user->expects(self::any())->method('getAuthData')->willReturn([
@@ -201,7 +204,7 @@ class OAuth2AuthenticatorTest extends TestCase
         );
     }
 
-    public function testRegisterTokenWithThirdPart()
+    public function testRegisterTokenWithThirdParty()
     {
         $user = $this->createMock(User::class);
         $user->expects(self::any())->method('getAuthData')->willReturn([
@@ -216,6 +219,78 @@ class OAuth2AuthenticatorTest extends TestCase
         $promise->expects(self::once())->method('success')
             ->with($this->callback(
                 fn ($x) => $x instanceof ThirdPartyAuthenticatedUser
+            ))
+            ->willReturnSelf();
+
+        $this->getSymfonyUserWriter()
+            ->expects(self::once())
+            ->method('save')
+            ->willReturnSelf();
+
+        self::assertInstanceOf(
+            OAuth2Authenticator::class,
+            $this->buildAuthenticator()->registerToken($user, 'provider', 'token', $promise)
+        );
+    }
+
+    public function testRegisterTokenWithThirdPartyWith2FAGoogle()
+    {
+        $user = $this->createMock(User::class);
+        $user->expects(self::any())->method('getAuthData')->willReturn([
+            (new ThirdPartyAuth())->setProtocol('oauth2')
+                ->setProvider('provider')
+                ->setToken('token'),
+            new TOTPAuth(
+                provider: TOTPAuth::PROVIDER_GOOGLE_AUTHENTICATOR,
+                algorithm: 'sha1',
+                period: 30,
+                digits: 6,
+                enabled: true,
+            ),
+        ]);
+        $user->expects(self::never())
+            ->method('addAuthData');
+
+        $promise = $this->createMock(PromiseInterface::class);
+        $promise->expects(self::once())->method('success')
+            ->with($this->callback(
+                fn ($x) => $x instanceof GoogleAuthThirdPartyAuthenticatedUser
+            ))
+            ->willReturnSelf();
+
+        $this->getSymfonyUserWriter()
+            ->expects(self::once())
+            ->method('save')
+            ->willReturnSelf();
+
+        self::assertInstanceOf(
+            OAuth2Authenticator::class,
+            $this->buildAuthenticator()->registerToken($user, 'provider', 'token', $promise)
+        );
+    }
+
+    public function testRegisterTokenWithThirdPartyWith2FACommon()
+    {
+        $user = $this->createMock(User::class);
+        $user->expects(self::any())->method('getAuthData')->willReturn([
+            (new ThirdPartyAuth())->setProtocol('oauth2')
+                ->setProvider('provider')
+                ->setToken('token'),
+            new TOTPAuth(
+                provider: 'aTotp',
+                algorithm: 'sha1',
+                period: 30,
+                digits: 6,
+                enabled: true,
+            ),
+        ]);
+        $user->expects(self::never())
+            ->method('addAuthData');
+
+        $promise = $this->createMock(PromiseInterface::class);
+        $promise->expects(self::once())->method('success')
+            ->with($this->callback(
+                fn ($x) => $x instanceof TOTPThirdPartyAuthenticatedUser
             ))
             ->willReturnSelf();
 

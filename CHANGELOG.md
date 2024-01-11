@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [2.6.5] - 202-01-11
+### Stable Release
+- Fix issue in cascadin exprresion conversion 
+
 ## [2.6.4] - 2023-12-19
 ### Stable Release
 - Fix 2FA authentication with third party

@@ -34,6 +34,8 @@ use Teknoo\East\Common\Query\Expr\NotIn;
 use Teknoo\East\Common\Query\Expr\ObjectReference;
 use Teknoo\East\Common\Query\Expr\Regex;
 
+use function is_array;
+
 /**
  * Default implementation dedicated to generic Doctrine component to convert East Common
  * Queries expressions to Doctrines generic queries.
@@ -121,6 +123,22 @@ trait ExprConversionTrait
     }
 
     /**
+     * @param array<string, mixed> $final
+     * @param int|string $key
+     * @param ExprInterface $value
+     */
+    private static function callConvert(array &$final, int|string $key, ExprInterface $value): void
+    {
+        $exprClass = $value::class;
+        if (!isset(self::$exprMappings[$exprClass])) {
+            throw new NonManagedClassException("$exprClass is not managed by this repository");
+        }
+
+        $callable = self::$exprMappings[$exprClass];
+        $callable($final, (string) $key, $value);
+    }
+
+    /**
      * @param array<string, mixed> $values
      * @return array<string, mixed>
      */
@@ -128,19 +146,21 @@ trait ExprConversionTrait
     {
         $final = [];
         foreach ($values as $key => $value) {
+            if (is_array($value)) {
+                $value = self::convert($value);
+            }
+
             if (!$value instanceof ExprInterface) {
                 $final[$key] = $value;
 
                 continue;
             }
 
-            $exprClass = $value::class;
-            if (!isset(self::$exprMappings[$exprClass])) {
-                throw new NonManagedClassException("$exprClass is not managed by this repository");
-            }
-
-            $callable = self::$exprMappings[$exprClass];
-            $callable($final, (string) $key, $value);
+            self::callConvert(
+                final: $final,
+                key: $key,
+                value: $value,
+            );
         }
 
         return $final;

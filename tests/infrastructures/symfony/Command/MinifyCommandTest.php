@@ -73,11 +73,11 @@ class MinifyCommandTest extends TestCase
 
     private function getExecutorMock(): Executor|MockObject
     {
-        if (!$this->Executor instanceof Executor) {
-            $this->Executor = $this->createMock(Executor::class);
+        if (!$this->executor instanceof Executor) {
+            $this->executor = $this->createMock(Executor::class);
         }
 
-        return $this->Executor;
+        return $this->executor;
     }
 
     private function getClientMock(): Client|MockObject

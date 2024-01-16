@@ -1,6 +1,10 @@
 # Teknoo Software - Common - Change Log
 
-## [2.6.5] - 202-01-11
+## [2.6.6] - 2024-01-16
+### Stable Release
+- Support Doctrine Mongo ODM Bundle
+
+## [2.6.5] - 2024-01-11
 ### Stable Release
 - Fix issue in cascadin exprresion conversion 
 

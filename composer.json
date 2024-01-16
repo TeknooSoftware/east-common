@@ -76,7 +76,7 @@
         "teknoo/bridge-phpdi-symfony": "^6.0.4",
         "doctrine/common": "^3.4.3",
         "doctrine/mongodb-odm": "^2.6.2",
-        "doctrine/mongodb-odm-bundle": "^4.7",
+        "doctrine/mongodb-odm-bundle": "^4.7||^5",
         "doctrine/persistence": "^3.2",
         "knpuniversity/oauth2-client-bundle": "^2.18",
         "laminas/laminas-diactoros": "^3.3",

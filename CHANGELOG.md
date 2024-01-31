@@ -1,8 +1,26 @@
 # Teknoo Software - Common - Change Log
 
+## [2.7.0] - 2024-01-31
+### Stable Release
+- Common `DatesService` is deprecated, use Foundation's `DatesService` instead
+- Common's components use Foundation's `DatesService`
+- In `JumpIf`, if the $testValue is `Stringable`, the value will be automatically cast to string
+- Add `JumpIfNot` to Jump to a step if a condition is not valid (contrary to `JumpIf`)
+- Add `EmailValue` class as ValueObject compliant with `ObjectInterface`
+- Add RecoveryAccess as AuthData for User
+- Add Cookbook interface `PrepareRecoveryAccessEndPointInterface` and `PrepareRecoveryAccessEndPoint` to create
+  and send a link to allow an user to recover its access.
+  - Add Steps `FindUserByEmail`, `PrepareRecoveryAccess`, and `RemoveRecoveryAccess` for this last cookbook.
+- Add `NotifyUserABoutRecoveryAccessInterface` to implement in a step locked in framework to send the notification
+  - `RecoveryAccessNotification` is the default implementation of this interface in Symfony
+- Add `UserWithRecoveryAccess` and `RecoveringAccessUserProvider` to support this new feature with Symfony Passwordless
+  link (with LoginLink feature and Symfony Notifier)
+- This provider supports also TOTP.
+- Add `EmailFormType` in Symfony's Form to create a form to prompt an email.
+
 ## [2.6.6] - 2024-01-16
 ### Stable Release
-- Support Doctrine Mongo ODM Bundle
+- Support Doctrine Mongo ODM Bundle 5.x
 
 ## [2.6.5] - 2024-01-11
 ### Stable Release

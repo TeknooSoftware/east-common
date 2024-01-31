@@ -51,7 +51,7 @@ class LoadPersistedAsset
                 type: $type,
                 holder: fn(FinalFile $file) => $manager->updateWorkPlan([
                     FinalFile::class => $file,
-                ])
+                ]),
             );
         }
 

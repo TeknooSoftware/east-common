@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\Tests\East\Common\Recipe\Step;
 
 use PHPUnit\Framework\TestCase;
+use Stringable;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Common\Recipe\Step\JumpIf;
 
@@ -56,6 +57,27 @@ class JumpIfTest extends TestCase
         );
     }
 
+    public function testInvokeEmptyStringable()
+    {
+        $manager = $this->createMock(ManagerInterface::class);
+        $manager->expects(self::never())
+            ->method('continue');
+
+        self::assertInstanceOf(
+            JumpIf::class,
+            $this->buildStep()(
+                $manager,
+                'nextRouteName',
+                new class implements Stringable {
+                    public function __toString(): string
+                    {
+                        return '';
+                    }
+                }
+            )
+        );
+    }
+
     public function testInvokeWithValueWithoutExpected()
     {
         $manager = $this->createMock(ManagerInterface::class);
@@ -68,6 +90,27 @@ class JumpIfTest extends TestCase
                 $manager,
                 'nextRouteName',
                 'foo'
+            )
+        );
+    }
+
+    public function testInvokeWithValueWithoutExpectedAndStringable()
+    {
+        $manager = $this->createMock(ManagerInterface::class);
+        $manager->expects(self::once())
+            ->method('continue');
+
+        self::assertInstanceOf(
+            JumpIf::class,
+            $this->buildStep()(
+                $manager,
+                'nextRouteName',
+                new class implements Stringable {
+                    public function __toString(): string
+                    {
+                        return 'foo';
+                    }
+                }
             )
         );
     }

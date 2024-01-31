@@ -25,11 +25,12 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Common\Recipe\Step;
 
+use Stringable;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 
 /**
  * Special step to jump to another step when a $testValue is present in the workplan, or if a $testValue equal to
- * an expected value
+ * an expected value. If the $testValue is not null and stringable, the testValue will be casted to string.
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
@@ -38,16 +39,24 @@ use Teknoo\East\Foundation\Manager\ManagerInterface;
  */
 class JumpIf
 {
+    protected bool $conditionMustBe = true;
+
     public function __invoke(
         ManagerInterface $manager,
         string $nextStep,
         mixed $testValue = null,
         mixed $expectedJumpValue = null,
     ): self {
-        if (
-            (null === $expectedJumpValue && null !== $testValue)
+        if ($testValue instanceof Stringable) {
+            $testValue = (string) $testValue;
+        }
+
+        $conditionResult = (
+            (null === $expectedJumpValue && !empty($testValue))
             || (null !== $expectedJumpValue && $testValue === $expectedJumpValue)
-        ) {
+        );
+
+        if ($conditionResult === $this->conditionMustBe) {
             $manager->continue([], $nextStep);
         }
 

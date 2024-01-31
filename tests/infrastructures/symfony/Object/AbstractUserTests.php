@@ -27,10 +27,12 @@ namespace Teknoo\Tests\East\CommonBundle\Object;
 
 use ArrayIterator;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Teknoo\East\Common\Object\User;
 use Teknoo\East\CommonBundle\Object\AbstractUser;
 use Teknoo\East\Common\Object\User as BaseUser;
+use TypeError;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -95,10 +97,36 @@ abstract class AbstractUserTests extends TestCase
         );
     }
 
+    public function testGetEmail()
+    {
+        $this->getUser()
+            ->expects(self::once())
+            ->method('getEmail')
+            ->willReturn('foo@bar');
+
+        self::assertEquals(
+            'foo@bar',
+            $this->buildObject()->getEmail()
+        );
+    }
+
+    public function testGetHash()
+    {
+        $this->getUser()
+            ->expects(self::once())
+            ->method('getEmail')
+            ->willReturn('foo@bar');
+
+        self::assertEquals(
+            \hash('sha256', 'foo@bar'),
+            $this->buildObject()->getHash()
+        );
+    }
+
     public function testExceptionOnIsEqualToWithBadUser()
     {
-        $this->expectException(\TypeError::class);
-        $this->buildObject()->isEqualTo(new \stdClass());
+        $this->expectException(TypeError::class);
+        $this->buildObject()->isEqualTo(new stdClass());
     }
 
     public function testIsEqualToNotSameUserName()

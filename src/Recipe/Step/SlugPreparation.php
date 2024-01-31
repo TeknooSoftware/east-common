@@ -59,7 +59,7 @@ class SlugPreparation
         $object->prepareSlugNear(
             $loader,
             $this->findSlugService,
-            $slugField
+            $slugField,
         );
 
         return $this;

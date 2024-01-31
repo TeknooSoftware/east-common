@@ -47,7 +47,7 @@ use function interface_exists;
 
 /**
  * Symfony user provider to load East Common's user authenticated thanks to OAuth2Authenticator, or any third party
- * authenticated. It can manage only ThirdPartyAuthenticatedUser.
+ * authenticated. It can manage only ThirdPartyAuthenticatedUser, with or without TOTP access.
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)

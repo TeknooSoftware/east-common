@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Common\Object;
 
+use DomainException;
 use Stringable;
 use Teknoo\East\Common\Contracts\Object\DeletableInterface;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
@@ -33,6 +34,8 @@ use Teknoo\East\Common\Contracts\User\AuthDataInterface;
 use Teknoo\East\Common\Contracts\User\UserInterface;
 
 use function array_values;
+use function class_exists;
+use function is_a;
 use function is_array;
 use function iterator_to_array;
 use function trim;
@@ -159,6 +162,27 @@ class User implements IdentifiedObjectInterface, UserInterface, DeletableInterfa
         $set[] = $authData;
 
         return $this->setAuthData($set);
+    }
+
+    /**
+     * @param class-string<AuthDataInterface> $className
+     */
+    public function removeAuthData(string $className): User
+    {
+        if (!class_exists($className) || !is_a($className, AuthDataInterface::class, true)) {
+            throw new DomainException(
+                "Error `{$className}` is not an implementation of `" . AuthDataInterface::class . "`"
+            );
+        }
+
+        $filteredAuthData = [];
+        foreach ($this->getAuthData() as $authData) {
+            if (!is_a($authData, $className)) {
+                $filteredAuthData[] = $authData;
+            }
+        }
+
+        return $this->setAuthData($filteredAuthData);
     }
 
     public function getAuthData(): iterable

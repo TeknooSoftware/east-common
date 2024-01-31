@@ -20,12 +20,15 @@
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-
 date_default_timezone_set('UTC');
 
 error_reporting(E_ALL | E_STRICT);
 
-ini_set('memory_limit', '128M');
+if (PHP_VERSION_ID < 80200) {
+    ini_set('memory_limit', '196M');
+} else {
+    ini_set('memory_limit', '128M');
+}
 
 include __DIR__ . '/fakeQuery.php';
 include __DIR__ . '/fakeUOW.php';

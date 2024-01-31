@@ -63,7 +63,7 @@ class SendMedia
             $response = $response->withHeader('Content-Type', (string) $metadata->getContentType());
             $response = $response->withHeader(
                 'Content-Disposition',
-                'attachment; filename="' . $metadata->getFileName() . '"'
+                'attachment; filename="' . $metadata->getFileName() . '"',
             );
         }
 

@@ -45,7 +45,7 @@ use Throwable;
 class LoadObject
 {
     /**
-     * @param \Teknoo\East\Common\Contracts\Loader\LoaderInterface<ObjectInterface> $loader
+     * @param LoaderInterface<ObjectInterface> $loader
      */
     public function __invoke(
         LoaderInterface $loader,
@@ -71,7 +71,7 @@ class LoadObject
 
         $loader->load(
             $id,
-            $fetchPromise
+            $fetchPromise,
         );
 
         return $this;

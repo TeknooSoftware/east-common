@@ -29,6 +29,7 @@ use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\User\AuthDataInterface;
 use Teknoo\East\Common\Object\StoredPassword;
 use Teknoo\East\Common\Object\ThirdPartyAuth;
+use Teknoo\East\Common\Object\TOTPAuth;
 use Teknoo\Tests\East\Common\Object\Traits\ObjectTestTrait;
 use Teknoo\East\Common\Object\User;
 
@@ -291,6 +292,79 @@ class UserTest extends TestCase
     {
         $this->expectException(\Throwable::class);
         $this->buildObject()->setAuthData(new \stdClass());
+    }
+
+    public function testRemoveAuthData()
+    {
+        $object = $this->generateObjectPopulated(
+            [
+                'authData' => new \ArrayIterator([
+                    $a = $this->createMock(StoredPassword::class),
+                    $this->createMock(ThirdPartyAuth::class),
+                    $b = $this->createMock(TOTPAuth::class),
+                ])
+            ]
+        );
+
+        self::assertInstanceOf(
+            User::class,
+            $object->removeAuthData(ThirdPartyAuth::class),
+        );
+
+        self::assertEquals(
+            [
+                $a,
+                $b,
+            ],
+            $object->getAuthData(),
+        );
+    }
+
+    public function testRemoveAuthDataButDataToRemoveMissing()
+    {
+        $object = $this->generateObjectPopulated(
+            [
+                'authData' => new \ArrayIterator([
+                    $a = $this->createMock(StoredPassword::class),
+                    $b = $this->createMock(TOTPAuth::class),
+                ])
+            ]
+        );
+
+        self::assertInstanceOf(
+            User::class,
+            $object->removeAuthData(ThirdPartyAuth::class),
+        );
+
+        self::assertEquals(
+            [
+                $a,
+                $b,
+            ],
+            $object->getAuthData(),
+        );
+    }
+
+    public function testRemoveAuthDataExceptionOnBadClass()
+    {
+        $object = $this->generateObjectPopulated(
+            [
+                'authData' => new \ArrayIterator([
+                    $this->createMock(StoredPassword::class),
+                    $this->createMock(ThirdPartyAuth::class),
+                    $this->createMock(TOTPAuth::class),
+                ])
+            ]
+        );
+
+        $this->expectException(\DomainException::class);
+        $this->buildObject()->removeAuthData('fooooooooooo');
+    }
+
+    public function testRemoveAuthDataExceptionOnBadArgument()
+    {
+        $this->expectException(\Throwable::class);
+        $this->buildObject()->removeAuthData(new \stdClass());
     }
 
     public function testGetActive()

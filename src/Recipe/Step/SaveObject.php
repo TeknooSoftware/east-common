@@ -47,7 +47,7 @@ use Throwable;
 class SaveObject
 {
     /**
-     * @param WriterInterface<\Teknoo\East\Common\Contracts\Object\ObjectInterface> $writer
+     * @param WriterInterface<ObjectInterface> $writer
      */
     public function __invoke(
         WriterInterface $writer,
@@ -58,7 +58,7 @@ class SaveObject
         int $errorCode = 500,
         ?bool $prefereRealDateOnUpdate = null,
     ): self {
-        /** @var Promise<\Teknoo\East\Common\Contracts\Object\ObjectInterface, mixed, mixed> $savedPromise */
+        /** @var Promise<ObjectInterface, mixed, mixed> $savedPromise */
         $savedPromise = new Promise(
             static function (ObjectInterface $object) use ($manager, $parametersBag): void {
                 $workplan = [

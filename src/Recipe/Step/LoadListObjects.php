@@ -128,8 +128,8 @@ class LoadListObjects
                 $manager->updateWorkPlan(
                     [
                         'objectsCollection' => $objects,
-                        'pageCount' => $pageCount
-                    ]
+                        'pageCount' => $pageCount,
+                    ],
                 );
             },
             static fn (Throwable $throwable): ChefInterface => $manager->error(
@@ -146,9 +146,9 @@ class LoadListObjects
                 $criteria,
                 $order,
                 $itemsPerPage,
-                ($page - 1) * $itemsPerPage
+                ($page - 1) * $itemsPerPage,
             ),
-            $executePromise
+            $executePromise,
         );
 
         return $this;

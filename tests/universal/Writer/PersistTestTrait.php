@@ -28,7 +28,7 @@ namespace Teknoo\Tests\East\Common\Writer;
 use Teknoo\East\Common\Contracts\DBSource\ManagerInterface;
 use Teknoo\East\Common\Contracts\Object\TimestampableInterface;
 use Teknoo\East\Common\Contracts\Writer\WriterInterface;
-use Teknoo\East\Common\Service\DatesService;
+use Teknoo\East\Foundation\Time\DatesService;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**

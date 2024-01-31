@@ -29,8 +29,8 @@ use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\Object\DeletableInterface;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
 use Teknoo\East\Common\Contracts\Writer\WriterInterface;
-use Teknoo\East\Common\Service\DatesService;
 use Teknoo\East\Common\Service\DeletingService;
+use Teknoo\East\Foundation\Time\DatesService;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License

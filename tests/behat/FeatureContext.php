@@ -59,15 +59,16 @@ use Symfony\Component\DependencyInjection\ContainerBuilder as SfContainerBuilder
 use Symfony\Component\HttpFoundation\Request as SfRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
+use Symfony\Component\Mailer\Event\MessageEvents;
+use Symfony\Component\Mailer\Test\Constraint\EmailCount;
 use Symfony\Component\PasswordHasher\Hasher\SodiumPasswordHasher;
-use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\Component\Routing\Router;
 use Teknoo\DI\SymfonyBridge\DIBridgeBundle;
 use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
+use Teknoo\East\CommonBundle\Object\UserWithRecoveryAccess;
 use Teknoo\East\CommonBundle\TeknooEastCommonBundle;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\GetStreamFromMediaInterface;
-use Teknoo\East\Common\Doctrine\Object\Content;
 use Teknoo\East\Common\Loader\MediaLoader;
 use Teknoo\East\Common\Object\Media as BaseMedia;
 use Teknoo\East\Common\Object\Media;
@@ -75,7 +76,7 @@ use Teknoo\East\Common\Object\StoredPassword;
 use Teknoo\East\Common\Object\TOTPAuth;
 use Teknoo\East\Common\Object\User;
 use Teknoo\East\Common\Recipe\Cookbook\RenderMediaEndPoint;
-use Teknoo\East\Common\Service\DatesService;
+use Teknoo\East\Foundation\Time\DatesService;
 use Teknoo\East\FoundationBundle\EastFoundationBundle;
 use Teknoo\East\Foundation\Client\ClientInterface;
 use Teknoo\East\Foundation\Client\ResponseInterface as EastResponse;
@@ -98,11 +99,15 @@ use Twig\Environment;
 
 use function array_key_exists;
 use function copy;
+use function date_default_timezone_set;
+use function error_reporting;
 use function file_exists;
 use function file_get_contents;
 use function function_exists;
 use function in_array;
+use function ini_set;
 use function is_numeric;
+use function json_decode;
 use function json_encode;
 use function opcache_invalidate;
 use function parse_str;
@@ -159,6 +164,19 @@ class FeatureContext implements Context
     private ?MediaLoader $mediaLoader = null;
 
     public bool $noOverride = true;
+
+    public function __construct()
+    {
+        date_default_timezone_set('UTC');
+
+        error_reporting(E_ALL | E_STRICT);
+
+        if (PHP_VERSION_ID < 80200) {
+            ini_set('memory_limit', '196M');
+        } else {
+            ini_set('memory_limit', '128M');
+        }
+    }
 
     /**
      * @Given I have DI initialized
@@ -265,16 +283,10 @@ class FeatureContext implements Context
             {
                 $thisDir = __DIR__;
                 $rootDir = dirname(__DIR__, 2);
-                if ($routes instanceof RoutingConfigurator) {
-                    $routes->import($rootDir . '/infrastructures/symfony/Resources/config/admin_*.yaml', 'glob')
-                        ->prefix('/admin');
-                    $routes->import($thisDir . '/config/routes/*.yaml', 'glob');
-                    $routes->import($rootDir . '/infrastructures/symfony/Resources/config/r*.yaml', 'glob');
-                } else {
-                    $routes->import($rootDir . '/infrastructures/symfony/Resources/config/admin_*.yaml', '/admin', 'glob');
-                    $routes->import($thisDir . '/config/routes/*.yaml', '/', 'glob');
-                    $routes->import($rootDir . '/infrastructures/symfony/Resources/config/r*.yaml', '/', 'glob');
-                }
+                $routes->import($rootDir . '/infrastructures/symfony/Resources/config/admin_*.yaml', 'glob')
+                    ->prefix('/admin');
+                $routes->import($thisDir . '/config/routes/*.yaml', 'glob');
+                $routes->import($rootDir . '/infrastructures/symfony/Resources/config/r*.yaml', 'glob');
             }
 
             protected function getContainerClass(): string
@@ -1333,6 +1345,31 @@ class FeatureContext implements Context
     }
 
     /**
+     * @Then a recovery session must be opened
+     */
+    public function aRecoverySessionMustBeOpened()
+    {
+        $container = $this->symfonyKernel->getContainer()->get(GetTokenStorageService::class);
+        if (!$container->tokenStorage) {
+            Assert::fail('The SecurityBundle is not registered in your application.');
+        }
+
+        Assert::assertNotEmpty($token = $container->tokenStorage->getToken());
+        Assert::assertInstanceOf(UserWithRecoveryAccess::class, $token->getUser());
+    }
+
+    /**
+     * @Then a session must be not opened
+     */
+    public function aSessionMustBeNotOpened()
+    {
+        $container = $this->symfonyKernel->getContainer()->get(GetTokenStorageService::class);
+        if ($container->tokenStorage) {
+            Assert::assertEmpty($token = $container->tokenStorage->getToken());
+        }
+    }
+
+    /**
      * @Given a user with password :password
      */
     public function aUserWithPassword($password)
@@ -1445,7 +1482,7 @@ class FeatureContext implements Context
         Assert::assertInstanceOf(ResponseInterface::class, $this->response);
         Assert::assertEquals(200, $this->response->getStatusCode());
 
-        $json = \json_decode((string) $this->response->getBody(), true);
+        $json = json_decode((string) $this->response->getBody(), true);
         Assert::assertNotEmpty($json['topSecret'] ?? '');
         Assert::assertEquals('totp_custom', $json['provider'] ?? '');
         Assert::assertFalse($json['enabled'] ?? 'error');
@@ -1480,9 +1517,52 @@ class FeatureContext implements Context
         Assert::assertInstanceOf(ResponseInterface::class, $this->response);
         Assert::assertEquals(200, $this->response->getStatusCode());
 
-        $json = \json_decode((string) $this->response->getBody(), true);
+        $json = json_decode((string) $this->response->getBody(), true);
         Assert::assertNotEmpty($json['topSecret'] ?? '');
         Assert::assertEquals('totp_custom', $json['provider'] ?? '');
         Assert::assertTrue($json['enabled'] ?? 'error');
+    }
+
+    private function getMailerEvents(): MessageEvents
+    {
+        return $this->symfonyKernel->getContainer()->get('mailer.message_logger_listener')->getEvents();
+    }
+
+    /**
+     * @Then no notification must be sent
+     */
+    public function noNotificationMustBeSent()
+    {
+        Assert::assertThat(
+            $this->getMailerEvents(),
+            new EmailCount(0),
+        );
+    }
+
+    /**
+     * @Then a notification must be sent
+     */
+    public function aNotificationMustBeSent()
+    {
+        Assert::assertThat(
+            $this->getMailerEvents(),
+            new EmailCount(1),
+        );
+    }
+
+    /**
+     * @When the user click on the link in the notification
+     */
+    public function theUserClickOnTheLinkInTheNotification()
+    {
+        $message = $this->getMailerEvents()->getMessages(null)[0];
+        $context = $message->getContext();
+        $actionUrl = $context['action_url'] ?? '';
+
+        Assert::assertNotEmpty($actionUrl);
+
+        $serverRequest = SfRequest::create($actionUrl, 'GET');
+
+        $this->runSymfony($serverRequest);
     }
 }

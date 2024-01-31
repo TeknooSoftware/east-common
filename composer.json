@@ -60,9 +60,7 @@
         "teknoo/immutable": "^3.0.17",
         "teknoo/states": "^6.1.5",
         "teknoo/recipe": "^4.5.2",
-        "teknoo/east-foundation": "^7.5",
-        "twig/cssinliner-extra": "^3.8",
-        "twig/inky-extra": "^3.8"
+        "teknoo/east-foundation": "^7.5"
     },
     "require-dev": {
         "ext-mongodb" : "*",
@@ -107,7 +105,9 @@
         "symfony/security-http": "^6.3||^7",
         "symfony/templating": "^6.3||^7",
         "symfony/validator": "^6.3||^7",
-        "twig/twig": "^3.8"
+        "twig/twig": "^3.8",
+        "twig/cssinliner-extra": "^3.8",
+        "twig/inky-extra": "^3.8"
     },
     "archive": {
         "exclude": ["features", "tests", "vendor", ".idea"]

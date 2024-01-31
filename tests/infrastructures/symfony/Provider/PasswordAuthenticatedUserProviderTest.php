@@ -34,7 +34,6 @@ use Teknoo\East\Common\Contracts\User\AuthDataInterface;
 use Teknoo\East\Common\Loader\UserLoader;
 use Teknoo\East\Common\Object\StoredPassword;
 use Teknoo\East\Common\Object\TOTPAuth;
-use Teknoo\East\Common\Object\User;
 use Teknoo\East\Common\Query\User\UserByEmailQuery;
 use Teknoo\East\CommonBundle\Contracts\Object\UserWithTOTPAuthInterface;
 use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;

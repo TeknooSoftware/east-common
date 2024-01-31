@@ -9,3 +9,11 @@ framework:
     enabled: false
   router:
     default_uri: 'https://teknoo.software/'
+  notifier:
+    channel_policy:
+      urgent: ['email']
+      high: ['email']
+      medium: ['email']
+      low: ['email']
+    admin_recipients:
+      - { email: 'contact@teknoo.software' }

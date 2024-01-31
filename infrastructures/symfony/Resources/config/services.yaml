@@ -8,6 +8,7 @@ parameters:
     #Provider
     teknoo.east.common.bundle.password_authenticated_user_provider.class: 'Teknoo\East\CommonBundle\Provider\PasswordAuthenticatedUserProvider'
     teknoo.east.common.bundle.third_party_authenticated_user_provider.class: 'Teknoo\East\CommonBundle\Provider\ThirdPartyAuthenticatedUserProvider'
+    teknoo.east.common.bundle.user_with_recovery_access_provider.class: 'Teknoo\East\CommonBundle\Provider\RecoveringAccessUserProvider'
     teknoo.east.common.bundle.password_authenticated_user_provider.default_algo: 'sodium'
 
     #Authenticator
@@ -15,6 +16,10 @@ parameters:
 
     #Writer
     teknoo.east.common.bundle.writer.user.class: 'Teknoo\East\CommonBundle\Writer\SymfonyUserWriter'
+
+    teknoo.east.common.bundle.recovery.notification.subject: 'teknoo.space.common.recovery_access.notification.subject'
+    teknoo.east.common.bundle.recovery.role: 'ROLE_RECOVERY'
+    teknoo.east.common.bundle.recovery.notification_class: 'Symfony\Component\Security\Http\LoginLink\LoginLinkNotification'
 
     #Assets
     teknoo.east.common.assets.no_overwrite: true
@@ -27,17 +32,18 @@ parameters:
     teknoo.east.common.bundle.allowed_forms: []
 
     #Bowls
-    teknoo.east.common.endpoint.2fa_totp_enable.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
     teknoo.east.common.endpoint.2fa_totp_disable.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
+    teknoo.east.common.endpoint.2fa_totp_enable.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
     teknoo.east.common.endpoint.2fa_totp_qrcode.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
     teknoo.east.common.endpoint.2fa_totp_validate.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
     teknoo.east.common.endpoint.crud.delete.bowl.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
     teknoo.east.common.endpoint.crud.edit.bowl.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
     teknoo.east.common.endpoint.crud.list.bowl.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
     teknoo.east.common.endpoint.crud.new.bowl.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
-    teknoo.east.common.endpoint.static.bowl.class: 'Teknoo\Recipe\Bowl\RecipeBowl'
     teknoo.east.common.endpoint.media.bowl.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
     teknoo.east.common.endpoint.minifier.bowl.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
+    teknoo.east.common.endpoint.static.bowl.class: 'Teknoo\Recipe\Bowl\RecipeBowl'
+    teknoo.east.common.endpoint.user_recovery.prepare.bowl.class: 'Teknoo\Recipe\Bowl\FiberRecipeBowl'
 
 services:
     #Generic Endpoints
@@ -52,34 +58,6 @@ services:
         public: true
         arguments:
             - '@teknoo.east.common.endpoint.static.bowl'
-            - '@service_container'
-
-    #Media
-    teknoo.east.common.endpoint.media.bowl:
-        class: '%teknoo.east.common.endpoint.media.bowl.class%'
-        arguments:
-            - '@Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderMediaEndPointInterface'
-            - 0
-
-    teknoo.east.common.endpoint.media:
-        class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
-        public: true
-        arguments:
-            - '@teknoo.east.common.endpoint.media.bowl'
-            - '@service_container'
-
-    #Minifier
-    teknoo.east.common.endpoint.minifier.bowl:
-        class: '%teknoo.east.common.endpoint.minifier.bowl.class%'
-        arguments:
-            - '@Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierEndPointInterface'
-            - 0
-
-    teknoo.east.common.endpoint.minifier:
-        class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
-        public: true
-        arguments:
-            - '@teknoo.east.common.endpoint.minifier.bowl'
             - '@service_container'
 
     #2FA
@@ -134,7 +112,7 @@ services:
         arguments:
             - '@teknoo.east.common.endpoint.2fa_totp_validate.bowl'
             - '@service_container'
-    
+
     #CRUD endpoints
     teknoo.east.common.endpoint.crud.delete.bowl:
         class: '%teknoo.east.common.endpoint.crud.delete.bowl.class%'
@@ -189,6 +167,48 @@ services:
             - '@teknoo.east.common.endpoint.crud.new.bowl'
             - '@service_container'
 
+    #Media
+    teknoo.east.common.endpoint.media.bowl:
+        class: '%teknoo.east.common.endpoint.media.bowl.class%'
+        arguments:
+            - '@Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderMediaEndPointInterface'
+            - 0
+
+    teknoo.east.common.endpoint.media:
+        class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
+        public: true
+        arguments:
+            - '@teknoo.east.common.endpoint.media.bowl'
+            - '@service_container'
+
+    #Minifier
+    teknoo.east.common.endpoint.minifier.bowl:
+        class: '%teknoo.east.common.endpoint.minifier.bowl.class%'
+        arguments:
+            - '@Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierEndPointInterface'
+            - 0
+
+    teknoo.east.common.endpoint.minifier:
+        class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
+        public: true
+        arguments:
+            - '@teknoo.east.common.endpoint.minifier.bowl'
+            - '@service_container'
+
+    #User Recovery
+    teknoo.east.common.endpoint.user_recovery.prepare.bowl:
+        class: '%teknoo.east.common.endpoint.user_recovery.prepare.bowl.class%'
+        arguments:
+            - '@Teknoo\East\Common\Contracts\Recipe\Cookbook\PrepareRecoveryAccessEndPointInterface'
+            - 0
+
+    teknoo.east.common.endpoint.user_recovery.prepare:
+        class: 'Teknoo\East\Foundation\EndPoint\RecipeEndPoint'
+        public: true
+        arguments:
+            - '@teknoo.east.common.endpoint.user_recovery.prepare.bowl'
+            - '@service_container'
+
     #Steps
     Teknoo\East\CommonBundle\Recipe\Step\SearchFormLoader:
         class: 'Teknoo\East\CommonBundle\Recipe\Step\SearchFormLoader'
@@ -200,7 +220,7 @@ services:
     Teknoo\East\CommonBundle\Recipe\Step\FormHandling:
         class: 'Teknoo\East\CommonBundle\Recipe\Step\FormHandling'
         arguments:
-            - '@Teknoo\East\Common\Service\DatesService'
+            - '@Teknoo\East\Foundation\Time\DatesService'
             - '@form.factory'
         public: true
 
@@ -238,6 +258,20 @@ services:
             - '@Teknoo\East\CommonBundle\Writer\SymfonyUserWriter'
             - '@security.token_storage'
 
+    Teknoo\East\Common\Contracts\Recipe\Step\User\NotifyUserAboutRecoveryAccessInterface:
+        alias: 'Teknoo\East\CommonBundle\Recipe\Step\RecoveryAccessNotification'
+        public: true
+
+    Teknoo\East\CommonBundle\Recipe\Step\RecoveryAccessNotification:
+        class: 'Teknoo\East\CommonBundle\Recipe\Step\RecoveryAccessNotification'
+        public: true
+        arguments:
+            - '@Symfony\Component\Security\Http\LoginLink\LoginLinkHandlerInterface'
+            - '@notifier'
+            - '@translator'
+            - '%teknoo.east.common.bundle.recovery.notification.subject%'
+            - '%teknoo.east.common.bundle.recovery.role%'
+
     #Provider
     Teknoo\East\CommonBundle\Provider\PasswordAuthenticatedUserProvider:
         class: '%teknoo.east.common.bundle.password_authenticated_user_provider.class%'
@@ -249,6 +283,14 @@ services:
         class: '%teknoo.east.common.bundle.third_party_authenticated_user_provider.class%'
         arguments:
             - '@Teknoo\East\Common\Loader\UserLoader'
+
+
+    Teknoo\East\CommonBundle\Provider\RecoveringAccessUserProvider:
+        class: '%teknoo.east.common.bundle.user_with_recovery_access_provider.class%'
+        arguments:
+            - '@Teknoo\East\Common\Loader\UserLoader'
+            - '@Teknoo\East\CommonBundle\Writer\SymfonyUserWriter'
+            - '%teknoo.east.common.bundle.recovery.role%'
 
     #Command
     Teknoo\East\CommonBundle\Command\CreateUserCommand:

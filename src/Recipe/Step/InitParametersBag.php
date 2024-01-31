@@ -44,7 +44,7 @@ class InitParametersBag
     public function __invoke(ManagerInterface $manager): self
     {
         $manager->updateWorkPlan([
-            ParametersBag::class => new ParametersBag()
+            ParametersBag::class => new ParametersBag(),
         ]);
 
         return $this;

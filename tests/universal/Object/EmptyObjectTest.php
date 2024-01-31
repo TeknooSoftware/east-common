@@ -36,7 +36,7 @@ use Teknoo\East\Common\Object\EmptyObject;
  */
 class EmptyObjectTest extends TestCase
 {
-    public function testGetHash()
+    public function testConstructor()
     {
         self::assertInstanceOf(
             ObjectInterface::class,

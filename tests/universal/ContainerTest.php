@@ -40,6 +40,7 @@ use Teknoo\East\Common\Contracts\Recipe\Cookbook\EditObjectEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\ListObjectEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierCommandInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Cookbook\PrepareRecoveryAccessEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderMediaEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderStaticContentEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormHandlingInterface;
@@ -50,6 +51,7 @@ use Teknoo\East\Common\Contracts\Recipe\Step\ObjectAccessControlInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RenderFormInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\SearchFormLoaderInterface;
+use Teknoo\East\Common\Contracts\Recipe\Step\User\NotifyUserAboutRecoveryAccessInterface;
 use Teknoo\East\Common\Loader\MediaLoader;
 use Teknoo\East\Common\Loader\UserLoader;
 use Teknoo\East\Common\Recipe\Cookbook\CreateObjectEndPoint;
@@ -58,6 +60,7 @@ use Teknoo\East\Common\Recipe\Cookbook\EditObjectEndPoint;
 use Teknoo\East\Common\Recipe\Cookbook\ListObjectEndPoint;
 use Teknoo\East\Common\Recipe\Cookbook\MinifierCommand;
 use Teknoo\East\Common\Recipe\Cookbook\MinifierEndPoint;
+use Teknoo\East\Common\Recipe\Cookbook\PrepareRecoveryAccessEndPoint;
 use Teknoo\East\Common\Recipe\Cookbook\RenderMediaEndPoint;
 use Teknoo\East\Common\Recipe\Cookbook\RenderStaticContentEndPoint;
 use Teknoo\East\Common\Recipe\Step\CreateObject;
@@ -72,6 +75,7 @@ use Teknoo\East\Common\Recipe\Step\FrontAsset\MinifyAssets;
 use Teknoo\East\Common\Recipe\Step\FrontAsset\PersistAsset;
 use Teknoo\East\Common\Recipe\Step\FrontAsset\ReturnFile;
 use Teknoo\East\Common\Recipe\Step\JumpIf;
+use Teknoo\East\Common\Recipe\Step\JumpIfNot;
 use Teknoo\East\Common\Recipe\Step\LoadListObjects;
 use Teknoo\East\Common\Recipe\Step\LoadMedia;
 use Teknoo\East\Common\Recipe\Step\LoadObject;
@@ -82,6 +86,9 @@ use Teknoo\East\Common\Recipe\Step\SaveObject;
 use Teknoo\East\Common\Recipe\Step\SendMedia;
 use Teknoo\East\Common\Recipe\Step\SlugPreparation;
 use Teknoo\East\Common\Recipe\Step\Stop;
+use Teknoo\East\Common\Recipe\Step\User\FindUserByEmail;
+use Teknoo\East\Common\Recipe\Step\User\PrepareRecoveryAccess;
+use Teknoo\East\Common\Recipe\Step\User\RemoveRecoveryAccess;
 use Teknoo\East\Common\Service\DeletingService;
 use Teknoo\East\Common\Writer\MediaWriter;
 use Teknoo\East\Common\Writer\UserWriter;
@@ -368,6 +375,16 @@ class ContainerTest extends TestCase
         );
     }
 
+    public function testJumpIfNot()
+    {
+        $container = $this->buildContainer();
+
+        self::assertInstanceOf(
+            JumpIfNot::class,
+            $container->get(JumpIfNot::class)
+        );
+    }
+
     public function testStop()
     {
         $container = $this->buildContainer();
@@ -454,6 +471,39 @@ class ContainerTest extends TestCase
         );
     }
 
+    public function testFindUserByEmail()
+    {
+        $container = $this->buildContainer();
+
+        self::assertInstanceOf(
+            FindUserByEmail::class,
+            $container->get(FindUserByEmail::class)
+        );
+    }
+
+
+    public function testPrepareRecoveryAccess()
+    {
+        $container = $this->buildContainer();
+
+        self::assertInstanceOf(
+            PrepareRecoveryAccess::class,
+            $container->get(PrepareRecoveryAccess::class)
+        );
+    }
+
+
+    public function testRemoveRecoveryAccess()
+    {
+        $container = $this->buildContainer();
+
+        self::assertInstanceOf(
+            RemoveRecoveryAccess::class,
+            $container->get(RemoveRecoveryAccess::class)
+        );
+    }
+
+
     public function testSlugPreparation()
     {
         $container = $this->buildContainer();
@@ -464,7 +514,7 @@ class ContainerTest extends TestCase
         );
     }
 
-    public function testCreateContentEndPoint()
+    public function testCreateObjectEndPoint()
     {
         $container = $this->buildContainer();
         $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
@@ -489,7 +539,7 @@ class ContainerTest extends TestCase
         );
     }
 
-    public function testCreateContentEndPointWithAccessControl()
+    public function testCreateObjectEndPointWithAccessControl()
     {
         $container = $this->buildContainer();
         $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
@@ -514,7 +564,7 @@ class ContainerTest extends TestCase
         );
     }
 
-    public function testDeleteContentEndPoint()
+    public function testDeleteObjectEndPoint()
     {
         $container = $this->buildContainer();
         $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
@@ -536,7 +586,7 @@ class ContainerTest extends TestCase
         );
     }
 
-    public function testDeleteContentEndPointWithAccessControl()
+    public function testDeleteObjectEndPointWithAccessControl()
     {
         $container = $this->buildContainer();
         $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
@@ -558,7 +608,7 @@ class ContainerTest extends TestCase
         );
     }
 
-    public function testEditContentEndPoint()
+    public function testEditObjectEndPoint()
     {
         $container = $this->buildContainer();
         $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
@@ -582,7 +632,7 @@ class ContainerTest extends TestCase
         );
     }
 
-    public function testEditContentEndPointWithAccessControl()
+    public function testEditObjectEndPointWithAccessControl()
     {
         $container = $this->buildContainer();
         $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
@@ -606,7 +656,7 @@ class ContainerTest extends TestCase
         );
     }
 
-    public function testListContentEndPointWithoutFormLoader()
+    public function testListObjectEndPointWithoutFormLoader()
     {
         $container = $this->buildContainer();
         $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
@@ -628,7 +678,7 @@ class ContainerTest extends TestCase
         );
     }
 
-    public function testListContentEndPointWithFormLoader()
+    public function testListObjectEndPointWithFormLoader()
     {
         $container = $this->buildContainer();
         $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
@@ -650,7 +700,7 @@ class ContainerTest extends TestCase
         );
     }
 
-    public function testListContentEndPointWithAccessControl()
+    public function testListObjectEndPointWithAccessControl()
     {
         $container = $this->buildContainer();
         $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
@@ -752,6 +802,36 @@ class ContainerTest extends TestCase
         self::assertInstanceOf(
             RenderMediaEndPointInterface::class,
             $container->get(RenderMediaEndPointInterface::class)
+        );
+    }
+
+    public function testPrepareRecoveryAccessEndPoint()
+    {
+        $container = $this->buildContainer();
+        $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
+        $container->set(CreateObject::class, $this->createMock(CreateObject::class));
+        $container->set(FormHandlingInterface::class, $this->createMock(FormHandlingInterface::class));
+        $container->set(FormProcessingInterface::class, $this->createMock(FormProcessingInterface::class));
+        $container->set(FindUserByEmail::class, $this->createMock(FindUserByEmail::class));
+        $container->set(JumpIf::class, $this->createMock(JumpIf::class));
+        $container->set(RemoveRecoveryAccess::class, $this->createMock(RemoveRecoveryAccess::class));
+        $container->set(PrepareRecoveryAccess::class, $this->createMock(PrepareRecoveryAccess::class));
+        $container->set(SaveObject::class, $this->createMock(SaveObject::class));
+        $container->set(NotifyUserAboutRecoveryAccessInterface::class, $this->createMock(NotifyUserAboutRecoveryAccessInterface::class));
+        $container->set(Render::class, $this->createMock(Render::class));
+        $container->set(Stop::class, $this->createMock(Stop::class));
+        $container->set(RenderFormInterface::class, $this->createMock(RenderFormInterface::class));
+        $container->set(RenderError::class, $this->createMock(RenderError::class));
+        $container->set('teknoo.east.common.cookbook.default_error_template', 'foo.template');
+
+        self::assertInstanceOf(
+            PrepareRecoveryAccessEndPoint::class,
+            $container->get(PrepareRecoveryAccessEndPoint::class)
+        );
+
+        self::assertInstanceOf(
+            PrepareRecoveryAccessEndPointInterface::class,
+            $container->get(PrepareRecoveryAccessEndPointInterface::class)
         );
     }
 }

@@ -30,6 +30,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Teknoo\East\Common\Object\User;
 use Teknoo\East\Common\Object\User as BaseUser;
 
+use function hash;
 use function is_array;
 use function iterator_to_array;
 
@@ -66,6 +67,16 @@ abstract class AbstractUser implements
     public function getUserIdentifier(): string
     {
         return $this->user->getUserIdentifier();
+    }
+
+    public function getEmail(): string
+    {
+        return $this->user->getEmail();
+    }
+
+    public function getHash(): string
+    {
+        return hash('sha256', $this->getEmail());
     }
 
     public function getWrappedUser(): User

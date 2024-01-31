@@ -25,13 +25,13 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\CommonBundle\Object;
 
-use PHPUnit\Framework\TestCase;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
+use PHPUnit\Framework\MockObject\MockObject;
+use stdClass;
 use Teknoo\East\Common\Object\StoredPassword;
 use Teknoo\East\CommonBundle\Object\AbstractUser;
 use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
 use Teknoo\East\Common\Object\User as BaseUser;
+use TypeError;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -47,7 +47,7 @@ class PasswordAuthenticatedUserTest extends AbstractPasswordAuthUserTests
     private ?StoredPassword $storedPassword = null;
 
     /**
-     * @return BaseUser|\PHPUnit\Framework\MockObject\MockObject
+     * @return BaseUser|MockObject
      */
     public function getUser(): BaseUser
     {
@@ -61,7 +61,7 @@ class PasswordAuthenticatedUserTest extends AbstractPasswordAuthUserTests
     }
 
     /**
-     * @return StoredPassword|\PHPUnit\Framework\MockObject\MockObject
+     * @return StoredPassword|MockObject
      */
     public function getStoredPassword(): StoredPassword
     {
@@ -79,14 +79,14 @@ class PasswordAuthenticatedUserTest extends AbstractPasswordAuthUserTests
 
     public function testExceptionWithBadUser()
     {
-        $this->expectException(\TypeError::class);
-        new PasswordAuthenticatedUser(new \stdClass(), $this->getStoredPassword());
+        $this->expectException(TypeError::class);
+        new PasswordAuthenticatedUser(new stdClass(), $this->getStoredPassword());
     }
 
     public function testExceptionWithBadStoredPassword()
     {
-        $this->expectException(\TypeError::class);
-        new PasswordAuthenticatedUser($this->getUser(), new \stdClass());
+        $this->expectException(TypeError::class);
+        new PasswordAuthenticatedUser($this->getUser(), new stdClass());
     }
 
     public function testGetPasswordHasherName()

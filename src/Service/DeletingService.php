@@ -28,6 +28,7 @@ namespace Teknoo\East\Common\Service;
 use Teknoo\East\Common\Contracts\Object\DeletableInterface;
 use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Common\Contracts\Writer\WriterInterface;
+use Teknoo\East\Foundation\Time\DatesService as CommonDatesService;
 
 /**
  * Generic deleting service to delete an object (soft deletable or not) thanks to dedicated writer service to the
@@ -47,7 +48,7 @@ class DeletingService
      */
     public function __construct(
         private readonly WriterInterface $writer,
-        private readonly DatesService $datesService,
+        private readonly CommonDatesService $datesService,
     ) {
     }
 

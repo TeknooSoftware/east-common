@@ -86,7 +86,7 @@ class RenderList
                 'page' => $page,
                 'pageCount' => $pageCount,
                 'queryParams' => $request->getQueryParams(),
-                'searchForm' => $searchForm
+                'searchForm' => $searchForm,
             ] + $viewParameters,
             api: $api,
             cleanHtml: $cleanHtml ?? $this->defaultCleanHtml,

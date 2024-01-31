@@ -25,11 +25,11 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\CommonBundle\Object;
 
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
+use PHPUnit\Framework\MockObject\MockObject;
+use stdClass;
 use Teknoo\East\Common\Object\StoredPassword;
-use Teknoo\East\Common\Object\User;
 use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
+use TypeError;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -40,7 +40,7 @@ abstract class AbstractPasswordAuthUserTests extends AbstractUserTests
     private ?StoredPassword $storedPassword = null;
 
     /**
-     * @return StoredPassword|\PHPUnit\Framework\MockObject\MockObject
+     * @return StoredPassword|MockObject
      */
     public function getStoredPassword(): StoredPassword
     {
@@ -53,14 +53,14 @@ abstract class AbstractPasswordAuthUserTests extends AbstractUserTests
 
     public function testExceptionWithBadUser()
     {
-        $this->expectException(\TypeError::class);
-        new PasswordAuthenticatedUser(new \stdClass(), $this->getStoredPassword());
+        $this->expectException(TypeError::class);
+        new PasswordAuthenticatedUser(new stdClass(), $this->getStoredPassword());
     }
 
     public function testExceptionWithBadStoredPassword()
     {
-        $this->expectException(\TypeError::class);
-        new PasswordAuthenticatedUser($this->getUser(), new \stdClass());
+        $this->expectException(TypeError::class);
+        new PasswordAuthenticatedUser($this->getUser(), new stdClass());
     }
 
     public function testGetPassword()

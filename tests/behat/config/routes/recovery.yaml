@@ -1,0 +1,2 @@
+common_recovery:
+    resource: '@TeknooEastCommonBundle/Resources/config/user_recovery_routing.yaml'

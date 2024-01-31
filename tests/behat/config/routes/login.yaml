@@ -13,9 +13,20 @@ user_common_home:
     defaults:
         _controller: 'teknoo.east.common.endpoint.static'
 
+user_common_limited:
+    path: '/user/limited'
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.static'
+
 user_common_check:
     path: '/user/check'
     methods: ['POST']
+
+user_common_autologin:
+    path: '/user/auto-login'
+    schemes: [https]
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.static'
 
 user_index:
     path: '/'

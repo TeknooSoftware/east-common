@@ -1,0 +1,97 @@
+<?php
+
+/*
+ * East Common.
+ *
+ * LICENSE
+ *
+ * This source file is subject to the MIT license
+ * it is available in LICENSE file at the root of this package
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to richard@teknoo.software so we can send you a copy immediately.
+ *
+ *
+ * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
+ *
+ * @link        http://teknoo.software/east/common Project website
+ *
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richard@teknoo.software>
+ */
+
+declare(strict_types=1);
+
+namespace Teknoo\East\CommonBundle\Recipe\Step;
+
+use Symfony\Component\Notifier\NotifierInterface;
+use Symfony\Component\Notifier\Recipient\Recipient;
+use Symfony\Component\Security\Http\LoginLink\LoginLinkHandlerInterface;
+use Symfony\Component\Security\Http\LoginLink\LoginLinkNotification;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Teknoo\East\Common\Contracts\Recipe\Step\User\NotifyUserAboutRecoveryAccessInterface;
+use Teknoo\East\Common\Object\RecoveryAccess;
+use Teknoo\East\Common\Object\User;
+use Teknoo\East\CommonBundle\Object\UserWithRecoveryAccess;
+use Teknoo\East\CommonBundle\Recipe\Step\Exception\InvalidClassException;
+use Teknoo\East\Foundation\Client\ClientInterface;
+use Teknoo\East\Foundation\Manager\ManagerInterface;
+
+use function is_a;
+
+/**
+ * Symfony implementation of NotifyUserAboutRecoveryAccessInterface to create a LoginLink for the user and notify it
+ * via Symfony Notify (default by email, configurable in the final symfony app).
+ * The notification class, (by default `LoginLinkNotification`) can be overrided in the workplan witht
+ * the key `$recoveryNotificationClass`.
+ * The step require the translation key for the notification subjet and the Symfony User temporary Role to set with
+ * this user (to prevent full access with an non authicated user).
+ *
+ * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richard@teknoo.software>
+ */
+class RecoveryAccessNotification implements NotifyUserAboutRecoveryAccessInterface
+{
+    public function __construct(
+        private LoginLinkHandlerInterface $loginLinkHandler,
+        private NotifierInterface $notifier,
+        private TranslatorInterface $translator,
+        private readonly string $recoveryNotificationSubject,
+        private readonly string $recoveryAccessRole,
+    ) {
+    }
+
+    public function __invoke(
+        ManagerInterface $manager,
+        ClientInterface $client,
+        User $user,
+        RecoveryAccess $recoveryAccess,
+        string $recoveryNotificationClass = LoginLinkNotification::class,
+    ): NotifyUserAboutRecoveryAccessInterface {
+        if (!is_a($recoveryNotificationClass, LoginLinkNotification::class, true)) {
+            throw new InvalidClassException(
+                "Error, `{$recoveryNotificationClass}` is not a " . LoginLinkNotification::class . 'notification',
+            );
+        }
+
+        $sfUser = new UserWithRecoveryAccess($user, $recoveryAccess, $this->recoveryAccessRole);
+
+        $loginLinkDetails = $this->loginLinkHandler->createLoginLink(
+            user: $sfUser,
+        );
+
+        $notification = new $recoveryNotificationClass(
+            loginLinkDetails: $loginLinkDetails,
+            subject: (string) $this->translator->trans($this->recoveryNotificationSubject),
+        );
+
+        $recipient = new Recipient($user->getEmail());
+
+        $this->notifier->send($notification, $recipient);
+
+        return $this;
+    }
+}

@@ -15,6 +15,16 @@ services:
   Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface:
     synthetic: true
 
+  mailer.message_logger_listener:
+    alias: 'Symfony\Component\Mailer\EventListener\MessageLoggerListener'
+    public: true
+
+  Symfony\Component\Mailer\EventListener\MessageLoggerListener:
+    public: true
+    tags:
+      - {name: 'kernel.event_subscriber'}
+      - {name: 'kernel.reset', 'method': 'reset'}
+
   Psr\Log\LoggerInterface:
     alias: 'logger'
 
@@ -37,3 +47,6 @@ services:
     public: true
     arguments:
       - '@?security.token_storage'
+
+  Teknoo\Tests\East\Common\Behat\Events\BehatSubscriber:
+    tags: {name: 'kernel.event_subscriber'}

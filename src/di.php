@@ -37,6 +37,7 @@ use Teknoo\East\Common\Contracts\Recipe\Cookbook\EditObjectEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\ListObjectEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierCommandInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Cookbook\PrepareRecoveryAccessEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderMediaEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderStaticContentEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormHandlingInterface;
@@ -47,6 +48,7 @@ use Teknoo\East\Common\Contracts\Recipe\Step\ObjectAccessControlInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RenderFormInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\SearchFormLoaderInterface;
+use Teknoo\East\Common\Contracts\Recipe\Step\User\NotifyUserAboutRecoveryAccessInterface;
 use Teknoo\East\Common\Loader\MediaLoader;
 use Teknoo\East\Common\Loader\UserLoader;
 use Teknoo\East\Common\Middleware\LocaleMiddleware;
@@ -56,6 +58,7 @@ use Teknoo\East\Common\Recipe\Cookbook\EditObjectEndPoint;
 use Teknoo\East\Common\Recipe\Cookbook\ListObjectEndPoint;
 use Teknoo\East\Common\Recipe\Cookbook\MinifierCommand;
 use Teknoo\East\Common\Recipe\Cookbook\MinifierEndPoint;
+use Teknoo\East\Common\Recipe\Cookbook\PrepareRecoveryAccessEndPoint;
 use Teknoo\East\Common\Recipe\Cookbook\RenderMediaEndPoint;
 use Teknoo\East\Common\Recipe\Cookbook\RenderStaticContentEndPoint;
 use Teknoo\East\Common\Recipe\Step\CreateObject;
@@ -71,6 +74,7 @@ use Teknoo\East\Common\Recipe\Step\FrontAsset\PersistAsset;
 use Teknoo\East\Common\Recipe\Step\FrontAsset\ReturnFile;
 use Teknoo\East\Common\Recipe\Step\InitParametersBag;
 use Teknoo\East\Common\Recipe\Step\JumpIf;
+use Teknoo\East\Common\Recipe\Step\JumpIfNot;
 use Teknoo\East\Common\Recipe\Step\LoadListObjects;
 use Teknoo\East\Common\Recipe\Step\LoadMedia;
 use Teknoo\East\Common\Recipe\Step\LoadObject;
@@ -81,13 +85,18 @@ use Teknoo\East\Common\Recipe\Step\SaveObject;
 use Teknoo\East\Common\Recipe\Step\SendMedia;
 use Teknoo\East\Common\Recipe\Step\SlugPreparation;
 use Teknoo\East\Common\Recipe\Step\Stop;
+use Teknoo\East\Common\Recipe\Step\User\FindUserByEmail;
+use Teknoo\East\Common\Recipe\Step\User\PrepareRecoveryAccess;
+use Teknoo\East\Common\Recipe\Step\User\RemoveRecoveryAccess;
 use Teknoo\East\Common\Service\DatesService;
 use Teknoo\East\Common\Service\DeletingService;
 use Teknoo\East\Common\Service\FindSlugService;
+use Teknoo\East\Common\User\RecoveryAccess\TimeLimitedToken;
 use Teknoo\East\Common\Writer\MediaWriter;
 use Teknoo\East\Common\Writer\UserWriter;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
+use Teknoo\East\Foundation\Time\DatesService as CommonDatesService;
 use Teknoo\Recipe\Recipe;
 use Teknoo\Recipe\RecipeInterface as OriginalRecipeInterface;
 
@@ -105,19 +114,27 @@ return [
 
     //Writer
     UserWriter::class => create(UserWriter::class)
-        ->constructor(get(ManagerInterface::class), get(DatesService::class)),
+        ->constructor(get(ManagerInterface::class), get(CommonDatesService::class)),
     MediaWriter::class => create(MediaWriter::class)
-        ->constructor(get(ManagerInterface::class), get(DatesService::class)),
+        ->constructor(get(ManagerInterface::class), get(CommonDatesService::class)),
 
     //Deleting
     'teknoo.east.common.deleting.user' => create(DeletingService::class)
-        ->constructor(get(UserWriter::class), get(DatesService::class)),
+        ->constructor(get(UserWriter::class), get(CommonDatesService::class)),
     'teknoo.east.common.deleting.media' => create(DeletingService::class)
-        ->constructor(get(MediaWriter::class), get(DatesService::class)),
+        ->constructor(get(MediaWriter::class), get(CommonDatesService::class)),
 
     //Service
     FindSlugService::class => create(FindSlugService::class),
     DatesService::class => create(DatesService::class),
+
+    //User
+    'teknoo.east.common.user.recovery.time_limited.delay' => '1 hour',
+    TimeLimitedToken::class => create(TimeLimitedToken::class)
+        ->constructor(
+            get(CommonDatesService::class),
+            get('teknoo.east.common.user.recovery.time_limited.delay'),
+        ),
 
     //Middleware
     RecipeInterface::class => decorate(static function ($previous, ContainerInterface $container) {
@@ -155,6 +172,7 @@ return [
     ExtractSlug::class => create(),
     InitParametersBag::class => create(),
     JumpIf::class => create(),
+    JumpIfNot::class => create(),
     LoadListObjects::class => create(),
     LoadMedia::class => create()
         ->constructor(
@@ -211,10 +229,15 @@ return [
             get(StreamFactoryInterface::class),
             get(ResponseFactoryInterface::class),
         ),
+    FindUserByEmail::class => create(),
+    PrepareRecoveryAccess::class => create(),
+    RemoveRecoveryAccess::class => create(),
 
     //Base recipe
     OriginalRecipeInterface::class . ':CRUD' => get(OriginalRecipeInterface::class),
     OriginalRecipeInterface::class . ':Static' => get(OriginalRecipeInterface::class),
+    OriginalRecipeInterface::class . ':Asset' => get(OriginalRecipeInterface::class),
+    OriginalRecipeInterface::class . ':Auth' => get(OriginalRecipeInterface::class),
     OriginalRecipeInterface::class => get(Recipe::class),
     Recipe::class => create(),
 
@@ -339,7 +362,7 @@ return [
         }
 
         return new MinifierEndPoint(
-            $container->get(OriginalRecipeInterface::class . ':CRUD'),
+            $container->get(OriginalRecipeInterface::class . ':Asset'),
             $container->get(ComputePath::class),
             $container->get(LoadPersistedAsset::class),
             $container->get(JumpIf::class),
@@ -351,6 +374,35 @@ return [
             $defaultErrorTemplate,
         );
     },
+
+    PrepareRecoveryAccessEndPointInterface::class => get(PrepareRecoveryAccessEndPoint::class),
+    PrepareRecoveryAccessEndPoint::class => static function (
+        ContainerInterface $container
+    ): PrepareRecoveryAccessEndPoint {
+        $defaultErrorTemplate = null;
+        if ($container->has('teknoo.east.common.cookbook.default_error_template')) {
+            $defaultErrorTemplate = $container->get('teknoo.east.common.cookbook.default_error_template');
+        }
+
+        return new PrepareRecoveryAccessEndPoint(
+            $container->get(OriginalRecipeInterface::class . ':Auth'),
+            $container->get(CreateObject::class),
+            $container->get(FormHandlingInterface::class),
+            $container->get(FormProcessingInterface::class),
+            $container->get(FindUserByEmail::class),
+            $container->get(JumpIfNot::class),
+            $container->get(RemoveRecoveryAccess::class),
+            $container->get(PrepareRecoveryAccess::class),
+            $container->get(SaveObject::class),
+            $container->get(NotifyUserAboutRecoveryAccessInterface::class),
+            $container->get(Render::class),
+            $container->get(Stop::class),
+            $container->get(RenderFormInterface::class),
+            $container->get(RenderError::class),
+            $defaultErrorTemplate,
+        );
+    },
+
     RenderStaticContentEndPointInterface::class => get(RenderStaticContentEndPoint::class),
     RenderStaticContentEndPoint::class => static function (ContainerInterface $container): RenderStaticContentEndPoint {
         $defaultErrorTemplate = null;

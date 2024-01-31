@@ -25,10 +25,12 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\CommonBundle\Object;
 
+use PHPUnit\Framework\MockObject\MockObject;
+use stdClass;
 use Teknoo\East\Common\Object\ThirdPartyAuth;
 use Teknoo\East\CommonBundle\Object\ThirdPartyAuthenticatedUser;
-use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
 use Teknoo\East\Common\Object\User as BaseUser;
+use TypeError;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
@@ -43,7 +45,7 @@ class ThirdPartyAuthenticatedUserTest extends AbstractUserTests
     private ?ThirdPartyAuth $thirdPartyAuth = null;
 
     /**
-     * @return BaseUser|\PHPUnit\Framework\MockObject\MockObject
+     * @return BaseUser|MockObject
      */
     public function getUser(): BaseUser
     {
@@ -57,7 +59,7 @@ class ThirdPartyAuthenticatedUserTest extends AbstractUserTests
     }
 
     /**
-     * @return ThirdPartyAuth|\PHPUnit\Framework\MockObject\MockObject
+     * @return ThirdPartyAuth|MockObject
      */
     public function getThirdPartyAuth(): ThirdPartyAuth
     {
@@ -75,14 +77,14 @@ class ThirdPartyAuthenticatedUserTest extends AbstractUserTests
 
     public function testExceptionWithBadUser()
     {
-        $this->expectException(\TypeError::class);
-        new PasswordAuthenticatedUser(new \stdClass(), $this->getThirdPartyAuth());
+        $this->expectException(TypeError::class);
+        new ThirdPartyAuthenticatedUser(new stdClass(), $this->getThirdPartyAuth());
     }
 
     public function testExceptionWithBadThirdPartyAuth()
     {
-        $this->expectException(\TypeError::class);
-        new PasswordAuthenticatedUser($this->getUser(), new \stdClass());
+        $this->expectException(TypeError::class);
+        new ThirdPartyAuthenticatedUser($this->getUser(), new stdClass());
     }
 
     public function testGetWrappedThirdAuth()
@@ -111,5 +113,4 @@ class ThirdPartyAuthenticatedUserTest extends AbstractUserTests
         $this->buildObject()->eraseCredentials();
         self::assertTrue(true);
     }
-
 }

@@ -8,22 +8,25 @@ parameters:
             path: infrastructures/doctrine/di.php
         -
             message: '#mixed#'
-            path: infrastructures/symfony/Resources/config/di.php
-        -
-            message: '#mixed#'
             path: infrastructures/flysystem/di.php
         -
             message: '#\$fieldName of method [a-zA-Z0-9\\_]+::sort\(\)#'
             path: infrastructures/doctrine/DBSource/ODM/RepositoryTrait.php
         -
+            message: '#mixed#'
+            path: infrastructures/symfony/Resources/config/di.php
+        -
             message: '#[a-zA-Z0-9\\_]+::cook\(\) expects \(callable\(\): mixed\)|[a-zA-Z0-9\\_]+#'
             path: src/di.php
+        -
+            message: '#::\$type is never read, only written#'
+            path: src/Object
         -
             message: '#Method [a-zA-Z0-9\\_]+::__construct\(\) has parameter \$values with no value type specified in iterable type array#'
             path: src/Query/Expr/InclusiveOr.php
         -
-            message: '#::\$type is never read, only written#'
-            path: src/Object
+            message: '#query of method#'
+            path: src/Recipe/Step/User/FindUserByEmail.php
         -
             message: '#Closure\(string\): string given#'
             path: src/Service/FindSlugService.php

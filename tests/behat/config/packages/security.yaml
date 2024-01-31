@@ -1,10 +1,13 @@
 security:
     role_hierarchy:
         ROLE_USER: ~
+        ROLE_RECOVERY: ~
 
     providers:
         with_password:
             id: 'Teknoo\East\CommonBundle\Provider\PasswordAuthenticatedUserProvider'
+        with_recovery_access:
+            id: 'Teknoo\East\CommonBundle\Provider\RecoveringAccessUserProvider'
 
     password_hashers:
         Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser:
@@ -18,6 +21,11 @@ security:
         #require user role for all others pages
         user_area:
             pattern: '^/user'
+            login_link:
+                provider: 'with_recovery_access'
+                check_route: 'user_common_autologin'
+                signature_properties: ['userIdentifier', 'hash']
+                default_target_path: 'user_common_limited'
             form_login:
                 provider: 'with_password'
                 check_path: 'user_common_check'
@@ -28,10 +36,23 @@ security:
                 path: 'user_common_logout'
                 target: 'user_index'
             two_factor:
+                provider: 'with_password'
                 auth_form_path: 2fa_login    # The route name you have used in the routes.yaml
                 check_path: 2fa_login_check  # The route name you have used in the routes.yaml
+                default_target_path: 'user_common_limited'
 
     access_control:
+        - {
+            path: '^/user/access/recovery',
+            roles: [ PUBLIC_ACCESS, ~ROLE_RECOVERY ],
+            requires_channel: https,
+            allow_if: "!is_authenticated()"
+        }
+        - {
+            path: '^/user/limited',
+            roles: [ ROLE_USER, ROLE_RECOVERY ],
+            requires_channel: https
+        }
         - { path: '^/user/2fa', roles: [IS_AUTHENTICATED_2FA_IN_PROGRESS], requires_channel: https }
         - { path: '^/user/2fa/check', roles: [IS_AUTHENTICATED_2FA_IN_PROGRESS], requires_channel: https }
         - { path: '^/user', roles: ROLE_USER, requires_channel: https }

@@ -63,7 +63,7 @@ class LoadMedia
 
         $this->mediaLoader->load(
             $id,
-            $fetchPromise
+            $fetchPromise,
         );
 
         return $this;

@@ -31,7 +31,9 @@ use Teknoo\East\Foundation\Time\DatesService as BaseService;
  * Simple service to manage date and hour in a recipe to return always the same date during the request and avoid
  * differences between two datetime instance.
  *
- * You can override the date to pass by calling "setCurrentDate"
+ * You can override the date to pass by calling "setCurrentDate".
+ *
+ * @deprecated Use Teknoo\East\Foundation\Time\DatesService
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)

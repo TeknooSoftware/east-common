@@ -266,9 +266,9 @@ services:
         class: 'Teknoo\East\CommonBundle\Recipe\Step\RecoveryAccessNotification'
         public: true
         arguments:
-            - '@Symfony\Component\Security\Http\LoginLink\LoginLinkHandlerInterface'
-            - '@notifier'
-            - '@translator'
+            - '@?Symfony\Component\Security\Http\LoginLink\LoginLinkHandlerInterface'
+            - '@?notifier'
+            - '@?translator'
             - '%teknoo.east.common.bundle.recovery.notification.subject%'
             - '%teknoo.east.common.bundle.recovery.role%'
 

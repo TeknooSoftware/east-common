@@ -35,6 +35,8 @@ use Teknoo\East\Common\Object\RecoveryAccess;
 use Teknoo\East\Common\Object\User;
 use Teknoo\East\CommonBundle\Object\UserWithRecoveryAccess;
 use Teknoo\East\CommonBundle\Recipe\Step\Exception\InvalidClassException;
+use Teknoo\East\CommonBundle\Recipe\Step\Exception\MissingConfigurationException;
+use Teknoo\East\CommonBundle\Recipe\Step\Exception\MissingPackageException;
 use Teknoo\East\Foundation\Client\ClientInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 
@@ -56,9 +58,9 @@ use function is_a;
 class RecoveryAccessNotification implements NotifyUserAboutRecoveryAccessInterface
 {
     public function __construct(
-        private LoginLinkHandlerInterface $loginLinkHandler,
-        private NotifierInterface $notifier,
-        private TranslatorInterface $translator,
+        private ?LoginLinkHandlerInterface $loginLinkHandler,
+        private ?NotifierInterface $notifier,
+        private ?TranslatorInterface $translator,
         private readonly string $recoveryNotificationSubject,
         private readonly string $recoveryAccessRole,
     ) {
@@ -71,6 +73,19 @@ class RecoveryAccessNotification implements NotifyUserAboutRecoveryAccessInterfa
         RecoveryAccess $recoveryAccess,
         string $recoveryNotificationClass = LoginLinkNotification::class,
     ): NotifyUserAboutRecoveryAccessInterface {
+        if (null === $this->loginLinkHandler) {
+            throw new MissingConfigurationException(
+                'No `' . LoginLinkNotification::class . '` available, maybe it is missing a '
+                    . '`login_link` section in the firewall configuration',
+            );
+        }
+
+        if (null === $this->notifier) {
+            throw new MissingPackageException(
+                'No `' . NotifierInterface::class . '`, install it with composer require symfony/notifier',
+            );
+        }
+
         if (!is_a($recoveryNotificationClass, LoginLinkNotification::class, true)) {
             throw new InvalidClassException(
                 "Error, `{$recoveryNotificationClass}` is not a " . LoginLinkNotification::class . 'notification',
@@ -83,9 +98,10 @@ class RecoveryAccessNotification implements NotifyUserAboutRecoveryAccessInterfa
             user: $sfUser,
         );
 
+        $subject = $this->recoveryNotificationSubject;
         $notification = new $recoveryNotificationClass(
             loginLinkDetails: $loginLinkDetails,
-            subject: (string) $this->translator->trans($this->recoveryNotificationSubject),
+            subject: (string) ($this->translator?->trans($subject) ?? $subject),
         );
 
         $recipient = new Recipient($user->getEmail());

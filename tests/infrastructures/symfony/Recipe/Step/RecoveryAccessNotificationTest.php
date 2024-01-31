@@ -33,6 +33,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Teknoo\East\Common\Object\RecoveryAccess;
 use Teknoo\East\Common\Object\User;
 use Teknoo\East\CommonBundle\Recipe\Step\Exception\InvalidClassException;
+use Teknoo\East\CommonBundle\Recipe\Step\Exception\MissingConfigurationException;
+use Teknoo\East\CommonBundle\Recipe\Step\Exception\MissingPackageException;
 use Teknoo\East\Foundation\Client\ClientInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\CommonBundle\Recipe\Step\RecoveryAccessNotification;
@@ -94,6 +96,56 @@ class RecoveryAccessNotificationTest extends TestCase
             $this->getTranslator(),
             'teknoo.subject',
             'teknoo.template'
+        );
+    }
+
+    public function testExceptionWhenMissingLoginNotification()
+    {
+        $step = new RecoveryAccessNotification(
+            null,
+            $this->getNotifier(),
+            $this->getTranslator(),
+            'teknoo.subject',
+            'teknoo.template'
+        );
+
+        $this->expectException(MissingConfigurationException::class);
+
+        $user = $this->createMock(User::class);
+        $user->expects(self::any())
+            ->method('getEmail')
+            ->willReturn('foo@bar');
+
+        $step(
+            $this->createMock(ManagerInterface::class),
+            $this->createMock(ClientInterface::class),
+            $user,
+            $this->createMock(RecoveryAccess::class),
+        );
+    }
+
+    public function testExceptionWhenMissingNotifier()
+    {
+        $step = new RecoveryAccessNotification(
+            $this->getLoginLinkHandler(),
+            null,
+            $this->getTranslator(),
+            'teknoo.subject',
+            'teknoo.template'
+        );
+
+        $this->expectException(MissingPackageException::class);
+
+        $user = $this->createMock(User::class);
+        $user->expects(self::any())
+            ->method('getEmail')
+            ->willReturn('foo@bar');
+
+        $step(
+            $this->createMock(ManagerInterface::class),
+            $this->createMock(ClientInterface::class),
+            $user,
+            $this->createMock(RecoveryAccess::class),
         );
     }
 

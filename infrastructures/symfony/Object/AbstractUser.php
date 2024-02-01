@@ -27,6 +27,7 @@ namespace Teknoo\East\CommonBundle\Object;
 
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Teknoo\East\Common\Object\StoredPassword;
 use Teknoo\East\Common\Object\User;
 use Teknoo\East\Common\Object\User as BaseUser;
 
@@ -87,5 +88,12 @@ abstract class AbstractUser implements
     public function isEqualTo(UserInterface $user): bool
     {
         return $user instanceof self &&  $user->getUserIdentifier() === $this->getUserIdentifier();
+    }
+
+    public function eraseCredentials(): void
+    {
+        if (($authData = $this->getWrappedUser()->getOneAuthData(StoredPassword::class)) instanceof StoredPassword) {
+            $authData->eraseCredentials();
+        }
     }
 }

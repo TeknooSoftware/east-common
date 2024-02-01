@@ -290,6 +290,7 @@ services:
         arguments:
             - '@Teknoo\East\Common\Loader\UserLoader'
             - '@Teknoo\East\CommonBundle\Writer\SymfonyUserWriter'
+            - '@Teknoo\East\Foundation\Time\DatesService'
             - '%teknoo.east.common.bundle.recovery.role%'
 
     #Command

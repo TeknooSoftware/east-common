@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\CommonBundle\Provider;
 
+use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface as GoogleTwoFactorInterface;
 use Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface as TotpTwoFactorInterface;
@@ -37,12 +38,14 @@ use Teknoo\East\Common\Object\StoredPassword;
 use Teknoo\East\Common\Object\TOTPAuth;
 use Teknoo\East\Common\Object\User;
 use Teknoo\East\Common\Query\User\UserByEmailQuery;
+use Teknoo\East\Common\User\RecoveryAccess\TimeLimitedToken;
 use Teknoo\East\CommonBundle\Contracts\Object\UserWithTOTPAuthInterface;
 use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
 use Teknoo\East\CommonBundle\Object\UserWithRecoveryAccess;
 use Teknoo\East\CommonBundle\Provider\Exception\MissingUserException;
 use Teknoo\East\CommonBundle\Provider\RecoveringAccessUserProvider;
 use Teknoo\East\CommonBundle\Writer\SymfonyUserWriter;
+use Teknoo\East\Foundation\Time\DatesService;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
@@ -62,6 +65,11 @@ class RecoveringAccessUserProviderTest extends TestCase
      * @var SymfonyUserWriter
      */
     private $writer;
+
+    /**
+     * @var DatesService
+     */
+    private $datesService;
 
     /**
      * @return UserLoader|\PHPUnit\Framework\MockObject\MockObject
@@ -87,9 +95,26 @@ class RecoveringAccessUserProviderTest extends TestCase
         return $this->writer;
     }
 
+    /**
+     * @return DatesService|\PHPUnit\Framework\MockObject\MockObject
+     */
+    public function getDatesService(): DatesService
+    {
+        if (!$this->datesService instanceof DatesService) {
+            $this->datesService = $this->createMock(DatesService::class);
+        }
+
+        return $this->datesService;
+    }
+
     public function buildProvider(): RecoveringAccessUserProvider
     {
-        return new RecoveringAccessUserProvider($this->getLoader(), $this->getWriter(), 'ROLE_RECOVERY');
+        return new RecoveringAccessUserProvider(
+            $this->getLoader(),
+            $this->getWriter(),
+            $this->getDatesService(),
+            'ROLE_RECOVERY',
+        );
     }
 
     public function testLoadUserByUsernameNotFound()
@@ -111,9 +136,27 @@ class RecoveringAccessUserProviderTest extends TestCase
 
     public function testLoadUserByUsernameFound()
     {
+        $this->getDatesService()->expects(self::any())
+            ->method('passMeTheDate')
+            ->willReturnCallback(
+                function (callable $setter) {
+                    $setter(new DateTimeImmutable('2024-01-28'));
+
+                    return  $this->datesService;
+                }
+            );
+
         $user = new User();
         $user->setEmail('foo@bar');
-        $user->setAuthData([$recoveryAccess = new RecoveryAccess()]);
+        $user->setAuthData([
+            $recoveryAccess = new RecoveryAccess(
+                algorithm: TimeLimitedToken::class,
+                params: [
+                    'expired_at' => '2024-01-31',
+                    'token' => hash('sha256', random_bytes(512)),
+                ],
+            )
+        ]);
 
         $this->getLoader()
             ->expects(self::once())
@@ -135,11 +178,27 @@ class RecoveringAccessUserProviderTest extends TestCase
 
     public function testLoadUserByUsernameFoundWithGoogleAuthenticator()
     {
+        $this->getDatesService()->expects(self::any())
+            ->method('passMeTheDate')
+            ->willReturnCallback(
+                function (callable $setter) {
+                    $setter(new DateTimeImmutable('2024-01-28'));
+
+                    return  $this->datesService;
+                }
+            );
+
         $user = new User();
         $user->setEmail('foo@bar');
         $user->setAuthData(
             [
-                $recoveryAccess = new RecoveryAccess(),
+                $recoveryAccess = new RecoveryAccess(
+                    algorithm: TimeLimitedToken::class,
+                    params: [
+                        'expired_at' => '2024-01-31',
+                        'token' => hash('sha256', random_bytes(512)),
+                    ],
+                ),
                 $totp = new TOTPAuth(
                     provider: TOTPAuth::PROVIDER_GOOGLE_AUTHENTICATOR,
                     algorithm: 'sha1',
@@ -182,11 +241,27 @@ class RecoveringAccessUserProviderTest extends TestCase
 
     public function testLoadUserByUsernameFoundWithTOTP()
     {
+        $this->getDatesService()->expects(self::any())
+            ->method('passMeTheDate')
+            ->willReturnCallback(
+                function (callable $setter) {
+                    $setter(new DateTimeImmutable('2024-01-28'));
+
+                    return  $this->datesService;
+                }
+            );
+
         $user = new User();
         $user->setEmail('foo@bar');
         $user->setAuthData(
             [
-                $recoveryAccess = new RecoveryAccess(),
+                $recoveryAccess = new RecoveryAccess(
+                    algorithm: TimeLimitedToken::class,
+                    params: [
+                        'expired_at' => '2024-01-31',
+                        'token' => hash('sha256', random_bytes(512)),
+                    ],
+                ),
                 $totp = new TOTPAuth(
                     provider: 'aTotp',
                     algorithm: 'sha1',
@@ -266,9 +341,27 @@ class RecoveringAccessUserProviderTest extends TestCase
 
     public function testLoadUserByIdentifierFound()
     {
+        $this->getDatesService()->expects(self::any())
+            ->method('passMeTheDate')
+            ->willReturnCallback(
+                function (callable $setter) {
+                    $setter(new DateTimeImmutable('2024-01-28'));
+
+                    return  $this->datesService;
+                }
+            );
+
         $user = new User();
         $user->setEmail('foo@bar');
-        $user->setAuthData([$recoveryAccess = new RecoveryAccess()]);
+        $user->setAuthData([
+            $recoveryAccess = new RecoveryAccess(
+                algorithm: TimeLimitedToken::class,
+                params: [
+                    'expired_at' => '2024-01-31',
+                    'token' => hash('sha256', random_bytes(512)),
+                ],
+            )
+        ]);
 
         $this->getLoader()
             ->expects(self::once())
@@ -325,7 +418,13 @@ class RecoveringAccessUserProviderTest extends TestCase
         $this->buildProvider()->refreshUser(
             new UserWithRecoveryAccess(
                 (new User())->setEmail('foo@bar'),
-                new RecoveryAccess(),
+                $recoveryAccess = new RecoveryAccess(
+                    algorithm: TimeLimitedToken::class,
+                    params: [
+                        'expired_at' => '2024-01-31',
+                        'token' => hash('sha256', random_bytes(512)),
+                    ],
+                ),
                 'ROLE_RECOVERY',
             )
         );
@@ -333,9 +432,27 @@ class RecoveringAccessUserProviderTest extends TestCase
 
     public function testRefreshUserFound()
     {
+        $this->getDatesService()->expects(self::any())
+            ->method('passMeTheDate')
+            ->willReturnCallback(
+                function (callable $setter) {
+                    $setter(new DateTimeImmutable('2024-01-28'));
+
+                    return  $this->datesService;
+                }
+            );
+
         $user = new User();
         $user->setEmail('foo@bar');
-        $user->setAuthData([$recoveryAccess = new RecoveryAccess()]);
+        $user->setAuthData([
+            $recoveryAccess = new RecoveryAccess(
+                algorithm: TimeLimitedToken::class,
+                params: [
+                    'expired_at' => '2024-01-31',
+                    'token' => hash('sha256', random_bytes(512)),
+                ],
+            )
+        ]);
 
         $this->getLoader()
             ->expects(self::once())

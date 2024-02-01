@@ -25,8 +25,12 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Common\Object;
 
+use DomainException;
 use SensitiveParameter;
 use Teknoo\East\Common\Contracts\User\AuthDataInterface;
+use Teknoo\East\Common\Contracts\User\RecoveryAccess\AlgorithmInterface;
+
+use function is_a;
 
 /**
  * Class to defined persisted user's recovery access to authenticate it on a website to change its password
@@ -43,7 +47,10 @@ class RecoveryAccess implements AuthDataInterface
     //Constructor promoted properties are not defined when object is created without calling constructor
     //(like with doctrine)
 
-    private string $algorithm = '';
+    /**
+     * @var class-string<AlgorithmInterface>
+     */
+    private string $algorithm;
 
     /**
      * @var array<string, string>
@@ -51,22 +58,33 @@ class RecoveryAccess implements AuthDataInterface
     private array $params = [];
 
     /**
+     * @param class-string<AlgorithmInterface> $algorithm
      * @param array<string, string> $params
      */
     public function __construct(
-        string $algorithm = '',
+        string $algorithm,
         #[SensitiveParameter]
         array $params = [],
     ) {
+        if (!is_a($algorithm, AlgorithmInterface::class, true)) {
+            throw new DomainException("`$algorithm` must be an implementation of " . AlgorithmInterface::class);
+        }
+
         $this->algorithm = $algorithm;
         $this->params = $params;
     }
 
+    /**
+     * @return class-string<AlgorithmInterface>
+     */
     public function getAlgorithm(): string
     {
         return $this->algorithm;
     }
 
+    /**
+     * @param class-string<AlgorithmInterface> $algorithm
+     */
     public function setAlgorithm(string $algorithm): self
     {
         $this->algorithm = $algorithm;
@@ -89,13 +107,6 @@ class RecoveryAccess implements AuthDataInterface
     public function setParams(#[SensitiveParameter] array $params): self
     {
         $this->params = $params;
-
-        return $this;
-    }
-
-    public function eraseCredentials(): self
-    {
-        $this->params = [];
 
         return $this;
     }

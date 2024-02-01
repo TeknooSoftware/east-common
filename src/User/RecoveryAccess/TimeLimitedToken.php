@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Common\User\RecoveryAccess;
 
+use DateTimeImmutable;
 use DateTimeInterface;
 use Teknoo\East\Common\Contracts\User\RecoveryAccess\AlgorithmInterface;
 use Teknoo\East\Common\Object\RecoveryAccess;
@@ -76,5 +77,11 @@ class TimeLimitedToken implements AlgorithmInterface
         );
 
         return $this;
+    }
+
+    public static function valid(RecoveryAccess $recoveryAccess, DateTimeInterface $now): bool
+    {
+        $expiredAt = $recoveryAccess->getParams()['expired_at'] ?? '';
+        return !empty($expiredAt) && (new DateTimeImmutable($expiredAt)) > $now;
     }
 }

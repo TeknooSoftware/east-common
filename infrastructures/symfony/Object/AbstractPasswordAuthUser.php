@@ -60,5 +60,7 @@ abstract class AbstractPasswordAuthUser extends AbstractUser implements Password
     public function eraseCredentials(): void
     {
         $this->password->eraseCredentials();
+
+        parent::eraseCredentials();
     }
 }

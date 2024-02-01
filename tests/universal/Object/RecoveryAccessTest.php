@@ -25,8 +25,11 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Object;
 
+use DomainException;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use Teknoo\East\Common\Object\RecoveryAccess;
+use Teknoo\East\Common\User\RecoveryAccess\TimeLimitedToken;
 use Teknoo\Tests\East\Common\Object\Traits\PopulateObjectTrait;
 
 /**
@@ -43,7 +46,13 @@ class RecoveryAccessTest extends TestCase
      */
     public function buildObject(): RecoveryAccess
     {
-        return new RecoveryAccess();
+        return new RecoveryAccess(TimeLimitedToken::class);
+    }
+
+    public function testWrongAlgorithm()
+    {
+        $this->expectException(DomainException::class);
+        new RecoveryAccess(stdClass::class);
     }
 
     public function testGetParams()
@@ -77,41 +86,10 @@ class RecoveryAccessTest extends TestCase
         );
     }
 
-    public function testEraseCredentials()
-    {
-        $object = $this->buildObject();
-        self::assertInstanceOf(
-            $object::class,
-            $object->setParams(['fooBar'])
-        );
-
-        self::assertEquals(
-            ['fooBar'],
-            $object->getParams()
-        );
-
-        self::assertInstanceOf(
-            $object::class,
-            $object->setParams(['fooBar2'])
-        );
-
-        self::assertEquals(
-            ['fooBar2'],
-            $object->getParams()
-        );
-
-        self::assertInstanceOf(
-            $object::class,
-            $object->eraseCredentials()
-        );
-
-        self::assertEmpty($object->getParams());
-    }
-
     public function testSetParamsExceptionOnBadArgument()
     {
         $this->expectException(\Throwable::class);
-        $this->buildObject()->setParams(new \stdClass());
+        $this->buildObject()->setParams(new stdClass());
     }
 
     public function testGetAlgorithm()
@@ -139,6 +117,6 @@ class RecoveryAccessTest extends TestCase
     public function testSetAlgorithmExceptionOnBadArgument()
     {
         $this->expectException(\Throwable::class);
-        $this->buildObject()->setAlgorithm(new \stdClass());
+        $this->buildObject()->setAlgorithm(new stdClass());
     }
 }

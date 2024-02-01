@@ -26,7 +26,9 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Common\Contracts\User\RecoveryAccess;
 
+use DateTimeInterface;
 use Teknoo\East\Common\Contracts\Object\ObjectInterface;
+use Teknoo\East\Common\Object\RecoveryAccess;
 use Teknoo\East\Common\Object\User;
 
 /**
@@ -40,4 +42,6 @@ use Teknoo\East\Common\Object\User;
 interface AlgorithmInterface extends ObjectInterface
 {
     public function prepare(User $user, callable $callback): AlgorithmInterface;
+
+    public static function valid(RecoveryAccess $recoveryAccess, DateTimeInterface $now): bool;
 }

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\CommonBundle\Object;
 
+use Teknoo\East\Common\Object\StoredPassword;
 use Teknoo\East\Common\Object\ThirdPartyAuth;
 use Teknoo\East\Common\Object\User as BaseUser;
 
@@ -54,10 +55,5 @@ class ThirdPartyAuthenticatedUser extends AbstractUser
     public function getPassword(): ?string
     {
         return $this->auth->getToken();
-    }
-
-    public function eraseCredentials(): void
-    {
-        return;
     }
 }

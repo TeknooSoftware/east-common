@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\CommonBundle\Provider;
 
+use DateTimeInterface;
 use ReflectionClass;
 use ReflectionException;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface as GoogleTwoFactorInterface;
@@ -34,6 +35,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Teknoo\East\Common\Contracts\User\RecoveryAccess\AlgorithmInterface;
 use Teknoo\East\Common\Object\RecoveryAccess;
 use Teknoo\East\Common\Object\StoredPassword;
 use Teknoo\East\Common\Object\TOTPAuth;
@@ -44,11 +46,14 @@ use Teknoo\East\CommonBundle\Object\TOTP\TOTPUserWithRecoveryAccess;
 use Teknoo\East\CommonBundle\Object\UserWithRecoveryAccess;
 use Teknoo\East\CommonBundle\Provider\Exception\MissingUserException;
 use Teknoo\East\CommonBundle\Writer\SymfonyUserWriter;
+use Teknoo\East\Foundation\Time\DatesService;
 use Teknoo\Recipe\Promise\Promise;
 use Teknoo\East\Common\Loader\UserLoader;
 use Teknoo\East\Common\Query\User\UserByEmailQuery;
 
+use function class_exists;
 use function interface_exists;
+use function is_a;
 
 /**
  * Symfony user provider to load East Common's user authenticated thanks to a Recovery Access.
@@ -66,6 +71,7 @@ class RecoveringAccessUserProvider implements UserProviderInterface, PasswordUpg
     public function __construct(
         private readonly UserLoader $loader,
         private readonly SymfonyUserWriter $userWriter,
+        private readonly DatesService $datesService,
         private readonly string $recoveryAccessRole,
     ) {
     }
@@ -83,59 +89,79 @@ class RecoveringAccessUserProvider implements UserProviderInterface, PasswordUpg
     protected function fetchUserByUsername(string $username): UserWithRecoveryAccess
     {
         $role = $this->recoveryAccessRole;
+        $datesService = $this->datesService;
 
         /** @var Promise<User, UserWithRecoveryAccess, mixed> $promise */
-        $promise = new Promise(onSuccess: static function (User $user) use ($role): ?UserWithRecoveryAccess {
-            $totpAuth = null;
-            $accessAuth = null;
+        $promise = new Promise(
+            onSuccess: static function (User $user) use ($role, $datesService): ?UserWithRecoveryAccess {
+                $totpAuth = null;
+                $accessAuth = null;
 
-            foreach ($user->getAuthData() as $authData) {
-                if ($authData instanceof TOTPAuth) {
-                    $totpAuth = $authData;
+                foreach ($user->getAuthData() as $authData) {
+                    if ($authData instanceof TOTPAuth) {
+                        $totpAuth = $authData;
+                    }
+
+                    if ($authData instanceof RecoveryAccess) {
+                        $algo = $authData->getAlgorithm();
+                        if (class_exists($algo) && is_a($algo, AlgorithmInterface::class, true)) {
+                            $validFunction = $algo::valid(...);
+                            $datesService->passMeTheDate(
+                                setter: function (
+                                    DateTimeInterface $now
+                                ) use (
+                                    $authData,
+                                    &$accessAuth,
+                                    $validFunction
+                                ): void {
+                                    if ($validFunction($authData, $now)) {
+                                        $accessAuth = $authData;
+                                    }
+                                },
+                                preferRealDate: true
+                            );
+                        }
+                    }
                 }
 
-                if ($authData instanceof RecoveryAccess) {
-                    $accessAuth = $authData;
+                if (null === $accessAuth) {
+                    return null;
                 }
-            }
 
-            if (null === $accessAuth) {
-                return null;
-            }
-
-            if (
-                $totpAuth instanceof TOTPAuth
-                && (
-                    interface_exists(GoogleTwoFactorInterface::class)
-                    || interface_exists(TotpTwoFactorInterface::class)
-                )
-            ) {
                 if (
-                    interface_exists(GoogleTwoFactorInterface::class)
-                    && TOTPAuth::PROVIDER_GOOGLE_AUTHENTICATOR === $totpAuth->getProvider()
+                    $totpAuth instanceof TOTPAuth
+                    && (
+                        interface_exists(GoogleTwoFactorInterface::class)
+                        || interface_exists(TotpTwoFactorInterface::class)
+                    )
                 ) {
-                    $user = new GoogleAuthUserWithRecoveryAccess(
-                        user: $user,
-                        recoveryAccess: $accessAuth,
-                        temporaryRole: $role,
-                    );
-                } else {
-                    $user = new TOTPUserWithRecoveryAccess(
-                        user: $user,
-                        recoveryAccess: $accessAuth,
-                        temporaryRole: $role,
-                    );
+                    if (
+                        interface_exists(GoogleTwoFactorInterface::class)
+                        && TOTPAuth::PROVIDER_GOOGLE_AUTHENTICATOR === $totpAuth->getProvider()
+                    ) {
+                        $user = new GoogleAuthUserWithRecoveryAccess(
+                            user: $user,
+                            recoveryAccess: $accessAuth,
+                            temporaryRole: $role,
+                        );
+                    } else {
+                        $user = new TOTPUserWithRecoveryAccess(
+                            user: $user,
+                            recoveryAccess: $accessAuth,
+                            temporaryRole: $role,
+                        );
+                    }
+
+                    return $user->setTOTPAuth($totpAuth);
                 }
 
-                return $user->setTOTPAuth($totpAuth);
+                return new UserWithRecoveryAccess(
+                    user: $user,
+                    recoveryAccess: $accessAuth,
+                    temporaryRole: $role,
+                );
             }
-
-            return new UserWithRecoveryAccess(
-                user: $user,
-                recoveryAccess: $accessAuth,
-                temporaryRole: $role,
-            );
-        });
+        );
 
         $this->loader->fetch(
             new UserByEmailQuery($username),

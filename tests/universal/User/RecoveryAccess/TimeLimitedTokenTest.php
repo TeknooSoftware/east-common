@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\Tests\East\Common\User\RecoveryAccess;
 
 use DateTime;
+use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use Teknoo\East\Common\Contracts\User\AuthDataInterface;
@@ -92,6 +93,45 @@ class TimeLimitedTokenTest extends TestCase
         self::assertInstanceOf(
             TimeLimitedToken::class,
             $service->prepare($user, function () {}),
+        );
+    }
+
+    public function testValid()
+    {
+        self::assertTrue(
+            TimeLimitedToken::valid(
+                new RecoveryAccess(
+                    algorithm: TimeLimitedToken::class,
+                    params: [
+                        'expired_at' => '2024-02-01',
+                        'token' => hash('sha256', random_bytes(512)),
+                    ],
+                ),
+                new DateTimeImmutable('2024-01-31'),
+            )
+        );
+
+        self::assertFalse(
+            TimeLimitedToken::valid(
+                new RecoveryAccess(
+                    algorithm: TimeLimitedToken::class,
+                    params: [
+                        'expired_at' => '2024-01-30',
+                        'token' => hash('sha256', random_bytes(512)),
+                    ],
+                ),
+                new DateTimeImmutable('2024-01-31'),
+            )
+        );
+
+        self::assertFalse(
+            TimeLimitedToken::valid(
+                new RecoveryAccess(
+                    algorithm: TimeLimitedToken::class,
+                    params: [],
+                ),
+                new DateTimeImmutable('2024-01-31'),
+            )
         );
     }
 }

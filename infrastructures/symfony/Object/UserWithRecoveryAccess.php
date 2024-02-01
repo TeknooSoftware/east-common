@@ -67,11 +67,6 @@ class UserWithRecoveryAccess extends AbstractUser
         return hash('sha256', $this->getEmail() . ':' . $this->getToken());
     }
 
-    public function eraseCredentials(): void
-    {
-        $this->getWrappedUser()->removeAuthData(RecoveryAccess::class);
-    }
-
     public function isEqualTo(UserInterface $user): bool
     {
         return $user instanceof self &&  $user->getUserIdentifier() === $this->getUserIdentifier();

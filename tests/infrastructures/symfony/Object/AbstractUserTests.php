@@ -26,9 +26,11 @@ declare(strict_types=1);
 namespace Teknoo\Tests\East\CommonBundle\Object;
 
 use ArrayIterator;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Teknoo\East\Common\Object\StoredPassword;
 use Teknoo\East\Common\Object\User;
 use Teknoo\East\CommonBundle\Object\AbstractUser;
 use Teknoo\East\Common\Object\User as BaseUser;
@@ -42,6 +44,20 @@ abstract class AbstractUserTests extends TestCase
 {
     private ?BaseUser $user = null;
 
+    private ?StoredPassword $storedPassword = null;
+
+    /**
+     * @return StoredPassword|MockObject
+     */
+    public function getStoredPassword(): StoredPassword
+    {
+        if (!$this->storedPassword instanceof StoredPassword) {
+            $this->storedPassword = $this->createMock(StoredPassword::class);
+        }
+
+        return $this->storedPassword;
+    }
+
     /**
      * @return BaseUser|\PHPUnit\Framework\MockObject\MockObject
      */
@@ -51,6 +67,7 @@ abstract class AbstractUserTests extends TestCase
             $this->user = $this->createMock(BaseUser::class);
 
             $this->user->expects(self::any())->method('getAuthData')->willReturn([$this->getStoredPassword()]);
+            $this->user->expects(self::any())->method('getOneAuthData')->willReturn($this->getStoredPassword());
         }
 
         return $this->user;
@@ -153,5 +170,15 @@ abstract class AbstractUserTests extends TestCase
             User::class,
             $this->buildObject()->getWrappedUser()
         );
+    }
+
+    public function testEraseCredentials()
+    {
+        $this->getStoredPassword()
+            ->expects(self::once())
+            ->method('eraseCredentials')
+            ->willReturnSelf();
+
+        $this->buildObject()->eraseCredentials();
     }
 }

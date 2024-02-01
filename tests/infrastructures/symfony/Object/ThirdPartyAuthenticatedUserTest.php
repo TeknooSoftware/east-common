@@ -53,6 +53,7 @@ class ThirdPartyAuthenticatedUserTest extends AbstractUserTests
             $this->user = $this->createMock(BaseUser::class);
 
             $this->user->expects(self::any())->method('getAuthData')->willReturn([$this->getThirdPartyAuth()]);
+            $this->user->expects(self::any())->method('getOneAuthData')->willReturn($this->getStoredPassword());
         }
 
         return $this->user;

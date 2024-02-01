@@ -37,20 +37,6 @@ use TypeError;
  */
 abstract class AbstractPasswordAuthUserTests extends AbstractUserTests
 {
-    private ?StoredPassword $storedPassword = null;
-
-    /**
-     * @return StoredPassword|MockObject
-     */
-    public function getStoredPassword(): StoredPassword
-    {
-        if (!$this->storedPassword instanceof StoredPassword) {
-            $this->storedPassword = $this->createMock(StoredPassword::class);
-        }
-
-        return $this->storedPassword;
-    }
-
     public function testExceptionWithBadUser()
     {
         $this->expectException(TypeError::class);

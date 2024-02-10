@@ -76,13 +76,20 @@ class EditObjectEndPoint implements EditObjectEndPointInterface
 
     protected function populateRecipe(RecipeInterface $recipe): RecipeInterface
     {
-        $recipe = $recipe->require(new Ingredient(ServerRequestInterface::class, 'request'));
-        $recipe = $recipe->require(new Ingredient(LoaderInterface::class, 'loader'));
-        $recipe = $recipe->require(new Ingredient(WriterInterface::class, 'writer'));
-        $recipe = $recipe->require(new Ingredient('string', 'id'));
-        $recipe = $recipe->require(new Ingredient('string', 'formClass'));
-        $recipe = $recipe->require(new Ingredient('array', 'formOptions'));
-        $recipe = $recipe->require(new Ingredient('string', 'template'));
+        $recipe = $recipe->require(new Ingredient(requiredType: ServerRequestInterface::class, name: 'request'));
+        $recipe = $recipe->require(new Ingredient(requiredType: LoaderInterface::class, name: 'loader'));
+        $recipe = $recipe->require(new Ingredient(requiredType: WriterInterface::class, name: 'writer'));
+        $recipe = $recipe->require(new Ingredient(requiredType: 'string', name: 'id'));
+        $recipe = $recipe->require(new Ingredient(requiredType: 'string', name: 'formClass'));
+        $recipe = $recipe->require(
+            new Ingredient(
+                requiredType: 'array',
+                name: 'formOptions',
+                mandatory: false,
+                default: [],
+            )
+        );
+        $recipe = $recipe->require(new Ingredient(requiredType: 'string', name: 'template'));
 
         $recipe = $recipe->cook($this->loadObject, LoadObject::class, $this->loadObjectWiths, 10);
 

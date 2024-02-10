@@ -1,5 +1,10 @@
 # Teknoo Software - Common - Change Log
 
+## [2.7.1] - 2024-02-10
+### Stable Release
+- `formOptions` ingredient in now not mandatory in cookbooks.
+- Require `Recipe` 4.6.1+
+
 ## [2.7.0] - 2024-01-31
 ### Stable Release
 - Common `DatesService` is deprecated, use Foundation's `DatesService` instead

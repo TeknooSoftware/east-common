@@ -1,5 +1,10 @@
 # Teknoo Software - Common - Change Log
 
+## [2.7.2] - 2024-02-11
+### Stable Release
+- Fix `FormHandling` step with a GET request but it has a `Content-Type` to json. 
+  (According to standard, a GET request has no Content-Type, it's just to prevent)
+
 ## [2.7.1] - 2024-02-10
 ### Stable Release
 - `formOptions` ingredient in now not mandatory in cookbooks.

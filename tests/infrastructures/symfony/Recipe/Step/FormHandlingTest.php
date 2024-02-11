@@ -400,6 +400,7 @@ class FormHandlingTest extends TestCase
             }
         );
 
+        $request->expects(self::any())->method('getMethod')->willReturn('POST');
         $request->expects(self::any())->method('getParsedBody')->willReturn([]);
 
         $manager = $this->createMock(ManagerInterface::class);
@@ -437,7 +438,7 @@ class FormHandlingTest extends TestCase
         );
     }
 
-    public function testInvokeApiWithJson()
+    private function runTestForInvokeApiWithJson(string $method): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
         $request->expects(self::any())->method('getAttribute')->willReturnCallback(
@@ -447,6 +448,7 @@ class FormHandlingTest extends TestCase
                 default => false,
             }
         );
+
         $request->expects(self::any())->method('getHeader')->willReturnCallback(
             fn (string $header) => match ($header) {
                 'Content-Type' => ['application/json'],
@@ -454,6 +456,7 @@ class FormHandlingTest extends TestCase
             }
         );
 
+        $request->expects(self::any())->method('getMethod')->willReturn($method);
         $request->expects(self::any())->method('getParsedBody')->willReturn([]);
         $body = ['foo' => 'bar', 'bar' => ['foo']];
         $request->expects(self::any())->method('getBody')->willReturn(
@@ -472,6 +475,81 @@ class FormHandlingTest extends TestCase
         $form = $this->createMock(FormInterface::class);
         $form->expects(self::once())->method('handleRequest');
         $form->expects(self::once())->method('submit')->with($body, false);
+
+        $this->getFormFactory()
+            ->expects(self::any())
+            ->method('create')
+            ->with(
+                $formClass,
+                $object,
+                ['csrf_protection' => false],
+            )
+            ->willReturn($form);
+
+        self::assertInstanceOf(
+            FormHandling::class,
+            $this->buildStep()(
+                $request,
+                $manager,
+                $formClass,
+                $object,
+                $formOptions,
+            )
+        );
+    }
+
+    public function testInvokeApiWithJsonAndPOSTMethod()
+    {
+        $this->runTestForInvokeApiWithJson('POST');
+    }
+
+    public function testInvokeApiWithJsonAndPUTMethod()
+    {
+        $this->runTestForInvokeApiWithJson('PUT');
+    }
+
+    public function testInvokeApiWithJsonAndPATCHMethod()
+    {
+        $this->runTestForInvokeApiWithJson('PATCH');
+    }
+
+    public function testInvokeApiWithJsonAndGETMethod()
+    {
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->expects(self::any())->method('getAttribute')->willReturnCallback(
+            fn (string $name) => match ($name) {
+                'request' => $this->createMock(Request::class),
+                'api' => 'json',
+                default => false,
+            }
+        );
+
+        $request->expects(self::any())->method('getHeader')->willReturnCallback(
+            fn (string $header) => match ($header) {
+                'Content-Type' => ['application/json'],
+                default => [],
+            }
+        );
+
+        $request->expects(self::any())->method('getMethod')->willReturn('Get');
+        $request->expects(self::any())->method('getParsedBody')->willReturn([]);
+        $body = ['foo' => 'bar', 'bar' => ['foo']];
+        $request->expects(self::any())->method('getBody')->willReturn(
+            (new StreamFactory())->createStream(json_encode($body))
+        );
+
+        $manager = $this->createMock(ManagerInterface::class);
+        $formClass = 'Foo/Bar';
+        $formOptions = [];
+        $object = $this->createMock(IdentifiedObjectInterface::class);
+
+        $this->getDatesService()
+            ->expects(self::never())
+            ->method('passMeTheDate');
+
+        $form = $this->createMock(FormInterface::class);
+        $form->expects(self::once())->method('handleRequest');
+        $form->expects(self::never())->method('submit');
 
         $this->getFormFactory()
             ->expects(self::any())

@@ -34,6 +34,7 @@ use Teknoo\East\Common\Contracts\Recipe\Step\FormHandlingInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Time\DatesService;
 
+use function in_array;
 use function is_callable;
 use function json_decode;
 
@@ -107,7 +108,11 @@ class FormHandling implements FormHandlingInterface
         if (!empty($formHandleRequest)) {
             $form->handleRequest($request->getAttribute('request'));
 
-            if (!$form->isSubmitted() && !empty($api)) {
+            if (
+                !$form->isSubmitted()
+                && !empty($api)
+                && in_array($request->getMethod(), ['POST', 'PUT', 'PATCH'])
+            ) {
                 $values = [];
                 if (['application/json'] === $request->getHeader('Content-Type')) {
                     $values = (array) json_decode(

@@ -426,8 +426,6 @@ class UserTest extends TestCase
                 'firstName' => 'fooName',
                 'email' => '',
                 'lastName' => '',
-                'roles' => [],
-                'active' => true,
             ]);
 
         self::assertInstanceOf(
@@ -441,7 +439,7 @@ class UserTest extends TestCase
 
     public function testSetExportConfiguration()
     {
-        User::setExportConfiguration($conf = ['name' => ['all']]);
+        User::setExportConfiguration($conf = ['name' => ['default']]);
         $rc = new ReflectionClass(User::class);
 
         self::assertEquals(

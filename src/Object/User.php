@@ -85,13 +85,13 @@ class User implements
      * @var array<string, string[]>
      */
     private static array $exportConfigurations = [
-        '@class' => ['all', 'api', 'crud', 'digest'],
-        'id' => ['all', 'api', 'crud', 'digest'],
-        'email' => ['all', 'api', 'crud', 'digest'],
-        'firstName' => ['all', 'api', 'crud'],
-        'lastName' => ['all', 'api', 'crud'],
-        'roles' => ['all', 'crud'],
-        'active' => ['all', 'crud'],
+        '@class' => ['default', 'api', 'crud', 'digest'],
+        'id' => ['default', 'api', 'crud', 'digest'],
+        'email' => ['default', 'api', 'crud', 'digest'],
+        'firstName' => ['default', 'api', 'crud'],
+        'lastName' => ['default', 'api', 'crud'],
+        'roles' => ['crud'],
+        'active' => ['crud'],
     ];
 
     /**
@@ -261,7 +261,7 @@ class User implements
         $normalizer->injectData(
             $this->filterExport(
                 data: $data,
-                groups: (array) ($context['groups'] ?? ['all']),
+                groups: (array) ($context['groups'] ?? ['default']),
             )
         );
 

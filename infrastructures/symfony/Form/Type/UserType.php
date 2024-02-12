@@ -71,31 +71,34 @@ class UserType extends AbstractType
 
         $builder->add('email', EmailType::class, ['required' => true]);
         $builder->add('active', CheckboxType::class);
-        $builder->add('storedPassword', StoredPasswordType::class, ['mapped' => false]);
 
-        $builder->addEventListener(
-            FormEvents::POST_SET_DATA,
-            static function (FormEvent $event): void {
-                /**
-                 * @var User $user
-                 */
-                $user = $event->getData();
-                $spForm = $event->getForm()->get('storedPassword');
+        if (empty($options['api'])) {
+            $builder->add('storedPassword', StoredPasswordType::class, ['mapped' => false]);
 
-                foreach ($user->getAuthData() as $authData) {
-                    if (!$authData instanceof StoredPassword) {
-                        continue;
+            $builder->addEventListener(
+                FormEvents::POST_SET_DATA,
+                static function (FormEvent $event): void {
+                    /**
+                     * @var User $user
+                     */
+                    $user = $event->getData();
+                    $spForm = $event->getForm()->get('storedPassword');
+
+                    foreach ($user->getAuthData() as $authData) {
+                        if (!$authData instanceof StoredPassword) {
+                            continue;
+                        }
+
+                        $spForm->setData($authData);
+                        return;
                     }
 
+                    $authData = new StoredPassword();
                     $spForm->setData($authData);
-                    return;
+                    $user->addAuthData($authData);
                 }
-
-                $authData = new StoredPassword();
-                $spForm->setData($authData);
-                $user->addAuthData($authData);
-            }
-        );
+            );
+        }
 
         return $this;
     }
@@ -106,6 +109,7 @@ class UserType extends AbstractType
 
         $resolver->setDefaults([
             'data_class' => User::class,
+            'api' => null,
         ]);
 
         return $this;

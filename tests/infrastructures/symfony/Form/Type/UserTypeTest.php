@@ -89,6 +89,23 @@ class UserTypeTest extends TestCase
         );
     }
 
+    public function testBuildFormWithApi()
+    {
+        $builder = $this->createMock(FormBuilderInterface::class);
+
+        $builder->expects(self::any())
+            ->method('add')
+            ->willReturnSelf();
+
+        $builder->expects(self::never())
+            ->method('addEventListener');
+
+        self::assertInstanceOf(
+            AbstractType::class,
+            $this->buildForm()->buildForm($builder, ['api' => 'json'])
+        );
+    }
+
     public function testBuildFormWithNonPopulatedUser()
     {
         $builder = $this->createMock(FormBuilderInterface::class);

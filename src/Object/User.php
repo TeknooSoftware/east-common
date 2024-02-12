@@ -90,8 +90,8 @@ class User implements
         'email' => ['all', 'api', 'crud', 'digest'],
         'firstName' => ['all', 'api', 'crud'],
         'lastName' => ['all', 'api', 'crud'],
-        'roles' => ['crud'],
-        'active' => ['crud'],
+        'roles' => ['all', 'crud'],
+        'active' => ['all', 'crud'],
     ];
 
     /**

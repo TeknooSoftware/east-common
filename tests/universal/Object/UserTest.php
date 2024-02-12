@@ -426,6 +426,8 @@ class UserTest extends TestCase
                 'firstName' => 'fooName',
                 'email' => '',
                 'lastName' => '',
+                'roles' => [],
+                'active' => true,
             ]);
 
         self::assertInstanceOf(

@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [2.7.3] - 2024-02-12
+### Stable Release
+- Add User's export feature
+
 ## [2.7.2] - 2024-02-11
 ### Stable Release
 - Fix `FormHandling` step with a GET request but it has a `Content-Type` to json. 

@@ -26,10 +26,12 @@ declare(strict_types=1);
 namespace Teknoo\Tests\East\Common\Object;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 use Teknoo\East\Common\Contracts\User\AuthDataInterface;
 use Teknoo\East\Common\Object\StoredPassword;
 use Teknoo\East\Common\Object\ThirdPartyAuth;
 use Teknoo\East\Common\Object\TOTPAuth;
+use Teknoo\East\Foundation\Normalizer\EastNormalizerInterface;
 use Teknoo\Tests\East\Common\Object\Traits\ObjectTestTrait;
 use Teknoo\East\Common\Object\User;
 
@@ -347,16 +349,6 @@ class UserTest extends TestCase
 
     public function testRemoveAuthDataExceptionOnBadClass()
     {
-        $object = $this->generateObjectPopulated(
-            [
-                'authData' => new \ArrayIterator([
-                    $this->createMock(StoredPassword::class),
-                    $this->createMock(ThirdPartyAuth::class),
-                    $this->createMock(TOTPAuth::class),
-                ])
-            ]
-        );
-
         $this->expectException(\DomainException::class);
         $this->buildObject()->removeAuthData('fooooooooooo');
     }
@@ -406,5 +398,53 @@ class UserTest extends TestCase
     {
         $this->expectException(\Throwable::class);
         $this->buildObject()->setActive(new \stdClass());
+    }
+
+    public function testExportToMeDataBadNormalizer()
+    {
+        $this->expectException(\TypeError::class);
+        $this->buildObject()->exportToMeData(new \stdClass(), []);
+    }
+
+    public function testExportToMeDataBadContext()
+    {
+        $this->expectException(\TypeError::class);
+        $this->buildObject()->exportToMeData(
+            $this->createMock(EastNormalizerInterface::class),
+            new \stdClass()
+        );
+    }
+
+    public function testExportToMe()
+    {
+        $normalizer = $this->createMock(EastNormalizerInterface::class);
+        $normalizer->expects(self::once())
+            ->method('injectData')
+            ->with([
+                '@class' => User::class,
+                'id' => '123',
+                'firstName' => 'fooName',
+                'email' => '',
+                'lastName' => '',
+            ]);
+
+        self::assertInstanceOf(
+            User::class,
+            $this->buildObject()->setId('123')->setFirstName('fooName')->exportToMeData(
+                $normalizer,
+                ['foo' => 'bar']
+            )
+        );
+    }
+
+    public function testSetExportConfiguration()
+    {
+        User::setExportConfiguration($conf = ['name' => ['all']]);
+        $rc = new ReflectionClass(User::class);
+
+        self::assertEquals(
+            $conf,
+            $rc->getStaticPropertyValue('exportConfigurations'),
+        );
     }
 }

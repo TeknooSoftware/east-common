@@ -32,6 +32,9 @@ use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
 use Teknoo\East\Common\Contracts\Object\TimestampableInterface;
 use Teknoo\East\Common\Contracts\User\AuthDataInterface;
 use Teknoo\East\Common\Contracts\User\UserInterface;
+use Teknoo\East\Foundation\Normalizer\EastNormalizerInterface;
+use Teknoo\East\Foundation\Normalizer\Object\GroupsTrait;
+use Teknoo\East\Foundation\Normalizer\Object\NormalizableInterface;
 
 use function array_values;
 use function class_exists;
@@ -49,9 +52,16 @@ use function trim;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-class User implements IdentifiedObjectInterface, UserInterface, DeletableInterface, TimestampableInterface, Stringable
+class User implements
+    IdentifiedObjectInterface,
+    UserInterface,
+    DeletableInterface,
+    TimestampableInterface,
+    Stringable,
+    NormalizableInterface
 {
     use ObjectTrait;
+    use GroupsTrait;
 
     private string $firstName = '';
 
@@ -70,6 +80,27 @@ class User implements IdentifiedObjectInterface, UserInterface, DeletableInterfa
      * @var iterable<AuthDataInterface>
      */
     private iterable $authData = [];
+
+    /**
+     * @var array<string, string[]>
+     */
+    private static array $exportConfigurations = [
+        '@class' => ['all', 'api', 'crud', 'digest'],
+        'id' => ['all', 'api', 'crud', 'digest'],
+        'email' => ['all', 'api', 'crud', 'digest'],
+        'firstName' => ['all', 'api', 'crud'],
+        'lastName' => ['all', 'api', 'crud'],
+        'roles' => ['crud'],
+        'active' => ['crud'],
+    ];
+
+    /**
+     * @param array<string, string[]> $configurations
+     */
+    public static function setExportConfiguration(array $configurations): void
+    {
+        self::$exportConfigurations = $configurations;
+    }
 
     public function getFirstName(): string
     {
@@ -209,6 +240,30 @@ class User implements IdentifiedObjectInterface, UserInterface, DeletableInterfa
     public function setActive(bool $active): User
     {
         $this->active = $active;
+
+        return $this;
+    }
+
+    public function exportToMeData(EastNormalizerInterface $normalizer, array $context = []): NormalizableInterface
+    {
+        $data = [
+            '@class' => self::class,
+            'id' => $this->getId(),
+            'email' => $this->getEmail(),
+            'firstName' => $this->getFirstName(),
+            'lastName' => $this->getLastName(),
+            'roles' => $this->getRoles(),
+            'active' => $this->isActive(),
+        ];
+
+        $this->setGroupsConfiguration(self::$exportConfigurations);
+
+        $normalizer->injectData(
+            $this->filterExport(
+                data: $data,
+                groups: (array) ($context['groups'] ?? ['all']),
+            )
+        );
 
         return $this;
     }

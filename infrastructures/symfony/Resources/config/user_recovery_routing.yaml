@@ -6,7 +6,6 @@ _teknoo_common_user_recovery:
         algorithm: '@Teknoo\East\Common\User\RecoveryAccess\TimeLimitedToken'
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
         formClass: 'Teknoo\East\CommonBundle\Form\Type\EmailFormType'
-        formOptions: {}
         formTemplate: '@@TeknooEastCommon/User/recovery_form.html.twig'
         loader: '@Teknoo\East\Common\Loader\UserLoader'
         submittedTemplate: '@@TeknooEastCommon/User/recovery_submitted.html.twig'

@@ -25,24 +25,25 @@ declare(strict_types=1);
 
 namespace Teknoo\East\CommonBundle\Form\Type;
 
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Teknoo\East\Common\Object\StoredPassword;
 use Teknoo\East\Common\Object\User;
-use Teknoo\East\CommonBundle\Contracts\Form\FormApiAwareInterface;
 use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
 
 /**
- * Symfony form to edit East Common User.
+ * Symfony form to edit East Common User in a API mode, (password are not manageable via API)
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-class UserType extends ApiUserType implements FormApiAwareInterface
+class ApiUserType extends AbstractType
 {
     /**
      * @param FormBuilderInterface<PasswordAuthenticatedUser> $builder
@@ -50,37 +51,23 @@ class UserType extends ApiUserType implements FormApiAwareInterface
      */
     public function buildForm(FormBuilderInterface $builder, array $options): self
     {
-        parent::buildForm($builder, $options);
-
-        if (!empty($options['api'])) {
-            return $this;
-        }
-
-        $builder->add('storedPassword', StoredPasswordType::class, ['mapped' => false]);
-
-        $builder->addEventListener(
-            FormEvents::POST_SET_DATA,
-            static function (FormEvent $event): void {
-                /**
-                 * @var User $user
-                 */
-                $user = $event->getData();
-                $spForm = $event->getForm()->get('storedPassword');
-
-                foreach ($user->getAuthData() as $authData) {
-                    if (!$authData instanceof StoredPassword) {
-                        continue;
-                    }
-
-                    $spForm->setData($authData);
-                    return;
-                }
-
-                $authData = new StoredPassword();
-                $spForm->setData($authData);
-                $user->addAuthData($authData);
-            }
+        $builder->add('firstName', TextType::class, ['required' => true]);
+        $builder->add('lastName', TextType::class, ['required' => true]);
+        $builder->add(
+            'roles',
+            ChoiceType::class,
+            [
+                'required' => true,
+                'multiple' => true,
+                'choices' => [
+                    'user' => 'ROLE_USER',
+                    'admin' => 'ROLE_ADMIN'
+                ]
+            ]
         );
+
+        $builder->add('email', EmailType::class, ['required' => true]);
+        $builder->add('active', CheckboxType::class);
 
         return $this;
     }
@@ -91,7 +78,6 @@ class UserType extends ApiUserType implements FormApiAwareInterface
 
         $resolver->setDefaults([
             'data_class' => User::class,
-            'api' => null,
         ]);
 
         return $this;

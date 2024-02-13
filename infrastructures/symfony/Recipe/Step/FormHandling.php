@@ -31,10 +31,12 @@ use Symfony\Component\Form\FormInterface;
 use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Common\Contracts\Object\PublishableInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormHandlingInterface;
+use Teknoo\East\CommonBundle\Contracts\Form\FormApiAwareInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Time\DatesService;
 
 use function in_array;
+use function is_a;
 use function is_callable;
 use function json_decode;
 
@@ -102,6 +104,10 @@ class FormHandling implements FormHandlingInterface
 
         if (!empty($api)) {
             $formOptions['csrf_protection'] = false;
+
+            if (is_a($formClass, FormApiAwareInterface::class, true)) {
+                $formOptions['api'] = $api;
+            }
         }
 
         $form = $this->createForm($formClass, $object, $formOptions);

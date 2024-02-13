@@ -18,7 +18,6 @@ _teknoo_common_admin_user_edit:
         _controller: 'teknoo.east.common.endpoint.crud.edit'
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
         formClass: 'Teknoo\East\CommonBundle\Form\Type\UserType'
-        formOptions: {}
         loader: '@Teknoo\East\Common\Loader\UserLoader'
         template: '@@TeknooEastCommon/AdminUser/edit.html.twig'
         writer: '@Teknoo\East\CommonBundle\Writer\SymfonyUserWriter'
@@ -31,7 +30,6 @@ _teknoo_common_admin_user_new:
         _controller: 'teknoo.east.common.endpoint.crud.new'
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
         formClass: 'Teknoo\East\CommonBundle\Form\Type\UserType'
-        formOptions: {}
         loader: '@Teknoo\East\Common\Loader\UserLoader'
         objectClass: 'Teknoo\East\Common\Object\User'
         route: '_teknoo_common_admin_user_edit'
@@ -70,7 +68,6 @@ _teknoo_common_admin_media_new:
         _controller: 'teknoo.east.common.endpoint.crud.new'
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
         formClass: 'Teknoo\East\CommonBundle\Form\Type\MediaType'
-        formOptions: { }
         loader: '@Teknoo\East\Common\Loader\MediaLoader'
         objectClass: 'Teknoo\East\Common\Doctrine\Object\Media'
         route: '_teknoo_common_admin_media_list'

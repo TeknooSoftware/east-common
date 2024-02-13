@@ -9,7 +9,6 @@ _teknoo_common_2fa_totp_enable:
         template: '@@TeknooEastCommon/2fa/enabling.html.twig'
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
         totpProvider: 'totp_custom'
-        formOptions: {}
 
 _teknoo_common_2fa_google_enable:
     path: '/2fa/google/enable'
@@ -21,7 +20,6 @@ _teknoo_common_2fa_google_enable:
         formClass: 'Teknoo\East\CommonBundle\Form\Type\TOTPType'
         template: '@@TeknooEastCommon/2fa/enabling.html.twig'
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
-        formOptions: {}
 
 _teknoo_common_2fa_totp_disable:
     path: '/2fa/disable'
@@ -68,7 +66,6 @@ _teknoo_common_2fa_totp_validate:
         template: '@@TeknooEastCommon/2fa/validated.html.twig'
         route: '_teknoo_common_2fa_totp_enable'
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
-        formOptions: {}
 
 _teknoo_common_2fa_google_validate:
     path: '/2fa/google/validate'
@@ -81,4 +78,3 @@ _teknoo_common_2fa_google_validate:
         template: '@@TeknooEastCommon/2fa/validated.html.twig'
         route: '_teknoo_common_2fa_google_enable'
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
-        formOptions: {}

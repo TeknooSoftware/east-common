@@ -34,6 +34,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
 use Teknoo\East\Common\Contracts\Object\PublishableInterface;
+use Teknoo\East\CommonBundle\Form\Type\UserType;
 use Teknoo\East\CommonBundle\Recipe\Step\FormHandling;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 
@@ -423,6 +424,55 @@ class FormHandlingTest extends TestCase
                 $formClass,
                 $object,
                 ['csrf_protection' => false],
+            )
+            ->willReturn($form);
+
+        self::assertInstanceOf(
+            FormHandling::class,
+            $this->buildStep()(
+                $request,
+                $manager,
+                $formClass,
+                $object,
+                $formOptions,
+            )
+        );
+    }
+
+    public function testInvokeApiNoJsonWithFormApiAware()
+    {
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->expects(self::any())->method('getAttribute')->willReturnCallback(
+            fn (string $name) => match ($name) {
+                'request' => $this->createMock(Request::class),
+                'api' => 'json',
+                default => false,
+            }
+        );
+
+        $request->expects(self::any())->method('getMethod')->willReturn('POST');
+        $request->expects(self::any())->method('getParsedBody')->willReturn([]);
+
+        $manager = $this->createMock(ManagerInterface::class);
+        $formClass = UserType::class;
+        $formOptions = [];
+        $object = $this->createMock(IdentifiedObjectInterface::class);
+
+        $this->getDatesService()
+            ->expects(self::never())
+            ->method('passMeTheDate');
+
+        $form = $this->createMock(FormInterface::class);
+        $form->expects(self::once())->method('handleRequest');
+        $form->expects(self::once())->method('submit');
+
+        $this->getFormFactory()
+            ->expects(self::any())
+            ->method('create')
+            ->with(
+                $formClass,
+                $object,
+                ['csrf_protection' => false, 'api' => 'json'],
             )
             ->willReturn($form);
 

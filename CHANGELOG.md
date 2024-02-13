@@ -1,5 +1,15 @@
 # Teknoo Software - Common - Change Log
 
+## [2.8.0] - 2024-02-13
+### Stable Release
+- Remove `formOptions` as empty value in Symfony's routes (useless since 2.7.1)
+- Add Symfony contract `FormApiAwareInterface` dedicated for form usable in a Web context and API context
+  - A form with this contract MUST accept the option `api`, (must add in `defaults`)
+  - If a the form implements this interface, the step `FormHandling` will also injected the ingredient `$api` in the
+    form options  
+- `UserType` is splitted into `UserType` and `ApiUserType`, the first extends the second and implements `FormApiAware`.
+  - Password are manageable only with `UserType`
+
 ## [2.7.3] - 2024-02-12
 ### Stable Release
 - Add User's export feature

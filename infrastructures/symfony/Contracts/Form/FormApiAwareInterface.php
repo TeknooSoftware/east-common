@@ -23,28 +23,21 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\CommonBundle\Contracts\Security\Authenticator;
+namespace Teknoo\East\CommonBundle\Contracts\Form;
 
-use League\OAuth2\Client\Provider\ResourceOwnerInterface;
-use Teknoo\Recipe\Promise\PromiseInterface;
+use Teknoo\East\Common\Object\TOTPAuth;
+use Teknoo\East\Common\Object\User;
 
 /**
- * Contract to define a convertor between a OAuth2 resource to UserInterface instance
+ * Contact defining Symfony Form able to read the "api" options from the workplan, to avoid to pass it in the
+ * $formOptions directly in the route configuration.
+ * A form with this contract MUST accept the option `api`, (must add in `defaults`)
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-interface UserConverterInterface
+interface FormApiAwareInterface
 {
-    /**
-     * @param PromiseInterface<string, mixed> $promise
-     */
-    public function extractEmail(ResourceOwnerInterface $owner, PromiseInterface $promise): UserConverterInterface;
-
-    /**
-     * @param PromiseInterface<mixed, mixed> $promise
-     */
-    public function convertToUser(ResourceOwnerInterface $owner, PromiseInterface $promise): UserConverterInterface;
 }

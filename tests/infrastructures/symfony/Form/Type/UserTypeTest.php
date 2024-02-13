@@ -40,6 +40,7 @@ use Teknoo\East\CommonBundle\Form\Type\UserType;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  * @covers      \Teknoo\East\CommonBundle\Form\Type\UserType
+ * @covers      \Teknoo\East\CommonBundle\Form\Type\ApiUserType
  */
 class UserTypeTest extends TestCase
 {

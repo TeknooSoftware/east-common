@@ -29,7 +29,7 @@ use Teknoo\East\Common\Object\TOTPAuth;
 use Teknoo\East\Common\Object\User;
 
 /**
- * Contact defining Symfony users classes able to support an 2FA authentication with TOTP protocoles
+ * Contract defining Symfony users classes able to support an 2FA authentication with TOTP protocoles
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)

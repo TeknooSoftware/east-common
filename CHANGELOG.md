@@ -11,6 +11,9 @@
   - The step's name of the end of the loop must be defined at the construction in the `StartLoopingOn` instance.
   - The step's name of the start loop must be also be defined at the construction of the `EndLooping` instance.
   - The "loop" (aka the `StartLoopingOn` instance) is also injected in the workplan at each loop
+- Add `VisitableTrait` to implement easily `VisitableInterface`
+- Update `VisitableInterface` to accept direclty the property name and the callable as second argument without use 
+  an array
 
 ## [2.8.0] - 2024-02-13
 ### Stable Release

@@ -23,9 +23,9 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Common\Recipe\Step;
+namespace Teknoo\East\Common\Object\Exception;
 
-use Teknoo\East\Foundation\Manager\ManagerInterface;
+use BadMethodCallException as BaseException;
 
 /**
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
@@ -33,21 +33,6 @@ use Teknoo\East\Foundation\Manager\ManagerInterface;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-class EndLooping
+class BadMethodCallException extends BaseException
 {
-    public function __construct(
-        private string $startStepName = StartLoopingOn::class,
-    ) {
-    }
-
-    public function __invoke(
-        ManagerInterface $manager,
-        StartLoopingOn $loop,
-    ): self {
-        if (!$loop->isEnded()) {
-            $manager->continue([], $this->startStepName);
-        }
-
-        return $this;
-    }
 }

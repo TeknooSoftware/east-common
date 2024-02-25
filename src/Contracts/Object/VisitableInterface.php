@@ -26,6 +26,8 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Common\Contracts\Object;
 
+use Teknoo\East\Common\Object\Exception\BadMethodCallException;
+
 /**
  * Interface to define a visitable object, to expose indirectly internal values / attributes to an method.
  *
@@ -40,7 +42,11 @@ interface VisitableInterface
      * The name of the attribute or any value' identifier (can be other than an objet's attribute). The object is not
      * mandatory to pass the value to the callable.
      *
-     * @param array<string, callable> $visitors
+     * You can also pass directly the name of the identified value and the callable as second parameter. The callable
+     * is forbidden if $visitor is an array, and required if $visitor is a string
+     *
+     * @param string|array<string, callable> $visitors
+     * @throws BadMethodCallException
      */
-    public function visit($visitors): VisitableInterface;
+    public function visit(string|array $visitors, ?callable $callable = null): VisitableInterface;
 }

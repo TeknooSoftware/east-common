@@ -1,5 +1,17 @@
 # Teknoo Software - Common - Change Log
 
+## [2.9.0] - 2024-02-25
+### Stable Release
+- Add steps `StartLoopingOn` and `EndLooping` to perform easily looping on a collection in a recipe
+  - The collection must be passed at runtime in `StartLoopingOn`.
+      (you can map your ingredient to the parameter `collection`)
+    - At each call, the `StartLoopingOn` will put in the workplan the current value of the collection
+      - If the value is an object, the workplan's key will be automatically defined from the object class
+      - You can set the key value during the construction of `StartLoopingOn`. It is mandatory for non objects values
+  - The step's name of the end of the loop must be defined at the construction in the `StartLoopingOn` instance.
+  - The step's name of the start loop must be also be defined at the construction of the `EndLooping` instance.
+  - The "loop" (aka the `StartLoopingOn` instance) is also injected in the workplan at each loop
+
 ## [2.8.0] - 2024-02-13
 ### Stable Release
 - Remove `formOptions` as empty value in Symfony's routes (useless since 2.7.1)

@@ -39,9 +39,9 @@ class UserWriterTest extends TestCase
 {
     use PersistTestTrait;
 
-    public function buildWriter(bool $prefereRealDateOnUpdate = false,): \Teknoo\East\Common\Contracts\Writer\WriterInterface
+    public function buildWriter(bool $preferRealDateOnUpdate = false,): \Teknoo\East\Common\Contracts\Writer\WriterInterface
     {
-        return new UserWriter($this->getObjectManager(), $this->getDatesServiceMock(), $prefereRealDateOnUpdate);
+        return new UserWriter($this->getObjectManager(), $this->getDatesServiceMock(), $preferRealDateOnUpdate);
     }
 
     public function getObject()

@@ -48,7 +48,7 @@ trait PersistTrait
     public function __construct(
         private ManagerInterface $manager,
         private ?DatesService $datesService = null,
-        protected bool $prefereRealDateOnUpdate = false,
+        protected bool $preferRealDateOnUpdate = false,
     ) {
     }
 
@@ -60,13 +60,13 @@ trait PersistTrait
     private function persist(
         ObjectInterface $object,
         ?PromiseInterface $promise = null,
-        ?bool $prefereRealDateOnUpdate = null,
+        ?bool $preferRealDateOnUpdate = null,
     ): self {
         try {
             if ($object instanceof TimestampableInterface && $this->datesService instanceof DatesService) {
                 $this->datesService->passMeTheDate(
                     setter: $object->setUpdatedAt(...),
-                    preferRealDate: $prefereRealDateOnUpdate ?? $this->prefereRealDateOnUpdate,
+                    preferRealDate: $preferRealDateOnUpdate ?? $this->preferRealDateOnUpdate,
                 );
             }
 

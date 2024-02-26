@@ -69,7 +69,7 @@ class SymfonyUserWriter implements WriterInterface
     public function save(
         ObjectInterface $object,
         PromiseInterface $promise = null,
-        ?bool $prefereRealDateOnUpdate = null,
+        ?bool $preferRealDateOnUpdate = null,
     ): WriterInterface {
         if (!$object instanceof BaseUser) {
             if (null !== $promise) {
@@ -92,7 +92,7 @@ class SymfonyUserWriter implements WriterInterface
             }
         }
 
-        $this->universalWriter->save($object, $promise, $prefereRealDateOnUpdate);
+        $this->universalWriter->save($object, $promise, $preferRealDateOnUpdate);
 
         return $this;
     }

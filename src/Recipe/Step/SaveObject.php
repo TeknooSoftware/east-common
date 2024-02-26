@@ -56,7 +56,7 @@ class SaveObject
         ParametersBag $parametersBag,
         string $errorMessage = 'Error during object persistence',
         int $errorCode = 500,
-        ?bool $prefereRealDateOnUpdate = null,
+        ?bool $preferRealDateOnUpdate = null,
     ): self {
         /** @var Promise<ObjectInterface, mixed, mixed> $savedPromise */
         $savedPromise = new Promise(
@@ -90,7 +90,7 @@ class SaveObject
         $writer->save(
             object: $object,
             promise: $savedPromise,
-            prefereRealDateOnUpdate: $prefereRealDateOnUpdate,
+            preferRealDateOnUpdate: $preferRealDateOnUpdate,
         );
 
         return $this;

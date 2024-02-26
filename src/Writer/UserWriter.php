@@ -57,9 +57,9 @@ class UserWriter implements WriterInterface
     public function save(
         ObjectInterface $object,
         PromiseInterface $promise = null,
-        ?bool $prefereRealDateOnUpdate = null,
+        ?bool $preferRealDateOnUpdate = null,
     ): WriterInterface {
-        $this->persist($object, $promise, $prefereRealDateOnUpdate);
+        $this->persist($object, $promise, $preferRealDateOnUpdate);
 
         return $this;
     }

@@ -60,7 +60,7 @@ class MediaWriter implements WriterInterface
     public function save(
         ObjectInterface $object,
         PromiseInterface $promise = null,
-        ?bool $prefereRealDateOnUpdate = null,
+        ?bool $preferRealDateOnUpdate = null,
     ): WriterInterface {
         if (!$object instanceof Media || !$object->getMetadata() instanceof MediaMetadata) {
             if (null !== $promise) {

@@ -74,7 +74,7 @@ trait PersistTestTrait
     /**
      * @return WriterInterface
      */
-    abstract public function buildWriter(bool $prefereRealDateOnUpdate = false,): WriterInterface;
+    abstract public function buildWriter(bool $preferRealDateOnUpdate = false,): WriterInterface;
 
     /**
      * @return object

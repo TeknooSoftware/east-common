@@ -39,9 +39,9 @@ class MediaWriterTest extends TestCase
 {
     use PersistTestTrait;
 
-    public function buildWriter(bool $prefereRealDateOnUpdate = false,): WriterInterface
+    public function buildWriter(bool $preferRealDateOnUpdate = false,): WriterInterface
     {
-        return new MediaWriter($this->getObjectManager(), $this->getDatesServiceMock(), $prefereRealDateOnUpdate);
+        return new MediaWriter($this->getObjectManager(), $this->getDatesServiceMock(), $preferRealDateOnUpdate);
     }
 
     public function getObject()

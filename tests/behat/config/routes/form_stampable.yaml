@@ -36,7 +36,7 @@ _teknoo_common_admin_my_object_timestampable_edit_real_date:
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
         cleanHtml: false
         formOptions: { }
-        prefereRealDateOnUpdate: true
+        preferRealDateOnUpdate: true
 
 _teknoo_common_api_my_object_timestampable_edit:
     path: '/api/my_object_timestampable/edit/{id}'
@@ -64,7 +64,7 @@ _teknoo_common_api_my_object_timestampable_edit_real_date:
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
         cleanHtml: false
         formOptions: { }
-        prefereRealDateOnUpdate: true
+        preferRealDateOnUpdate: true
         api: 'json'
 
 _teknoo_common_admin_my_object_timestampable_new:

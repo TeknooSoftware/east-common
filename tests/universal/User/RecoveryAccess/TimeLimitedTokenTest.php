@@ -56,8 +56,8 @@ class TimeLimitedTokenTest extends TestCase
             ->method('forward')
             ->with('5 days')
             ->willReturnCallback(
-                function ($delai, callable $setter, $prefereRealDate) use ($datesService): DatesService {
-                    self::assertTrue($prefereRealDate);
+                function ($delai, callable $setter, $preferRealDate) use ($datesService): DatesService {
+                    self::assertTrue($preferRealDate);
                     $setter(new DateTime('2024-01-20 01:02:03'));
 
                     return $datesService;

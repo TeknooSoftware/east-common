@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [2.9.1] - 2024-02-26
+### Stable Release
+- Fix typo `preferRealDate` instead of `prefereRealDate`
+
 ## [2.9.0] - 2024-02-25
 ### Stable Release
 - Add steps `StartLoopingOn` and `EndLooping` to perform easily looping on a collection in a recipe
@@ -308,9 +312,9 @@ The behavior is available only on environment with the ext tidy enabled (else th
 
 ## [1.3.0] - 2022-08-14
 ### Stable Release
-- Add parameter `$prefereRealDateOnUpdate` to method `WriterInterface::save()` to pass the real date instead of the 
+- Add parameter `$preferRealDateOnUpdate` to method `WriterInterface::save()` to pass the real date instead of the 
   date in cache when a `TimestampableInterface` instance is passed.
-- Add property `PersistTrait::$prefereRealDateOnUpdate` to set the default behavior for a writer about date to pass
+- Add property `PersistTrait::$preferRealDateOnUpdate` to set the default behavior for a writer about date to pass
   to a `TimestampableInterface` instance.
 
 ## [1.2.6] - 2022-08-06

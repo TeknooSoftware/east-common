@@ -106,20 +106,27 @@ class RecoveringAccessUserProvider implements UserProviderInterface, PasswordUpg
                         $algo = $authData->getAlgorithm();
                         if (class_exists($algo) && is_a($algo, AlgorithmInterface::class, true)) {
                             $validFunction = $algo::valid(...);
-                            $datesService->passMeTheDate(
-                                setter: function (
+                            /** @var Promise<DateTimeInterface, RecoveryAccess, mixed> $promise */
+                            $promise = new Promise(
+                                onSuccess: static function (
                                     DateTimeInterface $now
                                 ) use (
                                     $authData,
-                                    &$accessAuth,
                                     $validFunction
-                                ): void {
+                                ): ?RecoveryAccess {
                                     if ($validFunction($authData, $now)) {
-                                        $accessAuth = $authData;
+                                        return $authData;
                                     }
-                                },
+
+                                    return null;
+                                }
+                            );
+
+                            $datesService->passMeTheDate(
+                                setter: $promise,
                                 preferRealDate: true
                             );
+                            $accessAuth = $promise->fetchResult();
                         }
                     }
                 }

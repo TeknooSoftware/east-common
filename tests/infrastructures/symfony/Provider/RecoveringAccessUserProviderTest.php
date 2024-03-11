@@ -176,6 +176,44 @@ class RecoveringAccessUserProviderTest extends TestCase
         );
     }
 
+    public function testLoadUserByUsernameFoundWithWrongAlgorithm()
+    {
+        $this->getDatesService()->expects(self::any())
+            ->method('passMeTheDate')
+            ->willReturnCallback(
+                function (callable $setter) {
+                    $setter(new DateTimeImmutable('2024-01-28'));
+
+                    return  $this->datesService;
+                }
+            );
+
+        $user = new User();
+        $user->setEmail('foo@bar');
+        $user->setAuthData([
+            $recoveryAccess = new RecoveryAccess(
+                algorithm: TimeLimitedToken::class,
+                params: [
+                    'expired_at' => '2024-01-26',
+                    'token' => hash('sha256', random_bytes(512)),
+                ],
+            )
+        ]);
+
+        $this->getLoader()
+            ->expects(self::once())
+            ->method('fetch')
+            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
+                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
+                $promise->success($user);
+
+                return $this->getLoader();
+            });
+
+        $this->expectException(UserNotFoundException::class);
+        $this->buildProvider()->loadUserByUsername('foo@bar');
+    }
+
     public function testLoadUserByUsernameFoundWithGoogleAuthenticator()
     {
         $this->getDatesService()->expects(self::any())

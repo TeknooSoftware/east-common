@@ -1,5 +1,10 @@
 # Teknoo Software - Common - Change Log
 
+## [2.9.2] - 2024-02-13
+### Stable Release
+- Use Recipe 5+
+- Improve `RecoveringAccessUserProvider` to use new `Promise` feature
+
 ## [2.9.1] - 2024-02-26
 ### Stable Release
 - Fix typo `preferRealDate` instead of `prefereRealDate`

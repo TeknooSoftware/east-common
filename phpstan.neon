@@ -27,9 +27,6 @@ parameters:
         -
             message: '#query of method#'
             path: src/Recipe/Step/User/FindUserByEmail.php
-        -
-            message: '#Closure\(string\): string given#'
-            path: src/Service/FindSlugService.php
 
 services:
     -

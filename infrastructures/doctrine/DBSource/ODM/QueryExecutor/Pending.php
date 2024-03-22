@@ -46,6 +46,9 @@ class Pending implements StateInterface
 {
     use StateTrait;
 
+    /**
+     * @param PromiseInterface<mixed, mixed> $promise
+     */
     private function run(): Closure
     {
         return function (PromiseInterface $promise): void {

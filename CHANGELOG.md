@@ -1,5 +1,10 @@
 # Teknoo Software - Common - Change Log
 
+## [2.10.0] - 2024-04-02
+### Stable Release
+- `JumpIf` and `JumpIfNot` support a callable for `$expectedJumpValue`.
+  - If a callable is passed, it must return a boolean and accepts the `$testValue` as parameter.
+
 ## [2.9.3] - 2024-03-22
 ### Stable Release
 - Fix support of last PHPStan 1.10.64

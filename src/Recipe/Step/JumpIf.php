@@ -28,6 +28,8 @@ namespace Teknoo\East\Common\Recipe\Step;
 use Stringable;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 
+use function is_callable;
+
 /**
  * Special step to jump to another step when a $testValue is present in the workplan, or if a $testValue equal to
  * an expected value. If the $testValue is not null and stringable, the testValue will be casted to string.
@@ -52,8 +54,9 @@ class JumpIf
         }
 
         $conditionResult = (
-            (null === $expectedJumpValue && !empty($testValue))
-            || (null !== $expectedJumpValue && $testValue === $expectedJumpValue)
+            (is_callable($expectedJumpValue) && $expectedJumpValue($testValue))
+            || (null === $expectedJumpValue && !empty($testValue))
+            || (null !== $expectedJumpValue && !is_callable($expectedJumpValue) && $testValue === $expectedJumpValue)
         );
 
         if ($conditionResult === $this->conditionMustBe) {

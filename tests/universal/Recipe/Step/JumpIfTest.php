@@ -148,4 +148,38 @@ class JumpIfTest extends TestCase
             )
         );
     }
+
+    public function testInvokeValueExpectedIsCallbackWithSuccess()
+    {
+        $manager = $this->createMock(ManagerInterface::class);
+        $manager->expects(self::never())
+            ->method('continue');
+
+        self::assertInstanceOf(
+            JumpIf::class,
+            $this->buildStep()(
+                $manager,
+                'nextRouteName',
+                'foo',
+                fn ($val) => $val !== 'foo',
+            )
+        );
+    }
+
+    public function testInvokeValueExpectedIsCallbackWithFailure()
+    {
+        $manager = $this->createMock(ManagerInterface::class);
+        $manager->expects(self::once())
+            ->method('continue');
+
+        self::assertInstanceOf(
+            JumpIf::class,
+            $this->buildStep()(
+                $manager,
+                'nextRouteName',
+                'foo',
+                fn ($val) => $val === 'foo',
+            )
+        );
+    }
 }

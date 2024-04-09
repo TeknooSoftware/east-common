@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [2.10.1] - 2024-04-09
+### Stable Release
+- `RenderForm` step will set the response statut to 400 when the form is invalid and in api mode.
+
 ## [2.10.0] - 2024-04-02
 ### Stable Release
 - `JumpIf` and `JumpIfNot` support a callable for `$expectedJumpValue`.

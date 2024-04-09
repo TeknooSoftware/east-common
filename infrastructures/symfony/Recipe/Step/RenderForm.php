@@ -96,10 +96,21 @@ class RenderForm implements RenderFormInterface
             $parameters['formView'] = $form->createView();
         }
 
+        $status = 200;
+        if (
+            !empty($api)
+            && $form instanceof FormInterface
+            && $form->isSubmitted()
+            && !$form->isValid()
+        ) {
+            $status = 400;
+        }
+
         $this->render(
             client: $client,
             view: $template,
             parameters: $parameters + $viewParameters,
+            status: $status,
             api: $api,
             cleanHtml: $cleanHtml ?? $this->defaultCleanHtml,
         );

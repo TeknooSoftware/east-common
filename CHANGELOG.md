@@ -1,5 +1,10 @@
 # Teknoo Software - Common - Change Log
 
+## [2.11.0] - 2024-05-07
+### Stable Release
+- Drop support of PHP 8.1
+- Add sensitive parameter attribute on methods catching throwable to prevent leak.
+
 ## [2.10.1] - 2024-04-09
 ### Stable Release
 - `RenderForm` step will set the response statut to 400 when the form is invalid and in api mode.

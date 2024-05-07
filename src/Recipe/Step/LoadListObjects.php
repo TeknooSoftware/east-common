@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Common\Recipe\Step;
 
 use Countable;
+use SensitiveParameter;
 use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
 use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Common\Contracts\Query\Expr\ExprInterface;
@@ -132,7 +133,7 @@ class LoadListObjects
                     ],
                 );
             },
-            static fn (Throwable $throwable): ChefInterface => $manager->error(
+            static fn (#[SensitiveParameter] Throwable $throwable): ChefInterface => $manager->error(
                 new LoadingException(
                     message: $errorMessage,
                     code: $errorCode,

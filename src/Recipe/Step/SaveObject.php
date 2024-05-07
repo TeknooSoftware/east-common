@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Common\Recipe\Step;
 
 use RuntimeException;
+use SensitiveParameter;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface as ObjectWithId;
 use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Common\Contracts\Writer\WriterInterface;
@@ -78,7 +79,7 @@ class SaveObject
 
                 $manager->updateWorkPlan($workplan);
             },
-            static fn (Throwable $error): ChefInterface => $manager->error(
+            static fn (#[SensitiveParameter] Throwable $error): ChefInterface => $manager->error(
                 new RuntimeException(
                     code: $errorCode,
                     message: $errorMessage,

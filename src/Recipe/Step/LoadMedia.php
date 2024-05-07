@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Common\Recipe\Step;
 
 use DomainException;
+use SensitiveParameter;
 use Teknoo\East\Common\Loader\MediaLoader;
 use Teknoo\East\Common\Object\Media;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
@@ -54,7 +55,7 @@ class LoadMedia
             static function (Media $media) use ($manager): void {
                 $manager->updateWorkPlan([Media::class => $media]);
             },
-            static function (Throwable $error) use ($manager): void {
+            static function (#[SensitiveParameter] Throwable $error) use ($manager): void {
                 $error = new DomainException($error->getMessage(), 404, $error);
 
                 $manager->error($error);

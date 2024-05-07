@@ -30,6 +30,7 @@ use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator as BaseAu
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface as GoogleTwoFactorInterface;
 use Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface as TotpTwoFactorInterface;
+use SensitiveParameter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -163,7 +164,7 @@ class OAuth2Authenticator extends BaseAuthenticator
 
                     $returnPromise = new Promise(
                         static fn(ThirdPartyAuthenticatedUser $user): ThirdPartyAuthenticatedUser => $user,
-                        static function (Throwable $error): never {
+                        static function (#[SensitiveParameter] Throwable $error): never {
                             throw $error;
                         }
                     );
@@ -172,7 +173,10 @@ class OAuth2Authenticator extends BaseAuthenticator
                         function (User $user, PromiseInterface $next) use ($accessToken, $provider): void {
                             $this->registerToken($user, (string) $provider, $accessToken->getToken(), $next);
                         },
-                        static fn(Throwable $error, PromiseInterface $next): PromiseInterface => $next->fail($error),
+                        static fn(
+                            #[SensitiveParameter] Throwable $error,
+                            PromiseInterface $next,
+                        ): PromiseInterface => $next->fail($error),
                         true
                     );
 
@@ -180,7 +184,10 @@ class OAuth2Authenticator extends BaseAuthenticator
                         static function (User $user, PromiseInterface $next): void {
                             $next->success($user);
                         },
-                        function (Throwable $error, PromiseInterface $next) use ($oauthUser): void {
+                        function (
+                            #[SensitiveParameter] Throwable $error,
+                            PromiseInterface $next,
+                        ) use ($oauthUser): void {
                             if ($error instanceof DomainException) {
                                 $this->userConverter->convertToUser(
                                     $oauthUser,
@@ -202,7 +209,7 @@ class OAuth2Authenticator extends BaseAuthenticator
                                 $next
                             );
                         },
-                        static function (Throwable $error): never {
+                        static function (#[SensitiveParameter] Throwable $error): never {
                             throw $error;
                         },
                         true,

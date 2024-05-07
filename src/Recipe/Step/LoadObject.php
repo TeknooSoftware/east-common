@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Common\Recipe\Step;
 
 use DomainException;
+use SensitiveParameter;
 use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
 use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
@@ -60,7 +61,7 @@ class LoadObject
             static function (ObjectInterface $object) use ($manager, $workPlanKey): void {
                 $manager->updateWorkPlan([$workPlanKey => $object]);
             },
-            static fn (Throwable $error): ChefInterface => $manager->error(
+            static fn (#[SensitiveParameter] Throwable $error): ChefInterface => $manager->error(
                 new DomainException(
                     message: $errorMessage ?? $error->getMessage(),
                     code: $errorCode ?? (int) ($error->getCode() > 0 ? $error->getCode() : 404),

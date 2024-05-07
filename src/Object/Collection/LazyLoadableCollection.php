@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Common\Object\Collection;
 
 use IteratorAggregate;
+use SensitiveParameter;
 use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
 use Teknoo\East\Common\Contracts\Query\QueryCollectionInterface;
 use Teknoo\East\Common\Query\Exception\NonFetchedCollectionException;
@@ -69,7 +70,7 @@ class LazyLoadableCollection implements IteratorAggregate
         /** @var Promise<iterable<ObjectClassInCollection>, mixed, iterable<ObjectClassInCollection>> $promise */
         $promise = new Promise(
             fn (iterable $collection) => $this->fetchedCollection = $collection,
-            fn (Throwable $error) => throw $error,
+            fn (#[SensitiveParameter] Throwable $error) => throw $error,
         );
 
         $this->loader->query(

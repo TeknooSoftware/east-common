@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Common\Recipe\Step\Traits;
 
 use Psr\Http\Message\StreamFactoryInterface;
+use SensitiveParameter;
 use Teknoo\East\Foundation\Client\ClientInterface;
 use Teknoo\East\Foundation\Http\Message\CallbackStreamInterface;
 use Teknoo\Recipe\Promise\Promise;
@@ -132,7 +133,9 @@ trait TemplateTrait
                     static function (ResultInterface $result): string {
                         return (string) $result;
                     },
-                    static fn (Throwable $error): ClientInterface => $client->errorInRequest($error, false),
+                    static fn (
+                        #[SensitiveParameter] Throwable $error,
+                    ): ClientInterface => $client->errorInRequest($error, false),
                 );
 
                 $this->templating->render(
@@ -171,7 +174,9 @@ trait TemplateTrait
 
                         $client->acceptResponse($response);
                     },
-                    static fn (Throwable $error): ClientInterface => $client->errorInRequest($error, false),
+                    static fn (
+                        #[SensitiveParameter] Throwable $error,
+                    ): ClientInterface => $client->errorInRequest($error, false),
                 ),
                 $view,
                 $parameters,

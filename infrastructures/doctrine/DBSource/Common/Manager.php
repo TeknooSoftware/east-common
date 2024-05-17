@@ -27,6 +27,8 @@ namespace Teknoo\East\Common\Doctrine\DBSource\Common;
 
 use Doctrine\Persistence\ObjectManager;
 use Teknoo\East\Common\Contracts\DBSource\ManagerInterface;
+use Teknoo\East\Common\DBSource\Manager\AlreadyStartedBatchException;
+use Teknoo\East\Common\DBSource\Manager\NonStartedBatchException;
 
 /**
  * Default implementation of `ManagerInterface` wrapping Doctrine's object manager,
@@ -40,9 +42,40 @@ use Teknoo\East\Common\Contracts\DBSource\ManagerInterface;
  */
 class Manager implements ManagerInterface
 {
+    private bool $isInBatch = false;
+
+    private bool $mustFlush = false;
+
     public function __construct(
         private readonly ObjectManager $objectManager,
     ) {
+    }
+
+    public function openBatch(): ManagerInterface
+    {
+        if ($this->isInBatch) {
+            throw new AlreadyStartedBatchException();
+        }
+
+        $this->isInBatch = true;
+
+        return $this;
+    }
+
+    public function closeBatch(): ManagerInterface
+    {
+        if (!$this->isInBatch) {
+            throw new NonStartedBatchException();
+        }
+
+        if ($this->mustFlush) {
+            $this->objectManager->flush();
+        }
+
+        $this->isInBatch = false;
+        $this->mustFlush = false;
+
+        return $this;
     }
 
     public function persist(object $object): ManagerInterface
@@ -61,7 +94,11 @@ class Manager implements ManagerInterface
 
     public function flush(): ManagerInterface
     {
-        $this->objectManager->flush();
+        if (!$this->isInBatch) {
+            $this->objectManager->flush();
+        } else {
+            $this->mustFlush = true;
+        }
 
         return $this;
     }

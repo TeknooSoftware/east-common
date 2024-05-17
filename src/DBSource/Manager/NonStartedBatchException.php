@@ -23,9 +23,9 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Common\FrontAsset;
+namespace Teknoo\East\Common\DBSource\Manager;
 
-use Teknoo\East\Common\Contracts\FrontAsset\FileInterface;
+use LogicException;
 
 /**
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
@@ -33,39 +33,6 @@ use Teknoo\East\Common\Contracts\FrontAsset\FileInterface;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-class File implements FileInterface
+class NonStartedBatchException extends LogicException
 {
-    /**
-     * @var callable
-     */
-    private $contentCallback;
-
-    private ?string $content = null;
-
-    public function __construct(
-        private string $path,
-        private FileType $type,
-        callable $contentCallback,
-    ) {
-        $this->contentCallback = $contentCallback;
-    }
-
-    public function &getContent(): string
-    {
-        if (null === $this->content) {
-            $this->content = ($this->contentCallback)();
-        }
-
-        return $this->content;
-    }
-
-    public function getPath(): string
-    {
-        return $this->path;
-    }
-
-    public function getType(): FileType
-    {
-        return $this->type;
-    }
 }

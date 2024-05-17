@@ -27,6 +27,8 @@ namespace Teknoo\Tests\East\Common\Doctrine\DBSource\Common;
 
 use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
+use Teknoo\East\Common\DBSource\Manager\AlreadyStartedBatchException;
+use Teknoo\East\Common\DBSource\Manager\NonStartedBatchException;
 use Teknoo\East\Common\Doctrine\DBSource\Common\Manager;
 
 /**
@@ -95,6 +97,43 @@ class ManagerTest extends TestCase
         self::assertInstanceOf(
             Manager::class,
             $this->buildManager()->flush()
+        );
+    }
+
+    public function testFlushOnBatch()
+    {
+        $this->getDoctrineObjectManagerMock()
+            ->expects(self::never())
+            ->method('flush');
+
+        self::assertInstanceOf(
+            Manager::class,
+            $this->buildManager()->openBatch()->flush()
+        );
+    }
+
+    public function testOpenBatchException()
+    {
+        $this->expectException(AlreadyStartedBatchException::class);
+        $this->buildManager()->openBatch()->openBatch();
+    }
+
+    public function testCloseBatchException()
+    {
+        $this->expectException(NonStartedBatchException::class);
+        $this->buildManager()->closeBatch();
+    }
+
+    public function testOnBatch()
+    {
+        $this->getDoctrineObjectManagerMock()
+            ->expects(self::once())
+            ->method('flush');
+
+        $manager = $this->buildManager();
+        self::assertInstanceOf(
+            Manager::class,
+            $manager->openBatch()->flush()->flush()->flush()->closeBatch()
         );
     }
 }

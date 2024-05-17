@@ -26,6 +26,8 @@ declare(strict_types=1);
 namespace Teknoo\East\Common\Contracts\DBSource;
 
 use Teknoo\East\Common\Contracts\Object\ObjectInterface;
+use Teknoo\East\Common\DBSource\Manager\AlreadyStartedBatchException;
+use Teknoo\East\Common\DBSource\Manager\NonStartedBatchException;
 
 /**
  * To define manager about unitaries operations on persisteds objects
@@ -37,6 +39,20 @@ use Teknoo\East\Common\Contracts\Object\ObjectInterface;
  */
 interface ManagerInterface
 {
+    /**
+     * To start a new batch of writing operation (flush calls will be delayed until closeBatch has called).
+     * It's not like transaction behavior.
+     * @throws AlreadyStartedBatchException if a transaction has been started
+     */
+    public function openBatch(): ManagerInterface;
+
+    /**
+     * To close and execute a batch of writing operation delayed since the call of openBatch
+     *  It's not like transaction behavior.
+     * @throws NonStartedBatchException if no transaction has been started
+     */
+    public function closeBatch(): ManagerInterface;
+
     /*
      * Tells the Manager to make an instance managed and persistent.
      *

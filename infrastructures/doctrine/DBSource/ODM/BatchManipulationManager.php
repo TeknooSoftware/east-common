@@ -32,6 +32,8 @@ use Teknoo\East\Common\Contracts\DBSource\ManagerInterface;
 use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Common\Contracts\Query\DeletingQueryInterface;
 use Teknoo\East\Common\Contracts\Query\UpdatingQueryInterface;
+use Teknoo\East\Common\DBSource\Manager\AlreadyStartedBatchException;
+use Teknoo\East\Common\DBSource\Manager\NonStartedBatchException;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
@@ -77,6 +79,20 @@ class BatchManipulationManager implements BatchManipulationManagerInterface
         );
 
         $query->delete($executor, $promise);
+
+        return $this;
+    }
+
+    public function openBatch(): ManagerInterface
+    {
+        $this->baseManager->openBatch();
+
+        return $this;
+    }
+
+    public function closeBatch(): ManagerInterface
+    {
+        $this->baseManager->closeBatch();
 
         return $this;
     }

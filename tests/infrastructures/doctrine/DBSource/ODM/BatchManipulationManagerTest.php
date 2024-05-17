@@ -105,6 +105,32 @@ class BatchManipulationManagerTest extends TestCase
         );
     }
 
+    public function testOpenBatch()
+    {
+        $this->getManager()
+            ->expects(self::once())
+            ->method('openBatch')
+            ->willReturnSelf();
+
+        self::assertInstanceOf(
+            BatchManipulationManagerInterface::class,
+            $this->buildBatchManager()->openBatch()
+        );
+    }
+
+    public function testCloseBatch()
+    {
+        $this->getManager()
+            ->expects(self::once())
+            ->method('closeBatch')
+            ->willReturnSelf();
+
+        self::assertInstanceOf(
+            BatchManipulationManagerInterface::class,
+            $this->buildBatchManager()->closeBatch()
+        );
+    }
+
     public function testPersist()
     {
         $this->getManager()

@@ -1,5 +1,10 @@
 # Teknoo Software - Common - Change Log
 
+## [2.12.0] - 2024-05-17
+### Stable Release
+- Add methods `openBatch` and `closeBatch` to DBSource managers to create batch of writing operation, like transaction,
+  but reading operations are not impacted, it's not a transaction. (This will come soon).
+
 ## [2.11.0] - 2024-05-07
 ### Stable Release
 - Drop support of PHP 8.1

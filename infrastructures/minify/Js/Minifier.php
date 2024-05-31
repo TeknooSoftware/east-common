@@ -27,7 +27,6 @@ namespace Teknoo\East\Common\Minify\Js;
 
 use Teknoo\East\Common\Contracts\FrontAsset\FilesSetInterface;
 use Teknoo\East\Common\Contracts\FrontAsset\MinifierInterface;
-use Teknoo\East\Common\FrontAsset\File;
 use Teknoo\East\Common\FrontAsset\FileType;
 use Teknoo\East\Common\Minify\AbstractMinifier;
 

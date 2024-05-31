@@ -1,5 +1,10 @@
 # Teknoo Software - Common - Change Log
 
+## [2.12.1] - 2024-05-31
+### Stable Release
+- Fix deprecated : replace `Symfony\Component\HttpKernel\DependencyInjection\Extension`
+        by `Symfony\Component\DependencyInjection\Extension\Extension`
+
 ## [2.12.0] - 2024-05-17
 ### Stable Release
 - Add methods `openBatch` and `closeBatch` to DBSource managers to create batch of writing operation, like transaction,

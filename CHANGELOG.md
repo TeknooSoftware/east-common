@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [2.12.2] - 2024-06-03
+### Stable Release
+- Remove useless dependency to `symfony/templating`
+
 ## [2.12.1] - 2024-05-31
 ### Stable Release
 - Fix deprecated : replace `Symfony\Component\HttpKernel\DependencyInjection\Extension`

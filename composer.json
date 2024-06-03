@@ -105,7 +105,6 @@
         "symfony/security-bundle": "^6.3||^7",
         "symfony/security-core": "^6.3||^7",
         "symfony/security-http": "^6.3||^7",
-        "symfony/templating": "^6.3||^7",
         "symfony/validator": "^6.3||^7",
         "twig/twig": "^3.8",
         "twig/cssinliner-extra": "^3.8",

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\CommonBundle\Recipe\Cookbook;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormHandlingInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RenderFormInterface;
@@ -39,8 +40,8 @@ use Teknoo\Tests\Recipe\Cookbook\BaseCookbookTestTrait;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  *
- * @covers      \Teknoo\East\CommonBundle\Recipe\Cookbook\Enable2FA
  */
+#[CoversClass(Enable2FA::class)]
 class Enable2FATest extends TestCase
 {
     use BaseCookbookTestTrait;

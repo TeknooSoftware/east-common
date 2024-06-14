@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\Tests\East\Common\Recipe\Step;
 
 use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Recipe\Step\EndLooping;
 use Teknoo\East\Common\Recipe\Step\StartLoopingOn;
@@ -35,8 +36,8 @@ use function array_shift;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\East\Common\Recipe\Step\StartLoopingOn
  */
+#[CoversClass(StartLoopingOn::class)]
 class StartLoopingOnTest extends TestCase
 {
     public function buildStep(string $keyValue = null): StartLoopingOn
@@ -47,13 +48,13 @@ class StartLoopingOnTest extends TestCase
     public function testLoopingWithScalarAndWithoutKey()
     {
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::never())
+        $manager->expects($this->never())
             ->method('updateWorkPlan');
 
-        $manager->expects(self::never())
+        $manager->expects($this->never())
             ->method('continue');
 
-        $manager->expects(self::once())
+        $manager->expects($this->once())
             ->method('error');
 
         self::assertInstanceOf(
@@ -73,7 +74,7 @@ class StartLoopingOnTest extends TestCase
         ];
 
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::exactly(3))
+        $manager->expects($this->exactly(3))
             ->method('updateWorkPlan')
             ->willReturnCallback(
                 function ($values) use (&$expectedValues, $step, $manager): ManagerInterface {
@@ -89,11 +90,11 @@ class StartLoopingOnTest extends TestCase
                 }
             );
 
-        $manager->expects(self::once())
+        $manager->expects($this->once())
             ->method('continue')
             ->with([StartLoopingOn::class => $step], EndLooping::class);
 
-        $manager->expects(self::never())
+        $manager->expects($this->never())
             ->method('error');
 
         $collection = [
@@ -118,7 +119,7 @@ class StartLoopingOnTest extends TestCase
 
         $expectedValues = [1,2,3];
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::exactly(3))
+        $manager->expects($this->exactly(3))
             ->method('updateWorkPlan')
             ->willReturnCallback(
                 function ($values) use (&$expectedValues, $step, $manager): ManagerInterface {
@@ -134,11 +135,11 @@ class StartLoopingOnTest extends TestCase
                 }
             );
 
-        $manager->expects(self::once())
+        $manager->expects($this->once())
             ->method('continue')
             ->with([StartLoopingOn::class => $step], EndLooping::class);
 
-        $manager->expects(self::never())
+        $manager->expects($this->never())
             ->method('error');
 
         $collection = [1,2,3];

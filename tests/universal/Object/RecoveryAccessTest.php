@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\Tests\East\Common\Object;
 
 use DomainException;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use Teknoo\East\Common\Object\RecoveryAccess;
@@ -35,8 +36,8 @@ use Teknoo\Tests\East\Common\Object\Traits\PopulateObjectTrait;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\East\Common\Object\RecoveryAccess
  */
+#[CoversClass(RecoveryAccess::class)]
 class RecoveryAccessTest extends TestCase
 {
     use PopulateObjectTrait;

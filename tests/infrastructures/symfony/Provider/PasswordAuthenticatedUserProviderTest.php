@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\CommonBundle\Provider;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface as GoogleTwoFactorInterface;
 use Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface as TotpTwoFactorInterface;
@@ -47,8 +48,8 @@ use Teknoo\East\Common\Object\User as BaseUser;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  *
- * @covers      \Teknoo\East\CommonBundle\Provider\PasswordAuthenticatedUserProvider
  */
+#[CoversClass(PasswordAuthenticatedUserProvider::class)]
 class PasswordAuthenticatedUserProviderTest extends TestCase
 {
     /**
@@ -95,7 +96,7 @@ class PasswordAuthenticatedUserProviderTest extends TestCase
         $this->expectException(UserNotFoundException::class);
 
         $this->getLoader()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
@@ -114,7 +115,7 @@ class PasswordAuthenticatedUserProviderTest extends TestCase
         $user->setAuthData([$storedPassword = new StoredPassword()]);
 
         $this->getLoader()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
@@ -149,7 +150,7 @@ class PasswordAuthenticatedUserProviderTest extends TestCase
         );
 
         $this->getLoader()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
@@ -196,7 +197,7 @@ class PasswordAuthenticatedUserProviderTest extends TestCase
         );
 
         $this->getLoader()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
@@ -232,7 +233,7 @@ class PasswordAuthenticatedUserProviderTest extends TestCase
         $user->setAuthData([$this->createMock(AuthDataInterface::class)]);
 
         $this->getLoader()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
@@ -250,7 +251,7 @@ class PasswordAuthenticatedUserProviderTest extends TestCase
         $this->expectException(UserNotFoundException::class);
 
         $this->getLoader()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
@@ -269,7 +270,7 @@ class PasswordAuthenticatedUserProviderTest extends TestCase
         $user->setAuthData([$storedPassword = new StoredPassword()]);
 
         $this->getLoader()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
@@ -293,7 +294,7 @@ class PasswordAuthenticatedUserProviderTest extends TestCase
         $user->setAuthData([$this->createMock(AuthDataInterface::class)]);
 
         $this->getLoader()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
@@ -311,7 +312,7 @@ class PasswordAuthenticatedUserProviderTest extends TestCase
         $this->expectException(UserNotFoundException::class);
 
         $this->getLoader()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
@@ -335,7 +336,7 @@ class PasswordAuthenticatedUserProviderTest extends TestCase
         $user->setAuthData([$storedPassword = new StoredPassword()]);
 
         $this->getLoader()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
@@ -365,7 +366,7 @@ class PasswordAuthenticatedUserProviderTest extends TestCase
 
     public function testUpgradePasswordNotSupported()
     {
-        $this->getWriter()->expects(self::never())->method('save');
+        $this->getWriter()->expects($this->never())->method('save');
 
         $this->buildProvider()->upgradePassword(
             $this->createMock(UserInterface::class),
@@ -378,11 +379,11 @@ class PasswordAuthenticatedUserProviderTest extends TestCase
         $user = $this->createMock(PasswordAuthenticatedUser::class);
         $storedPassword = $this->createMock(StoredPassword::class);
 
-        $user->expects(self::any())->method('getWrappedStoredPassword')->willReturn($storedPassword);
+        $user->expects($this->any())->method('getWrappedStoredPassword')->willReturn($storedPassword);
 
-        $storedPassword->expects(self::once())->method('setHashedPassword')->with('foo');
+        $storedPassword->expects($this->once())->method('setHashedPassword')->with('foo');
 
-        $this->getWriter()->expects(self::once())->method('save');
+        $this->getWriter()->expects($this->once())->method('save');
 
         $this->buildProvider()->upgradePassword(
             $user,

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Recipe\Step\User;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Object\User;
 use Teknoo\East\Common\Recipe\Step\User\RemoveRecoveryAccess;
@@ -32,8 +33,8 @@ use Teknoo\East\Common\Recipe\Step\User\RemoveRecoveryAccess;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\East\Common\Recipe\Step\User\RemoveRecoveryAccess
  */
+#[CoversClass(RemoveRecoveryAccess::class)]
 class RemoveRecoveryAccessTest extends TestCase
 {
     public function testInvoke()

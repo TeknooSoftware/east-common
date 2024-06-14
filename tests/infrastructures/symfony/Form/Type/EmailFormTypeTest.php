@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\CommonBundle\Form\Type;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Teknoo\East\CommonBundle\Form\Type\EmailFormType;
@@ -32,8 +33,8 @@ use Teknoo\East\CommonBundle\Form\Type\EmailFormType;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers      \Teknoo\East\CommonBundle\Form\Type\EmailFormType
  */
+#[CoversClass(EmailFormType::class)]
 class EmailFormTypeTest extends TestCase
 {
     use FormTestTrait;

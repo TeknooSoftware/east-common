@@ -25,18 +25,21 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\CommonBundle\Object\TOTP;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use Teknoo\East\Common\Object\ThirdPartyAuth;
 use Teknoo\East\Common\Object\User;
 use Teknoo\East\CommonBundle\Contracts\Object\UserWithTOTPAuthInterface;
 use Teknoo\East\CommonBundle\Object\TOTP\GoogleAuthThirdPartyAuthenticatedUser;
+use Teknoo\East\CommonBundle\Object\TOTP\TOTPAuthTrait;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  *
- * @covers      \Teknoo\East\CommonBundle\Object\TOTP\GoogleAuthThirdPartyAuthenticatedUser
- * @covers      \Teknoo\East\CommonBundle\Object\TOTP\TOTPAuthTrait
  */
+#[CoversTrait(TOTPAuthTrait::class)]
+#[CoversClass(GoogleAuthThirdPartyAuthenticatedUser::class)]
 class GoogleAuthThirdPartyAuthenticatedUserTest extends AbstractTOTPAuthTests
 {
     protected function buildUser(): UserWithTOTPAuthInterface

@@ -28,6 +28,7 @@ namespace Teknoo\Tests\East\CommonBundle\EndPoint;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Client\OAuth2ClientInterface;
 use League\OAuth2\Client\Provider\AbstractProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -46,8 +47,8 @@ use Teknoo\East\CommonBundle\EndPoint\ConnectEndPoint;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers      \Teknoo\East\CommonBundle\EndPoint\ConnectEndPoint
  */
+#[CoversClass(ConnectEndPoint::class)]
 class ConnectEndPointTest extends TestCase
 {
     private ?ClientRegistry $clientRegistry = null;
@@ -73,12 +74,12 @@ class ConnectEndPointTest extends TestCase
         );
 
         $response = $this->createMock(ResponseInterface::class);
-        $response->expects(self::any())
+        $response->expects($this->any())
             ->method('withHeader')
             ->willReturnSelf();
 
         $factory = $this->createMock(ResponseFactoryInterface::class);
-        $factory->expects(self::any())
+        $factory->expects($this->any())
             ->method('createResponse')
             ->willReturn($response);
 
@@ -96,21 +97,21 @@ class ConnectEndPointTest extends TestCase
 
         $oauthClient = $this->createMock(OAuth2ClientInterface::class);
         $this->getClientRegistry()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getClient')
             ->with('foo')
             ->willReturn($oauthClient);
 
         $provider = $this->createMock(AbstractProvider::class);
-        $oauthClient->expects(self::any())
+        $oauthClient->expects($this->any())
             ->method('getOAuth2Provider')
             ->willReturn($provider);
 
-        $provider->expects(self::any())
+        $provider->expects($this->any())
             ->method('getAuthorizationUrl')
             ->willReturn('/foo/bar');
 
-        $provider->expects(self::any())
+        $provider->expects($this->any())
             ->method('getState')
             ->willReturn('/foo/bar');
 
@@ -127,21 +128,21 @@ class ConnectEndPointTest extends TestCase
 
         $oauthClient = $this->createMock(OAuth2ClientInterface::class);
         $this->getClientRegistry()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getClient')
             ->with('foo')
             ->willReturn($oauthClient);
 
         $provider = $this->createMock(AbstractProvider::class);
-        $oauthClient->expects(self::any())
+        $oauthClient->expects($this->any())
             ->method('getOAuth2Provider')
             ->willReturn($provider);
 
-        $provider->expects(self::any())
+        $provider->expects($this->any())
             ->method('getAuthorizationUrl')
             ->willReturn('/foo/bar');
 
-        $provider->expects(self::any())
+        $provider->expects($this->any())
             ->method('getState')
             ->willReturn('/foo/bar');
 

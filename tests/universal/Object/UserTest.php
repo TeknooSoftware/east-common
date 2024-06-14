@@ -25,9 +25,12 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Object;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use Teknoo\East\Common\Contracts\User\AuthDataInterface;
+use Teknoo\East\Common\Object\ObjectTrait;
 use Teknoo\East\Common\Object\StoredPassword;
 use Teknoo\East\Common\Object\ThirdPartyAuth;
 use Teknoo\East\Common\Object\TOTPAuth;
@@ -38,9 +41,9 @@ use Teknoo\East\Common\Object\User;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\East\Common\Object\ObjectTrait
- * @covers \Teknoo\East\Common\Object\User
  */
+#[CoversClass(User::class)]
+#[CoversTrait(ObjectTrait::class)]
 class UserTest extends TestCase
 {
     use ObjectTestTrait;
@@ -418,7 +421,7 @@ class UserTest extends TestCase
     public function testExportToMe()
     {
         $normalizer = $this->createMock(EastNormalizerInterface::class);
-        $normalizer->expects(self::once())
+        $normalizer->expects($this->once())
             ->method('injectData')
             ->with([
                 '@class' => User::class,

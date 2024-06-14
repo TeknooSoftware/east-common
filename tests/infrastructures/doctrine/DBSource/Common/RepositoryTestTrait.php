@@ -41,6 +41,10 @@ use Teknoo\East\Common\Query\Expr\Regex;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Throwable;
 
+use function restore_error_handler;
+
+use const E_USER_NOTICE;
+
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
@@ -81,11 +85,11 @@ trait RepositoryTestTrait
     public function testFindNothing()
     {
         $promise = $this->createMock(PromiseInterface::class);
-        $promise->expects(self::never())->method('success');
-        $promise->expects(self::once())->method('fail')->with($this->callback(fn($value) => $value instanceof \DomainException));
+        $promise->expects($this->never())->method('success');
+        $promise->expects($this->once())->method('fail')->with($this->callback(fn($value) => $value instanceof \DomainException));
 
         $this->getDoctrineObjectRepositoryMock()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('find')
             ->with('abc')
             ->willReturn(null);
@@ -100,11 +104,11 @@ trait RepositoryTestTrait
     {
         $object = new \stdClass();
         $promise = $this->createMock(PromiseInterface::class);
-        $promise->expects(self::once())->method('success')->with($object);
-        $promise->expects(self::never())->method('fail');
+        $promise->expects($this->once())->method('success')->with($object);
+        $promise->expects($this->never())->method('fail');
 
         $this->getDoctrineObjectRepositoryMock()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('find')
             ->with('abc')
             ->willReturn($object);
@@ -119,11 +123,11 @@ trait RepositoryTestTrait
     {
         $object = new \stdClass();
         $promise = $this->createMock(PromiseInterface::class);
-        $promise->expects(self::once())->method('success')->with($object);
-        $promise->expects(self::never())->method('fail');
+        $promise->expects($this->once())->method('success')->with($object);
+        $promise->expects($this->never())->method('fail');
 
         $this->getDoctrineObjectRepositoryMock()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('find')
             ->with('abc')
             ->willReturn($object);
@@ -135,7 +139,7 @@ trait RepositoryTestTrait
                 function () use (&$fail) {
                     $fail = true;
                 },
-                \E_USER_NOTICE
+                E_USER_NOTICE
             );
         }
 
@@ -145,14 +149,19 @@ trait RepositoryTestTrait
                 $this->buildRepository()->find('abc', $promise, ['foo'],)
             );
         } catch (AssertionFailedError $error) {
+            if (null !== $previous) {
+                restore_error_handler();
+            }
+
             throw $error;
         } catch (Throwable) {
             $fail = true;
         }
 
         if (null !== $previous) {
-            set_error_handler($previous);
+            restore_error_handler();
         }
+
         self::assertTrue($fail, 'Notice must be Thrown');
     }
 
@@ -166,11 +175,11 @@ trait RepositoryTestTrait
     {
         $object = [new \stdClass()];
         $promise = $this->createMock(PromiseInterface::class);
-        $promise->expects(self::once())->method('success')->with($object);
-        $promise->expects(self::never())->method('fail');
+        $promise->expects($this->once())->method('success')->with($object);
+        $promise->expects($this->never())->method('fail');
 
         $this->getDoctrineObjectRepositoryMock()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('findAll')
             ->willReturn($object);
 
@@ -184,11 +193,11 @@ trait RepositoryTestTrait
     {
         $object = [new \stdClass()];
         $promise = $this->createMock(PromiseInterface::class);
-        $promise->expects(self::once())->method('success')->with($object);
-        $promise->expects(self::never())->method('fail');
+        $promise->expects($this->once())->method('success')->with($object);
+        $promise->expects($this->never())->method('fail');
 
         $this->getDoctrineObjectRepositoryMock()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('findAll')
             ->willReturn($object);
 
@@ -199,7 +208,7 @@ trait RepositoryTestTrait
                 function () use (&$fail) {
                     $fail = true;
                 },
-                \E_USER_NOTICE
+                E_USER_NOTICE
             );
         }
 
@@ -209,22 +218,27 @@ trait RepositoryTestTrait
                 $this->buildRepository()->findAll($promise, ['foo'],)
             );
         } catch (AssertionFailedError $error) {
+            if (null !== $previous) {
+                restore_error_handler();
+            }
+
             throw $error;
         } catch (Throwable) {
             $fail = true;
         }
 
         if (null !== $previous) {
-            set_error_handler($previous);
+            restore_error_handler();
         }
+
         self::assertTrue($fail, 'Notice must be Thrown');
     }
 
     public function testCountNotImplemented()
     {
         $promise = $this->createMock(PromiseInterface::class);
-        $promise->expects(self::never())->method('success');
-        $promise->expects(self::once())->method('fail');
+        $promise->expects($this->never())->method('success');
+        $promise->expects($this->once())->method('fail');
 
         self::assertInstanceOf(
             RepositoryInterface::class,
@@ -258,11 +272,11 @@ trait RepositoryTestTrait
     {
         $object = [new \stdClass()];
         $promise = $this->createMock(PromiseInterface::class);
-        $promise->expects(self::once())->method('success')->with($object);
-        $promise->expects(self::never())->method('fail');
+        $promise->expects($this->once())->method('success')->with($object);
+        $promise->expects($this->never())->method('fail');
 
         $this->getDoctrineObjectRepositoryMock()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('findBy')
             ->with(['foo' => 'bar'])
             ->willReturn($object);
@@ -281,11 +295,11 @@ trait RepositoryTestTrait
     {
         $object = [new \stdClass()];
         $promise = $this->createMock(PromiseInterface::class);
-        $promise->expects(self::once())->method('success')->with($object);
-        $promise->expects(self::never())->method('fail');
+        $promise->expects($this->once())->method('success')->with($object);
+        $promise->expects($this->never())->method('fail');
 
         $this->getDoctrineObjectRepositoryMock()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('findBy')
             ->with(['foo' => 'bar'])
             ->willReturn($object);
@@ -297,7 +311,7 @@ trait RepositoryTestTrait
                 function () use (&$fail) {
                     $fail = true;
                 },
-                \E_USER_NOTICE
+                E_USER_NOTICE
             );
         }
 
@@ -314,14 +328,19 @@ trait RepositoryTestTrait
                 )
             );
         } catch (AssertionFailedError $error) {
+            if (null !== $previous) {
+                restore_error_handler();
+            }
+
             throw $error;
         } catch (Throwable) {
             $fail = true;
         }
 
         if (null !== $previous) {
-            set_error_handler($previous);
+            restore_error_handler();
         }
+
         self::assertTrue($fail, 'Notice must be Thrown');
     }
 
@@ -340,11 +359,11 @@ trait RepositoryTestTrait
     public function testFindOneByNothing()
     {
         $promise = $this->createMock(PromiseInterface::class);
-        $promise->expects(self::never())->method('success');
-        $promise->expects(self::once())->method('fail')->with($this->callback(fn($value) => $value instanceof \DomainException));
+        $promise->expects($this->never())->method('success');
+        $promise->expects($this->once())->method('fail')->with($this->callback(fn($value) => $value instanceof \DomainException));
 
         $this->getDoctrineObjectRepositoryMock()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('findOneBy')
             ->with(['foo' => 'bar'])
             ->willReturn(null);
@@ -358,11 +377,11 @@ trait RepositoryTestTrait
     public function testFindOneByExpcetion()
     {
         $promise = $this->createMock(PromiseInterface::class);
-        $promise->expects(self::never())->method('success');
-        $promise->expects(self::once())->method('fail')->with($this->callback(fn($value) => $value instanceof \RuntimeException));
+        $promise->expects($this->never())->method('success');
+        $promise->expects($this->once())->method('fail')->with($this->callback(fn($value) => $value instanceof \RuntimeException));
 
         $this->getDoctrineObjectRepositoryMock()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('findOneBy')
             ->with(['foo' => 'bar'])
             ->willThrowException(new \RuntimeException());
@@ -377,11 +396,11 @@ trait RepositoryTestTrait
     {
         $object = new \stdClass();
         $promise = $this->createMock(PromiseInterface::class);
-        $promise->expects(self::once())->method('success')->with($object);
-        $promise->expects(self::never())->method('fail');
+        $promise->expects($this->once())->method('success')->with($object);
+        $promise->expects($this->never())->method('fail');
 
         $this->getDoctrineObjectRepositoryMock()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('findOneBy')
             ->with([
                 'foo' => 'bar',
@@ -421,11 +440,11 @@ trait RepositoryTestTrait
     {
         $object = new \stdClass();
         $promise = $this->createMock(PromiseInterface::class);
-        $promise->expects(self::once())->method('success')->with($object);
-        $promise->expects(self::never())->method('fail');
+        $promise->expects($this->once())->method('success')->with($object);
+        $promise->expects($this->never())->method('fail');
 
         $this->getDoctrineObjectRepositoryMock()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('findOneBy')
             ->with([
                 'foo' => 'bar',
@@ -447,7 +466,7 @@ trait RepositoryTestTrait
                 function () use (&$fail) {
                     $fail = true;
                 },
-                \E_USER_NOTICE
+                E_USER_NOTICE
             );
         }
 
@@ -471,13 +490,17 @@ trait RepositoryTestTrait
                 )
             );
         } catch (AssertionFailedError $error) {
+            if (null !== $previous) {
+                restore_error_handler();
+            }
+
             throw $error;
         } catch (Throwable) {
             $fail = true;
         }
 
         if (null !== $previous) {
-            set_error_handler($previous);
+            restore_error_handler();
         }
         self::assertTrue($fail, 'Notice must be Thrown');
     }
@@ -489,11 +512,11 @@ trait RepositoryTestTrait
         };
 
         $promise = $this->createMock(PromiseInterface::class);
-        $promise->expects(self::never())->method('success');
-        $promise->expects(self::once())->method('fail');
+        $promise->expects($this->never())->method('success');
+        $promise->expects($this->once())->method('fail');
 
         $this->getDoctrineObjectRepositoryMock()
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('findOneBy');
 
         self::assertInstanceOf(
@@ -521,11 +544,11 @@ trait RepositoryTestTrait
 
         $object = new \stdClass();
         $promise = $this->createMock(PromiseInterface::class);
-        $promise->expects(self::once())->method('success')->with($object);
-        $promise->expects(self::never())->method('fail');
+        $promise->expects($this->once())->method('success')->with($object);
+        $promise->expects($this->never())->method('fail');
 
         $this->getDoctrineObjectRepositoryMock()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('findOneBy')
             ->with([
                 'foo' => 'bar',

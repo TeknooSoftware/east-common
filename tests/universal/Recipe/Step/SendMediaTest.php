@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Recipe\Step;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -38,8 +39,8 @@ use Teknoo\East\Foundation\Client\ClientInterface;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\East\Common\Recipe\Step\SendMedia
  */
+#[CoversClass(SendMedia::class)]
 class SendMediaTest extends TestCase
 {
     private ?ResponseFactoryInterface $responseFactory = null;
@@ -97,20 +98,20 @@ class SendMediaTest extends TestCase
     public function testInvokeWithMetadata()
     {
         $client = $this->createMock(ClientInterface::class);
-        $client->expects(self::once())->method('acceptResponse');
+        $client->expects($this->once())->method('acceptResponse');
 
         $media = $this->createMock(Media::class);
-        $media->expects(self::any())->method('getMetadata')->willReturn(
+        $media->expects($this->any())->method('getMetadata')->willReturn(
             $this->createMock(MediaMetadata::class)
         );
 
         $stream = $this->createMock(StreamInterface::class);
 
         $response = $this->createMock(ResponseInterface::class);
-        $response->expects(self::any())->method('withHeader')->willReturnSelf();
-        $response->expects(self::any())->method('withBody')->willReturnSelf();
+        $response->expects($this->any())->method('withHeader')->willReturnSelf();
+        $response->expects($this->any())->method('withBody')->willReturnSelf();
         $this->getResponseFactory()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('createResponse')
             ->willReturn($response);
 
@@ -127,18 +128,18 @@ class SendMediaTest extends TestCase
     public function testInvokeWithoutMetadata()
     {
         $client = $this->createMock(ClientInterface::class);
-        $client->expects(self::once())->method('acceptResponse');
+        $client->expects($this->once())->method('acceptResponse');
 
         $media = $this->createMock(Media::class);
-        $media->expects(self::any())->method('getMetadata')->willReturn(null);
+        $media->expects($this->any())->method('getMetadata')->willReturn(null);
 
         $stream = $this->createMock(StreamInterface::class);
 
         $response = $this->createMock(ResponseInterface::class);
-        $response->expects(self::any())->method('withHeader')->willReturnSelf();
-        $response->expects(self::any())->method('withBody')->willReturnSelf();
+        $response->expects($this->any())->method('withHeader')->willReturnSelf();
+        $response->expects($this->any())->method('withBody')->willReturnSelf();
         $this->getResponseFactory()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('createResponse')
             ->willReturn($response);
 

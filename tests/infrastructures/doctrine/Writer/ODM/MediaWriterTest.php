@@ -27,6 +27,7 @@ namespace Teknoo\Tests\East\Common\Doctrine\Writer\ODM;
 
 use Doctrine\ODM\MongoDB\Repository\GridFSRepository;
 use Doctrine\ODM\MongoDB\Repository\UploadOptions;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Doctrine\Object\Media;
 use Teknoo\East\Common\Object\Media as OriginalMedia;
@@ -44,8 +45,8 @@ use Teknoo\Recipe\Promise\PromiseInterface;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  *
- * @covers \Teknoo\East\Common\Doctrine\Writer\ODM\MediaWriter
  */
+#[CoversClass(MediaWriter::class)]
 class MediaWriterTest extends TestCase
 {
     private ?GridFSRepository $repository = null;
@@ -87,14 +88,14 @@ class MediaWriterTest extends TestCase
     public function testSaveWithNonManagedMedia()
     {
         $promise = $this->createMock(PromiseInterface::class);
-        $promise->expects(self::once())->method('fail');
+        $promise->expects($this->once())->method('fail');
 
         $media = new class extends OriginalMedia {
 
         };
 
         $this->getGridFSRepository()
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('uploadFromFile');
 
         self::assertInstanceOf(
@@ -106,10 +107,10 @@ class MediaWriterTest extends TestCase
     public function testSaveWithNoMediaMetadata()
     {
         $promise = $this->createMock(PromiseInterface::class);
-        $promise->expects(self::once())->method('fail');
+        $promise->expects($this->once())->method('fail');
 
         $this->getGridFSRepository()
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('uploadFromFile');
 
         self::assertInstanceOf(
@@ -136,14 +137,14 @@ class MediaWriterTest extends TestCase
         $media2->setMetadata($metadata2);
 
         $promise = $this->createMock(PromiseInterface::class);
-        $promise->expects(self::never())->method('fail');
-        $promise->expects(self::once())->method('success')->with($media2)->willReturnSelf();
+        $promise->expects($this->never())->method('fail');
+        $promise->expects($this->once())->method('success')->with($media2)->willReturnSelf();
 
         $options = new UploadOptions();
         $options->metadata = $metadata1;
         $options->chunkSizeBytes = 123;
         $this->getGridFSRepository()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('uploadFromFile')
             ->with(
                 '/foo/bar',
@@ -164,7 +165,7 @@ class MediaWriterTest extends TestCase
         $promise = $this->createMock(PromiseInterface::class);
 
         $this->getOriginalWriter()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('remove')
             ->with($object, $promise)
             ->willReturnSelf();

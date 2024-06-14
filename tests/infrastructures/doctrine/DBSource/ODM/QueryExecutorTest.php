@@ -28,19 +28,24 @@ namespace Teknoo\Tests\East\Common\Doctrine\DBSource\ODM;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Query\Builder;
 use Doctrine\ODM\MongoDB\Query\Query;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use ReflectionMethod;
+use RuntimeException;
 use Teknoo\East\Common\Doctrine\DBSource\ODM\QueryExecutor;
+use Teknoo\East\Common\Doctrine\DBSource\ODM\QueryExecutor\Pending;
+use Teknoo\East\Common\Doctrine\DBSource\ODM\QueryExecutor\Runnable;
 use Teknoo\East\Common\Object\User;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\East\Common\Doctrine\DBSource\ODM\QueryExecutor
- * @covers \Teknoo\East\Common\Doctrine\DBSource\ODM\QueryExecutor\Pending
- * @covers \Teknoo\East\Common\Doctrine\DBSource\ODM\QueryExecutor\Runnable
  */
+#[CoversClass(Runnable::class)]
+#[CoversClass(Pending::class)]
+#[CoversClass(QueryExecutor::class)]
 class QueryExecutorTest extends TestCase
 {
     private ?DocumentManager $documentManager = null;
@@ -64,7 +69,7 @@ class QueryExecutorTest extends TestCase
 
     public function testStatesListDeclaration()
     {
-        $rf = new \ReflectionMethod(QueryExecutor::class, 'statesListDeclaration');
+        $rf = new ReflectionMethod(QueryExecutor::class, 'statesListDeclaration');
         $rf->setAccessible(true);
         self::assertIsArray($rf->getClosure()());
     }
@@ -101,9 +106,9 @@ class QueryExecutorTest extends TestCase
     public function testExecuteQueryNotRunnable()
     {
         $promise = $this->createMock(PromiseInterface::class);
-        $promise->expects(self::once())
+        $promise->expects($this->once())
             ->method('fail');
-        $promise->expects(self::never())
+        $promise->expects($this->never())
             ->method('success');
 
         self::assertInstanceOf(
@@ -119,9 +124,9 @@ class QueryExecutorTest extends TestCase
     public function testExecuteQueryRunnable()
     {
         $promise = $this->createMock(PromiseInterface::class);
-        $promise->expects(self::never())
+        $promise->expects($this->never())
             ->method('fail');
-        $promise->expects(self::once())
+        $promise->expects($this->once())
             ->method('success');
 
         self::assertInstanceOf(
@@ -142,24 +147,24 @@ class QueryExecutorTest extends TestCase
     public function testExecuteQueryRunnableWithError()
     {
         $promise = $this->createMock(PromiseInterface::class);
-        $promise->expects(self::once())
+        $promise->expects($this->once())
             ->method('fail');
-        $promise->expects(self::never())
+        $promise->expects($this->never())
             ->method('success');
 
 
         $query = $this->createMock(Query::class);
-        $query->expects(self::any())
+        $query->expects($this->any())
             ->method('execute')
-            ->willThrowException(new \RuntimeException('Error'));
+            ->willThrowException(new RuntimeException('Error'));
 
         $builder = $this->createMock(Builder::class);
-        $builder->expects(self::any())
+        $builder->expects($this->any())
             ->method('getQuery')
             ->willReturn($query);
 
         $this->getDocumentManager()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('createQueryBuilder')
             ->willReturn($builder);
 
@@ -181,9 +186,9 @@ class QueryExecutorTest extends TestCase
     public function testExecuteQueryRunnableWithUpdateField()
     {
         $promise = $this->createMock(PromiseInterface::class);
-        $promise->expects(self::never())
+        $promise->expects($this->never())
             ->method('fail');
-        $promise->expects(self::once())
+        $promise->expects($this->once())
             ->method('success');
 
         self::assertInstanceOf(

@@ -32,6 +32,7 @@ use Doctrine\ODM\MongoDB\UnitOfWork;
 use MongoDB\BSON\ObjectId;
 use MongoDB\GridFS\Bucket;
 use MongoDB\GridFS\Exception\FileNotFoundException;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Doctrine\Repository\ODM\Media;
 
@@ -44,8 +45,8 @@ use Teknoo\East\Common\Doctrine\Repository\ODM\Media;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  *
- * @covers \Teknoo\East\Common\Doctrine\Repository\ODM\Media
  */
+#[CoversClass(Media::class)]
 class MediaTest extends TestCase
 {
     private ?DocumentManager $dm = null;
@@ -104,18 +105,18 @@ class MediaTest extends TestCase
     {
         $id = 'IEdJQ4vbUO7UNyrlmjIZUoQWCW99TYPq';
         $bucket = $this->createMock(Bucket::class);
-        $bucket->expects(self::any())
+        $bucket->expects($this->any())
             ->method('openDownloadStream')
             ->with($id)
             ->willReturn(\fopen('php://memory', 'r'));
 
         $this->getClassMetadata()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getDatabaseIdentifierValue')
             ->willReturnCallback(fn ($id) => new ObjectId($id));
 
         $this->getDocumentManager()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getDocumentBucket')
             ->willReturn($bucket);
 
@@ -128,18 +129,18 @@ class MediaTest extends TestCase
     {
         $id = '5f0f4a76c0918d70c7759a52';
         $bucket = $this->createMock(Bucket::class);
-        $bucket->expects(self::any())
+        $bucket->expects($this->any())
             ->method('openDownloadStream')
             ->with(new ObjectId($id))
             ->willReturn(\fopen('php://memory', 'r'));
 
         $this->getClassMetadata()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getDatabaseIdentifierValue')
             ->willReturnCallback(fn ($id) => new ObjectId($id));
 
         $this->getDocumentManager()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getDocumentBucket')
             ->willReturn($bucket);
 
@@ -151,12 +152,12 @@ class MediaTest extends TestCase
     public function testOpenDownloadStreamWithObjectIdException()
     {
         $bucket = $this->createMock(Bucket::class);
-        $bucket->expects(self::any())
+        $bucket->expects($this->any())
             ->method('openDownloadStream')
             ->willThrowException(new FileNotFoundException('foo'));
 
         $this->getDocumentManager()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getDocumentBucket')
             ->willReturn($bucket);
 

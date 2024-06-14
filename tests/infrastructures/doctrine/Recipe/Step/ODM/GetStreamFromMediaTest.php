@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\Tests\East\Common\Doctrine\Recipe\Step\ODM;
 
 use Doctrine\ODM\MongoDB\Repository\GridFSRepository;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -44,8 +45,8 @@ use Teknoo\East\Common\Doctrine\Recipe\Step\ODM\GetStreamFromMedia;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  *
- * @covers \Teknoo\East\Common\Doctrine\Recipe\Step\ODM\GetStreamFromMedia
  */
+#[CoversClass(GetStreamFromMedia::class)]
 class GetStreamFromMediaTest extends TestCase
 {
     private ?GridFSRepository $repository = null;
@@ -87,8 +88,8 @@ class GetStreamFromMediaTest extends TestCase
     public function testInvokeNotMedia()
     {
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::never())->method('updateWorkPlan');
-        $manager->expects(self::once())->method('error');
+        $manager->expects($this->never())->method('updateWorkPlan');
+        $manager->expects($this->once())->method('error');
 
         self::assertInstanceOf(
             GetStreamFromMedia::class,
@@ -103,15 +104,15 @@ class GetStreamFromMediaTest extends TestCase
     {
         $stream = $this->createMock(StreamInterface::class);
         $this->getStreamFactory()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('createStreamFromResource')
             ->willReturn($stream);
 
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::once())->method('updateWorkPlan')->with([
+        $manager->expects($this->once())->method('updateWorkPlan')->with([
             StreamInterface::class => $stream,
         ]);
-        $manager->expects(self::never())->method('error');
+        $manager->expects($this->never())->method('error');
 
         self::assertInstanceOf(
             GetStreamFromMedia::class,

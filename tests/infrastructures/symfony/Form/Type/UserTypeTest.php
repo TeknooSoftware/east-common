@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\CommonBundle\Form\Type;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -34,14 +35,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Teknoo\East\Common\Contracts\User\AuthDataInterface;
 use Teknoo\East\Common\Object\StoredPassword;
 use Teknoo\East\Common\Object\User;
+use Teknoo\East\CommonBundle\Form\Type\ApiUserType;
 use Teknoo\East\CommonBundle\Form\Type\UserType;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers      \Teknoo\East\CommonBundle\Form\Type\UserType
- * @covers      \Teknoo\East\CommonBundle\Form\Type\ApiUserType
  */
+#[CoversClass(ApiUserType::class)]
+#[CoversClass(UserType::class)]
 class UserTypeTest extends TestCase
 {
     use FormTestTrait;
@@ -55,28 +57,28 @@ class UserTypeTest extends TestCase
     {
         $builder = $this->createMock(FormBuilderInterface::class);
 
-        $builder->expects(self::any())
+        $builder->expects($this->any())
             ->method('add')
             ->willReturnSelf();
 
-        $builder->expects(self::any())
+        $builder->expects($this->any())
             ->method('addEventListener')
             ->willReturnCallback(
                 function (string $name, callable $callable) use ($builder) {
                     $data = $this->createMock(User::class);
-                    $data->expects(self::any())
+                    $data->expects($this->any())
                         ->method('getAuthData')
                         ->willReturn([
                             $this->createMock(StoredPassword::class)
                         ]);
 
                     $form = $this->createMock(FormInterface::class);
-                    $form->expects(self::any())->method('get')->willReturnSelf();
-                    $form->expects(self::once())->method('setData')->willReturnSelf();
+                    $form->expects($this->any())->method('get')->willReturnSelf();
+                    $form->expects($this->once())->method('setData')->willReturnSelf();
 
                     $event = $this->createMock(FormEvent::class);
-                    $event->expects(self::any())->method('getData')->willReturn($data);
-                    $event->expects(self::any())->method('getForm')->willReturn($form);
+                    $event->expects($this->any())->method('getData')->willReturn($data);
+                    $event->expects($this->any())->method('getForm')->willReturn($form);
 
                     $callable($event);
 
@@ -94,11 +96,11 @@ class UserTypeTest extends TestCase
     {
         $builder = $this->createMock(FormBuilderInterface::class);
 
-        $builder->expects(self::any())
+        $builder->expects($this->any())
             ->method('add')
             ->willReturnSelf();
 
-        $builder->expects(self::never())
+        $builder->expects($this->never())
             ->method('addEventListener');
 
         self::assertInstanceOf(
@@ -111,26 +113,26 @@ class UserTypeTest extends TestCase
     {
         $builder = $this->createMock(FormBuilderInterface::class);
 
-        $builder->expects(self::any())
+        $builder->expects($this->any())
             ->method('add')
             ->willReturnSelf();
 
-        $builder->expects(self::any())
+        $builder->expects($this->any())
             ->method('addEventListener')
             ->willReturnCallback(
                 function (string $name, callable $callable) use ($builder) {
                     $data = $this->createMock(User::class);
-                    $data->expects(self::any())
+                    $data->expects($this->any())
                         ->method('getAuthData')
                         ->willReturn([]);
 
                     $form = $this->createMock(FormInterface::class);
-                    $form->expects(self::any())->method('get')->willReturnSelf();
-                    $form->expects(self::once())->method('setData')->willReturnSelf();
+                    $form->expects($this->any())->method('get')->willReturnSelf();
+                    $form->expects($this->once())->method('setData')->willReturnSelf();
 
                     $event = $this->createMock(FormEvent::class);
-                    $event->expects(self::any())->method('getData')->willReturn($data);
-                    $event->expects(self::any())->method('getForm')->willReturn($form);
+                    $event->expects($this->any())->method('getData')->willReturn($data);
+                    $event->expects($this->any())->method('getForm')->willReturn($form);
 
                     $callable($event);
 
@@ -148,28 +150,28 @@ class UserTypeTest extends TestCase
     {
         $builder = $this->createMock(FormBuilderInterface::class);
 
-        $builder->expects(self::any())
+        $builder->expects($this->any())
             ->method('add')
             ->willReturnSelf();
 
-        $builder->expects(self::any())
+        $builder->expects($this->any())
             ->method('addEventListener')
             ->willReturnCallback(
                 function (string $name, callable $callable) use ($builder) {
                     $data = $this->createMock(User::class);
-                    $data->expects(self::any())
+                    $data->expects($this->any())
                         ->method('getAuthData')
                         ->willReturn([
                             $this->createMock(AuthDataInterface::class)
                         ]);
 
                     $form = $this->createMock(FormInterface::class);
-                    $form->expects(self::any())->method('get')->willReturnSelf();
-                    $form->expects(self::once())->method('setData')->willReturnSelf();
+                    $form->expects($this->any())->method('get')->willReturnSelf();
+                    $form->expects($this->once())->method('setData')->willReturnSelf();
 
                     $event = $this->createMock(FormEvent::class);
-                    $event->expects(self::any())->method('getData')->willReturn($data);
-                    $event->expects(self::any())->method('getForm')->willReturn($form);
+                    $event->expects($this->any())->method('getData')->willReturn($data);
+                    $event->expects($this->any())->method('getForm')->willReturn($form);
 
                     $callable($event);
 

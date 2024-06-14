@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Recipe\Step;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface as ObjectWithId;
 use Teknoo\East\Common\Contracts\Object\ObjectInterface;
@@ -37,8 +38,8 @@ use Teknoo\Recipe\Promise\PromiseInterface;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\East\Common\Recipe\Step\SaveObject
  */
+#[CoversClass(SaveObject::class)]
 class SaveObjectTest extends TestCase
 {
     public function buildStep(): SaveObject
@@ -84,11 +85,11 @@ class SaveObjectTest extends TestCase
         $writer = $this->createMock(WriterInterface::class);
         $object = $this->createMock(ObjectWithId
         ::class);
-        $object->expects(self::any())->method('getId')->willReturn('foo');
+        $object->expects($this->any())->method('getId')->willReturn('foo');
         $manager = $this->createMock(ManagerInterface::class);
 
-        $manager->expects(self::never())->method('error');
-        $manager->expects(self::once())->method('updateWorkPlan')->with([
+        $manager->expects($this->never())->method('error');
+        $manager->expects($this->once())->method('updateWorkPlan')->with([
             'id' => 'foo',
             'parameters' => [
                 'id' => 'foo',
@@ -98,7 +99,7 @@ class SaveObjectTest extends TestCase
             'objectSaved' => true,
         ]);
 
-        $writer->expects(self::any())
+        $writer->expects($this->any())
             ->method('save')
             ->willReturnCallback(
                 function ($object, PromiseInterface $promise) use ($writer) {
@@ -125,13 +126,13 @@ class SaveObjectTest extends TestCase
         $object = $this->createMock(ObjectInterface::class);
         $manager = $this->createMock(ManagerInterface::class);
 
-        $manager->expects(self::never())->method('error');
-        $manager->expects(self::once())->method('updateWorkPlan')->with([
+        $manager->expects($this->never())->method('error');
+        $manager->expects($this->once())->method('updateWorkPlan')->with([
             'formHandleRequest' => false,
             'objectSaved' => true,
         ]);
 
-        $writer->expects(self::any())
+        $writer->expects($this->any())
             ->method('save')
             ->willReturnCallback(
                 function ($object, PromiseInterface $promise) use ($writer) {
@@ -158,10 +159,10 @@ class SaveObjectTest extends TestCase
         $object = $this->createMock(ObjectInterface::class);
         $manager = $this->createMock(ManagerInterface::class);
 
-        $manager->expects(self::once())->method('error');
-        $manager->expects(self::never())->method('updateWorkPlan');
+        $manager->expects($this->once())->method('error');
+        $manager->expects($this->never())->method('updateWorkPlan');
 
-        $writer->expects(self::any())
+        $writer->expects($this->any())
             ->method('save')
             ->willReturnCallback(
                 function ($object, PromiseInterface $promise) use ($writer) {
@@ -188,13 +189,13 @@ class SaveObjectTest extends TestCase
     {
         $writer = $this->createMock(WriterInterface::class);
         $object = $this->createMock(ObjectWithId::class);
-        $object->expects(self::any())->method('getId')->willReturn('foo');
+        $object->expects($this->any())->method('getId')->willReturn('foo');
         $manager = $this->createMock(ManagerInterface::class);
 
-        $manager->expects(self::once())->method('error');
-        $manager->expects(self::never())->method('updateWorkPlan');
+        $manager->expects($this->once())->method('error');
+        $manager->expects($this->never())->method('updateWorkPlan');
 
-        $writer->expects(self::any())
+        $writer->expects($this->any())
             ->method('save')
             ->willReturnCallback(
                 function ($object, PromiseInterface $promise) use ($writer) {

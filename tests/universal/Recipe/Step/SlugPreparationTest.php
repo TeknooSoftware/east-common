@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Recipe\Step;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
@@ -36,8 +37,8 @@ use Teknoo\East\Common\Service\FindSlugService;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\East\Common\Recipe\Step\SlugPreparation
  */
+#[CoversClass(SlugPreparation::class)]
 class SlugPreparationTest extends TestCase
 {
     private ?FindSlugService $findSlugService = null;

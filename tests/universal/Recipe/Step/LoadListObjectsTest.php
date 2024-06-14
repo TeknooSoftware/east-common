@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Recipe\Step;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
@@ -36,8 +37,8 @@ use Teknoo\Recipe\Promise\PromiseInterface;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\East\Common\Recipe\Step\LoadListObjects
  */
+#[CoversClass(LoadListObjects::class)]
 class LoadListObjectsTest extends TestCase
 {
     public function buildStep(): LoadListObjects
@@ -131,7 +132,7 @@ class LoadListObjectsTest extends TestCase
         };
 
         $loader = $this->createMock(LoaderInterface::class);
-        $loader->expects(self::any())->method('query')->willReturnCallback(
+        $loader->expects($this->any())->method('query')->willReturnCallback(
             function ($query, PromiseInterface $promise) use ($objects, $loader) {
                 $promise->success($objects);
 
@@ -140,8 +141,8 @@ class LoadListObjectsTest extends TestCase
         );
 
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::never())->method('error');
-        $manager->expects(self::once())->method('updateWorkPlan')->with([
+        $manager->expects($this->never())->method('error');
+        $manager->expects($this->once())->method('updateWorkPlan')->with([
             'objectsCollection' => $objects,
             'pageCount' => 1
         ]);
@@ -177,7 +178,7 @@ class LoadListObjectsTest extends TestCase
         };
 
         $loader = $this->createMock(LoaderInterface::class);
-        $loader->expects(self::any())->method('query')->willReturnCallback(
+        $loader->expects($this->any())->method('query')->willReturnCallback(
             function ($query, PromiseInterface $promise) use ($objects, $loader) {
                 $promise->success($objects);
 
@@ -186,8 +187,8 @@ class LoadListObjectsTest extends TestCase
         );
 
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::never())->method('error');
-        $manager->expects(self::once())->method('updateWorkPlan')->with([
+        $manager->expects($this->never())->method('error');
+        $manager->expects($this->once())->method('updateWorkPlan')->with([
             'objectsCollection' => $objects,
             'pageCount' => $pageCount
         ]);
@@ -223,7 +224,7 @@ class LoadListObjectsTest extends TestCase
         };
 
         $loader = $this->createMock(LoaderInterface::class);
-        $loader->expects(self::any())->method('query')->willReturnCallback(
+        $loader->expects($this->any())->method('query')->willReturnCallback(
             function ($query, PromiseInterface $promise) use ($objects, $loader) {
                 $promise->success($objects);
 
@@ -232,8 +233,8 @@ class LoadListObjectsTest extends TestCase
         );
 
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::never())->method('error');
-        $manager->expects(self::once())->method('updateWorkPlan')->with([
+        $manager->expects($this->never())->method('error');
+        $manager->expects($this->once())->method('updateWorkPlan')->with([
             'objectsCollection' => $objects,
             'pageCount' => $pageCount
         ]);
@@ -273,7 +274,7 @@ class LoadListObjectsTest extends TestCase
         };
 
         $loader = $this->createMock(LoaderInterface::class);
-        $loader->expects(self::any())->method('query')->willReturnCallback(
+        $loader->expects($this->any())->method('query')->willReturnCallback(
             function ($query, PromiseInterface $promise) use ($objects, $loader) {
                 $promise->success($objects);
 
@@ -282,8 +283,8 @@ class LoadListObjectsTest extends TestCase
         );
 
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::never())->method('error');
-        $manager->expects(self::once())->method('updateWorkPlan')->with([
+        $manager->expects($this->never())->method('error');
+        $manager->expects($this->once())->method('updateWorkPlan')->with([
             'objectsCollection' => $objects,
             'pageCount' => $pageCount
         ]);
@@ -307,7 +308,7 @@ class LoadListObjectsTest extends TestCase
     public function testInvokeErrorInQuery()
     {
         $loader = $this->createMock(LoaderInterface::class);
-        $loader->expects(self::any())->method('query')->willReturnCallback(
+        $loader->expects($this->any())->method('query')->willReturnCallback(
             function ($query, PromiseInterface $promise) use ($loader) {
                 $promise->fail(new \RuntimeException('Error'));
 
@@ -316,8 +317,8 @@ class LoadListObjectsTest extends TestCase
         );
 
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::once())->method('error');
-        $manager->expects(self::never())->method('updateWorkPlan');
+        $manager->expects($this->once())->method('error');
+        $manager->expects($this->never())->method('updateWorkPlan');
 
         self::assertInstanceOf(
             LoadListObjects::class,
@@ -334,11 +335,11 @@ class LoadListObjectsTest extends TestCase
     public function testInvokeErrorWithBadCriteriaKeyName()
     {
         $loader = $this->createMock(LoaderInterface::class);
-        $loader->expects(self::never())->method('query');
+        $loader->expects($this->never())->method('query');
 
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::once())->method('error');
-        $manager->expects(self::never())->method('updateWorkPlan');
+        $manager->expects($this->once())->method('error');
+        $manager->expects($this->never())->method('updateWorkPlan');
 
         self::assertInstanceOf(
             LoadListObjects::class,
@@ -358,11 +359,11 @@ class LoadListObjectsTest extends TestCase
     public function testInvokeErrorWithBadCriteriaKeyType()
     {
         $loader = $this->createMock(LoaderInterface::class);
-        $loader->expects(self::never())->method('query');
+        $loader->expects($this->never())->method('query');
 
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::once())->method('error');
-        $manager->expects(self::never())->method('updateWorkPlan');
+        $manager->expects($this->once())->method('error');
+        $manager->expects($this->never())->method('updateWorkPlan');
 
         self::assertInstanceOf(
             LoadListObjects::class,
@@ -382,11 +383,11 @@ class LoadListObjectsTest extends TestCase
     public function testInvokeErrorWithBadCriteriaValue()
     {
         $loader = $this->createMock(LoaderInterface::class);
-        $loader->expects(self::never())->method('query');
+        $loader->expects($this->never())->method('query');
 
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::once())->method('error');
-        $manager->expects(self::never())->method('updateWorkPlan');
+        $manager->expects($this->once())->method('error');
+        $manager->expects($this->never())->method('updateWorkPlan');
 
         self::assertInstanceOf(
             LoadListObjects::class,
@@ -406,11 +407,11 @@ class LoadListObjectsTest extends TestCase
     public function testInvokeErrorWithBadCriteriaValueType()
     {
         $loader = $this->createMock(LoaderInterface::class);
-        $loader->expects(self::never())->method('query');
+        $loader->expects($this->never())->method('query');
 
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::once())->method('error');
-        $manager->expects(self::never())->method('updateWorkPlan');
+        $manager->expects($this->once())->method('error');
+        $manager->expects($this->never())->method('updateWorkPlan');
 
         self::assertInstanceOf(
             LoadListObjects::class,
@@ -430,11 +431,11 @@ class LoadListObjectsTest extends TestCase
     public function testInvokeErrorWithBadCriteriaValueTypeObject()
     {
         $loader = $this->createMock(LoaderInterface::class);
-        $loader->expects(self::never())->method('query');
+        $loader->expects($this->never())->method('query');
 
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::once())->method('error');
-        $manager->expects(self::never())->method('updateWorkPlan');
+        $manager->expects($this->once())->method('error');
+        $manager->expects($this->never())->method('updateWorkPlan');
 
         self::assertInstanceOf(
             LoadListObjects::class,

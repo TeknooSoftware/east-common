@@ -25,9 +25,11 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\CommonBundle\Object;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use stdClass;
 use Teknoo\East\Common\Object\RecoveryAccess;
+use Teknoo\East\CommonBundle\Object\AbstractUser;
 use Teknoo\East\CommonBundle\Object\UserWithRecoveryAccess;
 use Teknoo\East\Common\Object\User as BaseUser;
 use TypeError;
@@ -35,9 +37,9 @@ use TypeError;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers      \Teknoo\East\CommonBundle\Object\AbstractUser
- * @covers      \Teknoo\East\CommonBundle\Object\UserWithRecoveryAccess
  */
+#[CoversClass(UserWithRecoveryAccess::class)]
+#[CoversClass(AbstractUser::class)]
 class UserWithRecoveryAccessTest extends AbstractUserTests
 {
     private ?BaseUser $user = null;
@@ -52,8 +54,8 @@ class UserWithRecoveryAccessTest extends AbstractUserTests
         if (!$this->user instanceof BaseUser) {
             $this->user = $this->createMock(BaseUser::class);
 
-            $this->user->expects(self::any())->method('getAuthData')->willReturn([$this->getRecoveryAccess()]);
-            $this->user->expects(self::any())->method('getOneAuthData')->willReturn($this->getStoredPassword());
+            $this->user->expects($this->any())->method('getAuthData')->willReturn([$this->getRecoveryAccess()]);
+            $this->user->expects($this->any())->method('getOneAuthData')->willReturn($this->getStoredPassword());
         }
 
         return $this->user;
@@ -66,7 +68,7 @@ class UserWithRecoveryAccessTest extends AbstractUserTests
     {
         if (!$this->recoveryAccess instanceof RecoveryAccess) {
             $this->recoveryAccess = $this->createMock(RecoveryAccess::class);
-            $this->recoveryAccess->expects(self::any())->method('getParams')->willReturn(['token' => 'bar']);
+            $this->recoveryAccess->expects($this->any())->method('getParams')->willReturn(['token' => 'bar']);
         }
 
         return $this->recoveryAccess;
@@ -110,7 +112,7 @@ class UserWithRecoveryAccessTest extends AbstractUserTests
     public function testGetRolesFromArray()
     {
         $this->getUser()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getRoles')
             ->willReturn(['foo','bar']);
 
@@ -130,7 +132,7 @@ class UserWithRecoveryAccessTest extends AbstractUserTests
     public function testGetRolesFromIterable()
     {
         $this->getUser()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getRoles')
             ->willReturn(['foo','bar']);
 
@@ -150,7 +152,7 @@ class UserWithRecoveryAccessTest extends AbstractUserTests
     public function testGetHash()
     {
         $this->getUser()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getEmail')
             ->willReturn('foo@bar');
 

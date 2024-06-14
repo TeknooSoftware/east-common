@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Object;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use Teknoo\East\Common\Contracts\Object\VisitableInterface;
@@ -41,9 +43,9 @@ use Teknoo\East\Common\Object\User;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\East\Common\Object\VisitableTrait
- * @covers \Teknoo\East\Common\Object\Exception\BadMethodCallException
  */
+#[CoversClass(\Teknoo\East\Common\Object\Exception\BadMethodCallException::class)]
+#[CoversTrait(\Teknoo\East\Common\Object\VisitableTrait::class)]
 class VisitableTest extends TestCase
 {
     public function buildObject()

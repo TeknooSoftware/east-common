@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\CommonBundle\Recipe\Step;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Notifier\NotifierInterface;
@@ -42,8 +43,8 @@ use Teknoo\East\CommonBundle\Recipe\Step\RecoveryAccessNotification;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers      \Teknoo\East\CommonBundle\Recipe\Step\RecoveryAccessNotification
  */
+#[CoversClass(RecoveryAccessNotification::class)]
 class RecoveryAccessNotificationTest extends TestCase
 {
     private ?LoginLinkHandlerInterface $loginLinkHandler = null;
@@ -112,7 +113,7 @@ class RecoveryAccessNotificationTest extends TestCase
         $this->expectException(MissingConfigurationException::class);
 
         $user = $this->createMock(User::class);
-        $user->expects(self::any())
+        $user->expects($this->any())
             ->method('getEmail')
             ->willReturn('foo@bar');
 
@@ -137,7 +138,7 @@ class RecoveryAccessNotificationTest extends TestCase
         $this->expectException(MissingPackageException::class);
 
         $user = $this->createMock(User::class);
-        $user->expects(self::any())
+        $user->expects($this->any())
             ->method('getEmail')
             ->willReturn('foo@bar');
 
@@ -152,7 +153,7 @@ class RecoveryAccessNotificationTest extends TestCase
     public function testInvoke()
     {
         $user = $this->createMock(User::class);
-        $user->expects(self::any())
+        $user->expects($this->any())
             ->method('getEmail')
             ->willReturn('foo@bar');
 
@@ -170,7 +171,7 @@ class RecoveryAccessNotificationTest extends TestCase
     public function testInvokeWithInvalidNotification()
     {
         $user = $this->createMock(User::class);
-        $user->expects(self::any())
+        $user->expects($this->any())
             ->method('getEmail')
             ->willReturn('foo@bar');
 

@@ -25,19 +25,22 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Loader;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\DBSource\Repository\UserRepositoryInterface;
 use Teknoo\East\Common\Contracts\DBSource\RepositoryInterface;
 use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
+use Teknoo\East\Common\Loader\LoaderTrait;
 use Teknoo\East\Common\Loader\UserLoader;
 use Teknoo\East\Common\Object\User;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers      \Teknoo\East\Common\Loader\UserLoader
- * @covers      \Teknoo\East\Common\Loader\LoaderTrait
  */
+#[CoversTrait(LoaderTrait::class)]
+#[CoversClass(UserLoader::class)]
 class UserLoaderTest extends TestCase
 {
     use LoaderTestTrait;

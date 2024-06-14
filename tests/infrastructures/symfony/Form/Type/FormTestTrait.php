@@ -41,24 +41,24 @@ trait FormTestTrait
     {
         $builder = $this->createMock(FormBuilderInterface::class);
 
-        $builder->expects(self::any())
+        $builder->expects($this->any())
             ->method('add')
             ->willReturnCallback(
                 function ($child, $type, array $options = array()) use ($builder) {
                     if (DocumentType::class == $type && isset($options['query_builder'])) {
                         $qBuilder = $this->createMock(Builder::class);
-                        $qBuilder->expects(self::once())
+                        $qBuilder->expects($this->once())
                             ->method('field')
                             ->with('deletedAt')
                             ->willReturnSelf();
 
-                        $qBuilder->expects(self::once())
+                        $qBuilder->expects($this->once())
                             ->method('equals')
                             ->with(null)
                             ->willReturnSelf();
 
                         $repository = $this->createMock(DocumentRepository::class);
-                        $repository->expects(self::once())
+                        $repository->expects($this->once())
                             ->method('createQueryBuilder')
                             ->willReturn($qBuilder);
 

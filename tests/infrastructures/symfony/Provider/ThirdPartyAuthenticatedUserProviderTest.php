@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\CommonBundle\Provider;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface as GoogleTwoFactorInterface;
 use Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface as TotpTwoFactorInterface;
@@ -48,8 +49,8 @@ use Teknoo\East\Common\Object\User as BaseUser;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  *
- * @covers      \Teknoo\East\CommonBundle\Provider\ThirdPartyAuthenticatedUserProvider
  */
+#[CoversClass(ThirdPartyAuthenticatedUserProvider::class)]
 class ThirdPartyAuthenticatedUserProviderTest extends TestCase
 {
     /**
@@ -79,7 +80,7 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
         $this->expectException(UserNotFoundException::class);
 
         $this->getLoader()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
@@ -98,7 +99,7 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
         $user->setAuthData([$thirdPartyAuth = new ThirdPartyAuth()]);
 
         $this->getLoader()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
@@ -122,7 +123,7 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
         $user->setAuthData([$this->createMock(AuthDataInterface::class)]);
 
         $this->getLoader()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
@@ -140,7 +141,7 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
         $this->expectException(UserNotFoundException::class);
 
         $this->getLoader()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
@@ -159,7 +160,7 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
         $user->setAuthData([$thirdPartyAuth = new ThirdPartyAuth()]);
 
         $this->getLoader()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
@@ -193,7 +194,7 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
         );
 
         $this->getLoader()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
@@ -240,7 +241,7 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
         );
 
         $this->getLoader()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
@@ -276,7 +277,7 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
         $user->setAuthData([$this->createMock(AuthDataInterface::class)]);
 
         $this->getLoader()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
@@ -294,7 +295,7 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
         $this->expectException(UserNotFoundException::class);
 
         $this->getLoader()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
@@ -318,7 +319,7 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
         $user->setAuthData([$thirdPartyAuth = new ThirdPartyAuth()]);
 
         $this->getLoader()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);

@@ -68,12 +68,12 @@ trait LoaderTestTrait
          *
          */
         $promiseMock = $this->createMock(Promise::class);
-        $promiseMock->expects(self::never())->method('success');
-        $promiseMock->expects(self::once())
+        $promiseMock->expects($this->never())->method('success');
+        $promiseMock->expects($this->once())
             ->method('fail');
 
         $this->getRepositoryMock()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('findOneBy')
             ->with(['id'=>'fooBar', 'deletedAt'=>null], $promiseMock)
             ->willThrowException(new \Exception());
@@ -90,11 +90,11 @@ trait LoaderTestTrait
          * @var \PHPUnit\Framework\MockObject\MockObject $promiseMock
          */
         $promiseMock = $this->createMock(Promise::class);
-        $promiseMock->expects(self::never())->method('success');
-        $promiseMock->expects(self::never())->method('fail');
+        $promiseMock->expects($this->never())->method('success');
+        $promiseMock->expects($this->never())->method('fail');
 
         $this->getRepositoryMock()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('findOneBy')
             ->with(['id'=>'fooBar', 'deletedAt'=>null], $promiseMock);
 
@@ -123,8 +123,8 @@ trait LoaderTestTrait
          *
          */
         $promiseMock = $this->createMock(Promise::class);
-        $promiseMock->expects(self::never())->method('success');
-        $promiseMock->expects(self::never())->method('fail');
+        $promiseMock->expects($this->never())->method('success');
+        $promiseMock->expects($this->never())->method('fail');
 
         $loader = $this->buildLoader();
 
@@ -132,7 +132,7 @@ trait LoaderTestTrait
          * @var \PHPUnit\Framework\MockObject\MockObject $queryMock
          */
         $queryMock = $this->createMock(QueryCollectionInterface::class);
-        $queryMock->expects(self::once())
+        $queryMock->expects($this->once())
             ->method('execute')
             ->with($loader, $this->getRepositoryMock(), $promiseMock);
 
@@ -161,8 +161,8 @@ trait LoaderTestTrait
          *
          */
         $promiseMock = $this->createMock(Promise::class);
-        $promiseMock->expects(self::never())->method('success');
-        $promiseMock->expects(self::never())->method('fail');
+        $promiseMock->expects($this->never())->method('success');
+        $promiseMock->expects($this->never())->method('fail');
 
         $loader = $this->buildLoader();
 
@@ -170,7 +170,7 @@ trait LoaderTestTrait
          * @var \PHPUnit\Framework\MockObject\MockObject $fetchMock
          */
         $fetchMock = $this->createMock(QueryElementInterface::class);
-        $fetchMock->expects(self::once())
+        $fetchMock->expects($this->once())
             ->method('fetch')
             ->with($loader, $this->getRepositoryMock(), $promiseMock);
 

@@ -66,8 +66,8 @@ abstract class AbstractUserTests extends TestCase
         if (!$this->user instanceof BaseUser) {
             $this->user = $this->createMock(BaseUser::class);
 
-            $this->user->expects(self::any())->method('getAuthData')->willReturn([$this->getStoredPassword()]);
-            $this->user->expects(self::any())->method('getOneAuthData')->willReturn($this->getStoredPassword());
+            $this->user->expects($this->any())->method('getAuthData')->willReturn([$this->getStoredPassword()]);
+            $this->user->expects($this->any())->method('getOneAuthData')->willReturn($this->getStoredPassword());
         }
 
         return $this->user;
@@ -78,7 +78,7 @@ abstract class AbstractUserTests extends TestCase
     public function testGetRolesFromArray()
     {
         $this->getUser()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getRoles')
             ->willReturn(['foo','bar']);
 
@@ -91,7 +91,7 @@ abstract class AbstractUserTests extends TestCase
     public function testGetRolesFromIterable()
     {
         $this->getUser()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getRoles')
             ->willReturn(new ArrayIterator(['foo','bar']));
 
@@ -104,7 +104,7 @@ abstract class AbstractUserTests extends TestCase
     public function testGetUserIdentifier()
     {
         $this->getUser()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getUserIdentifier')
             ->willReturn('username');
 
@@ -117,7 +117,7 @@ abstract class AbstractUserTests extends TestCase
     public function testGetEmail()
     {
         $this->getUser()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getEmail')
             ->willReturn('foo@bar');
 
@@ -130,7 +130,7 @@ abstract class AbstractUserTests extends TestCase
     public function testGetHash()
     {
         $this->getUser()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getEmail')
             ->willReturn('foo@bar');
 
@@ -149,13 +149,13 @@ abstract class AbstractUserTests extends TestCase
     public function testIsEqualToNotSameUserName()
     {
         $this->getUser()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getUserIdentifier')
             ->willReturn('myUserName');
 
         $user = $this->createMock(UserInterface::class);
         $user
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getUserIdentifier')
             ->willReturn('notUserName');
 
@@ -175,7 +175,7 @@ abstract class AbstractUserTests extends TestCase
     public function testEraseCredentials()
     {
         $this->getStoredPassword()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('eraseCredentials')
             ->willReturnSelf();
 

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Recipe\Step\User;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\User\AuthDataInterface;
 use Teknoo\East\Common\Contracts\User\RecoveryAccess\AlgorithmInterface;
@@ -35,14 +36,14 @@ use Teknoo\East\Foundation\Manager\ManagerInterface;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\East\Common\Recipe\Step\User\PrepareRecoveryAccess
  */
+#[CoversClass(PrepareRecoveryAccess::class)]
 class PrepareRecoveryAccessTest extends TestCase
 {
     public function testInvoke()
     {
         $algorithm = $this->createMock(AlgorithmInterface::class);
-        $algorithm->expects(self::once())
+        $algorithm->expects($this->once())
             ->method('prepare')
             ->willReturnCallback(
                 function (User $user, callable $callback) use ($algorithm) {
@@ -53,7 +54,7 @@ class PrepareRecoveryAccessTest extends TestCase
             );
 
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::once())
+        $manager->expects($this->once())
             ->method('updateWorkPlan')
             ->willReturnSelf();
 

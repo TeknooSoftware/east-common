@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Recipe\Step\FrontAsset;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -37,8 +38,8 @@ use Teknoo\East\Foundation\Client\ClientInterface;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\East\Common\Recipe\Step\FrontAsset\ReturnFile
  */
+#[CoversClass(ReturnFile::class)]
 class ReturnFileTest extends TestCase
 {
     public function testInvoke()
@@ -46,15 +47,15 @@ class ReturnFileTest extends TestCase
         $responseFactory = $this->createMock(ResponseFactoryInterface::class);
 
         $response = $this->createMock(ResponseInterface::class);
-        $responseFactory->expects(self::any())
+        $responseFactory->expects($this->any())
             ->method('createResponse')
             ->willReturn($response);
 
-        $response->expects(self::any())
+        $response->expects($this->any())
             ->method('withHeader')
             ->willReturnSelf();
 
-        $response->expects(self::any())
+        $response->expects($this->any())
             ->method('withBody')
             ->willReturnSelf();
 

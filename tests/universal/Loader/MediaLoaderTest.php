@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Loader;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\DBSource\Repository\MediaRepositoryInterface;
 use Teknoo\East\Common\Contracts\DBSource\RepositoryInterface;
@@ -37,9 +38,8 @@ use Teknoo\Recipe\Promise\Promise;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers      \Teknoo\East\Common\Loader\MediaLoader
  */
-class MediaLoaderTest extends TestCase
+#[CoversClass(MediaLoader::class)] class MediaLoaderTest extends TestCase
 {
     use LoaderTestTrait;
 
@@ -82,11 +82,11 @@ class MediaLoaderTest extends TestCase
          * @var \PHPUnit\Framework\MockObject\MockObject $promiseMock
          */
         $promiseMock = $this->createMock(Promise::class);
-        $promiseMock->expects(self::never())->method('success');
-        $promiseMock->expects(self::never())->method('fail');
+        $promiseMock->expects($this->never())->method('success');
+        $promiseMock->expects($this->never())->method('fail');
 
         $this->getRepositoryMock()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('findOneBy')
             ->with(
                 [new InclusiveOr(

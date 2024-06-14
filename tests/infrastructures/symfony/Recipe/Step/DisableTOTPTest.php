@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\CommonBundle\Recipe\Step;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
@@ -36,15 +38,16 @@ use Teknoo\East\Common\Object\User;
 use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
 use Teknoo\East\CommonBundle\Object\ThirdPartyAuthenticatedUser;
 use Teknoo\East\CommonBundle\Recipe\Step\DisableTOTP;
+use Teknoo\East\CommonBundle\Recipe\Step\UserTrait;
 use Teknoo\East\CommonBundle\Writer\SymfonyUserWriter;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  *
- * @covers      \Teknoo\East\CommonBundle\Recipe\Step\UserTrait
- * @covers      \Teknoo\East\CommonBundle\Recipe\Step\DisableTOTP
  */
+#[CoversClass(DisableTOTP::class)]
+#[CoversTrait(UserTrait::class)]
 class DisableTOTPTest extends TestCase
 {
     private ?SymfonyUserWriter $userWriter = null;
@@ -80,7 +83,7 @@ class DisableTOTPTest extends TestCase
     public function testWithoutTokenInStorage()
     {
         $this->getTokenStorage()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getToken')
             ->willReturn(null);
 
@@ -91,12 +94,12 @@ class DisableTOTPTest extends TestCase
     public function testWithoutUserInToken()
     {
         $token = $this->createMock(TokenInterface::class);
-        $token->expects(self::any())
+        $token->expects($this->any())
             ->method('getUser')
             ->willReturn(null);
 
         $this->getTokenStorage()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getToken')
             ->willReturn($token);
 
@@ -107,12 +110,12 @@ class DisableTOTPTest extends TestCase
     public function testWithNonEastUserInToken()
     {
         $token = $this->createMock(TokenInterface::class);
-        $token->expects(self::any())
+        $token->expects($this->any())
             ->method('getUser')
             ->willReturn($this->createMock(UserInterface::class));
 
         $this->getTokenStorage()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getToken')
             ->willReturn($token);
 
@@ -123,17 +126,17 @@ class DisableTOTPTest extends TestCase
     public function testWithPasswordAuthenticatedUserInToken()
     {
         $token = $this->createMock(TokenInterface::class);
-        $token->expects(self::any())
+        $token->expects($this->any())
             ->method('getUser')
             ->willReturn($this->createMock(PasswordAuthenticatedUser::class));
 
         $this->getTokenStorage()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getToken')
             ->willReturn($token);
 
         $this->getSymfonyUserWriter()
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('save');
 
         self::assertInstanceOf(
@@ -145,17 +148,17 @@ class DisableTOTPTest extends TestCase
     public function testWithThirdPartyAuthenticatedUserInToken()
     {
         $token = $this->createMock(TokenInterface::class);
-        $token->expects(self::any())
+        $token->expects($this->any())
             ->method('getUser')
             ->willReturn($this->createMock(ThirdPartyAuthenticatedUser::class));
 
         $this->getTokenStorage()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getToken')
             ->willReturn($token);
 
         $this->getSymfonyUserWriter()
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('save');
 
         self::assertInstanceOf(
@@ -170,22 +173,22 @@ class DisableTOTPTest extends TestCase
         $wrapperUser->addAuthData(new TOTPAuth());
 
         $user = $this->createMock(ThirdPartyAuthenticatedUser::class);
-        $user->expects(self::any())
+        $user->expects($this->any())
             ->method('getWrappedUser')
             ->willReturn($wrapperUser);
 
         $token = $this->createMock(TokenInterface::class);
-        $token->expects(self::any())
+        $token->expects($this->any())
             ->method('getUser')
             ->willReturn($user);
 
         $this->getTokenStorage()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getToken')
             ->willReturn($token);
 
         $this->getSymfonyUserWriter()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('save');
 
         self::assertInstanceOf(

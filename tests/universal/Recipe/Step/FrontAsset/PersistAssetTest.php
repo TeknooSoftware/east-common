@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Recipe\Step\FrontAsset;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\FrontAsset\PersisterInterface;
 use Teknoo\East\Common\FrontAsset\FinalFile;
@@ -33,8 +34,8 @@ use Teknoo\East\Common\Recipe\Step\FrontAsset\PersistAsset;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\East\Common\Recipe\Step\FrontAsset\PersistAsset
  */
+#[CoversClass(PersistAsset::class)]
 class PersistAssetTest extends TestCase
 {
     public function testInvoke()

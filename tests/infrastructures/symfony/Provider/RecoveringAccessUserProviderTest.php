@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\Tests\East\CommonBundle\Provider;
 
 use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface as GoogleTwoFactorInterface;
 use Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface as TotpTwoFactorInterface;
@@ -52,8 +53,8 @@ use Teknoo\Recipe\Promise\PromiseInterface;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  *
- * @covers      \Teknoo\East\CommonBundle\Provider\RecoveringAccessUserProvider
  */
+#[CoversClass(RecoveringAccessUserProvider::class)]
 class RecoveringAccessUserProviderTest extends TestCase
 {
     /**
@@ -122,7 +123,7 @@ class RecoveringAccessUserProviderTest extends TestCase
         $this->expectException(UserNotFoundException::class);
 
         $this->getLoader()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
@@ -136,7 +137,7 @@ class RecoveringAccessUserProviderTest extends TestCase
 
     public function testLoadUserByUsernameFound()
     {
-        $this->getDatesService()->expects(self::any())
+        $this->getDatesService()->expects($this->any())
             ->method('passMeTheDate')
             ->willReturnCallback(
                 function (callable $setter) {
@@ -159,7 +160,7 @@ class RecoveringAccessUserProviderTest extends TestCase
         ]);
 
         $this->getLoader()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
@@ -178,7 +179,7 @@ class RecoveringAccessUserProviderTest extends TestCase
 
     public function testLoadUserByUsernameFoundWithWrongAlgorithm()
     {
-        $this->getDatesService()->expects(self::any())
+        $this->getDatesService()->expects($this->any())
             ->method('passMeTheDate')
             ->willReturnCallback(
                 function (callable $setter) {
@@ -201,7 +202,7 @@ class RecoveringAccessUserProviderTest extends TestCase
         ]);
 
         $this->getLoader()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
@@ -216,7 +217,7 @@ class RecoveringAccessUserProviderTest extends TestCase
 
     public function testLoadUserByUsernameFoundWithGoogleAuthenticator()
     {
-        $this->getDatesService()->expects(self::any())
+        $this->getDatesService()->expects($this->any())
             ->method('passMeTheDate')
             ->willReturnCallback(
                 function (callable $setter) {
@@ -248,7 +249,7 @@ class RecoveringAccessUserProviderTest extends TestCase
         );
 
         $this->getLoader()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
@@ -279,7 +280,7 @@ class RecoveringAccessUserProviderTest extends TestCase
 
     public function testLoadUserByUsernameFoundWithTOTP()
     {
-        $this->getDatesService()->expects(self::any())
+        $this->getDatesService()->expects($this->any())
             ->method('passMeTheDate')
             ->willReturnCallback(
                 function (callable $setter) {
@@ -311,7 +312,7 @@ class RecoveringAccessUserProviderTest extends TestCase
         );
 
         $this->getLoader()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
@@ -347,7 +348,7 @@ class RecoveringAccessUserProviderTest extends TestCase
         $user->setAuthData([$this->createMock(AuthDataInterface::class)]);
 
         $this->getLoader()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
@@ -365,7 +366,7 @@ class RecoveringAccessUserProviderTest extends TestCase
         $this->expectException(UserNotFoundException::class);
 
         $this->getLoader()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
@@ -379,7 +380,7 @@ class RecoveringAccessUserProviderTest extends TestCase
 
     public function testLoadUserByIdentifierFound()
     {
-        $this->getDatesService()->expects(self::any())
+        $this->getDatesService()->expects($this->any())
             ->method('passMeTheDate')
             ->willReturnCallback(
                 function (callable $setter) {
@@ -402,7 +403,7 @@ class RecoveringAccessUserProviderTest extends TestCase
         ]);
 
         $this->getLoader()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
@@ -426,7 +427,7 @@ class RecoveringAccessUserProviderTest extends TestCase
         $user->setAuthData([$this->createMock(AuthDataInterface::class)]);
 
         $this->getLoader()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
@@ -444,7 +445,7 @@ class RecoveringAccessUserProviderTest extends TestCase
         $this->expectException(UserNotFoundException::class);
 
         $this->getLoader()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
@@ -470,7 +471,7 @@ class RecoveringAccessUserProviderTest extends TestCase
 
     public function testRefreshUserFound()
     {
-        $this->getDatesService()->expects(self::any())
+        $this->getDatesService()->expects($this->any())
             ->method('passMeTheDate')
             ->willReturnCallback(
                 function (callable $setter) {
@@ -493,7 +494,7 @@ class RecoveringAccessUserProviderTest extends TestCase
         ]);
 
         $this->getLoader()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetch')
             ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
                 self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
@@ -524,7 +525,7 @@ class RecoveringAccessUserProviderTest extends TestCase
 
     public function testUpgradePasswordNotSupported()
     {
-        $this->getWriter()->expects(self::never())->method('save');
+        $this->getWriter()->expects($this->never())->method('save');
 
         $this->buildProvider()->upgradePassword(
             $this->createMock(UserInterface::class),
@@ -537,9 +538,9 @@ class RecoveringAccessUserProviderTest extends TestCase
         $sfUser = $this->createMock(UserWithRecoveryAccess::class);
         $user = $this->createMock(User::class);
 
-        $sfUser->expects(self::any())->method('getWrappedUser')->willReturn($user);
+        $sfUser->expects($this->any())->method('getWrappedUser')->willReturn($user);
 
-        $user->expects(self::once())
+        $user->expects($this->once())
             ->method('addAuthData')
             ->with(
                 new StoredPassword(
@@ -549,7 +550,7 @@ class RecoveringAccessUserProviderTest extends TestCase
                 )
             );
 
-        $this->getWriter()->expects(self::once())->method('save');
+        $this->getWriter()->expects($this->once())->method('save');
 
         $this->buildProvider()->upgradePassword(
             $sfUser,

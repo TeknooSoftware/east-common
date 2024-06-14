@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\CommonBundle\Middleware;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -34,8 +35,8 @@ use Teknoo\East\CommonBundle\Middleware\LocaleMiddleware;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers      \Teknoo\East\CommonBundle\Middleware\LocaleMiddleware
  */
+#[CoversClass(LocaleMiddleware::class)]
 class LocaleMiddlewareTest extends TestCase
 {
     /**
@@ -67,13 +68,13 @@ class LocaleMiddlewareTest extends TestCase
     {
         $serverRequest = $this->createMock(ServerRequestInterface::class);
 
-        $serverRequest->expects(self::any())
+        $serverRequest->expects($this->any())
             ->method('getAttribute')
             ->with('locale')
             ->willReturn('fr');
 
         $this->getTranslator()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('setLocale')
             ->with('fr');
 
@@ -89,13 +90,13 @@ class LocaleMiddlewareTest extends TestCase
     {
         $serverRequest = $this->createMock(ServerRequestInterface::class);
 
-        $serverRequest->expects(self::any())
+        $serverRequest->expects($this->any())
             ->method('getAttribute')
             ->with('locale')
             ->willReturn(null);
 
         $this->getTranslator()
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('setLocale');
 
         self::assertInstanceOf(
@@ -111,7 +112,7 @@ class LocaleMiddlewareTest extends TestCase
         $message = $this->createMock(MessageInterface::class);
 
         $this->getTranslator()
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('setLocale');
 
         self::assertInstanceOf(

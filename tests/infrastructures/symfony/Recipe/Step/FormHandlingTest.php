@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\Tests\East\CommonBundle\Recipe\Step;
 
 use Laminas\Diactoros\StreamFactory;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
@@ -44,8 +45,8 @@ use function json_encode;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers      \Teknoo\East\CommonBundle\Recipe\Step\FormHandling
  */
+#[CoversClass(FormHandling::class)]
 class FormHandlingTest extends TestCase
 {
     private ?DatesService $datesService = null;
@@ -87,14 +88,14 @@ class FormHandlingTest extends TestCase
     public function testInvokeBasic()
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects(self::any())->method('getAttribute')->willReturnCallback(
+        $request->expects($this->any())->method('getAttribute')->willReturnCallback(
             fn (string $name) => match ($name) {
                 'request' => $this->createMock(Request::class),
                 default => false,
             }
         );
 
-        $request->expects(self::any())->method('getParsedBody')->willReturn([]);
+        $request->expects($this->any())->method('getParsedBody')->willReturn([]);
 
         $manager = $this->createMock(ManagerInterface::class);
         $formClass = 'Foo/Bar';
@@ -102,15 +103,15 @@ class FormHandlingTest extends TestCase
         $object = $this->createMock(IdentifiedObjectInterface::class);
 
         $this->getDatesService()
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('passMeTheDate');
 
         $form = $this->createMock(FormInterface::class);
-        $form->expects(self::once())->method('handleRequest');
-        $form->expects(self::never())->method('submit');
+        $form->expects($this->once())->method('handleRequest');
+        $form->expects($this->never())->method('submit');
 
         $this->getFormFactory()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('create')
             ->willReturn($form);
 
@@ -129,14 +130,14 @@ class FormHandlingTest extends TestCase
     public function testInvokeWithPublishableAndNotPublish()
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects(self::any())->method('getAttribute')->willReturnCallback(
+        $request->expects($this->any())->method('getAttribute')->willReturnCallback(
             fn (string $name) => match ($name) {
                 'request' => $this->createMock(Request::class),
                 default => false,
             }
         );
 
-        $request->expects(self::any())->method('getParsedBody')->willReturn([
+        $request->expects($this->any())->method('getParsedBody')->willReturn([
         ]);
 
         $manager = $this->createMock(ManagerInterface::class);
@@ -146,16 +147,16 @@ class FormHandlingTest extends TestCase
         $object = $this->createMock(IdentifiedObjectInterface::class);
 
         $form = $this->createMock(FormInterface::class);
-        $form->expects(self::once())->method('handleRequest');
-        $form->expects(self::never())->method('submit');
+        $form->expects($this->once())->method('handleRequest');
+        $form->expects($this->never())->method('submit');
 
         $this->getFormFactory()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('create')
             ->willReturn($form);
 
         $this->getDatesService()
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('passMeTheDate');
 
         self::assertInstanceOf(
@@ -173,13 +174,13 @@ class FormHandlingTest extends TestCase
     public function testInvokeWithPublishableAndNotPublishWithHandlingDisabled()
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects(self::any())->method('getAttribute')->willReturnCallback(
+        $request->expects($this->any())->method('getAttribute')->willReturnCallback(
             fn (string $name) => match ($name) {
                 'request' => $this->createMock(Request::class),
                 default => false,
             }
         );
-        $request->expects(self::any())->method('getParsedBody')->willReturn([
+        $request->expects($this->any())->method('getParsedBody')->willReturn([
         ]);
         $manager = $this->createMock(ManagerInterface::class);
         $formClass = 'Foo/Bar';
@@ -187,16 +188,16 @@ class FormHandlingTest extends TestCase
         $object = $this->createMock(IdentifiedObjectInterface::class);
 
         $form = $this->createMock(FormInterface::class);
-        $form->expects(self::never())->method('handleRequest');
-        $form->expects(self::never())->method('submit');
+        $form->expects($this->never())->method('handleRequest');
+        $form->expects($this->never())->method('submit');
 
         $this->getFormFactory()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('create')
             ->willReturn($form);
 
         $this->getDatesService()
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('passMeTheDate');
 
         self::assertInstanceOf(
@@ -215,30 +216,30 @@ class FormHandlingTest extends TestCase
     public function testInvokeWithPApiWithHandlingDisabled()
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects(self::any())->method('getAttribute')->willReturnCallback(
+        $request->expects($this->any())->method('getAttribute')->willReturnCallback(
             fn (string $name) => match ($name) {
                 'request' => $this->createMock(Request::class),
                 'api' => 'json',
                 default => false,
             }
         );
-        $request->expects(self::any())->method('getParsedBody')->willReturn([]);
+        $request->expects($this->any())->method('getParsedBody')->willReturn([]);
         $manager = $this->createMock(ManagerInterface::class);
         $formClass = 'Foo/Bar';
         $formOptions = [];
         $object = $this->createMock(IdentifiedObjectInterface::class);
 
         $form = $this->createMock(FormInterface::class);
-        $form->expects(self::never())->method('handleRequest');
-        $form->expects(self::never())->method('submit');
+        $form->expects($this->never())->method('handleRequest');
+        $form->expects($this->never())->method('submit');
 
         $this->getFormFactory()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('create')
             ->willReturn($form);
 
         $this->getDatesService()
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('passMeTheDate');
 
         self::assertInstanceOf(
@@ -257,13 +258,13 @@ class FormHandlingTest extends TestCase
     public function testInvokeWithNotPublishableAndNotPublish()
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects(self::any())->method('getAttribute')->willReturnCallback(
+        $request->expects($this->any())->method('getAttribute')->willReturnCallback(
             fn (string $name) => match ($name) {
                 'request' => $this->createMock(Request::class),
                 default => false,
             }
         );
-        $request->expects(self::any())->method('getParsedBody')->willReturn([
+        $request->expects($this->any())->method('getParsedBody')->willReturn([
         ]);
         $manager = $this->createMock(ManagerInterface::class);
         $formClass = 'Foo/Bar';
@@ -271,15 +272,15 @@ class FormHandlingTest extends TestCase
         $object = $this->createMock(IdentifiedObjectInterface::class);
 
         $this->getDatesService()
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('passMeTheDate');
 
         $form = $this->createMock(FormInterface::class);
-        $form->expects(self::once())->method('handleRequest');
-        $form->expects(self::never())->method('submit');
+        $form->expects($this->once())->method('handleRequest');
+        $form->expects($this->never())->method('submit');
 
         $this->getFormFactory()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('create')
             ->willReturn($form);
 
@@ -298,14 +299,14 @@ class FormHandlingTest extends TestCase
     public function testInvokeWithPublishableAndPublish()
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects(self::any())->method('getAttribute')->willReturnCallback(
+        $request->expects($this->any())->method('getAttribute')->willReturnCallback(
             fn (string $name) => match ($name) {
                 'request' => $this->createMock(Request::class),
                 default => false,
             }
         );
 
-        $request->expects(self::any())->method('getParsedBody')->willReturn([
+        $request->expects($this->any())->method('getParsedBody')->willReturn([
             'publish' => true
         ]);
 
@@ -322,16 +323,16 @@ class FormHandlingTest extends TestCase
         };
 
         $form = $this->createMock(FormInterface::class);
-        $form->expects(self::once())->method('handleRequest');
-        $form->expects(self::never())->method('submit');
+        $form->expects($this->once())->method('handleRequest');
+        $form->expects($this->never())->method('submit');
 
         $this->getFormFactory()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('create')
             ->willReturn($form);
 
         $this->getDatesService()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('passMeTheDate');
 
         self::assertInstanceOf(
@@ -349,14 +350,14 @@ class FormHandlingTest extends TestCase
     public function testInvokeWithNotPublishableAndPublish()
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects(self::any())->method('getAttribute')->willReturnCallback(
+        $request->expects($this->any())->method('getAttribute')->willReturnCallback(
             fn (string $name) => match ($name) {
                 'request' => $this->createMock(Request::class),
                 default => false,
             }
         );
 
-        $request->expects(self::any())->method('getParsedBody')->willReturn([
+        $request->expects($this->any())->method('getParsedBody')->willReturn([
             'publish' => true
         ]);
 
@@ -366,15 +367,15 @@ class FormHandlingTest extends TestCase
         $object = $this->createMock(IdentifiedObjectInterface::class);
 
         $this->getDatesService()
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('passMeTheDate');
 
         $form = $this->createMock(FormInterface::class);
-        $form->expects(self::once())->method('handleRequest');
-        $form->expects(self::never())->method('submit');
+        $form->expects($this->once())->method('handleRequest');
+        $form->expects($this->never())->method('submit');
 
         $this->getFormFactory()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('create')
             ->willReturn($form);
 
@@ -393,7 +394,7 @@ class FormHandlingTest extends TestCase
     public function testInvokeApiNoJson()
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects(self::any())->method('getAttribute')->willReturnCallback(
+        $request->expects($this->any())->method('getAttribute')->willReturnCallback(
             fn (string $name) => match ($name) {
                 'request' => $this->createMock(Request::class),
                 'api' => 'json',
@@ -401,8 +402,8 @@ class FormHandlingTest extends TestCase
             }
         );
 
-        $request->expects(self::any())->method('getMethod')->willReturn('POST');
-        $request->expects(self::any())->method('getParsedBody')->willReturn([]);
+        $request->expects($this->any())->method('getMethod')->willReturn('POST');
+        $request->expects($this->any())->method('getParsedBody')->willReturn([]);
 
         $manager = $this->createMock(ManagerInterface::class);
         $formClass = 'Foo/Bar';
@@ -410,15 +411,15 @@ class FormHandlingTest extends TestCase
         $object = $this->createMock(IdentifiedObjectInterface::class);
 
         $this->getDatesService()
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('passMeTheDate');
 
         $form = $this->createMock(FormInterface::class);
-        $form->expects(self::once())->method('handleRequest');
-        $form->expects(self::once())->method('submit');
+        $form->expects($this->once())->method('handleRequest');
+        $form->expects($this->once())->method('submit');
 
         $this->getFormFactory()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('create')
             ->with(
                 $formClass,
@@ -442,7 +443,7 @@ class FormHandlingTest extends TestCase
     public function testInvokeApiNoJsonWithFormApiAware()
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects(self::any())->method('getAttribute')->willReturnCallback(
+        $request->expects($this->any())->method('getAttribute')->willReturnCallback(
             fn (string $name) => match ($name) {
                 'request' => $this->createMock(Request::class),
                 'api' => 'json',
@@ -450,8 +451,8 @@ class FormHandlingTest extends TestCase
             }
         );
 
-        $request->expects(self::any())->method('getMethod')->willReturn('POST');
-        $request->expects(self::any())->method('getParsedBody')->willReturn([]);
+        $request->expects($this->any())->method('getMethod')->willReturn('POST');
+        $request->expects($this->any())->method('getParsedBody')->willReturn([]);
 
         $manager = $this->createMock(ManagerInterface::class);
         $formClass = UserType::class;
@@ -459,15 +460,15 @@ class FormHandlingTest extends TestCase
         $object = $this->createMock(IdentifiedObjectInterface::class);
 
         $this->getDatesService()
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('passMeTheDate');
 
         $form = $this->createMock(FormInterface::class);
-        $form->expects(self::once())->method('handleRequest');
-        $form->expects(self::once())->method('submit');
+        $form->expects($this->once())->method('handleRequest');
+        $form->expects($this->once())->method('submit');
 
         $this->getFormFactory()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('create')
             ->with(
                 $formClass,
@@ -491,7 +492,7 @@ class FormHandlingTest extends TestCase
     private function runTestForInvokeApiWithJson(string $method): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects(self::any())->method('getAttribute')->willReturnCallback(
+        $request->expects($this->any())->method('getAttribute')->willReturnCallback(
             fn (string $name) => match ($name) {
                 'request' => $this->createMock(Request::class),
                 'api' => 'json',
@@ -499,17 +500,17 @@ class FormHandlingTest extends TestCase
             }
         );
 
-        $request->expects(self::any())->method('getHeader')->willReturnCallback(
+        $request->expects($this->any())->method('getHeader')->willReturnCallback(
             fn (string $header) => match ($header) {
                 'Content-Type' => ['application/json'],
                 default => [],
             }
         );
 
-        $request->expects(self::any())->method('getMethod')->willReturn($method);
-        $request->expects(self::any())->method('getParsedBody')->willReturn([]);
+        $request->expects($this->any())->method('getMethod')->willReturn($method);
+        $request->expects($this->any())->method('getParsedBody')->willReturn([]);
         $body = ['foo' => 'bar', 'bar' => ['foo']];
-        $request->expects(self::any())->method('getBody')->willReturn(
+        $request->expects($this->any())->method('getBody')->willReturn(
             (new StreamFactory())->createStream(json_encode($body))
         );
 
@@ -519,15 +520,15 @@ class FormHandlingTest extends TestCase
         $object = $this->createMock(IdentifiedObjectInterface::class);
 
         $this->getDatesService()
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('passMeTheDate');
 
         $form = $this->createMock(FormInterface::class);
-        $form->expects(self::once())->method('handleRequest');
-        $form->expects(self::once())->method('submit')->with($body, false);
+        $form->expects($this->once())->method('handleRequest');
+        $form->expects($this->once())->method('submit')->with($body, false);
 
         $this->getFormFactory()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('create')
             ->with(
                 $formClass,
@@ -566,7 +567,7 @@ class FormHandlingTest extends TestCase
     public function testInvokeApiWithJsonAndGETMethod()
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects(self::any())->method('getAttribute')->willReturnCallback(
+        $request->expects($this->any())->method('getAttribute')->willReturnCallback(
             fn (string $name) => match ($name) {
                 'request' => $this->createMock(Request::class),
                 'api' => 'json',
@@ -574,17 +575,17 @@ class FormHandlingTest extends TestCase
             }
         );
 
-        $request->expects(self::any())->method('getHeader')->willReturnCallback(
+        $request->expects($this->any())->method('getHeader')->willReturnCallback(
             fn (string $header) => match ($header) {
                 'Content-Type' => ['application/json'],
                 default => [],
             }
         );
 
-        $request->expects(self::any())->method('getMethod')->willReturn('Get');
-        $request->expects(self::any())->method('getParsedBody')->willReturn([]);
+        $request->expects($this->any())->method('getMethod')->willReturn('Get');
+        $request->expects($this->any())->method('getParsedBody')->willReturn([]);
         $body = ['foo' => 'bar', 'bar' => ['foo']];
-        $request->expects(self::any())->method('getBody')->willReturn(
+        $request->expects($this->any())->method('getBody')->willReturn(
             (new StreamFactory())->createStream(json_encode($body))
         );
 
@@ -594,15 +595,15 @@ class FormHandlingTest extends TestCase
         $object = $this->createMock(IdentifiedObjectInterface::class);
 
         $this->getDatesService()
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('passMeTheDate');
 
         $form = $this->createMock(FormInterface::class);
-        $form->expects(self::once())->method('handleRequest');
-        $form->expects(self::never())->method('submit');
+        $form->expects($this->once())->method('handleRequest');
+        $form->expects($this->never())->method('submit');
 
         $this->getFormFactory()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('create')
             ->with(
                 $formClass,

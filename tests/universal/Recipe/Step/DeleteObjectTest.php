@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Recipe\Step;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
 use Teknoo\East\Common\Recipe\Step\DeleteObject;
@@ -33,8 +34,8 @@ use Teknoo\East\Common\Service\DeletingService;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\East\Common\Recipe\Step\DeleteObject
  */
+#[CoversClass(DeleteObject::class)]
 class DeleteObjectTest extends TestCase
 {
     public function buildStep(): DeleteObject

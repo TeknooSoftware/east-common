@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Service;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\Object\DeletableInterface;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
@@ -35,8 +36,8 @@ use Teknoo\East\Foundation\Time\DatesService;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\East\Common\Service\DeletingService
  */
+#[CoversClass(DeletingService::class)]
 class DeletingServiceTest extends TestCase
 {
     /**
@@ -99,17 +100,17 @@ class DeletingServiceTest extends TestCase
         };
 
         $this->getWriterMock()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('save')
             ->with($object)
             ->willReturnSelf();
 
         $this->getWriterMock()
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('remove');
 
         $this->getDatesServiceMock()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('passMeTheDate')
             ->willReturnCallback(
                 function ($setter) use ($date) {
@@ -138,11 +139,11 @@ class DeletingServiceTest extends TestCase
         };
 
         $this->getWriterMock()
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('save');
 
         $this->getWriterMock()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('remove')
             ->with($object)
             ->willReturnSelf();

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Service;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
@@ -36,8 +37,8 @@ use Teknoo\Recipe\Promise\PromiseInterface;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\East\Common\Service\FindSlugService
  */
+#[CoversClass(FindSlugService::class)]
 class FindSlugServiceTest extends TestCase
 {
     public function buildService(): FindSlugService
@@ -50,7 +51,7 @@ class FindSlugServiceTest extends TestCase
         $loader = $this->createMock(LoaderInterface::class);
         $sluggable = $this->createMock(SluggableInterface::class);
 
-        $loader->expects(self::once())
+        $loader->expects($this->once())
             ->method('fetch')
             ->with(new FindBySlugQuery('slugField', 'foo-bar'))
             ->willReturnCallback(
@@ -61,7 +62,7 @@ class FindSlugServiceTest extends TestCase
                 }
             );
 
-        $sluggable->expects(self::once())
+        $sluggable->expects($this->once())
             ->method('setSlug')
             ->with('foo-bar')
             ->willReturnSelf();
@@ -100,7 +101,7 @@ class FindSlugServiceTest extends TestCase
             }
         };
 
-        $loader->expects(self::once())
+        $loader->expects($this->once())
             ->method('fetch')
             ->with(new FindBySlugQuery('slugField', 'foo-bar', false, $sluggable))
             ->willReturnCallback(
@@ -128,7 +129,7 @@ class FindSlugServiceTest extends TestCase
         $sluggable = $this->createMock(SluggableInterface::class);
 
         $counter=0;
-        $loader->expects(self::exactly(3))
+        $loader->expects($this->exactly(3))
             ->method('fetch')
             ->with(
                 $this->callback(
@@ -158,7 +159,7 @@ class FindSlugServiceTest extends TestCase
                 }
             );
 
-        $sluggable->expects(self::once())
+        $sluggable->expects($this->once())
             ->method('setSlug')
             ->with('foo-bar-3')
             ->willReturnSelf();

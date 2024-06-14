@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Recipe\Step;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Common\Recipe\Step\Stop;
@@ -32,8 +33,8 @@ use Teknoo\East\Common\Recipe\Step\Stop;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\East\Common\Recipe\Step\Stop
  */
+#[CoversClass(Stop::class)]
 class StopTest extends TestCase
 {
     public function buildStep(): Stop
@@ -44,7 +45,7 @@ class StopTest extends TestCase
     public function testInvoke()
     {
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::once())
+        $manager->expects($this->once())
             ->method('stop');
 
         self::assertInstanceOf(

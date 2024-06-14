@@ -29,6 +29,7 @@ use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Client\OAuth2ClientInterface;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use League\OAuth2\Client\Token\AccessToken;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -51,8 +52,8 @@ use Teknoo\Recipe\Promise\PromiseInterface;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers      \Teknoo\East\CommonBundle\Security\Authenticator\OAuth2Authenticator
  */
+#[CoversClass(OAuth2Authenticator::class)]
 class OAuth2AuthenticatorTest extends TestCase
 {
     private ?ClientRegistry $clientRegistry = null;
@@ -145,8 +146,8 @@ class OAuth2AuthenticatorTest extends TestCase
     public function testRegisterTokenWithoutThirdParty()
     {
         $user = $this->createMock(User::class);
-        $user->expects(self::any())->method('getAuthData')->willReturn([]);
-        $user->expects(self::once())
+        $user->expects($this->any())->method('getAuthData')->willReturn([]);
+        $user->expects($this->once())
             ->method('addAuthData')
             ->with(
                 (new ThirdPartyAuth())->setProtocol('oauth2')
@@ -154,14 +155,14 @@ class OAuth2AuthenticatorTest extends TestCase
             )->willReturnSelf();
 
         $promise = $this->createMock(PromiseInterface::class);
-        $promise->expects(self::once())->method('success')
+        $promise->expects($this->once())->method('success')
             ->with($this->callback(
                 fn ($x) => $x instanceof ThirdPartyAuthenticatedUser
             ))
         ->willReturnSelf();
 
         $this->getSymfonyUserWriter()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('save')
             ->willReturnSelf();
 
@@ -174,12 +175,12 @@ class OAuth2AuthenticatorTest extends TestCase
     public function testRegisterTokenWithAnotherProviderThirdParty()
     {
         $user = $this->createMock(User::class);
-        $user->expects(self::any())->method('getAuthData')->willReturn([
+        $user->expects($this->any())->method('getAuthData')->willReturn([
             (new ThirdPartyAuth())->setProtocol('oauth2')
                 ->setProvider('provider2')
                 ->setToken('token')
         ]);
-        $user->expects(self::once())
+        $user->expects($this->once())
             ->method('addAuthData')
             ->with(
                 (new ThirdPartyAuth())->setProtocol('oauth2')
@@ -187,14 +188,14 @@ class OAuth2AuthenticatorTest extends TestCase
             )->willReturnSelf();
 
         $promise = $this->createMock(PromiseInterface::class);
-        $promise->expects(self::once())->method('success')
+        $promise->expects($this->once())->method('success')
             ->with($this->callback(
                 fn ($x) => $x instanceof ThirdPartyAuthenticatedUser
             ))
             ->willReturnSelf();
 
         $this->getSymfonyUserWriter()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('save')
             ->willReturnSelf();
 
@@ -207,23 +208,23 @@ class OAuth2AuthenticatorTest extends TestCase
     public function testRegisterTokenWithThirdParty()
     {
         $user = $this->createMock(User::class);
-        $user->expects(self::any())->method('getAuthData')->willReturn([
+        $user->expects($this->any())->method('getAuthData')->willReturn([
             (new ThirdPartyAuth())->setProtocol('oauth2')
                 ->setProvider('provider')
                 ->setToken('token')
         ]);
-        $user->expects(self::never())
+        $user->expects($this->never())
             ->method('addAuthData');
 
         $promise = $this->createMock(PromiseInterface::class);
-        $promise->expects(self::once())->method('success')
+        $promise->expects($this->once())->method('success')
             ->with($this->callback(
                 fn ($x) => $x instanceof ThirdPartyAuthenticatedUser
             ))
             ->willReturnSelf();
 
         $this->getSymfonyUserWriter()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('save')
             ->willReturnSelf();
 
@@ -236,7 +237,7 @@ class OAuth2AuthenticatorTest extends TestCase
     public function testRegisterTokenWithThirdPartyWith2FAGoogle()
     {
         $user = $this->createMock(User::class);
-        $user->expects(self::any())->method('getAuthData')->willReturn([
+        $user->expects($this->any())->method('getAuthData')->willReturn([
             (new ThirdPartyAuth())->setProtocol('oauth2')
                 ->setProvider('provider')
                 ->setToken('token'),
@@ -248,18 +249,18 @@ class OAuth2AuthenticatorTest extends TestCase
                 enabled: true,
             ),
         ]);
-        $user->expects(self::never())
+        $user->expects($this->never())
             ->method('addAuthData');
 
         $promise = $this->createMock(PromiseInterface::class);
-        $promise->expects(self::once())->method('success')
+        $promise->expects($this->once())->method('success')
             ->with($this->callback(
                 fn ($x) => $x instanceof GoogleAuthThirdPartyAuthenticatedUser
             ))
             ->willReturnSelf();
 
         $this->getSymfonyUserWriter()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('save')
             ->willReturnSelf();
 
@@ -272,7 +273,7 @@ class OAuth2AuthenticatorTest extends TestCase
     public function testRegisterTokenWithThirdPartyWith2FACommon()
     {
         $user = $this->createMock(User::class);
-        $user->expects(self::any())->method('getAuthData')->willReturn([
+        $user->expects($this->any())->method('getAuthData')->willReturn([
             (new ThirdPartyAuth())->setProtocol('oauth2')
                 ->setProvider('provider')
                 ->setToken('token'),
@@ -284,18 +285,18 @@ class OAuth2AuthenticatorTest extends TestCase
                 enabled: true,
             ),
         ]);
-        $user->expects(self::never())
+        $user->expects($this->never())
             ->method('addAuthData');
 
         $promise = $this->createMock(PromiseInterface::class);
-        $promise->expects(self::once())->method('success')
+        $promise->expects($this->once())->method('success')
             ->with($this->callback(
                 fn ($x) => $x instanceof TOTPThirdPartyAuthenticatedUser
             ))
             ->willReturnSelf();
 
         $this->getSymfonyUserWriter()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('save')
             ->willReturnSelf();
 
@@ -310,21 +311,21 @@ class OAuth2AuthenticatorTest extends TestCase
         $request = new Request([], [], ['_oauth_client_key'=>'foo']);
 
         $token = $this->createMock(AccessToken::class);
-        $token->expects(self::any())->method('getToken')->willReturn('foo');
+        $token->expects($this->any())->method('getToken')->willReturn('foo');
 
         $client = $this->createMock(OAuth2ClientInterface::class);
-        $client->expects(self::any())->method('getAccessToken')->willReturn($token);
-        $client->expects(self::any())->method('fetchUserFromToken')->willReturn(
+        $client->expects($this->any())->method('getAccessToken')->willReturn($token);
+        $client->expects($this->any())->method('fetchUserFromToken')->willReturn(
             $this->createMock(ResourceOwnerInterface::class)
         );
 
         $this->getClientRegistry()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getClient')
             ->willReturn($client);
 
         $this->getUserConverterInterface()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('extractEmail')
             ->willReturnCallback(
                 function (ResourceOwnerInterface $owner, PromiseInterface $promise) {
@@ -335,7 +336,7 @@ class OAuth2AuthenticatorTest extends TestCase
             );
 
         $this->getLoader()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('fetch')
             ->willReturnCallback(
                 function ($query, PromiseInterface $promise) {
@@ -361,21 +362,21 @@ class OAuth2AuthenticatorTest extends TestCase
         $request = new Request([], [], ['_oauth_client_key'=>'foo']);
 
         $token = $this->createMock(AccessToken::class);
-        $token->expects(self::any())->method('getToken')->willReturn('foo');
+        $token->expects($this->any())->method('getToken')->willReturn('foo');
 
         $client = $this->createMock(OAuth2ClientInterface::class);
-        $client->expects(self::any())->method('getAccessToken')->willReturn($token);
-        $client->expects(self::any())->method('fetchUserFromToken')->willReturn(
+        $client->expects($this->any())->method('getAccessToken')->willReturn($token);
+        $client->expects($this->any())->method('fetchUserFromToken')->willReturn(
             $this->createMock(ResourceOwnerInterface::class)
         );
 
         $this->getClientRegistry()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getClient')
             ->willReturn($client);
 
         $this->getUserConverterInterface()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('extractEmail')
             ->willReturnCallback(
                 function (ResourceOwnerInterface $owner, PromiseInterface $promise) {
@@ -386,7 +387,7 @@ class OAuth2AuthenticatorTest extends TestCase
             );
 
         $this->getUserConverterInterface()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('convertToUser')
             ->willReturnCallback(
                 function (ResourceOwnerInterface $owner, PromiseInterface $promise) {
@@ -397,7 +398,7 @@ class OAuth2AuthenticatorTest extends TestCase
             );
 
         $this->getLoader()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('fetch')
             ->willReturnCallback(
                 function ($query, PromiseInterface $promise) {
@@ -423,21 +424,21 @@ class OAuth2AuthenticatorTest extends TestCase
         $request = new Request([], [], ['_oauth_client_key'=>'foo']);
 
         $token = $this->createMock(AccessToken::class);
-        $token->expects(self::any())->method('getToken')->willReturn('foo');
+        $token->expects($this->any())->method('getToken')->willReturn('foo');
 
         $client = $this->createMock(OAuth2ClientInterface::class);
-        $client->expects(self::any())->method('getAccessToken')->willReturn($token);
-        $client->expects(self::any())->method('fetchUserFromToken')->willReturn(
+        $client->expects($this->any())->method('getAccessToken')->willReturn($token);
+        $client->expects($this->any())->method('fetchUserFromToken')->willReturn(
             $this->createMock(ResourceOwnerInterface::class)
         );
 
         $this->getClientRegistry()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getClient')
             ->willReturn($client);
 
         $this->getUserConverterInterface()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('extractEmail')
             ->willReturnCallback(
                 function (ResourceOwnerInterface $owner, PromiseInterface $promise) {
@@ -448,11 +449,11 @@ class OAuth2AuthenticatorTest extends TestCase
             );
 
         $this->getUserConverterInterface()
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('convertToUser');
 
         $this->getLoader()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('fetch')
             ->willReturnCallback(
                 function ($query, PromiseInterface $promise) {
@@ -475,21 +476,21 @@ class OAuth2AuthenticatorTest extends TestCase
         $request = new Request([], [], ['_oauth_client_key'=>'foo']);
 
         $token = $this->createMock(AccessToken::class);
-        $token->expects(self::any())->method('getToken')->willReturn('foo');
+        $token->expects($this->any())->method('getToken')->willReturn('foo');
 
         $client = $this->createMock(OAuth2ClientInterface::class);
-        $client->expects(self::any())->method('getAccessToken')->willReturn($token);
-        $client->expects(self::any())->method('fetchUserFromToken')->willReturn(
+        $client->expects($this->any())->method('getAccessToken')->willReturn($token);
+        $client->expects($this->any())->method('fetchUserFromToken')->willReturn(
             $this->createMock(ResourceOwnerInterface::class)
         );
 
         $this->getClientRegistry()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getClient')
             ->willReturn($client);
 
         $this->getUserConverterInterface()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('extractEmail')
             ->willReturnCallback(
                 function (ResourceOwnerInterface $owner, PromiseInterface $promise) {
@@ -500,11 +501,11 @@ class OAuth2AuthenticatorTest extends TestCase
             );
 
         $this->getUserConverterInterface()
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('convertToUser');
 
         $this->getLoader()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('fetch')
             ->willReturnCallback(
                 function ($query, PromiseInterface $promise) {
@@ -527,21 +528,21 @@ class OAuth2AuthenticatorTest extends TestCase
         $request = new Request([], [], ['_oauth_client_key'=>'foo']);
 
         $token = $this->createMock(AccessToken::class);
-        $token->expects(self::any())->method('getToken')->willReturn('foo');
+        $token->expects($this->any())->method('getToken')->willReturn('foo');
 
         $client = $this->createMock(OAuth2ClientInterface::class);
-        $client->expects(self::any())->method('getAccessToken')->willReturn($token);
-        $client->expects(self::any())->method('fetchUserFromToken')->willReturn(
+        $client->expects($this->any())->method('getAccessToken')->willReturn($token);
+        $client->expects($this->any())->method('fetchUserFromToken')->willReturn(
             $this->createMock(ResourceOwnerInterface::class)
         );
 
         $this->getClientRegistry()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getClient')
             ->willReturn($client);
 
         $this->getUserConverterInterface()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('extractEmail')
             ->willReturnCallback(
                 function (ResourceOwnerInterface $owner, PromiseInterface $promise) {

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Recipe\Step;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
@@ -34,8 +35,8 @@ use Teknoo\East\Common\Recipe\Step\ExtractSlug;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\East\Common\Recipe\Step\ExtractSlug
  */
+#[CoversClass(ExtractSlug::class)]
 class ExtractSlugTest extends TestCase
 {
     public function buildStep(): ExtractSlug
@@ -66,14 +67,14 @@ class ExtractSlugTest extends TestCase
     public function testInvokeWithoutPath()
     {
         $uri = $this->createMock(UriInterface::class);
-        $uri->expects(self::any())->method('getPath')->willReturn('/');
+        $uri->expects($this->any())->method('getPath')->willReturn('/');
 
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects(self::any())->method('getUri')->willReturn($uri);
+        $request->expects($this->any())->method('getUri')->willReturn($uri);
 
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::once())->method('updateWorkPlan')->with(['slug' => 'default']);
-        $manager->expects(self::never())->method('error');
+        $manager->expects($this->once())->method('updateWorkPlan')->with(['slug' => 'default']);
+        $manager->expects($this->never())->method('error');
 
         self::assertInstanceOf(
             ExtractSlug::class,
@@ -87,14 +88,14 @@ class ExtractSlugTest extends TestCase
     public function testInvokeWithSimplePath()
     {
         $uri = $this->createMock(UriInterface::class);
-        $uri->expects(self::any())->method('getPath')->willReturn('/foo');
+        $uri->expects($this->any())->method('getPath')->willReturn('/foo');
 
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects(self::any())->method('getUri')->willReturn($uri);
+        $request->expects($this->any())->method('getUri')->willReturn($uri);
 
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::once())->method('updateWorkPlan')->with(['slug' => 'foo']);
-        $manager->expects(self::never())->method('error');
+        $manager->expects($this->once())->method('updateWorkPlan')->with(['slug' => 'foo']);
+        $manager->expects($this->never())->method('error');
 
         self::assertInstanceOf(
             ExtractSlug::class,
@@ -108,14 +109,14 @@ class ExtractSlugTest extends TestCase
     public function testInvokeWithSubPath()
     {
         $uri = $this->createMock(UriInterface::class);
-        $uri->expects(self::any())->method('getPath')->willReturn('/foo/bar');
+        $uri->expects($this->any())->method('getPath')->willReturn('/foo/bar');
 
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects(self::any())->method('getUri')->willReturn($uri);
+        $request->expects($this->any())->method('getUri')->willReturn($uri);
 
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::once())->method('updateWorkPlan')->with(['slug' => 'bar']);
-        $manager->expects(self::never())->method('error');
+        $manager->expects($this->once())->method('updateWorkPlan')->with(['slug' => 'bar']);
+        $manager->expects($this->never())->method('error');
 
         self::assertInstanceOf(
             ExtractSlug::class,

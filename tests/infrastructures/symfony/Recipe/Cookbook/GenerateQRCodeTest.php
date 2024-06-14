@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\CommonBundle\Recipe\Cookbook;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Recipe\Step\RenderError;
 use Teknoo\East\CommonBundle\Contracts\Recipe\Step\BuildQrCodeInterface;
@@ -37,8 +38,8 @@ use Teknoo\Tests\Recipe\Cookbook\BaseCookbookTestTrait;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  *
- * @covers      \Teknoo\East\CommonBundle\Recipe\Cookbook\GenerateQRCode
  */
+#[CoversClass(GenerateQRCode::class)]
 class GenerateQRCodeTest extends TestCase
 {
     use BaseCookbookTestTrait;

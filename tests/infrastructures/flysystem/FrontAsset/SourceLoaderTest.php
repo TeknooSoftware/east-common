@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\Tests\East\Common\Flysystem\FrontAsset;
 
 use League\Flysystem\Filesystem;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Flysystem\FrontAsset\SourceLoader;
 use Teknoo\East\Common\FrontAsset\Exception\UnkownSetNameException;
@@ -42,8 +43,8 @@ use Teknoo\East\Common\FrontAsset\FileType;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  *
- * @covers \Teknoo\East\Common\Flysystem\FrontAsset\SourceLoader
  */
+#[CoversClass(SourceLoader::class)]
 class SourceLoaderTest extends TestCase
 {
     public function testLoadMissingSet()

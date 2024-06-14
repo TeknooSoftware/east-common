@@ -25,9 +25,11 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\CommonBundle\Object;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use stdClass;
 use Teknoo\East\Common\Object\StoredPassword;
+use Teknoo\East\CommonBundle\Object\AbstractPasswordAuthUser;
 use Teknoo\East\CommonBundle\Object\AbstractUser;
 use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
 use Teknoo\East\Common\Object\User as BaseUser;
@@ -36,10 +38,10 @@ use TypeError;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers      \Teknoo\East\CommonBundle\Object\AbstractUser
- * @covers      \Teknoo\East\CommonBundle\Object\AbstractPasswordAuthUser
- * @covers      \Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser
  */
+#[CoversClass(PasswordAuthenticatedUser::class)]
+#[CoversClass(AbstractPasswordAuthUser::class)]
+#[CoversClass(AbstractUser::class)]
 class PasswordAuthenticatedUserTest extends AbstractPasswordAuthUserTests
 {
     private ?BaseUser $user = null;
@@ -54,7 +56,7 @@ class PasswordAuthenticatedUserTest extends AbstractPasswordAuthUserTests
         if (!$this->user instanceof BaseUser) {
             $this->user = $this->createMock(BaseUser::class);
 
-            $this->user->expects(self::any())->method('getAuthData')->willReturn([$this->getStoredPassword()]);
+            $this->user->expects($this->any())->method('getAuthData')->willReturn([$this->getStoredPassword()]);
         }
 
         return $this->user;
@@ -92,7 +94,7 @@ class PasswordAuthenticatedUserTest extends AbstractPasswordAuthUserTests
     public function testGetPasswordHasherName()
     {
         $this->getStoredPassword()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getAlgo')
             ->willReturn('foo');
 

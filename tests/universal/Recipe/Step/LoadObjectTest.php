@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Recipe\Step;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
 use Teknoo\East\Common\Contracts\Object\ObjectInterface;
@@ -35,8 +36,8 @@ use Teknoo\Recipe\Promise\PromiseInterface;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\East\Common\Recipe\Step\LoadObject
  */
+#[CoversClass(LoadObject::class)]
 class LoadObjectTest extends TestCase
 {
     public function buildStep(): LoadObject
@@ -82,13 +83,13 @@ class LoadObjectTest extends TestCase
         $object = $this->createMock(ObjectInterface::class);
 
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::never())->method('error');
-        $manager->expects(self::once())->method('updateWorkPlan')->with([
+        $manager->expects($this->never())->method('error');
+        $manager->expects($this->once())->method('updateWorkPlan')->with([
             ObjectInterface::class => $object
         ]);
 
         $loader = $this->createMock(LoaderInterface::class);
-        $loader->expects(self::any())
+        $loader->expects($this->any())
             ->method('load')
             ->willReturnCallback(
                 function ($query, PromiseInterface $promise) use ($loader, $object) {
@@ -113,13 +114,13 @@ class LoadObjectTest extends TestCase
         $object = $this->createMock(ObjectInterface::class);
 
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::never())->method('error');
-        $manager->expects(self::once())->method('updateWorkPlan')->with([
+        $manager->expects($this->never())->method('error');
+        $manager->expects($this->once())->method('updateWorkPlan')->with([
             'MyKey' => $object
         ]);
 
         $loader = $this->createMock(LoaderInterface::class);
-        $loader->expects(self::any())
+        $loader->expects($this->any())
             ->method('load')
             ->willReturnCallback(
                 function ($query, PromiseInterface $promise) use ($loader, $object) {
@@ -143,13 +144,13 @@ class LoadObjectTest extends TestCase
     public function testInvokeError()
     {
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::once())->method('error')->with(
+        $manager->expects($this->once())->method('error')->with(
             new \DomainException('foo', 404, new \DomainException('foo'))
         );
-        $manager->expects(self::never())->method('updateWorkPlan');
+        $manager->expects($this->never())->method('updateWorkPlan');
 
         $loader = $this->createMock(LoaderInterface::class);
-        $loader->expects(self::any())
+        $loader->expects($this->any())
             ->method('load')
             ->willReturnCallback(
                 function ($query, PromiseInterface $promise) use ($loader) {

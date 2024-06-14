@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\CommonBundle\Writer;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -40,8 +41,8 @@ use Teknoo\Recipe\Promise\PromiseInterface;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers      \Teknoo\East\CommonBundle\Writer\SymfonyUserWriter
  */
+#[CoversClass(SymfonyUserWriter::class)]
 class SymfonyUserWriterTest extends TestCase
 {
     /**
@@ -111,10 +112,10 @@ class SymfonyUserWriterTest extends TestCase
         $object = $this->createMock(IdentifiedObjectInterface::class);
 
         $this->getUniversalWriter()
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('save');
 
-        $promise->expects(self::once())
+        $promise->expects($this->once())
             ->method('fail');
 
         self::assertInstanceOf(
@@ -128,12 +129,12 @@ class SymfonyUserWriterTest extends TestCase
         $promise = $this->createMock(PromiseInterface::class);
         $user = $this->createMock(BaseUser::class);
         $authData = $this->createMock(AuthDataInterface::class);
-        $user->expects(self::any())
+        $user->expects($this->any())
             ->method('getAuthData')
             ->willReturn([$authData]);
 
         $this->getUniversalWriter()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('save')
             ->with($user, $promise)
             ->willReturnSelf();
@@ -150,26 +151,26 @@ class SymfonyUserWriterTest extends TestCase
         $user = $this->createMock(BaseUser::class);
         $storedPassword = $this->createMock(StoredPassword::class);
 
-        $user->expects(self::any())
+        $user->expects($this->any())
             ->method('getAuthData')
             ->willReturn([$storedPassword]);
 
-        $storedPassword->expects(self::once())
+        $storedPassword->expects($this->once())
             ->method('mustHashPassword')
             ->willReturn(true);
 
-        $storedPassword->expects(self::once())
+        $storedPassword->expects($this->once())
             ->method('setHashedPassword')
             ->with('fooBar')
             ->willReturnSelf();
 
-        $storedPassword->expects(self::once())
+        $storedPassword->expects($this->once())
             ->method('setAlgo')
             ->with(PasswordAuthenticatedUser::class)
             ->willReturnSelf();
 
         $this->getUniversalWriter()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('save')
             ->with($user, $promise)
             ->willReturnSelf();
@@ -186,24 +187,24 @@ class SymfonyUserWriterTest extends TestCase
         $user = $this->createMock(BaseUser::class);
         $storedPassword = $this->createMock(StoredPassword::class);
 
-        $user->expects(self::any())
+        $user->expects($this->any())
             ->method('getAuthData')
             ->willReturn([$storedPassword]);
 
-        $storedPassword->expects(self::once())
+        $storedPassword->expects($this->once())
             ->method('mustHashPassword')
             ->willReturn(false);
 
-        $storedPassword->expects(self::never())
+        $storedPassword->expects($this->never())
             ->method('eraseCredentials');
 
-        $storedPassword->expects(self::never())
+        $storedPassword->expects($this->never())
             ->method('setPassword')
             ->with('fooBar')
             ->willReturnSelf();
 
         $this->getUniversalWriter()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('save')
             ->with($user, $promise)
             ->willReturnSelf();
@@ -220,7 +221,7 @@ class SymfonyUserWriterTest extends TestCase
         $promise = $this->createMock(PromiseInterface::class);
 
         $this->getUniversalWriter()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('remove')
             ->with($object, $promise)
             ->willReturnSelf();

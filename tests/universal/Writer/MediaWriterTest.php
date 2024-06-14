@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Writer;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\Writer\WriterInterface;
 use Teknoo\East\Common\Object\Media;
@@ -33,8 +34,8 @@ use Teknoo\East\Common\Writer\MediaWriter;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\East\Common\Writer\MediaWriter
  */
+#[CoversClass(MediaWriter::class)]
 class MediaWriterTest extends TestCase
 {
     use PersistTestTrait;

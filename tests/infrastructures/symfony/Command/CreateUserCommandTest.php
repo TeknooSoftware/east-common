@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\CommonBundle\Command;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -36,8 +37,8 @@ use Teknoo\East\Common\Writer\UserWriter;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers      \Teknoo\East\CommonBundle\Command\CreateUserCommand
  */
+#[CoversClass(CreateUserCommand::class)]
 class CreateUserCommandTest extends TestCase
 {
     /**
@@ -100,7 +101,7 @@ class CreateUserCommandTest extends TestCase
     public function testExecution()
     {
         $input = $this->createMock(InputInterface::class);
-        $input->expects(self::any())
+        $input->expects($this->any())
             ->method('getArgument')
             ->willReturnMap([
                 ['email', 'foo@bar'],
@@ -110,10 +111,10 @@ class CreateUserCommandTest extends TestCase
             ]);
 
         $output = $this->createMock(OutputInterface::class);
-        $output->expects(self::atLeastOnce())->method('writeln');
+        $output->expects($this->atLeastOnce())->method('writeln');
 
         $this->getWriter()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('save')
             ->willReturnSelf();
 

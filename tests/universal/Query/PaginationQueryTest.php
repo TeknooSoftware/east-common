@@ -25,19 +25,21 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Query;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\DBSource\RepositoryInterface;
 use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
 use Teknoo\East\Common\Contracts\Query\QueryCollectionInterface;
+use Teknoo\East\Common\Query\Enum\Direction;
 use Teknoo\East\Common\Query\PaginationQuery;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\East\Common\Query\Enum\Direction
- * @covers \Teknoo\East\Common\Query\PaginationQuery
  */
+#[CoversClass(PaginationQuery::class)]
+#[CoversClass(Direction::class)]
 class PaginationQueryTest extends TestCase
 {
     use QueryCollectionTestTrait;
@@ -56,7 +58,7 @@ class PaginationQueryTest extends TestCase
         $repository = $this->createMock(RepositoryInterface::class);
         $promise = $this->createMock(PromiseInterface::class);
 
-        $promise->expects(self::once())
+        $promise->expects($this->once())
             ->method('success')
             ->with(
                 self::callback(
@@ -66,9 +68,9 @@ class PaginationQueryTest extends TestCase
                         && $r->getIterator() instanceof \Iterator
                 )
             );
-        $promise->expects(self::never())->method('fail');
+        $promise->expects($this->never())->method('fail');
 
-        $repository->expects(self::once())
+        $repository->expects($this->once())
             ->method('count')
             ->with(
                 ['foo' => 'bar', 'deletedAt' => null,],
@@ -82,7 +84,7 @@ class PaginationQueryTest extends TestCase
             }
             );
 
-        $repository->expects(self::once())
+        $repository->expects($this->once())
             ->method('findBy')
             ->with(
                 ['foo' => 'bar', 'deletedAt' => null,],
@@ -111,10 +113,10 @@ class PaginationQueryTest extends TestCase
         $repository = $this->createMock(RepositoryInterface::class);
         $promise = $this->createMock(PromiseInterface::class);
 
-        $promise->expects(self::never())->method('success');
-        $promise->expects(self::once())->method('fail');
+        $promise->expects($this->never())->method('success');
+        $promise->expects($this->once())->method('fail');
 
-        $repository->expects(self::once())
+        $repository->expects($this->once())
             ->method('count')
             ->with(
                 ['foo' => 'bar', 'deletedAt' => null,],
@@ -128,7 +130,7 @@ class PaginationQueryTest extends TestCase
             }
             );
 
-        $repository->expects(self::once())
+        $repository->expects($this->once())
             ->method('findBy')
             ->with(
                 ['foo' => 'bar', 'deletedAt' => null,],
@@ -157,10 +159,10 @@ class PaginationQueryTest extends TestCase
         $repository = $this->createMock(RepositoryInterface::class);
         $promise = $this->createMock(PromiseInterface::class);
 
-        $promise->expects(self::never())->method('success');
-        $promise->expects(self::once())->method('fail');
+        $promise->expects($this->never())->method('success');
+        $promise->expects($this->once())->method('fail');
 
-        $repository->expects(self::any())
+        $repository->expects($this->any())
             ->method('count')
             ->with(
                 ['foo' => 'bar', 'deletedAt' => null,],
@@ -174,7 +176,7 @@ class PaginationQueryTest extends TestCase
             }
             );
 
-        $repository->expects(self::once())
+        $repository->expects($this->once())
             ->method('findBy')
             ->with(
                 ['foo' => 'bar', 'deletedAt' => null,],

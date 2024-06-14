@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Object;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Common\Object\EmailValue;
@@ -32,8 +33,8 @@ use Teknoo\East\Common\Object\EmailValue;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\East\Common\Object\EmailValue
  */
+#[CoversClass(EmailValue::class)]
 class EmailValueTest extends TestCase
 {
     public function testConstructor()

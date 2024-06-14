@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\Tests\East\Common\Doctrine\DBSource\ODM;
 
 use Doctrine\Persistence\ObjectRepository;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\DBSource\RepositoryInterface;
 use Teknoo\East\Common\Doctrine\DBSource\ODM\MediaRepository;
@@ -34,8 +35,8 @@ use Teknoo\Tests\East\Common\Doctrine\DBSource\ODM\RepositoryTestTrait;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\East\Common\Doctrine\DBSource\ODM\MediaRepository
  */
+#[CoversClass(MediaRepository::class)]
 class MediaRepositoryTest extends TestCase
 {
     use RepositoryTestTrait;

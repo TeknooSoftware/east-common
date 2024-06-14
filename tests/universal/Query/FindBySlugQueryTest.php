@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Query;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\DBSource\RepositoryInterface;
 use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
@@ -36,8 +37,8 @@ use Teknoo\Recipe\Promise\PromiseInterface;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\East\Common\Query\FindBySlugQuery
  */
+#[CoversClass(FindBySlugQuery::class)]
 class FindBySlugQueryTest extends TestCase
 {
     use QueryElementTestTrait;
@@ -56,10 +57,10 @@ class FindBySlugQueryTest extends TestCase
         $repository = $this->createMock(RepositoryInterface::class);
         $promise = $this->createMock(PromiseInterface::class);
 
-        $promise->expects(self::never())->method('success');
-        $promise->expects(self::never())->method('fail');
+        $promise->expects($this->never())->method('success');
+        $promise->expects($this->never())->method('fail');
 
-        $repository->expects(self::once())
+        $repository->expects($this->once())
             ->method('findOneBy')
             ->with(['fooBarName' => 'HelloWorld', 'deletedAt' => null,], $this->callback(fn($pr) => $pr instanceof PromiseInterface));
 
@@ -75,10 +76,10 @@ class FindBySlugQueryTest extends TestCase
         $repository = $this->createMock(RepositoryInterface::class);
         $promise = $this->createMock(PromiseInterface::class);
 
-        $promise->expects(self::never())->method('success');
-        $promise->expects(self::never())->method('fail');
+        $promise->expects($this->never())->method('success');
+        $promise->expects($this->never())->method('fail');
 
-        $repository->expects(self::once())
+        $repository->expects($this->once())
             ->method('findOneBy')
             ->with(['fooBarName' => 'HelloWorld',], $this->callback(fn($pr) => $pr instanceof PromiseInterface));
 
@@ -94,12 +95,12 @@ class FindBySlugQueryTest extends TestCase
         $repository = $this->createMock(RepositoryInterface::class);
         $promise = $this->createMock(PromiseInterface::class);
 
-        $promise->expects(self::never())->method('success');
-        $promise->expects(self::never())->method('fail');
+        $promise->expects($this->never())->method('success');
+        $promise->expects($this->never())->method('fail');
 
         $object = $this->createMock(IdentifiedObjectInterface::class);
 
-        $repository->expects(self::once())
+        $repository->expects($this->once())
             ->method('findOneBy')
             ->with(['fooBarName' => 'HelloWorld',], $this->callback(fn($pr) => $pr instanceof PromiseInterface));
 
@@ -115,13 +116,13 @@ class FindBySlugQueryTest extends TestCase
         $repository = $this->createMock(RepositoryInterface::class);
         $promise = $this->createMock(PromiseInterface::class);
 
-        $promise->expects(self::never())->method('success');
-        $promise->expects(self::never())->method('fail');
+        $promise->expects($this->never())->method('success');
+        $promise->expects($this->never())->method('fail');
 
         $object = $this->createMock(IdentifiedObjectInterface::class);
-        $object->expects(self::any())->method('getId')->willReturn('foo');
+        $object->expects($this->any())->method('getId')->willReturn('foo');
 
-        $repository->expects(self::once())
+        $repository->expects($this->once())
             ->method('findOneBy')
             ->with(['fooBarName' => 'HelloWorld', 'id' => new NotEqual('foo')], $this->callback(fn($pr) => $pr instanceof PromiseInterface));
 
@@ -137,10 +138,10 @@ class FindBySlugQueryTest extends TestCase
         $repository = $this->createMock(RepositoryInterface::class);
         $promise = $this->createMock(PromiseInterface::class);
 
-        $promise->expects(self::never())->method('success');
-        $promise->expects(self::once())->method('fail');
+        $promise->expects($this->never())->method('success');
+        $promise->expects($this->once())->method('fail');
 
-        $repository->expects(self::once())
+        $repository->expects($this->once())
             ->method('findOneBy')
             ->willReturnCallback(function ($criteria, PromiseInterface $promise) use ($repository) {
                 $promise->fail(new \RuntimeException());

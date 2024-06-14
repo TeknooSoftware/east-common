@@ -52,7 +52,7 @@ abstract class AbstractPasswordAuthUserTests extends AbstractUserTests
     public function testGetPassword()
     {
         $this->getStoredPassword()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getHash')
             ->willReturn('foo');
 
@@ -65,7 +65,7 @@ abstract class AbstractPasswordAuthUserTests extends AbstractUserTests
     public function testEraseCredentials()
     {
         $this->getStoredPassword()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('eraseCredentials')
             ->willReturnSelf();
 

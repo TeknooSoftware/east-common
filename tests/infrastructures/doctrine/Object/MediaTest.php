@@ -25,7 +25,9 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Doctrine\Object;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Teknoo\East\Common\Doctrine\Object\Media;
+use Teknoo\East\Common\Object\Media as MediaOrigin;
 use Teknoo\Tests\East\Common\Object\MediaTest as OriginalTest;
 
 /**
@@ -37,9 +39,9 @@ use Teknoo\Tests\East\Common\Object\MediaTest as OriginalTest;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  *
- * @covers \Teknoo\East\Common\Doctrine\Object\Media
- * @covers \Teknoo\East\Common\Object\Media
  */
+#[CoversClass(MediaOrigin::class)]
+#[CoversClass(Media::class)]
 class MediaTest extends OriginalTest
 {
     public function buildObject(): Media

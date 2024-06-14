@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\CommonBundle\Form\Type;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticatorInterface;
@@ -50,9 +51,8 @@ use Teknoo\East\CommonBundle\Object\TOTP\TOTPPasswordAuthenticatedUser;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  *
- * @covers      \Teknoo\East\CommonBundle\Form\Type\TOTPType
- * @covers      \Teknoo\East\CommonBundle\Form\Type\TOTPType
  */
+#[CoversClass(TOTPType::class)]
 class TOTPTypeTest extends TestCase
 {
     use FormTestTrait;
@@ -113,21 +113,21 @@ class TOTPTypeTest extends TestCase
     public function testWithoutTokenInStorage()
     {
         $this->getTokenStorage()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getToken')
             ->willReturn(null);
 
         $builder = $this->createMock(FormBuilderInterface::class);
 
-        $builder->expects(self::any())
+        $builder->expects($this->any())
             ->method('add')
             ->willReturnCallback(
                 function ($name, $type, $options) use ($builder) {
                     $violation = $this->createMock(ConstraintViolationBuilderInterface::class);
-                    $violation->expects(self::any())->method('atPath')->willReturnSelf();
+                    $violation->expects($this->any())->method('atPath')->willReturnSelf();
 
                     $context = $this->createMock(ExecutionContextInterface::class);
-                    $context->expects(self::once())
+                    $context->expects($this->once())
                         ->method('buildViolation')
                         ->willReturn($violation);
 
@@ -151,26 +151,26 @@ class TOTPTypeTest extends TestCase
     public function testWithoutUserInToken()
     {
         $token = $this->createMock(TokenInterface::class);
-        $token->expects(self::any())
+        $token->expects($this->any())
             ->method('getUser')
             ->willReturn(null);
 
         $this->getTokenStorage()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getToken')
             ->willReturn($token);
 
         $builder = $this->createMock(FormBuilderInterface::class);
 
-        $builder->expects(self::any())
+        $builder->expects($this->any())
             ->method('add')
             ->willReturnCallback(
                 function ($name, $type, $options) use ($builder) {
                     $violation = $this->createMock(ConstraintViolationBuilderInterface::class);
-                    $violation->expects(self::any())->method('atPath')->willReturnSelf();
+                    $violation->expects($this->any())->method('atPath')->willReturnSelf();
 
                     $context = $this->createMock(ExecutionContextInterface::class);
-                    $context->expects(self::once())
+                    $context->expects($this->once())
                         ->method('buildViolation')
                         ->willReturn($violation);
 
@@ -194,26 +194,26 @@ class TOTPTypeTest extends TestCase
     public function testWithNonEastUserInToken()
     {
         $token = $this->createMock(TokenInterface::class);
-        $token->expects(self::any())
+        $token->expects($this->any())
             ->method('getUser')
             ->willReturn($this->createMock(UserInterface::class));
 
         $this->getTokenStorage()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getToken')
             ->willReturn($token);
 
         $builder = $this->createMock(FormBuilderInterface::class);
 
-        $builder->expects(self::any())
+        $builder->expects($this->any())
             ->method('add')
             ->willReturnCallback(
                 function ($name, $type, $options) use ($builder) {
                     $violation = $this->createMock(ConstraintViolationBuilderInterface::class);
-                    $violation->expects(self::any())->method('atPath')->willReturnSelf();
+                    $violation->expects($this->any())->method('atPath')->willReturnSelf();
 
                     $context = $this->createMock(ExecutionContextInterface::class);
-                    $context->expects(self::once())
+                    $context->expects($this->once())
                         ->method('buildViolation')
                         ->willReturn($violation);
 
@@ -237,26 +237,26 @@ class TOTPTypeTest extends TestCase
     public function testWithPasswordAuthenticatedUserInToken()
     {
         $token = $this->createMock(TokenInterface::class);
-        $token->expects(self::any())
+        $token->expects($this->any())
             ->method('getUser')
             ->willReturn($this->createMock(PasswordAuthenticatedUser::class));
 
         $this->getTokenStorage()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getToken')
             ->willReturn($token);
 
         $builder = $this->createMock(FormBuilderInterface::class);
 
-        $builder->expects(self::any())
+        $builder->expects($this->any())
             ->method('add')
             ->willReturnCallback(
                 function ($name, $type, $options) use ($builder) {
                     $violation = $this->createMock(ConstraintViolationBuilderInterface::class);
-                    $violation->expects(self::any())->method('atPath')->willReturnSelf();
+                    $violation->expects($this->any())->method('atPath')->willReturnSelf();
 
                     $context = $this->createMock(ExecutionContextInterface::class);
-                    $context->expects(self::once())
+                    $context->expects($this->once())
                         ->method('buildViolation')
                         ->willReturn($violation);
 
@@ -280,26 +280,26 @@ class TOTPTypeTest extends TestCase
     public function testWithThirdPartyAuthenticatedUserInToken()
     {
         $token = $this->createMock(TokenInterface::class);
-        $token->expects(self::any())
+        $token->expects($this->any())
             ->method('getUser')
             ->willReturn($this->createMock(ThirdPartyAuthenticatedUser::class));
 
         $this->getTokenStorage()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getToken')
             ->willReturn($token);
 
         $builder = $this->createMock(FormBuilderInterface::class);
 
-        $builder->expects(self::any())
+        $builder->expects($this->any())
             ->method('add')
             ->willReturnCallback(
                 function ($name, $type, $options) use ($builder) {
                     $violation = $this->createMock(ConstraintViolationBuilderInterface::class);
-                    $violation->expects(self::any())->method('atPath')->willReturnSelf();
+                    $violation->expects($this->any())->method('atPath')->willReturnSelf();
 
                     $context = $this->createMock(ExecutionContextInterface::class);
-                    $context->expects(self::once())
+                    $context->expects($this->once())
                         ->method('buildViolation')
                         ->willReturn($violation);
 
@@ -326,39 +326,39 @@ class TOTPTypeTest extends TestCase
         $wrapperUser->addAuthData($auth = new TOTPAuth());
 
         $user = $this->createMock(GoogleAuthPasswordAuthenticatedUser::class);
-        $user->expects(self::any())
+        $user->expects($this->any())
             ->method('getWrappedUser')
             ->willReturn($wrapperUser);
 
-        $user->expects(self::any())
+        $user->expects($this->any())
             ->method('getTOTPAuth')
             ->willReturn($auth);
 
         $token = $this->createMock(TokenInterface::class);
-        $token->expects(self::any())
+        $token->expects($this->any())
             ->method('getUser')
             ->willReturn($user);
 
         $this->getTokenStorage()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getToken')
             ->willReturn($token);
 
-        $this->getGoogleAuthenticator()->expects(self::any())
+        $this->getGoogleAuthenticator()->expects($this->any())
             ->method('checkCode')
             ->willReturn(false);
 
         $builder = $this->createMock(FormBuilderInterface::class);
 
-        $builder->expects(self::any())
+        $builder->expects($this->any())
             ->method('add')
             ->willReturnCallback(
                 function ($name, $type, $options) use ($builder) {
                     $violation = $this->createMock(ConstraintViolationBuilderInterface::class);
-                    $violation->expects(self::any())->method('atPath')->willReturnSelf();
+                    $violation->expects($this->any())->method('atPath')->willReturnSelf();
 
                     $context = $this->createMock(ExecutionContextInterface::class);
-                    $context->expects(self::once())
+                    $context->expects($this->once())
                         ->method('buildViolation')
                         ->willReturn($violation);
 
@@ -385,39 +385,39 @@ class TOTPTypeTest extends TestCase
         $wrapperUser->addAuthData($auth = new TOTPAuth());
 
         $user = $this->createMock(TOTPPasswordAuthenticatedUser::class);
-        $user->expects(self::any())
+        $user->expects($this->any())
             ->method('getWrappedUser')
             ->willReturn($wrapperUser);
 
-        $user->expects(self::any())
+        $user->expects($this->any())
             ->method('getTOTPAuth')
             ->willReturn($auth);
 
         $token = $this->createMock(TokenInterface::class);
-        $token->expects(self::any())
+        $token->expects($this->any())
             ->method('getUser')
             ->willReturn($user);
 
         $this->getTokenStorage()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getToken')
             ->willReturn($token);
 
-        $this->getTotpAuthenticator()->expects(self::any())
+        $this->getTotpAuthenticator()->expects($this->any())
             ->method('checkCode')
             ->willReturn(false);
 
         $builder = $this->createMock(FormBuilderInterface::class);
 
-        $builder->expects(self::any())
+        $builder->expects($this->any())
             ->method('add')
             ->willReturnCallback(
                 function ($name, $type, $options) use ($builder) {
                     $violation = $this->createMock(ConstraintViolationBuilderInterface::class);
-                    $violation->expects(self::any())->method('atPath')->willReturnSelf();
+                    $violation->expects($this->any())->method('atPath')->willReturnSelf();
 
                     $context = $this->createMock(ExecutionContextInterface::class);
-                    $context->expects(self::once())
+                    $context->expects($this->once())
                         ->method('buildViolation')
                         ->willReturn($violation);
 
@@ -444,36 +444,36 @@ class TOTPTypeTest extends TestCase
         $wrapperUser->addAuthData($auth = new TOTPAuth());
 
         $user = $this->createMock(GoogleAuthPasswordAuthenticatedUser::class);
-        $user->expects(self::any())
+        $user->expects($this->any())
             ->method('getWrappedUser')
             ->willReturn($wrapperUser);
 
-        $user->expects(self::any())
+        $user->expects($this->any())
             ->method('getTOTPAuth')
             ->willReturn($auth);
 
         $token = $this->createMock(TokenInterface::class);
-        $token->expects(self::any())
+        $token->expects($this->any())
             ->method('getUser')
             ->willReturn($user);
 
         $this->getTokenStorage()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getToken')
             ->willReturn($token);
 
-        $this->getGoogleAuthenticator()->expects(self::any())
+        $this->getGoogleAuthenticator()->expects($this->any())
             ->method('checkCode')
             ->willReturn(true);
 
         $builder = $this->createMock(FormBuilderInterface::class);
 
-        $builder->expects(self::any())
+        $builder->expects($this->any())
             ->method('add')
             ->willReturnCallback(
                 function ($name, $type, $options) use ($builder) {
                     $context = $this->createMock(ExecutionContextInterface::class);
-                    $context->expects(self::never())
+                    $context->expects($this->never())
                         ->method('buildViolation');
 
                     /** @var Callback $constraintCallback */
@@ -499,36 +499,36 @@ class TOTPTypeTest extends TestCase
         $wrapperUser->addAuthData($auth = new TOTPAuth());
 
         $user = $this->createMock(TOTPPasswordAuthenticatedUser::class);
-        $user->expects(self::any())
+        $user->expects($this->any())
             ->method('getWrappedUser')
             ->willReturn($wrapperUser);
 
-        $user->expects(self::any())
+        $user->expects($this->any())
             ->method('getTOTPAuth')
             ->willReturn($auth);
 
         $token = $this->createMock(TokenInterface::class);
-        $token->expects(self::any())
+        $token->expects($this->any())
             ->method('getUser')
             ->willReturn($user);
 
         $this->getTokenStorage()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('getToken')
             ->willReturn($token);
 
-        $this->getTotpAuthenticator()->expects(self::any())
+        $this->getTotpAuthenticator()->expects($this->any())
             ->method('checkCode')
             ->willReturn(true);
 
         $builder = $this->createMock(FormBuilderInterface::class);
 
-        $builder->expects(self::any())
+        $builder->expects($this->any())
             ->method('add')
             ->willReturnCallback(
                 function ($name, $type, $options) use ($builder) {
                     $context = $this->createMock(ExecutionContextInterface::class);
-                    $context->expects(self::never())
+                    $context->expects($this->never())
                         ->method('buildViolation');
 
                     /** @var Callback $constraintCallback */

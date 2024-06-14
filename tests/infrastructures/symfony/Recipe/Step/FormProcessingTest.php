@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\CommonBundle\Recipe\Step;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\FormInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
@@ -33,8 +34,8 @@ use Teknoo\East\CommonBundle\Recipe\Step\FormProcessing;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers      \Teknoo\East\CommonBundle\Recipe\Step\FormProcessing
  */
+#[CoversClass(FormProcessing::class)]
 class FormProcessingTest extends TestCase
 {
     public function buildStep(): FormProcessing
@@ -45,11 +46,11 @@ class FormProcessingTest extends TestCase
     public function testInvokeFormNotSubmitted()
     {
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::once())->method('continue')->with([], 'nextStep');
+        $manager->expects($this->once())->method('continue')->with([], 'nextStep');
 
         $form = $this->createMock(FormInterface::class);
-        $form->expects(self::any())->method('isSubmitted')->willReturn(false);
-        $form->expects(self::any())->method('isValid')->willReturn(false);
+        $form->expects($this->any())->method('isSubmitted')->willReturn(false);
+        $form->expects($this->any())->method('isValid')->willReturn(false);
 
         self::assertInstanceOf(
             FormProcessing::class,
@@ -64,11 +65,11 @@ class FormProcessingTest extends TestCase
     public function testInvokeFormNotValid()
     {
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::once())->method('continue')->with([], 'nextStep');
+        $manager->expects($this->once())->method('continue')->with([], 'nextStep');
 
         $form = $this->createMock(FormInterface::class);
-        $form->expects(self::any())->method('isSubmitted')->willReturn(true);
-        $form->expects(self::any())->method('isValid')->willReturn(false);
+        $form->expects($this->any())->method('isSubmitted')->willReturn(true);
+        $form->expects($this->any())->method('isValid')->willReturn(false);
 
         self::assertInstanceOf(
             FormProcessing::class,
@@ -83,11 +84,11 @@ class FormProcessingTest extends TestCase
     public function testInvokeFormSubmittedAndValid()
     {
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::never())->method('continue');
+        $manager->expects($this->never())->method('continue');
 
         $form = $this->createMock(FormInterface::class);
-        $form->expects(self::any())->method('isSubmitted')->willReturn(true);
-        $form->expects(self::any())->method('isValid')->willReturn(true);
+        $form->expects($this->any())->method('isSubmitted')->willReturn(true);
+        $form->expects($this->any())->method('isValid')->willReturn(true);
 
         self::assertInstanceOf(
             FormProcessing::class,

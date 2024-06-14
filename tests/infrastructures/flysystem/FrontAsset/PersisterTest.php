@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\Tests\East\Common\Flysystem\FrontAsset;
 
 use League\Flysystem\Filesystem;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\FrontAsset\FileInterface;
 use Teknoo\East\Common\Flysystem\FrontAsset\Persister;
@@ -42,14 +43,14 @@ use Teknoo\East\Common\FrontAsset\FileType;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  *
- * @covers \Teknoo\East\Common\Flysystem\FrontAsset\Persister
  */
+#[CoversClass(Persister::class)]
 class PersisterTest extends TestCase
 {
     public function testLoad(): void
     {
         $flysystem = $this->createMock(Filesystem::class);
-        $flysystem->expects(self::any())
+        $flysystem->expects($this->any())
             ->method('fileExists')
             ->willReturn(true);
 
@@ -67,7 +68,7 @@ class PersisterTest extends TestCase
     public function testWrite(): void
     {
         $flysystem = $this->createMock(Filesystem::class);
-        $flysystem->expects(self::any())
+        $flysystem->expects($this->any())
             ->method('write');
 
         $persister = new Persister($flysystem);

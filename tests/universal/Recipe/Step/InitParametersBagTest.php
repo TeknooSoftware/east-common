@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Recipe\Step;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
@@ -35,8 +36,8 @@ use Teknoo\East\Common\Recipe\Step\InitParametersBag;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\East\Common\Recipe\Step\InitParametersBag
  */
+#[CoversClass(InitParametersBag::class)]
 class InitParametersBagTest extends TestCase
 {
     public function buildStep(): InitParametersBag

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\CommonBundle\Command;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\MessageInterface;
@@ -42,14 +43,12 @@ use Teknoo\East\CommonBundle\Command\MinifyCommand;
 use Teknoo\East\Foundation\Command\Executor;
 use Teknoo\East\Foundation\Http\Message\MessageFactoryInterface;
 use Teknoo\East\FoundationBundle\Command\Client;
-use Teknoo\East\Paas\Contracts\Recipe\Cookbook\RunJobInterface;
-use Teknoo\East\Paas\Infrastructures\Symfony\Command\RunJobCommand;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers      \Teknoo\East\CommonBundle\Command\MinifyCommand
  */
+#[CoversClass(MinifyCommand::class)]
 class MinifyCommandTest extends TestCase
 {
     /**
@@ -154,17 +153,17 @@ class MinifyCommandTest extends TestCase
     public function testExecutionFromInput()
     {
         $input = $this->createMock(InputInterface::class);
-        $input->expects(self::any())
+        $input->expects($this->any())
             ->method('getArgument')
             ->willReturn('fooBar');
 
         $request = $this->createMock(MessageInterface::class);
-        $request->expects(self::any())
+        $request->expects($this->any())
             ->method('withBody')
             ->willReturnSelf();
 
         $this->getMessageFactoryMock()
-            ->expects(self::any())
+            ->expects($this->any())
             ->method('createMessage')
             ->willReturn($request);
 

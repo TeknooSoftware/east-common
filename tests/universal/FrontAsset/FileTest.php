@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\FrontAsset;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\FrontAsset\File;
 use Teknoo\East\Common\FrontAsset\FileType;
@@ -32,8 +33,8 @@ use Teknoo\East\Common\FrontAsset\FileType;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers      \Teknoo\East\Common\FrontAsset\File
  */
+#[CoversClass(File::class)]
 class FileTest extends TestCase
 {
     private function buildFile(): File

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Recipe\Step;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Stringable;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
@@ -33,8 +34,8 @@ use Teknoo\East\Common\Recipe\Step\JumpIfNot;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\East\Common\Recipe\Step\JumpIfNot
  */
+#[CoversClass(JumpIfNot::class)]
 class JumpIfNotTest extends TestCase
 {
     public function buildStep(): JumpIfNot
@@ -45,7 +46,7 @@ class JumpIfNotTest extends TestCase
     public function testInvokeNoValue()
     {
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::once())
+        $manager->expects($this->once())
             ->method('continue');
 
         self::assertInstanceOf(
@@ -60,7 +61,7 @@ class JumpIfNotTest extends TestCase
     public function testInvokeEmptyStringable()
     {
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::once())
+        $manager->expects($this->once())
             ->method('continue');
 
         self::assertInstanceOf(
@@ -81,7 +82,7 @@ class JumpIfNotTest extends TestCase
     public function testInvokeWithValueWithoutExpected()
     {
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::never())
+        $manager->expects($this->never())
             ->method('continue');
 
         self::assertInstanceOf(
@@ -97,7 +98,7 @@ class JumpIfNotTest extends TestCase
     public function testInvokeWithValueWithoutExpectedAndStringable()
     {
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::never())
+        $manager->expects($this->never())
             ->method('continue');
 
         self::assertInstanceOf(
@@ -118,7 +119,7 @@ class JumpIfNotTest extends TestCase
     public function testInvokeValueNotEqualToExpected()
     {
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::once())
+        $manager->expects($this->once())
             ->method('continue');
 
         self::assertInstanceOf(
@@ -135,7 +136,7 @@ class JumpIfNotTest extends TestCase
     public function testInvokeWithValueEqualToExpected()
     {
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::never())
+        $manager->expects($this->never())
             ->method('continue');
 
         self::assertInstanceOf(
@@ -152,7 +153,7 @@ class JumpIfNotTest extends TestCase
     public function testInvokeValueExpectedIsCallbackWithSuccess()
     {
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::never())
+        $manager->expects($this->never())
             ->method('continue');
 
         self::assertInstanceOf(
@@ -169,7 +170,7 @@ class JumpIfNotTest extends TestCase
     public function testInvokeValueExpectedIsCallbackWithFailure()
     {
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::once())
+        $manager->expects($this->once())
             ->method('continue');
 
         self::assertInstanceOf(

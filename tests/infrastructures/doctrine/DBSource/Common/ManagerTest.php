@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\Tests\East\Common\Doctrine\DBSource\Common;
 
 use Doctrine\Persistence\ObjectManager;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\DBSource\Manager\AlreadyStartedBatchException;
 use Teknoo\East\Common\DBSource\Manager\NonStartedBatchException;
@@ -34,8 +35,8 @@ use Teknoo\East\Common\Doctrine\DBSource\Common\Manager;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\East\Common\Doctrine\DBSource\Common\Manager
  */
+#[CoversClass(Manager::class)]
 class ManagerTest extends TestCase
 {
     /**
@@ -64,7 +65,7 @@ class ManagerTest extends TestCase
     {
         $object = new \stdClass();
         $this->getDoctrineObjectManagerMock()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('persist')
             ->with($object);
 
@@ -78,7 +79,7 @@ class ManagerTest extends TestCase
     {
         $object = new \stdClass();
         $this->getDoctrineObjectManagerMock()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('remove')
             ->with($object);
 
@@ -91,7 +92,7 @@ class ManagerTest extends TestCase
     public function testFlush()
     {
         $this->getDoctrineObjectManagerMock()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('flush');
 
         self::assertInstanceOf(
@@ -103,7 +104,7 @@ class ManagerTest extends TestCase
     public function testFlushOnBatch()
     {
         $this->getDoctrineObjectManagerMock()
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('flush');
 
         self::assertInstanceOf(
@@ -127,7 +128,7 @@ class ManagerTest extends TestCase
     public function testOnBatch()
     {
         $this->getDoctrineObjectManagerMock()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('flush');
 
         $manager = $this->buildManager();

@@ -26,9 +26,11 @@ declare(strict_types=1);
 namespace Teknoo\Tests\East\Common\Minify\Js;
 
 use MatthiasMullie\Minify\Minify;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\FrontAsset\FileInterface;
 use Teknoo\East\Common\FrontAsset\FilesSet;
+use Teknoo\East\Common\Minify\AbstractMinifier;
 use Teknoo\East\Common\Minify\Js\Minifier;
 
 /**
@@ -42,9 +44,9 @@ use Teknoo\East\Common\Minify\Js\Minifier;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  *
- * @covers \Teknoo\East\Common\Minify\Js\Minifier
- * @covers \Teknoo\East\Common\Minify\AbstractMinifier
  */
+#[CoversClass(AbstractMinifier::class)]
+#[CoversClass(Minifier::class)]
 class MinifierTest extends TestCase
 {
     public function testProcess()

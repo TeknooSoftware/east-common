@@ -27,6 +27,7 @@ namespace Teknoo\Tests\East\Common\User\RecoveryAccess;
 
 use DateTime;
 use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use Teknoo\East\Common\Contracts\User\AuthDataInterface;
@@ -39,8 +40,8 @@ use Throwable;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\East\Common\User\RecoveryAccess\TimeLimitedToken
  */
+#[CoversClass(TimeLimitedToken::class)]
 class TimeLimitedTokenTest extends TestCase
 {
     public function testPrepareWithBadUser()
@@ -52,7 +53,7 @@ class TimeLimitedTokenTest extends TestCase
     public function testPrepare()
     {
         $datesService = $this->createMock(DatesService::class);
-        $datesService->expects(self::once())
+        $datesService->expects($this->once())
             ->method('forward')
             ->with('5 days')
             ->willReturnCallback(
@@ -67,7 +68,7 @@ class TimeLimitedTokenTest extends TestCase
         $service = new TimeLimitedToken($datesService, '5 days');
         $user = $this->createMock(User::class);
 
-        $user->expects(self::once())
+        $user->expects($this->once())
             ->method('addAuthData')
             ->willReturnCallback(
                 function (AuthDataInterface|RecoveryAccess $authData) use ($user): User {

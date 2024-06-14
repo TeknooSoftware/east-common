@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\Tests\East\Common\Doctrine\DBSource\ODM;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\DBSource\BatchManipulationManagerInterface;
@@ -39,8 +40,8 @@ use Teknoo\Recipe\Promise\PromiseInterface;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\East\Common\Doctrine\DBSource\ODM\BatchManipulationManager
  */
+#[CoversClass(BatchManipulationManager::class)]
 class BatchManipulationManagerTest extends TestCase
 {
     private ?ManagerInterface $baseManager = null;
@@ -76,7 +77,7 @@ class BatchManipulationManagerTest extends TestCase
     public function testUpdateQuery()
     {
         $query = $this->createMock(UpdatingQueryInterface::class);
-        $query->expects(self::once())
+        $query->expects($this->once())
             ->method('update')
             ->willReturnSelf();
 
@@ -92,7 +93,7 @@ class BatchManipulationManagerTest extends TestCase
     public function testDeleteQuery()
     {
         $query = $this->createMock(DeletingQueryInterface::class);
-        $query->expects(self::once())
+        $query->expects($this->once())
             ->method('delete')
             ->willReturnSelf();
 
@@ -108,7 +109,7 @@ class BatchManipulationManagerTest extends TestCase
     public function testOpenBatch()
     {
         $this->getManager()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('openBatch')
             ->willReturnSelf();
 
@@ -121,7 +122,7 @@ class BatchManipulationManagerTest extends TestCase
     public function testCloseBatch()
     {
         $this->getManager()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('closeBatch')
             ->willReturnSelf();
 
@@ -134,7 +135,7 @@ class BatchManipulationManagerTest extends TestCase
     public function testPersist()
     {
         $this->getManager()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('persist')
             ->willReturnSelf();
 
@@ -149,7 +150,7 @@ class BatchManipulationManagerTest extends TestCase
     public function testRemove()
     {
         $this->getManager()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('remove')
             ->willReturnSelf();
 
@@ -164,7 +165,7 @@ class BatchManipulationManagerTest extends TestCase
     public function testFlush()
     {
         $this->getManager()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('flush')
             ->willReturnSelf();
 

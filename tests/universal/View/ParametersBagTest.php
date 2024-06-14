@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\View;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\View\ParametersBag;
 use Teknoo\Recipe\Ingredient\MergeableInterface;
@@ -32,8 +33,8 @@ use Teknoo\Recipe\Ingredient\MergeableInterface;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\East\Common\View\ParametersBag
  */
+#[CoversClass(ParametersBag::class)]
 class ParametersBagTest extends TestCase
 {
     public function testSet()

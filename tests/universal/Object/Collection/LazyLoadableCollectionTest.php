@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\Tests\East\Common\Object\Collection;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
@@ -38,14 +39,14 @@ use Teknoo\Recipe\Promise\Promise;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  *
- * @covers \Teknoo\East\Common\Object\Collection\LazyLoadableCollection
  */
+#[CoversClass(LazyLoadableCollection::class)]
 class LazyLoadableCollectionTest extends TestCase
 {
     public function testFetchCollectionSuccess()
     {
         $loader = $this->createMock(LoaderInterface::class);
-        $loader->expects(self::any())
+        $loader->expects($this->any())
             ->method('query')
             ->willReturnCallback(
                 function ($query, Promise $promise) use ($loader) {
@@ -67,7 +68,7 @@ class LazyLoadableCollectionTest extends TestCase
     public function testFetchCollectionFail()
     {
         $loader = $this->createMock(LoaderInterface::class);
-        $loader->expects(self::any())
+        $loader->expects($this->any())
             ->method('query')
             ->willReturnCallback(
                 function ($query, Promise $promise) use ($loader) {
@@ -90,7 +91,7 @@ class LazyLoadableCollectionTest extends TestCase
     public function testGetIterator()
     {
         $loader = $this->createMock(LoaderInterface::class);
-        $loader->expects(self::any())
+        $loader->expects($this->any())
             ->method('query')
             ->willReturnCallback(
                 function ($query, Promise $promise) use ($loader) {

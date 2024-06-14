@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Recipe\Step\User;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
 use Teknoo\East\Common\Contracts\User\UserInterface;
@@ -36,8 +37,8 @@ use Teknoo\Recipe\Promise\PromiseInterface;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\East\Common\Recipe\Step\User\FindUserByEmail
  */
+#[CoversClass(FindUserByEmail::class)]
 class FindUserByEmailTest extends TestCase
 {
     public function buildStep(): FindUserByEmail
@@ -83,13 +84,13 @@ class FindUserByEmailTest extends TestCase
         $object = $this->createMock(UserInterface::class);
 
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::never())->method('error');
-        $manager->expects(self::once())->method('updateWorkPlan')->with([
+        $manager->expects($this->never())->method('error');
+        $manager->expects($this->once())->method('updateWorkPlan')->with([
             UserInterface::class => $object
         ]);
 
         $loader = $this->createMock(LoaderInterface::class);
-        $loader->expects(self::any())
+        $loader->expects($this->any())
             ->method('fetch')
             ->willReturnCallback(
                 function ($query, PromiseInterface $promise) use ($loader, $object) {
@@ -112,12 +113,12 @@ class FindUserByEmailTest extends TestCase
     public function testInvokeError()
     {
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::never())->method('error');
-        $manager->expects(self::once())->method('continue');
-        $manager->expects(self::never())->method('updateWorkPlan');
+        $manager->expects($this->never())->method('error');
+        $manager->expects($this->once())->method('continue');
+        $manager->expects($this->never())->method('updateWorkPlan');
 
         $loader = $this->createMock(LoaderInterface::class);
-        $loader->expects(self::any())
+        $loader->expects($this->any())
             ->method('fetch')
             ->willReturnCallback(
                 function ($query, PromiseInterface $promise) use ($loader) {

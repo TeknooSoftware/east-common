@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Recipe\Step;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
@@ -34,9 +35,9 @@ use Teknoo\East\Common\Recipe\Step\ExtractOrder;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\East\Common\Recipe\Step\ExtractOrder
- * @covers \Teknoo\East\Common\Query\Enum\Direction
  */
+#[CoversClass(Direction::class)]
+#[CoversClass(ExtractOrder::class)]
 class ExtractOrderTest extends TestCase
 {
     public function buildStep(): ExtractOrder
@@ -94,8 +95,8 @@ class ExtractOrderTest extends TestCase
     public function testInvokeWithNoParameter()
     {
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::once())->method('updateWorkPlan')->with(['order' => ['id' => Direction::Desc]]);
-        $manager->expects(self::never())->method('error');
+        $manager->expects($this->once())->method('updateWorkPlan')->with(['order' => ['id' => Direction::Desc]]);
+        $manager->expects($this->never())->method('error');
 
         self::assertInstanceOf(
             ExtractOrder::class,
@@ -109,8 +110,8 @@ class ExtractOrderTest extends TestCase
     public function testInvokeWithDefaultToAsc()
     {
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::once())->method('updateWorkPlan')->with(['order' => ['createdAt' => Direction::Asc]]);
-        $manager->expects(self::never())->method('error');
+        $manager->expects($this->once())->method('updateWorkPlan')->with(['order' => ['createdAt' => Direction::Asc]]);
+        $manager->expects($this->never())->method('error');
 
         self::assertInstanceOf(
             ExtractOrder::class,
@@ -126,14 +127,14 @@ class ExtractOrderTest extends TestCase
     public function testInvokeWithParameter()
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects(self::any())->method('getQueryParams')->willReturn([
+        $request->expects($this->any())->method('getQueryParams')->willReturn([
             'order' => 'createdAt',
             'direction' => 'ASC'
         ]);
 
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::once())->method('updateWorkPlan')->with(['order' => ['createdAt' => Direction::Asc]]);
-        $manager->expects(self::never())->method('error');
+        $manager->expects($this->once())->method('updateWorkPlan')->with(['order' => ['createdAt' => Direction::Asc]]);
+        $manager->expects($this->never())->method('error');
 
         self::assertInstanceOf(
             ExtractOrder::class,
@@ -149,14 +150,14 @@ class ExtractOrderTest extends TestCase
     public function testInvokeWithInvalidParameter()
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects(self::any())->method('getQueryParams')->willReturn([
+        $request->expects($this->any())->method('getQueryParams')->willReturn([
             'order' => 'createdAt',
             'direction' => 'Foo'
         ]);
 
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::never())->method('updateWorkPlan');
-        $manager->expects(self::once())->method('error');
+        $manager->expects($this->never())->method('updateWorkPlan');
+        $manager->expects($this->once())->method('error');
 
         self::assertInstanceOf(
             ExtractOrder::class,

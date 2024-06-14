@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Recipe\Step;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Recipe\Step\EndLooping;
 use Teknoo\East\Common\Recipe\Step\StartLoopingOn;
@@ -33,8 +34,8 @@ use Teknoo\East\Foundation\Manager\ManagerInterface;
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\East\Common\Recipe\Step\EndLooping
  */
+#[CoversClass(EndLooping::class)]
 class EndLoopingTest extends TestCase
 {
     public function buildStep(): EndLooping
@@ -45,13 +46,13 @@ class EndLoopingTest extends TestCase
     public function testInvokeLoopNotEnded()
     {
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::once())
+        $manager->expects($this->once())
             ->method('continue')
             ->with([], StartLoopingOn::class)
             ->willReturnSelf();
 
         $loop = $this->createMock(StartLoopingOn::class);
-        $loop->expects(self::any())
+        $loop->expects($this->any())
             ->method('isEnded')
             ->willReturn(false);
 
@@ -64,11 +65,11 @@ class EndLoopingTest extends TestCase
     public function testInvokeLoopEnded()
     {
         $manager = $this->createMock(ManagerInterface::class);
-        $manager->expects(self::never())
+        $manager->expects($this->never())
             ->method('continue');
 
         $loop = $this->createMock(StartLoopingOn::class);
-        $loop->expects(self::any())
+        $loop->expects($this->any())
             ->method('isEnded')
             ->willReturn(true);
 

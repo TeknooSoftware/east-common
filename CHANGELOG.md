@@ -1,5 +1,10 @@
 # Teknoo Software - Common - Change Log
 
+## [2.12.3] - 2024-06-14
+### Stable Release
+- Remove Composer unused
+- Switch to PHPUnit 11
+
 ## [2.12.2] - 2024-06-03
 ### Stable Release
 - Remove useless dependency to `symfony/templating`

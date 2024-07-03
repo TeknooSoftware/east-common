@@ -28,6 +28,7 @@ namespace Teknoo\Tests\East\Common\Recipe\Step;
 use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\MessageInterface;
@@ -366,14 +367,28 @@ class RenderErrorTest extends TestCase
         );
     }
 
-    public function testInvokeWithCode()
+    public static function codeProvider(): array
+    {
+        return [
+            [400],
+            [401],
+            [402],
+            [403],
+            [404],
+            [500],
+            [550],
+        ];
+    }
+
+    #[DataProvider('codeProvider')]
+    public function testInvokeWithCode(int $code)
     {
         $request = $this->createMock(ServerRequestInterface::class);
         $request->expects($this->any())->method('getAttribute')->willReturn([]);
 
         $client = $this->createMock(ClientInterface::class);
         $template = 'foo';
-        $error = new Exception('foo', 404);
+        $error = new Exception('foo', $code);
 
         $client->expects($this->once())
             ->method('errorInRequest')

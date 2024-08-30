@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [2.12.4] - 2024-08-30
+### Stable Release
+- API Response are trimed in `TemplateTrait`
+
 ## [2.12.3] - 2024-06-14
 ### Stable Release
 - Remove Composer unused

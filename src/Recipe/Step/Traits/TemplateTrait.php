@@ -38,6 +38,7 @@ use tidy;
 use function class_exists;
 use function function_exists;
 use function tidy_get_output;
+use function trim;
 
 /**
  * Trait used into recipe's steps to render a page thanks to template engine and pass the result to the response in a
@@ -127,7 +128,7 @@ trait TemplateTrait
         $stream = $this->streamFactory->createStream();
 
         if ($stream instanceof CallbackStreamInterface) {
-            $stream->bind(function () use ($client, &$view, &$parameters, $cleanHtml): string {
+            $stream->bind(function () use ($client, &$view, &$parameters, $cleanHtml, $api): string {
                 /** @var Promise<ResultInterface, string, mixed> $promise */
                 $promise = new Promise(
                     static function (ResultInterface $result): string {
@@ -150,6 +151,11 @@ trait TemplateTrait
                     $resultStr = $this->cleanOutput($resultStr);
                 }
 
+                $resultStr = match ($api) {
+                    'json' => trim($resultStr),
+                    default => $resultStr,
+                };
+
                 return $resultStr;
             });
 
@@ -163,11 +169,24 @@ trait TemplateTrait
             }
             $this->templating->render(
                 new Promise(
-                    static function (ResultInterface $result) use ($stream, $client, $response, $cleanOuput): void {
+                    static function (
+                        ResultInterface $result,
+                    ) use (
+                        $stream,
+                        $client,
+                        $response,
+                        $cleanOuput,
+                        $api,
+                    ): void {
                         $resultStr = (string) $result;
                         if (null !== $cleanOuput) {
                             $resultStr = $cleanOuput($resultStr);
                         }
+
+                        $resultStr = match ($api) {
+                            'json' => trim($resultStr),
+                            default => $resultStr,
+                        };
 
                         $stream->write($resultStr);
                         $response = $response->withBody($stream);

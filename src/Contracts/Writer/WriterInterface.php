@@ -48,7 +48,7 @@ interface WriterInterface
      */
     public function save(
         ObjectInterface $object,
-        PromiseInterface $promise = null,
+        ?PromiseInterface $promise = null,
         ?bool $preferRealDateOnUpdate = null,
     ): WriterInterface;
 
@@ -57,5 +57,5 @@ interface WriterInterface
      * @param PromiseInterface<TSuccessArgType, mixed>|null $promise
      * @return WriterInterface<TSuccessArgType>
      */
-    public function remove(ObjectInterface $object, PromiseInterface $promise = null): WriterInterface;
+    public function remove(ObjectInterface $object, ?PromiseInterface $promise = null): WriterInterface;
 }

@@ -92,7 +92,7 @@ trait PersistTrait
      * @param PromiseInterface<TSuccessArgType, mixed>|null $promise
      * @throws Throwable
      */
-    public function remove(ObjectInterface $object, PromiseInterface $promise = null): WriterInterface
+    public function remove(ObjectInterface $object, ?PromiseInterface $promise = null): WriterInterface
     {
         try {
             $this->manager->remove($object);

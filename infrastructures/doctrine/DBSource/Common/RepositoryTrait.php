@@ -105,7 +105,7 @@ trait RepositoryTrait
     public function findBy(
         array $criteria,
         PromiseInterface $promise,
-        array $orderBy = null,
+        ?array $orderBy = null,
         ?int $limit = null,
         ?int $offset = null,
         array $hydrate = [],

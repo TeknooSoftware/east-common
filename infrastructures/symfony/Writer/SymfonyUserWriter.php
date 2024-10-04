@@ -68,7 +68,7 @@ class SymfonyUserWriter implements WriterInterface
 
     public function save(
         ObjectInterface $object,
-        PromiseInterface $promise = null,
+        ?PromiseInterface $promise = null,
         ?bool $preferRealDateOnUpdate = null,
     ): WriterInterface {
         if (!$object instanceof BaseUser) {
@@ -97,7 +97,7 @@ class SymfonyUserWriter implements WriterInterface
         return $this;
     }
 
-    public function remove(ObjectInterface $object, PromiseInterface $promise = null): WriterInterface
+    public function remove(ObjectInterface $object, ?PromiseInterface $promise = null): WriterInterface
     {
         $this->universalWriter->remove($object, $promise);
 

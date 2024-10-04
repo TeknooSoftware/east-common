@@ -49,7 +49,7 @@ class LocaleMiddleware
 
     public function execute(
         MessageInterface $message,
-        string $locale = null,
+        ?string $locale = null,
     ): self {
         if (!$message instanceof ServerRequestInterface) {
             return $this;

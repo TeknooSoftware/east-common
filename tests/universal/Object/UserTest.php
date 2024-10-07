@@ -26,11 +26,9 @@ declare(strict_types=1);
 namespace Teknoo\Tests\East\Common\Object;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use Teknoo\East\Common\Contracts\User\AuthDataInterface;
-use Teknoo\East\Common\Object\ObjectTrait;
 use Teknoo\East\Common\Object\StoredPassword;
 use Teknoo\East\Common\Object\ThirdPartyAuth;
 use Teknoo\East\Common\Object\TOTPAuth;
@@ -43,7 +41,6 @@ use Teknoo\East\Common\Object\User;
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(User::class)]
-#[CoversTrait(ObjectTrait::class)]
 class UserTest extends TestCase
 {
     use ObjectTestTrait;

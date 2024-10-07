@@ -26,17 +26,14 @@ declare(strict_types=1);
 namespace Teknoo\Tests\East\Common\Writer;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Object\User;
-use Teknoo\East\Common\Writer\PersistTrait;
 use Teknoo\East\Common\Writer\UserWriter;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-#[CoversTrait(PersistTrait::class)]
 #[CoversClass(UserWriter::class)]
 class UserWriterTest extends TestCase
 {

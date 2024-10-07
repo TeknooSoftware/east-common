@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [2.12.5] - 2024-10-07
+### Stable Release
+- Update dev lib requirements (issue with covering from PHP 11.4)
+
 ## [2.12.4] - 2024-08-30
 ### Stable Release
 - API Response are trimed in `TemplateTrait`

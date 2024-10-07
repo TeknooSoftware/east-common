@@ -27,7 +27,6 @@ namespace Teknoo\Tests\East\Common\Recipe\Step;
 
 use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -38,8 +37,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 use stdClass;
-use Teknoo\East\Common\Recipe\Step\Traits\ResponseTrait;
-use Teknoo\East\Common\Recipe\Step\Traits\TemplateTrait;
 use Teknoo\East\Foundation\Client\ClientInterface;
 use Teknoo\East\Foundation\Http\Message\CallbackStreamInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
@@ -55,8 +52,6 @@ use TypeError;
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(RenderError::class)]
-#[CoversTrait(ResponseTrait::class)]
-#[CoversTrait(TemplateTrait::class)]
 class RenderErrorTest extends TestCase
 {
     private ?ResponseFactoryInterface $responseFactory = null;

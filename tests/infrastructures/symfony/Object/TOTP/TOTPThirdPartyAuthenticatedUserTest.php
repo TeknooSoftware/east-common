@@ -26,11 +26,9 @@ declare(strict_types=1);
 namespace Teknoo\Tests\East\CommonBundle\Object\TOTP;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversTrait;
 use Teknoo\East\Common\Object\ThirdPartyAuth;
 use Teknoo\East\Common\Object\User;
 use Teknoo\East\CommonBundle\Contracts\Object\UserWithTOTPAuthInterface;
-use Teknoo\East\CommonBundle\Object\TOTP\TOTPAuthTrait;
 use Teknoo\East\CommonBundle\Object\TOTP\TOTPThirdPartyAuthenticatedUser;
 
 /**
@@ -38,7 +36,6 @@ use Teknoo\East\CommonBundle\Object\TOTP\TOTPThirdPartyAuthenticatedUser;
  * @author      Richard Déloge <richard@teknoo.software>
  *
  */
-#[CoversTrait(TOTPAuthTrait::class)]
 #[CoversClass(TOTPThirdPartyAuthenticatedUser::class)]
 class TOTPThirdPartyAuthenticatedUserTest extends AbstractTOTPAuthTests
 {

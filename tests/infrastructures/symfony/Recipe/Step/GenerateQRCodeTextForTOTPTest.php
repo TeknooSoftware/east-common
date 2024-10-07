@@ -26,12 +26,10 @@ declare(strict_types=1);
 namespace Teknoo\Tests\East\CommonBundle\Recipe\Step;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Totp\TotpAuthenticatorInterface;
 use Teknoo\East\CommonBundle\Object\TOTP\TOTPPasswordAuthenticatedUser;
-use Teknoo\East\CommonBundle\Recipe\Step\UserTrait;
 use UnexpectedValueException;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticatorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -51,7 +49,6 @@ use Teknoo\East\Foundation\Manager\ManagerInterface;
  *
  */
 #[CoversClass(GenerateQRCodeTextForTOTP::class)]
-#[CoversTrait(UserTrait::class)]
 class GenerateQRCodeTextForTOTPTest extends TestCase
 {
     private ?TokenStorageInterface $tokenStorage = null;

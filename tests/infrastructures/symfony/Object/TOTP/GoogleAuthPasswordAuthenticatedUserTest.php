@@ -26,19 +26,16 @@ declare(strict_types=1);
 namespace Teknoo\Tests\East\CommonBundle\Object\TOTP;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversTrait;
 use Teknoo\East\Common\Object\StoredPassword;
 use Teknoo\East\Common\Object\User;
 use Teknoo\East\CommonBundle\Contracts\Object\UserWithTOTPAuthInterface;
 use Teknoo\East\CommonBundle\Object\TOTP\GoogleAuthPasswordAuthenticatedUser;
-use Teknoo\East\CommonBundle\Object\TOTP\TOTPAuthTrait;
 
 /**
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  *
  */
-#[CoversTrait(TOTPAuthTrait::class)]
 #[CoversClass(GoogleAuthPasswordAuthenticatedUser::class)]
 class GoogleAuthPasswordAuthenticatedUserTest extends AbstractTOTPAuthTests
 {

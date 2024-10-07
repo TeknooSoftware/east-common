@@ -29,7 +29,6 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\MessageInterface;
@@ -42,8 +41,6 @@ use stdClass;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
 use Teknoo\East\Common\Contracts\Object\PublishableInterface;
 use Teknoo\East\Common\Recipe\Step\Render;
-use Teknoo\East\Common\Recipe\Step\Traits\ResponseTrait;
-use Teknoo\East\Common\Recipe\Step\Traits\TemplateTrait;
 use Teknoo\East\Foundation\Client\ClientInterface;
 use Teknoo\East\Foundation\Http\Message\CallbackStreamInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
@@ -58,8 +55,6 @@ use function class_exists;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-#[CoversTrait(TemplateTrait::class)]
-#[CoversTrait(ResponseTrait::class)]
 #[CoversClass(Render::class)]
 class RenderTest extends TestCase
 {

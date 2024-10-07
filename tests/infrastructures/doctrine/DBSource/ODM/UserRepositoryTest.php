@@ -27,11 +27,8 @@ namespace Teknoo\Tests\East\Common\Doctrine\DBSource\ODM;
 
 use Doctrine\Persistence\ObjectRepository;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\DBSource\RepositoryInterface;
-use Teknoo\East\Common\Doctrine\DBSource\ODM\ExprConversionTrait;
-use Teknoo\East\Common\Doctrine\DBSource\ODM\RepositoryTrait;
 use Teknoo\East\Common\Doctrine\DBSource\ODM\UserRepository;
 use TypeError;
 
@@ -39,8 +36,6 @@ use TypeError;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-#[CoversTrait(ExprConversionTrait::class)]
-#[CoversTrait(RepositoryTrait::class)]
 #[CoversClass(UserRepository::class)]
 class UserRepositoryTest extends TestCase
 {

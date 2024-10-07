@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace Teknoo\Tests\East\CommonBundle\Recipe\Step;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
@@ -42,7 +41,6 @@ use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
 use Teknoo\East\CommonBundle\Object\ThirdPartyAuthenticatedUser;
 use Teknoo\East\CommonBundle\Object\TOTP\GoogleAuthPasswordAuthenticatedUser;
 use Teknoo\East\CommonBundle\Object\TOTP\TOTPPasswordAuthenticatedUser;
-use Teknoo\East\CommonBundle\Recipe\Step\UserTrait;
 use Teknoo\East\CommonBundle\Recipe\Step\ValidateTOTP;
 use Teknoo\East\CommonBundle\Writer\SymfonyUserWriter;
 
@@ -52,7 +50,6 @@ use Teknoo\East\CommonBundle\Writer\SymfonyUserWriter;
  *
  */
 #[CoversClass(ValidateTOTP::class)]
-#[CoversTrait(UserTrait::class)]
 class ValidateTOTPTest extends TestCase
 {
     private ?SymfonyUserWriter $userWriter = null;

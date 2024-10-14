@@ -1,5 +1,10 @@
 # Teknoo Software - Common - Change Log
 
+## [2.12.6] - 2024-10-14
+### Stable Release
+- Update requirement libraries
+- Use `random_bytes` instead of `uniqid`
+
 ## [2.12.5] - 2024-10-07
 ### Stable Release
 - Update dev lib requirements (issue with covering from PHP 11.4)

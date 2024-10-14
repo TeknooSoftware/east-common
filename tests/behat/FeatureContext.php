@@ -98,6 +98,7 @@ use Throwable;
 use Twig\Environment;
 
 use function array_key_exists;
+use function bin2hex;
 use function copy;
 use function date_default_timezone_set;
 use function error_reporting;
@@ -111,6 +112,7 @@ use function json_decode;
 use function json_encode;
 use function opcache_invalidate;
 use function parse_str;
+use function random_bytes;
 use function random_int;
 use function realpath;
 use function str_replace;
@@ -406,7 +408,7 @@ class FeatureContext implements Context
                 if ($id = $object->getId()) {
                     $this->featureContext->updatedObjects[$id] = $object;
                 } else {
-                    $object->id = uniqid('eastcommon', true);
+                    $object->id = 'eastcommon' . bin2hex(random_bytes(23));
                     $this->featureContext->createdObjects[] = $object;
 
                     $this->featureContext->getObjectRepository()->setObject(['id' => $object->getId()], $object);

@@ -28,6 +28,7 @@ namespace Teknoo\East\Common\Flysystem\FrontAsset;
 use League\Flysystem\Filesystem;
 use Teknoo\East\Common\Contracts\FrontAsset\SourceLoaderInterface;
 use Teknoo\East\Common\FrontAsset\Exception\UnkownSetNameException;
+use Teknoo\East\Common\FrontAsset\Extensions\SourceLoader as SourceLoaderExtension;
 use Teknoo\East\Common\FrontAsset\File;
 use Teknoo\East\Common\FrontAsset\FilesSet;
 use Teknoo\East\Common\FrontAsset\FileType;
@@ -44,6 +45,7 @@ class SourceLoader implements SourceLoaderInterface
      * @param array<string, string[]> $definedSets
      */
     public function __construct(
+        private readonly SourceLoaderExtension $extension,
         private readonly Filesystem $filesystem,
         private readonly array $definedSets,
         private readonly FileType $type,
@@ -66,6 +68,12 @@ class SourceLoader implements SourceLoaderInterface
                 )
             );
         }
+
+        $this->extension->updateSets(
+            $this->type,
+            $setName,
+            $set,
+        );
 
         $holder($set);
 

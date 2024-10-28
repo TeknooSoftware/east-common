@@ -92,6 +92,8 @@ use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Foundation\Template\ResultInterface;
 use Teknoo\East\Twig\Template\Engine;
 use Teknoo\Recipe\Promise\PromiseInterface;
+use Teknoo\Tests\East\Common\Behat\Extension\LoaderForTest;
+use Teknoo\Tests\East\Common\Behat\Extension\ManagerForTest;
 use Teknoo\Tests\East\Common\Behat\Object\MyObject;
 use Teknoo\Tests\East\Common\Behat\Object\MyObjectTimeStampable;
 use Throwable;
@@ -224,6 +226,13 @@ class FeatureContext implements Context
 
         $routerRc = new ReflectionClass(Router::class);
         $routerRc->setStaticPropertyValue('cache', []);
+
+        $this->getExtensionManagerForTest()->disabling();
+    }
+
+    private function getExtensionManagerForTest(): ManagerForTest
+    {
+        return ManagerForTest::run(new LoaderForTest());
     }
 
     /**
@@ -888,10 +897,15 @@ class FeatureContext implements Context
 
     /**
      * @Then the content must be the new minified css
+     * @Then the content must be the new :extended minified css
      */
-    public function theContentMustBeTheNewMinifiedCss()
+    public function theContentMustBeTheNewMinifiedCss(string $extended = '')
     {
-        $fileExpected = realpath(__DIR__ . '/../support/build/css/expected.min.css');
+        if (!empty($extended)) {
+            $extended .= '.';
+        }
+
+        $fileExpected = realpath(__DIR__ . '/../support/build/css/' . $extended . 'expected.min.css');
         $fileMain = realpath(__DIR__ . '/../support/build/css/main.min.css');
         if (false === $fileMain) {
             $fileMain = realpath(__DIR__ . '/../support/build/css/main.2.0.0.min.css');
@@ -942,10 +956,15 @@ class FeatureContext implements Context
 
     /**
      * @Then the content must be the new minified js
+     * @Then the content must be the new :extended minified js
      */
-    public function theContentMustBeTheNewMinifiedJs()
+    public function theContentMustBeTheNewMinifiedJs(string $extended = '')
     {
-        $fileExpected = realpath(__DIR__ . '/../support/build/js/expected.min.js');
+        if (!empty($extended)) {
+            $extended .= '.';
+        }
+
+        $fileExpected = realpath(__DIR__ . '/../support/build/js/' . $extended . 'expected.min.js');
         $fileMain = realpath(__DIR__ . '/../support/build/js/main.min.js');
         if (false === $fileMain) {
             $fileMain = realpath(__DIR__ . '/../support/build/js/main.2.0.0.min.js');
@@ -1089,6 +1108,14 @@ class FeatureContext implements Context
                 return json_encode($final);
             }
         };
+    }
+
+    /**
+     * @Given with an extension in our application
+     */
+    public function withAnExtensionInOurApplication()
+    {
+        $this->getExtensionManagerForTest()->enabling();
     }
 
     /**

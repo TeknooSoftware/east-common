@@ -33,6 +33,7 @@ use Teknoo\East\Common\Contracts\FrontAsset\PersisterInterface;
 use Teknoo\East\Common\Contracts\FrontAsset\SourceLoaderInterface;
 use Teknoo\East\Common\Flysystem\FrontAsset\Persister;
 use Teknoo\East\Common\Flysystem\FrontAsset\SourceLoader;
+use Teknoo\East\Common\FrontAsset\Extensions\SourceLoader as SourceLoaderExtension;
 use Teknoo\East\Common\FrontAsset\FileType;
 
 use function DI\get;
@@ -79,6 +80,7 @@ return [
         $adapterFactory = $container->get('teknoo.east.common.assets.flysystem.adapter');
 
         return new SourceLoader(
+            extension: $container->get(SourceLoaderExtension::class),
             filesystem: new Filesystem(
                 $adapterFactory(
                     $container->get('kernel.project_dir') . '/' .
@@ -127,6 +129,7 @@ return [
         $adapterFactory = $container->get('teknoo.east.common.assets.flysystem.adapter');
 
         return new SourceLoader(
+            extension: $container->get(SourceLoaderExtension::class),
             filesystem: new Filesystem(
                 $adapterFactory(
                     $container->get('kernel.project_dir') . '/' .
@@ -134,7 +137,7 @@ return [
                 ),
             ),
             definedSets: $container->get('teknoo.east.common.assets.sets.js'),
-            type: FileType::CSS,
+            type: FileType::JS,
         );
     },
 ];

@@ -35,6 +35,8 @@ use Teknoo\East\Common\Contracts\FrontAsset\SourceLoaderInterface;
 use Teknoo\East\Common\Flysystem\FrontAsset\Persister;
 use Teknoo\East\Common\Flysystem\FrontAsset\SourceLoader;
 
+use Teknoo\East\Common\FrontAsset\Extensions\SourceLoader as SourceLoaderExtension;
+
 use function sys_get_temp_dir;
 
 /**
@@ -177,6 +179,10 @@ class ContainerTest extends TestCase
             'teknoo.east.common.assets.flysystem.adapter',
             fn () => (fn () => $this->createMock(FilesystemAdapter::class)),
         );
+        $container->set(
+            SourceLoaderExtension::class,
+            $this->createMock(SourceLoaderExtension::class),
+        );
 
         self::assertInstanceOf(
             SourceLoaderInterface::class,
@@ -224,6 +230,10 @@ class ContainerTest extends TestCase
         $container->set(
             'teknoo.east.common.assets.flysystem.adapter',
             fn () => (fn () => $this->createMock(FilesystemAdapter::class)),
+        );
+        $container->set(
+            SourceLoaderExtension::class,
+            $this->createMock(SourceLoaderExtension::class),
         );
 
         self::assertInstanceOf(

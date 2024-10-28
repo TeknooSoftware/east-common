@@ -18,6 +18,8 @@
   <testsuites>
     <testsuite name="Teknoo Software/East Common Test Suite">
       <directory suffix="Test.php">tests/</directory>
+      <exclude>tests/behat/</exclude>
+      <exclude>tests/var/</exclude>
     </testsuite>
   </testsuites>
   <source>

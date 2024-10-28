@@ -52,6 +52,7 @@ use Teknoo\East\Common\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RenderFormInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\SearchFormLoaderInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\User\NotifyUserAboutRecoveryAccessInterface;
+use Teknoo\East\Common\FrontAsset\Extensions\SourceLoader as SourceLoaderExtension;
 use Teknoo\East\Common\Loader\MediaLoader;
 use Teknoo\East\Common\Loader\UserLoader;
 use Teknoo\East\Common\Recipe\Cookbook\CreateObjectEndPoint;
@@ -92,6 +93,7 @@ use Teknoo\East\Common\Recipe\Step\User\RemoveRecoveryAccess;
 use Teknoo\East\Common\Service\DeletingService;
 use Teknoo\East\Common\Writer\MediaWriter;
 use Teknoo\East\Common\Writer\UserWriter;
+use Teknoo\East\Foundation\Extension\ManagerInterface as ExtensionManager;
 use Teknoo\East\Foundation\Manager\Manager;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Router\RouterInterface;
@@ -147,7 +149,6 @@ class ContainerTest extends TestCase
     {
         $this->generateTestForLoader(MediaLoader::class, MediaRepositoryInterface::class);
     }
-
 
     private function generateTestForWriter(string $className)
     {
@@ -832,6 +833,17 @@ class ContainerTest extends TestCase
         self::assertInstanceOf(
             PrepareRecoveryAccessEndPointInterface::class,
             $container->get(PrepareRecoveryAccessEndPointInterface::class)
+        );
+    }
+
+    public function testSourceLoaderExtension()
+    {
+        $container = $this->buildContainer();
+        $container->set(ExtensionManager::class, $this->createMock(ExtensionManager::class));
+
+        self::assertInstanceOf(
+            SourceLoaderExtension::class,
+            $container->get(SourceLoaderExtension::class)
         );
     }
 }

@@ -49,6 +49,7 @@ use Teknoo\East\Common\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RenderFormInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\SearchFormLoaderInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\User\NotifyUserAboutRecoveryAccessInterface;
+use Teknoo\East\Common\FrontAsset\Extensions\SourceLoader as SourceLoaderExtension;
 use Teknoo\East\Common\Loader\MediaLoader;
 use Teknoo\East\Common\Loader\UserLoader;
 use Teknoo\East\Common\Middleware\LocaleMiddleware;
@@ -94,6 +95,7 @@ use Teknoo\East\Common\Service\FindSlugService;
 use Teknoo\East\Common\User\RecoveryAccess\TimeLimitedToken;
 use Teknoo\East\Common\Writer\MediaWriter;
 use Teknoo\East\Common\Writer\UserWriter;
+use Teknoo\East\Foundation\Extension\ManagerInterface as ExtensionManager;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Foundation\Time\DatesService as CommonDatesService;
@@ -158,6 +160,12 @@ return [
 
         return $previous;
     }),
+
+    //Front Asset
+    SourceLoaderExtension::class => create()
+        ->constructor(
+            get(ExtensionManager::class)
+        ),
 
     'teknoo.east.common.rendering.clean_html' => value(false),
 

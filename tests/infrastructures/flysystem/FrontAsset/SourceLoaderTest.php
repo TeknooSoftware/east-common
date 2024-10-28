@@ -30,6 +30,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Flysystem\FrontAsset\SourceLoader;
 use Teknoo\East\Common\FrontAsset\Exception\UnkownSetNameException;
+use Teknoo\East\Common\FrontAsset\Extensions\SourceLoader as SourceLoaderExtension;
 use Teknoo\East\Common\FrontAsset\FileType;
 
 /**
@@ -53,6 +54,7 @@ class SourceLoaderTest extends TestCase
 
         $this->expectException(UnkownSetNameException::class);
         $loader = new SourceLoader(
+            $this->createMock(SourceLoaderExtension::class),
             $flysystem,
             [
                 'foo' => [],
@@ -70,6 +72,7 @@ class SourceLoaderTest extends TestCase
         $flysystem = $this->createMock(Filesystem::class);
 
         $loader = new SourceLoader(
+            $this->createMock(SourceLoaderExtension::class),
             $flysystem,
             [
                 'foo' => [

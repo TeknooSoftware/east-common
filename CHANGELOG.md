@@ -1,5 +1,10 @@
 # Teknoo Software - Common - Change Log
 
+## [2.13.0] - 2024-10-28
+### Stable Release
+- Fix wrong file type passed to JS Source Loader to minify javascripts
+- Add `SourceLoader` extension module to allow app extension to complete set of assets
+
 ## [2.12.6] - 2024-10-14
 ### Stable Release
 - Update requirement libraries

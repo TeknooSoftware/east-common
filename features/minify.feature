@@ -9,6 +9,16 @@ Feature: Minify a set of assets (css or js) into a single file
     And the response must be a css file
     And the content must be the new minified css
 
+  Scenario: Create a minified css file from a set of css and with an app extension
+    Given I have DI With Symfony initialized
+    And a twig templating engine
+    And with an extension in our application
+    And with css non minified files
+    When Symfony will receive the GET request "https://foo.com/build/css/main.min.css"
+    Then The client must accept a response
+    And the response must be a css file
+    And the content must be the new extended minified css
+
   Scenario: Create a minified css file from a set of css without overriding
     Given I have DI With Symfony initialized
     And a twig templating engine
@@ -54,6 +64,16 @@ Feature: Minify a set of assets (css or js) into a single file
     Then The client must accept a response
     And the response must be a js file
     And the content must be the new minified js
+
+  Scenario: Create a minified js file from a set of js and with an app extension
+    Given I have DI With Symfony initialized
+    And a twig templating engine
+    And with js non minified files
+    And with an extension in our application
+    When Symfony will receive the GET request "https://foo.com/build/js/main.min.js"
+    Then The client must accept a response
+    And the response must be a js file
+    And the content must be the new extended minified js
 
   Scenario: Create a minified js file from a set of js without overriding
     Given I have DI With Symfony initialized

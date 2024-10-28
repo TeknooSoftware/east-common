@@ -23,28 +23,16 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\East\Common\Minify;
+namespace Teknoo\Tests\East\Common\Behat\Extension;
 
-use MatthiasMullie\Minify\CSS;
-use MatthiasMullie\Minify\JS;
-use Teknoo\East\Common\Contracts\FrontAsset\MinifierInterface;
-use Teknoo\East\Common\Minify\Css\Minifier as CssMinifier;
-use Teknoo\East\Common\Minify\Js\Minifier as JsMinifier;
+use Teknoo\East\Foundation\Extension\LoaderInterface;
 
-use function DI\get;
-
-return [
-    MinifierInterface::class . ':css' => get(CssMinifier::class),
-    CssMinifier::class => static function (): CssMinifier {
-        return new CssMinifier(
-            new CSS(),
-        );
-    },
-
-    MinifierInterface::class . ':js' => get(JsMinifier::class),
-    JsMinifier::class => static function (): JsMinifier {
-        return new JsMinifier(
-            new JS(),
-        );
-    },
-];
+class LoaderForTest implements LoaderInterface
+{
+    public function __invoke(): iterable
+    {
+        return [
+            ExtensionForTest::class,
+        ];
+    }
+}

@@ -36,7 +36,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Teknoo\East\Common\Contracts\FrontAsset\MinifierInterface;
 use Teknoo\East\Common\Contracts\FrontAsset\PersisterInterface;
 use Teknoo\East\Common\Contracts\FrontAsset\SourceLoaderInterface;
-use Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierCommandInterface;
+use Teknoo\East\Common\Contracts\Recipe\Plan\MinifierCommandInterface;
 use Teknoo\East\CommonBundle\Command\CreateUserCommand;
 use Teknoo\East\Common\Writer\UserWriter;
 use Teknoo\East\CommonBundle\Command\MinifyCommand;

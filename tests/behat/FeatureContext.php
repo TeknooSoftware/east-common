@@ -75,7 +75,7 @@ use Teknoo\East\Common\Object\Media;
 use Teknoo\East\Common\Object\StoredPassword;
 use Teknoo\East\Common\Object\TOTPAuth;
 use Teknoo\East\Common\Object\User;
-use Teknoo\East\Common\Recipe\Cookbook\RenderMediaEndPoint;
+use Teknoo\East\Common\Recipe\Plan\RenderMediaEndPoint;
 use Teknoo\East\Foundation\Time\DatesService;
 use Teknoo\East\FoundationBundle\EastFoundationBundle;
 use Teknoo\East\Foundation\Client\ClientInterface;
@@ -84,7 +84,7 @@ use Teknoo\East\Foundation\EndPoint\RecipeEndPoint;
 use Teknoo\East\Foundation\Manager\Manager;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Middleware\MiddlewareInterface;
-use Teknoo\East\Foundation\Recipe\CookbookInterface;
+use Teknoo\East\Foundation\Recipe\PlanInterface;
 use Teknoo\East\Foundation\Router\Result;
 use Teknoo\East\Foundation\Router\ResultInterface as RouterResultInterface;
 use Teknoo\East\Foundation\Router\RouterInterface;
@@ -827,7 +827,7 @@ class FeatureContext implements Context
 
     private function buildManager(ServerRequest $request): Manager
     {
-        $manager = new Manager($this->container->get(CookbookInterface::class));
+        $manager = new Manager($this->container->get(PlanInterface::class));
 
         $this->response = null;
         $this->error = null;

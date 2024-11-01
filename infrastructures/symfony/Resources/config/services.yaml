@@ -50,7 +50,7 @@ services:
     teknoo.east.common.endpoint.static.bowl:
         class: '%teknoo.east.common.endpoint.static.bowl.class%'
         arguments:
-            - '@Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderStaticContentEndPointInterface'
+            - '@Teknoo\East\Common\Contracts\Recipe\Plan\RenderStaticContentEndPointInterface'
             - 0
 
     teknoo.east.common.endpoint.static:
@@ -64,7 +64,7 @@ services:
     teknoo.east.common.endpoint.2fa_totp_enable.bowl:
         class: '%teknoo.east.common.endpoint.2fa_totp_enable.class%'
         arguments:
-            - '@Teknoo\East\CommonBundle\Recipe\Cookbook\Enable2FA'
+            - '@Teknoo\East\CommonBundle\Recipe\Plan\Enable2FA'
             - 0
 
     teknoo.east.common.endpoint.2fa_totp_enable:
@@ -77,7 +77,7 @@ services:
     teknoo.east.common.endpoint.2fa_totp_disable.bowl:
         class: '%teknoo.east.common.endpoint.2fa_totp_disable.class%'
         arguments:
-            - '@Teknoo\East\CommonBundle\Recipe\Cookbook\Disable2FA'
+            - '@Teknoo\East\CommonBundle\Recipe\Plan\Disable2FA'
             - 0
 
     teknoo.east.common.endpoint.2fa_totp_disable:
@@ -90,7 +90,7 @@ services:
     teknoo.east.common.endpoint.2fa_totp_qrcode.bowl:
         class: '%teknoo.east.common.endpoint.2fa_totp_qrcode.class%'
         arguments:
-            - '@Teknoo\East\CommonBundle\Recipe\Cookbook\GenerateQRCode'
+            - '@Teknoo\East\CommonBundle\Recipe\Plan\GenerateQRCode'
             - 0
 
     teknoo.east.common.endpoint.2fa_totp_qrcode:
@@ -103,7 +103,7 @@ services:
     teknoo.east.common.endpoint.2fa_totp_validate.bowl:
         class: '%teknoo.east.common.endpoint.2fa_totp_validate.class%'
         arguments:
-            - '@Teknoo\East\CommonBundle\Recipe\Cookbook\Validate2FA'
+            - '@Teknoo\East\CommonBundle\Recipe\Plan\Validate2FA'
             - 0
 
     teknoo.east.common.endpoint.2fa_totp_validate:
@@ -117,7 +117,7 @@ services:
     teknoo.east.common.endpoint.crud.delete.bowl:
         class: '%teknoo.east.common.endpoint.crud.delete.bowl.class%'
         arguments:
-            - '@Teknoo\East\Common\Contracts\Recipe\Cookbook\DeleteObjectEndPointInterface'
+            - '@Teknoo\East\Common\Contracts\Recipe\Plan\DeleteObjectEndPointInterface'
             - 0
 
     teknoo.east.common.endpoint.crud.delete:
@@ -130,7 +130,7 @@ services:
     teknoo.east.common.endpoint.crud.edit.bowl:
         class: '%teknoo.east.common.endpoint.crud.edit.bowl.class%'
         arguments:
-            - '@Teknoo\East\Common\Contracts\Recipe\Cookbook\EditObjectEndPointInterface'
+            - '@Teknoo\East\Common\Contracts\Recipe\Plan\EditObjectEndPointInterface'
             - 0
 
     teknoo.east.common.endpoint.crud.edit:
@@ -143,7 +143,7 @@ services:
     teknoo.east.common.endpoint.crud.list.bowl:
         class: '%teknoo.east.common.endpoint.crud.list.bowl.class%'
         arguments:
-            - '@Teknoo\East\Common\Contracts\Recipe\Cookbook\ListObjectEndPointInterface'
+            - '@Teknoo\East\Common\Contracts\Recipe\Plan\ListObjectEndPointInterface'
             - 0
 
     teknoo.east.common.endpoint.crud.list:
@@ -157,7 +157,7 @@ services:
     teknoo.east.common.endpoint.crud.new.bowl:
         class: '%teknoo.east.common.endpoint.crud.new.bowl.class%'
         arguments:
-            - '@Teknoo\East\Common\Contracts\Recipe\Cookbook\CreateObjectEndPointInterface'
+            - '@Teknoo\East\Common\Contracts\Recipe\Plan\CreateObjectEndPointInterface'
             - 0
 
     teknoo.east.common.endpoint.crud.new:
@@ -171,7 +171,7 @@ services:
     teknoo.east.common.endpoint.media.bowl:
         class: '%teknoo.east.common.endpoint.media.bowl.class%'
         arguments:
-            - '@Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderMediaEndPointInterface'
+            - '@Teknoo\East\Common\Contracts\Recipe\Plan\RenderMediaEndPointInterface'
             - 0
 
     teknoo.east.common.endpoint.media:
@@ -185,7 +185,7 @@ services:
     teknoo.east.common.endpoint.minifier.bowl:
         class: '%teknoo.east.common.endpoint.minifier.bowl.class%'
         arguments:
-            - '@Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierEndPointInterface'
+            - '@Teknoo\East\Common\Contracts\Recipe\Plan\MinifierEndPointInterface'
             - 0
 
     teknoo.east.common.endpoint.minifier:
@@ -199,7 +199,7 @@ services:
     teknoo.east.common.endpoint.user_recovery.prepare.bowl:
         class: '%teknoo.east.common.endpoint.user_recovery.prepare.bowl.class%'
         arguments:
-            - '@Teknoo\East\Common\Contracts\Recipe\Cookbook\PrepareRecoveryAccessEndPointInterface'
+            - '@Teknoo\East\Common\Contracts\Recipe\Plan\PrepareRecoveryAccessEndPointInterface'
             - 0
 
     teknoo.east.common.endpoint.user_recovery.prepare:

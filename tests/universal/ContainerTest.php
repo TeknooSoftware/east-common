@@ -34,15 +34,15 @@ use Psr\Log\LoggerInterface;
 use Teknoo\East\Common\Contracts\DBSource\ManagerInterface as DbManagerInterface;
 use Teknoo\East\Common\Contracts\DBSource\Repository\MediaRepositoryInterface;
 use Teknoo\East\Common\Contracts\DBSource\Repository\UserRepositoryInterface;
-use Teknoo\East\Common\Contracts\Recipe\Cookbook\CreateObjectEndPointInterface;
-use Teknoo\East\Common\Contracts\Recipe\Cookbook\DeleteObjectEndPointInterface;
-use Teknoo\East\Common\Contracts\Recipe\Cookbook\EditObjectEndPointInterface;
-use Teknoo\East\Common\Contracts\Recipe\Cookbook\ListObjectEndPointInterface;
-use Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierCommandInterface;
-use Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierEndPointInterface;
-use Teknoo\East\Common\Contracts\Recipe\Cookbook\PrepareRecoveryAccessEndPointInterface;
-use Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderMediaEndPointInterface;
-use Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderStaticContentEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Plan\CreateObjectEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Plan\DeleteObjectEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Plan\EditObjectEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Plan\ListObjectEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Plan\MinifierCommandInterface;
+use Teknoo\East\Common\Contracts\Recipe\Plan\MinifierEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Plan\PrepareRecoveryAccessEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Plan\RenderMediaEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Plan\RenderStaticContentEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormHandlingInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormProcessingInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\GetStreamFromMediaInterface;
@@ -55,15 +55,15 @@ use Teknoo\East\Common\Contracts\Recipe\Step\User\NotifyUserAboutRecoveryAccessI
 use Teknoo\East\Common\FrontAsset\Extensions\SourceLoader as SourceLoaderExtension;
 use Teknoo\East\Common\Loader\MediaLoader;
 use Teknoo\East\Common\Loader\UserLoader;
-use Teknoo\East\Common\Recipe\Cookbook\CreateObjectEndPoint;
-use Teknoo\East\Common\Recipe\Cookbook\DeleteObjectEndPoint;
-use Teknoo\East\Common\Recipe\Cookbook\EditObjectEndPoint;
-use Teknoo\East\Common\Recipe\Cookbook\ListObjectEndPoint;
-use Teknoo\East\Common\Recipe\Cookbook\MinifierCommand;
-use Teknoo\East\Common\Recipe\Cookbook\MinifierEndPoint;
-use Teknoo\East\Common\Recipe\Cookbook\PrepareRecoveryAccessEndPoint;
-use Teknoo\East\Common\Recipe\Cookbook\RenderMediaEndPoint;
-use Teknoo\East\Common\Recipe\Cookbook\RenderStaticContentEndPoint;
+use Teknoo\East\Common\Recipe\Plan\CreateObjectEndPoint;
+use Teknoo\East\Common\Recipe\Plan\DeleteObjectEndPoint;
+use Teknoo\East\Common\Recipe\Plan\EditObjectEndPoint;
+use Teknoo\East\Common\Recipe\Plan\ListObjectEndPoint;
+use Teknoo\East\Common\Recipe\Plan\MinifierCommand;
+use Teknoo\East\Common\Recipe\Plan\MinifierEndPoint;
+use Teknoo\East\Common\Recipe\Plan\PrepareRecoveryAccessEndPoint;
+use Teknoo\East\Common\Recipe\Plan\RenderMediaEndPoint;
+use Teknoo\East\Common\Recipe\Plan\RenderStaticContentEndPoint;
 use Teknoo\East\Common\Recipe\Step\CreateObject;
 use Teknoo\East\Common\Recipe\Step\DeleteObject;
 use Teknoo\East\Common\Recipe\Step\ExtractOrder;
@@ -527,7 +527,37 @@ class ContainerTest extends TestCase
         $container->set(RedirectClientInterface::class, $this->createMock(RedirectClientInterface::class));
         $container->set(RenderFormInterface::class, $this->createMock(RenderFormInterface::class));
         $container->set(RenderError::class, $this->createMock(RenderError::class));
+        $container->set('teknoo.east.common.plan.default_error_template', 'foo.template');
+
+        self::assertInstanceOf(
+            CreateObjectEndPoint::class,
+            $container->get(CreateObjectEndPoint::class)
+        );
+
+        self::assertInstanceOf(
+            CreateObjectEndPointInterface::class,
+            $container->get(CreateObjectEndPointInterface::class)
+        );
+    }
+
+    public function testCreateObjectEndPointWithDeprecation()
+    {
+        $container = $this->buildContainer();
+        $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
+        $container->set(CreateObject::class, $this->createMock(CreateObject::class));
+        $container->set(FormHandlingInterface::class, $this->createMock(FormHandlingInterface::class));
+        $container->set(FormProcessingInterface::class, $this->createMock(FormProcessingInterface::class));
+        $container->set(SlugPreparation::class, $this->createMock(SlugPreparation::class));
+        $container->set(SaveObject::class, $this->createMock(SaveObject::class));
+        $container->set(RedirectClientInterface::class, $this->createMock(RedirectClientInterface::class));
+        $container->set(RenderFormInterface::class, $this->createMock(RenderFormInterface::class));
+        $container->set(RenderError::class, $this->createMock(RenderError::class));
         $container->set('teknoo.east.common.cookbook.default_error_template', 'foo.template');
+
+        $this->expectUserDeprecationMessage(
+            'Parameter `teknoo.east.common.cookbook.default_error_template` is deprecated, '
+            . 'use `teknoo.east.common.plan.default_error_template` instead',
+        );
 
         self::assertInstanceOf(
             CreateObjectEndPoint::class,
@@ -574,7 +604,7 @@ class ContainerTest extends TestCase
         $container->set(RedirectClientInterface::class, $this->createMock(RedirectClientInterface::class));
         $container->set(Render::class, $this->createMock(Render::class));
         $container->set(RenderError::class, $this->createMock(RenderError::class));
-        $container->set('teknoo.east.common.cookbook.default_error_template', 'foo.template');
+        $container->set('teknoo.east.common.plan.default_error_template', 'foo.template');
 
         self::assertInstanceOf(
             DeleteObjectEndPoint::class,
@@ -620,7 +650,7 @@ class ContainerTest extends TestCase
         $container->set(SaveObject::class, $this->createMock(SaveObject::class));
         $container->set(RenderFormInterface::class, $this->createMock(RenderFormInterface::class));
         $container->set(RenderError::class, $this->createMock(RenderError::class));
-        $container->set('teknoo.east.common.cookbook.default_error_template', 'foo.template');
+        $container->set('teknoo.east.common.plan.default_error_template', 'foo.template');
 
         self::assertInstanceOf(
             EditObjectEndPoint::class,
@@ -666,7 +696,7 @@ class ContainerTest extends TestCase
         $container->set(LoadListObjects::class, $this->createMock(LoadListObjects::class));
         $container->set(RenderList::class, $this->createMock(RenderList::class));
         $container->set(RenderError::class, $this->createMock(RenderError::class));
-        $container->set('teknoo.east.common.cookbook.default_error_template', 'foo.template');
+        $container->set('teknoo.east.common.plan.default_error_template', 'foo.template');
 
         self::assertInstanceOf(
             ListObjectEndPoint::class,
@@ -729,7 +759,7 @@ class ContainerTest extends TestCase
         $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
         $container->set(Render::class, $this->createMock(Render::class));
         $container->set(RenderError::class, $this->createMock(RenderError::class));
-        $container->set('teknoo.east.common.cookbook.default_error_template', 'foo.template');
+        $container->set('teknoo.east.common.plan.default_error_template', 'foo.template');
 
         self::assertInstanceOf(
             RenderStaticContentEndPoint::class,
@@ -754,7 +784,7 @@ class ContainerTest extends TestCase
         $container->set(PersistAsset::class, $this->createMock(PersistAsset::class));
         $container->set(ReturnFile::class, $this->createMock(ReturnFile::class));
         $container->set(RenderError::class, $this->createMock(RenderError::class));
-        $container->set('teknoo.east.common.cookbook.default_error_template', 'foo.template');
+        $container->set('teknoo.east.common.plan.default_error_template', 'foo.template');
 
         self::assertInstanceOf(
             MinifierEndPoint::class,
@@ -823,7 +853,7 @@ class ContainerTest extends TestCase
         $container->set(Stop::class, $this->createMock(Stop::class));
         $container->set(RenderFormInterface::class, $this->createMock(RenderFormInterface::class));
         $container->set(RenderError::class, $this->createMock(RenderError::class));
-        $container->set('teknoo.east.common.cookbook.default_error_template', 'foo.template');
+        $container->set('teknoo.east.common.plan.default_error_template', 'foo.template');
 
         self::assertInstanceOf(
             PrepareRecoveryAccessEndPoint::class,

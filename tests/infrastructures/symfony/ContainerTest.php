@@ -36,7 +36,7 @@ use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Teknoo\East\Common\Contracts\FrontAsset\MinifierInterface;
 use Teknoo\East\Common\Contracts\FrontAsset\PersisterInterface;
 use Teknoo\East\Common\Contracts\FrontAsset\SourceLoaderInterface;
-use Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierCommandInterface;
+use Teknoo\East\Common\Contracts\Recipe\Plan\MinifierCommandInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormHandlingInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Common\Recipe\Step\CreateObject;
@@ -44,10 +44,10 @@ use Teknoo\East\Common\Recipe\Step\RenderError;
 use Teknoo\East\CommonBundle\Command\MinifyCommand;
 use Teknoo\East\CommonBundle\Contracts\Recipe\Step\BuildQrCodeInterface;
 use Teknoo\East\CommonBundle\Middleware\LocaleMiddleware;
-use Teknoo\East\CommonBundle\Recipe\Cookbook\Disable2FA;
-use Teknoo\East\CommonBundle\Recipe\Cookbook\Enable2FA;
-use Teknoo\East\CommonBundle\Recipe\Cookbook\GenerateQRCode;
-use Teknoo\East\CommonBundle\Recipe\Cookbook\Validate2FA;
+use Teknoo\East\CommonBundle\Recipe\Plan\Disable2FA;
+use Teknoo\East\CommonBundle\Recipe\Plan\Enable2FA;
+use Teknoo\East\CommonBundle\Recipe\Plan\GenerateQRCode;
+use Teknoo\East\CommonBundle\Recipe\Plan\Validate2FA;
 use Teknoo\East\CommonBundle\Recipe\Step\DisableTOTP;
 use Teknoo\East\CommonBundle\Recipe\Step\EnableTOTP;
 use Teknoo\East\CommonBundle\Recipe\Step\GenerateQRCodeTextForTOTP;
@@ -55,6 +55,7 @@ use Teknoo\East\CommonBundle\Recipe\Step\ValidateTOTP;
 use Teknoo\East\Diactoros\MessageFactory;
 use Teknoo\East\Foundation\Command\Executor;
 use Teknoo\East\Foundation\Http\Message\MessageFactoryInterface;
+use Teknoo\East\Foundation\Recipe\PlanInterface;
 use Teknoo\East\Foundation\Recipe\RecipeInterface;
 use Teknoo\East\Foundation\Router\RouterInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
@@ -132,7 +133,7 @@ class ContainerTest extends TestCase
     {
         $container = $this->buildContainer();
 
-        $container->set('teknoo.east.common.cookbook.default_error_template', 'foo');
+        $container->set('teknoo.east.common.plan.default_error_template', 'foo');
 
         $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
         $container->set(EnableTOTP::class, $this->createMock(EnableTOTP::class));
@@ -147,11 +148,47 @@ class ContainerTest extends TestCase
         );
     }
 
-    public function testDisable2FA()
+    public function testEnable2FAWithCookbook()
     {
         $container = $this->buildContainer();
 
         $container->set('teknoo.east.common.cookbook.default_error_template', 'foo');
+
+        $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
+        $container->set(EnableTOTP::class, $this->createMock(EnableTOTP::class));
+        $container->set(CreateObject::class, $this->createMock(CreateObject::class));
+        $container->set(FormHandlingInterface::class, $this->createMock(FormHandlingInterface::class));
+        $container->set(RenderFormInterface::class, $this->createMock(RenderFormInterface::class));
+        $container->set(RenderError::class, $this->createMock(RenderError::class));
+
+        $this->expectUserDeprecationMessage(
+            'Parameter `teknoo.east.common.cookbook.default_error_template` is deprecated, '
+            . 'use `teknoo.east.common.plan.default_error_template` instead',
+        );
+        self::assertInstanceOf(
+            Enable2FA::class,
+            $container->get(Enable2FA::class)
+        );
+    }
+
+    public function testPlanInterface()
+    {
+        $container = $this->buildContainer();
+        $container->set(\Teknoo\East\Common\Middleware\LocaleMiddleware::class, $this->createMock(\Teknoo\East\Common\Middleware\LocaleMiddleware::class));
+        $container->set(LocaleMiddleware::class, $this->createMock(LocaleMiddleware::class));
+        $container->set(RouterInterface::class, $this->createMock(RouterInterface::class));
+
+        self::assertInstanceOf(
+            PlanInterface::class,
+            $container->get(PlanInterface::class),
+        );
+    }
+
+    public function testDisable2FA()
+    {
+        $container = $this->buildContainer();
+
+        $container->set('teknoo.east.common.plan.default_error_template', 'foo');
 
         $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
         $container->set(DisableTOTP::class, $this->createMock(DisableTOTP::class));
@@ -168,7 +205,7 @@ class ContainerTest extends TestCase
     {
         $container = $this->buildContainer();
 
-        $container->set('teknoo.east.common.cookbook.default_error_template', 'foo');
+        $container->set('teknoo.east.common.plan.default_error_template', 'foo');
 
         $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
         $container->set(GenerateQRCodeTextForTOTP::class, $this->createMock(GenerateQRCodeTextForTOTP::class));
@@ -185,7 +222,7 @@ class ContainerTest extends TestCase
     {
         $container = $this->buildContainer();
 
-        $container->set('teknoo.east.common.cookbook.default_error_template', 'foo');
+        $container->set('teknoo.east.common.plan.default_error_template', 'foo');
 
         $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
         $container->set(CreateObject::class, $this->createMock(CreateObject::class));

@@ -31,16 +31,16 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Teknoo\East\Common\Contracts\FrontAsset\MinifierInterface;
 use Teknoo\East\Common\Contracts\FrontAsset\PersisterInterface;
 use Teknoo\East\Common\Contracts\FrontAsset\SourceLoaderInterface;
-use Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierCommandInterface;
+use Teknoo\East\Common\Contracts\Recipe\Plan\MinifierCommandInterface;
 use Teknoo\East\Common\FrontAsset\FileType;
 use Teknoo\East\CommonBundle\Command\Exception\MissingMessageFactoryException;
 use Teknoo\East\CommonBundle\Command\MinifyCommand;
 use Teknoo\East\CommonBundle\Contracts\Recipe\Step\BuildQrCodeInterface;
 use Teknoo\East\CommonBundle\Middleware\LocaleMiddleware;
-use Teknoo\East\CommonBundle\Recipe\Cookbook\Disable2FA;
-use Teknoo\East\CommonBundle\Recipe\Cookbook\Enable2FA;
-use Teknoo\East\CommonBundle\Recipe\Cookbook\GenerateQRCode;
-use Teknoo\East\CommonBundle\Recipe\Cookbook\Validate2FA;
+use Teknoo\East\CommonBundle\Recipe\Plan\Disable2FA;
+use Teknoo\East\CommonBundle\Recipe\Plan\Enable2FA;
+use Teknoo\East\CommonBundle\Recipe\Plan\GenerateQRCode;
+use Teknoo\East\CommonBundle\Recipe\Plan\Validate2FA;
 use Teknoo\East\CommonBundle\Recipe\Step\DisableTOTP;
 use Teknoo\East\CommonBundle\Recipe\Step\EnableTOTP;
 use Teknoo\East\CommonBundle\Recipe\Step\FormHandling;
@@ -60,7 +60,7 @@ use Teknoo\East\Common\Recipe\Step\RenderError;
 use Teknoo\East\Diactoros\MessageFactory;
 use Teknoo\East\Foundation\Command\Executor;
 use Teknoo\East\Foundation\Http\Message\MessageFactoryInterface;
-use Teknoo\East\Foundation\Recipe\RecipeInterface;
+use Teknoo\East\Foundation\Recipe\PlanInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\FoundationBundle\Command\Client;
 use Teknoo\Recipe\RecipeInterface as OriginalRecipeInterface;
@@ -76,15 +76,13 @@ return [
         return new LocaleMiddleware($container->get('translator'));
     },
 
-    RecipeInterface::class => decorate(static function ($previous, ContainerInterface $container) {
-        if ($previous instanceof RecipeInterface) {
-            $previous = $previous->cook(
-                [$container->get(LocaleMiddleware::class), 'execute'],
-                LocaleMiddleware::class,
-                [],
-                LocaleMiddleware::MIDDLEWARE_PRIORITY
-            );
-        }
+    PlanInterface::class => decorate(static function (PlanInterface $previous, ContainerInterface $container) {
+        /** @var LocaleMiddleware $localeMiddleware */
+        $localeMiddleware = $container->get(LocaleMiddleware::class);
+        $previous->add(
+            action: $localeMiddleware->execute(...),
+            position: LocaleMiddleware::MIDDLEWARE_PRIORITY,
+        );
 
         return $previous;
     }),
@@ -111,12 +109,9 @@ return [
             get('teknoo.east.common.rendering.clean_html'),
         ),
 
-    //TOTP Cookbook
+    //TOTP Plan
     Enable2FA::class => static function (ContainerInterface $container): Enable2FA {
-        $defaultErrorTemplate = null;
-        if ($container->has('teknoo.east.common.cookbook.default_error_template')) {
-            $defaultErrorTemplate = $container->get('teknoo.east.common.cookbook.default_error_template');
-        }
+        $defaultErrorTemplate = $container->get('teknoo.east.common.get_default_error_template');
 
         return new Enable2FA(
             recipe: $container->get(OriginalRecipeInterface::class),
@@ -129,10 +124,7 @@ return [
         );
     },
     Disable2FA::class => static function (ContainerInterface $container): Disable2FA {
-        $defaultErrorTemplate = null;
-        if ($container->has('teknoo.east.common.cookbook.default_error_template')) {
-            $defaultErrorTemplate = $container->get('teknoo.east.common.cookbook.default_error_template');
-        }
+        $defaultErrorTemplate = $container->get('teknoo.east.common.get_default_error_template');
 
         return new Disable2FA(
             recipe: $container->get(OriginalRecipeInterface::class),
@@ -151,10 +143,7 @@ return [
         );
     },
     Validate2FA::class => static function (ContainerInterface $container): Validate2FA {
-        $defaultErrorTemplate = null;
-        if ($container->has('teknoo.east.common.cookbook.default_error_template')) {
-            $defaultErrorTemplate = $container->get('teknoo.east.common.cookbook.default_error_template');
-        }
+        $defaultErrorTemplate = $container->get('teknoo.east.common.get_default_error_template');
 
         return new Validate2FA(
             recipe: $container->get(OriginalRecipeInterface::class),

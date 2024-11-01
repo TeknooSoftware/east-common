@@ -25,17 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\CommonBundle\Recipe\Cookbook;
 
-use Psr\Http\Message\ServerRequestInterface;
-use Teknoo\East\Common\Contracts\Recipe\Step\FormHandlingInterface;
-use Teknoo\East\Common\Contracts\Recipe\Step\RenderFormInterface;
-use Teknoo\East\Common\Recipe\Step\CreateObject;
-use Teknoo\East\Common\Recipe\Step\RenderError;
-use Teknoo\East\CommonBundle\Recipe\Step\EnableTOTP;
-use Teknoo\East\Foundation\Recipe\CookbookInterface;
-use Teknoo\Recipe\Bowl\Bowl;
-use Teknoo\Recipe\Cookbook\BaseCookbookTrait;
-use Teknoo\Recipe\Ingredient\Ingredient;
-use Teknoo\Recipe\RecipeInterface;
+use Teknoo\East\CommonBundle\Recipe\Plan\Enable2FA as OriginalPlan;
 
 /**
  * Cookbook endpoint to enable/prepare 2FA with Google Authenticator/TOTP provider for an user
@@ -44,49 +34,9 @@ use Teknoo\Recipe\RecipeInterface;
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
+ *
+ * @deprecated Use `Teknoo\East\CommonBundle\Recipe\Plan\Enable2FA` instead
  */
-class Enable2FA implements CookbookInterface
+class Enable2FA extends OriginalPlan
 {
-    use BaseCookbookTrait;
-
-    public function __construct(
-        RecipeInterface $recipe,
-        private EnableTOTP $enableTOTP,
-        private readonly CreateObject $createObject,
-        private readonly FormHandlingInterface $formHandling,
-        private readonly RenderFormInterface $renderForm,
-        private readonly RenderError $renderError,
-        private readonly ?string $defaultErrorTemplate = null,
-    ) {
-        $this->fill($recipe);
-    }
-
-    protected function populateRecipe(RecipeInterface $recipe): RecipeInterface
-    {
-        $recipe = $recipe->require(new Ingredient(requiredType: ServerRequestInterface::class, name: 'request'));
-        $recipe = $recipe->require(new Ingredient(requiredType: 'string', name: 'objectClass'));
-        $recipe = $recipe->require(new Ingredient(requiredType: 'string', name: 'formClass'));
-        $recipe = $recipe->require(
-            new Ingredient(
-                requiredType: 'array',
-                name: 'formOptions',
-                mandatory: false,
-                default: [],
-            )
-        );
-
-        $recipe = $recipe->cook($this->enableTOTP, EnableTOTP::class, [], 10);
-
-        $recipe = $recipe->cook($this->createObject, CreateObject::class, [], 20);
-
-        $recipe = $recipe->cook($this->formHandling, FormHandlingInterface::class, [], 30);
-
-        $recipe = $recipe->cook($this->renderForm, RenderFormInterface::class, [], 40);
-
-        if (null !== $this->defaultErrorTemplate) {
-            $this->addToWorkplan('errorTemplate', $this->defaultErrorTemplate);
-        }
-
-        return $recipe->onError(new Bowl($this->renderError, []));
-    }
 }

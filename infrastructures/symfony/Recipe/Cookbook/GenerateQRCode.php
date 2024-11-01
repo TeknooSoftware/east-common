@@ -25,15 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\CommonBundle\Recipe\Cookbook;
 
-use Psr\Http\Message\ServerRequestInterface;
-use Teknoo\East\Common\Recipe\Step\RenderError;
-use Teknoo\East\CommonBundle\Contracts\Recipe\Step\BuildQrCodeInterface;
-use Teknoo\East\CommonBundle\Recipe\Step\GenerateQRCodeTextForTOTP;
-use Teknoo\East\Foundation\Recipe\CookbookInterface;
-use Teknoo\Recipe\Bowl\Bowl;
-use Teknoo\Recipe\Cookbook\BaseCookbookTrait;
-use Teknoo\Recipe\Ingredient\Ingredient;
-use Teknoo\Recipe\RecipeInterface;
+use Teknoo\East\CommonBundle\Recipe\Plan\GenerateQRCode as OriginalPlan;
 
 /**
  * Cookbook endpoint to generate a QRCode image to register an user into you TOTP app/Google
@@ -43,33 +35,9 @@ use Teknoo\Recipe\RecipeInterface;
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
+ *
+ * @deprecated Use `Teknoo\East\CommonBundle\Recipe\Plan\GenerateQRCode` instead
  */
-class GenerateQRCode implements CookbookInterface
+class GenerateQRCode extends OriginalPlan
 {
-    use BaseCookbookTrait;
-
-    public function __construct(
-        RecipeInterface $recipe,
-        private GenerateQRCodeTextForTOTP $generateQRCodeTextForTOTP,
-        private BuildQrCodeInterface $buildQrCode,
-        private readonly RenderError $renderError,
-        private readonly ?string $defaultErrorTemplate = null,
-    ) {
-        $this->fill($recipe);
-    }
-
-    protected function populateRecipe(RecipeInterface $recipe): RecipeInterface
-    {
-        $recipe = $recipe->require(new Ingredient(ServerRequestInterface::class, 'request'));
-
-        $recipe = $recipe->cook($this->generateQRCodeTextForTOTP, GenerateQRCodeTextForTOTP::class, [], 10);
-
-        $recipe = $recipe->cook($this->buildQrCode, BuildQrCodeInterface::class, [], 20);
-
-        if (null !== $this->defaultErrorTemplate) {
-            $this->addToWorkplan('errorTemplate', $this->defaultErrorTemplate);
-        }
-
-        return $recipe->onError(new Bowl($this->renderError, []));
-    }
 }

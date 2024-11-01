@@ -25,17 +25,8 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Common\Recipe\Cookbook;
 
-use Teknoo\East\Common\Contracts\FrontAsset\MinifierInterface;
-use Teknoo\East\Common\Contracts\FrontAsset\PersisterInterface;
-use Teknoo\East\Common\Contracts\FrontAsset\SourceLoaderInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierCommandInterface;
-use Teknoo\East\Common\FrontAsset\FileType;
-use Teknoo\East\Common\Recipe\Step\FrontAsset\LoadSource;
-use Teknoo\East\Common\Recipe\Step\FrontAsset\MinifyAssets;
-use Teknoo\East\Common\Recipe\Step\FrontAsset\PersistAsset;
-use Teknoo\Recipe\Cookbook\BaseCookbookTrait;
-use Teknoo\Recipe\Ingredient\Ingredient;
-use Teknoo\Recipe\RecipeInterface;
+use Teknoo\East\Common\Recipe\Plan\MinifierCommand as OriginalPlan;
 
 /**
  * Interface defining a Command Recipe able to minify a list of assets files into an unique file, the file
@@ -45,34 +36,9 @@ use Teknoo\Recipe\RecipeInterface;
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
+ *
+ * @deprecated Use `Teknoo\East\Common\Recipe\Plan\MinifierCommand` instead
  */
-class MinifierCommand implements MinifierCommandInterface
+class MinifierCommand extends OriginalPlan implements MinifierCommandInterface
 {
-    use BaseCookbookTrait;
-
-    public function __construct(
-        RecipeInterface $recipe,
-        private readonly LoadSource $loadSource,
-        private readonly MinifyAssets $minifyAssets,
-        private readonly PersistAsset $persistAsset,
-    ) {
-        $this->fill($recipe);
-    }
-
-    protected function populateRecipe(RecipeInterface $recipe): RecipeInterface
-    {
-        $recipe = $recipe->require(new Ingredient(SourceLoaderInterface::class, 'sourceLoader'));
-        $recipe = $recipe->require(new Ingredient(PersisterInterface::class, 'persister'));
-        $recipe = $recipe->require(new Ingredient(MinifierInterface::class, 'minifier'));
-        $recipe = $recipe->require(new Ingredient(FileType::class, 'type'));
-        $recipe = $recipe->require(new Ingredient('string', 'setName'));
-
-        $recipe = $recipe->cook($this->loadSource, LoadSource::class, [], 40);
-
-        $recipe = $recipe->cook($this->minifyAssets, MinifyAssets::class, [], 50);
-
-        $recipe = $recipe->cook($this->persistAsset, PersistAsset::class, [], 60);
-
-        return $recipe;
-    }
 }

@@ -31,15 +31,15 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Teknoo\East\Common\Contracts\DBSource\ManagerInterface;
 use Teknoo\East\Common\Contracts\DBSource\Repository\MediaRepositoryInterface;
 use Teknoo\East\Common\Contracts\DBSource\Repository\UserRepositoryInterface;
-use Teknoo\East\Common\Contracts\Recipe\Cookbook\CreateObjectEndPointInterface;
-use Teknoo\East\Common\Contracts\Recipe\Cookbook\DeleteObjectEndPointInterface;
-use Teknoo\East\Common\Contracts\Recipe\Cookbook\EditObjectEndPointInterface;
-use Teknoo\East\Common\Contracts\Recipe\Cookbook\ListObjectEndPointInterface;
-use Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierCommandInterface;
-use Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierEndPointInterface;
-use Teknoo\East\Common\Contracts\Recipe\Cookbook\PrepareRecoveryAccessEndPointInterface;
-use Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderMediaEndPointInterface;
-use Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderStaticContentEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Plan\CreateObjectEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Plan\DeleteObjectEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Plan\EditObjectEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Plan\ListObjectEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Plan\MinifierCommandInterface;
+use Teknoo\East\Common\Contracts\Recipe\Plan\MinifierEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Plan\PrepareRecoveryAccessEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Plan\RenderMediaEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Plan\RenderStaticContentEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormHandlingInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormProcessingInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\GetStreamFromMediaInterface;
@@ -53,15 +53,15 @@ use Teknoo\East\Common\FrontAsset\Extensions\SourceLoader as SourceLoaderExtensi
 use Teknoo\East\Common\Loader\MediaLoader;
 use Teknoo\East\Common\Loader\UserLoader;
 use Teknoo\East\Common\Middleware\LocaleMiddleware;
-use Teknoo\East\Common\Recipe\Cookbook\CreateObjectEndPoint;
-use Teknoo\East\Common\Recipe\Cookbook\DeleteObjectEndPoint;
-use Teknoo\East\Common\Recipe\Cookbook\EditObjectEndPoint;
-use Teknoo\East\Common\Recipe\Cookbook\ListObjectEndPoint;
-use Teknoo\East\Common\Recipe\Cookbook\MinifierCommand;
-use Teknoo\East\Common\Recipe\Cookbook\MinifierEndPoint;
-use Teknoo\East\Common\Recipe\Cookbook\PrepareRecoveryAccessEndPoint;
-use Teknoo\East\Common\Recipe\Cookbook\RenderMediaEndPoint;
-use Teknoo\East\Common\Recipe\Cookbook\RenderStaticContentEndPoint;
+use Teknoo\East\Common\Recipe\Plan\CreateObjectEndPoint;
+use Teknoo\East\Common\Recipe\Plan\DeleteObjectEndPoint;
+use Teknoo\East\Common\Recipe\Plan\EditObjectEndPoint;
+use Teknoo\East\Common\Recipe\Plan\ListObjectEndPoint;
+use Teknoo\East\Common\Recipe\Plan\MinifierCommand;
+use Teknoo\East\Common\Recipe\Plan\MinifierEndPoint;
+use Teknoo\East\Common\Recipe\Plan\PrepareRecoveryAccessEndPoint;
+use Teknoo\East\Common\Recipe\Plan\RenderMediaEndPoint;
+use Teknoo\East\Common\Recipe\Plan\RenderStaticContentEndPoint;
 use Teknoo\East\Common\Recipe\Step\CreateObject;
 use Teknoo\East\Common\Recipe\Step\DeleteObject;
 use Teknoo\East\Common\Recipe\Step\ExtractOrder;
@@ -96,7 +96,7 @@ use Teknoo\East\Common\User\RecoveryAccess\TimeLimitedToken;
 use Teknoo\East\Common\Writer\MediaWriter;
 use Teknoo\East\Common\Writer\UserWriter;
 use Teknoo\East\Foundation\Extension\ManagerInterface as ExtensionManager;
-use Teknoo\East\Foundation\Recipe\RecipeInterface;
+use Teknoo\East\Foundation\Recipe\PlanInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
 use Teknoo\East\Foundation\Time\DatesService as CommonDatesService;
 use Teknoo\Recipe\Recipe;
@@ -104,10 +104,30 @@ use Teknoo\Recipe\RecipeInterface as OriginalRecipeInterface;
 
 use function DI\create;
 use function DI\decorate;
+use function DI\factory;
 use function DI\get;
 use function DI\value;
 
 return [
+    'teknoo.east.common.get_default_error_template' => factory(
+        static function (ContainerInterface $container): ?string {
+            $defaultErrorTemplate = null;
+            if ($container->has('teknoo.east.common.plan.default_error_template')) {
+                $defaultErrorTemplate = $container->get('teknoo.east.common.plan.default_error_template');
+            } elseif ($container->has('teknoo.east.common.cookbook.default_error_template')) {
+                @trigger_error(
+                    'Parameter `teknoo.east.common.cookbook.default_error_template` is deprecated, '
+                    . 'use `teknoo.east.common.plan.default_error_template` instead',
+                    E_USER_DEPRECATED
+                );
+
+                $defaultErrorTemplate = $container->get('teknoo.east.common.cookbook.default_error_template');
+            }
+
+            return $defaultErrorTemplate;
+        }
+    ),
+
     //Loaders
     UserLoader::class => create(UserLoader::class)
         ->constructor(get(UserRepositoryInterface::class)),
@@ -139,24 +159,21 @@ return [
         ),
 
     //Middleware
-    RecipeInterface::class => decorate(static function ($previous, ContainerInterface $container) {
-        if ($previous instanceof RecipeInterface) {
-            $previous = $previous->cook(
-                $container->get(InitParametersBag::class),
-                InitParametersBag::class,
-                [],
-                4
-            );
-        }
 
-        if ($container->has(LocaleMiddleware::class)) {
-            $previous = $previous->cook(
-                [$container->get(LocaleMiddleware::class), 'execute'],
-                LocaleMiddleware::class,
-                [],
-                LocaleMiddleware::MIDDLEWARE_PRIORITY
-            );
-        }
+    PlanInterface::class => decorate(static function (PlanInterface $previous, ContainerInterface $container) {
+        /** @var InitParametersBag $initParametersBag */
+        $initParametersBag = $container->get(InitParametersBag::class);
+        $previous->add(
+            action: $initParametersBag,
+            position: 4,
+        );
+
+        /** @var LocaleMiddleware $localeMiddleware */
+        $localeMiddleware = $container->get(LocaleMiddleware::class);
+        $previous->add(
+            action: $localeMiddleware->execute(...),
+            position: LocaleMiddleware::MIDDLEWARE_PRIORITY,
+        );
 
         return $previous;
     }),
@@ -249,18 +266,17 @@ return [
     OriginalRecipeInterface::class => get(Recipe::class),
     Recipe::class => create(),
 
-    //Cookbook
+    //Plan
     CreateObjectEndPointInterface::class => get(CreateObjectEndPoint::class),
-    CreateObjectEndPoint::class => static function (ContainerInterface $container): CreateObjectEndPoint {
+    CreateObjectEndPoint::class => static function (
+        ContainerInterface $container,
+    ): CreateObjectEndPoint {
         $accessControl = null;
         if ($container->has(ObjectAccessControlInterface::class)) {
             $accessControl = $container->get(ObjectAccessControlInterface::class);
         }
 
-        $defaultErrorTemplate = null;
-        if ($container->has('teknoo.east.common.cookbook.default_error_template')) {
-            $defaultErrorTemplate = $container->get('teknoo.east.common.cookbook.default_error_template');
-        }
+        $defaultErrorTemplate = $container->get('teknoo.east.common.get_default_error_template');
 
         return new CreateObjectEndPoint(
             $container->get(OriginalRecipeInterface::class . ':CRUD'),
@@ -277,16 +293,15 @@ return [
         );
     },
     DeleteObjectEndPointInterface::class => get(DeleteObjectEndPoint::class),
-    DeleteObjectEndPoint::class => static function (ContainerInterface $container): DeleteObjectEndPoint {
+    DeleteObjectEndPoint::class => static function (
+        ContainerInterface $container,
+    ): DeleteObjectEndPoint {
         $accessControl = null;
         if ($container->has(ObjectAccessControlInterface::class)) {
             $accessControl = $container->get(ObjectAccessControlInterface::class);
         }
 
-        $defaultErrorTemplate = null;
-        if ($container->has('teknoo.east.common.cookbook.default_error_template')) {
-            $defaultErrorTemplate = $container->get('teknoo.east.common.cookbook.default_error_template');
-        }
+        $defaultErrorTemplate = $container->get('teknoo.east.common.get_default_error_template');
 
         return new DeleteObjectEndPoint(
             $container->get(OriginalRecipeInterface::class . ':CRUD'),
@@ -301,16 +316,15 @@ return [
         );
     },
     EditObjectEndPointInterface::class => get(EditObjectEndPoint::class),
-    EditObjectEndPoint::class => static function (ContainerInterface $container): EditObjectEndPoint {
+    EditObjectEndPoint::class => static function (
+        ContainerInterface $container,
+    ): EditObjectEndPoint {
         $accessControl = null;
         if ($container->has(ObjectAccessControlInterface::class)) {
             $accessControl = $container->get(ObjectAccessControlInterface::class);
         }
 
-        $defaultErrorTemplate = null;
-        if ($container->has('teknoo.east.common.cookbook.default_error_template')) {
-            $defaultErrorTemplate = $container->get('teknoo.east.common.cookbook.default_error_template');
-        }
+        $defaultErrorTemplate = $container->get('teknoo.east.common.get_default_error_template');
 
         return new EditObjectEndPoint(
             $container->get(OriginalRecipeInterface::class . ':CRUD'),
@@ -326,7 +340,9 @@ return [
         );
     },
     ListObjectEndPointInterface::class => get(ListObjectEndPoint::class),
-    ListObjectEndPoint::class => static function (ContainerInterface $container): ListObjectEndPoint {
+    ListObjectEndPoint::class => static function (
+        ContainerInterface $container,
+    ): ListObjectEndPoint {
         $formLoader = null;
         if ($container->has(SearchFormLoaderInterface::class)) {
             $formLoader = $container->get(SearchFormLoaderInterface::class);
@@ -337,10 +353,7 @@ return [
             $accessControl = $container->get(ListObjectsAccessControlInterface::class);
         }
 
-        $defaultErrorTemplate = null;
-        if ($container->has('teknoo.east.common.cookbook.default_error_template')) {
-            $defaultErrorTemplate = $container->get('teknoo.east.common.cookbook.default_error_template');
-        }
+        $defaultErrorTemplate = $container->get('teknoo.east.common.get_default_error_template');
 
         return new ListObjectEndPoint(
             $container->get(OriginalRecipeInterface::class . ':CRUD'),
@@ -363,11 +376,11 @@ return [
             get(PersistAsset::class),
         ),
     MinifierEndPointInterface::class => get(MinifierEndPoint::class),
-    MinifierEndPoint::class => static function (ContainerInterface $container): MinifierEndPoint {
-        $defaultErrorTemplate = null;
-        if ($container->has('teknoo.east.common.cookbook.default_error_template')) {
-            $defaultErrorTemplate = $container->get('teknoo.east.common.cookbook.default_error_template');
-        }
+    MinifierEndPoint::class => static function (
+        ContainerInterface $container,
+    ): MinifierEndPoint {
+
+        $defaultErrorTemplate = $container->get('teknoo.east.common.get_default_error_template');
 
         return new MinifierEndPoint(
             $container->get(OriginalRecipeInterface::class . ':Asset'),
@@ -387,10 +400,7 @@ return [
     PrepareRecoveryAccessEndPoint::class => static function (
         ContainerInterface $container
     ): PrepareRecoveryAccessEndPoint {
-        $defaultErrorTemplate = null;
-        if ($container->has('teknoo.east.common.cookbook.default_error_template')) {
-            $defaultErrorTemplate = $container->get('teknoo.east.common.cookbook.default_error_template');
-        }
+        $defaultErrorTemplate = $container->get('teknoo.east.common.get_default_error_template');
 
         return new PrepareRecoveryAccessEndPoint(
             $container->get(OriginalRecipeInterface::class . ':Auth'),
@@ -412,11 +422,10 @@ return [
     },
 
     RenderStaticContentEndPointInterface::class => get(RenderStaticContentEndPoint::class),
-    RenderStaticContentEndPoint::class => static function (ContainerInterface $container): RenderStaticContentEndPoint {
-        $defaultErrorTemplate = null;
-        if ($container->has('teknoo.east.common.cookbook.default_error_template')) {
-            $defaultErrorTemplate = $container->get('teknoo.east.common.cookbook.default_error_template');
-        }
+    RenderStaticContentEndPoint::class => static function (
+        ContainerInterface $container,
+    ): RenderStaticContentEndPoint {
+        $defaultErrorTemplate = $container->get('teknoo.east.common.get_default_error_template');
 
         return new RenderStaticContentEndPoint(
             $container->get(OriginalRecipeInterface::class . ':Static'),

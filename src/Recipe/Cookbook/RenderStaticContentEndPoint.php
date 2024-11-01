@@ -25,14 +25,8 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Common\Recipe\Cookbook;
 
-use Psr\Http\Message\ServerRequestInterface;
 use Teknoo\East\Common\Contracts\Recipe\Cookbook\RenderStaticContentEndPointInterface;
-use Teknoo\East\Common\Recipe\Step\Render;
-use Teknoo\East\Common\Recipe\Step\RenderError;
-use Teknoo\Recipe\Bowl\Bowl;
-use Teknoo\Recipe\Cookbook\BaseCookbookTrait;
-use Teknoo\Recipe\Ingredient\Ingredient;
-use Teknoo\Recipe\RecipeInterface;
+use Teknoo\East\Common\Recipe\Plan\RenderStaticContentEndPoint as OriginalPlan;
 
 /**
  * HTTP EndPoint Recipe able to render a static template via the engine and send it to the client.
@@ -41,34 +35,9 @@ use Teknoo\Recipe\RecipeInterface;
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
+ *
+ * @deprecated Use `Teknoo\East\Common\Recipe\Plan\RenderStaticContentEndPoint` instead
  */
-class RenderStaticContentEndPoint implements RenderStaticContentEndPointInterface
+class RenderStaticContentEndPoint extends OriginalPlan implements RenderStaticContentEndPointInterface
 {
-    use BaseCookbookTrait;
-
-    public function __construct(
-        RecipeInterface $recipe,
-        private readonly Render $render,
-        private readonly RenderError $renderError,
-        private readonly ?string $defaultErrorTemplate = null,
-    ) {
-        $this->fill($recipe);
-    }
-
-    protected function populateRecipe(RecipeInterface $recipe): RecipeInterface
-    {
-        $recipe = $recipe->require(new Ingredient(ServerRequestInterface::class, 'request'));
-        $recipe = $recipe->require(new Ingredient('string', 'template'));
-        $recipe = $recipe->require(new Ingredient('string', 'errorTemplate'));
-
-        $recipe = $recipe->cook($this->render, Render::class, [], 10);
-
-        $recipe = $recipe->onError(new Bowl($this->renderError, []));
-
-        if (null !== $this->defaultErrorTemplate) {
-            $this->addToWorkplan('errorTemplate', $this->defaultErrorTemplate);
-        }
-
-        return $recipe;
-    }
 }

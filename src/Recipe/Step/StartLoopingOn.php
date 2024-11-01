@@ -110,7 +110,7 @@ class StartLoopingOn
      */
     public function __invoke(ManagerInterface $manager, iterable $collection): self
     {
-        //To allow overide this loop directly in a cookbook with a dedicated class with git hint typing
+        //To allow overide this loop directly in a plan with a dedicated class with git hint typing
         return $this->doLoop($manager, $collection);
     }
 

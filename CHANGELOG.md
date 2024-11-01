@@ -1,5 +1,16 @@
 # Teknoo Software - Common - Change Log
 
+## [3.0.0] - 2024-11-01
+### Stable Release
+- Migrate to `Teknoo Recipe` 6.
+- Rename `Cookbook` to `Plan`.
+  - Old classes and interfaces are deprecated.
+- Migrate to `EditablePlan` all previous `Cookbook` / `Plan`.
+- Migrate the decoration about the East Foundation Plan to register the `LocaleMiddleware` 
+  and `InitParametersBag`.
+- The parameter `teknoo.east.common.plan.default_error_template` replace 
+  `teknoo.east.common.cookbook.default_error_template`
+
 ## [2.13.0] - 2024-10-28
 ### Stable Release
 - Fix wrong file type passed to JS Source Loader to minify javascripts
@@ -113,7 +124,7 @@
 - Add `JumpIfNot` to Jump to a step if a condition is not valid (contrary to `JumpIf`)
 - Add `EmailValue` class as ValueObject compliant with `ObjectInterface`
 - Add RecoveryAccess as AuthData for User
-- Add Cookbook interface `PrepareRecoveryAccessEndPointInterface` and `PrepareRecoveryAccessEndPoint` to create
+- Add Plan interface `PrepareRecoveryAccessEndPointInterface` and `PrepareRecoveryAccessEndPoint` to create
   and send a link to allow an user to recover its access.
   - Add Steps `FindUserByEmail`, `PrepareRecoveryAccess`, and `RemoveRecoveryAccess` for this last cookbook.
 - Add `NotifyUserABoutRecoveryAccessInterface` to implement in a step locked in framework to send the notification
@@ -170,28 +181,28 @@ The behavior is available only on environment with the ext tidy enabled (else th
 - JS and CSS Minifier features from specific HTTP endpoint without webpack
   - Use `league/flysystem` to perform I/O operations
   - Use `matthiasmullie/minify` to perform minifing operations
-  - The cookbook implements the interface `Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierEndPointInterface`
+  - The cookbook implements the interface `Teknoo\East\Common\Contracts\Recipe\Plan\MinifierEndPointInterface`
   - Routes available in `infrastructures/symfony/Resources/config/assets_routing.yaml`
   - Compiled file can be versioned by using `_teknoo_common_minifier_css_version`
     and `_teknoo_common_minifier_js_version`.
   - By default, a compiled file is not overwritten but this behavior can be disabled by set the parameter
     `teknoo.east.common.assets.no_overwrite` to false
   - With Symfony, command `teknoo:common:minify:css` and `teknoo:common:minify:js` can be used.
-    - The cookbook implements the interface `Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierCommandInterface`
+    - The cookbook implements the interface `Teknoo\East\Common\Contracts\Recipe\Plan\MinifierCommandInterface`
 
 ## [2.4.0-beta2] - 2023-11-09
 ### Stable Release
 - JS and CSS Minifier features from specific HTTP endpoint without webpack
   - Use `league/flysystem` to perform I/O operations
   - Use `matthiasmullie/minify` to perform minifing operations
-  - The cookbook implements the interface `Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierEndPointInterface`
+  - The cookbook implements the interface `Teknoo\East\Common\Contracts\Recipe\Plan\MinifierEndPointInterface`
   - Routes available in `infrastructures/symfony/Resources/config/assets_routing.yaml`
   - Compiled file can be versioned by using `_teknoo_common_minifier_css_version` 
     and `_teknoo_common_minifier_js_version`.
   - By default, a compiled file is not overwritten but this behavior can be disabled by set the parameter 
     `teknoo.east.common.assets.no_overwrite` to false
   - With Symfony, command `teknoo:common:minify:css` and `teknoo:common:minify:js` can be used.
-    - The cookbook implements the interface `Teknoo\East\Common\Contracts\Recipe\Cookbook\MinifierCommandInterface`
+    - The cookbook implements the interface `Teknoo\East\Common\Contracts\Recipe\Plan\MinifierCommandInterface`
   
 ## [2.4.0-beta1] - 2023-11-05
 ### Stable Release
@@ -305,9 +316,9 @@ The behavior is available only on environment with the ext tidy enabled (else th
 - Update Users providers in Symfony Bundle to return user with `UserWithTOTPAuthInterface`
   and sheb's interfaces, and use its bundle out of the box without any adaptation for this bundle.
 - Add, in Symfony bundle, endpoints and step to enable or disable TOTP and QRCode generation : 
-  - Cookbook `Enable2FA`
-  - Cookbook `Disable2FA`
-  - Cookbook `GenerateQRCode`
+  - Plan `Enable2FA`
+  - Plan `Disable2FA`
+  - Plan `GenerateQRCode`
   - Step `EnableTOTP`
   - Step `DisableTOTP`
   - Step`GenerateQRCodeTextFORTOTP`

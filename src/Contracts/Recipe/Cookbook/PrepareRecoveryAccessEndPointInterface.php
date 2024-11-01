@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Common\Contracts\Recipe\Cookbook;
 
-use Teknoo\Recipe\CookbookInterface;
+use Teknoo\East\Common\Contracts\Recipe\Plan\PrepareRecoveryAccessEndPointInterface as OriginalInterface;
 
 /**
  * Interface defining a HTTP EndPoint Recipe able to prepare recovery access for an user identified by and email and
@@ -35,7 +35,9 @@ use Teknoo\Recipe\CookbookInterface;
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
+ *
+ * @deprecated Use `Teknoo\East\Common\Contracts\Recipe\Plan\PrepareRecoveryAccessEndPointInterface` instead
  */
-interface PrepareRecoveryAccessEndPointInterface extends CookbookInterface
+interface PrepareRecoveryAccessEndPointInterface extends OriginalInterface
 {
 }

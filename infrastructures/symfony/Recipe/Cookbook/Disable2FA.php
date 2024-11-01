@@ -25,15 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\CommonBundle\Recipe\Cookbook;
 
-use Psr\Http\Message\ServerRequestInterface;
-use Teknoo\East\Common\Contracts\Recipe\Step\RedirectClientInterface;
-use Teknoo\East\Common\Recipe\Step\RenderError;
-use Teknoo\East\CommonBundle\Recipe\Step\DisableTOTP;
-use Teknoo\East\Foundation\Recipe\CookbookInterface;
-use Teknoo\Recipe\Bowl\Bowl;
-use Teknoo\Recipe\Cookbook\BaseCookbookTrait;
-use Teknoo\Recipe\Ingredient\Ingredient;
-use Teknoo\Recipe\RecipeInterface;
+use Teknoo\East\CommonBundle\Recipe\Plan\Disable2FA as OriginalPlan;
 
 /**
  * Cookbook endpoint able to disable 2FA Authentication with TOTP/Google Auth for an user.
@@ -42,34 +34,9 @@ use Teknoo\Recipe\RecipeInterface;
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
+ *
+ * @deprecated Use `Teknoo\East\CommonBundle\Recipe\Plan\Disable2FA` instead
  */
-class Disable2FA implements CookbookInterface
+class Disable2FA extends OriginalPlan
 {
-    use BaseCookbookTrait;
-
-    public function __construct(
-        RecipeInterface $recipe,
-        private DisableTOTP $disableTOTP,
-        private readonly RedirectClientInterface $redirectClient,
-        private readonly RenderError $renderError,
-        private readonly ?string $defaultErrorTemplate = null,
-    ) {
-        $this->fill($recipe);
-    }
-
-    protected function populateRecipe(RecipeInterface $recipe): RecipeInterface
-    {
-        $recipe = $recipe->require(new Ingredient(ServerRequestInterface::class, 'request'));
-        $recipe = $recipe->require(new Ingredient('string', 'route'));
-
-        $recipe = $recipe->cook($this->disableTOTP, DisableTOTP::class, [], 10);
-
-        $recipe = $recipe->cook($this->redirectClient, RedirectClientInterface::class, [], 20);
-
-        if (null !== $this->defaultErrorTemplate) {
-            $this->addToWorkplan('errorTemplate', $this->defaultErrorTemplate);
-        }
-
-        return $recipe->onError(new Bowl($this->renderError, []));
-    }
 }

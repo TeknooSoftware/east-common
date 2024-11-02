@@ -28,6 +28,7 @@ namespace Teknoo\East\Common;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Stringable;
 use Teknoo\East\Common\Contracts\DBSource\ManagerInterface;
 use Teknoo\East\Common\Contracts\DBSource\Repository\MediaRepositoryInterface;
 use Teknoo\East\Common\Contracts\DBSource\Repository\UserRepositoryInterface;
@@ -110,7 +111,7 @@ use function DI\value;
 
 return [
     'teknoo.east.common.get_default_error_template' => factory(
-        static function (ContainerInterface $container): ?string {
+        static function (ContainerInterface $container): Stringable {
             $defaultErrorTemplate = null;
             if ($container->has('teknoo.east.common.plan.default_error_template')) {
                 $defaultErrorTemplate = $container->get('teknoo.east.common.plan.default_error_template');
@@ -124,7 +125,17 @@ return [
                 $defaultErrorTemplate = $container->get('teknoo.east.common.cookbook.default_error_template');
             }
 
-            return $defaultErrorTemplate;
+            return new class ((string) $defaultErrorTemplate) implements \Stringable {
+                public function __construct(
+                    private string $defaultErrorTemplate = '',
+                ) {
+                }
+
+                public function __toString(): string
+                {
+                    return $this->defaultErrorTemplate;
+                }
+            };
         }
     ),
 

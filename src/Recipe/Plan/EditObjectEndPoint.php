@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Common\Recipe\Plan;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Stringable;
 use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
 use Teknoo\East\Common\Contracts\Recipe\Plan\EditObjectEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormHandlingInterface;
@@ -68,7 +69,7 @@ class EditObjectEndPoint implements EditObjectEndPointInterface
         private readonly RenderFormInterface $renderForm,
         private readonly RenderError $renderError,
         private readonly ?ObjectAccessControlInterface $objectAccessControl = null,
-        private readonly ?string $defaultErrorTemplate = null,
+        private readonly string|Stringable|null $defaultErrorTemplate = null,
         private readonly array $loadObjectWiths = [],
     ) {
         $this->fill($recipe);
@@ -116,7 +117,7 @@ class EditObjectEndPoint implements EditObjectEndPointInterface
         $this->addToWorkplan('nextStep', RenderFormInterface::class);
 
         if (null !== $this->defaultErrorTemplate) {
-            $this->addToWorkplan('errorTemplate', $this->defaultErrorTemplate);
+            $this->addToWorkplan('errorTemplate', (string) $this->defaultErrorTemplate);
         }
 
         return $recipe;

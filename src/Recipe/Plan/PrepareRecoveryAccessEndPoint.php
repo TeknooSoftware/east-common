@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Common\Recipe\Plan;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Stringable;
 use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
 use Teknoo\East\Common\Contracts\Recipe\Plan\PrepareRecoveryAccessEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormHandlingInterface;
@@ -78,7 +79,7 @@ class PrepareRecoveryAccessEndPoint implements PrepareRecoveryAccessEndPointInte
         private readonly Stop $stop,
         private readonly RenderFormInterface $renderForm,
         private readonly RenderError $renderError,
-        private readonly ?string $defaultErrorTemplate = null,
+        private readonly string|Stringable|null $defaultErrorTemplate = null,
     ) {
         $this->fill($recipe);
     }
@@ -172,7 +173,7 @@ class PrepareRecoveryAccessEndPoint implements PrepareRecoveryAccessEndPointInte
         $recipe = $recipe->onError(new Bowl($this->renderError, []));
 
         if (null !== $this->defaultErrorTemplate) {
-            $this->addToWorkplan('errorTemplate', $this->defaultErrorTemplate);
+            $this->addToWorkplan('errorTemplate', (string) $this->defaultErrorTemplate);
         }
 
         return $recipe;

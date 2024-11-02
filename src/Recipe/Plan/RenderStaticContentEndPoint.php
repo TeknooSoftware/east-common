@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Common\Recipe\Plan;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Stringable;
 use Teknoo\East\Common\Contracts\Recipe\Plan\RenderStaticContentEndPointInterface;
 use Teknoo\East\Common\Recipe\Step\Render;
 use Teknoo\East\Common\Recipe\Step\RenderError;
@@ -50,7 +51,7 @@ class RenderStaticContentEndPoint implements RenderStaticContentEndPointInterfac
         RecipeInterface $recipe,
         private readonly Render $render,
         private readonly RenderError $renderError,
-        private readonly ?string $defaultErrorTemplate = null,
+        private readonly string|Stringable|null $defaultErrorTemplate = null,
     ) {
         $this->fill($recipe);
     }
@@ -66,7 +67,7 @@ class RenderStaticContentEndPoint implements RenderStaticContentEndPointInterfac
         $recipe = $recipe->onError(new Bowl($this->renderError, []));
 
         if (null !== $this->defaultErrorTemplate) {
-            $this->addToWorkplan('errorTemplate', $this->defaultErrorTemplate);
+            $this->addToWorkplan('errorTemplate', (string) $this->defaultErrorTemplate);
         }
 
         return $recipe;

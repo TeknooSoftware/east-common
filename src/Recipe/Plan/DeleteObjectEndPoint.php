@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Common\Recipe\Plan;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Stringable;
 use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
 use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Common\Contracts\Recipe\Plan\DeleteObjectEndPointInterface;
@@ -67,7 +68,7 @@ class DeleteObjectEndPoint implements DeleteObjectEndPointInterface
         private readonly Render $render,
         private readonly RenderError $renderError,
         private readonly ?ObjectAccessControlInterface $objectAccessControl = null,
-        private readonly ?string $defaultErrorTemplate = null,
+        private readonly string|Stringable|null $defaultErrorTemplate = null,
         private readonly array $loadObjectWiths = [],
     ) {
         $this->fill($recipe);
@@ -119,7 +120,7 @@ class DeleteObjectEndPoint implements DeleteObjectEndPointInterface
         $this->addToWorkplan('nextStep', Render::class);
 
         if (null !== $this->defaultErrorTemplate) {
-            $this->addToWorkplan('errorTemplate', $this->defaultErrorTemplate);
+            $this->addToWorkplan('errorTemplate', (string) $this->defaultErrorTemplate);
         }
 
         return $recipe;

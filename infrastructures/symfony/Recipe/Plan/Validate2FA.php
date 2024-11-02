@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\East\CommonBundle\Recipe\Plan;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Stringable;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormHandlingInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormProcessingInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RedirectClientInterface;
@@ -60,7 +61,7 @@ class Validate2FA implements EditablePlanInterface
         private readonly RedirectClientInterface $redirectClient,
         private readonly RenderFormInterface $renderForm,
         private readonly RenderError $renderError,
-        private readonly ?string $defaultErrorTemplate = null,
+        private readonly string|Stringable|null $defaultErrorTemplate = null,
     ) {
         $this->fill($recipe);
     }
@@ -97,7 +98,7 @@ class Validate2FA implements EditablePlanInterface
         $this->addToWorkplan('nextStep', RenderFormInterface::class);
 
         if (null !== $this->defaultErrorTemplate) {
-            $this->addToWorkplan('errorTemplate', $this->defaultErrorTemplate);
+            $this->addToWorkplan('errorTemplate', (string) $this->defaultErrorTemplate);
         }
 
         return $recipe->onError(new Bowl($this->renderError, []));

@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Common\Recipe\Plan;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Stringable;
 use Teknoo\East\Common\Contracts\FrontAsset\MinifierInterface;
 use Teknoo\East\Common\Contracts\FrontAsset\PersisterInterface;
 use Teknoo\East\Common\Contracts\FrontAsset\SourceLoaderInterface;
@@ -69,7 +70,7 @@ class MinifierEndPoint implements MinifierEndPointInterface
         private readonly PersistAsset $persistAsset,
         private readonly ReturnFile $returnFile,
         private readonly RenderError $renderError,
-        private readonly ?string $defaultErrorTemplate = null,
+        private readonly string|Stringable|null $defaultErrorTemplate = null,
     ) {
         $this->fill($recipe);
     }
@@ -119,7 +120,7 @@ class MinifierEndPoint implements MinifierEndPointInterface
         $this->addToWorkplan('nextStep', ReturnFile::class);
 
         if (null !== $this->defaultErrorTemplate) {
-            $this->addToWorkplan('errorTemplate', $this->defaultErrorTemplate);
+            $this->addToWorkplan('errorTemplate', (string) $this->defaultErrorTemplate);
         }
 
         return $recipe;

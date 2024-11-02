@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\East\CommonBundle\Recipe\Plan;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Stringable;
 use Teknoo\East\Common\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Common\Recipe\Step\RenderError;
 use Teknoo\East\CommonBundle\Recipe\Step\DisableTOTP;
@@ -52,7 +53,7 @@ class Disable2FA implements EditablePlanInterface
         private DisableTOTP $disableTOTP,
         private readonly RedirectClientInterface $redirectClient,
         private readonly RenderError $renderError,
-        private readonly ?string $defaultErrorTemplate = null,
+        private readonly string|Stringable|null $defaultErrorTemplate = null,
     ) {
         $this->fill($recipe);
     }
@@ -67,7 +68,7 @@ class Disable2FA implements EditablePlanInterface
         $recipe = $recipe->cook($this->redirectClient, RedirectClientInterface::class, [], 20);
 
         if (null !== $this->defaultErrorTemplate) {
-            $this->addToWorkplan('errorTemplate', $this->defaultErrorTemplate);
+            $this->addToWorkplan('errorTemplate', (string) $this->defaultErrorTemplate);
         }
 
         return $recipe->onError(new Bowl($this->renderError, []));

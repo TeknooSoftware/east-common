@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\East\CommonBundle\Recipe\Plan;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Stringable;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormHandlingInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RenderFormInterface;
 use Teknoo\East\Common\Recipe\Step\CreateObject;
@@ -56,7 +57,7 @@ class Enable2FA implements EditablePlanInterface
         private readonly FormHandlingInterface $formHandling,
         private readonly RenderFormInterface $renderForm,
         private readonly RenderError $renderError,
-        private readonly ?string $defaultErrorTemplate = null,
+        private readonly string|Stringable|null $defaultErrorTemplate = null,
     ) {
         $this->fill($recipe);
     }
@@ -84,7 +85,7 @@ class Enable2FA implements EditablePlanInterface
         $recipe = $recipe->cook($this->renderForm, RenderFormInterface::class, [], 40);
 
         if (null !== $this->defaultErrorTemplate) {
-            $this->addToWorkplan('errorTemplate', $this->defaultErrorTemplate);
+            $this->addToWorkplan('errorTemplate', (string) $this->defaultErrorTemplate);
         }
 
         return $recipe->onError(new Bowl($this->renderError, []));

@@ -876,4 +876,49 @@ class ContainerTest extends TestCase
             $container->get(SourceLoaderExtension::class)
         );
     }
+
+    public function testGetDefaultErrorTemplate()
+    {
+        $container = $this->buildContainer();
+        $container->set(
+            'teknoo.east.common.plan.default_error_template',
+            'foo'
+        );
+
+        $template = $container->get('teknoo.east.common.get_default_error_template');
+        self::assertInstanceOf(
+            \Stringable::class,
+            $template,
+        );
+
+        self::assertEquals(
+            'foo',
+            (string) $template,
+        );
+    }
+
+    public function testCookbookGetDefaultErrorTemplate()
+    {
+        $container = $this->buildContainer();
+        $container->set(
+            'teknoo.east.common.cookbook.default_error_template',
+            'foo'
+        );
+
+        $this->expectUserDeprecationMessage(
+            'Parameter `teknoo.east.common.cookbook.default_error_template` is deprecated, '
+            . 'use `teknoo.east.common.plan.default_error_template` instead',
+        );
+
+        $template = $container->get('teknoo.east.common.get_default_error_template');
+        self::assertInstanceOf(
+            \Stringable::class,
+            $template,
+        );
+
+        self::assertEquals(
+            'foo',
+            (string) $template,
+        );
+    }
 }

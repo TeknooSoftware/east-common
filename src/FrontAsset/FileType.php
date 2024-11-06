@@ -36,4 +36,10 @@ enum FileType: string
 {
     case CSS = 'css';
     case JS = 'js';
+
+    case JPEG = 'jpeg';
+    case GIF = 'gif';
+    case PNG = 'png';
+    case SVG = 'svg';
+    case WEBP = 'webp';
 }

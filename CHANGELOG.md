@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [3.0.1] - 2024-11-06
+### Stable Release
+- Add some missing images types to `FileType` and `ReturnFile`
+
 ## [3.0.0] - 2024-11-01
 ### Stable Release
 - Migrate to `Teknoo Recipe` 6.

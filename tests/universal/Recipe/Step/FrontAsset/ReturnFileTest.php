@@ -70,5 +70,77 @@ class ReturnFileTest extends TestCase
                 FileType::JS,
             ),
         );
+
+        self::assertInstanceOf(
+            ReturnFile::class,
+            (new ReturnFile(
+                $this->createMock(StreamFactoryInterface::class),
+                $responseFactory,
+            ))(
+                $this->createMock(ClientInterface::class),
+                $this->createMock(FinalFile::class),
+                FileType::CSS,
+            ),
+        );
+
+        self::assertInstanceOf(
+            ReturnFile::class,
+            (new ReturnFile(
+                $this->createMock(StreamFactoryInterface::class),
+                $responseFactory,
+            ))(
+                $this->createMock(ClientInterface::class),
+                $this->createMock(FinalFile::class),
+                FileType::JPEG,
+            ),
+        );
+
+        self::assertInstanceOf(
+            ReturnFile::class,
+            (new ReturnFile(
+                $this->createMock(StreamFactoryInterface::class),
+                $responseFactory,
+            ))(
+                $this->createMock(ClientInterface::class),
+                $this->createMock(FinalFile::class),
+                FileType::GIF,
+            ),
+        );
+
+        self::assertInstanceOf(
+            ReturnFile::class,
+            (new ReturnFile(
+                $this->createMock(StreamFactoryInterface::class),
+                $responseFactory,
+            ))(
+                $this->createMock(ClientInterface::class),
+                $this->createMock(FinalFile::class),
+                FileType::PNG,
+            ),
+        );
+
+        self::assertInstanceOf(
+            ReturnFile::class,
+            (new ReturnFile(
+                $this->createMock(StreamFactoryInterface::class),
+                $responseFactory,
+            ))(
+                $this->createMock(ClientInterface::class),
+                $this->createMock(FinalFile::class),
+                FileType::SVG,
+            ),
+        );
+
+        self::assertInstanceOf(
+            ReturnFile::class,
+            (new ReturnFile(
+                $this->createMock(StreamFactoryInterface::class),
+                $responseFactory,
+            ))(
+                $this->createMock(ClientInterface::class),
+                $this->createMock(FinalFile::class),
+                FileType::WEBP,
+            ),
+        );
     }
 }

@@ -60,6 +60,11 @@ class ReturnFile
             'content-type' => match ($type) {
                 FileType::JS => 'text/javascript; charset=utf-8',
                 FileType::CSS => 'text/css; charset=utf-8',
+                FileType::GIF => 'image/gif',
+                FileType::JPEG => 'image/jpeg',
+                FileType::PNG => 'image/png',
+                FileType::SVG => 'image/svg+xml',
+                FileType::WEBP => 'image/webp',
             }
         ];
 

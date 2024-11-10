@@ -255,7 +255,6 @@ To start a project with Symfony :
 
 ```
 symfony new your_project_name new
-composer require teknoo/composer-install
 composer require teknoo/east-common-symfony    
 ```
 

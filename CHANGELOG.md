@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [3.0.2] - 2024-11-20
+### Stable Release
+- `Teknoo\East\CommonBundle\Command\CreateUserCommand` use constant to return code instead of int value.
+
 ## [3.0.1] - 2024-11-06
 ### Stable Release
 - Add some missing images types to `FileType` and `ReturnFile`

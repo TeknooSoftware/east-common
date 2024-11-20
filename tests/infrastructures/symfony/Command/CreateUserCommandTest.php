@@ -123,4 +123,30 @@ class CreateUserCommandTest extends TestCase
             $output
         );
     }
+
+    public function testExecutionWithError()
+    {
+        $input = $this->createMock(InputInterface::class);
+        $input->expects($this->any())
+            ->method('getArgument')
+            ->willReturnMap([
+                ['email', 'foo@bar'],
+                ['first_name', 'foo'],
+                ['last_name', 'bar'],
+                ['password', 'foobar'],
+            ]);
+
+        $output = $this->createMock(OutputInterface::class);
+        $output->expects($this->atLeastOnce())->method('writeln');
+
+        $this->getWriter()
+            ->expects($this->once())
+            ->method('save')
+            ->willThrowException(new \Exception('foo'));
+
+        $this->buildCommand()->run(
+            $input,
+            $output
+        );
+    }
 }

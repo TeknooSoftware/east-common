@@ -34,6 +34,7 @@ use Teknoo\East\Common\Object\StoredPassword;
 use Teknoo\East\Common\Object\User as BaseUser;
 use Teknoo\East\Common\Writer\UserWriter;
 use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
+use Throwable;
 
 /**
  * Symfony App Console to put a new administrator into the Website's database. By example, to use to create the first
@@ -65,31 +66,37 @@ class CreateUserCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $user = new BaseUser();
+        try {
+            $user = new BaseUser();
 
-        $user->setEmail((string) $input->getArgument('email'));
-        $user->setFirstName((string) $input->getArgument('first_name'));
-        $user->setLastName((string) $input->getArgument('last_name'));
-        $user->setRoles(['ROLE_USER', 'ROLE_ADMIN']);
+            $user->setEmail((string)$input->getArgument('email'));
+            $user->setFirstName((string)$input->getArgument('first_name'));
+            $user->setLastName((string)$input->getArgument('last_name'));
+            $user->setRoles(['ROLE_USER', 'ROLE_ADMIN']);
 
-        $storedPassword = new StoredPassword();
-        $storedPassword->setAlgo(PasswordAuthenticatedUser::class);
-        $storedPassword->setHashedPassword(
-            $this->passwordHasher->hashPassword(
-                new PasswordAuthenticatedUser(
-                    $user,
-                    $storedPassword
-                ),
-                (string) $input->getArgument('password')
-            )
-        );
+            $storedPassword = new StoredPassword();
+            $storedPassword->setAlgo(PasswordAuthenticatedUser::class);
+            $storedPassword->setHashedPassword(
+                $this->passwordHasher->hashPassword(
+                    new PasswordAuthenticatedUser(
+                        $user,
+                        $storedPassword
+                    ),
+                    (string)$input->getArgument('password')
+                )
+            );
 
-        $user->addAuthData($storedPassword);
+            $user->addAuthData($storedPassword);
 
-        $this->writer->save($user);
+            $this->writer->save($user);
 
-        $output->writeln('User created');
+            $output->writeln('User created');
 
-        return 0;
+            return self::SUCCESS;
+        } catch (Throwable $e) {
+            $output->writeln('Error: ' . $e->getMessage());
+
+            return self::FAILURE;
+        }
     }
 }

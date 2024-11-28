@@ -3,7 +3,7 @@
     "type": "library",
     "description": "Universal package, following the #East programming philosophy, build on Teknoo/East-Foundation (and Teknoo/Recipe), providing components (user management, object persistence, template rendering, ..) for the creation of web application or website.",
     "keywords": ["east","common","application"],
-    "homepage": "http://teknoo.software/east/common",
+    "homepage": "https://teknoo.software/east-collection/common",
     "license": "MIT",
     "authors": [
         {

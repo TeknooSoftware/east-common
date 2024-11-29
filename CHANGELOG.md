@@ -1,5 +1,11 @@
 # Teknoo Software - Common - Change Log
 
+## [3.0.3] - 2024-11-29
+### Stable Release
+- Add exception on User::getUserIdentifier when email is empty
+- Add non-empty-string on getUserIdentifier
+- Support to Symfony 7.2
+
 ## [3.0.2] - 2024-11-20
 ### Stable Release
 - `Teknoo\East\CommonBundle\Command\CreateUserCommand` use constant to return code instead of int value.

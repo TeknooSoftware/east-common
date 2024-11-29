@@ -154,9 +154,18 @@ class User implements
         return $this->email;
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getUserIdentifier(): string
     {
-        return $this->getEmail();
+        $email = $this->getEmail();
+
+        if (empty($email)) {
+            throw new DomainException("Email address can\'t be empty');");
+        }
+
+        return $email;
     }
 
     public function setEmail(string $email): User

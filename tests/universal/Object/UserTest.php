@@ -133,6 +133,12 @@ class UserTest extends TestCase
         );
     }
 
+    public function testGetUserIdentifierExceptionOnEmpty()
+    {
+        $this->expectException(\DomainException::class);
+        $this->generateObjectPopulated(['email' => ''])->getUserIdentifier();
+    }
+
     public function testSetEmail()
     {
         $object = $this->buildObject();

@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [3.0.4] - 2024-12-16
+### Stable Release
+- SaveObject step will no replace the workplan's ingredient `parameters`, but just update it.
+ 
 ## [3.0.3] - 2024-11-29
 ### Stable Release
 - Add exception on User::getUserIdentifier when email is empty

@@ -49,6 +49,8 @@ class SaveObject
 {
     /**
      * @param WriterInterface<ObjectInterface> $writer
+     * @param array<string, mixed> $parameters
+     *
      */
     public function __invoke(
         WriterInterface $writer,
@@ -58,10 +60,11 @@ class SaveObject
         string $errorMessage = 'Error during object persistence',
         int $errorCode = 500,
         ?bool $preferRealDateOnUpdate = null,
+        array $parameters = [],
     ): self {
         /** @var Promise<ObjectInterface, mixed, mixed> $savedPromise */
         $savedPromise = new Promise(
-            static function (ObjectInterface $object) use ($manager, $parametersBag): void {
+            static function (ObjectInterface $object) use ($manager, $parametersBag, &$parameters): void {
                 $workplan = [
                     'formHandleRequest' => false,
                     'objectSaved' => true,
@@ -71,10 +74,9 @@ class SaveObject
 
                 if ($object instanceof ObjectWithId) {
                     $workplan['id'] = $object->getId();
-                    $workplan['parameters'] = [
-                        'id' => $object->getId(),
-                        'objectSaved' => true,
-                    ];
+                    $parameters['id'] = $object->getId();
+                    $parameters['objectSaved'] = true;
+                    $workplan['parameters'] = $parameters;
                 }
 
                 $manager->updateWorkPlan($workplan);

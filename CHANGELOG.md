@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [3.0.5] - 2025-01-25
+### Stable Release
+- Update to support Doctrine ODM 2.10 and ODM Bundle 5.1
+ 
 ## [3.0.4] - 2024-12-16
 ### Stable Release
 - SaveObject step will no replace the workplan's ingredient `parameters`, but just update it.

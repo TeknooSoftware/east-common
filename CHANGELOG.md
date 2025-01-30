@@ -1,5 +1,10 @@
 # Teknoo Software - Common - Change Log
 
+## [3.0.6] - 2025-01-30
+### Stable Release
+- Remove `ProxyDetector`
+- If Doctrine ODM, requires `Doctrine ODM Bundle 5.2`
+
 ## [3.0.5] - 2025-01-25
 ### Stable Release
 - Update to support Doctrine ODM 2.10 and ODM Bundle 5.1

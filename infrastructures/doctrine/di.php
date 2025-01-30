@@ -29,16 +29,17 @@ use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 use Doctrine\ODM\MongoDB\Repository\GridFSRepository;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
+use Doctrine\Persistence\Proxy;
 use Exception;
 use ProxyManager\Proxy\GhostObjectInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Symfony\Component\VarExporter\LazyObjectInterface;
 use Teknoo\East\Common\Contracts\DBSource\BatchManipulationManagerInterface;
 use Teknoo\East\Common\Contracts\DBSource\ManagerInterface;
 use Teknoo\East\Common\Contracts\DBSource\Repository\MediaRepositoryInterface;
 use Teknoo\East\Common\Contracts\DBSource\Repository\UserRepositoryInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\GetStreamFromMediaInterface;
-use Teknoo\East\Common\Contracts\Service\ProxyDetectorInterface;
 use Teknoo\East\Common\Doctrine\DBSource\Common\Manager;
 use Teknoo\East\Common\Doctrine\DBSource\Common\MediaRepository;
 use Teknoo\East\Common\Doctrine\DBSource\Common\UserRepository;
@@ -99,31 +100,6 @@ return [
             "Error, repository of class %s are not currently managed",
             $repository::class
         ));
-    },
-
-    ProxyDetectorInterface::class => static function (): ProxyDetectorInterface {
-        return new class implements ProxyDetectorInterface {
-            public function checkIfInstanceBehindProxy(
-                object $object,
-                PromiseInterface $promise
-            ): ProxyDetectorInterface {
-                if (!$object instanceof GhostObjectInterface) {
-                    $promise->fail(new Exception('Object is not behind a proxy', 500));
-
-                    return $this;
-                }
-
-                if ($object->isProxyInitialized()) {
-                    $promise->fail(new Exception('Proxy is already initialized', 500));
-
-                    return $this;
-                }
-
-                $promise->success($object);
-
-                return $this;
-            }
-        };
     },
 
     MediaWriter::class => static function (ContainerInterface $container): MediaWriter {

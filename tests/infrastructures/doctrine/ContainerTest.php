@@ -39,7 +39,6 @@ use Teknoo\East\Common\Contracts\DBSource\ManagerInterface;
 use Teknoo\East\Common\Contracts\DBSource\Repository\MediaRepositoryInterface;
 use Teknoo\East\Common\Contracts\DBSource\Repository\UserRepositoryInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\GetStreamFromMediaInterface;
-use Teknoo\East\Common\Contracts\Service\ProxyDetectorInterface;
 use Teknoo\East\Common\Doctrine\DBSource\ODM\BatchManipulationManager;
 use Teknoo\East\Common\Doctrine\Object\Media;
 use Teknoo\East\Common\Doctrine\Recipe\Step\ODM\GetStreamFromMedia;
@@ -136,79 +135,6 @@ class ContainerTest extends TestCase
     {
         $this->expectException(\RuntimeException::class);
         $this->generateTestForRepositoryWithUnsupportedRepository(User::class, UserRepositoryInterface::class);
-    }
-
-    public function testProxyDetectorInterface()
-    {
-        $container = $this->buildContainer();
-        $proxyDetector = $container->get(ProxyDetectorInterface::class);
-
-        $p1 = $this->createMock(PromiseInterface::class);
-        $p1->expects($this->never())->method('success');
-        $p1->expects($this->once())->method('fail');
-
-        self::assertInstanceOf(
-            ProxyDetectorInterface::class,
-            $proxyDetector->checkIfInstanceBehindProxy(new \stdClass(), $p1)
-        );
-
-        $p2 = $this->createMock(PromiseInterface::class);
-        $p2->expects($this->never())->method('success');
-        $p2->expects($this->once())->method('fail');
-
-        self::assertInstanceOf(
-            ProxyDetectorInterface::class,
-            $proxyDetector->checkIfInstanceBehindProxy(new class implements GhostObjectInterface {
-                public function setProxyInitializer(?\Closure $initializer = null): never
-                {
-                    throw new \RuntimeException('Must not be called');
-                }
-
-                public function getProxyInitializer(): never
-                {
-                    throw new \RuntimeException('Must not be called');
-                }
-
-                public function initializeProxy(): never
-                {
-                    throw new \RuntimeException('Must not be called');
-                }
-
-                public function isProxyInitialized(): bool
-                {
-                    return true;
-                }
-            }, $p2)
-        );
-
-        $p3 = $this->createMock(PromiseInterface::class);
-        $p3->expects($this->once())->method('success');
-        $p3->expects($this->never())->method('fail');
-
-        self::assertInstanceOf(
-            ProxyDetectorInterface::class,
-            $proxyDetector->checkIfInstanceBehindProxy(new class implements GhostObjectInterface {
-                public function setProxyInitializer(?\Closure $initializer = null): never
-                {
-                    throw new \RuntimeException('Must not be called');
-                }
-
-                public function getProxyInitializer(): never
-                {
-                    throw new \RuntimeException('Must not be called');
-                }
-
-                public function initializeProxy(): never
-                {
-                    throw new \RuntimeException('Must not be called');
-                }
-
-                public function isProxyInitialized(): bool
-                {
-                    return false;
-                }
-            }, $p3)
-        );
     }
 
     public function testMediaRepositoryWithObjectRepository()

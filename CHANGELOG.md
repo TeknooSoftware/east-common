@@ -8,6 +8,7 @@
 - Drop support of PHP 8.2
   - The library stay usable with PHP 8.2, without any waranties and tests
   - In the next major release, Support of PHP 8.2 will be dropped
+- Fix deprecation about PHP 8.4 in tests
 
 ## [3.0.6] - 2025-01-30
 ### Stable Release

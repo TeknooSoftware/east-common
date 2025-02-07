@@ -369,15 +369,15 @@ class FeatureContext implements Context
      */
     public function withJsFilesAlreadyMinifiedFileIntoAnUniqueFile()
     {
-        $filePrev = realpath(__DIR__ . '/../support/build/js/prev.min.js');
-        $fileMain = realpath(__DIR__ . '/../support/build/js/main.min.js');
+        $filePrev = __DIR__ . '/../support/build/js/prev.min.js';
+        $fileMain = __DIR__ . '/../support/build/js/main.min.js';
         if (false !== $fileMain && file_exists($fileMain)) {
             unlink($fileMain);
         }
 
         copy($filePrev, $fileMain);
 
-        $fileMain = realpath(__DIR__ . '/../support/build/js/main.2.0.0.min.js');
+        $fileMain = __DIR__ . '/../support/build/js/main.2.0.0.min.js';
         if (false !== $fileMain && file_exists($fileMain)) {
             unlink($fileMain);
         }

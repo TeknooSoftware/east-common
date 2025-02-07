@@ -36,7 +36,6 @@ use Teknoo\East\Common\Recipe\Step\ExtractOrder;
  * @license     https://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-#[CoversClass(Direction::class)]
 #[CoversClass(ExtractOrder::class)]
 class ExtractOrderTest extends TestCase
 {

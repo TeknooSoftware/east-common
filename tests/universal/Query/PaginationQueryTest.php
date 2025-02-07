@@ -39,7 +39,6 @@ use Teknoo\Recipe\Promise\PromiseInterface;
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(PaginationQuery::class)]
-#[CoversClass(Direction::class)]
 class PaginationQueryTest extends TestCase
 {
     use QueryCollectionTestTrait;

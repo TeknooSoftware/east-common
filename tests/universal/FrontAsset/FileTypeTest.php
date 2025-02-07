@@ -33,7 +33,6 @@ use Teknoo\East\Common\FrontAsset\FileType;
  * @license     https://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-#[CoversClass(FileType::class)]
 class FileTypeTest extends TestCase
 {
     public function testEnums()

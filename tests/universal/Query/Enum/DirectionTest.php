@@ -33,7 +33,6 @@ use Teknoo\East\Common\Query\Enum\Direction;
  * @license     https://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-#[CoversClass(Direction::class)]
 class DirectionTest extends TestCase
 {
     public function testEnums()

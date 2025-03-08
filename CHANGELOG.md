@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [3.0.8] - 2025-03-08
+### Stable Release
+- Improve UserType options checks
+
 ## [3.0.7] - 2025-02-07
 ### Stable Release
 - Update dev lib requirements

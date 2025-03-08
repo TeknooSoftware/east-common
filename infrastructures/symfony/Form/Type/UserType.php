@@ -94,6 +94,8 @@ class UserType extends ApiUserType implements FormApiAwareInterface
             'api' => null,
         ]);
 
+        $resolver->setAllowedTypes('api', ['null', 'string']);
+
         return $this;
     }
 }

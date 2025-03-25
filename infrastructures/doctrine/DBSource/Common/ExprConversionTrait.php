@@ -27,12 +27,16 @@ namespace Teknoo\East\Common\Doctrine\DBSource\Common;
 
 use Teknoo\East\Common\Contracts\Query\Expr\ExprInterface;
 use Teknoo\East\Common\Doctrine\DBSource\Exception\NonManagedClassException;
+use Teknoo\East\Common\Query\Expr\Greater;
 use Teknoo\East\Common\Query\Expr\In;
 use Teknoo\East\Common\Query\Expr\InclusiveOr;
+use Teknoo\East\Common\Query\Expr\Lower;
 use Teknoo\East\Common\Query\Expr\NotEqual;
 use Teknoo\East\Common\Query\Expr\NotIn;
 use Teknoo\East\Common\Query\Expr\ObjectReference;
 use Teknoo\East\Common\Query\Expr\Regex;
+use Teknoo\East\Common\Query\Expr\StrictlyGreater;
+use Teknoo\East\Common\Query\Expr\StrictlyLower;
 
 use function is_array;
 
@@ -57,6 +61,10 @@ trait ExprConversionTrait
         In::class => [self::class, 'processInExpr'],
         InclusiveOr::class => [self::class, 'processInclusiveOrExpr'],
         NotEqual::class => [self::class, 'processNotEqualExpr'],
+        Greater::class => [self::class, 'processGreaterExpr'],
+        Lower::class => [self::class, 'processLowerExpr'],
+        StrictlyGreater::class => [self::class, 'processStrictlyGreaterExpr'],
+        StrictlyLower::class => [self::class, 'processStrictlyLowerExpr'],
         NotIn::class => [self::class, 'processNotInExpr'],
         ObjectReference::class => [self::class, 'processObjectReferenceExpr'],
         Regex::class => [self::class, 'processRegexExpr'],
@@ -74,6 +82,42 @@ trait ExprConversionTrait
     private static function processNotEqualExpr(array &$final, string $key, ExprInterface $expr): void
     {
         $final['notEqual'] = ($final['notEqual'] ?? []) + [$key => $expr->getValue()];
+    }
+
+    /**
+     * @param array<string, array<string, mixed>> $final
+     * @param Greater $expr
+     */
+    private static function processGreaterExpr(array &$final, string $key, ExprInterface $expr): void
+    {
+        $final[$key]['gte'] = $expr->getValue();
+    }
+
+    /**
+     * @param array<string, array<string, mixed>> $final
+     * @param Lower $expr
+     */
+    private static function processLowerExpr(array &$final, string $key, ExprInterface $expr): void
+    {
+        $final[$key]['lte'] = $expr->getValue();
+    }
+
+    /**
+     * @param array<string, array<string, mixed>> $final
+     * @param StrictlyGreater $expr
+     */
+    private static function processStrictlyGreaterExpr(array &$final, string $key, ExprInterface $expr): void
+    {
+        $final[$key]['gt'] = $expr->getValue();
+    }
+
+    /**
+     * @param array<string, array<string, mixed>> $final
+     * @param StrictlyLower $expr
+     */
+    private static function processStrictlyLowerExpr(array &$final, string $key, ExprInterface $expr): void
+    {
+        $final[$key]['lt'] = $expr->getValue();
     }
 
     /**

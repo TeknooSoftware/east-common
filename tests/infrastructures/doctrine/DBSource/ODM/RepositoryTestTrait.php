@@ -30,14 +30,17 @@ use Doctrine\ODM\MongoDB\Query\Query;
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 use Teknoo\East\Common\Contracts\DBSource\RepositoryInterface;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
-use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Common\Query\Enum\Direction;
+use Teknoo\East\Common\Query\Expr\Greater;
 use Teknoo\East\Common\Query\Expr\In;
+use Teknoo\East\Common\Query\Expr\Lower;
 use Teknoo\East\Common\Query\Expr\NotIn;
 use Teknoo\East\Common\Query\Expr\InclusiveOr;
 use Teknoo\East\Common\Query\Expr\NotEqual;
 use Teknoo\East\Common\Query\Expr\ObjectReference;
 use Teknoo\East\Common\Query\Expr\Regex;
+use Teknoo\East\Common\Query\Expr\StrictlyGreater;
+use Teknoo\East\Common\Query\Expr\StrictlyLower;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
@@ -483,6 +486,10 @@ trait RepositoryTestTrait
                 'bar' => ['$in' => ['foo']],
                 'bar2' => ['$nin' => ['foo']],
                 '$ne' => ['barNot' => ['foo']],
+                'barGte' => ['$gte' => 123],
+                'barLte' => ['$lte' => 456],
+                'barGt' => ['$gt' => 789],
+                'barLt' => ['$lt' => 654],
                 'barRegex' => new \MongoDB\BSON\Regex('foo', 'i'),
                 '$or' => [
                     ['foo' => 'bar'],
@@ -509,6 +516,10 @@ trait RepositoryTestTrait
                     'bar' => new In(['foo']),
                     'bar2' => new NotIn(['foo']),
                     'barNot' => new NotEqual(['foo']),
+                    'barGte' => new Greater(123),
+                    'barLte' => new Lower(456),
+                    'barGt' => new StrictlyGreater(789),
+                    'barLt' => new StrictlyLower(654),
                     'barRegex' => new Regex('foo', 'i'),
                     new InclusiveOr(
                         ['foo' => 'bar'],
@@ -550,6 +561,10 @@ trait RepositoryTestTrait
                 'bar' => ['$in' => ['foo']],
                 'bar2' => ['$nin' => ['foo']],
                 '$ne' => ['barNot' => ['foo']],
+                'barGte' => ['$gte' => 123],
+                'barLte' => ['$lte' => 456],
+                'barGt' => ['$gt' => 789],
+                'barLt' => ['$lt' => 654],
                 '$or' => [
                     ['foo' => 'bar'],
                     ['bar' => 'foo']
@@ -575,6 +590,10 @@ trait RepositoryTestTrait
                     'bar' => new In(['foo']),
                     'bar2' => new NotIn(['foo']),
                     'barNot' => new NotEqual(['foo']),
+                    'barGte' => new Greater(123),
+                    'barLte' => new Lower(456),
+                    'barGt' => new StrictlyGreater(789),
+                    'barLt' => new StrictlyLower(654),
                     new InclusiveOr(
                         ['foo' => 'bar'],
                         ['bar' => 'foo']

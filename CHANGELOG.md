@@ -1,5 +1,14 @@
 # Teknoo Software - Common - Change Log
 
+## [3.1.0] - 2025-03-25
+### Stable Release
+- Add queries expression to compare values : 
+  - `Greater` (greater or equal) 
+  - `Lower` (lower or equal) 
+  - `StrictlyGreater` 
+  - `StrictlyLower`
+- Improve queries executions to allow multiple criteria per fields
+
 ## [3.0.8] - 2025-03-08
 ### Stable Release
 - Improve UserType options checks

@@ -32,12 +32,16 @@ use Teknoo\East\Common\Contracts\DBSource\RepositoryInterface;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
 use Teknoo\East\Common\Contracts\Query\Expr\ExprInterface;
 use Teknoo\East\Common\Query\Enum\Direction;
+use Teknoo\East\Common\Query\Expr\Greater;
 use Teknoo\East\Common\Query\Expr\In;
 use Teknoo\East\Common\Query\Expr\InclusiveOr;
+use Teknoo\East\Common\Query\Expr\Lower;
 use Teknoo\East\Common\Query\Expr\NotEqual;
 use Teknoo\East\Common\Query\Expr\NotIn;
 use Teknoo\East\Common\Query\Expr\ObjectReference;
 use Teknoo\East\Common\Query\Expr\Regex;
+use Teknoo\East\Common\Query\Expr\StrictlyGreater;
+use Teknoo\East\Common\Query\Expr\StrictlyLower;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Throwable;
 
@@ -406,7 +410,7 @@ trait RepositoryTestTrait
                 'foo' => 'bar',
                 'bar' => ['foo'],
                 'notIn' => ['bar2' => ['foo']],
-                'notEqual' => ['bwrNot' =>'foo'],
+                'notEqual' => ['barNot' =>'foo'],
                 'bwrRegex' => '/foo/i',
                 'or' => [
                     ['foo' => 'bar'],
@@ -423,7 +427,7 @@ trait RepositoryTestTrait
                     'foo' => 'bar',
                     'bar' => new In(['foo']),
                     'bar2' => new NotIn(['foo']),
-                    'bwrNot' => new NotEqual('foo'),
+                    'barNot' => new NotEqual('foo'),
                     'bwrRegex' => new Regex('foo'),
                     new InclusiveOr(
                         ['foo' => 'bar'],
@@ -450,7 +454,11 @@ trait RepositoryTestTrait
                 'foo' => 'bar',
                 'bar' => ['foo'],
                 'notIn' => ['bar2' => ['foo']],
-                'notEqual' => ['bwrNot' =>'foo'],
+                'notEqual' => ['barNot' =>'foo'],
+                'barGte' => ['gte' => 123],
+                'barLte' => ['lte' => 456],
+                'barGt' => ['gt' => 789,],
+                'barLt' => ['lt' => 654],
                 'or' => [
                     ['foo' => 'bar'],
                     ['bar' => 'foo']
@@ -478,7 +486,11 @@ trait RepositoryTestTrait
                         'foo' => 'bar',
                         'bar' => new In(['foo']),
                         'bar2' => new NotIn(['foo']),
-                        'bwrNot' => new NotEqual('foo'),
+                        'barNot' => new NotEqual('foo'),
+                        'barGte' => new Greater(123),
+                        'barLte' => new Lower(456),
+                        'barGt' => new StrictlyGreater(789),
+                        'barLt' => new StrictlyLower(654),
                         new InclusiveOr(
                             ['foo' => 'bar'],
                             ['bar' => 'foo']

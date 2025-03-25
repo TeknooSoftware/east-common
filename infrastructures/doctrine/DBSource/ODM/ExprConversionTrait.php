@@ -28,12 +28,16 @@ namespace Teknoo\East\Common\Doctrine\DBSource\ODM;
 use MongoDB\BSON\Regex as MongoRegex;
 use Teknoo\East\Common\Contracts\Query\Expr\ExprInterface;
 use Teknoo\East\Common\Doctrine\DBSource\Common\ExprConversionTrait as CommonTrait;
+use Teknoo\East\Common\Query\Expr\Greater;
 use Teknoo\East\Common\Query\Expr\In;
 use Teknoo\East\Common\Query\Expr\InclusiveOr;
+use Teknoo\East\Common\Query\Expr\Lower;
 use Teknoo\East\Common\Query\Expr\NotEqual;
 use Teknoo\East\Common\Query\Expr\NotIn;
 use Teknoo\East\Common\Query\Expr\ObjectReference;
 use Teknoo\East\Common\Query\Expr\Regex;
+use Teknoo\East\Common\Query\Expr\StrictlyGreater;
+use Teknoo\East\Common\Query\Expr\StrictlyLower;
 
 use function is_array;
 
@@ -66,6 +70,42 @@ trait ExprConversionTrait
     }
 
     /**
+     * @param array<string, array<string, mixed>> $final
+     * @param Greater $expr
+     */
+    private static function processGreaterExpr(array &$final, string $key, ExprInterface $expr): void
+    {
+        $final[$key]['$gte'] = $expr->getValue();
+    }
+
+    /**
+     * @param array<string, array<string, mixed>> $final
+     * @param Lower $expr
+     */
+    private static function processLowerExpr(array &$final, string $key, ExprInterface $expr): void
+    {
+        $final[$key]['$lte'] = $expr->getValue();
+    }
+
+    /**
+     * @param array<string, array<string, mixed>> $final
+     * @param StrictlyGreater $expr
+     */
+    private static function processStrictlyGreaterExpr(array &$final, string $key, ExprInterface $expr): void
+    {
+        $final[$key]['$gt'] = $expr->getValue();
+    }
+
+    /**
+     * @param array<string, array<string, mixed>> $final
+     * @param StrictlyLower $expr
+     */
+    private static function processStrictlyLowerExpr(array &$final, string $key, ExprInterface $expr): void
+    {
+        $final[$key]['$lt'] = $expr->getValue();
+    }
+
+    /**
      * @param array<string, mixed> $final
      * @param Regex $expr$final[$key] = ['$nin' => $expr->getValues()];
      */
@@ -78,21 +118,21 @@ trait ExprConversionTrait
     }
 
     /**
-     * @param array<string, mixed> $final
+     * @param array<string, array<string, mixed>> $final
      * @param In $expr
      */
     private static function processInExpr(array &$final, string $key, ExprInterface $expr): void
     {
-        $final[$key] = ['$in' => $expr->getValues()];
+        $final[$key]['$in'] = $expr->getValues();
     }
 
     /**
-     * @param array<string, mixed> $final
+     * @param array<string, array<string, mixed>> $final
      * @param NotIn $expr
      */
     private static function processNotInExpr(array &$final, string $key, ExprInterface $expr): void
     {
-        $final[$key] = ['$nin' => $expr->getValues()];
+        $final[$key]['$nin'] = $expr->getValues();
     }
 
     /**

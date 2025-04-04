@@ -394,6 +394,38 @@ trait RepositoryTestTrait
         );
     }
 
+    public function testDistinctBy()
+    {
+        $this->objectRepository = $this->createMock(DocumentRepository::class);
+
+        $values = ['foo', 'bar'];
+        $promise = $this->createMock(PromiseInterface::class);
+        $promise->expects($this->once())->method('success')->with($values);
+        $promise->expects($this->never())->method('fail');
+
+        $this->objectRepository
+            ->expects($this->never())
+            ->method('findBy');
+
+        $query = $this->createMock(Query::class);
+        $query->expects($this->once())->method('execute')->willReturn($values);
+
+        $queryBuilderMock = $this->createMock(Builder::class);
+        $queryBuilderMock->expects($this->any())
+            ->method('getQuery')
+            ->willReturn($query);
+
+        $this->objectRepository
+            ->expects($this->once())
+            ->method('createQueryBuilder')
+            ->willReturn($queryBuilderMock);
+
+        self::assertInstanceOf(
+            RepositoryInterface::class,
+            $this->buildRepository()->distinctBy('foo', ['foo' => 'bar', 'bar' => new In(['foo'])], $promise, 1, 2)
+        );
+    }
+
     public function testFindOneByBadCriteria()
     {
         $this->expectException(\TypeError::class);

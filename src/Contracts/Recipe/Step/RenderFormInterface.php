@@ -27,7 +27,9 @@ namespace Teknoo\East\Common\Contracts\Recipe\Step;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Teknoo\East\Common\Contracts\Object\ObjectInterface;
+use Teknoo\East\Common\View\ParametersBag;
 use Teknoo\East\Foundation\Client\ClientInterface;
+use Teknoo\Recipe\Ingredient\Attributes\Transform;
 
 /**
  * Interface to define step to use into a HTTP EndPoint Recipe to render thanks to a template engine the form instance
@@ -40,12 +42,20 @@ use Teknoo\East\Foundation\Client\ClientInterface;
  */
 interface RenderFormInterface
 {
+    /**
+     * @param array<string, mixed> $viewParameters
+     */
     public function __invoke(
         ServerRequestInterface $request,
         ClientInterface $client,
         mixed $form,
         string $template,
         ObjectInterface $object,
-        bool $isTranslatable = false
+        bool $isTranslatable = false,
+        #[Transform(ParametersBag::class)] array $viewParameters = [],
+        bool|string|null $objectSaved = null,
+        ?string $api = null,
+        #[Transform(transformer: 'boolval')]
+        ?bool $cleanHtml = null,
     ): RenderFormInterface;
 }

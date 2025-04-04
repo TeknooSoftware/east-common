@@ -87,6 +87,21 @@ interface RepositoryInterface
     ): RepositoryInterface;
 
     /**
+     * To get distinct values about a document's (sub)field according to criteria and optional offset
+     *
+     * @param array<string, mixed> $criteria
+     * @param PromiseInterface<iterable<mixed>, mixed> $promise
+     * @return RepositoryInterface<TSuccessArgType>
+     */
+    public function distinctBy(
+        string $field,
+        array $criteria,
+        PromiseInterface $promise,
+        ?int $limit = null,
+        ?int $offset = null,
+    ): RepositoryInterface;
+
+    /**
      * Count objects with criteria compatible
      *
      * @param array<string, mixed> $criteria The criteria.

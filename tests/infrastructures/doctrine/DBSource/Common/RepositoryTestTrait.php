@@ -250,6 +250,18 @@ trait RepositoryTestTrait
         );
     }
 
+    public function testDistinctByNotImplemented()
+    {
+        $promise = $this->createMock(PromiseInterface::class);
+        $promise->expects($this->never())->method('success');
+        $promise->expects($this->once())->method('fail');
+
+        self::assertInstanceOf(
+            RepositoryInterface::class,
+            $this->buildRepository()->distinctBy('foo', ['foo' => 'bar'], $promise)
+        );
+    }
+
     public function testFindByBadCriteria()
     {
         $this->expectException(\TypeError::class);

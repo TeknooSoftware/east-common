@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\CommonBundle\Recipe\Step;
 
+use DateTimeImmutable;
+use DateTimeInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -292,12 +294,17 @@ class RenderFormTest extends TestCase
                 return 123;
             }
 
-            public function getPublishedAt(): ?\DateTimeInterface
+            public function updatedAt(): DateTimeInterface
             {
-                return new \DateTimeImmutable('2021-01-21');
+                return new DateTimeImmutable('2021-01-21');
             }
 
-            public function setPublishedAt(\DateTimeInterface $dateTime): PublishableInterface
+            public function getPublishedAt(): ?DateTimeInterface
+            {
+                return new DateTimeImmutable('2021-01-21');
+            }
+
+            public function setPublishedAt(DateTimeInterface $dateTime): PublishableInterface
             {
                 return $this;
             }

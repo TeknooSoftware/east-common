@@ -138,6 +138,23 @@ trait RepositoryTrait
     /**
      * @param array<int|string, mixed> $criteria
      */
+    public function distinctBy(
+        string $field,
+        array $criteria,
+        PromiseInterface $promise,
+        ?int $limit = null,
+        ?int $offset = null,
+    ): RepositoryInterface {
+        $promise->fail(
+            new RuntimeException('Error, this method is not available with this repository', 500)
+        );
+
+        return $this;
+    }
+
+    /**
+     * @param array<int|string, mixed> $criteria
+     */
     public function count(array $criteria, PromiseInterface $promise): RepositoryInterface
     {
         $promise->fail(

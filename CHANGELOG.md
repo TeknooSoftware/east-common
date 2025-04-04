@@ -1,5 +1,12 @@
 # Teknoo Software - Common - Change Log
 
+## [3.2.0] - 2025-04-04
+### Stable Release
+- Add `distinctBy` method to repository to fetch distinct field value or subfield value for a set of 
+criteria.
+- This method, like `count` is not available on CommonRepository.
+- `RenderForm` step add `Last-Modified` header for compliant object.
+
 ## [3.1.0] - 2025-03-25
 ### Stable Release
 - Add queries expression to compare values : 

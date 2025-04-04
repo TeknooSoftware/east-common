@@ -152,6 +152,39 @@ trait RepositoryTrait
     }
 
     /**
+     * @param array<string, mixed> $criteria
+     */
+    public function distinctBy(
+        string $field,
+        array $criteria,
+        PromiseInterface $promise,
+        ?int $limit = null,
+        ?int $offset = null,
+    ): RepositoryInterface {
+        $queryBuilder = $this->repository->createQueryBuilder();
+
+        $queryBuilder->equals(self::convert($criteria));
+
+        $queryBuilder->distinct($field);
+
+        if (!empty($limit)) {
+            $queryBuilder->limit($limit);
+        }
+
+        if (!empty($offset)) {
+            $queryBuilder->skip($offset);
+        }
+
+        $query = $queryBuilder->getQuery();
+
+        /** @var iterable<mixed> $result */
+        $result = $query->execute();
+        $promise->success($result);
+
+        return $this;
+    }
+
+    /**
      * @param array<int|string, mixed> $criteria
      */
     public function count(array $criteria, PromiseInterface $promise): RepositoryInterface

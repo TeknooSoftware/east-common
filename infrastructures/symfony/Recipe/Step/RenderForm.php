@@ -106,11 +106,20 @@ class RenderForm implements RenderFormInterface
             $status = 400;
         }
 
+        $headers = [];
+        if (
+            method_exists($object, 'updatedAt')
+            && null !== ($updatedAt = $object->updatedAt())
+        ) {
+            $headers['Last-Modified'] = $updatedAt->format('D, d M Y H:i:s \G\M\T');
+        }
+
         $this->render(
             client: $client,
             view: $template,
             parameters: $parameters + $viewParameters,
             status: $status,
+            headers: $headers,
             api: $api,
             cleanHtml: $cleanHtml ?? $this->defaultCleanHtml,
         );

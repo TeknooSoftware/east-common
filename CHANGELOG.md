@@ -1,5 +1,10 @@
 # Teknoo Software - Common - Change Log
 
+## [3.3.0] - 2025-04-08
+### Stable Release
+- Add `FormManagerAwareInterface` to inject manager to Form in FormOptions
+- Fix Typo in `FormApiAwareInterface`
+
 ## [3.2.0] - 2025-04-04
 ### Stable Release
 - Add `distinctBy` method to repository to fetch distinct field value or subfield value for a set of 

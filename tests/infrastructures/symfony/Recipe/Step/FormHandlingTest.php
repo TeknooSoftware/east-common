@@ -30,11 +30,15 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
 use Teknoo\East\Common\Contracts\Object\PublishableInterface;
+use Teknoo\East\CommonBundle\Contracts\Form\FormManagerAwareInterface;
 use Teknoo\East\CommonBundle\Form\Type\UserType;
 use Teknoo\East\CommonBundle\Recipe\Step\FormHandling;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
@@ -99,6 +103,48 @@ class FormHandlingTest extends TestCase
 
         $manager = $this->createMock(ManagerInterface::class);
         $formClass = 'Foo/Bar';
+        $formOptions = [];
+        $object = $this->createMock(IdentifiedObjectInterface::class);
+
+        $this->getDatesService()
+            ->expects($this->never())
+            ->method('passMeTheDate');
+
+        $form = $this->createMock(FormInterface::class);
+        $form->expects($this->once())->method('handleRequest');
+        $form->expects($this->never())->method('submit');
+
+        $this->getFormFactory()
+            ->expects($this->any())
+            ->method('create')
+            ->willReturn($form);
+
+        self::assertInstanceOf(
+            FormHandling::class,
+            $this->buildStep()(
+                $request,
+                $manager,
+                $formClass,
+                $object,
+                $formOptions,
+            )
+        );
+    }
+
+    public function testInvokeWithManagerAware()
+    {
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->expects($this->any())->method('getAttribute')->willReturnCallback(
+            fn (string $name) => match ($name) {
+                'request' => $this->createMock(Request::class),
+                default => false,
+            }
+        );
+
+        $request->expects($this->any())->method('getParsedBody')->willReturn([]);
+
+        $manager = $this->createMock(ManagerInterface::class);
+        $formClass = (new class extends AbstractType implements FormManagerAwareInterface {})::class;
         $formOptions = [];
         $object = $this->createMock(IdentifiedObjectInterface::class);
 

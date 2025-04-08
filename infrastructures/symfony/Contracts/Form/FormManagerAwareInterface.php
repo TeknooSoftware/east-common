@@ -26,15 +26,15 @@ declare(strict_types=1);
 namespace Teknoo\East\CommonBundle\Contracts\Form;
 
 /**
- * Contact defining Symfony Form able to read the "api" options from the workplan, to avoid to pass it in the
+ * Contact defining Symfony Form able to read the "manager" options from the workplan, to avoid to pass it in the
  * $formOptions directly in the route configuration.
- * A form with this contract MUST accept the option `api`, (must add in `requires` or `defaults`)
+ * A form with this contract MUST accept the option `manager`, (must add in `requires` or `defaults`)
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     https://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-interface FormApiAwareInterface
+interface FormManagerAwareInterface
 {
 }

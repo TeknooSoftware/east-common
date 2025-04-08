@@ -32,6 +32,7 @@ use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Common\Contracts\Object\PublishableInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormHandlingInterface;
 use Teknoo\East\CommonBundle\Contracts\Form\FormApiAwareInterface;
+use Teknoo\East\CommonBundle\Contracts\Form\FormManagerAwareInterface;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Foundation\Time\DatesService;
 
@@ -108,6 +109,10 @@ class FormHandling implements FormHandlingInterface
             if (is_a($formClass, FormApiAwareInterface::class, true)) {
                 $formOptions['api'] = $api;
             }
+        }
+
+        if (is_a($formClass, FormManagerAwareInterface::class, true)) {
+            $formOptions['manager'] = $manager;
         }
 
         $form = $this->createForm($formClass, $object, $formOptions);

@@ -1,5 +1,11 @@
 # Teknoo Software - Common - Change Log
 
+## [3.4.0] - 2025-04-09
+### Stable Release
+- Drop Support of PHP 8.2
+- Drop Support of Doctrine Persistence 3
+- Fix bug in compliance with Doctrine Persistence 4
+
 ## [3.3.0] - 2025-04-08
 ### Stable Release
 - Add `FormManagerAwareInterface` to inject manager to Form in FormOptions

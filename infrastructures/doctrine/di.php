@@ -29,12 +29,8 @@ use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 use Doctrine\ODM\MongoDB\Repository\GridFSRepository;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
-use Doctrine\Persistence\Proxy;
-use Exception;
-use ProxyManager\Proxy\GhostObjectInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\StreamFactoryInterface;
-use Symfony\Component\VarExporter\LazyObjectInterface;
 use Teknoo\East\Common\Contracts\DBSource\BatchManipulationManagerInterface;
 use Teknoo\East\Common\Contracts\DBSource\ManagerInterface;
 use Teknoo\East\Common\Contracts\DBSource\Repository\MediaRepositoryInterface;
@@ -53,7 +49,6 @@ use Teknoo\East\Common\Doctrine\Recipe\Step\ODM\GetStreamFromMedia;
 use Teknoo\East\Common\Doctrine\Writer\ODM\MediaWriter;
 use Teknoo\East\Common\Object\User;
 use Teknoo\East\Common\Writer\MediaWriter as OriginalWriter;
-use Teknoo\Recipe\Promise\PromiseInterface;
 
 use function DI\create;
 use function DI\get;
@@ -76,14 +71,7 @@ return [
             return new OdmUserRepository($repository);
         }
 
-        if ($repository instanceof ObjectRepository) {
-            return new UserRepository($repository);
-        }
-
-        throw new NonManagedRepositoryException(sprintf(
-            "Error, repository of class %s are not currently managed",
-            $repository::class
-        ));
+        return new UserRepository($repository);
     },
 
     MediaRepositoryInterface::class => static function (ContainerInterface $container): MediaRepositoryInterface {
@@ -92,14 +80,7 @@ return [
             return new OdmMediaRepository($repository);
         }
 
-        if ($repository instanceof ObjectRepository) {
-            return new MediaRepository($repository);
-        }
-
-        throw new NotSupportedException(sprintf(
-            "Error, repository of class %s are not currently managed",
-            $repository::class
-        ));
+        return new MediaRepository($repository);
     },
 
     MediaWriter::class => static function (ContainerInterface $container): MediaWriter {

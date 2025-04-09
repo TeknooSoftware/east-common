@@ -30,6 +30,8 @@ use DI\Container;
 use DI\ContainerBuilder;
 use DateTime;
 use DateTimeImmutable;
+use Doctrine\Persistence\Mapping\ClassMetadata;
+use Doctrine\Persistence\Mapping\ClassMetadataFactory;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
 use Exception;
@@ -405,14 +407,14 @@ class FeatureContext implements Context
                 $this->featureContext = $featureContext;
             }
 
-            public function find($className, $id)
+            public function find($className, $id): ?object
             {
             }
 
             /**
              * @param IdentifiedObjectInterface $object
              */
-            public function persist($object)
+            public function persist($object): void
             {
                 if ($id = $object->getId()) {
                     $this->featureContext->updatedObjects[$id] = $object;
@@ -424,49 +426,50 @@ class FeatureContext implements Context
                 }
             }
 
-            public function remove($object)
+            public function remove($object): void
             {
             }
 
-            public function merge($object)
+            public function clear($objectName = null): void
             {
             }
 
-            public function clear($objectName = null)
+            public function detach($object): void
             {
             }
 
-            public function detach($object)
+            public function refresh($object): void
             {
             }
 
-            public function refresh($object)
+            public function flush(): void
             {
             }
 
-            public function flush()
-            {
-            }
-
-            public function getRepository($className)
+            public function getRepository($className): ObjectRepository
             {
                 return $this->featureContext->getObjectRepository();
             }
 
-            public function getClassMetadata($className)
+            public function getClassMetadata($className): ClassMetadata
             {
             }
 
-            public function getMetadataFactory()
+            public function getMetadataFactory(): ClassMetadataFactory
             {
             }
 
-            public function initializeObject($obj)
+            public function initializeObject($obj): void
             {
             }
 
-            public function contains($object)
+            public function contains($object): bool
             {
+            }
+
+            public function isUninitializedObject(mixed $value): bool
+            {
+                return false;
             }
         };
     }
@@ -495,19 +498,19 @@ class FeatureContext implements Context
                 return $this;
             }
 
-            public function find($id)
+            public function find($id): ?object
             {
             }
 
-            public function findAll()
+            public function findAll(): array
             {
             }
 
-            public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+            public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null): array
             {
             }
 
-            public function findOneBy(array $criteria)
+            public function findOneBy(array $criteria): ?object
             {
                 if (array_key_exists('deletedAt', $criteria)) {
                     unset($criteria['deletedAt']);
@@ -528,7 +531,7 @@ class FeatureContext implements Context
                 return null;
             }
 
-            public function getClassName()
+            public function getClassName(): string
             {
                 return $this->className;
             }

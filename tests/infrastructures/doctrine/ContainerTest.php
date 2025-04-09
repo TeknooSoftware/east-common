@@ -109,18 +109,6 @@ class ContainerTest extends TestCase
         );
     }
 
-    private function generateTestForRepositoryWithUnsupportedRepository(string $objectClass, string $repositoryClass)
-    {
-        $container = $this->buildContainer();
-        $objectManager = $this->createMock(ObjectManager::class);
-        $objectManager->expects($this->any())->method('getRepository')->with($objectClass)->willReturn(
-            $this->createMock(\DateTime::class)
-        );
-
-        $container->set(ObjectManager::class, $objectManager);
-        $container->get($repositoryClass);
-    }
-
     public function testUserRepositoryWithObjectRepository()
     {
         $this->generateTestForRepository(User::class, UserRepositoryInterface::class, ObjectRepository::class);
@@ -129,12 +117,6 @@ class ContainerTest extends TestCase
     public function testUserRepositoryWithDocumentRepository()
     {
         $this->generateTestForRepository(User::class, UserRepositoryInterface::class, DocumentRepository::class);
-    }
-
-    public function testUserRepositoryWithUnsupportedRepository()
-    {
-        $this->expectException(\RuntimeException::class);
-        $this->generateTestForRepositoryWithUnsupportedRepository(User::class, UserRepositoryInterface::class);
     }
 
     public function testMediaRepositoryWithObjectRepository()
@@ -147,19 +129,13 @@ class ContainerTest extends TestCase
         $this->generateTestForRepository(Media::class, MediaRepositoryInterface::class, DocumentRepository::class);
     }
 
-    public function testMediaRepositoryWithUnsupportedRepository()
-    {
-        $this->expectException(\RuntimeException::class);
-        $this->generateTestForRepositoryWithUnsupportedRepository(Media::class, MediaRepositoryInterface::class);
-    }
-
     public function testMediaWriterWithValidRepository()
     {
         $this->expectException(\RuntimeException::class);
         $container = $this->buildContainer();
         $objectManager = $this->createMock(ObjectManager::class);
         $objectManager->expects($this->any())->method('getRepository')->willReturn(
-            $this->createMock(\DateTime::class)
+            $this->createMock(ObjectRepository::class)
         );
 
         $container->set(ObjectManager::class, $objectManager);
@@ -191,7 +167,7 @@ class ContainerTest extends TestCase
         $container = $this->buildContainer();
         $objectManager = $this->createMock(ObjectManager::class);
         $objectManager->expects($this->any())->method('getRepository')->willReturn(
-            $this->createMock(DocumentRepository::class)
+            $this->createMock(ObjectRepository::class)
         );
 
         $container->set(ObjectManager::class, $objectManager);

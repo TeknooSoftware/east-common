@@ -56,8 +56,8 @@
         }
     },
     "require": {
-        "php": "^8.2",
-        "php-di/php-di": "^7.0.8",
+        "php": "^8.3",
+        "php-di/php-di": "^7.0.9",
         "teknoo/immutable": "^3.0.19",
         "teknoo/states": "^6.4.3",
         "teknoo/recipe": "^6.0.3",
@@ -75,9 +75,9 @@
         "behat/behat": "^3.18.1",
         "teknoo/bridge-phpdi-symfony": "^6.1.1",
         "doctrine/common": "^3.5",
-        "doctrine/mongodb-odm": "^2.10",
-        "doctrine/mongodb-odm-bundle": "^5.2",
-        "doctrine/persistence": "^3.4||^4",
+        "doctrine/mongodb-odm": "^2.11",
+        "doctrine/mongodb-odm-bundle": "^5.3",
+        "doctrine/persistence": "^4",
         "knpuniversity/oauth2-client-bundle": "^2.18.3",
         "laminas/laminas-diactoros": "^3.5",
         "league/flysystem": "^3.29.1",

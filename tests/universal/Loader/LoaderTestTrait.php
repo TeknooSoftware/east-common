@@ -96,7 +96,7 @@ trait LoaderTestTrait
         $this->getRepositoryMock()
             ->expects($this->any())
             ->method('findOneBy')
-            ->with(['id'=>'fooBar', 'deletedAt'=>null], $promiseMock);
+            ->with(['id'=>'fooBar'], $promiseMock);
 
         self::assertInstanceOf(
             \Teknoo\East\Common\Contracts\Loader\LoaderInterface::class,

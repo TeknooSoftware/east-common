@@ -64,12 +64,12 @@ class UserByEmailQueryTest extends TestCase
         $repository->expects($this->once())
             ->method('findOneBy')
             ->with([
-                'email' => 'foo@bar',
-                'active' => new InclusiveOr(
-                    ['active' => true],
-                    ['active' => null],
-                ),
-                'deletedAt' => null,],
+                    'email' => 'foo@bar',
+                    'active' => new InclusiveOr(
+                        ['active' => true],
+                        ['active' => null],
+                    ),
+                ],
                 $promise
             );
 

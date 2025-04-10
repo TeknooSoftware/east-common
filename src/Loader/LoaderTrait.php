@@ -61,7 +61,6 @@ trait LoaderTrait
     {
         $criteria = [
             'id' => $id,
-            'deletedAt' => null
         ];
 
         try {

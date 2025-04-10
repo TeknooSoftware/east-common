@@ -71,4 +71,28 @@ interface ManagerInterface
      * database.
      */
     public function flush(): ManagerInterface;
+
+    /**
+     * To register a doctrine filter to add criteria to all requests sended to the database server.
+     * Usefull to implement some feature like soft deleted
+     * If $enabling is at trye (default behavior) the filter will be automatically added.
+     *
+     * @param class-string $className
+     * @param array<string, mixed> $parameters
+     */
+    public function registerFilter(string $className, array $parameters = [], bool $enabling = true): ManagerInterface;
+
+    /**
+     * To enable a doctrine filter added with registerFilter
+     *
+     * @param class-string $className
+     */
+    public function enableFilter(string $className): ManagerInterface;
+
+    /**
+     * To disable a doctrine filter added with registerFilter
+     *
+     * @param class-string $className
+     */
+    public function disableFilter(string $className): ManagerInterface;
 }

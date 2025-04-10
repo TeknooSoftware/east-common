@@ -29,6 +29,7 @@ use Doctrine\Persistence\ObjectManager;
 use Teknoo\East\Common\Contracts\DBSource\ManagerInterface;
 use Teknoo\East\Common\DBSource\Manager\AlreadyStartedBatchException;
 use Teknoo\East\Common\DBSource\Manager\NonStartedBatchException;
+use Teknoo\East\Common\Doctrine\Contracts\DBSource\ConfigurationHelperInterface;
 
 /**
  * Default implementation of `ManagerInterface` wrapping Doctrine's object manager,
@@ -48,7 +49,9 @@ class Manager implements ManagerInterface
 
     public function __construct(
         private readonly ObjectManager $objectManager,
+        private readonly ?ConfigurationHelperInterface $configurationHelper = null,
     ) {
+        $this->configurationHelper?->setManager($this, $this->objectManager);
     }
 
     public function openBatch(): ManagerInterface
@@ -99,6 +102,27 @@ class Manager implements ManagerInterface
         } else {
             $this->mustFlush = true;
         }
+
+        return $this;
+    }
+
+    public function registerFilter(string $className, array $parameters = [], bool $enabling = true): ManagerInterface
+    {
+        $this->configurationHelper?->registerFilter($className, $parameters, $enabling);
+
+        return $this;
+    }
+
+    public function enableFilter(string $className): ManagerInterface
+    {
+        $this->configurationHelper?->enableFilter($className);
+
+        return $this;
+    }
+
+    public function disableFilter(string $className): ManagerInterface
+    {
+        $this->configurationHelper?->disableFilter($className);
 
         return $this;
     }

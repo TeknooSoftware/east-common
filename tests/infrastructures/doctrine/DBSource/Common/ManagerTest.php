@@ -30,7 +30,9 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\DBSource\Manager\AlreadyStartedBatchException;
 use Teknoo\East\Common\DBSource\Manager\NonStartedBatchException;
+use Teknoo\East\Common\Doctrine\Contracts\DBSource\ConfigurationHelperInterface;
 use Teknoo\East\Common\Doctrine\DBSource\Common\Manager;
+use Teknoo\East\Common\Doctrine\Filter\ODM\SoftDeletableFilter;
 
 /**
  * @license     https://teknoo.software/license/mit         MIT License
@@ -56,9 +58,9 @@ class ManagerTest extends TestCase
         return $this->objectManager;
     }
 
-    public function buildManager(): Manager
+    public function buildManager(?ConfigurationHelperInterface $configurationHelper = null): Manager
     {
-        return new Manager($this->getDoctrineObjectManagerMock());
+        return new Manager($this->getDoctrineObjectManagerMock(), $configurationHelper);
     }
 
     public function testPersist()
@@ -135,6 +137,72 @@ class ManagerTest extends TestCase
         self::assertInstanceOf(
             Manager::class,
             $manager->openBatch()->flush()->flush()->flush()->closeBatch()
+        );
+    }
+
+    public function testRegisterFilterWithoutHelper()
+    {
+        self::assertInstanceOf(
+            Manager::class,
+            $this->buildManager()->registerFilter(SoftDeletableFilter::class, ['foo' => 'bar'])
+        );
+    }
+
+    public function testEnableFilterWithoutHelper()
+    {
+        self::assertInstanceOf(
+            Manager::class,
+            $this->buildManager()->enableFilter(SoftDeletableFilter::class)
+        );
+    }
+
+    public function testDisableFilterWithoutHelper()
+    {
+        self::assertInstanceOf(
+            Manager::class,
+            $this->buildManager()->disableFilter(SoftDeletableFilter::class)
+        );
+    }
+
+    public function testRegisterFilterWithHelper()
+    {
+        $helper = $this->createMock(ConfigurationHelperInterface::class);
+        $helper->expects($this->once())
+            ->method('registerFilter')
+            ->with(SoftDeletableFilter::class, ['foo' => 'bar'])
+            ->willReturnSelf();
+
+        self::assertInstanceOf(
+            Manager::class,
+            $this->buildManager($helper)->registerFilter(SoftDeletableFilter::class, ['foo' => 'bar'])
+        );
+    }
+
+    public function testEnableFilterWithHelper()
+    {
+        $helper = $this->createMock(ConfigurationHelperInterface::class);
+        $helper->expects($this->once())
+            ->method('enableFilter')
+            ->with(SoftDeletableFilter::class)
+            ->willReturnSelf();
+
+        self::assertInstanceOf(
+            Manager::class,
+            $this->buildManager($helper)->enableFilter(SoftDeletableFilter::class)
+        );
+    }
+
+    public function testDisableFilterWithHelper()
+    {
+        $helper = $this->createMock(ConfigurationHelperInterface::class);
+        $helper->expects($this->once())
+            ->method('disableFilter')
+            ->with(SoftDeletableFilter::class)
+            ->willReturnSelf();
+
+        self::assertInstanceOf(
+            Manager::class,
+            $this->buildManager($helper)->disableFilter(SoftDeletableFilter::class)
         );
     }
 }

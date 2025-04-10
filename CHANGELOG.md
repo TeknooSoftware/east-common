@@ -1,5 +1,11 @@
 # Teknoo Software - Common - Change Log
 
+## [3.5.0] - 2025-04-10
+### Stable Release
+- Support Doctrine Filter
+  - Filters are managed by an `ConfigurationHelper` dedicated by Doctrine implmentation automatically created by the DI 
+  - Add `SoftDeletableFilter` to automatically add criteria `'deleted_at'=null` in MongoDB queries
+  
 ## [3.4.0] - 2025-04-09
 ### Stable Release
 - Drop Support of PHP 8.2

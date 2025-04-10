@@ -25,10 +25,11 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Common\Doctrine;
 
+use ArrayObject;
+use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 use Doctrine\ODM\MongoDB\Repository\GridFSRepository;
 use Doctrine\Persistence\ObjectManager;
-use Doctrine\Persistence\ObjectRepository;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Teknoo\East\Common\Contracts\DBSource\BatchManipulationManagerInterface;
@@ -39,11 +40,12 @@ use Teknoo\East\Common\Contracts\Recipe\Step\GetStreamFromMediaInterface;
 use Teknoo\East\Common\Doctrine\DBSource\Common\Manager;
 use Teknoo\East\Common\Doctrine\DBSource\Common\MediaRepository;
 use Teknoo\East\Common\Doctrine\DBSource\Common\UserRepository;
-use Teknoo\East\Common\Doctrine\DBSource\Exception\NonManagedRepositoryException;
 use Teknoo\East\Common\Doctrine\DBSource\ODM\BatchManipulationManager;
+use Teknoo\East\Common\Doctrine\DBSource\ODM\ConfigurationHelper as ODMConfigHelper;
 use Teknoo\East\Common\Doctrine\DBSource\ODM\MediaRepository as OdmMediaRepository;
 use Teknoo\East\Common\Doctrine\DBSource\ODM\UserRepository as OdmUserRepository;
 use Teknoo\East\Common\Doctrine\Exception\NotSupportedException;
+use Teknoo\East\Common\Doctrine\Filter\ODM\SoftDeletableFilter;
 use Teknoo\East\Common\Doctrine\Object\Media;
 use Teknoo\East\Common\Doctrine\Recipe\Step\ODM\GetStreamFromMedia;
 use Teknoo\East\Common\Doctrine\Writer\ODM\MediaWriter;
@@ -54,10 +56,34 @@ use function DI\create;
 use function DI\get;
 
 return [
+    'teknoo.east.common.doctrine.odm.filter.enabled' => static function (ContainerInterface $container): iterable {
+        /** @var ArrayObject<string, mixed> $stack */
+        $stack = new ArrayObject([]);
+
+        $stack[SoftDeletableFilter::class] = [];
+
+        return $stack;
+    },
+
     ManagerInterface::class => get(Manager::class),
-    Manager::class => create()->constructor(
-        get(ObjectManager::class),
-    ),
+    Manager::class => static function (ContainerInterface $container): Manager {
+        $om = $container->get(ObjectManager::class);
+
+        $helper = null;
+        $filters = [];
+        if ($om instanceof DocumentManager) {
+            $helper = new ODMConfigHelper();
+            $filters = $container->get('teknoo.east.common.doctrine.odm.filter.enabled');
+        }
+
+        $manager = new Manager($om, $helper);
+
+        foreach ($filters as $filter => $params) {
+            $manager->registerFilter($filter, $params);
+        }
+
+        return $manager;
+    },
 
     BatchManipulationManagerInterface::class => get(BatchManipulationManager::class),
     BatchManipulationManager::class => create()->constructor(

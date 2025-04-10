@@ -35,6 +35,7 @@ use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Common\Contracts\Query\DeletingQueryInterface;
 use Teknoo\East\Common\Contracts\Query\UpdatingQueryInterface;
 use Teknoo\East\Common\Doctrine\DBSource\ODM\BatchManipulationManager;
+use Teknoo\East\Common\Doctrine\Filter\ODM\SoftDeletableFilter;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
@@ -172,6 +173,48 @@ class BatchManipulationManagerTest extends TestCase
         self::assertInstanceOf(
             BatchManipulationManagerInterface::class,
             $this->buildBatchManager()->flush()
+        );
+    }
+
+    public function testRegisterFilter()
+    {
+        $this->getManager()
+            ->expects($this->once())
+            ->method('registerFilter')
+            ->with(SoftDeletableFilter::class, ['foo' => 'bar'])
+            ->willReturnSelf();
+
+        self::assertInstanceOf(
+            BatchManipulationManagerInterface::class,
+            $this->buildBatchManager()->registerFilter(SoftDeletableFilter::class, ['foo' => 'bar'])
+        );
+    }
+
+    public function testEnableFilter()
+    {
+        $this->getManager()
+            ->expects($this->once())
+            ->method('enableFilter')
+            ->with(SoftDeletableFilter::class)
+            ->willReturnSelf();
+
+        self::assertInstanceOf(
+            BatchManipulationManagerInterface::class,
+            $this->buildBatchManager()->enableFilter(SoftDeletableFilter::class)
+        );
+    }
+
+    public function testDisableFilter()
+    {
+        $this->getManager()
+            ->expects($this->once())
+            ->method('disableFilter')
+            ->with(SoftDeletableFilter::class)
+            ->willReturnSelf();
+
+        self::assertInstanceOf(
+            BatchManipulationManagerInterface::class,
+            $this->buildBatchManager()->disableFilter(SoftDeletableFilter::class)
         );
     }
 }

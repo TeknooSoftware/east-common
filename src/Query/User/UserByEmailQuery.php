@@ -66,8 +66,7 @@ class UserByEmailQuery implements QueryElementInterface, ImmutableInterface
                 'active' => new InclusiveOr(
                     ['active' => true],
                     ['active' => null],
-                ),
-                'deletedAt' => null
+                )
             ],
             $promise
         );

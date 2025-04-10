@@ -27,12 +27,13 @@ namespace Teknoo\Tests\East\Common\Doctrine;
 
 use DI\Container;
 use DI\ContainerBuilder;
+use Doctrine\ODM\MongoDB\Configuration;
+use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 use Doctrine\ODM\MongoDB\Repository\GridFSRepository;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
 use PHPUnit\Framework\TestCase;
-use ProxyManager\Proxy\GhostObjectInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Teknoo\East\Common\Contracts\DBSource\BatchManipulationManagerInterface;
 use Teknoo\East\Common\Contracts\DBSource\ManagerInterface;
@@ -45,7 +46,6 @@ use Teknoo\East\Common\Doctrine\Recipe\Step\ODM\GetStreamFromMedia;
 use Teknoo\East\Common\Doctrine\Writer\ODM\MediaWriter;
 use Teknoo\East\Common\Object\User;
 use Teknoo\East\Common\Writer\MediaWriter as OriginalWriter;
-use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
  * Class DefinitionProviderTest.
@@ -76,6 +76,22 @@ class ContainerTest extends TestCase
     {
         $container = $this->buildContainer();
         $objectManager = $this->createMock(ObjectManager::class);
+
+        $container->set(ObjectManager::class, $objectManager);
+        self::assertInstanceOf(ManagerInterface::class, $container->get(ManagerInterface::class));
+    }
+
+    public function testManagerWithDocumentManager()
+    {
+        $container = $this->buildContainer();
+        $objectManager = new class extends DocumentManager {
+            public function __construct() {}
+
+            public function getConfiguration(): Configuration {
+                static $configuration;
+                return $configuration ??= new Configuration();
+            }
+        };
 
         $container->set(ObjectManager::class, $objectManager);
         self::assertInstanceOf(ManagerInterface::class, $container->get(ManagerInterface::class));

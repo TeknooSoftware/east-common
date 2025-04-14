@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [3.5.1] - 2025-04-14
+### Stable Release
+- Add support of `count` and `distinctBy` on doctrine common repository 
+
 ## [3.5.0] - 2025-04-10
 ### Stable Release
 - Support Doctrine Filter

@@ -27,13 +27,16 @@ namespace Teknoo\East\Common\Doctrine\DBSource\Common;
 
 use Doctrine\Persistence\ObjectRepository;
 use DomainException;
-use RuntimeException;
 use Teknoo\East\Common\Contracts\DBSource\RepositoryInterface;
 use Teknoo\East\Common\Query\Enum\Direction;
+use Teknoo\Recipe\Promise\Promise;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Throwable;
 
+use function array_keys;
 use function array_walk;
+use function is_array;
+use function is_object;
 use function trigger_error;
 
 use const E_USER_NOTICE;
@@ -136,7 +139,7 @@ trait RepositoryTrait
     }
 
     /**
-     * @param array<int|string, mixed> $criteria
+     * @param array<string, mixed> $criteria
      */
     public function distinctBy(
         string $field,
@@ -145,20 +148,39 @@ trait RepositoryTrait
         ?int $limit = null,
         ?int $offset = null,
     ): RepositoryInterface {
-        $promise->fail(
-            new RuntimeException('Error, this method is not available with this repository', 500)
+        $this->findBy(
+            $criteria,
+            (new Promise(
+                onSuccess: function (iterable $result, PromiseInterface $next) use ($field) {
+                    $final = [];
+                    foreach ($result as $item) {
+                        if (is_array($item) && isset($item[$field])) {
+                            $final[$item[$field]] = true;
+                        } elseif (is_object($item) && isset($item->{$field})) {
+                            $final[$item->{$field}] = true;
+                        }
+                    }
+
+                    $next(array_keys($final));
+                },
+            ))->next($promise)
         );
 
         return $this;
     }
 
     /**
-     * @param array<int|string, mixed> $criteria
+     * @param array<string, mixed> $criteria
      */
     public function count(array $criteria, PromiseInterface $promise): RepositoryInterface
     {
-        $promise->fail(
-            new RuntimeException('Error, this method is not available with this repository', 500)
+        $this->findBy(
+            $criteria,
+            (new Promise(
+                onSuccess: function (array $result, PromiseInterface $next) {
+                    $next(count($result));
+                },
+            ))->next($promise)
         );
 
         return $this;

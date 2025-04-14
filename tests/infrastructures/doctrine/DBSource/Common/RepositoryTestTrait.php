@@ -238,11 +238,19 @@ trait RepositoryTestTrait
         self::assertTrue($fail, 'Notice must be Thrown');
     }
 
-    public function testCountNotImplemented()
+    public function testCount()
     {
+        $object = [new \stdClass(),new \stdClass(),new \stdClass()];
+
         $promise = $this->createMock(PromiseInterface::class);
-        $promise->expects($this->never())->method('success');
-        $promise->expects($this->once())->method('fail');
+        $promise->expects($this->once())->method('__invoke')->with(3);
+        $promise->expects($this->never())->method('fail');
+
+        $this->getDoctrineObjectRepositoryMock()
+            ->expects($this->once())
+            ->method('findBy')
+            ->with(['foo' => 'bar'])
+            ->willReturn($object);
 
         self::assertInstanceOf(
             RepositoryInterface::class,
@@ -250,11 +258,47 @@ trait RepositoryTestTrait
         );
     }
 
-    public function testDistinctByNotImplemented()
+    public function testDistinctByWithArray()
     {
+        $object = [
+            ['foo' => 'foo'],
+            ['bar' => 'bar'],
+            ['foo' => 'bar'],
+        ];
+
         $promise = $this->createMock(PromiseInterface::class);
-        $promise->expects($this->never())->method('success');
-        $promise->expects($this->once())->method('fail');
+        $promise->expects($this->once())->method('__invoke')->with(['foo', 'bar']);
+        $promise->expects($this->never())->method('fail');
+
+        $this->getDoctrineObjectRepositoryMock()
+            ->expects($this->once())
+            ->method('findBy')
+            ->with(['foo' => 'bar'])
+            ->willReturn($object);
+
+        self::assertInstanceOf(
+            RepositoryInterface::class,
+            $this->buildRepository()->distinctBy('foo', ['foo' => 'bar'], $promise)
+        );
+    }
+
+    public function testDistinctByWithObject()
+    {
+        $object = [
+            (object) ['foo' => 'foo'],
+            (object) ['bar' => 'bar'],
+            (object) ['foo' => 'bar'],
+        ];
+
+        $promise = $this->createMock(PromiseInterface::class);
+        $promise->expects($this->once())->method('__invoke')->with(['foo', 'bar']);
+        $promise->expects($this->never())->method('fail');
+
+        $this->getDoctrineObjectRepositoryMock()
+            ->expects($this->once())
+            ->method('findBy')
+            ->with(['foo' => 'bar'])
+            ->willReturn($object);
 
         self::assertInstanceOf(
             RepositoryInterface::class,

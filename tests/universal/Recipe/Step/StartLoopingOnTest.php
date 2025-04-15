@@ -40,7 +40,7 @@ use function array_shift;
 #[CoversClass(StartLoopingOn::class)]
 class StartLoopingOnTest extends TestCase
 {
-    public function buildStep(string $keyValue = null): StartLoopingOn
+    public function buildStep(?string $keyValue = null): StartLoopingOn
     {
         return new StartLoopingOn(keyValue: $keyValue);
     }

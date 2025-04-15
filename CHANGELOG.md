@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [3.5.2] - 2025-04-15
+### Stable Release
+- Fix issue in test with PHP 8.4
+
 ## [3.5.1] - 2025-04-14
 ### Stable Release
 - Add support of `count` and `distinctBy` on doctrine common repository 

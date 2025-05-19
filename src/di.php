@@ -196,6 +196,14 @@ return [
         ),
 
     'teknoo.east.common.rendering.clean_html' => value(false),
+    'teknoo.east.common.rendering.clean_html.configuration' => value(
+        [
+            'drop-empty-elements' => false,
+            'indent' => true,
+            'output-xhtml' => false,
+            'wrap' => 200,
+        ]
+    ),
 
     //Steps
     CreateObject::class => create(),
@@ -215,27 +223,48 @@ return [
             get(MediaLoader::class)
         ),
     LoadObject::class => create(),
-    Render::class => create()
-        ->constructor(
-            get(EngineInterface::class),
-            get(StreamFactoryInterface::class),
-            get(ResponseFactoryInterface::class),
-            get('teknoo.east.common.rendering.clean_html'),
-        ),
-    RenderError::class => create()
-        ->constructor(
-            get(EngineInterface::class),
-            get(StreamFactoryInterface::class),
-            get(ResponseFactoryInterface::class),
-            get('teknoo.east.common.rendering.clean_html'),
-        ),
-    RenderList::class => create()
-        ->constructor(
-            get(EngineInterface::class),
-            get(StreamFactoryInterface::class),
-            get(ResponseFactoryInterface::class),
-            get('teknoo.east.common.rendering.clean_html'),
-        ),
+    Render::class => static function (ContainerInterface $container): Render {
+        $render = new Render(
+            $container->get(EngineInterface::class),
+            $container->get(StreamFactoryInterface::class),
+            $container->get(ResponseFactoryInterface::class),
+            $container->get('teknoo.east.common.rendering.clean_html'),
+        );
+
+        if ($container->has('teknoo.east.common.rendering.clean_html.configuration')) {
+            $render->setTidyConfig($container->get('teknoo.east.common.rendering.clean_html.configuration'));
+        }
+
+        return $render;
+    },
+    RenderError::class => static function (ContainerInterface $container): RenderError {
+        $renderError = new RenderError(
+            $container->get(EngineInterface::class),
+            $container->get(StreamFactoryInterface::class),
+            $container->get(ResponseFactoryInterface::class),
+            $container->get('teknoo.east.common.rendering.clean_html'),
+        );
+
+        if ($container->has('teknoo.east.common.rendering.clean_html.configuration')) {
+            $renderError->setTidyConfig($container->get('teknoo.east.common.rendering.clean_html.configuration'));
+        }
+
+        return $renderError;
+    },
+    RenderList::class => static function (ContainerInterface $container): RenderList {
+        $renderList = new RenderList(
+            $container->get(EngineInterface::class),
+            $container->get(StreamFactoryInterface::class),
+            $container->get(ResponseFactoryInterface::class),
+            $container->get('teknoo.east.common.rendering.clean_html'),
+        );
+
+        if ($container->has('teknoo.east.common.rendering.clean_html.configuration')) {
+            $renderList->setTidyConfig($container->get('teknoo.east.common.rendering.clean_html.configuration'));
+        }
+
+        return $renderList;
+    },
     SaveObject::class => create(),
     SendMedia::class => create()
         ->constructor(

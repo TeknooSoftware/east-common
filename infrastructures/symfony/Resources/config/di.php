@@ -101,13 +101,20 @@ return [
 
     //Rendering
     RenderFormInterface::class => get(RenderForm::class),
-    RenderForm::class => create()
-        ->constructor(
-            get(EngineInterface::class),
-            get(StreamFactoryInterface::class),
-            get(ResponseFactoryInterface::class),
-            get('teknoo.east.common.rendering.clean_html'),
-        ),
+    RenderForm::class => static function (ContainerInterface $container): RenderForm {
+        $renderForm = new RenderForm(
+            $container->get(EngineInterface::class),
+            $container->get(StreamFactoryInterface::class),
+            $container->get(ResponseFactoryInterface::class),
+            $container->get('teknoo.east.common.rendering.clean_html'),
+        );
+
+        if ($container->has('teknoo.east.common.rendering.clean_html.configuration')) {
+            $renderForm->setTidyConfig($container->get('teknoo.east.common.rendering.clean_html.configuration'));
+        }
+
+        return $renderForm;
+    },
 
     //TOTP Plan
     Enable2FA::class => static function (ContainerInterface $container): Enable2FA {

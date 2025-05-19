@@ -1,5 +1,10 @@
 # Teknoo Software - Common - Change Log
 
+## [3.5.3] - 2025-05-19
+### Stable Release
+- Add container parameter `teknoo.east.common.rendering.clean_html.configuration` to allow edit 
+ for a project the default tidy configuration
+
 ## [3.5.2] - 2025-04-15
 ### Stable Release
 - Fix issue in test with PHP 8.4

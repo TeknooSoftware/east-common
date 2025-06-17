@@ -44,11 +44,12 @@ class SourceLoaderTest extends TestCase
 {
     public function testExtendsBundles()
     {
+        $toCall = fn () => 'foo';
         $manager = $this->createMock(ManagerInterface::class);
         $manager->expects($this->once())
             ->method('execute')
             ->willReturnCallback(
-                function ($module) use ($manager) {
+                function ($module) use ($manager, $toCall) {
                     self::assertinstanceOf(SourceLoader::class, $module);
 
                     $module->update(
@@ -57,14 +58,14 @@ class SourceLoaderTest extends TestCase
                                 new File(
                                     'bar2.js',
                                     FileType::JS,
-                                    fn () => 'foo'
+                                    $toCall,
                                 )
                             ),
                             FileType::CSS => $set->add(
                                 new File(
                                     'bar2.css',
                                     FileType::CSS,
-                                    fn () => 'foo'
+                                    $toCall
                                 )
                             ),
                         }
@@ -81,7 +82,7 @@ class SourceLoaderTest extends TestCase
                 new File(
                     'bar2.css',
                     FileType::CSS,
-                    fn () => 'foo'
+                    $toCall
                 )
             );
 
@@ -89,7 +90,6 @@ class SourceLoaderTest extends TestCase
             FileType::CSS,
             'default',
             $set,
-            $manager,
         );
     }
 }

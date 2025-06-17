@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [3.5.4] - 2025-06-17
+### Stable Release
+- Fix issue with last phpunit updates.
+
 ## [3.5.3] - 2025-05-19
 ### Stable Release
 - Add container parameter `teknoo.east.common.rendering.clean_html.configuration` to allow edit 

@@ -61,13 +61,13 @@
         "teknoo/immutable": "^3.0.19",
         "teknoo/states": "^6.4.3",
         "teknoo/recipe": "^6.0.3",
-        "teknoo/east-foundation": "^8.0.4"
+        "teknoo/east-foundation": "^8.0.5"
     },
     "require-dev": {
         "ext-mongodb" : "*",
         "ext-tidy" : "*",
         "roave/security-advisories": "dev-latest",
-        "phpunit/phpunit": "^12",
+        "phpunit/phpunit": "^12.2.2",
         "squizlabs/php_codesniffer": "^3.11.3",
         "phpstan/phpstan": "^1.12.16",
         "phpstan/extension-installer": "^1.4.3",

@@ -22,7 +22,7 @@
  */
 date_default_timezone_set('UTC');
 
-error_reporting(E_ALL | E_STRICT);
+error_reporting(E_ALL);
 
 if (PHP_VERSION_ID < 80200) {
     ini_set('memory_limit', '196M');

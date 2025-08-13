@@ -123,8 +123,7 @@
         "symfony/yaml": "^6.4.24||^7.3",
         "twig/twig": "^3.21.1",
         "twig/cssinliner-extra": "^3.21",
-        "twig/inky-extra": "^3.21",
-        "rector/rector": "*"
+        "twig/inky-extra": "^3.21"
     },
     "archive": {
         "exclude": ["features", "tests", "vendor", ".idea"]

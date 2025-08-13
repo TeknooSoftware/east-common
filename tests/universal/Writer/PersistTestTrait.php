@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -32,7 +32,7 @@ use Teknoo\East\Foundation\Time\DatesService;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 trait PersistTestTrait
@@ -71,17 +71,14 @@ trait PersistTestTrait
         return $this->datesService;
     }
 
-    /**
-     * @return WriterInterface
-     */
-    abstract public function buildWriter(bool $preferRealDateOnUpdate = false,): WriterInterface;
+    abstract public function buildWriter(bool $preferRealDateOnUpdate = false): WriterInterface;
 
     /**
      * @return object
      */
     abstract public function getObject();
 
-    public function testSave()
+    public function testSave(): void
     {
         $object = $this->getObject();
 
@@ -94,10 +91,10 @@ trait PersistTestTrait
             ->expects($this->once())
             ->method('flush');
 
-        self::assertInstanceOf(WriterInterface::class, $this->buildWriter()->save($object));
+        $this->assertInstanceOf(WriterInterface::class, $this->buildWriter()->save($object));
     }
 
-    public function testSaveWithPromiseSuccess()
+    public function testSaveWithPromiseSuccess(): void
     {
         $object = $this->getObject();
 
@@ -128,7 +125,7 @@ trait PersistTestTrait
                 ->willReturnCallback(
                     function ($setter, $preferRealDate) use ($date) {
                         $setter($date);
-                        self::assertFalse($preferRealDate);
+                        $this->assertFalse($preferRealDate);
 
                         return $this->getDatesServiceMock();
                     }
@@ -139,10 +136,10 @@ trait PersistTestTrait
                 ->method('passMeTheDate');
         }
 
-        self::assertInstanceOf(WriterInterface::class, $this->buildWriter()->save($object, $promise));
+        $this->assertInstanceOf(WriterInterface::class, $this->buildWriter()->save($object, $promise));
     }
 
-    public function testSaveWithPromiseSuccessWithNotPreferedRealDateSetInWriterPropertyButOverloadedInCall()
+    public function testSaveWithPromiseSuccessWithNotPreferedRealDateSetInWriterPropertyButOverloadedInCall(): void
     {
         $object = $this->getObject();
 
@@ -173,7 +170,7 @@ trait PersistTestTrait
                 ->willReturnCallback(
                     function ($setter, $preferRealDate) use ($date) {
                         $setter($date);
-                        self::assertTrue($preferRealDate);
+                        $this->assertTrue($preferRealDate);
 
                         return $this->getDatesServiceMock();
                     }
@@ -184,13 +181,13 @@ trait PersistTestTrait
                 ->method('passMeTheDate');
         }
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             WriterInterface::class,
             $this->buildWriter(false)->save($object, $promise, true)
         );
     }
 
-    public function testSaveWithPromiseSuccessWithPreferedRealDateSetInWriterProperty()
+    public function testSaveWithPromiseSuccessWithPreferedRealDateSetInWriterProperty(): void
     {
         $object = $this->getObject();
 
@@ -221,7 +218,7 @@ trait PersistTestTrait
                 ->willReturnCallback(
                     function ($setter, $preferRealDate) use ($date) {
                         $setter($date);
-                        self::assertTrue($preferRealDate);
+                        $this->assertTrue($preferRealDate);
 
                         return $this->getDatesServiceMock();
                     }
@@ -232,10 +229,10 @@ trait PersistTestTrait
                 ->method('passMeTheDate');
         }
 
-        self::assertInstanceOf(WriterInterface::class, $this->buildWriter(true)->save($object, $promise));
+        $this->assertInstanceOf(WriterInterface::class, $this->buildWriter(true)->save($object, $promise));
     }
 
-    public function testSaveWithPromiseSuccessWithPreferedRealDateSetInWriterPropertyOverloadedToFalseInCall()
+    public function testSaveWithPromiseSuccessWithPreferedRealDateSetInWriterPropertyOverloadedToFalseInCall(): void
     {
         $object = $this->getObject();
 
@@ -266,7 +263,7 @@ trait PersistTestTrait
                 ->willReturnCallback(
                     function ($setter, $preferRealDate) use ($date) {
                         $setter($date);
-                        self::assertFalse($preferRealDate);
+                        $this->assertFalse($preferRealDate);
 
                         return $this->getDatesServiceMock();
                     }
@@ -277,13 +274,13 @@ trait PersistTestTrait
                 ->method('passMeTheDate');
         }
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             WriterInterface::class,
             $this->buildWriter(true)->save($object, $promise, false)
         );
     }
 
-    public function testSaveWithPromiseSuccessWithPreferedRealDateSetInWriterPropertyOverloadedToTrueInCall()
+    public function testSaveWithPromiseSuccessWithPreferedRealDateSetInWriterPropertyOverloadedToTrueInCall(): void
     {
         $object = $this->getObject();
 
@@ -314,7 +311,7 @@ trait PersistTestTrait
                 ->willReturnCallback(
                     function ($setter, $preferRealDate) use ($date) {
                         $setter($date);
-                        self::assertTrue($preferRealDate);
+                        $this->assertTrue($preferRealDate);
 
                         return $this->getDatesServiceMock();
                     }
@@ -325,13 +322,13 @@ trait PersistTestTrait
                 ->method('passMeTheDate');
         }
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             WriterInterface::class,
             $this->buildWriter(true)->save($object, $promise, true)
         );
     }
 
-    public function testSaveWithPromiseFailure()
+    public function testSaveWithPromiseFailure(): void
     {
         $object = $this->getObject();
 
@@ -356,10 +353,10 @@ trait PersistTestTrait
             ->with($error)
             ->willReturnSelf();
 
-        self::assertInstanceOf(WriterInterface::class, $this->buildWriter()->save($object, $promise));
+        $this->assertInstanceOf(WriterInterface::class, $this->buildWriter()->save($object, $promise));
     }
 
-    public function testSaveWithoutPromiseFailure()
+    public function testSaveWithoutPromiseFailure(): void
     {
         $this->expectException(\Exception::class);
         $object = $this->getObject();
@@ -376,10 +373,10 @@ trait PersistTestTrait
             ->method('flush')
             ->willThrowException($error);
 
-        self::assertInstanceOf(WriterInterface::class, $this->buildWriter()->save($object));
+        $this->assertInstanceOf(WriterInterface::class, $this->buildWriter()->save($object));
     }
-    
-    public function testRemove()
+
+    public function testRemove(): void
     {
         $object = $this->getObject();
 
@@ -392,10 +389,10 @@ trait PersistTestTrait
             ->expects($this->once())
             ->method('flush');
 
-        self::assertInstanceOf(WriterInterface::class, $this->buildWriter()->remove($object));
+        $this->assertInstanceOf(WriterInterface::class, $this->buildWriter()->remove($object));
     }
 
-    public function testRemoveWithPromiseSuccess()
+    public function testRemoveWithPromiseSuccess(): void
     {
         $object = $this->getObject();
 
@@ -416,10 +413,10 @@ trait PersistTestTrait
         $promise->expects($this->never())
             ->method('fail');
 
-        self::assertInstanceOf(WriterInterface::class, $this->buildWriter()->remove($object, $promise));
+        $this->assertInstanceOf(WriterInterface::class, $this->buildWriter()->remove($object, $promise));
     }
 
-    public function testRemoveWithPromiseFailure()
+    public function testRemoveWithPromiseFailure(): void
     {
         $object = $this->getObject();
 
@@ -444,10 +441,10 @@ trait PersistTestTrait
             ->with($error)
             ->willReturnSelf();
 
-        self::assertInstanceOf(WriterInterface::class, $this->buildWriter()->remove($object, $promise));
+        $this->assertInstanceOf(WriterInterface::class, $this->buildWriter()->remove($object, $promise));
     }
 
-    public function testRemoveWithoutPromiseFailure()
+    public function testRemoveWithoutPromiseFailure(): void
     {
         $this->expectException(\Exception::class);
         $object = $this->getObject();
@@ -464,6 +461,6 @@ trait PersistTestTrait
             ->method('flush')
             ->willThrowException($error);
 
-        self::assertInstanceOf(WriterInterface::class, $this->buildWriter()->remove($object));
+        $this->assertInstanceOf(WriterInterface::class, $this->buildWriter()->remove($object));
     }
 }

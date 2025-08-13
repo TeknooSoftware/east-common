@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 
@@ -30,7 +30,7 @@ use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Object\MediaMetadata;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(MediaMetadata::class)]
@@ -41,28 +41,28 @@ class MediaMetadataTest extends TestCase
         return new MediaMetadata('contentType', 'fileName', 'alternative', 'path', 'legacy');
     }
 
-    public function testGetContentType()
+    public function testGetContentType(): void
     {
-        self::assertEquals('contentType', $this->buildObject()->getContentType());
+        $this->assertEquals('contentType', $this->buildObject()->getContentType());
     }
 
-    public function testGetFileName()
+    public function testGetFileName(): void
     {
-        self::assertEquals('fileName', $this->buildObject()->getFileName());
+        $this->assertEquals('fileName', $this->buildObject()->getFileName());
     }
 
-    public function testGetAlternative()
+    public function testGetAlternative(): void
     {
-        self::assertEquals('alternative', $this->buildObject()->getAlternative());
+        $this->assertEquals('alternative', $this->buildObject()->getAlternative());
     }
 
-    public function testGetLocalPath()
+    public function testGetLocalPath(): void
     {
-        self::assertEquals('path', $this->buildObject()->getLocalPath());
+        $this->assertEquals('path', $this->buildObject()->getLocalPath());
     }
 
-    public function testGetLegacyId()
+    public function testGetLegacyId(): void
     {
-        self::assertEquals('legacy', $this->buildObject()->getLegacyId());
+        $this->assertEquals('legacy', $this->buildObject()->getLegacyId());
     }
 }

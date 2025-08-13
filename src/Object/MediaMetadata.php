@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 
@@ -34,37 +34,21 @@ use Teknoo\Immutable\ImmutableTrait;
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 class MediaMetadata implements ImmutableInterface
 {
     use ImmutableTrait;
 
-    private ?string $contentType = '';
-
-    private ?string $fileName = '';
-
-    private ?string $alternative = '';
-
-    private ?string $localPath = '';
-
-    private ?string $legacyId = '';
-
     public function __construct(
-        string $contentType,
-        string $fileName = '',
-        string $alternative = '',
-        string $localPath = '',
-        string $legacyId = ''
+        private readonly string $contentType,
+        private readonly string $fileName = '',
+        private readonly string $alternative = '',
+        private readonly string $localPath = '',
+        private readonly string $legacyId = '',
     ) {
         $this->uniqueConstructorCheck();
-
-        $this->contentType = $contentType;
-        $this->fileName = $fileName;
-        $this->alternative = $alternative;
-        $this->localPath = $localPath;
-        $this->legacyId = $legacyId;
     }
 
     public function getContentType(): string

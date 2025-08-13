@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 
@@ -32,7 +32,7 @@ use Teknoo\East\Common\Object\MediaMetadata;
 use Teknoo\Tests\East\Common\Object\Traits\PopulateObjectTrait;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(Media::class)]
@@ -40,123 +40,120 @@ class MediaTest extends TestCase
 {
     use PopulateObjectTrait;
 
-    /**
-     * @return Media
-     */
     public function buildObject(): Media
     {
-        return new class extends Media {
-            public function getResource()
+        return new class () extends Media {
+            public function getResource(): null
             {
                 return null;
             }
         };
     }
 
-    public function testGetId()
+    public function testGetId(): void
     {
-        self::assertEquals(
+        $this->assertEquals(
             123,
             $this->generateObjectPopulated(['id' => 123])->getId()
         );
     }
 
-    public function testSetId()
+    public function testSetId(): void
     {
         $object = $this->buildObject();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->setId('fooBar')
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             'fooBar',
             $object->getId()
         );
     }
 
-    public function testSetIdExceptionOnBadArgument()
+    public function testSetIdExceptionOnBadArgument(): void
     {
         $this->expectException(\Throwable::class);
         $this->buildObject()->setId(new \stdClass());
     }
 
-    public function testGetName()
+    public function testGetName(): void
     {
-        self::assertEquals(
+        $this->assertEquals(
             'fooBar',
             $this->generateObjectPopulated(['name' => 'fooBar'])->getName()
         );
     }
 
-    public function testSetName()
+    public function testSetName(): void
     {
         $object = $this->buildObject();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->setName('fooBar')
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             'fooBar',
             $object->getName()
         );
     }
 
-    public function testSetNameExceptionOnBadArgument()
+    public function testSetNameExceptionOnBadArgument(): void
     {
         $this->expectException(\Throwable::class);
         $this->buildObject()->setName(new \stdClass());
     }
-    
-    public function testGetLength()
+
+    public function testGetLength(): void
     {
-        self::assertEquals(
+        $this->assertEquals(
             123,
             $this->generateObjectPopulated(['length' => 123])->getLength()
         );
     }
 
-    public function testSetLength()
+    public function testSetLength(): void
     {
         $object = $this->buildObject();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->setLength(123)
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             123,
             $object->getLength()
         );
     }
 
-    public function testSetLengthExceptionOnBadArgument()
+    public function testSetLengthExceptionOnBadArgument(): void
     {
         $this->expectException(\Throwable::class);
         $this->buildObject()->setLength(new \stdClass());
     }
 
-    public function testGetMetadata()
+    public function testGetMetadata(): void
     {
         $object = new MediaMetadata('foo', 'bar', 'world');
-        self::assertEquals(
+        $this->assertEquals(
             $object,
             $this->generateObjectPopulated(['metadata' => $object])->getMetadata()
         );
     }
 
-    public function testSetMetadata()
+    public function testSetMetadata(): void
     {
         $mdt = new MediaMetadata('foo', 'bar', 'world');
 
         $object = $this->buildObject();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             Media::class,
             $object->setMetadata($mdt)
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             $mdt,
             $object->getMetadata()
         );

@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -32,15 +32,15 @@ use Teknoo\East\Common\Recipe\Step\FrontAsset\LoadSource;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(LoadSource::class)]
 class LoadSourceTest extends TestCase
 {
-    public function testInvoke()
+    public function testInvoke(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             LoadSource::class,
             (new LoadSource())(
                 $this->createMock(ManagerInterface::class),

@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -31,10 +31,11 @@ use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Recipe\Step\EndLooping;
 use Teknoo\East\Common\Recipe\Step\StartLoopingOn;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
+
 use function array_shift;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(StartLoopingOn::class)]
@@ -45,7 +46,7 @@ class StartLoopingOnTest extends TestCase
         return new StartLoopingOn(keyValue: $keyValue);
     }
 
-    public function testLoopingWithScalarAndWithoutKey()
+    public function testLoopingWithScalarAndWithoutKey(): void
     {
         $manager = $this->createMock(ManagerInterface::class);
         $manager->expects($this->never())
@@ -57,13 +58,13 @@ class StartLoopingOnTest extends TestCase
         $manager->expects($this->once())
             ->method('error');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             StartLoopingOn::class,
             $this->buildStep()($manager, [1,2,3]),
         );
     }
 
-    public function testLoopingWithObjects()
+    public function testLoopingWithObjects(): void
     {
         $step = $this->buildStep();
 
@@ -78,7 +79,7 @@ class StartLoopingOnTest extends TestCase
             ->method('updateWorkPlan')
             ->willReturnCallback(
                 function ($values) use (&$expectedValues, $step, $manager): ManagerInterface {
-                    self::assertEquals(
+                    $this->assertEquals(
                         $values,
                         [
                             StartLoopingOn::class => $step,
@@ -103,17 +104,17 @@ class StartLoopingOnTest extends TestCase
             new DateTimeImmutable('2024-02-23'),
         ];
 
-        self::assertInstanceOf(StartLoopingOn::class, $step($manager, $collection));
-        self::assertFalse($step->isEnded());
-        self::assertInstanceOf(StartLoopingOn::class, $step($manager, $collection));
-        self::assertFalse($step->isEnded());
-        self::assertInstanceOf(StartLoopingOn::class, $step($manager, $collection));
-        self::assertTrue($step->isEnded());
-        self::assertInstanceOf(StartLoopingOn::class, $step($manager, $collection));
-        self::assertTrue($step->isEnded());
+        $this->assertInstanceOf(StartLoopingOn::class, $step($manager, $collection));
+        $this->assertFalse($step->isEnded());
+        $this->assertInstanceOf(StartLoopingOn::class, $step($manager, $collection));
+        $this->assertFalse($step->isEnded());
+        $this->assertInstanceOf(StartLoopingOn::class, $step($manager, $collection));
+        $this->assertTrue($step->isEnded());
+        $this->assertInstanceOf(StartLoopingOn::class, $step($manager, $collection));
+        $this->assertTrue($step->isEnded());
     }
 
-    public function testLoopingWithScalar()
+    public function testLoopingWithScalar(): void
     {
         $step = $this->buildStep('foo');
 
@@ -123,7 +124,7 @@ class StartLoopingOnTest extends TestCase
             ->method('updateWorkPlan')
             ->willReturnCallback(
                 function ($values) use (&$expectedValues, $step, $manager): ManagerInterface {
-                    self::assertEquals(
+                    $this->assertEquals(
                         $values,
                         [
                             StartLoopingOn::class => $step,
@@ -144,14 +145,14 @@ class StartLoopingOnTest extends TestCase
 
         $collection = [1,2,3];
 
-        self::assertInstanceOf(StartLoopingOn::class, $step($manager, $collection));
-        self::assertFalse($step->isEnded());
-        self::assertInstanceOf(StartLoopingOn::class, $step($manager, $collection));
-        self::assertFalse($step->isEnded());
-        self::assertInstanceOf(StartLoopingOn::class, $step($manager, $collection));
-        self::assertTrue($step->isEnded());
-        self::assertInstanceOf(StartLoopingOn::class, $step($manager, $collection));
-        self::assertTrue($step->isEnded());
+        $this->assertInstanceOf(StartLoopingOn::class, $step($manager, $collection));
+        $this->assertFalse($step->isEnded());
+        $this->assertInstanceOf(StartLoopingOn::class, $step($manager, $collection));
+        $this->assertFalse($step->isEnded());
+        $this->assertInstanceOf(StartLoopingOn::class, $step($manager, $collection));
+        $this->assertTrue($step->isEnded());
+        $this->assertInstanceOf(StartLoopingOn::class, $step($manager, $collection));
+        $this->assertTrue($step->isEnded());
 
     }
 }

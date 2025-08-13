@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -34,19 +34,19 @@ use Teknoo\East\Common\Recipe\Step\User\PrepareRecoveryAccess;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(PrepareRecoveryAccess::class)]
 class PrepareRecoveryAccessTest extends TestCase
 {
-    public function testInvoke()
+    public function testInvoke(): void
     {
         $algorithm = $this->createMock(AlgorithmInterface::class);
         $algorithm->expects($this->once())
             ->method('prepare')
             ->willReturnCallback(
-                function (User $user, callable $callback) use ($algorithm) {
+                function (User $user, callable $callback) use ($algorithm): \PHPUnit\Framework\MockObject\MockObject {
                     $callback($this->createMock(AuthDataInterface::class));
 
                     return $algorithm;
@@ -58,7 +58,7 @@ class PrepareRecoveryAccessTest extends TestCase
             ->method('updateWorkPlan')
             ->willReturnSelf();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             PrepareRecoveryAccess::class,
             (new PrepareRecoveryAccess())(
                 $manager,

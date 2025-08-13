@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 
@@ -25,7 +25,9 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\CommonBundle\Middleware;
 
+use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -33,21 +35,15 @@ use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Teknoo\East\CommonBundle\Middleware\LocaleMiddleware;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(LocaleMiddleware::class)]
 class LocaleMiddlewareTest extends TestCase
 {
-    /**
-     * @var LocaleAwareInterface
-     */
-    private $translator;
+    private (LocaleAwareInterface&MockObject)|null $translator = null;
 
-    /**
-     * @return LocaleAwareInterface|\PHPUnit\Framework\MockObject\MockObject
-     */
-    public function getTranslator(): LocaleAwareInterface
+    public function getTranslator(): LocaleAwareInterface&MockObject
     {
         if (!$this->translator instanceof LocaleAwareInterface) {
             $this->translator = $this->createMock(LocaleAwareInterface::class);
@@ -56,19 +52,16 @@ class LocaleMiddlewareTest extends TestCase
         return $this->translator;
     }
 
-    /**
-     * @return LocaleMiddleware
-     */
-    public function buildMiddleware()
+    public function buildMiddleware(): LocaleMiddleware
     {
         return new LocaleMiddleware($this->getTranslator());
     }
 
-    public function testUpdateLocaleInTranslatorIfLocalePresent()
+    public function testUpdateLocaleInTranslatorIfLocalePresent(): void
     {
         $serverRequest = $this->createMock(ServerRequestInterface::class);
 
-        $serverRequest->expects($this->any())
+        $serverRequest
             ->method('getAttribute')
             ->with('locale')
             ->willReturn('fr');
@@ -78,7 +71,7 @@ class LocaleMiddlewareTest extends TestCase
             ->method('setLocale')
             ->with('fr');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             LocaleMiddleware::class,
             $this->buildMiddleware()->execute(
                 $serverRequest,
@@ -86,11 +79,11 @@ class LocaleMiddlewareTest extends TestCase
         );
     }
 
-    public function testNotUpdateLocaleInTranslatorIfLocaleNotPresent()
+    public function testNotUpdateLocaleInTranslatorIfLocaleNotPresent(): void
     {
         $serverRequest = $this->createMock(ServerRequestInterface::class);
 
-        $serverRequest->expects($this->any())
+        $serverRequest
             ->method('getAttribute')
             ->with('locale')
             ->willReturn(null);
@@ -99,7 +92,7 @@ class LocaleMiddlewareTest extends TestCase
             ->expects($this->never())
             ->method('setLocale');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             LocaleMiddleware::class,
             $this->buildMiddleware()->execute(
                 $serverRequest,
@@ -107,7 +100,7 @@ class LocaleMiddlewareTest extends TestCase
         );
     }
 
-    public function testWithMessage()
+    public function testWithMessage(): void
     {
         $message = $this->createMock(MessageInterface::class);
 
@@ -115,7 +108,7 @@ class LocaleMiddlewareTest extends TestCase
             ->expects($this->never())
             ->method('setLocale');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             LocaleMiddleware::class,
             $this->buildMiddleware()->execute(
                 $message,

@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -41,7 +41,7 @@ use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\CommonBundle\Recipe\Step\RecoveryAccessNotification;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(RecoveryAccessNotification::class)]
@@ -100,7 +100,7 @@ class RecoveryAccessNotificationTest extends TestCase
         );
     }
 
-    public function testExceptionWhenMissingLoginNotification()
+    public function testExceptionWhenMissingLoginNotification(): void
     {
         $step = new RecoveryAccessNotification(
             null,
@@ -113,7 +113,7 @@ class RecoveryAccessNotificationTest extends TestCase
         $this->expectException(MissingConfigurationException::class);
 
         $user = $this->createMock(User::class);
-        $user->expects($this->any())
+        $user
             ->method('getEmail')
             ->willReturn('foo@bar');
 
@@ -125,7 +125,7 @@ class RecoveryAccessNotificationTest extends TestCase
         );
     }
 
-    public function testExceptionWhenMissingNotifier()
+    public function testExceptionWhenMissingNotifier(): void
     {
         $step = new RecoveryAccessNotification(
             $this->getLoginLinkHandler(),
@@ -138,7 +138,7 @@ class RecoveryAccessNotificationTest extends TestCase
         $this->expectException(MissingPackageException::class);
 
         $user = $this->createMock(User::class);
-        $user->expects($this->any())
+        $user
             ->method('getEmail')
             ->willReturn('foo@bar');
 
@@ -150,14 +150,14 @@ class RecoveryAccessNotificationTest extends TestCase
         );
     }
 
-    public function testInvoke()
+    public function testInvoke(): void
     {
         $user = $this->createMock(User::class);
-        $user->expects($this->any())
+        $user
             ->method('getEmail')
             ->willReturn('foo@bar');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RecoveryAccessNotification::class,
             $this->buildStep()(
                 $this->createMock(ManagerInterface::class),
@@ -168,15 +168,15 @@ class RecoveryAccessNotificationTest extends TestCase
         );
     }
 
-    public function testInvokeWithInvalidNotification()
+    public function testInvokeWithInvalidNotification(): void
     {
         $user = $this->createMock(User::class);
-        $user->expects($this->any())
+        $user
             ->method('getEmail')
             ->willReturn('foo@bar');
 
         $this->expectException(InvalidClassException::class);
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RecoveryAccessNotification::class,
             $this->buildStep()(
                 $this->createMock(ManagerInterface::class),

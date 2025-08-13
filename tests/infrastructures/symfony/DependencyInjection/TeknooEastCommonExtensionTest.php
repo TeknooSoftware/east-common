@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -32,16 +32,13 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Teknoo\East\CommonBundle\DependencyInjection\TeknooEastCommonExtension;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(TeknooEastCommonExtension::class)]
 class TeknooEastCommonExtensionTest extends TestCase
 {
-    /**
-     * @var ContainerBuilder
-     */
-    private $container;
+    private (ContainerBuilder&MockObject)|null $container = null;
 
     private function getContainerBuilderMock(): ContainerBuilder&MockObject
     {
@@ -52,9 +49,6 @@ class TeknooEastCommonExtensionTest extends TestCase
         return $this->container;
     }
 
-    /**
-     * @return TeknooEastCommonExtension
-     */
     private function buildExtension(): TeknooEastCommonExtension
     {
         return new TeknooEastCommonExtension();
@@ -65,23 +59,23 @@ class TeknooEastCommonExtensionTest extends TestCase
         return TeknooEastCommonExtension::class;
     }
 
-    public function testLoad()
+    public function testLoad(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $this->getExtensionClass(),
             $this->buildExtension()->load([], $this->getContainerBuilderMock())
         );
     }
 
-    public function testLoadErrorContainer()
+    public function testLoadErrorContainer(): void
     {
         $this->expectException(\TypeError::class);
         $this->buildExtension()->load([], new \stdClass());
     }
 
-    public function testLoadErrorConfig()
+    public function testLoadErrorConfig(): void
     {
         $this->expectException(\TypeError::class);
-        $this->buildExtension()->load(new \stdClass(), $this->getContainerBuilderMock());
+        $this->buildExtension()->load(new \stdClass(), $this->container);
     }
 }

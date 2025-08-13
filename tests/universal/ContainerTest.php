@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -108,16 +108,15 @@ use Teknoo\Recipe\RecipeInterface as OriginalRecipeInterface;
  *
  * @link        http://teknoo.software/east Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 class ContainerTest extends TestCase
 {
     /**
-     * @return Container
      * @throws \Exception
      */
-    protected function buildContainer() : Container
+    protected function buildContainer(): Container
     {
         $containerDefinition = new ContainerBuilder();
         $containerDefinition->addDefinitions(__DIR__.'/../../vendor/teknoo/east-foundation/src/di.php');
@@ -126,7 +125,7 @@ class ContainerTest extends TestCase
         return $containerDefinition->build();
     }
 
-    private function generateTestForLoader(string $className, string $repositoryInterface)
+    private function generateTestForLoader(string $className, string $repositoryInterface): void
     {
         $container = $this->buildContainer();
         $repository = $this->createMock($repositoryInterface);
@@ -134,23 +133,23 @@ class ContainerTest extends TestCase
         $container->set($repositoryInterface, $repository);
         $loader = $container->get($className);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $className,
             $loader
         );
     }
 
-    public function testUserLoader()
+    public function testUserLoader(): void
     {
         $this->generateTestForLoader(UserLoader::class, UserRepositoryInterface::class);
     }
 
-    public function testMediaLoader()
+    public function testMediaLoader(): void
     {
         $this->generateTestForLoader(MediaLoader::class, MediaRepositoryInterface::class);
     }
 
-    private function generateTestForWriter(string $className)
+    private function generateTestForWriter(string $className): void
     {
         $container = $this->buildContainer();
         $objectManager = $this->createMock(DbManagerInterface::class);
@@ -158,23 +157,23 @@ class ContainerTest extends TestCase
         $container->set(DbManagerInterface::class, $objectManager);
         $loader = $container->get($className);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $className,
             $loader
         );
     }
 
-    public function testUserWriter()
+    public function testUserWriter(): void
     {
         $this->generateTestForWriter(UserWriter::class);
     }
 
-    public function testMediaWriter()
+    public function testMediaWriter(): void
     {
         $this->generateTestForWriter(MediaWriter::class);
     }
 
-    private function generateTestForDelete(string $key)
+    private function generateTestForDelete(string $key): void
     {
         $container = $this->buildContainer();
         $objectManager = $this->createMock(DbManagerInterface::class);
@@ -182,45 +181,45 @@ class ContainerTest extends TestCase
         $container->set(DbManagerInterface::class, $objectManager);
         $loader = $container->get($key);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             DeletingService::class,
             $loader
         );
     }
 
-    public function testUserDelete()
+    public function testUserDelete(): void
     {
         $this->generateTestForDelete('teknoo.east.common.deleting.user');
     }
 
-    public function testMediaDelete()
+    public function testMediaDelete(): void
     {
         $this->generateTestForDelete('teknoo.east.common.deleting.media');
     }
 
-    public function testLoadMedia()
+    public function testLoadMedia(): void
     {
         $container = $this->buildContainer();
         $container->set(MediaRepositoryInterface::class, $this->createMock(MediaRepositoryInterface::class));
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             LoadMedia::class,
             $container->get(LoadMedia::class)
         );
     }
 
-    public function testSendMedia()
+    public function testSendMedia(): void
     {
         $container = $this->buildContainer();
         $container->set(ResponseFactoryInterface::class, $this->createMock(ResponseFactoryInterface::class));
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             SendMedia::class,
             $container->get(SendMedia::class)
         );
     }
 
-    public function testEastManagerMiddlewareInjection()
+    public function testEastManagerMiddlewareInjection(): void
     {
         $containerDefinition = new ContainerBuilder();
         $containerDefinition->addDefinitions(__DIR__.'/../../vendor/teknoo/east-foundation/src/di.php');
@@ -234,169 +233,169 @@ class ContainerTest extends TestCase
         $manager1 = $container->get(Manager::class);
         $manager2 = $container->get(ManagerInterface::class);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             Manager::class,
             $manager1
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             Manager::class,
             $manager2
         );
 
-        self::assertSame($manager1, $manager2);
+        $this->assertSame($manager1, $manager2);
     }
 
-    public function testCreateObject()
+    public function testCreateObject(): void
     {
         $container = $this->buildContainer();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             CreateObject::class,
             $container->get(CreateObject::class)
         );
     }
 
-    public function testDeleteObject()
+    public function testDeleteObject(): void
     {
         $container = $this->buildContainer();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             DeleteObject::class,
             $container->get(DeleteObject::class)
         );
     }
 
-    public function testExtractOrder()
+    public function testExtractOrder(): void
     {
         $container = $this->buildContainer();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ExtractOrder::class,
             $container->get(ExtractOrder::class)
         );
     }
 
-    public function testExtractPage()
+    public function testExtractPage(): void
     {
         $container = $this->buildContainer();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ExtractPage::class,
             $container->get(ExtractPage::class)
         );
     }
 
-    public function testExtractSlug()
+    public function testExtractSlug(): void
     {
         $container = $this->buildContainer();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ExtractSlug::class,
             $container->get(ExtractSlug::class)
         );
     }
 
-    public function testLoadListObjects()
+    public function testLoadListObjects(): void
     {
         $container = $this->buildContainer();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             LoadListObjects::class,
             $container->get(LoadListObjects::class)
         );
     }
 
-    public function testLoadObject()
+    public function testLoadObject(): void
     {
         $container = $this->buildContainer();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             LoadObject::class,
             $container->get(LoadObject::class)
         );
     }
 
-    public function testRender()
+    public function testRender(): void
     {
         $container = $this->buildContainer();
         $container->set(EngineInterface::class, $this->createMock(EngineInterface::class));
         $container->set(StreamFactoryInterface::class, $this->createMock(StreamFactoryInterface::class));
         $container->set(ResponseFactoryInterface::class, $this->createMock(ResponseFactoryInterface::class));
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             Render::class,
             $container->get(Render::class)
         );
     }
 
-    public function testRenderError()
+    public function testRenderError(): void
     {
         $container = $this->buildContainer();
         $container->set(EngineInterface::class, $this->createMock(EngineInterface::class));
         $container->set(StreamFactoryInterface::class, $this->createMock(StreamFactoryInterface::class));
         $container->set(ResponseFactoryInterface::class, $this->createMock(ResponseFactoryInterface::class));
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RenderError::class,
             $container->get(RenderError::class)
         );
     }
 
-    public function testRenderList()
+    public function testRenderList(): void
     {
         $container = $this->buildContainer();
         $container->set(EngineInterface::class, $this->createMock(EngineInterface::class));
         $container->set(StreamFactoryInterface::class, $this->createMock(StreamFactoryInterface::class));
         $container->set(ResponseFactoryInterface::class, $this->createMock(ResponseFactoryInterface::class));
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RenderList::class,
             $container->get(RenderList::class)
         );
     }
 
-    public function testSaveObject()
+    public function testSaveObject(): void
     {
         $container = $this->buildContainer();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             SaveObject::class,
             $container->get(SaveObject::class)
         );
     }
 
-    public function testJumpIf()
+    public function testJumpIf(): void
     {
         $container = $this->buildContainer();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             JumpIf::class,
             $container->get(JumpIf::class)
         );
     }
 
-    public function testJumpIfNot()
+    public function testJumpIfNot(): void
     {
         $container = $this->buildContainer();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             JumpIfNot::class,
             $container->get(JumpIfNot::class)
         );
     }
 
-    public function testStop()
+    public function testStop(): void
     {
         $container = $this->buildContainer();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             Stop::class,
             $container->get(Stop::class)
         );
     }
 
-    public function testComputePathWithFinalLocation()
+    public function testComputePathWithFinalLocation(): void
     {
         $container = $this->buildContainer();
         $container->set(
@@ -404,118 +403,118 @@ class ContainerTest extends TestCase
             'foo',
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ComputePath::class,
             $container->get(ComputePath::class)
         );
     }
 
-    public function testComputePath()
+    public function testComputePath(): void
     {
         $container = $this->buildContainer();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ComputePath::class,
             $container->get(ComputePath::class)
         );
     }
 
-    public function testLoadPersistedAsset()
+    public function testLoadPersistedAsset(): void
     {
         $container = $this->buildContainer();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             LoadPersistedAsset::class,
             $container->get(LoadPersistedAsset::class)
         );
     }
 
-    public function testLoadSource()
+    public function testLoadSource(): void
     {
         $container = $this->buildContainer();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             LoadSource::class,
             $container->get(LoadSource::class)
         );
     }
 
-    public function testMinifyAssets()
+    public function testMinifyAssets(): void
     {
         $container = $this->buildContainer();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             MinifyAssets::class,
             $container->get(MinifyAssets::class)
         );
     }
 
-    public function testPersistAsset()
+    public function testPersistAsset(): void
     {
         $container = $this->buildContainer();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             PersistAsset::class,
             $container->get(PersistAsset::class)
         );
     }
 
-    public function testReturnFile()
+    public function testReturnFile(): void
     {
         $container = $this->buildContainer();
         $container->set(StreamFactoryInterface::class, $this->createMock(StreamFactoryInterface::class));
         $container->set(ResponseFactoryInterface::class, $this->createMock(ResponseFactoryInterface::class));
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ReturnFile::class,
             $container->get(ReturnFile::class)
         );
     }
 
-    public function testFindUserByEmail()
+    public function testFindUserByEmail(): void
     {
         $container = $this->buildContainer();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             FindUserByEmail::class,
             $container->get(FindUserByEmail::class)
         );
     }
 
 
-    public function testPrepareRecoveryAccess()
+    public function testPrepareRecoveryAccess(): void
     {
         $container = $this->buildContainer();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             PrepareRecoveryAccess::class,
             $container->get(PrepareRecoveryAccess::class)
         );
     }
 
 
-    public function testRemoveRecoveryAccess()
+    public function testRemoveRecoveryAccess(): void
     {
         $container = $this->buildContainer();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RemoveRecoveryAccess::class,
             $container->get(RemoveRecoveryAccess::class)
         );
     }
 
 
-    public function testSlugPreparation()
+    public function testSlugPreparation(): void
     {
         $container = $this->buildContainer();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             SlugPreparation::class,
             $container->get(SlugPreparation::class)
         );
     }
 
-    public function testCreateObjectEndPoint()
+    public function testCreateObjectEndPoint(): void
     {
         $container = $this->buildContainer();
         $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
@@ -529,48 +528,18 @@ class ContainerTest extends TestCase
         $container->set(RenderError::class, $this->createMock(RenderError::class));
         $container->set('teknoo.east.common.plan.default_error_template', 'foo.template');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             CreateObjectEndPoint::class,
             $container->get(CreateObjectEndPoint::class)
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             CreateObjectEndPointInterface::class,
             $container->get(CreateObjectEndPointInterface::class)
         );
     }
 
-    public function testCreateObjectEndPointWithDeprecation()
-    {
-        $container = $this->buildContainer();
-        $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
-        $container->set(CreateObject::class, $this->createMock(CreateObject::class));
-        $container->set(FormHandlingInterface::class, $this->createMock(FormHandlingInterface::class));
-        $container->set(FormProcessingInterface::class, $this->createMock(FormProcessingInterface::class));
-        $container->set(SlugPreparation::class, $this->createMock(SlugPreparation::class));
-        $container->set(SaveObject::class, $this->createMock(SaveObject::class));
-        $container->set(RedirectClientInterface::class, $this->createMock(RedirectClientInterface::class));
-        $container->set(RenderFormInterface::class, $this->createMock(RenderFormInterface::class));
-        $container->set(RenderError::class, $this->createMock(RenderError::class));
-        $container->set('teknoo.east.common.cookbook.default_error_template', 'foo.template');
-
-        $this->expectUserDeprecationMessage(
-            'Parameter `teknoo.east.common.cookbook.default_error_template` is deprecated, '
-            . 'use `teknoo.east.common.plan.default_error_template` instead',
-        );
-
-        self::assertInstanceOf(
-            CreateObjectEndPoint::class,
-            $container->get(CreateObjectEndPoint::class)
-        );
-
-        self::assertInstanceOf(
-            CreateObjectEndPointInterface::class,
-            $container->get(CreateObjectEndPointInterface::class)
-        );
-    }
-
-    public function testCreateObjectEndPointWithAccessControl()
+    public function testCreateObjectEndPointWithAccessControl(): void
     {
         $container = $this->buildContainer();
         $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
@@ -584,18 +553,18 @@ class ContainerTest extends TestCase
         $container->set(RenderError::class, $this->createMock(RenderError::class));
         $container->set(ObjectAccessControlInterface::class, $this->createMock(ObjectAccessControlInterface::class));
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             CreateObjectEndPoint::class,
             $container->get(CreateObjectEndPoint::class)
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             CreateObjectEndPointInterface::class,
             $container->get(CreateObjectEndPointInterface::class)
         );
     }
 
-    public function testDeleteObjectEndPoint()
+    public function testDeleteObjectEndPoint(): void
     {
         $container = $this->buildContainer();
         $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
@@ -606,18 +575,18 @@ class ContainerTest extends TestCase
         $container->set(RenderError::class, $this->createMock(RenderError::class));
         $container->set('teknoo.east.common.plan.default_error_template', 'foo.template');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             DeleteObjectEndPoint::class,
             $container->get(DeleteObjectEndPoint::class)
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             DeleteObjectEndPointInterface::class,
             $container->get(DeleteObjectEndPointInterface::class)
         );
     }
 
-    public function testDeleteObjectEndPointWithAccessControl()
+    public function testDeleteObjectEndPointWithAccessControl(): void
     {
         $container = $this->buildContainer();
         $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
@@ -628,18 +597,18 @@ class ContainerTest extends TestCase
         $container->set(RenderError::class, $this->createMock(RenderError::class));
         $container->set(ObjectAccessControlInterface::class, $this->createMock(ObjectAccessControlInterface::class));
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             DeleteObjectEndPoint::class,
             $container->get(DeleteObjectEndPoint::class)
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             DeleteObjectEndPointInterface::class,
             $container->get(DeleteObjectEndPointInterface::class)
         );
     }
 
-    public function testEditObjectEndPoint()
+    public function testEditObjectEndPoint(): void
     {
         $container = $this->buildContainer();
         $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
@@ -652,18 +621,18 @@ class ContainerTest extends TestCase
         $container->set(RenderError::class, $this->createMock(RenderError::class));
         $container->set('teknoo.east.common.plan.default_error_template', 'foo.template');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             EditObjectEndPoint::class,
             $container->get(EditObjectEndPoint::class)
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             EditObjectEndPointInterface::class,
             $container->get(EditObjectEndPointInterface::class)
         );
     }
 
-    public function testEditObjectEndPointWithAccessControl()
+    public function testEditObjectEndPointWithAccessControl(): void
     {
         $container = $this->buildContainer();
         $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
@@ -676,18 +645,18 @@ class ContainerTest extends TestCase
         $container->set(RenderError::class, $this->createMock(RenderError::class));
         $container->set(ObjectAccessControlInterface::class, $this->createMock(ObjectAccessControlInterface::class));
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             EditObjectEndPoint::class,
             $container->get(EditObjectEndPoint::class)
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             EditObjectEndPointInterface::class,
             $container->get(EditObjectEndPointInterface::class)
         );
     }
 
-    public function testListObjectEndPointWithoutFormLoader()
+    public function testListObjectEndPointWithoutFormLoader(): void
     {
         $container = $this->buildContainer();
         $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
@@ -698,18 +667,18 @@ class ContainerTest extends TestCase
         $container->set(RenderError::class, $this->createMock(RenderError::class));
         $container->set('teknoo.east.common.plan.default_error_template', 'foo.template');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ListObjectEndPoint::class,
             $container->get(ListObjectEndPoint::class)
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ListObjectEndPointInterface::class,
             $container->get(ListObjectEndPointInterface::class)
         );
     }
 
-    public function testListObjectEndPointWithFormLoader()
+    public function testListObjectEndPointWithFormLoader(): void
     {
         $container = $this->buildContainer();
         $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
@@ -720,18 +689,18 @@ class ContainerTest extends TestCase
         $container->set(RenderError::class, $this->createMock(RenderError::class));
         $container->set(SearchFormLoaderInterface::class, $this->createMock(SearchFormLoaderInterface::class));
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ListObjectEndPoint::class,
             $container->get(ListObjectEndPoint::class)
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ListObjectEndPointInterface::class,
             $container->get(ListObjectEndPointInterface::class)
         );
     }
 
-    public function testListObjectEndPointWithAccessControl()
+    public function testListObjectEndPointWithAccessControl(): void
     {
         $container = $this->buildContainer();
         $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
@@ -742,18 +711,18 @@ class ContainerTest extends TestCase
         $container->set(RenderError::class, $this->createMock(RenderError::class));
         $container->set(ListObjectsAccessControlInterface::class, $this->createMock(ListObjectsAccessControlInterface::class));
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ListObjectEndPoint::class,
             $container->get(ListObjectEndPoint::class)
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ListObjectEndPointInterface::class,
             $container->get(ListObjectEndPointInterface::class)
         );
     }
 
-    public function testRenderStaticContentEndPoint()
+    public function testRenderStaticContentEndPoint(): void
     {
         $container = $this->buildContainer();
         $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
@@ -761,18 +730,18 @@ class ContainerTest extends TestCase
         $container->set(RenderError::class, $this->createMock(RenderError::class));
         $container->set('teknoo.east.common.plan.default_error_template', 'foo.template');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RenderStaticContentEndPoint::class,
             $container->get(RenderStaticContentEndPoint::class)
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RenderStaticContentEndPointInterface::class,
             $container->get(RenderStaticContentEndPointInterface::class)
         );
     }
 
-    public function testMinifierEndPoint()
+    public function testMinifierEndPoint(): void
     {
         $container = $this->buildContainer();
         $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
@@ -786,18 +755,18 @@ class ContainerTest extends TestCase
         $container->set(RenderError::class, $this->createMock(RenderError::class));
         $container->set('teknoo.east.common.plan.default_error_template', 'foo.template');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             MinifierEndPoint::class,
             $container->get(MinifierEndPoint::class)
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             MinifierEndPointInterface::class,
             $container->get(MinifierEndPointInterface::class)
         );
     }
 
-    public function testMinifierCommand()
+    public function testMinifierCommand(): void
     {
         $container = $this->buildContainer();
         $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
@@ -805,18 +774,18 @@ class ContainerTest extends TestCase
         $container->set(MinifyAssets::class, $this->createMock(MinifyAssets::class));
         $container->set(PersistAsset::class, $this->createMock(PersistAsset::class));
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             MinifierCommand::class,
             $container->get(MinifierCommand::class)
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             MinifierCommandInterface::class,
             $container->get(MinifierCommandInterface::class)
         );
     }
 
-    public function testRenderMediaEndPoint()
+    public function testRenderMediaEndPoint(): void
     {
         $container = $this->buildContainer();
         $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
@@ -825,18 +794,18 @@ class ContainerTest extends TestCase
         $container->set(SendMedia::class, $this->createMock(SendMedia::class));
         $container->set(RenderError::class, $this->createMock(RenderError::class));
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RenderMediaEndPoint::class,
             $container->get(RenderMediaEndPoint::class)
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RenderMediaEndPointInterface::class,
             $container->get(RenderMediaEndPointInterface::class)
         );
     }
 
-    public function testPrepareRecoveryAccessEndPoint()
+    public function testPrepareRecoveryAccessEndPoint(): void
     {
         $container = $this->buildContainer();
         $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
@@ -855,29 +824,29 @@ class ContainerTest extends TestCase
         $container->set(RenderError::class, $this->createMock(RenderError::class));
         $container->set('teknoo.east.common.plan.default_error_template', 'foo.template');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             PrepareRecoveryAccessEndPoint::class,
             $container->get(PrepareRecoveryAccessEndPoint::class)
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             PrepareRecoveryAccessEndPointInterface::class,
             $container->get(PrepareRecoveryAccessEndPointInterface::class)
         );
     }
 
-    public function testSourceLoaderExtension()
+    public function testSourceLoaderExtension(): void
     {
         $container = $this->buildContainer();
         $container->set(ExtensionManager::class, $this->createMock(ExtensionManager::class));
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             SourceLoaderExtension::class,
             $container->get(SourceLoaderExtension::class)
         );
     }
 
-    public function testGetDefaultErrorTemplate()
+    public function testGetDefaultErrorTemplate(): void
     {
         $container = $this->buildContainer();
         $container->set(
@@ -886,37 +855,12 @@ class ContainerTest extends TestCase
         );
 
         $template = $container->get('teknoo.east.common.get_default_error_template');
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             \Stringable::class,
             $template,
         );
 
-        self::assertEquals(
-            'foo',
-            (string) $template,
-        );
-    }
-
-    public function testCookbookGetDefaultErrorTemplate()
-    {
-        $container = $this->buildContainer();
-        $container->set(
-            'teknoo.east.common.cookbook.default_error_template',
-            'foo'
-        );
-
-        $this->expectUserDeprecationMessage(
-            'Parameter `teknoo.east.common.cookbook.default_error_template` is deprecated, '
-            . 'use `teknoo.east.common.plan.default_error_template` instead',
-        );
-
-        $template = $container->get('teknoo.east.common.get_default_error_template');
-        self::assertInstanceOf(
-            \Stringable::class,
-            $template,
-        );
-
-        self::assertEquals(
+        $this->assertEquals(
             'foo',
             (string) $template,
         );

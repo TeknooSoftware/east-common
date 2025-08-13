@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 
@@ -42,7 +42,7 @@ use Teknoo\East\Common\Doctrine\Repository\ODM\Media;
  *
  * @link        http://teknoo.software/east Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  *
  */
@@ -92,7 +92,7 @@ class MediaTest extends TestCase
         return $this->class;
     }
 
-    public function buildRepository()
+    public function buildRepository(): \Teknoo\East\Common\Doctrine\Repository\ODM\Media
     {
         return new Media(
             $this->getDocumentManager(),
@@ -101,68 +101,63 @@ class MediaTest extends TestCase
         );
     }
 
-    public function testOpenDownloadStreamWithLegacyId()
+    public function testOpenDownloadStreamWithLegacyId(): void
     {
         $id = 'IEdJQ4vbUO7UNyrlmjIZUoQWCW99TYPq';
         $bucket = $this->createMock(Bucket::class);
-        $bucket->expects($this->any())
+        $bucket
             ->method('openDownloadStream')
             ->with($id)
             ->willReturn(\fopen('php://memory', 'r'));
 
         $this->getClassMetadata()
-            ->expects($this->any())
             ->method('getDatabaseIdentifierValue')
-            ->willReturnCallback(fn ($id) => new ObjectId($id));
+            ->willReturnCallback(fn ($id): \MongoDB\BSON\ObjectId => new ObjectId($id));
 
         $this->getDocumentManager()
-            ->expects($this->any())
             ->method('getDocumentBucket')
             ->willReturn($bucket);
 
-        self::assertNotEmpty(
+        $this->assertNotEmpty(
             $this->buildRepository()->openDownloadStream($id)
         );
     }
 
-    public function testOpenDownloadStreamWithObjectId()
+    public function testOpenDownloadStreamWithObjectId(): void
     {
         $id = '5f0f4a76c0918d70c7759a52';
         $bucket = $this->createMock(Bucket::class);
-        $bucket->expects($this->any())
+        $bucket
             ->method('openDownloadStream')
             ->with(new ObjectId($id))
             ->willReturn(\fopen('php://memory', 'r'));
 
         $this->getClassMetadata()
-            ->expects($this->any())
             ->method('getDatabaseIdentifierValue')
-            ->willReturnCallback(fn ($id) => new ObjectId($id));
+            ->willReturnCallback(fn ($id): \MongoDB\BSON\ObjectId => new ObjectId($id));
 
         $this->getDocumentManager()
-            ->expects($this->any())
             ->method('getDocumentBucket')
             ->willReturn($bucket);
 
-        self::assertNotEmpty(
+        $this->assertNotEmpty(
             $this->buildRepository()->openDownloadStream($id)
         );
     }
 
-    public function testOpenDownloadStreamWithObjectIdException()
+    public function testOpenDownloadStreamWithObjectIdException(): void
     {
         $bucket = $this->createMock(Bucket::class);
-        $bucket->expects($this->any())
+        $bucket
             ->method('openDownloadStream')
             ->willThrowException(new FileNotFoundException('foo'));
 
         $this->getDocumentManager()
-            ->expects($this->any())
             ->method('getDocumentBucket')
             ->willReturn($bucket);
 
         $this->expectException(DocumentNotFoundException::class);
-        self::assertNotEmpty(
+        $this->assertNotEmpty(
             $this->buildRepository()->openDownloadStream('2MbSIZleD7tjslM4luOgN1ho')
         );
     }

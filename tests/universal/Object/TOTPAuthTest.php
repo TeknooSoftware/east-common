@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -31,7 +31,7 @@ use Teknoo\East\Common\Object\TOTPAuth;
 use Teknoo\Tests\East\Common\Object\Traits\PopulateObjectTrait;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  *
  */
@@ -40,140 +40,137 @@ class TOTPAuthTest extends TestCase
 {
     use PopulateObjectTrait;
 
-    /**
-     * @return TOTPAuth
-     */
     public function buildObject(): TOTPAuth
     {
         return new TOTPAuth();
     }
 
-    public function testGetTopSecret()
+    public function testGetTopSecret(): void
     {
-        self::assertEquals(
+        $this->assertEquals(
             'fooBar',
             $this->generateObjectPopulated(['topSecret' => 'fooBar'])->getTopSecret()
         );
     }
 
-    public function testSetTopSecret()
+    public function testSetTopSecret(): void
     {
         $object = $this->buildObject();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->setTopSecret('fooBar')
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             'fooBar',
             $object->getTopSecret()
         );
     }
 
-    public function testGetProvider()
+    public function testGetProvider(): void
     {
-        self::assertEquals(
+        $this->assertEquals(
             'fooBar',
             $this->generateObjectPopulated(['provider' => 'fooBar'])->getProvider()
         );
     }
 
-    public function testSetProvider()
+    public function testSetProvider(): void
     {
         $object = $this->buildObject();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->setProvider('fooBar')
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             'fooBar',
             $object->getProvider()
         );
     }
 
-    public function testGetAlgorithm()
+    public function testGetAlgorithm(): void
     {
-        self::assertEquals(
+        $this->assertEquals(
             'fooBar',
             $this->generateObjectPopulated(['algorithm' => 'fooBar'])->getAlgorithm()
         );
     }
 
-    public function testSetAlgorithm()
+    public function testSetAlgorithm(): void
     {
         $object = $this->buildObject();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->setAlgorithm('fooBar')
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             'fooBar',
             $object->getAlgorithm()
         );
     }
 
-    public function testGetPeriod()
+    public function testGetPeriod(): void
     {
-        self::assertEquals(
+        $this->assertEquals(
             123,
             $this->generateObjectPopulated(['period' => 123])->getPeriod()
         );
     }
 
-    public function testSetPeriod()
+    public function testSetPeriod(): void
     {
         $object = $this->buildObject();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->setPeriod(123)
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             123,
             $object->getPeriod()
         );
     }
 
-    public function testGetDigits()
+    public function testGetDigits(): void
     {
-        self::assertEquals(
+        $this->assertEquals(
             123,
             $this->generateObjectPopulated(['digits' => 123])->getDigits()
         );
     }
 
-    public function testSetDigits()
+    public function testSetDigits(): void
     {
         $object = $this->buildObject();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->setDigits(123)
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             123,
             $object->getDigits()
         );
     }
 
-    public function testGetEnabled()
+    public function testGetEnabled(): void
     {
-        self::assertTrue(
+        $this->assertTrue(
             $this->generateObjectPopulated(['enabled' => true])->isEnabled()
         );
     }
 
-    public function testSetEnabled()
+    public function testSetEnabled(): void
     {
         $object = $this->buildObject();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->setEnabled(false)
         );
 
-        self::assertFalse(
+        $this->assertFalse(
             $object->isEnabled()
         );
     }

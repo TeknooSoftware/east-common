@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -48,7 +48,7 @@ use Throwable;
 use TypeError;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(RenderError::class)]
@@ -101,7 +101,7 @@ class RenderErrorTest extends TestCase
         return new RenderError($this->getEngine(), $this->getStreamFactory(), $this->getResponseFactory());
     }
 
-    public function testInvokeBadRequest()
+    public function testInvokeBadRequest(): void
     {
         $this->expectException(TypeError::class);
 
@@ -113,7 +113,7 @@ class RenderErrorTest extends TestCase
         );
     }
 
-    public function testInvokeBadClient()
+    public function testInvokeBadClient(): void
     {
         $this->expectException(TypeError::class);
 
@@ -126,7 +126,7 @@ class RenderErrorTest extends TestCase
         );
     }
 
-    public function testInvokeBadErrorTemplate()
+    public function testInvokeBadErrorTemplate(): void
     {
         $this->expectException(TypeError::class);
 
@@ -139,7 +139,7 @@ class RenderErrorTest extends TestCase
         );
     }
 
-    public function testInvokeBadError()
+    public function testInvokeBadError(): void
     {
         $this->expectException(TypeError::class);
 
@@ -152,10 +152,10 @@ class RenderErrorTest extends TestCase
         );
     }
 
-    public function testInvokeNonCallback()
+    public function testInvokeNonCallback(): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects($this->any())->method('getAttribute')->willReturn([]);
+        $request->method('getAttribute')->willReturn([]);
 
         $client = $this->createMock(ClientInterface::class);
         $template = 'foo';
@@ -166,23 +166,20 @@ class RenderErrorTest extends TestCase
             ->with($error, true);
 
         $response = $this->createMock(ResponseInterface::class);
-        $response->expects($this->any())->method('withHeader')->willReturnSelf();
-        $response->expects($this->any())->method('withBody')->willReturnSelf();
+        $response->method('withHeader')->willReturnSelf();
+        $response->method('withBody')->willReturnSelf();
         $this->getResponseFactory()
-            ->expects($this->any())
             ->method('createResponse')
             ->willReturn($response);
 
         $this->getStreamFactory()
-            ->expects($this->any())
             ->method('createStream')
             ->willReturn($this->createMock(StreamInterface::class));
 
         $this->getEngine()
-            ->expects($this->any())
             ->method('render')
             ->willReturnCallback(
-                function (PromiseInterface $promise) {
+                function (PromiseInterface $promise): \Teknoo\East\Foundation\Template\EngineInterface {
                     $promise->success(
                         $this->createMock(ResultInterface::class)
                     );
@@ -191,7 +188,7 @@ class RenderErrorTest extends TestCase
                 }
             );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RenderError::class,
             $this->buildStep()(
                 $request,
@@ -203,7 +200,7 @@ class RenderErrorTest extends TestCase
         );
     }
 
-    public function testInvokeWithMessage()
+    public function testInvokeWithMessage(): void
     {
         $message = $this->createMock(MessageInterface::class);
 
@@ -216,23 +213,20 @@ class RenderErrorTest extends TestCase
             ->with($error, true);
 
         $response = $this->createMock(ResponseInterface::class);
-        $response->expects($this->any())->method('withHeader')->willReturnSelf();
-        $response->expects($this->any())->method('withBody')->willReturnSelf();
+        $response->method('withHeader')->willReturnSelf();
+        $response->method('withBody')->willReturnSelf();
         $this->getResponseFactory()
-            ->expects($this->any())
             ->method('createResponse')
             ->willReturn($response);
 
         $this->getStreamFactory()
-            ->expects($this->any())
             ->method('createStream')
             ->willReturn($this->createMock(StreamInterface::class));
 
         $this->getEngine()
-            ->expects($this->any())
             ->method('render')
             ->willReturnCallback(
-                function (PromiseInterface $promise) {
+                function (PromiseInterface $promise): \Teknoo\East\Foundation\Template\EngineInterface {
                     $promise->success(
                         $this->createMock(ResultInterface::class)
                     );
@@ -241,7 +235,7 @@ class RenderErrorTest extends TestCase
                 }
             );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RenderError::class,
             $this->buildStep()(
                 $message,
@@ -253,10 +247,10 @@ class RenderErrorTest extends TestCase
         );
     }
 
-    public function testInvokeError()
+    public function testInvokeError(): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects($this->any())->method('getAttribute')->willReturn([]);
+        $request->method('getAttribute')->willReturn([]);
 
         $client = $this->createMock(ClientInterface::class);
         $template = 'foo';
@@ -266,23 +260,20 @@ class RenderErrorTest extends TestCase
             ->method('errorInRequest');
 
         $response = $this->createMock(ResponseInterface::class);
-        $response->expects($this->any())->method('withHeader')->willReturnSelf();
-        $response->expects($this->any())->method('withBody')->willReturnSelf();
+        $response->method('withHeader')->willReturnSelf();
+        $response->method('withBody')->willReturnSelf();
         $this->getResponseFactory()
-            ->expects($this->any())
             ->method('createResponse')
             ->willReturn($response);
 
         $this->getStreamFactory()
-            ->expects($this->any())
             ->method('createStream')
             ->willReturn($this->createMock(StreamInterface::class));
 
         $this->getEngine()
-            ->expects($this->any())
             ->method('render')
             ->willReturnCallback(
-                function (PromiseInterface $promise) {
+                function (PromiseInterface $promise): \Teknoo\East\Foundation\Template\EngineInterface {
                     $promise->fail(
                         new Exception('foo')
                     );
@@ -291,7 +282,7 @@ class RenderErrorTest extends TestCase
                 }
             );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RenderError::class,
             $this->buildStep()(
                 $request,
@@ -303,10 +294,10 @@ class RenderErrorTest extends TestCase
         );
     }
 
-    public function testInvokeWithStreamCallback()
+    public function testInvokeWithStreamCallback(): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects($this->any())->method('getAttribute')->willReturn([]);
+        $request->method('getAttribute')->willReturn([]);
 
         $client = $this->createMock(ClientInterface::class);
         $template = 'foo';
@@ -317,31 +308,28 @@ class RenderErrorTest extends TestCase
             ->with($error, true);
 
         $response = $this->createMock(ResponseInterface::class);
-        $response->expects($this->any())->method('withHeader')->willReturnSelf();
-        $response->expects($this->any())->method('withBody')->willReturnSelf();
+        $response->method('withHeader')->willReturnSelf();
+        $response->method('withBody')->willReturnSelf();
         $this->getResponseFactory()
-            ->expects($this->any())
             ->method('createResponse')
             ->willReturn($response);
 
         $stream = $this->createMock(CallbackStreamInterface::class);
-        $stream->expects($this->any())->method('bind')->willReturnCallback(
-            function (callable $callback) use ($stream) {
+        $stream->method('bind')->willReturnCallback(
+            function (callable $callback) use ($stream): \PHPUnit\Framework\MockObject\MockObject {
                 $callback();
                 return $stream;
             }
         );
 
         $this->getStreamFactory()
-            ->expects($this->any())
             ->method('createStream')
             ->willReturn($stream);
 
         $this->getEngine()
-            ->expects($this->any())
             ->method('render')
             ->willReturnCallback(
-                function (PromiseInterface $promise) {
+                function (PromiseInterface $promise): \Teknoo\East\Foundation\Template\EngineInterface {
                     $promise->success(
                         $this->createMock(ResultInterface::class)
                     );
@@ -350,7 +338,7 @@ class RenderErrorTest extends TestCase
                 }
             );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RenderError::class,
             $this->buildStep()(
                 $request,
@@ -362,24 +350,22 @@ class RenderErrorTest extends TestCase
         );
     }
 
-    public static function codeProvider(): array
+    public static function codeProvider(): \Iterator
     {
-        return [
-            [400],
-            [401],
-            [402],
-            [403],
-            [404],
-            [500],
-            [550],
-        ];
+        yield [400];
+        yield [401];
+        yield [402];
+        yield [403];
+        yield [404];
+        yield [500];
+        yield [550];
     }
 
     #[DataProvider('codeProvider')]
-    public function testInvokeWithCode(int $code)
+    public function testInvokeWithCode(int $code): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects($this->any())->method('getAttribute')->willReturn([]);
+        $request->method('getAttribute')->willReturn([]);
 
         $client = $this->createMock(ClientInterface::class);
         $template = 'foo';
@@ -390,25 +376,22 @@ class RenderErrorTest extends TestCase
             ->with($error, true);
 
         $response = $this->createMock(ResponseInterface::class);
-        $response->expects($this->any())->method('withHeader')->willReturnSelf();
-        $response->expects($this->any())->method('withBody')->willReturnSelf();
+        $response->method('withHeader')->willReturnSelf();
+        $response->method('withBody')->willReturnSelf();
         $this->getResponseFactory()
-            ->expects($this->any())
             ->method('createResponse')
             ->willReturn($response);
 
         $stream = $this->createMock(StreamInterface::class);
 
         $this->getStreamFactory()
-            ->expects($this->any())
             ->method('createStream')
             ->willReturn($stream);
 
         $this->getEngine()
-            ->expects($this->any())
             ->method('render')
             ->willReturnCallback(
-                function (PromiseInterface $promise) {
+                function (PromiseInterface $promise): \Teknoo\East\Foundation\Template\EngineInterface {
                     $promise->success(
                         $this->createMock(ResultInterface::class)
                     );
@@ -417,7 +400,7 @@ class RenderErrorTest extends TestCase
                 }
             );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RenderError::class,
             $this->buildStep()(
                 $request,
@@ -429,9 +412,9 @@ class RenderErrorTest extends TestCase
         );
     }
 
-    public function testSetTidyConfig()
+    public function testSetTidyConfig(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RenderError::class,
             $this->buildStep()->setTidyConfig(['foo' => 'bar']),
         );

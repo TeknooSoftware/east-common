@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 
@@ -41,45 +41,45 @@ class ExtensionForTest implements ExtensionInterface
     {
         match ($module::class) {
             SourceLoader::class => $module->update(
-                fn (FileType $fileType, string $setName, FilesSet $set) => match ($fileType) {
+                fn (FileType $fileType, string $setName, FilesSet $set): ?\Teknoo\East\Common\Contracts\FrontAsset\FilesSetInterface => match ($fileType) {
                     FileType::CSS => match ($setName) {
-                            'main' => $set->add(
-                                new File(
-                                    'from-extension.css',
-                                    FileType::CSS,
-                                    fn () => 'body { background-color: red; }',
-                                ),
+                        'main' => $set->add(
+                            new File(
+                                'from-extension.css',
+                                FileType::CSS,
+                                fn (): string => 'body { background-color: red; }',
                             ),
-                            default => $set->add(
-                                new File(
-                                    'from-extension.css',
-                                    FileType::CSS,
-                                    fn () => 'body { background-color: blue; }',
-                                ),
+                        ),
+                        default => $set->add(
+                            new File(
+                                'from-extension.css',
+                                FileType::CSS,
+                                fn (): string => 'body { background-color: blue; }',
                             ),
-                        },
+                        ),
+                    },
 
-                        FileType::JS => match ($setName) {
-                            'main' => $set->add(
-                                    new File(
-                                        'from-extension-1.js',
-                                        FileType::JS,
-                                        fn () => 'alert("hello");',
-                                    )
-                                )->add(
-                                    new File(
-                                        'from-extension-2.js',
-                                        FileType::JS,
-                                        fn () => 'alert("world");',
-                                    ),
-                                ),
-                            default => $set->add(
-                                new File(
-                                    'from-extension-fail.js',
-                                    FileType::JS,
-                                    fn () => 'alert("fail");',
-                                )
+                    FileType::JS => match ($setName) {
+                        'main' => $set->add(
+                            new File(
+                                'from-extension-1.js',
+                                FileType::JS,
+                                fn (): string => 'alert("hello");',
                             )
+                        )->add(
+                            new File(
+                                'from-extension-2.js',
+                                FileType::JS,
+                                fn (): string => 'alert("world");',
+                            ),
+                        ),
+                        default => $set->add(
+                            new File(
+                                'from-extension-fail.js',
+                                FileType::JS,
+                                fn (): string => 'alert("fail");',
+                            )
+                        )
                     },
                     default => null,
                 }

@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -36,7 +36,7 @@ use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\Tests\East\Common\Query\QueryElementTestTrait;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(UserByEmailQuery::class)]
@@ -52,7 +52,7 @@ class UserByEmailQueryTest extends TestCase
         return new UserByEmailQuery('foo@bar');
     }
 
-    public function testFetch()
+    public function testFetch(): void
     {
         $loader = $this->createMock(LoaderInterface::class);
         $repository = $this->createMock(RepositoryInterface::class);
@@ -63,7 +63,8 @@ class UserByEmailQueryTest extends TestCase
 
         $repository->expects($this->once())
             ->method('findOneBy')
-            ->with([
+            ->with(
+                [
                     'email' => 'foo@bar',
                     'active' => new InclusiveOr(
                         ['active' => true],
@@ -73,7 +74,7 @@ class UserByEmailQueryTest extends TestCase
                 $promise
             );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             UserByEmailQuery::class,
             $this->buildQuery()->fetch($loader, $repository, $promise)
         );

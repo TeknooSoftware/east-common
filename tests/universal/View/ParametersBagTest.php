@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -31,42 +31,42 @@ use Teknoo\East\Common\View\ParametersBag;
 use Teknoo\Recipe\Ingredient\MergeableInterface;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(ParametersBag::class)]
 class ParametersBagTest extends TestCase
 {
-    public function testSet()
+    public function testSet(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ParametersBag::class,
-            (new ParametersBag())->set('foo', 'bar')
+            new ParametersBag()->set('foo', 'bar')
         );
     }
 
-    public function testMerge()
+    public function testMerge(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ParametersBag::class,
-            (new ParametersBag())->merge(new ParametersBag())
+            new ParametersBag()->merge(new ParametersBag())
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ParametersBag::class,
-            (new ParametersBag())->merge($this->createMock(MergeableInterface::class))
+            new ParametersBag()->merge($this->createMock(MergeableInterface::class))
         );
     }
 
-    public function testTransform()
+    public function testTransform(): void
     {
-        self::assertEquals(
+        $this->assertEquals(
             ['foo' => 'bar', 'bar' => 'foo', 'hello' => 'world'],
-            (new ParametersBag())
+            new ParametersBag()
                 ->set('foo', 'bar2')
                 ->set('bar', 'foo')
                 ->merge(
-                    (new ParametersBag())
+                    new ParametersBag()
                         ->set('foo', 'bar')
                         ->set('hello', 'world')
                 )

@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 
@@ -36,42 +36,42 @@ use Teknoo\East\Common\Object\Collection\LazyLoadableCollection;
 use Teknoo\Recipe\Promise\Promise;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  *
  */
 #[CoversClass(LazyLoadableCollection::class)]
 class LazyLoadableCollectionTest extends TestCase
 {
-    public function testFetchCollectionSuccess()
+    public function testFetchCollectionSuccess(): void
     {
         $loader = $this->createMock(LoaderInterface::class);
-        $loader->expects($this->any())
+        $loader
             ->method('query')
             ->willReturnCallback(
-                function ($query, Promise $promise) use ($loader) {
+                function (\Teknoo\East\Common\Contracts\Query\QueryCollectionInterface $query, Promise $promise) use ($loader): \PHPUnit\Framework\MockObject\MockObject {
                     $promise->success([]);
 
                     return $loader;
                 }
             );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             LazyLoadableCollection::class,
-            (new LazyLoadableCollection(
+            new LazyLoadableCollection(
                 loader: $loader,
                 query: $this->createMock(QueryCollectionInterface::class),
-            ))->fetchCollection()
+            )->fetchCollection()
         );
     }
 
-    public function testFetchCollectionFail()
+    public function testFetchCollectionFail(): void
     {
         $loader = $this->createMock(LoaderInterface::class);
-        $loader->expects($this->any())
+        $loader
             ->method('query')
             ->willReturnCallback(
-                function ($query, Promise $promise) use ($loader) {
+                function (\Teknoo\East\Common\Contracts\Query\QueryCollectionInterface $query, Promise $promise) use ($loader): \PHPUnit\Framework\MockObject\MockObject {
                     $promise->fail(new Exception('error'));
 
                     return $loader;
@@ -79,22 +79,22 @@ class LazyLoadableCollectionTest extends TestCase
             );
 
         $this->expectException(Exception::class);
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             LazyLoadableCollection::class,
-            (new LazyLoadableCollection(
+            new LazyLoadableCollection(
                 loader: $loader,
                 query: $this->createMock(QueryCollectionInterface::class),
-            ))->fetchCollection()
+            )->fetchCollection()
         );
     }
 
-    public function testGetIterator()
+    public function testGetIterator(): void
     {
         $loader = $this->createMock(LoaderInterface::class);
-        $loader->expects($this->any())
+        $loader
             ->method('query')
             ->willReturnCallback(
-                function ($query, Promise $promise) use ($loader) {
+                function (\Teknoo\East\Common\Contracts\Query\QueryCollectionInterface $query, Promise $promise) use ($loader): \PHPUnit\Framework\MockObject\MockObject {
                     $promise->success([
                         $this->createMock(ObjectInterface::class),
                         $this->createMock(ObjectInterface::class),
@@ -106,22 +106,22 @@ class LazyLoadableCollectionTest extends TestCase
 
         $collection = new LazyLoadableCollection(
             loader: $loader,
-        query: $this->createMock(QueryCollectionInterface::class),
+            query: $this->createMock(QueryCollectionInterface::class),
         );
 
         $i = 0;
         foreach ($collection as $item) {
-            self::assertInstanceOf(
+            $this->assertInstanceOf(
                 ObjectInterface::class,
                 $item,
             );
-            $i++;
+            ++$i;
         }
 
-        self::assertEquals(2, $i);
+        $this->assertEquals(2, $i);
     }
 
-    public function testGetIteratorWithWrongLoading()
+    public function testGetIteratorWithWrongLoading(): void
     {
         $collection = new LazyLoadableCollection(
             loader: $this->createMock(LoaderInterface::class),

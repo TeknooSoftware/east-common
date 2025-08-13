@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -38,19 +38,19 @@ use Teknoo\East\Foundation\Time\DatesService;
 use Throwable;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(TimeLimitedToken::class)]
 class TimeLimitedTokenTest extends TestCase
 {
-    public function testPrepareWithBadUser()
+    public function testPrepareWithBadUser(): void
     {
         $this->expectException(Throwable::class);
-        (new TimeLimitedToken($this->createMock(DatesService::class), '5 days',))->prepare(new stdClass());
+        new TimeLimitedToken($this->createMock(DatesService::class), '5 days', )->prepare(new stdClass());
     }
 
-    public function testPrepare()
+    public function testPrepare(): void
     {
         $datesService = $this->createMock(DatesService::class);
         $datesService->expects($this->once())
@@ -58,7 +58,7 @@ class TimeLimitedTokenTest extends TestCase
             ->with('5 days')
             ->willReturnCallback(
                 function ($delai, callable $setter, $preferRealDate) use ($datesService): DatesService {
-                    self::assertTrue($preferRealDate);
+                    $this->assertTrue($preferRealDate);
                     $setter(new DateTime('2024-01-20 01:02:03'));
 
                     return $datesService;
@@ -72,17 +72,17 @@ class TimeLimitedTokenTest extends TestCase
             ->method('addAuthData')
             ->willReturnCallback(
                 function (AuthDataInterface|RecoveryAccess $authData) use ($user): User {
-                    self::assertInstanceOf(
+                    $this->assertInstanceOf(
                         RecoveryAccess::class,
                         $authData,
                     );
 
-                    self::assertEquals(
+                    $this->assertEquals(
                         TimeLimitedToken::class,
                         $authData->getAlgorithm(),
                     );
 
-                    self::assertEquals(
+                    $this->assertEquals(
                         '2024-01-20 01:02:03',
                         $authData->getParams()['expired_at'] ?? '',
                     );
@@ -91,15 +91,15 @@ class TimeLimitedTokenTest extends TestCase
                 }
             );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             TimeLimitedToken::class,
-            $service->prepare($user, function () {}),
+            $service->prepare($user, function (): void {}),
         );
     }
 
-    public function testValid()
+    public function testValid(): void
     {
-        self::assertTrue(
+        $this->assertTrue(
             TimeLimitedToken::valid(
                 new RecoveryAccess(
                     algorithm: TimeLimitedToken::class,
@@ -112,7 +112,7 @@ class TimeLimitedTokenTest extends TestCase
             )
         );
 
-        self::assertFalse(
+        $this->assertFalse(
             TimeLimitedToken::valid(
                 new RecoveryAccess(
                     algorithm: TimeLimitedToken::class,
@@ -125,7 +125,7 @@ class TimeLimitedTokenTest extends TestCase
             )
         );
 
-        self::assertFalse(
+        $this->assertFalse(
             TimeLimitedToken::valid(
                 new RecoveryAccess(
                     algorithm: TimeLimitedToken::class,

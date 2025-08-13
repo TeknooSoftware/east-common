@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 
@@ -48,7 +48,7 @@ use function is_array;
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 trait ExprConversionTrait
@@ -76,7 +76,7 @@ trait ExprConversionTrait
     }
 
     /**
-     * @param array<string, mixed> $final
+     * @param array<string, array<string, mixed>> $final
      * @param NotEqual $expr
      */
     private static function processNotEqualExpr(array &$final, string $key, ExprInterface $expr): void
@@ -167,9 +167,7 @@ trait ExprConversionTrait
     }
 
     /**
-     * @param array<string, mixed> $final
-     * @param int|string $key
-     * @param ExprInterface $value
+     * @param array<int|string, mixed> $final
      */
     private static function callConvert(array &$final, int|string $key, ExprInterface $value): void
     {
@@ -183,8 +181,22 @@ trait ExprConversionTrait
     }
 
     /**
-     * @param array<string, mixed> $values
+     * @param array<string|int, mixed> $criteria
      * @return array<string, mixed>
+     */
+    private static function sanitize(array $criteria): array
+    {
+        $sanitazedCriteria = [];
+        foreach (self::convert($criteria) as $key => &$value) {
+            $sanitazedCriteria[(string) $key] = $value;
+        }
+
+        return $sanitazedCriteria;
+    }
+
+    /**
+     * @param array<string|int, mixed> $values
+     * @return array<string|int, mixed>
      */
     private static function convert(array &$values): array
     {
@@ -195,7 +207,7 @@ trait ExprConversionTrait
             }
 
             if (!$value instanceof ExprInterface) {
-                $final[$key] = $value;
+                $final[(string) $key] = $value;
 
                 continue;
             }

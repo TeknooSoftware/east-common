@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 
@@ -32,6 +32,8 @@ use Teknoo\East\Common\Query\Enum\Direction;
 use Teknoo\Recipe\Ingredient\Attributes\Transform;
 use Throwable;
 
+use function is_scalar;
+use function is_string;
 use function strtoupper;
 
 /**
@@ -43,7 +45,7 @@ use function strtoupper;
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 class ExtractOrder
@@ -59,14 +61,14 @@ class ExtractOrder
         $order = [];
         $queryParams = $request->getQueryParams();
         $direction = $defaultOrderDirection;
-        if (isset($queryParams['direction'])) {
+        if (isset($queryParams['direction']) && is_scalar($queryParams['direction'])) {
             $direction = match ($value = strtoupper((string) $queryParams['direction'])) {
                 'ASC', 'DESC' => Direction::from($value),
                 default => throw new InvalidArgumentException('Invalid direction value %value'),
             };
         }
 
-        if (!empty($queryParams['order'])) {
+        if (!empty($queryParams['order']) && is_string($queryParams['order'])) {
             $order[(string) $queryParams['order']] = $direction;
         } elseif (!empty($defaultOrderColumn)) {
             $order[$defaultOrderColumn] = $direction;

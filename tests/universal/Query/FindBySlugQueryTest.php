@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -35,7 +35,7 @@ use Teknoo\East\Common\Query\FindBySlugQuery;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(FindBySlugQuery::class)]
@@ -51,7 +51,7 @@ class FindBySlugQueryTest extends TestCase
         return new FindBySlugQuery('fooBarName', 'HelloWorld', $includedDeleted, $object);
     }
 
-    public function testFetch()
+    public function testFetch(): void
     {
         $loader = $this->createMock(LoaderInterface::class);
         $repository = $this->createMock(RepositoryInterface::class);
@@ -62,15 +62,15 @@ class FindBySlugQueryTest extends TestCase
 
         $repository->expects($this->once())
             ->method('findOneBy')
-            ->with(['fooBarName' => 'HelloWorld', 'deletedAt' => null,], $this->callback(fn($pr) => $pr instanceof PromiseInterface));
+            ->with(['fooBarName' => 'HelloWorld', 'deletedAt' => null,], $this->callback(fn ($pr): bool => $pr instanceof PromiseInterface));
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             FindBySlugQuery::class,
             $this->buildQuery()->fetch($loader, $repository, $promise)
         );
     }
 
-    public function testFetchWithDeleted()
+    public function testFetchWithDeleted(): void
     {
         $loader = $this->createMock(LoaderInterface::class);
         $repository = $this->createMock(RepositoryInterface::class);
@@ -81,15 +81,15 @@ class FindBySlugQueryTest extends TestCase
 
         $repository->expects($this->once())
             ->method('findOneBy')
-            ->with(['fooBarName' => 'HelloWorld',], $this->callback(fn($pr) => $pr instanceof PromiseInterface));
+            ->with(['fooBarName' => 'HelloWorld',], $this->callback(fn ($pr): bool => $pr instanceof PromiseInterface));
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             FindBySlugQuery::class,
             $this->buildQuery(true)->fetch($loader, $repository, $promise)
         );
     }
 
-    public function testFetchWithNonSavedObject()
+    public function testFetchWithNonSavedObject(): void
     {
         $loader = $this->createMock(LoaderInterface::class);
         $repository = $this->createMock(RepositoryInterface::class);
@@ -102,15 +102,15 @@ class FindBySlugQueryTest extends TestCase
 
         $repository->expects($this->once())
             ->method('findOneBy')
-            ->with(['fooBarName' => 'HelloWorld',], $this->callback(fn($pr) => $pr instanceof PromiseInterface));
+            ->with(['fooBarName' => 'HelloWorld',], $this->callback(fn ($pr): bool => $pr instanceof PromiseInterface));
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             FindBySlugQuery::class,
             $this->buildQuery(true, $object)->fetch($loader, $repository, $promise)
         );
     }
 
-    public function testFetchWithSavedObject()
+    public function testFetchWithSavedObject(): void
     {
         $loader = $this->createMock(LoaderInterface::class);
         $repository = $this->createMock(RepositoryInterface::class);
@@ -120,19 +120,19 @@ class FindBySlugQueryTest extends TestCase
         $promise->expects($this->never())->method('fail');
 
         $object = $this->createMock(IdentifiedObjectInterface::class);
-        $object->expects($this->any())->method('getId')->willReturn('foo');
+        $object->method('getId')->willReturn('foo');
 
         $repository->expects($this->once())
             ->method('findOneBy')
-            ->with(['fooBarName' => 'HelloWorld', 'id' => new NotEqual('foo')], $this->callback(fn($pr) => $pr instanceof PromiseInterface));
+            ->with(['fooBarName' => 'HelloWorld', 'id' => new NotEqual('foo')], $this->callback(fn ($pr): bool => $pr instanceof PromiseInterface));
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             FindBySlugQuery::class,
             $this->buildQuery(true, $object)->fetch($loader, $repository, $promise)
         );
     }
 
-    public function testFetchFailing()
+    public function testFetchFailing(): void
     {
         $loader = $this->createMock(LoaderInterface::class);
         $repository = $this->createMock(RepositoryInterface::class);
@@ -143,13 +143,13 @@ class FindBySlugQueryTest extends TestCase
 
         $repository->expects($this->once())
             ->method('findOneBy')
-            ->willReturnCallback(function ($criteria, PromiseInterface $promise) use ($repository) {
+            ->willReturnCallback(function ($criteria, PromiseInterface $promise) use ($repository): \PHPUnit\Framework\MockObject\MockObject {
                 $promise->fail(new \RuntimeException());
 
                 return $repository;
             });
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             FindBySlugQuery::class,
             $this->buildQuery()->fetch($loader, $repository, $promise)
         );

@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -35,7 +35,7 @@ use Teknoo\East\Common\Object\User as BaseUser;
 use TypeError;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(ThirdPartyAuthenticatedUser::class)]
@@ -49,13 +49,14 @@ class ThirdPartyAuthenticatedUserTest extends AbstractUserTests
     /**
      * @return BaseUser|MockObject
      */
+    #[\Override]
     public function getUser(): BaseUser
     {
         if (!$this->user instanceof BaseUser) {
             $this->user = $this->createMock(BaseUser::class);
 
-            $this->user->expects($this->any())->method('getAuthData')->willReturn([$this->getThirdPartyAuth()]);
-            $this->user->expects($this->any())->method('getOneAuthData')->willReturn($this->getStoredPassword());
+            $this->user->method('getAuthData')->willReturn([$this->getThirdPartyAuth()]);
+            $this->user->method('getOneAuthData')->willReturn($this->getStoredPassword());
         }
 
         return $this->user;
@@ -78,42 +79,43 @@ class ThirdPartyAuthenticatedUserTest extends AbstractUserTests
         return new ThirdPartyAuthenticatedUser($this->getUser(), $this->getThirdPartyAuth());
     }
 
-    public function testExceptionWithBadUser()
+    public function testExceptionWithBadUser(): void
     {
         $this->expectException(TypeError::class);
         new ThirdPartyAuthenticatedUser(new stdClass(), $this->getThirdPartyAuth());
     }
 
-    public function testExceptionWithBadThirdPartyAuth()
+    public function testExceptionWithBadThirdPartyAuth(): void
     {
         $this->expectException(TypeError::class);
         new ThirdPartyAuthenticatedUser($this->getUser(), new stdClass());
     }
 
-    public function testGetWrappedThirdAuth()
+    public function testGetWrappedThirdAuth(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ThirdPartyAuth::class,
             $this->buildObject()->getWrappedThirdAuth()
         );
     }
 
-    public function testGetPassword()
+    public function testGetPassword(): void
     {
         $this->getThirdPartyAuth()
             ->expects($this->once())
             ->method('getToken')
             ->willReturn('foo');
 
-        self::assertEquals(
+        $this->assertEquals(
             'foo',
             $this->buildObject()->getPassword()
         );
     }
 
-    public function testEraseCredentials()
+    #[\Override]
+    public function testEraseCredentials(): void
     {
         $this->buildObject()->eraseCredentials();
-        self::assertTrue(true);
+        $this->assertTrue(true);
     }
 }

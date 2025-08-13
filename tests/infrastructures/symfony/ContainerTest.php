@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -63,11 +63,12 @@ use Teknoo\East\Common\Contracts\Recipe\Step\FormProcessingInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RenderFormInterface;
 use Teknoo\East\CommonBundle\Recipe\Step\FormProcessing;
 use Teknoo\East\CommonBundle\Recipe\Step\RenderForm;
-
 use Teknoo\East\Common\Contracts\DBSource\Repository\ContentRepositoryInterface;
 use Teknoo\East\Common\Contracts\DBSource\Repository\ItemRepositoryInterface;
 use Teknoo\Recipe\RecipeInterface as OriginalRecipeInterface;
+
 use function interface_exists;
+
 /**
  * Class DefinitionProviderTest.
  *
@@ -76,41 +77,38 @@ use function interface_exists;
  *
  * @link        http://teknoo.software/east Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 class ContainerTest extends TestCase
 {
-    /**
-     * @return Container
-     */
-    protected function buildContainer() : Container
+    protected function buildContainer(): Container
     {
         $containerDefinition = new ContainerBuilder();
         $containerDefinition->addDefinitions(__DIR__.'/../../../vendor/teknoo/east-foundation/src/di.php');
         $containerDefinition->addDefinitions(__DIR__ . '/../../../src/di.php');
         $containerDefinition->addDefinitions(__DIR__.'/../../../infrastructures/symfony/Resources/config/di.php');
         $containerDefinition->useAutowiring(false);
-        
+
         return $containerDefinition->build();
     }
 
-    public function testFormProcessing()
+    public function testFormProcessing(): void
     {
         $container = $this->buildContainer();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             FormProcessing::class,
             $container->get(FormProcessing::class)
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             FormProcessingInterface::class,
             $container->get(FormProcessingInterface::class)
         );
     }
 
-    public function testRenderForm()
+    public function testRenderForm(): void
     {
         $container = $this->buildContainer();
 
@@ -118,18 +116,18 @@ class ContainerTest extends TestCase
         $container->set(StreamFactoryInterface::class, $this->createMock(StreamFactoryInterface::class));
         $container->set(ResponseFactoryInterface::class, $this->createMock(ResponseFactoryInterface::class));
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RenderFormInterface::class,
             $container->get(RenderFormInterface::class)
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RenderForm::class,
             $container->get(RenderForm::class)
         );
     }
 
-    public function testEnable2FA()
+    public function testEnable2FA(): void
     {
         $container = $this->buildContainer();
 
@@ -142,49 +140,26 @@ class ContainerTest extends TestCase
         $container->set(RenderFormInterface::class, $this->createMock(RenderFormInterface::class));
         $container->set(RenderError::class, $this->createMock(RenderError::class));
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             Enable2FA::class,
             $container->get(Enable2FA::class)
         );
     }
 
-    public function testEnable2FAWithCookbook()
-    {
-        $container = $this->buildContainer();
-
-        $container->set('teknoo.east.common.cookbook.default_error_template', 'foo');
-
-        $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
-        $container->set(EnableTOTP::class, $this->createMock(EnableTOTP::class));
-        $container->set(CreateObject::class, $this->createMock(CreateObject::class));
-        $container->set(FormHandlingInterface::class, $this->createMock(FormHandlingInterface::class));
-        $container->set(RenderFormInterface::class, $this->createMock(RenderFormInterface::class));
-        $container->set(RenderError::class, $this->createMock(RenderError::class));
-
-        $this->expectUserDeprecationMessage(
-            'Parameter `teknoo.east.common.cookbook.default_error_template` is deprecated, '
-            . 'use `teknoo.east.common.plan.default_error_template` instead',
-        );
-        self::assertInstanceOf(
-            Enable2FA::class,
-            $container->get(Enable2FA::class)
-        );
-    }
-
-    public function testPlanInterface()
+    public function testPlanInterface(): void
     {
         $container = $this->buildContainer();
         $container->set(\Teknoo\East\Common\Middleware\LocaleMiddleware::class, $this->createMock(\Teknoo\East\Common\Middleware\LocaleMiddleware::class));
         $container->set(LocaleMiddleware::class, $this->createMock(LocaleMiddleware::class));
         $container->set(RouterInterface::class, $this->createMock(RouterInterface::class));
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             PlanInterface::class,
             $container->get(PlanInterface::class),
         );
     }
 
-    public function testDisable2FA()
+    public function testDisable2FA(): void
     {
         $container = $this->buildContainer();
 
@@ -195,13 +170,13 @@ class ContainerTest extends TestCase
         $container->set(RedirectClientInterface::class, $this->createMock(RedirectClientInterface::class));
         $container->set(RenderError::class, $this->createMock(RenderError::class));
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             Disable2FA::class,
             $container->get(Disable2FA::class)
         );
     }
 
-    public function testGenerateQRCode()
+    public function testGenerateQRCode(): void
     {
         $container = $this->buildContainer();
 
@@ -212,13 +187,13 @@ class ContainerTest extends TestCase
         $container->set(BuildQrCodeInterface::class, $this->createMock(BuildQrCodeInterface::class));
         $container->set(RenderError::class, $this->createMock(RenderError::class));
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             GenerateQRCode::class,
             $container->get(GenerateQRCode::class)
         );
     }
 
-    public function testValidate2FA()
+    public function testValidate2FA(): void
     {
         $container = $this->buildContainer();
 
@@ -233,13 +208,13 @@ class ContainerTest extends TestCase
         $container->set(RenderFormInterface::class, $this->createMock(RenderFormInterface::class));
         $container->set(RenderError::class, $this->createMock(RenderError::class));
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             Validate2FA::class,
             $container->get(Validate2FA::class)
         );
     }
 
-    public function testLocaleMiddleware()
+    public function testLocaleMiddleware(): void
     {
         $container = $this->buildContainer();
         $translatableListener = $this->createMock(LocaleAwareInterface::class);
@@ -247,13 +222,13 @@ class ContainerTest extends TestCase
         $container->set('translator', $translatableListener);
         $loader = $container->get(LocaleMiddleware::class);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             LocaleMiddleware::class,
             $loader
         );
     }
 
-    public function testEastManagerMiddlewareInjection()
+    public function testEastManagerMiddlewareInjection(): void
     {
         $container = $this->buildContainer();
 
@@ -261,13 +236,13 @@ class ContainerTest extends TestCase
         $container->set(RouterInterface::class, $this->createMock(RouterInterface::class));
         $container->set('translator', $this->createMock(LocaleAwareInterface::class));
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RecipeInterface::class,
             $container->get(RecipeInterface::class)
         );
     }
 
-    public function testMinifyCommandCssWithMessageFactoryInterface()
+    public function testMinifyCommandCssWithMessageFactoryInterface(): void
     {
         $container = $this->buildContainer();
 
@@ -285,13 +260,13 @@ class ContainerTest extends TestCase
         $container->set(MinifierInterface::class . ':css', $this->createMock(MinifierInterface::class));
         $container->set(MessageFactoryInterface::class, $this->createMock(MessageFactoryInterface::class));
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             MinifyCommand::class,
             $container->get(MinifyCommand::class . ':css')
         );
     }
 
-    public function testMinifyCommandCssWithMessageFactory()
+    public function testMinifyCommandCssWithMessageFactory(): void
     {
         $container = $this->buildContainer();
 
@@ -309,13 +284,13 @@ class ContainerTest extends TestCase
         $container->set(MinifierInterface::class . ':css', $this->createMock(MinifierInterface::class));
         $container->set(MessageFactory::class, $this->createMock(MessageFactory::class));
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             MinifyCommand::class,
             $container->get(MinifyCommand::class . ':css')
         );
     }
 
-    public function testMinifyCommandCssWithoutMessageFactory()
+    public function testMinifyCommandCssWithoutMessageFactory(): void
     {
         $container = $this->buildContainer();
 
@@ -336,7 +311,7 @@ class ContainerTest extends TestCase
         $container->get(MinifyCommand::class . ':css');
     }
 
-    public function testMinifyCommandJsWithMessageFactoryInterface()
+    public function testMinifyCommandJsWithMessageFactoryInterface(): void
     {
         $container = $this->buildContainer();
 
@@ -354,13 +329,13 @@ class ContainerTest extends TestCase
         $container->set(MinifierInterface::class . ':js', $this->createMock(MinifierInterface::class));
         $container->set(MessageFactoryInterface::class, $this->createMock(MessageFactoryInterface::class));
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             MinifyCommand::class,
             $container->get(MinifyCommand::class . ':js')
         );
     }
 
-    public function testMinifyCommandJsWithMessageFactory()
+    public function testMinifyCommandJsWithMessageFactory(): void
     {
         $container = $this->buildContainer();
 
@@ -378,13 +353,13 @@ class ContainerTest extends TestCase
         $container->set(MinifierInterface::class . ':js', $this->createMock(MinifierInterface::class));
         $container->set(MessageFactory::class, $this->createMock(MessageFactory::class));
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             MinifyCommand::class,
             $container->get(MinifyCommand::class . ':js')
         );
     }
 
-    public function testMinifyCommandJsWithoutMessageFactory()
+    public function testMinifyCommandJsWithoutMessageFactory(): void
     {
         $container = $this->buildContainer();
 

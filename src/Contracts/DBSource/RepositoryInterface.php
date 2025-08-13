@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 
@@ -32,7 +32,7 @@ use Teknoo\Recipe\Promise\PromiseInterface;
 /**
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  *
  * @template TSuccessArgType
@@ -71,7 +71,7 @@ interface RepositoryInterface
      * an UnexpectedValueException if certain values of the sorting or limiting details are
      * not supported.
      *
-     * @param array<string, mixed> $criteria
+     * @param array<int|string, mixed> $criteria
      * @param PromiseInterface<iterable<TSuccessArgType>, mixed> $promise
      * @param array<string, Direction>|null $orderBy
      * @param string[] $hydrate list of fields hosting a reference to hydrate
@@ -89,7 +89,7 @@ interface RepositoryInterface
     /**
      * To get distinct values about a document's (sub)field according to criteria and optional offset
      *
-     * @param array<string, mixed> $criteria
+     * @param array<int|string, mixed> $criteria
      * @param PromiseInterface<iterable<mixed>, mixed> $promise
      * @return RepositoryInterface<TSuccessArgType>
      */
@@ -104,7 +104,7 @@ interface RepositoryInterface
     /**
      * Count objects with criteria compatible
      *
-     * @param array<string, mixed> $criteria The criteria.
+     * @param array<int|string, mixed> $criteria The criteria.
      * @param PromiseInterface<int, mixed> $promise
      * @return RepositoryInterface<TSuccessArgType>
      */
@@ -116,7 +116,7 @@ interface RepositoryInterface
     /**
      * Finds a single object by a set of criteria.
      *
-     * @param array<string|int, mixed> $criteria The criteria.
+     * @param array<int|string, mixed> $criteria The criteria.
      * @param PromiseInterface<TSuccessArgType, mixed> $promise
      * @param string[] $hydrate list of fields hosting a reference to hydrate
      * @return RepositoryInterface<TSuccessArgType>

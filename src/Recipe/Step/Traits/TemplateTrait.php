@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 
@@ -47,7 +47,7 @@ use function trim;
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 trait TemplateTrait
@@ -101,7 +101,7 @@ trait TemplateTrait
      * @param string          $view       The view name
      * @param array<string, mixed> $parameters An array of parameters to pass to the view
      * @param int             $status The status code to use for the Response
-     * @param array<string, mixed> $headers An array of values to inject into HTTP header response
+     * @param array<string, array<string>|string> $headers An array of values to inject into HTTP header response
      */
     private function render(
         ClientInterface $client,
@@ -131,9 +131,7 @@ trait TemplateTrait
             $stream->bind(function () use ($client, &$view, &$parameters, $cleanHtml, $api): string {
                 /** @var Promise<ResultInterface, string, mixed> $promise */
                 $promise = new Promise(
-                    static function (ResultInterface $result): string {
-                        return (string) $result;
-                    },
+                    static fn (ResultInterface $result): string => (string) $result,
                     static fn (
                         #[SensitiveParameter] Throwable $error,
                     ): ClientInterface => $client->errorInRequest($error, false),
@@ -151,12 +149,10 @@ trait TemplateTrait
                     $resultStr = $this->cleanOutput($resultStr);
                 }
 
-                $resultStr = match ($api) {
+                return match ($api) {
                     'json' => trim($resultStr),
                     default => $resultStr,
                 };
-
-                return $resultStr;
             });
 
             $response = $response->withBody($stream);
@@ -167,6 +163,7 @@ trait TemplateTrait
             if ($cleanHtml) {
                 $cleanOuput = $this->cleanOutput(...);
             }
+
             $this->templating->render(
                 new Promise(
                     static function (

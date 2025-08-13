@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -29,17 +29,12 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Teknoo\East\Common\Contracts\User\AuthDataInterface;
-use Teknoo\East\Common\Object\StoredPassword;
-use Teknoo\East\Common\Object\User;
 use Teknoo\East\CommonBundle\Form\Type\ApiUserType;
 use Teknoo\East\CommonBundle\Form\Type\UserType;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(ApiUserType::class)]
@@ -49,26 +44,26 @@ class ApiUserTypeTest extends TestCase
 
     public function buildForm(): UserType
     {
-        return new UserType;
+        return new UserType();
     }
 
-    public function testBuildFormWithPopulatedUser()
+    public function testBuildFormWithPopulatedUser(): void
     {
         $builder = $this->createMock(FormBuilderInterface::class);
 
-        $builder->expects($this->any())
+        $builder
             ->method('add')
             ->willReturnSelf();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             AbstractType::class,
             $this->buildForm()->buildForm($builder, [])
         );
     }
 
-    public function testConfigureOptions()
+    public function testConfigureOptions(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             UserType::class,
             $this->buildForm()->configureOptions(
                 $this->createMock(OptionsResolver::class)

@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -31,7 +31,7 @@ use Teknoo\East\Common\Object\StoredPassword;
 use Teknoo\Tests\East\Common\Object\Traits\PopulateObjectTrait;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(StoredPassword::class)]
@@ -39,151 +39,148 @@ class StoredPasswordTest extends TestCase
 {
     use PopulateObjectTrait;
 
-    /**
-     * @return StoredPassword
-     */
     public function buildObject(): StoredPassword
     {
         return new StoredPassword();
     }
 
-    public function testGetHash()
+    public function testGetHash(): void
     {
-        self::assertEquals(
+        $this->assertEquals(
             'fooBar',
             $this->generateObjectPopulated(['hash' => 'fooBar'])->getHash()
         );
     }
 
-    public function testGetPassword()
+    public function testGetPassword(): void
     {
-        self::assertEquals(
+        $this->assertEquals(
             'fooBar',
             $this->generateObjectPopulated(['hash' => 'fooBar'])->getPassword()
         );
     }
 
-    public function testSetPassword()
+    public function testSetPassword(): void
     {
         $object = $this->buildObject();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->setPassword('fooBar')
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             'fooBar',
             $object->getHash()
         );
 
-        self::assertTrue($object->mustHashPassword());
+        $this->assertTrue($object->mustHashPassword());
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->setPassword(null)
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             'fooBar',
             $object->getHash()
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->setPassword('')
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             'fooBar',
             $object->getHash()
         );
     }
 
-    public function testSetHashedPassword()
+    public function testSetHashedPassword(): void
     {
         $object = $this->buildObject();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->setHashedPassword('fooBar')
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             'fooBar',
             $object->getHash()
         );
 
-        self::assertFalse($object->mustHashPassword());
+        $this->assertFalse($object->mustHashPassword());
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->setHashedPassword(null)
         );
 
-        self::assertEmpty(
+        $this->assertEmpty(
             $object->getHash()
         );
     }
 
-    public function testEraseCredentials()
+    public function testEraseCredentials(): void
     {
         $object = $this->buildObject();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->setPassword('fooBar')
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             'fooBar',
             $object->getHash()
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->setPassword('fooBar2')
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             'fooBar2',
             $object->getHash()
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->eraseCredentials()
         );
 
-        self::assertEmpty($object->getHash());
+        $this->assertEmpty($object->getHash());
     }
 
-    public function testSetPasswordExceptionOnBadArgument()
+    public function testSetPasswordExceptionOnBadArgument(): void
     {
         $this->expectException(\Throwable::class);
         $this->buildObject()->setPassword(new \stdClass());
     }
 
-    public function testGetAlgo()
+    public function testGetAlgo(): void
     {
-        self::assertEquals(
+        $this->assertEquals(
             'fooBar',
             $this->generateObjectPopulated(['algo' => 'fooBar'])->getAlgo()
         );
     }
 
-    public function testSetAlgo()
+    public function testSetAlgo(): void
     {
         $object = $this->buildObject();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->setAlgo('fooBar')
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             'fooBar',
             $object->getAlgo()
         );
     }
 
-    public function testSetSaltExceptionOnBadArgument()
+    public function testSetSaltExceptionOnBadArgument(): void
     {
         $this->expectException(\Throwable::class);
         $this->buildObject()->setSalt(new \stdClass());

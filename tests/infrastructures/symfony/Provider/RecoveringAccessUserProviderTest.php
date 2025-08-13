@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -27,6 +27,7 @@ namespace Teknoo\Tests\East\CommonBundle\Provider;
 
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface as GoogleTwoFactorInterface;
 use Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface as TotpTwoFactorInterface;
@@ -50,32 +51,20 @@ use Teknoo\East\Foundation\Time\DatesService;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  *
  */
 #[CoversClass(RecoveringAccessUserProvider::class)]
 class RecoveringAccessUserProviderTest extends TestCase
 {
-    /**
-     * @var UserLoader
-     */
-    private $loader;
+    private (UserLoader&MockObject)|null $loader = null;
 
-    /**
-     * @var SymfonyUserWriter
-     */
-    private $writer;
+    private (SymfonyUserWriter&MockObject)|null $writer = null;
 
-    /**
-     * @var DatesService
-     */
-    private $datesService;
+    private (DatesService&MockObject)|null $datesService = null;
 
-    /**
-     * @return UserLoader|\PHPUnit\Framework\MockObject\MockObject
-     */
-    public function getLoader(): UserLoader
+    public function getLoader(): UserLoader&MockObject
     {
         if (!$this->loader instanceof UserLoader) {
             $this->loader = $this->createMock(UserLoader::class);
@@ -84,10 +73,7 @@ class RecoveringAccessUserProviderTest extends TestCase
         return $this->loader;
     }
 
-    /**
-     * @return SymfonyUserWriter|\PHPUnit\Framework\MockObject\MockObject
-     */
-    public function getWriter(): SymfonyUserWriter
+    public function getWriter(): SymfonyUserWriter&MockObject
     {
         if (!$this->writer instanceof SymfonyUserWriter) {
             $this->writer = $this->createMock(SymfonyUserWriter::class);
@@ -96,10 +82,7 @@ class RecoveringAccessUserProviderTest extends TestCase
         return $this->writer;
     }
 
-    /**
-     * @return DatesService|\PHPUnit\Framework\MockObject\MockObject
-     */
-    public function getDatesService(): DatesService
+    public function getDatesService(): DatesService&MockObject
     {
         if (!$this->datesService instanceof DatesService) {
             $this->datesService = $this->createMock(DatesService::class);
@@ -118,15 +101,15 @@ class RecoveringAccessUserProviderTest extends TestCase
         );
     }
 
-    public function testLoadUserByUsernameNotFound()
+    public function testLoadUserByUsernameNotFound(): void
     {
         $this->expectException(UserNotFoundException::class);
 
         $this->getLoader()
             ->expects($this->once())
             ->method('fetch')
-            ->willReturnCallback(function ($name, PromiseInterface $promise) {
-                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
+            ->willReturnCallback(function ($name, PromiseInterface $promise): \Teknoo\East\Common\Loader\UserLoader {
+                $this->assertEquals(new UserByEmailQuery('foo@bar'), $name);
                 $promise->fail(new \DomainException());
 
                 return $this->getLoader();
@@ -135,12 +118,12 @@ class RecoveringAccessUserProviderTest extends TestCase
         $this->buildProvider()->loadUserByUsername('foo@bar');
     }
 
-    public function testLoadUserByUsernameFound()
+    public function testLoadUserByUsernameFound(): void
     {
-        $this->getDatesService()->expects($this->any())
+        $this->getDatesService()
             ->method('passMeTheDate')
             ->willReturnCallback(
-                function (callable $setter) {
+                function (callable $setter): ?\PHPUnit\Framework\MockObject\MockObject {
                     $setter(new DateTimeImmutable('2024-01-28'));
 
                     return  $this->datesService;
@@ -162,8 +145,8 @@ class RecoveringAccessUserProviderTest extends TestCase
         $this->getLoader()
             ->expects($this->once())
             ->method('fetch')
-            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
-                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
+            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user): \Teknoo\East\Common\Loader\UserLoader {
+                $this->assertEquals(new UserByEmailQuery('foo@bar'), $name);
                 $promise->success($user);
 
                 return $this->getLoader();
@@ -171,18 +154,18 @@ class RecoveringAccessUserProviderTest extends TestCase
 
         $loadedUser = new UserWithRecoveryAccess($user, $recoveryAccess, 'ROLE_RECOVERY');
 
-        self::assertEquals(
+        $this->assertEquals(
             $loadedUser,
             $this->buildProvider()->loadUserByUsername('foo@bar')
         );
     }
 
-    public function testLoadUserByUsernameFoundWithWrongAlgorithm()
+    public function testLoadUserByUsernameFoundWithWrongAlgorithm(): void
     {
-        $this->getDatesService()->expects($this->any())
+        $this->getDatesService()
             ->method('passMeTheDate')
             ->willReturnCallback(
-                function (callable $setter) {
+                function (callable $setter): ?\PHPUnit\Framework\MockObject\MockObject {
                     $setter(new DateTimeImmutable('2024-01-28'));
 
                     return  $this->datesService;
@@ -204,8 +187,8 @@ class RecoveringAccessUserProviderTest extends TestCase
         $this->getLoader()
             ->expects($this->once())
             ->method('fetch')
-            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
-                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
+            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user): \Teknoo\East\Common\Loader\UserLoader {
+                $this->assertEquals(new UserByEmailQuery('foo@bar'), $name);
                 $promise->success($user);
 
                 return $this->getLoader();
@@ -215,12 +198,12 @@ class RecoveringAccessUserProviderTest extends TestCase
         $this->buildProvider()->loadUserByUsername('foo@bar');
     }
 
-    public function testLoadUserByUsernameFoundWithGoogleAuthenticator()
+    public function testLoadUserByUsernameFoundWithGoogleAuthenticator(): void
     {
-        $this->getDatesService()->expects($this->any())
+        $this->getDatesService()
             ->method('passMeTheDate')
             ->willReturnCallback(
-                function (callable $setter) {
+                function (callable $setter): ?\PHPUnit\Framework\MockObject\MockObject {
                     $setter(new DateTimeImmutable('2024-01-28'));
 
                     return  $this->datesService;
@@ -251,8 +234,8 @@ class RecoveringAccessUserProviderTest extends TestCase
         $this->getLoader()
             ->expects($this->once())
             ->method('fetch')
-            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
-                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
+            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user): \Teknoo\East\Common\Loader\UserLoader {
+                $this->assertEquals(new UserByEmailQuery('foo@bar'), $name);
                 $promise->success($user);
 
                 return $this->getLoader();
@@ -260,30 +243,30 @@ class RecoveringAccessUserProviderTest extends TestCase
 
         $loadedUser = new UserWithRecoveryAccess($user, $recoveryAccess, 'ROLE_RECOVERY');
 
-        self::assertTrue(
+        $this->assertTrue(
             $loadedUser->isEqualTo(
                 $builtUser = $this->buildProvider()
                     ->loadUserByUsername('foo@bar')
             )
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             GoogleTwoFactorInterface::class,
             $builtUser,
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             UserWithTOTPAuthInterface::class,
             $builtUser,
         );
     }
 
-    public function testLoadUserByUsernameFoundWithTOTP()
+    public function testLoadUserByUsernameFoundWithTOTP(): void
     {
-        $this->getDatesService()->expects($this->any())
+        $this->getDatesService()
             ->method('passMeTheDate')
             ->willReturnCallback(
-                function (callable $setter) {
+                function (callable $setter): ?\PHPUnit\Framework\MockObject\MockObject {
                     $setter(new DateTimeImmutable('2024-01-28'));
 
                     return  $this->datesService;
@@ -314,8 +297,8 @@ class RecoveringAccessUserProviderTest extends TestCase
         $this->getLoader()
             ->expects($this->once())
             ->method('fetch')
-            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
-                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
+            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user): \Teknoo\East\Common\Loader\UserLoader {
+                $this->assertEquals(new UserByEmailQuery('foo@bar'), $name);
                 $promise->success($user);
 
                 return $this->getLoader();
@@ -323,25 +306,25 @@ class RecoveringAccessUserProviderTest extends TestCase
 
         $loadedUser = new UserWithRecoveryAccess($user, $recoveryAccess, 'ROLE_RECOVERY');
 
-        self::assertTrue(
+        $this->assertTrue(
             $loadedUser->isEqualTo(
                 $builtUser = $this->buildProvider()
                     ->loadUserByUsername('foo@bar')
             )
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             TotpTwoFactorInterface::class,
             $builtUser,
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             UserWithTOTPAuthInterface::class,
             $builtUser,
         );
     }
 
-    public function testLoadUserByUsernameFoundWithoutRecoveryAccess()
+    public function testLoadUserByUsernameFoundWithoutRecoveryAccess(): void
     {
         $user = new User();
         $user->setEmail('foo@bar');
@@ -350,8 +333,8 @@ class RecoveringAccessUserProviderTest extends TestCase
         $this->getLoader()
             ->expects($this->once())
             ->method('fetch')
-            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
-                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
+            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user): \Teknoo\East\Common\Loader\UserLoader {
+                $this->assertEquals(new UserByEmailQuery('foo@bar'), $name);
                 $promise->success($user);
 
                 return $this->getLoader();
@@ -361,15 +344,15 @@ class RecoveringAccessUserProviderTest extends TestCase
         $this->buildProvider()->loadUserByUsername('foo@bar');
     }
 
-    public function testLoadUserByIdentifierNotFound()
+    public function testLoadUserByIdentifierNotFound(): void
     {
         $this->expectException(UserNotFoundException::class);
 
         $this->getLoader()
             ->expects($this->once())
             ->method('fetch')
-            ->willReturnCallback(function ($name, PromiseInterface $promise) {
-                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
+            ->willReturnCallback(function ($name, PromiseInterface $promise): \Teknoo\East\Common\Loader\UserLoader {
+                $this->assertEquals(new UserByEmailQuery('foo@bar'), $name);
                 $promise->fail(new \DomainException());
 
                 return $this->getLoader();
@@ -378,12 +361,12 @@ class RecoveringAccessUserProviderTest extends TestCase
         $this->buildProvider()->loadUserByIdentifier('foo@bar');
     }
 
-    public function testLoadUserByIdentifierFound()
+    public function testLoadUserByIdentifierFound(): void
     {
-        $this->getDatesService()->expects($this->any())
+        $this->getDatesService()
             ->method('passMeTheDate')
             ->willReturnCallback(
-                function (callable $setter) {
+                function (callable $setter): ?\PHPUnit\Framework\MockObject\MockObject {
                     $setter(new DateTimeImmutable('2024-01-28'));
 
                     return  $this->datesService;
@@ -405,8 +388,8 @@ class RecoveringAccessUserProviderTest extends TestCase
         $this->getLoader()
             ->expects($this->once())
             ->method('fetch')
-            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
-                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
+            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user): \Teknoo\East\Common\Loader\UserLoader {
+                $this->assertEquals(new UserByEmailQuery('foo@bar'), $name);
                 $promise->success($user);
 
                 return $this->getLoader();
@@ -414,13 +397,13 @@ class RecoveringAccessUserProviderTest extends TestCase
 
         $loadedUser = new UserWithRecoveryAccess($user, $recoveryAccess, 'ROLE_RECOVERY');
 
-        self::assertEquals(
+        $this->assertEquals(
             $loadedUser,
             $this->buildProvider()->loadUserByUsername('foo@bar')
         );
     }
 
-    public function testLoadUserByIdentifierFoundWithoutRecoveryAccess()
+    public function testLoadUserByIdentifierFoundWithoutRecoveryAccess(): void
     {
         $user = new User();
         $user->setEmail('foo@bar');
@@ -429,8 +412,8 @@ class RecoveringAccessUserProviderTest extends TestCase
         $this->getLoader()
             ->expects($this->once())
             ->method('fetch')
-            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
-                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
+            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user): \Teknoo\East\Common\Loader\UserLoader {
+                $this->assertEquals(new UserByEmailQuery('foo@bar'), $name);
                 $promise->success($user);
 
                 return $this->getLoader();
@@ -440,15 +423,15 @@ class RecoveringAccessUserProviderTest extends TestCase
         $this->buildProvider()->loadUserByIdentifier('foo@bar');
     }
 
-    public function testrefreshUserNotFound()
+    public function testrefreshUserNotFound(): void
     {
         $this->expectException(UserNotFoundException::class);
 
         $this->getLoader()
             ->expects($this->once())
             ->method('fetch')
-            ->willReturnCallback(function ($name, PromiseInterface $promise) {
-                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
+            ->willReturnCallback(function ($name, PromiseInterface $promise): \Teknoo\East\Common\Loader\UserLoader {
+                $this->assertEquals(new UserByEmailQuery('foo@bar'), $name);
                 $promise->fail(new \DomainException());
 
                 return $this->getLoader();
@@ -456,7 +439,7 @@ class RecoveringAccessUserProviderTest extends TestCase
 
         $this->buildProvider()->refreshUser(
             new UserWithRecoveryAccess(
-                (new User())->setEmail('foo@bar'),
+                new User()->setEmail('foo@bar'),
                 $recoveryAccess = new RecoveryAccess(
                     algorithm: TimeLimitedToken::class,
                     params: [
@@ -469,12 +452,12 @@ class RecoveringAccessUserProviderTest extends TestCase
         );
     }
 
-    public function testRefreshUserFound()
+    public function testRefreshUserFound(): void
     {
-        $this->getDatesService()->expects($this->any())
+        $this->getDatesService()
             ->method('passMeTheDate')
             ->willReturnCallback(
-                function (callable $setter) {
+                function (callable $setter): ?\PHPUnit\Framework\MockObject\MockObject {
                     $setter(new DateTimeImmutable('2024-01-28'));
 
                     return  $this->datesService;
@@ -496,8 +479,8 @@ class RecoveringAccessUserProviderTest extends TestCase
         $this->getLoader()
             ->expects($this->once())
             ->method('fetch')
-            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
-                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
+            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user): \Teknoo\East\Common\Loader\UserLoader {
+                $this->assertEquals(new UserByEmailQuery('foo@bar'), $name);
                 $promise->success($user);
 
                 return $this->getLoader();
@@ -505,11 +488,11 @@ class RecoveringAccessUserProviderTest extends TestCase
 
         $loadedUser = new UserWithRecoveryAccess($user, $recoveryAccess, 'ROLE_RECOVERY');
 
-        self::assertEquals(
+        $this->assertEquals(
             $loadedUser,
             $this->buildProvider()->refreshUser(
                 new UserWithRecoveryAccess(
-                    (new User())->setEmail('foo@bar'),
+                    new User()->setEmail('foo@bar'),
                     $recoveryAccess,
                     'ROLE_RECOVERY',
                 )
@@ -517,13 +500,13 @@ class RecoveringAccessUserProviderTest extends TestCase
         );
     }
 
-    public function testRefreshUserNotSupported()
+    public function testRefreshUserNotSupported(): void
     {
         $this->expectException(MissingUserException::class);
         $this->buildProvider()->refreshUser($this->createMock(UserInterface::class));
     }
 
-    public function testUpgradePasswordNotSupported()
+    public function testUpgradePasswordNotSupported(): void
     {
         $this->getWriter()->expects($this->never())->method('save');
 
@@ -533,12 +516,12 @@ class RecoveringAccessUserProviderTest extends TestCase
         );
     }
 
-    public function testUpgradePassword()
+    public function testUpgradePassword(): void
     {
         $sfUser = $this->createMock(UserWithRecoveryAccess::class);
         $user = $this->createMock(User::class);
 
-        $sfUser->expects($this->any())->method('getWrappedUser')->willReturn($user);
+        $sfUser->method('getWrappedUser')->willReturn($user);
 
         $user->expects($this->once())
             ->method('addAuthData')
@@ -558,10 +541,10 @@ class RecoveringAccessUserProviderTest extends TestCase
         );
     }
 
-    public function testSupportsClass()
+    public function testSupportsClass(): void
     {
-        self::assertTrue($this->buildProvider()->supportsClass(UserWithRecoveryAccess::class));
-        self::assertFalse($this->buildProvider()->supportsClass(User::class));
-        self::assertFalse($this->buildProvider()->supportsClass(\DateTime::class));
+        $this->assertTrue($this->buildProvider()->supportsClass(UserWithRecoveryAccess::class));
+        $this->assertFalse($this->buildProvider()->supportsClass(User::class));
+        $this->assertFalse($this->buildProvider()->supportsClass(\DateTime::class));
     }
 }

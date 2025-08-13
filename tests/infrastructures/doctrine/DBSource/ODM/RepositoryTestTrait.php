@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -44,7 +44,7 @@ use Teknoo\East\Common\Query\Expr\StrictlyLower;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 trait RepositoryTestTrait
@@ -66,28 +66,25 @@ trait RepositoryTestTrait
         return $this->objectRepository;
     }
 
-    /**
-     * @return RepositoryInterface
-     */
     abstract public function buildRepository(): RepositoryInterface;
 
-    public function testFindBadId()
+    public function testFindBadId(): void
     {
         $this->expectException(\TypeError::class);
         $this->buildRepository()->find(new \stdClass(), $this->createMock(PromiseInterface::class));
     }
 
-    public function testFindBadPromise()
+    public function testFindBadPromise(): void
     {
         $this->expectException(\TypeError::class);
         $this->buildRepository()->find('abc', new \stdClass());
     }
 
-    public function testFindNothing()
+    public function testFindNothing(): void
     {
         $promise = $this->createMock(PromiseInterface::class);
         $promise->expects($this->never())->method('success');
-        $promise->expects($this->once())->method('fail')->with($this->callback(fn($value) => $value instanceof \DomainException));
+        $promise->expects($this->once())->method('fail')->with($this->callback(fn ($value): bool => $value instanceof \DomainException));
 
         $query = $this->createMock(Query::class);
         $query->expects($this->once())->method('getSingleResult')->willReturn(null);
@@ -108,13 +105,13 @@ trait RepositoryTestTrait
             ->method('createQueryBuilder')
             ->willReturn($queryBuilderMock);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RepositoryInterface::class,
             $this->buildRepository()->find('abc', $promise)
         );
     }
 
-    public function testFindOneThing()
+    public function testFindOneThing(): void
     {
         $object = new \stdClass();
         $promise = $this->createMock(PromiseInterface::class);
@@ -140,13 +137,13 @@ trait RepositoryTestTrait
             ->method('createQueryBuilder')
             ->willReturn($queryBuilderMock);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RepositoryInterface::class,
             $this->buildRepository()->find('abc', $promise)
         );
     }
 
-    public function testFindOneThingWithPrime()
+    public function testFindOneThingWithPrime(): void
     {
         $object = new \stdClass();
         $promise = $this->createMock(PromiseInterface::class);
@@ -182,19 +179,19 @@ trait RepositoryTestTrait
             ->method('createQueryBuilder')
             ->willReturn($queryBuilderMock);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RepositoryInterface::class,
             $this->buildRepository()->find('abc', $promise, ['foo'])
         );
     }
 
-    public function testFindAllBadPromise()
+    public function testFindAllBadPromise(): void
     {
         $this->expectException(\TypeError::class);
         $this->buildRepository()->findAll(new \stdClass());
     }
 
-    public function testFindAll()
+    public function testFindAll(): void
     {
         $object = [new \stdClass()];
         $promise = $this->createMock(PromiseInterface::class);
@@ -214,13 +211,13 @@ trait RepositoryTestTrait
             ->method('createQueryBuilder')
             ->willReturn($queryBuilderMock);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RepositoryInterface::class,
             $this->buildRepository()->findAll($promise)
         );
     }
 
-    public function testFindAllWithPrime()
+    public function testFindAllWithPrime(): void
     {
         $object = [new \stdClass()];
         $promise = $this->createMock(PromiseInterface::class);
@@ -251,25 +248,25 @@ trait RepositoryTestTrait
             ->method('createQueryBuilder')
             ->willReturn($queryBuilderMock);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RepositoryInterface::class,
             $this->buildRepository()->findAll($promise, ['foo'])
         );
     }
 
-    public function testFindByBadCriteria()
+    public function testFindByBadCriteria(): void
     {
         $this->expectException(\TypeError::class);
         $this->buildRepository()->findBy(new \stdClass(), $this->createMock(PromiseInterface::class));
     }
 
-    public function testFindByBadPromise()
+    public function testFindByBadPromise(): void
     {
         $this->expectException(\TypeError::class);
         $this->buildRepository()->findBy(['foo' => 'bar'], new \stdClass());
     }
 
-    public function testFindBy()
+    public function testFindBy(): void
     {
         $this->objectRepository = $this->createMock(DocumentRepository::class);
 
@@ -295,14 +292,14 @@ trait RepositoryTestTrait
             ->method('createQueryBuilder')
             ->willReturn($queryBuilderMock);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RepositoryInterface::class,
             $this->buildRepository()
-                ->findBy(['foo' => 'bar', 'bar' => new In(['foo'])], $promise, ['foo'=>Direction::Asc], 1, 2)
+                ->findBy(['foo' => 'bar', 'bar' => new In(['foo'])], $promise, ['foo' => Direction::Asc], 1, 2)
         );
     }
 
-    public function testFindByWithPrime()
+    public function testFindByWithPrime(): void
     {
         $this->objectRepository = $this->createMock(DocumentRepository::class);
 
@@ -339,12 +336,12 @@ trait RepositoryTestTrait
             ->method('createQueryBuilder')
             ->willReturn($queryBuilderMock);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RepositoryInterface::class,
             $this->buildRepository()->findBy(
                 ['foo' => 'bar', 'bar' => new In(['foo'])],
                 $promise,
-                ['foo'=>Direction::Asc],
+                ['foo' => Direction::Asc],
                 1,
                 2,
                 ['foo'],
@@ -352,7 +349,7 @@ trait RepositoryTestTrait
         );
     }
 
-    public function testFindByBadOrder()
+    public function testFindByBadOrder(): void
     {
         $this->expectException(\TypeError::class);
         $this->buildRepository()->findBy(
@@ -362,7 +359,7 @@ trait RepositoryTestTrait
         );
     }
 
-    public function testCount()
+    public function testCount(): void
     {
         $this->objectRepository = $this->createMock(DocumentRepository::class);
 
@@ -388,13 +385,13 @@ trait RepositoryTestTrait
             ->method('createQueryBuilder')
             ->willReturn($queryBuilderMock);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RepositoryInterface::class,
             $this->buildRepository()->count(['foo' => 'bar', 'bar' => new In(['foo'])], $promise)
         );
     }
 
-    public function testDistinctBy()
+    public function testDistinctBy(): void
     {
         $this->objectRepository = $this->createMock(DocumentRepository::class);
 
@@ -420,31 +417,31 @@ trait RepositoryTestTrait
             ->method('createQueryBuilder')
             ->willReturn($queryBuilderMock);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RepositoryInterface::class,
             $this->buildRepository()->distinctBy('foo', ['foo' => 'bar', 'bar' => new In(['foo'])], $promise, 1, 2)
         );
     }
 
-    public function testFindOneByBadCriteria()
+    public function testFindOneByBadCriteria(): void
     {
         $this->expectException(\TypeError::class);
         $this->buildRepository()->findOneBy(new \stdClass(), $this->createMock(PromiseInterface::class));
     }
 
-    public function testFindOneByBadPromise()
+    public function testFindOneByBadPromise(): void
     {
         $this->expectException(\TypeError::class);
         $this->buildRepository()->findOneBy(['foo' => 'bar'], new \stdClass());
     }
 
-    public function testFindOneByNothing()
+    public function testFindOneByNothing(): void
     {
         $promise = $this->createMock(PromiseInterface::class);
         $promise->expects($this->never())->method('success');
         $promise->expects($this->once())
             ->method('fail')
-            ->with($this->callback(fn($value) => $value instanceof \DomainException));
+            ->with($this->callback(fn ($value): bool => $value instanceof \DomainException));
 
         $query = $this->createMock(Query::class);
         $query->expects($this->once())->method('getSingleResult')->willReturn(null);
@@ -464,17 +461,17 @@ trait RepositoryTestTrait
             ->method('createQueryBuilder')
             ->willReturn($queryBuilderMock);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RepositoryInterface::class,
             $this->buildRepository()->findOneBy(['foo' => 'bar'], $promise)
         );
     }
 
-    public function testFindOneByExpcetion()
+    public function testFindOneByExpcetion(): void
     {
         $promise = $this->createMock(PromiseInterface::class);
         $promise->expects($this->never())->method('success');
-        $promise->expects($this->once())->method('fail')->with($this->callback(fn($value) => $value instanceof \RuntimeException));
+        $promise->expects($this->once())->method('fail')->with($this->callback(fn ($value): bool => $value instanceof \RuntimeException));
 
         $query = $this->createMock(Query::class);
         $query->expects($this->once())->method('getSingleResult')->willThrowException(new \RuntimeException());
@@ -494,13 +491,13 @@ trait RepositoryTestTrait
             ->method('createQueryBuilder')
             ->willReturn($queryBuilderMock);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RepositoryInterface::class,
             $this->buildRepository()->findOneBy(['foo' => 'bar'], $promise)
         );
     }
 
-    public function testFindOneByOneThing()
+    public function testFindOneByOneThing(): void
     {
         $object = new \stdClass();
         $promise = $this->createMock(PromiseInterface::class);
@@ -540,7 +537,7 @@ trait RepositoryTestTrait
             ->method('createQueryBuilder')
             ->willReturn($queryBuilderMock);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RepositoryInterface::class,
             $this->buildRepository()->findOneBy(
                 [
@@ -564,7 +561,7 @@ trait RepositoryTestTrait
         );
     }
 
-    public function testFindOneByOneThingWithPrime()
+    public function testFindOneByOneThingWithPrime(): void
     {
         $object = new \stdClass();
         $promise = $this->createMock(PromiseInterface::class);
@@ -614,7 +611,7 @@ trait RepositoryTestTrait
             ->method('createQueryBuilder')
             ->willReturn($queryBuilderMock);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RepositoryInterface::class,
             $this->buildRepository()->findOneBy(
                 [

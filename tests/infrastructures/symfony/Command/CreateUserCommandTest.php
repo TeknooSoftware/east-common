@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\Tests\East\CommonBundle\Command;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -35,26 +36,17 @@ use Teknoo\East\CommonBundle\Command\CreateUserCommand;
 use Teknoo\East\Common\Writer\UserWriter;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(CreateUserCommand::class)]
 class CreateUserCommandTest extends TestCase
 {
-    /**
-     * @var UserWriter
-     */
-    private $writer;
+    private (UserWriter&MockObject)|null $writer = null;
 
-    /**
-     * @var UserPasswordHasherInterface
-     */
-    private $userPasswordHasher;
+    private ?UserPasswordHasherInterface $userPasswordHasher = null;
 
-    /**
-     * @return UserWriter|\PHPUnit\Framework\MockObject\MockObject
-     */
-    public function getWriter(): UserWriter
+    public function getWriter(): UserWriter&MockObject
     {
         if (!$this->writer instanceof UserWriter) {
             $this->writer = $this->createMock(UserWriter::class);
@@ -63,13 +55,10 @@ class CreateUserCommandTest extends TestCase
         return $this->writer;
     }
 
-    /**
-     * @return UserPasswordHasherInterface|\PHPUnit\Framework\MockObject\MockObject
-     */
     public function getUserPasswordHasher(): UserPasswordHasherInterface
     {
         if (!$this->userPasswordHasher instanceof UserPasswordHasherInterface) {
-            $this->userPasswordHasher = new class implements UserPasswordHasherInterface {
+            $this->userPasswordHasher = new class () implements UserPasswordHasherInterface {
                 public function isPasswordValid(PasswordAuthenticatedUserInterface $user, string $plainPassword): bool
                 {
 
@@ -90,7 +79,7 @@ class CreateUserCommandTest extends TestCase
         return $this->userPasswordHasher;
     }
 
-    public function buildCommand()
+    public function buildCommand(): \Teknoo\East\CommonBundle\Command\CreateUserCommand
     {
         return new CreateUserCommand(
             $this->getWriter(),
@@ -98,10 +87,10 @@ class CreateUserCommandTest extends TestCase
         );
     }
 
-    public function testExecution()
+    public function testExecution(): void
     {
         $input = $this->createMock(InputInterface::class);
-        $input->expects($this->any())
+        $input
             ->method('getArgument')
             ->willReturnMap([
                 ['email', 'foo@bar'],
@@ -124,10 +113,10 @@ class CreateUserCommandTest extends TestCase
         );
     }
 
-    public function testExecutionWithError()
+    public function testExecutionWithError(): void
     {
         $input = $this->createMock(InputInterface::class);
-        $input->expects($this->any())
+        $input
             ->method('getArgument')
             ->willReturnMap([
                 ['email', 'foo@bar'],

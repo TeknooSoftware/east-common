@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -32,37 +32,38 @@ use Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser;
 use TypeError;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 abstract class AbstractPasswordAuthUserTests extends AbstractUserTests
 {
-    public function testExceptionWithBadUser()
+    public function testExceptionWithBadUser(): void
     {
         $this->expectException(TypeError::class);
         new PasswordAuthenticatedUser(new stdClass(), $this->getStoredPassword());
     }
 
-    public function testExceptionWithBadStoredPassword()
+    public function testExceptionWithBadStoredPassword(): void
     {
         $this->expectException(TypeError::class);
         new PasswordAuthenticatedUser($this->getUser(), new stdClass());
     }
 
-    public function testGetPassword()
+    public function testGetPassword(): void
     {
         $this->getStoredPassword()
             ->expects($this->once())
             ->method('getHash')
             ->willReturn('foo');
 
-        self::assertEquals(
+        $this->assertEquals(
             'foo',
             $this->buildObject()->getPassword()
         );
     }
 
-    public function testEraseCredentials()
+    #[\Override]
+    public function testEraseCredentials(): void
     {
         $this->getStoredPassword()
             ->expects($this->once())
@@ -72,9 +73,9 @@ abstract class AbstractPasswordAuthUserTests extends AbstractUserTests
         $this->buildObject()->eraseCredentials();
     }
 
-    public function testGetWrappedStoredPassword()
+    public function testGetWrappedStoredPassword(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             StoredPassword::class,
             $this->buildObject()->getWrappedStoredPassword()
         );

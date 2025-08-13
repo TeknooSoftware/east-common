@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -31,7 +31,7 @@ use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Common\Recipe\Step\ExtractPage;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(ExtractPage::class)]
@@ -42,7 +42,7 @@ class ExtractPageTest extends TestCase
         return new ExtractPage();
     }
 
-    public function testInvokeBadManager()
+    public function testInvokeBadManager(): void
     {
         $this->expectException(\TypeError::class);
 
@@ -52,7 +52,7 @@ class ExtractPageTest extends TestCase
         );
     }
 
-    public function testInvokeBadPage()
+    public function testInvokeBadPage(): void
     {
         $this->expectException(\TypeError::class);
 
@@ -62,7 +62,7 @@ class ExtractPageTest extends TestCase
         );
     }
 
-    public function testInvokeWithoutPage()
+    public function testInvokeWithoutPage(): void
     {
         $manager = $this->createMock(ManagerInterface::class);
         $manager->expects($this->once())->method('updateWorkPlan')->with([
@@ -70,7 +70,7 @@ class ExtractPageTest extends TestCase
         ]);
         $manager->expects($this->never())->method('error');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ExtractPage::class,
             $this->buildStep()(
                 $manager
@@ -78,7 +78,7 @@ class ExtractPageTest extends TestCase
         );
     }
 
-    public function testInvokeWithPage()
+    public function testInvokeWithPage(): void
     {
         $manager = $this->createMock(ManagerInterface::class);
         $manager->expects($this->once())->method('updateWorkPlan')->with([
@@ -86,7 +86,7 @@ class ExtractPageTest extends TestCase
         ]);
         $manager->expects($this->never())->method('error');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ExtractPage::class,
             $this->buildStep()(
                 $manager,
@@ -95,7 +95,7 @@ class ExtractPageTest extends TestCase
         );
     }
 
-    public function testInvokeWithInvalidPage()
+    public function testInvokeWithInvalidPage(): void
     {
         $manager = $this->createMock(ManagerInterface::class);
         $manager->expects($this->once())->method('updateWorkPlan')->with([
@@ -103,7 +103,7 @@ class ExtractPageTest extends TestCase
         ]);
         $manager->expects($this->never())->method('error');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ExtractPage::class,
             $this->buildStep()(
                 $manager,

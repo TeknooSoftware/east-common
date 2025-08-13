@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -36,7 +36,7 @@ use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(SaveObject::class)]
@@ -47,7 +47,7 @@ class SaveObjectTest extends TestCase
         return new SaveObject();
     }
 
-    public function testInvokeBadWriter()
+    public function testInvokeBadWriter(): void
     {
         $this->expectException(\TypeError::class);
 
@@ -58,7 +58,7 @@ class SaveObjectTest extends TestCase
         );
     }
 
-    public function testInvokeBadObject()
+    public function testInvokeBadObject(): void
     {
         $this->expectException(\TypeError::class);
 
@@ -69,7 +69,7 @@ class SaveObjectTest extends TestCase
         );
     }
 
-    public function testInvokeBadManager()
+    public function testInvokeBadManager(): void
     {
         $this->expectException(\TypeError::class);
 
@@ -80,12 +80,11 @@ class SaveObjectTest extends TestCase
         );
     }
 
-    public function testInvokeWithObjectId()
+    public function testInvokeWithObjectId(): void
     {
         $writer = $this->createMock(WriterInterface::class);
-        $object = $this->createMock(ObjectWithId
-        ::class);
-        $object->expects($this->any())->method('getId')->willReturn('foo');
+        $object = $this->createMock(ObjectWithId::class);
+        $object->method('getId')->willReturn('foo');
         $manager = $this->createMock(ManagerInterface::class);
 
         $manager->expects($this->never())->method('error');
@@ -99,17 +98,17 @@ class SaveObjectTest extends TestCase
             'objectSaved' => true,
         ]);
 
-        $writer->expects($this->any())
+        $writer
             ->method('save')
             ->willReturnCallback(
-                function ($object, PromiseInterface $promise) use ($writer) {
+                function (\Teknoo\East\Common\Contracts\Object\ObjectInterface $object, PromiseInterface $promise) use ($writer): \PHPUnit\Framework\MockObject\MockObject {
                     $promise->success($object);
 
                     return $writer;
                 }
             );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             SaveObject::class,
             $this->buildStep()(
                 $writer,
@@ -120,7 +119,7 @@ class SaveObjectTest extends TestCase
         );
     }
 
-    public function testInvokeWithObjectContact()
+    public function testInvokeWithObjectContact(): void
     {
         $writer = $this->createMock(WriterInterface::class);
         $object = $this->createMock(ObjectInterface::class);
@@ -132,17 +131,17 @@ class SaveObjectTest extends TestCase
             'objectSaved' => true,
         ]);
 
-        $writer->expects($this->any())
+        $writer
             ->method('save')
             ->willReturnCallback(
-                function ($object, PromiseInterface $promise) use ($writer) {
+                function (\Teknoo\East\Common\Contracts\Object\ObjectInterface $object, PromiseInterface $promise) use ($writer): \PHPUnit\Framework\MockObject\MockObject {
                     $promise->success($object);
 
                     return $writer;
                 }
             );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             SaveObject::class,
             $this->buildStep()(
                 $writer,
@@ -153,7 +152,7 @@ class SaveObjectTest extends TestCase
         );
     }
 
-    public function testInvokeWithErrorWithObjectContract()
+    public function testInvokeWithErrorWithObjectContract(): void
     {
         $writer = $this->createMock(WriterInterface::class);
         $object = $this->createMock(ObjectInterface::class);
@@ -162,10 +161,10 @@ class SaveObjectTest extends TestCase
         $manager->expects($this->once())->method('error');
         $manager->expects($this->never())->method('updateWorkPlan');
 
-        $writer->expects($this->any())
+        $writer
             ->method('save')
             ->willReturnCallback(
-                function ($object, PromiseInterface $promise) use ($writer) {
+                function (\Teknoo\East\Common\Contracts\Object\ObjectInterface $object, PromiseInterface $promise) use ($writer): \PHPUnit\Framework\MockObject\MockObject {
                     $promise->fail(
                         new \Exception()
                     );
@@ -174,7 +173,7 @@ class SaveObjectTest extends TestCase
                 }
             );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             SaveObject::class,
             $this->buildStep()(
                 $writer,
@@ -185,20 +184,20 @@ class SaveObjectTest extends TestCase
         );
     }
 
-    public function testInvokeWithErrorWithObjectId()
+    public function testInvokeWithErrorWithObjectId(): void
     {
         $writer = $this->createMock(WriterInterface::class);
         $object = $this->createMock(ObjectWithId::class);
-        $object->expects($this->any())->method('getId')->willReturn('foo');
+        $object->method('getId')->willReturn('foo');
         $manager = $this->createMock(ManagerInterface::class);
 
         $manager->expects($this->once())->method('error');
         $manager->expects($this->never())->method('updateWorkPlan');
 
-        $writer->expects($this->any())
+        $writer
             ->method('save')
             ->willReturnCallback(
-                function ($object, PromiseInterface $promise) use ($writer) {
+                function (\Teknoo\East\Common\Contracts\Object\ObjectInterface $object, PromiseInterface $promise) use ($writer): \PHPUnit\Framework\MockObject\MockObject {
                     $promise->fail(
                         new \Exception()
                     );
@@ -207,7 +206,7 @@ class SaveObjectTest extends TestCase
                 }
             );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             SaveObject::class,
             $this->buildStep()(
                 $writer,

@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -35,7 +35,7 @@ use Teknoo\East\Common\Service\FindSlugService;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(FindSlugService::class)]
@@ -46,7 +46,7 @@ class FindSlugServiceTest extends TestCase
         return new FindSlugService();
     }
 
-    public function testProcessSlugAvailable()
+    public function testProcessSlugAvailable(): void
     {
         $loader = $this->createMock(LoaderInterface::class);
         $sluggable = $this->createMock(SluggableInterface::class);
@@ -55,7 +55,7 @@ class FindSlugServiceTest extends TestCase
             ->method('fetch')
             ->with(new FindBySlugQuery('slugField', 'foo-bar'))
             ->willReturnCallback(
-                function ($query, PromiseInterface $promise) use ($loader) {
+                function ($query, PromiseInterface $promise) use ($loader): \PHPUnit\Framework\MockObject\MockObject {
                     $promise->fail(new \DomainException('Not Found'));
 
                     return $loader;
@@ -67,7 +67,7 @@ class FindSlugServiceTest extends TestCase
             ->with('foo-bar')
             ->willReturnSelf();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             FindSlugService::class,
             $this->buildService()->process(
                 $loader,
@@ -78,10 +78,10 @@ class FindSlugServiceTest extends TestCase
         );
     }
 
-    public function testProcessSlugAvailableWithObject()
+    public function testProcessSlugAvailableWithObject(): void
     {
         $loader = $this->createMock(LoaderInterface::class);
-        $sluggable = new class implements SluggableInterface, IdentifiedObjectInterface {
+        $sluggable = new class () implements SluggableInterface, IdentifiedObjectInterface {
             public function getId(): string
             {
                 return 'foo';
@@ -105,14 +105,14 @@ class FindSlugServiceTest extends TestCase
             ->method('fetch')
             ->with(new FindBySlugQuery('slugField', 'foo-bar', false, $sluggable))
             ->willReturnCallback(
-                function ($query, PromiseInterface $promise) use ($loader) {
+                function ($query, PromiseInterface $promise) use ($loader): \PHPUnit\Framework\MockObject\MockObject {
                     $promise->fail(new \DomainException('Not Found'));
 
                     return $loader;
                 }
             );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             FindSlugService::class,
             $this->buildService()->process(
                 $loader,
@@ -123,12 +123,12 @@ class FindSlugServiceTest extends TestCase
         );
     }
 
-    public function testProcessSlugFirstAndSecondNotAvailable()
+    public function testProcessSlugFirstAndSecondNotAvailable(): void
     {
         $loader = $this->createMock(LoaderInterface::class);
         $sluggable = $this->createMock(SluggableInterface::class);
 
-        $counter=0;
+        $counter = 0;
         $loader->expects($this->exactly(3))
             ->method('fetch')
             ->with(
@@ -137,18 +137,21 @@ class FindSlugServiceTest extends TestCase
                         if ($value == (new FindBySlugQuery('slugField', 'foo-bar'))) {
                             return true;
                         }
+
                         if ($value == (new FindBySlugQuery('slugField', 'foo-bar-2'))) {
                             return true;
                         }
+
                         if ($value == (new FindBySlugQuery('slugField', 'foo-bar-3'))) {
                             return true;
                         }
+
                         return false;
                     }
                 )
             )
             ->willReturnCallback(
-                function ($query, PromiseInterface $promise) use ($loader, &$counter) {
+                function ($query, PromiseInterface $promise) use ($loader, &$counter): \PHPUnit\Framework\MockObject\MockObject {
                     if ($counter++ < 2) {
                         $promise->success($this->createMock(IdentifiedObjectInterface::class));
                     } else {
@@ -164,7 +167,7 @@ class FindSlugServiceTest extends TestCase
             ->with('foo-bar-3')
             ->willReturnSelf();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             FindSlugService::class,
             $this->buildService()->process(
                 $loader,

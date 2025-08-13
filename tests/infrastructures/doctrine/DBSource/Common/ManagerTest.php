@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 
@@ -27,6 +27,7 @@ namespace Teknoo\Tests\East\Common\Doctrine\DBSource\Common;
 
 use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\DBSource\Manager\AlreadyStartedBatchException;
 use Teknoo\East\Common\DBSource\Manager\NonStartedBatchException;
@@ -35,16 +36,13 @@ use Teknoo\East\Common\Doctrine\DBSource\Common\Manager;
 use Teknoo\East\Common\Doctrine\Filter\ODM\SoftDeletableFilter;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(Manager::class)]
 class ManagerTest extends TestCase
 {
-    /**
-     * @var ObjectManager
-     */
-    private $objectManager;
+    private (ObjectManager&MockObject)|null $objectManager = null;
 
     /**
      * @return ObjectManager|\PHPUnit\Framework\MockObject\MockObject
@@ -63,7 +61,7 @@ class ManagerTest extends TestCase
         return new Manager($this->getDoctrineObjectManagerMock(), $configurationHelper);
     }
 
-    public function testPersist()
+    public function testPersist(): void
     {
         $object = new \stdClass();
         $this->getDoctrineObjectManagerMock()
@@ -71,13 +69,13 @@ class ManagerTest extends TestCase
             ->method('persist')
             ->with($object);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             Manager::class,
             $this->buildManager()->persist($object)
         );
     }
 
-    public function testRemove()
+    public function testRemove(): void
     {
         $object = new \stdClass();
         $this->getDoctrineObjectManagerMock()
@@ -85,86 +83,86 @@ class ManagerTest extends TestCase
             ->method('remove')
             ->with($object);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             Manager::class,
             $this->buildManager()->remove($object)
         );
     }
 
-    public function testFlush()
+    public function testFlush(): void
     {
         $this->getDoctrineObjectManagerMock()
             ->expects($this->once())
             ->method('flush');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             Manager::class,
             $this->buildManager()->flush()
         );
     }
 
-    public function testFlushOnBatch()
+    public function testFlushOnBatch(): void
     {
         $this->getDoctrineObjectManagerMock()
             ->expects($this->never())
             ->method('flush');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             Manager::class,
             $this->buildManager()->openBatch()->flush()
         );
     }
 
-    public function testOpenBatchException()
+    public function testOpenBatchException(): void
     {
         $this->expectException(AlreadyStartedBatchException::class);
         $this->buildManager()->openBatch()->openBatch();
     }
 
-    public function testCloseBatchException()
+    public function testCloseBatchException(): void
     {
         $this->expectException(NonStartedBatchException::class);
         $this->buildManager()->closeBatch();
     }
 
-    public function testOnBatch()
+    public function testOnBatch(): void
     {
         $this->getDoctrineObjectManagerMock()
             ->expects($this->once())
             ->method('flush');
 
         $manager = $this->buildManager();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             Manager::class,
             $manager->openBatch()->flush()->flush()->flush()->closeBatch()
         );
     }
 
-    public function testRegisterFilterWithoutHelper()
+    public function testRegisterFilterWithoutHelper(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             Manager::class,
             $this->buildManager()->registerFilter(SoftDeletableFilter::class, ['foo' => 'bar'])
         );
     }
 
-    public function testEnableFilterWithoutHelper()
+    public function testEnableFilterWithoutHelper(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             Manager::class,
             $this->buildManager()->enableFilter(SoftDeletableFilter::class)
         );
     }
 
-    public function testDisableFilterWithoutHelper()
+    public function testDisableFilterWithoutHelper(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             Manager::class,
             $this->buildManager()->disableFilter(SoftDeletableFilter::class)
         );
     }
 
-    public function testRegisterFilterWithHelper()
+    public function testRegisterFilterWithHelper(): void
     {
         $helper = $this->createMock(ConfigurationHelperInterface::class);
         $helper->expects($this->once())
@@ -172,13 +170,13 @@ class ManagerTest extends TestCase
             ->with(SoftDeletableFilter::class, ['foo' => 'bar'])
             ->willReturnSelf();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             Manager::class,
             $this->buildManager($helper)->registerFilter(SoftDeletableFilter::class, ['foo' => 'bar'])
         );
     }
 
-    public function testEnableFilterWithHelper()
+    public function testEnableFilterWithHelper(): void
     {
         $helper = $this->createMock(ConfigurationHelperInterface::class);
         $helper->expects($this->once())
@@ -186,13 +184,13 @@ class ManagerTest extends TestCase
             ->with(SoftDeletableFilter::class)
             ->willReturnSelf();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             Manager::class,
             $this->buildManager($helper)->enableFilter(SoftDeletableFilter::class)
         );
     }
 
-    public function testDisableFilterWithHelper()
+    public function testDisableFilterWithHelper(): void
     {
         $helper = $this->createMock(ConfigurationHelperInterface::class);
         $helper->expects($this->once())
@@ -200,7 +198,7 @@ class ManagerTest extends TestCase
             ->with(SoftDeletableFilter::class)
             ->willReturnSelf();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             Manager::class,
             $this->buildManager($helper)->disableFilter(SoftDeletableFilter::class)
         );

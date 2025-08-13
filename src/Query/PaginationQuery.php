@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 
@@ -44,7 +44,7 @@ use Traversable;
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  *
  * @implements QueryCollectionInterface<ObjectInterface>
@@ -74,19 +74,21 @@ class PaginationQuery implements QueryCollectionInterface, ImmutableInterface
         $criteria = $this->criteria;
         $criteria['deletedAt'] = null;
 
-        /** @var Promise<iterable<ObjectInterface>, mixed, mixed> $findPromise */
+        /** @var Promise<Traversable<ObjectInterface>, mixed, mixed> $findPromise */
         $findPromise = new Promise(
-            static function ($result) use ($criteria, $promise, $repository): void {
-                /** @var Promise<int, mixed, mixed> $countPromise */
+            static function (Traversable $result) use ($criteria, $promise, $repository): void {
+                /** @var Promise<int<0, max>, mixed, mixed> $countPromise */
                 $countPromise = new Promise(
                     static function (int $count) use ($promise, $result): void {
-                        $iterator = new class ($count, $result) implements Countable, IteratorAggregate {
+                        /** @var int<0, max> $count */
+                        $iterator = new readonly class ($count, $result) implements Countable, IteratorAggregate {
                             /**
+                             * @param int<0, max> $count
                              * @param Traversable<ObjectInterface> $iterator
                              */
                             public function __construct(
-                                private readonly int $count,
-                                private readonly Traversable $iterator,
+                                private int $count,
+                                private Traversable $iterator,
                             ) {
                             }
 

@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -33,6 +33,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Diactoros\CallbackStreamFactory;
 use Teknoo\East\Foundation\Http\Message\CallbackStreamFactoryInterface;
+
 use function DI\string;
 
 /**
@@ -43,16 +44,15 @@ use function DI\string;
  *
  * @link        http://teknoo.software/east Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 class ContainerTest extends TestCase
 {
     /**
-     * @return Container
      * @throws \Exception
      */
-    protected function buildContainer() : Container
+    protected function buildContainer(): Container
     {
         $containerDefinition = new ContainerBuilder();
         $containerDefinition->addDefinitions(__DIR__.'/../../infrastructures/di.php');
@@ -60,26 +60,26 @@ class ContainerTest extends TestCase
         return $containerDefinition->build();
     }
 
-    public function testResponseFactoryInterface()
+    public function testResponseFactoryInterface(): void
     {
         $container = $this->buildContainer();
         $factory = $container->get(ResponseFactoryInterface::class);
-        self::assertInstanceOf(ResponseFactory::class, $factory);
-        self::assertInstanceOf(ResponseFactoryInterface::class, $factory);
+        $this->assertInstanceOf(ResponseFactory::class, $factory);
+        $this->assertInstanceOf(ResponseFactoryInterface::class, $factory);
     }
 
-    public function testStreamFactoryInterface()
+    public function testStreamFactoryInterface(): void
     {
         $container = $this->buildContainer();
         $factory = $container->get(StreamFactoryInterface::class);
-        self::assertInstanceOf(StreamFactoryInterface::class, $factory);
+        $this->assertInstanceOf(StreamFactoryInterface::class, $factory);
     }
 
-    public function testCallbackStreamFactoryInterface()
+    public function testCallbackStreamFactoryInterface(): void
     {
         $container = $this->buildContainer();
         $factory = $container->get(CallbackStreamFactoryInterface::class);
-        self::assertInstanceOf(StreamFactoryInterface::class, $factory);
-        self::assertInstanceOf(CallbackStreamFactory::class, $factory);
+        $this->assertInstanceOf(StreamFactoryInterface::class, $factory);
+        $this->assertInstanceOf(CallbackStreamFactory::class, $factory);
     }
 }

@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 
@@ -36,7 +36,7 @@ use Teknoo\Tests\East\Common\Object\MediaTest as OriginalTest;
  *
  * @link        http://teknoo.software/east Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  *
  */
@@ -44,21 +44,22 @@ use Teknoo\Tests\East\Common\Object\MediaTest as OriginalTest;
 #[CoversClass(Media::class)]
 class MediaTest extends OriginalTest
 {
+    #[\Override]
     public function buildObject(): Media
     {
         return new Media();
     }
 
-    public function testGetChunkSize()
+    public function testGetChunkSize(): void
     {
-        self::assertNull($this->generateObjectPopulated()->getChunkSize());
-        self::assertIsInt($this->generateObjectPopulated(['chunkSize' => 124])->getChunkSize());
+        $this->assertNull($this->generateObjectPopulated()->getChunkSize());
+        $this->assertIsInt($this->generateObjectPopulated(['chunkSize' => 124])->getChunkSize());
     }
 
-    public function testGetUploadDate()
+    public function testGetUploadDate(): void
     {
-        self::assertNull($this->generateObjectPopulated()->getUploadDate());
-        self::assertInstanceOf(
+        $this->assertNull($this->generateObjectPopulated()->getUploadDate());
+        $this->assertInstanceOf(
             \DateTimeInterface::class,
             $this->generateObjectPopulated(['uploadDate' => (new \DateTime('2020-08-01'))])->getUploadDate()
         );

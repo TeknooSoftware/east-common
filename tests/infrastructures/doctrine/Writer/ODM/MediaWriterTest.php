@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 
@@ -42,7 +42,7 @@ use Teknoo\Recipe\Promise\PromiseInterface;
  *
  * @link        http://teknoo.software/east Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  *
  */
@@ -85,26 +85,25 @@ class MediaWriterTest extends TestCase
         );
     }
 
-    public function testSaveWithNonManagedMedia()
+    public function testSaveWithNonManagedMedia(): void
     {
         $promise = $this->createMock(PromiseInterface::class);
         $promise->expects($this->once())->method('fail');
 
-        $media = new class extends OriginalMedia {
-
+        $media = new class () extends OriginalMedia {
         };
 
         $this->getGridFSRepository()
             ->expects($this->never())
             ->method('uploadFromFile');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             MediaWriter::class,
             $this->buildWriter()->save($media, $promise)
         );
     }
 
-    public function testSaveWithNoMediaMetadata()
+    public function testSaveWithNoMediaMetadata(): void
     {
         $promise = $this->createMock(PromiseInterface::class);
         $promise->expects($this->once())->method('fail');
@@ -113,13 +112,13 @@ class MediaWriterTest extends TestCase
             ->expects($this->never())
             ->method('uploadFromFile');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             MediaWriter::class,
             $this->buildWriter()->save(new Media(), $promise)
         );
     }
 
-    public function testSave()
+    public function testSave(): void
     {
         $media1 = new Media();
         $media1->setLength(123);
@@ -153,13 +152,13 @@ class MediaWriterTest extends TestCase
             )
             ->willReturn($media2);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             MediaWriter::class,
             $this->buildWriter()->save($media1, $promise)
         );
     }
 
-    public function testRemove()
+    public function testRemove(): void
     {
         $object = $this->createMock(Media::class);
         $promise = $this->createMock(PromiseInterface::class);
@@ -170,7 +169,7 @@ class MediaWriterTest extends TestCase
             ->with($object, $promise)
             ->willReturnSelf();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             MediaWriter::class,
             $this->buildWriter()->remove($object, $promise)
         );

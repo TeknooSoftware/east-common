@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 
@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\Tests\East\Common\Middleware;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use PHPUnit\Framework\TestCase;
@@ -37,23 +38,22 @@ use Teknoo\East\Common\Middleware\LocaleMiddleware;
 use Teknoo\East\Common\View\ParametersBag;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(LocaleMiddleware::class)]
 class LocaleMiddlewareTest extends TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
-     */
-    private $translatableSetter;
+    private ?object $translatableSetter = null;
 
     public function getTranslatableSetter(): callable
     {
-        if (!$this->translatableSetter) {
+        if ($this->translatableSetter === null) {
             $this->translatableSetter = new class () {
                 public $lang;
-                public function __invoke($lang): void {
+
+                public function __invoke($lang): void
+                {
                     $this->lang = $lang;
                 }
             };
@@ -64,14 +64,13 @@ class LocaleMiddlewareTest extends TestCase
 
     /**
      * @param string $locale
-     * @return LocaleMiddleware
      */
-    public function buildMiddleware($locale='en'): LocaleMiddleware
+    public function buildMiddleware($locale = 'en'): LocaleMiddleware
     {
         return new LocaleMiddleware($this->getTranslatableSetter(), $locale);
     }
 
-    public function testWithMessage()
+    public function testWithMessage(): void
     {
         $message = $this->createMock(MessageInterface::class);
 
@@ -81,26 +80,26 @@ class LocaleMiddlewareTest extends TestCase
 
 
         $sessionMiddleware = $this->createMock(SessionInterface::class);
-        $sessionMiddleware->expects($this->any())
+        $sessionMiddleware
             ->method('get')
-            ->willReturnCallback(function ($key, PromiseInterface $promise) use ($sessionMiddleware) {
+            ->willReturnCallback(function (string $key, PromiseInterface $promise) use ($sessionMiddleware): \PHPUnit\Framework\MockObject\MockObject {
                 $promise->fail(new \DomainException());
 
                 return $sessionMiddleware;
             });
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             LocaleMiddleware::class,
             $this->buildMiddleware('en')->execute($message, $manager, $bag)
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             'en',
             $this->getTranslatableSetter()->lang
         );
     }
 
-    public function testExecuteNoInRequestNoInSession()
+    public function testExecuteNoInRequestNoInSession(): void
     {
         $bag = $this->createMock(ParametersBag::class);
 
@@ -115,35 +114,35 @@ class LocaleMiddlewareTest extends TestCase
             ->willReturn($serverRequestFinal);
 
         $sessionMiddleware = $this->createMock(SessionInterface::class);
-        $sessionMiddleware->expects($this->any())
+        $sessionMiddleware
             ->method('get')
-            ->willReturnCallback(function ($key, PromiseInterface $promise) use ($sessionMiddleware) {
+            ->willReturnCallback(function (string $key, PromiseInterface $promise) use ($sessionMiddleware): \PHPUnit\Framework\MockObject\MockObject {
                 $promise->fail(new \DomainException());
 
                 return $sessionMiddleware;
             });
 
-        $serverRequest->expects($this->any())
+        $serverRequest
             ->method('getAttribute')
             ->with(SessionInterface::ATTRIBUTE_KEY)
             ->willReturn($sessionMiddleware);
 
-        $serverRequestFinal->expects($this->any())
+        $serverRequestFinal
             ->method('getAttribute')
             ->willReturn([]);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             LocaleMiddleware::class,
             $this->buildMiddleware('en')->execute($serverRequest, $manager, $bag)
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             'en',
             $this->getTranslatableSetter()->lang
         );
     }
 
-    public function testExecuteNoInRequestInSession()
+    public function testExecuteNoInRequestInSession(): void
     {
         $serverRequest = $this->createMock(ServerRequestInterface::class);
         $serverRequestFinal = $this->createMock(ServerRequestInterface::class);
@@ -157,35 +156,35 @@ class LocaleMiddlewareTest extends TestCase
             ->willReturn($serverRequestFinal);
 
         $sessionMiddleware = $this->createMock(SessionInterface::class);
-        $sessionMiddleware->expects($this->any())
+        $sessionMiddleware
             ->method('get')
-            ->willReturnCallback(function ($key, PromiseInterface $promise) use ($sessionMiddleware) {
+            ->willReturnCallback(function (string $key, PromiseInterface $promise) use ($sessionMiddleware): \PHPUnit\Framework\MockObject\MockObject {
                 $promise->success('fr');
 
                 return $sessionMiddleware;
             });
 
-        $serverRequest->expects($this->any())
+        $serverRequest
             ->method('getAttribute')
             ->with(SessionInterface::ATTRIBUTE_KEY)
             ->willReturn($sessionMiddleware);
 
-        $serverRequestFinal->expects($this->any())
+        $serverRequestFinal
             ->method('getAttribute')
             ->willReturn(['foo' => 'bar']);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             LocaleMiddleware::class,
             $this->buildMiddleware('en')->execute($serverRequest, $manager, $bag)
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             'fr',
             $this->getTranslatableSetter()->lang
         );
     }
 
-    public function testExecuteInRequestInSession()
+    public function testExecuteInRequestInSession(): void
     {
         $serverRequest = $this->createMock(ServerRequestInterface::class);
         $serverRequestFinal = $this->createMock(ServerRequestInterface::class);
@@ -207,31 +206,31 @@ class LocaleMiddlewareTest extends TestCase
         $sessionMiddleware->expects($this->never())->method('get');
         $sessionMiddleware->expects($this->once())->method('set')->with('locale', 'es');
 
-        $serverRequest->expects($this->any())
+        $serverRequest
             ->method('getQueryParams')
             ->willReturn(['locale' => 'es']);
 
-        $serverRequest->expects($this->any())
+        $serverRequest
             ->method('getAttribute')
             ->with(SessionInterface::ATTRIBUTE_KEY)
             ->willReturn($sessionMiddleware);
 
-        $serverRequestFinal->expects($this->any())
+        $serverRequestFinal
             ->method('getAttribute')
             ->willReturn([]);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             LocaleMiddleware::class,
             $this->buildMiddleware('en')->execute($serverRequest, $manager, $bag)
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             'es',
             $this->getTranslatableSetter()->lang
         );
     }
 
-    public function testExecuteNoSession()
+    public function testExecuteNoSession(): void
     {
         $serverRequest = $this->createMock(ServerRequestInterface::class);
         $serverRequestFinal = $this->createMock(ServerRequestInterface::class);
@@ -240,15 +239,15 @@ class LocaleMiddlewareTest extends TestCase
 
         $manager = $this->createMock(ManagerInterface::class);
 
-        $serverRequest->expects($this->any())
+        $serverRequest
             ->method('getQueryParams')
             ->willReturn([]);
 
-        $serverRequestFinal->expects($this->any())
+        $serverRequestFinal
             ->method('getAttribute')
             ->willReturn([]);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             LocaleMiddleware::class,
             $this->buildMiddleware('en')->execute($serverRequest, $manager, $bag)
         );

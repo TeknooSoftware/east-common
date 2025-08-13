@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -36,7 +36,7 @@ use Teknoo\East\Common\Object\User as BaseUser;
 use TypeError;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(PasswordAuthenticatedUser::class)]
@@ -51,12 +51,13 @@ class PasswordAuthenticatedUserTest extends AbstractPasswordAuthUserTests
     /**
      * @return BaseUser|MockObject
      */
+    #[\Override]
     public function getUser(): BaseUser
     {
         if (!$this->user instanceof BaseUser) {
             $this->user = $this->createMock(BaseUser::class);
 
-            $this->user->expects($this->any())->method('getAuthData')->willReturn([$this->getStoredPassword()]);
+            $this->user->method('getAuthData')->willReturn([$this->getStoredPassword()]);
         }
 
         return $this->user;
@@ -65,6 +66,7 @@ class PasswordAuthenticatedUserTest extends AbstractPasswordAuthUserTests
     /**
      * @return StoredPassword|MockObject
      */
+    #[\Override]
     public function getStoredPassword(): StoredPassword
     {
         if (!$this->storedPassword instanceof StoredPassword) {
@@ -79,26 +81,28 @@ class PasswordAuthenticatedUserTest extends AbstractPasswordAuthUserTests
         return new PasswordAuthenticatedUser($this->getUser(), $this->getStoredPassword());
     }
 
-    public function testExceptionWithBadUser()
+    #[\Override]
+    public function testExceptionWithBadUser(): void
     {
         $this->expectException(TypeError::class);
         new PasswordAuthenticatedUser(new stdClass(), $this->getStoredPassword());
     }
 
-    public function testExceptionWithBadStoredPassword()
+    #[\Override]
+    public function testExceptionWithBadStoredPassword(): void
     {
         $this->expectException(TypeError::class);
         new PasswordAuthenticatedUser($this->getUser(), new stdClass());
     }
 
-    public function testGetPasswordHasherName()
+    public function testGetPasswordHasherName(): void
     {
         $this->getStoredPassword()
             ->expects($this->once())
             ->method('getAlgo')
             ->willReturn('foo');
 
-        self::assertEquals(
+        $this->assertEquals(
             'foo',
             $this->buildObject()->getPasswordHasherName()
         );

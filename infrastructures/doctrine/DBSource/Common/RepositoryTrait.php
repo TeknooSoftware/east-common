@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 
@@ -48,7 +48,7 @@ use const E_USER_NOTICE;
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  *
  * @template ObjectClass
@@ -102,7 +102,7 @@ trait RepositoryTrait
     }
 
     /**
-     * @param array<string, mixed> $criteria
+     * @param array<int|string, mixed> $criteria
      * @param array<string, Direction>|null $orderBy
      */
     public function findBy(
@@ -116,14 +116,14 @@ trait RepositoryTrait
         if (null !== $orderBy) {
             array_walk(
                 $orderBy,
-                static fn(Direction &$item) => $item = $item->value
+                static fn (Direction &$item) => $item = $item->value
             );
         }
 
         /** @var array<string, 'asc'|'ASC'|'desc'|'DESC'>|null $orderBy */
         /** @var iterable<ObjectClass> $result */
         $result = $this->repository->findBy(
-            $criteria,
+            self::sanitize($criteria),
             $orderBy,
             $limit,
             $offset
@@ -139,7 +139,7 @@ trait RepositoryTrait
     }
 
     /**
-     * @param array<string, mixed> $criteria
+     * @param array<int|string, mixed> $criteria
      */
     public function distinctBy(
         string $field,
@@ -148,39 +148,45 @@ trait RepositoryTrait
         ?int $limit = null,
         ?int $offset = null,
     ): RepositoryInterface {
+        /** @var PromiseInterface<iterable<ObjectClass>, mixed> $iPromise */
+        $iPromise = new Promise(
+            onSuccess: function (iterable $result, PromiseInterface $next) use ($field): void {
+                $final = [];
+                foreach ($result as $item) {
+                    if (is_array($item) && isset($item[$field])) {
+                        $final[$item[$field]] = true;
+                    } elseif (is_object($item) && isset($item->{$field})) {
+                        $final[$item->{$field}] = true;
+                    }
+                }
+
+                $next(array_keys($final));
+            },
+        )->next($promise);
+
         $this->findBy(
             $criteria,
-            (new Promise(
-                onSuccess: function (iterable $result, PromiseInterface $next) use ($field) {
-                    $final = [];
-                    foreach ($result as $item) {
-                        if (is_array($item) && isset($item[$field])) {
-                            $final[$item[$field]] = true;
-                        } elseif (is_object($item) && isset($item->{$field})) {
-                            $final[$item->{$field}] = true;
-                        }
-                    }
-
-                    $next(array_keys($final));
-                },
-            ))->next($promise)
+            $iPromise,
         );
 
         return $this;
     }
 
     /**
-     * @param array<string, mixed> $criteria
+     * @param array<int|string, mixed> $criteria
      */
     public function count(array $criteria, PromiseInterface $promise): RepositoryInterface
     {
+        /** @var PromiseInterface<iterable<ObjectClass>, mixed> $iPromise */
+        $iPromise = new Promise(
+            onSuccess: function (array $result, PromiseInterface $next): void {
+                $next(count($result));
+            },
+        )->next($promise);
+
         $this->findBy(
-            $criteria,
-            (new Promise(
-                onSuccess: function (array $result, PromiseInterface $next) {
-                    $next(count($result));
-                },
-            ))->next($promise)
+            criteria: $criteria,
+            promise: $iPromise,
         );
 
         return $this;
@@ -197,7 +203,7 @@ trait RepositoryTrait
         $error = null;
         try {
             /** @var ObjectClass|null $result */
-            $result = $this->repository->findOneBy(self::convert($criteria));
+            $result = $this->repository->findOneBy(self::sanitize($criteria));
 
             if (!empty($result)) {
                 $promise->success($result);

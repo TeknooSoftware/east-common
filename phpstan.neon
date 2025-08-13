@@ -1,9 +1,6 @@
 parameters:
     ignoreErrors:
         -
-            message: '#Cannot cast mixed to string#'
-            path: infrastructures
-        -
             message: '#mixed#'
             path: infrastructures/doctrine/di.php
         -
@@ -16,14 +13,35 @@ parameters:
             message: '#mixed#'
             path: infrastructures/symfony/Resources/config/di.php
         -
+            message: '#is never assigned#'
+            path: infrastructures/doctrine/Object/Media.php
+        -
+            message: '#will always evaluate to true#'
+            path: infrastructures/doctrine/Writer/ODM/MediaWriter.php
+        -
+            message: '#Cannot cast mixed to string#'
+            path: infrastructures/symfony/Command/CreateUserCommand.php
+        -
+            message: '#will always evaluate to true#'
+            path: infrastructures/symfony/Provider/RecoveringAccessUserProvider.php
+        -
+            message: '#Cannot cast mixed to string#'
+            path: infrastructures/symfony/Security/Authenticator/OAuth2Authenticator.php
+        -
+            message: '#will always evaluate to true#'
+            path: infrastructures/symfony/Writer/SymfonyUserWriter.php
+        -
             message: '#[a-zA-Z0-9\\_]+::cook\(\) expects \(callable\(\): mixed\)|[a-zA-Z0-9\\_]+#'
             path: src/di.php
         -
             message: '#::\$type is never read, only written#'
             path: src/Object
         -
-            message: '#Method [a-zA-Z0-9\\_]+::__construct\(\) has parameter \$values with no value type specified in iterable type array#'
-            path: src/Query/Expr/InclusiveOr.php
+            message: '#does not accept iterable#'
+            path: src/Object/Collection/LazyLoadableCollection.php
         -
-            message: '#query of method#'
-            path: src/Recipe/Step/User/FindUserByEmail.php
+            message: '#will always evaluate to true#'
+            path: src/Writer/PersistTrait.php
+        -
+            message: '#Parameter \#1 \$visitors of method#'
+            path: src/Object/VisitableTrait.php

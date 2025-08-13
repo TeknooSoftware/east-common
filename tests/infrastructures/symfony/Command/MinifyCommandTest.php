@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -45,17 +45,12 @@ use Teknoo\East\Foundation\Http\Message\MessageFactoryInterface;
 use Teknoo\East\FoundationBundle\Command\Client;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(MinifyCommand::class)]
 class MinifyCommandTest extends TestCase
 {
-    /**
-     * @var UserWriter
-     */
-    private $writer;
-
     private ?Executor $executor = null;
 
     private ?Client $client = null;
@@ -150,26 +145,25 @@ class MinifyCommandTest extends TestCase
         );
     }
 
-    public function testExecutionFromInput()
+    public function testExecutionFromInput(): void
     {
         $input = $this->createMock(InputInterface::class);
-        $input->expects($this->any())
+        $input
             ->method('getArgument')
             ->willReturn('fooBar');
 
         $request = $this->createMock(MessageInterface::class);
-        $request->expects($this->any())
+        $request
             ->method('withBody')
             ->willReturnSelf();
 
         $this->getMessageFactoryMock()
-            ->expects($this->any())
             ->method('createMessage')
             ->willReturn($request);
 
         $output = $this->createMock(OutputInterface::class);
 
-        self::assertEquals(
+        $this->assertEquals(
             0,
             $this->buildCommand()->run(
                 $input,

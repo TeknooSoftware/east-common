@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -31,61 +31,61 @@ use Teknoo\East\Common\Object\Exception\BadMethodCallException;
 use Teknoo\East\Common\Object\VisitableTrait;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 class VisitableTest extends TestCase
 {
-    public function buildObject()
+    public function buildObject(): \Teknoo\East\Common\Contracts\Object\VisitableInterface
     {
-        return new class implements VisitableInterface {
+        return new class () implements VisitableInterface {
             use VisitableTrait;
 
-            private $foo = 'bar';
+            private string $foo = 'bar';
 
-            private $bar = 'foo';
+            private string $bar = 'foo';
         };
     }
 
-    public function testExceptionWithArrayAndCallable()
+    public function testExceptionWithArrayAndCallable(): void
     {
         $this->expectException(BadMethodCallException::class);
-        $this->buildObject()->visit(['foo' => fn () => true], fn () => true);
+        $this->buildObject()->visit(['foo' => fn (): true => true], fn (): true => true);
     }
 
-    public function testExceptionWithStringWithoutCallable()
+    public function testExceptionWithStringWithoutCallable(): void
     {
         $this->expectException(BadMethodCallException::class);
         $this->buildObject()->visit('foo');
     }
 
-    public function testVisitWithArray()
+    public function testVisitWithArray(): void
     {
-        $called = new class() {
+        $called = new class () {
             public int $counter = 0;
         };
 
         $this->buildObject()->visit(
             [
-                'foo' => fn ($value) => (++$called->counter) && self::assertEquals('bar', $value),
-                'bar' => fn ($value) => (++$called->counter) && self::assertEquals('foo', $value),
+                'foo' => fn ($value): false => (++$called->counter) && $this->assertEquals('bar', $value),
+                'bar' => fn ($value): false => (++$called->counter) && $this->assertEquals('foo', $value),
             ]
         );
 
-        self::assertEquals(2, $called->counter);
+        $this->assertEquals(2, $called->counter);
     }
 
-    public function testVisitWithString()
+    public function testVisitWithString(): void
     {
-        $called = new class() {
+        $called = new class () {
             public int $counter = 0;
         };
 
         $this->buildObject()->visit(
             'foo',
-            fn ($value) => (++$called->counter) && self::assertEquals('bar', $value),
+            fn ($value): false => (++$called->counter) && $this->assertEquals('bar', $value),
         );
 
-        self::assertEquals(1, $called->counter);
+        $this->assertEquals(1, $called->counter);
     }
 }

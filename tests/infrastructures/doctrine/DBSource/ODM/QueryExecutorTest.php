@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -40,7 +40,7 @@ use Teknoo\East\Common\Object\User;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(Runnable::class)]
@@ -67,19 +67,19 @@ class QueryExecutorTest extends TestCase
         );
     }
 
-    public function testStatesListDeclaration()
+    public function testStatesListDeclaration(): void
     {
         $rf = new ReflectionMethod(QueryExecutor::class, 'statesListDeclaration');
         $rf->setAccessible(true);
-        self::assertIsArray($rf->getClosure()());
+        $this->assertIsArray($rf->getClosure()());
     }
 
-    public function testFilterOn()
+    public function testFilterOn(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             QueryExecutor::class,
             $this->buildQuery(
-                function () {},
+                function (): void {},
             )->filterOn(
                 User::class,
                 [
@@ -89,12 +89,12 @@ class QueryExecutorTest extends TestCase
         );
     }
 
-    public function testUpdateFields()
+    public function testUpdateFields(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             QueryExecutor::class,
             $this->buildQuery(
-                function () {},
+                function (): void {},
             )->updateFields(
                 [
                     'id' => 'foo',
@@ -103,7 +103,7 @@ class QueryExecutorTest extends TestCase
         );
     }
 
-    public function testExecuteQueryNotRunnable()
+    public function testExecuteQueryNotRunnable(): void
     {
         $promise = $this->createMock(PromiseInterface::class);
         $promise->expects($this->once())
@@ -111,17 +111,17 @@ class QueryExecutorTest extends TestCase
         $promise->expects($this->never())
             ->method('success');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             QueryExecutor::class,
             $this->buildQuery(
-                function () {},
+                function (): void {},
             )->execute(
                 $promise,
             )
         );
     }
 
-    public function testExecuteQueryRunnable()
+    public function testExecuteQueryRunnable(): void
     {
         $promise = $this->createMock(PromiseInterface::class);
         $promise->expects($this->never())
@@ -129,7 +129,7 @@ class QueryExecutorTest extends TestCase
         $promise->expects($this->once())
             ->method('success');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             QueryExecutor::class,
             $this->buildQuery(
                 fn ($query) => $query,
@@ -144,7 +144,7 @@ class QueryExecutorTest extends TestCase
         );
     }
 
-    public function testExecuteQueryRunnableWithError()
+    public function testExecuteQueryRunnableWithError(): void
     {
         $promise = $this->createMock(PromiseInterface::class);
         $promise->expects($this->once())
@@ -154,21 +154,20 @@ class QueryExecutorTest extends TestCase
 
 
         $query = $this->createMock(Query::class);
-        $query->expects($this->any())
+        $query
             ->method('execute')
             ->willThrowException(new RuntimeException('Error'));
 
         $builder = $this->createMock(Builder::class);
-        $builder->expects($this->any())
+        $builder
             ->method('getQuery')
             ->willReturn($query);
 
         $this->getDocumentManager()
-            ->expects($this->any())
             ->method('createQueryBuilder')
             ->willReturn($builder);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             QueryExecutor::class,
             $this->buildQuery(
                 fn ($query) => $query,
@@ -183,7 +182,7 @@ class QueryExecutorTest extends TestCase
         );
     }
 
-    public function testExecuteQueryRunnableWithUpdateField()
+    public function testExecuteQueryRunnableWithUpdateField(): void
     {
         $promise = $this->createMock(PromiseInterface::class);
         $promise->expects($this->never())
@@ -191,7 +190,7 @@ class QueryExecutorTest extends TestCase
         $promise->expects($this->once())
             ->method('success');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             QueryExecutor::class,
             $this->buildQuery(
                 fn ($query) => $query,

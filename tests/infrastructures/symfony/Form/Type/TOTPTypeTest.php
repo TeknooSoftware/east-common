@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -48,7 +48,7 @@ use Teknoo\East\CommonBundle\Object\TOTP\GoogleAuthPasswordAuthenticatedUser;
 use Teknoo\East\CommonBundle\Object\TOTP\TOTPPasswordAuthenticatedUser;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  *
  */
@@ -100,9 +100,9 @@ class TOTPTypeTest extends TestCase
     }
 
 
-    public function testConfigureOptions()
+    public function testConfigureOptions(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             TOTPType::class,
             $this->buildForm()->configureOptions(
                 $this->createMock(OptionsResolver::class)
@@ -110,21 +110,20 @@ class TOTPTypeTest extends TestCase
         );
     }
 
-    public function testWithoutTokenInStorage()
+    public function testWithoutTokenInStorage(): void
     {
         $this->getTokenStorage()
-            ->expects($this->any())
             ->method('getToken')
             ->willReturn(null);
 
         $builder = $this->createMock(FormBuilderInterface::class);
 
-        $builder->expects($this->any())
+        $builder
             ->method('add')
             ->willReturnCallback(
-                function ($name, $type, $options) use ($builder) {
+                function (string|\Symfony\Component\Form\FormBuilderInterface $name, ?string $type, array $options) use ($builder): \PHPUnit\Framework\MockObject\MockObject {
                     $violation = $this->createMock(ConstraintViolationBuilderInterface::class);
-                    $violation->expects($this->any())->method('atPath')->willReturnSelf();
+                    $violation->method('atPath')->willReturnSelf();
 
                     $context = $this->createMock(ExecutionContextInterface::class);
                     $context->expects($this->once())
@@ -142,32 +141,31 @@ class TOTPTypeTest extends TestCase
                 }
             );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             AbstractType::class,
             $this->buildForm()->buildForm($builder, [])
         );
     }
 
-    public function testWithoutUserInToken()
+    public function testWithoutUserInToken(): void
     {
         $token = $this->createMock(TokenInterface::class);
-        $token->expects($this->any())
+        $token
             ->method('getUser')
             ->willReturn(null);
 
         $this->getTokenStorage()
-            ->expects($this->any())
             ->method('getToken')
             ->willReturn($token);
 
         $builder = $this->createMock(FormBuilderInterface::class);
 
-        $builder->expects($this->any())
+        $builder
             ->method('add')
             ->willReturnCallback(
-                function ($name, $type, $options) use ($builder) {
+                function (string|\Symfony\Component\Form\FormBuilderInterface $name, ?string $type, array $options) use ($builder): \PHPUnit\Framework\MockObject\MockObject {
                     $violation = $this->createMock(ConstraintViolationBuilderInterface::class);
-                    $violation->expects($this->any())->method('atPath')->willReturnSelf();
+                    $violation->method('atPath')->willReturnSelf();
 
                     $context = $this->createMock(ExecutionContextInterface::class);
                     $context->expects($this->once())
@@ -185,32 +183,31 @@ class TOTPTypeTest extends TestCase
                 }
             );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             AbstractType::class,
             $this->buildForm()->buildForm($builder, [])
         );
     }
 
-    public function testWithNonEastUserInToken()
+    public function testWithNonEastUserInToken(): void
     {
         $token = $this->createMock(TokenInterface::class);
-        $token->expects($this->any())
+        $token
             ->method('getUser')
             ->willReturn($this->createMock(UserInterface::class));
 
         $this->getTokenStorage()
-            ->expects($this->any())
             ->method('getToken')
             ->willReturn($token);
 
         $builder = $this->createMock(FormBuilderInterface::class);
 
-        $builder->expects($this->any())
+        $builder
             ->method('add')
             ->willReturnCallback(
-                function ($name, $type, $options) use ($builder) {
+                function (string|\Symfony\Component\Form\FormBuilderInterface $name, ?string $type, array $options) use ($builder): \PHPUnit\Framework\MockObject\MockObject {
                     $violation = $this->createMock(ConstraintViolationBuilderInterface::class);
-                    $violation->expects($this->any())->method('atPath')->willReturnSelf();
+                    $violation->method('atPath')->willReturnSelf();
 
                     $context = $this->createMock(ExecutionContextInterface::class);
                     $context->expects($this->once())
@@ -228,32 +225,31 @@ class TOTPTypeTest extends TestCase
                 }
             );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             AbstractType::class,
             $this->buildForm()->buildForm($builder, [])
         );
     }
 
-    public function testWithPasswordAuthenticatedUserInToken()
+    public function testWithPasswordAuthenticatedUserInToken(): void
     {
         $token = $this->createMock(TokenInterface::class);
-        $token->expects($this->any())
+        $token
             ->method('getUser')
             ->willReturn($this->createMock(PasswordAuthenticatedUser::class));
 
         $this->getTokenStorage()
-            ->expects($this->any())
             ->method('getToken')
             ->willReturn($token);
 
         $builder = $this->createMock(FormBuilderInterface::class);
 
-        $builder->expects($this->any())
+        $builder
             ->method('add')
             ->willReturnCallback(
-                function ($name, $type, $options) use ($builder) {
+                function (string|\Symfony\Component\Form\FormBuilderInterface $name, ?string $type, array $options) use ($builder): \PHPUnit\Framework\MockObject\MockObject {
                     $violation = $this->createMock(ConstraintViolationBuilderInterface::class);
-                    $violation->expects($this->any())->method('atPath')->willReturnSelf();
+                    $violation->method('atPath')->willReturnSelf();
 
                     $context = $this->createMock(ExecutionContextInterface::class);
                     $context->expects($this->once())
@@ -271,32 +267,31 @@ class TOTPTypeTest extends TestCase
                 }
             );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             AbstractType::class,
             $this->buildForm()->buildForm($builder, [])
         );
     }
 
-    public function testWithThirdPartyAuthenticatedUserInToken()
+    public function testWithThirdPartyAuthenticatedUserInToken(): void
     {
         $token = $this->createMock(TokenInterface::class);
-        $token->expects($this->any())
+        $token
             ->method('getUser')
             ->willReturn($this->createMock(ThirdPartyAuthenticatedUser::class));
 
         $this->getTokenStorage()
-            ->expects($this->any())
             ->method('getToken')
             ->willReturn($token);
 
         $builder = $this->createMock(FormBuilderInterface::class);
 
-        $builder->expects($this->any())
+        $builder
             ->method('add')
             ->willReturnCallback(
-                function ($name, $type, $options) use ($builder) {
+                function (string|\Symfony\Component\Form\FormBuilderInterface $name, ?string $type, array $options) use ($builder): \PHPUnit\Framework\MockObject\MockObject {
                     $violation = $this->createMock(ConstraintViolationBuilderInterface::class);
-                    $violation->expects($this->any())->method('atPath')->willReturnSelf();
+                    $violation->method('atPath')->willReturnSelf();
 
                     $context = $this->createMock(ExecutionContextInterface::class);
                     $context->expects($this->once())
@@ -314,48 +309,47 @@ class TOTPTypeTest extends TestCase
                 }
             );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             AbstractType::class,
             $this->buildForm()->buildForm($builder, [])
         );
     }
 
-    public function testWithGoogleTwoFactorInToken()
+    public function testWithGoogleTwoFactorInToken(): void
     {
         $wrapperUser = new User();
         $wrapperUser->addAuthData($auth = new TOTPAuth());
 
         $user = $this->createMock(GoogleAuthPasswordAuthenticatedUser::class);
-        $user->expects($this->any())
+        $user
             ->method('getWrappedUser')
             ->willReturn($wrapperUser);
 
-        $user->expects($this->any())
+        $user
             ->method('getTOTPAuth')
             ->willReturn($auth);
 
         $token = $this->createMock(TokenInterface::class);
-        $token->expects($this->any())
+        $token
             ->method('getUser')
             ->willReturn($user);
 
         $this->getTokenStorage()
-            ->expects($this->any())
             ->method('getToken')
             ->willReturn($token);
 
-        $this->getGoogleAuthenticator()->expects($this->any())
+        $this->getGoogleAuthenticator()
             ->method('checkCode')
             ->willReturn(false);
 
         $builder = $this->createMock(FormBuilderInterface::class);
 
-        $builder->expects($this->any())
+        $builder
             ->method('add')
             ->willReturnCallback(
-                function ($name, $type, $options) use ($builder) {
+                function (string|\Symfony\Component\Form\FormBuilderInterface $name, ?string $type, array $options) use ($builder): \PHPUnit\Framework\MockObject\MockObject {
                     $violation = $this->createMock(ConstraintViolationBuilderInterface::class);
-                    $violation->expects($this->any())->method('atPath')->willReturnSelf();
+                    $violation->method('atPath')->willReturnSelf();
 
                     $context = $this->createMock(ExecutionContextInterface::class);
                     $context->expects($this->once())
@@ -373,48 +367,47 @@ class TOTPTypeTest extends TestCase
                 }
             );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             AbstractType::class,
             $this->buildForm()->buildForm($builder, [])
         );
     }
 
-    public function testWithTotpTwoFactorInToken()
+    public function testWithTotpTwoFactorInToken(): void
     {
         $wrapperUser = new User();
         $wrapperUser->addAuthData($auth = new TOTPAuth());
 
         $user = $this->createMock(TOTPPasswordAuthenticatedUser::class);
-        $user->expects($this->any())
+        $user
             ->method('getWrappedUser')
             ->willReturn($wrapperUser);
 
-        $user->expects($this->any())
+        $user
             ->method('getTOTPAuth')
             ->willReturn($auth);
 
         $token = $this->createMock(TokenInterface::class);
-        $token->expects($this->any())
+        $token
             ->method('getUser')
             ->willReturn($user);
 
         $this->getTokenStorage()
-            ->expects($this->any())
             ->method('getToken')
             ->willReturn($token);
 
-        $this->getTotpAuthenticator()->expects($this->any())
+        $this->getTotpAuthenticator()
             ->method('checkCode')
             ->willReturn(false);
 
         $builder = $this->createMock(FormBuilderInterface::class);
 
-        $builder->expects($this->any())
+        $builder
             ->method('add')
             ->willReturnCallback(
-                function ($name, $type, $options) use ($builder) {
+                function (string|\Symfony\Component\Form\FormBuilderInterface $name, ?string $type, array $options) use ($builder): \PHPUnit\Framework\MockObject\MockObject {
                     $violation = $this->createMock(ConstraintViolationBuilderInterface::class);
-                    $violation->expects($this->any())->method('atPath')->willReturnSelf();
+                    $violation->method('atPath')->willReturnSelf();
 
                     $context = $this->createMock(ExecutionContextInterface::class);
                     $context->expects($this->once())
@@ -432,46 +425,45 @@ class TOTPTypeTest extends TestCase
                 }
             );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             AbstractType::class,
             $this->buildForm()->buildForm($builder, [])
         );
     }
 
-    public function testWithGoogleTwoFactorInTokenWithValidCode()
+    public function testWithGoogleTwoFactorInTokenWithValidCode(): void
     {
         $wrapperUser = new User();
         $wrapperUser->addAuthData($auth = new TOTPAuth());
 
         $user = $this->createMock(GoogleAuthPasswordAuthenticatedUser::class);
-        $user->expects($this->any())
+        $user
             ->method('getWrappedUser')
             ->willReturn($wrapperUser);
 
-        $user->expects($this->any())
+        $user
             ->method('getTOTPAuth')
             ->willReturn($auth);
 
         $token = $this->createMock(TokenInterface::class);
-        $token->expects($this->any())
+        $token
             ->method('getUser')
             ->willReturn($user);
 
         $this->getTokenStorage()
-            ->expects($this->any())
             ->method('getToken')
             ->willReturn($token);
 
-        $this->getGoogleAuthenticator()->expects($this->any())
+        $this->getGoogleAuthenticator()
             ->method('checkCode')
             ->willReturn(true);
 
         $builder = $this->createMock(FormBuilderInterface::class);
 
-        $builder->expects($this->any())
+        $builder
             ->method('add')
             ->willReturnCallback(
-                function ($name, $type, $options) use ($builder) {
+                function (string|\Symfony\Component\Form\FormBuilderInterface $name, ?string $type, array $options) use ($builder): \PHPUnit\Framework\MockObject\MockObject {
                     $context = $this->createMock(ExecutionContextInterface::class);
                     $context->expects($this->never())
                         ->method('buildViolation');
@@ -487,46 +479,45 @@ class TOTPTypeTest extends TestCase
                 }
             );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             AbstractType::class,
             $this->buildForm()->buildForm($builder, [])
         );
     }
 
-    public function testWithTotpTwoFactorInTokenWithValidCode()
+    public function testWithTotpTwoFactorInTokenWithValidCode(): void
     {
         $wrapperUser = new User();
         $wrapperUser->addAuthData($auth = new TOTPAuth());
 
         $user = $this->createMock(TOTPPasswordAuthenticatedUser::class);
-        $user->expects($this->any())
+        $user
             ->method('getWrappedUser')
             ->willReturn($wrapperUser);
 
-        $user->expects($this->any())
+        $user
             ->method('getTOTPAuth')
             ->willReturn($auth);
 
         $token = $this->createMock(TokenInterface::class);
-        $token->expects($this->any())
+        $token
             ->method('getUser')
             ->willReturn($user);
 
         $this->getTokenStorage()
-            ->expects($this->any())
             ->method('getToken')
             ->willReturn($token);
 
-        $this->getTotpAuthenticator()->expects($this->any())
+        $this->getTotpAuthenticator()
             ->method('checkCode')
             ->willReturn(true);
 
         $builder = $this->createMock(FormBuilderInterface::class);
 
-        $builder->expects($this->any())
+        $builder
             ->method('add')
             ->willReturnCallback(
-                function ($name, $type, $options) use ($builder) {
+                function (string|\Symfony\Component\Form\FormBuilderInterface $name, ?string $type, array $options) use ($builder): \PHPUnit\Framework\MockObject\MockObject {
                     $context = $this->createMock(ExecutionContextInterface::class);
                     $context->expects($this->never())
                         ->method('buildViolation');
@@ -542,7 +533,7 @@ class TOTPTypeTest extends TestCase
                 }
             );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             AbstractType::class,
             $this->buildForm()->buildForm($builder, [])
         );

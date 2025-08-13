@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -32,7 +32,7 @@ use Teknoo\East\Common\Contracts\Query\QueryElementInterface;
 use Teknoo\Recipe\Promise\Promise;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 trait LoaderTestTrait
@@ -49,19 +49,19 @@ trait LoaderTestTrait
      */
     abstract public function getEntity();
 
-    public function testLoadBadId()
+    public function testLoadBadId(): void
     {
         $this->expectException(\Throwable::class);
         $this->buildLoader()->load(new \stdClass(), new Promise());
     }
 
-    public function testLoadBadPromise()
+    public function testLoadBadPromise(): void
     {
         $this->expectException(\Throwable::class);
         $this->buildLoader()->load('fooBar', new \stdClass());
     }
 
-    public function testLoadWithError()
+    public function testLoadWithError(): void
     {
         /**
          * @var \PHPUnit\Framework\MockObject\MockObject $promiseMock
@@ -75,16 +75,16 @@ trait LoaderTestTrait
         $this->getRepositoryMock()
             ->expects($this->any())
             ->method('findOneBy')
-            ->with(['id'=>'fooBar', 'deletedAt'=>null], $promiseMock)
+            ->with(['id' => 'fooBar', 'deletedAt' => null], $promiseMock)
             ->willThrowException(new \Exception());
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             LoaderInterface::class,
             $this->buildLoader()->load('fooBar', $promiseMock)
         );
     }
 
-    public function testLoad()
+    public function testLoad(): void
     {
         /**
          * @var \PHPUnit\Framework\MockObject\MockObject $promiseMock
@@ -96,27 +96,27 @@ trait LoaderTestTrait
         $this->getRepositoryMock()
             ->expects($this->any())
             ->method('findOneBy')
-            ->with(['id'=>'fooBar'], $promiseMock);
+            ->with(['id' => 'fooBar'], $promiseMock);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             \Teknoo\East\Common\Contracts\Loader\LoaderInterface::class,
             $this->buildLoader()->load('fooBar', $promiseMock)
         );
     }
 
-    public function testQueryBadQuery()
+    public function testQueryBadQuery(): void
     {
         $this->expectException(\Throwable::class);
         $this->buildLoader()->query(new \stdClass(), new Promise());
     }
 
-    public function testQueryBadPromise()
+    public function testQueryBadPromise(): void
     {
         $this->expectException(\Throwable::class);
         $this->buildLoader()->query($this->createMock(QueryCollectionInterface::class), new \stdClass());
     }
 
-    public function testQuery()
+    public function testQuery(): void
     {
         /**
          * @var \PHPUnit\Framework\MockObject\MockObject $promiseMock
@@ -136,25 +136,25 @@ trait LoaderTestTrait
             ->method('execute')
             ->with($loader, $this->getRepositoryMock(), $promiseMock);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             \Teknoo\East\Common\Contracts\Loader\LoaderInterface::class,
             $loader->query($queryMock, $promiseMock)
         );
     }
 
-    public function testFetchBadFetch()
+    public function testFetchBadFetch(): void
     {
         $this->expectException(\Throwable::class);
         $this->buildLoader()->fetch(new \stdClass(), new Promise());
     }
 
-    public function testFetchBadPromise()
+    public function testFetchBadPromise(): void
     {
         $this->expectException(\Throwable::class);
         $this->buildLoader()->fetch($this->createMock(QueryElementInterface::class), new \stdClass());
     }
 
-    public function testFetch()
+    public function testFetch(): void
     {
         /**
          * @var \PHPUnit\Framework\MockObject\MockObject $promiseMock
@@ -174,7 +174,7 @@ trait LoaderTestTrait
             ->method('fetch')
             ->with($loader, $this->getRepositoryMock(), $promiseMock);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             \Teknoo\East\Common\Contracts\Loader\LoaderInterface::class,
             $loader->fetch($fetchMock, $promiseMock)
         );

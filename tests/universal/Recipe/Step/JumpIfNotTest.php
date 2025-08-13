@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -32,7 +32,7 @@ use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Common\Recipe\Step\JumpIfNot;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(JumpIfNot::class)]
@@ -43,13 +43,13 @@ class JumpIfNotTest extends TestCase
         return new JumpIfNot();
     }
 
-    public function testInvokeNoValue()
+    public function testInvokeNoValue(): void
     {
         $manager = $this->createMock(ManagerInterface::class);
         $manager->expects($this->once())
             ->method('continue');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             JumpIfNot::class,
             $this->buildStep()(
                 $manager,
@@ -58,18 +58,18 @@ class JumpIfNotTest extends TestCase
         );
     }
 
-    public function testInvokeEmptyStringable()
+    public function testInvokeEmptyStringable(): void
     {
         $manager = $this->createMock(ManagerInterface::class);
         $manager->expects($this->once())
             ->method('continue');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             JumpIfNot::class,
             $this->buildStep()(
                 $manager,
                 'nextRouteName',
-                new class implements Stringable {
+                new class () implements Stringable {
                     public function __toString(): string
                     {
                         return '';
@@ -79,13 +79,13 @@ class JumpIfNotTest extends TestCase
         );
     }
 
-    public function testInvokeWithValueWithoutExpected()
+    public function testInvokeWithValueWithoutExpected(): void
     {
         $manager = $this->createMock(ManagerInterface::class);
         $manager->expects($this->never())
             ->method('continue');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             JumpIfNot::class,
             $this->buildStep()(
                 $manager,
@@ -95,18 +95,18 @@ class JumpIfNotTest extends TestCase
         );
     }
 
-    public function testInvokeWithValueWithoutExpectedAndStringable()
+    public function testInvokeWithValueWithoutExpectedAndStringable(): void
     {
         $manager = $this->createMock(ManagerInterface::class);
         $manager->expects($this->never())
             ->method('continue');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             JumpIfNot::class,
             $this->buildStep()(
                 $manager,
                 'nextRouteName',
-                new class implements Stringable {
+                new class () implements Stringable {
                     public function __toString(): string
                     {
                         return 'foo';
@@ -116,13 +116,13 @@ class JumpIfNotTest extends TestCase
         );
     }
 
-    public function testInvokeValueNotEqualToExpected()
+    public function testInvokeValueNotEqualToExpected(): void
     {
         $manager = $this->createMock(ManagerInterface::class);
         $manager->expects($this->once())
             ->method('continue');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             JumpIfNot::class,
             $this->buildStep()(
                 $manager,
@@ -133,13 +133,13 @@ class JumpIfNotTest extends TestCase
         );
     }
 
-    public function testInvokeWithValueEqualToExpected()
+    public function testInvokeWithValueEqualToExpected(): void
     {
         $manager = $this->createMock(ManagerInterface::class);
         $manager->expects($this->never())
             ->method('continue');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             JumpIfNot::class,
             $this->buildStep()(
                 $manager,
@@ -150,36 +150,36 @@ class JumpIfNotTest extends TestCase
         );
     }
 
-    public function testInvokeValueExpectedIsCallbackWithSuccess()
+    public function testInvokeValueExpectedIsCallbackWithSuccess(): void
     {
         $manager = $this->createMock(ManagerInterface::class);
         $manager->expects($this->never())
             ->method('continue');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             JumpIfNot::class,
             $this->buildStep()(
                 $manager,
                 'nextRouteName',
                 'foo',
-                fn ($val) => $val === 'foo',
+                fn ($val): bool => $val === 'foo',
             )
         );
     }
 
-    public function testInvokeValueExpectedIsCallbackWithFailure()
+    public function testInvokeValueExpectedIsCallbackWithFailure(): void
     {
         $manager = $this->createMock(ManagerInterface::class);
         $manager->expects($this->once())
             ->method('continue');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             JumpIfNot::class,
             $this->buildStep()(
                 $manager,
                 'nextRouteName',
                 'foo',
-                fn ($val) => $val !== 'foo',
+                fn ($val): bool => $val !== 'foo',
             )
         );
     }

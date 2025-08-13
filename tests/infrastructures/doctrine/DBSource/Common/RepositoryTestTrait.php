@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -25,9 +25,9 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Doctrine\DBSource\Common;
 
-use PHPUnit\Framework\Error\Notice;
 use Doctrine\Persistence\ObjectRepository;
 use PHPUnit\Framework\AssertionFailedError;
+use PHPUnit\Framework\MockObject\MockObject;
 use Teknoo\East\Common\Contracts\DBSource\RepositoryInterface;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
 use Teknoo\East\Common\Contracts\Query\Expr\ExprInterface;
@@ -50,15 +50,12 @@ use function restore_error_handler;
 use const E_USER_NOTICE;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 trait RepositoryTestTrait
 {
-    /**
-     * @var ObjectRepository
-     */
-    private $objectRepository;
+    private (ObjectRepository&MockObject)|null $objectRepository = null;
 
     /**
      * @return ObjectRepository|\PHPUnit\Framework\MockObject\MockObject
@@ -74,23 +71,23 @@ trait RepositoryTestTrait
 
     abstract public function buildRepository(): RepositoryInterface;
 
-    public function testFindBadId()
+    public function testFindBadId(): void
     {
         $this->expectException(\TypeError::class);
         $this->buildRepository()->find(new \stdClass(), $this->createMock(PromiseInterface::class));
     }
 
-    public function testFindBadPromise()
+    public function testFindBadPromise(): void
     {
         $this->expectException(\TypeError::class);
         $this->buildRepository()->find('abc', new \stdClass());
     }
 
-    public function testFindNothing()
+    public function testFindNothing(): void
     {
         $promise = $this->createMock(PromiseInterface::class);
         $promise->expects($this->never())->method('success');
-        $promise->expects($this->once())->method('fail')->with($this->callback(fn($value) => $value instanceof \DomainException));
+        $promise->expects($this->once())->method('fail')->with($this->callback(fn ($value): bool => $value instanceof \DomainException));
 
         $this->getDoctrineObjectRepositoryMock()
             ->expects($this->once())
@@ -98,13 +95,13 @@ trait RepositoryTestTrait
             ->with('abc')
             ->willReturn(null);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RepositoryInterface::class,
             $this->buildRepository()->find('abc', $promise)
         );
     }
 
-    public function testFindOneThing()
+    public function testFindOneThing(): void
     {
         $object = new \stdClass();
         $promise = $this->createMock(PromiseInterface::class);
@@ -117,13 +114,13 @@ trait RepositoryTestTrait
             ->with('abc')
             ->willReturn($object);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RepositoryInterface::class,
             $this->buildRepository()->find('abc', $promise)
         );
     }
 
-    public function testFindOneThingWithPrime()
+    public function testFindOneThingWithPrime(): void
     {
         $object = new \stdClass();
         $promise = $this->createMock(PromiseInterface::class);
@@ -137,45 +134,38 @@ trait RepositoryTestTrait
             ->willReturn($object);
 
         $fail = false;
-        $previous = null;
-        if (!class_exists(Notice::class)) {
-            $previous = set_error_handler(
-                function () use (&$fail) {
-                    $fail = true;
-                },
-                E_USER_NOTICE
-            );
-        }
+        $previous = set_error_handler(
+            function () use (&$fail): void {
+                $fail = true;
+            },
+            E_USER_NOTICE
+        );
 
         try {
-            self::assertInstanceOf(
+            $this->assertInstanceOf(
                 RepositoryInterface::class,
-                $this->buildRepository()->find('abc', $promise, ['foo'],)
+                $this->buildRepository()->find('abc', $promise, ['foo'], )
             );
         } catch (AssertionFailedError $error) {
-            if (null !== $previous) {
-                restore_error_handler();
-            }
+            restore_error_handler();
 
             throw $error;
         } catch (Throwable) {
             $fail = true;
         }
 
-        if (null !== $previous) {
-            restore_error_handler();
-        }
+        restore_error_handler();
 
-        self::assertTrue($fail, 'Notice must be Thrown');
+        $this->assertTrue($fail, 'Notice must be Thrown');
     }
 
-    public function testFindAllBadPromise()
+    public function testFindAllBadPromise(): void
     {
         $this->expectException(\TypeError::class);
         $this->buildRepository()->findAll(new \stdClass());
     }
 
-    public function testFindAll()
+    public function testFindAll(): void
     {
         $object = [new \stdClass()];
         $promise = $this->createMock(PromiseInterface::class);
@@ -187,13 +177,13 @@ trait RepositoryTestTrait
             ->method('findAll')
             ->willReturn($object);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RepositoryInterface::class,
             $this->buildRepository()->findAll($promise)
         );
     }
 
-    public function testFindAllWithPrime()
+    public function testFindAllWithPrime(): void
     {
         $object = [new \stdClass()];
         $promise = $this->createMock(PromiseInterface::class);
@@ -206,44 +196,37 @@ trait RepositoryTestTrait
             ->willReturn($object);
 
         $fail = false;
-        $previous = null;
-        if (!class_exists(Notice::class)) {
-            $previous = set_error_handler(
-                function () use (&$fail) {
-                    $fail = true;
-                },
-                E_USER_NOTICE
-            );
-        }
+        $previous = set_error_handler(
+            function () use (&$fail): void {
+                $fail = true;
+            },
+            E_USER_NOTICE
+        );
 
         try {
-            self::assertInstanceOf(
+            $this->assertInstanceOf(
                 RepositoryInterface::class,
-                $this->buildRepository()->findAll($promise, ['foo'],)
+                $this->buildRepository()->findAll($promise, ['foo'], )
             );
         } catch (AssertionFailedError $error) {
-            if (null !== $previous) {
-                restore_error_handler();
-            }
+            restore_error_handler();
 
             throw $error;
         } catch (Throwable) {
             $fail = true;
         }
 
-        if (null !== $previous) {
-            restore_error_handler();
-        }
+        restore_error_handler();
 
-        self::assertTrue($fail, 'Notice must be Thrown');
+        $this->assertTrue($fail, 'Notice must be Thrown');
     }
 
-    public function testCount()
+    public function testCount(): void
     {
         $object = [new \stdClass(),new \stdClass(),new \stdClass()];
 
         $promise = $this->createMock(PromiseInterface::class);
-        $promise->expects($this->once())->method('__invoke')->with(3);
+        $promise->expects($this->once())->method('success')->with(3);
         $promise->expects($this->never())->method('fail');
 
         $this->getDoctrineObjectRepositoryMock()
@@ -252,13 +235,13 @@ trait RepositoryTestTrait
             ->with(['foo' => 'bar'])
             ->willReturn($object);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RepositoryInterface::class,
             $this->buildRepository()->count(['foo' => 'bar'], $promise)
         );
     }
 
-    public function testDistinctByWithArray()
+    public function testDistinctByWithArray(): void
     {
         $object = [
             ['foo' => 'foo'],
@@ -267,7 +250,7 @@ trait RepositoryTestTrait
         ];
 
         $promise = $this->createMock(PromiseInterface::class);
-        $promise->expects($this->once())->method('__invoke')->with(['foo', 'bar']);
+        $promise->expects($this->once())->method('success')->with(['foo', 'bar']);
         $promise->expects($this->never())->method('fail');
 
         $this->getDoctrineObjectRepositoryMock()
@@ -276,13 +259,13 @@ trait RepositoryTestTrait
             ->with(['foo' => 'bar'])
             ->willReturn($object);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RepositoryInterface::class,
             $this->buildRepository()->distinctBy('foo', ['foo' => 'bar'], $promise)
         );
     }
 
-    public function testDistinctByWithObject()
+    public function testDistinctByWithObject(): void
     {
         $object = [
             (object) ['foo' => 'foo'],
@@ -291,7 +274,7 @@ trait RepositoryTestTrait
         ];
 
         $promise = $this->createMock(PromiseInterface::class);
-        $promise->expects($this->once())->method('__invoke')->with(['foo', 'bar']);
+        $promise->expects($this->once())->method('success')->with(['foo', 'bar']);
         $promise->expects($this->never())->method('fail');
 
         $this->getDoctrineObjectRepositoryMock()
@@ -300,25 +283,25 @@ trait RepositoryTestTrait
             ->with(['foo' => 'bar'])
             ->willReturn($object);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RepositoryInterface::class,
             $this->buildRepository()->distinctBy('foo', ['foo' => 'bar'], $promise)
         );
     }
 
-    public function testFindByBadCriteria()
+    public function testFindByBadCriteria(): void
     {
         $this->expectException(\TypeError::class);
         $this->buildRepository()->findBy(new \stdClass(), $this->createMock(PromiseInterface::class));
     }
 
-    public function testFindByBadPromise()
+    public function testFindByBadPromise(): void
     {
         $this->expectException(\TypeError::class);
         $this->buildRepository()->findBy(['foo' => 'bar'], new \stdClass());
     }
 
-    public function testFindByBadOrder()
+    public function testFindByBadOrder(): void
     {
         $this->expectException(\TypeError::class);
         $this->buildRepository()->findBy(
@@ -328,7 +311,7 @@ trait RepositoryTestTrait
         );
     }
 
-    public function testFindBy()
+    public function testFindBy(): void
     {
         $object = [new \stdClass()];
         $promise = $this->createMock(PromiseInterface::class);
@@ -341,7 +324,7 @@ trait RepositoryTestTrait
             ->with(['foo' => 'bar'])
             ->willReturn($object);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RepositoryInterface::class,
             $this->buildRepository()->findBy(
                 ['foo' => 'bar'],
@@ -351,7 +334,7 @@ trait RepositoryTestTrait
         );
     }
 
-    public function testFindByWithPrime()
+    public function testFindByWithPrime(): void
     {
         $object = [new \stdClass()];
         $promise = $this->createMock(PromiseInterface::class);
@@ -368,7 +351,7 @@ trait RepositoryTestTrait
         $previous = null;
         if (!class_exists(Notice::class)) {
             $previous = set_error_handler(
-                function () use (&$fail) {
+                function () use (&$fail): void {
                     $fail = true;
                 },
                 E_USER_NOTICE
@@ -376,7 +359,7 @@ trait RepositoryTestTrait
         }
 
         try {
-            self::assertInstanceOf(
+            $this->assertInstanceOf(
                 RepositoryInterface::class,
                 $this->buildRepository()->findBy(
                     ['foo' => 'bar'],
@@ -401,26 +384,26 @@ trait RepositoryTestTrait
             restore_error_handler();
         }
 
-        self::assertTrue($fail, 'Notice must be Thrown');
+        $this->assertTrue($fail, 'Notice must be Thrown');
     }
 
-    public function testFindOneByBadCriteria()
+    public function testFindOneByBadCriteria(): void
     {
         $this->expectException(\TypeError::class);
         $this->buildRepository()->findOneBy(new \stdClass(), $this->createMock(PromiseInterface::class));
     }
 
-    public function testFindOneByBadPromise()
+    public function testFindOneByBadPromise(): void
     {
         $this->expectException(\TypeError::class);
         $this->buildRepository()->findOneBy(['foo' => 'bar'], new \stdClass());
     }
 
-    public function testFindOneByNothing()
+    public function testFindOneByNothing(): void
     {
         $promise = $this->createMock(PromiseInterface::class);
         $promise->expects($this->never())->method('success');
-        $promise->expects($this->once())->method('fail')->with($this->callback(fn($value) => $value instanceof \DomainException));
+        $promise->expects($this->once())->method('fail')->with($this->callback(fn ($value): bool => $value instanceof \DomainException));
 
         $this->getDoctrineObjectRepositoryMock()
             ->expects($this->once())
@@ -428,17 +411,17 @@ trait RepositoryTestTrait
             ->with(['foo' => 'bar'])
             ->willReturn(null);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RepositoryInterface::class,
             $this->buildRepository()->findOneBy(['foo' => 'bar'], $promise)
         );
     }
 
-    public function testFindOneByExpcetion()
+    public function testFindOneByExpcetion(): void
     {
         $promise = $this->createMock(PromiseInterface::class);
         $promise->expects($this->never())->method('success');
-        $promise->expects($this->once())->method('fail')->with($this->callback(fn($value) => $value instanceof \RuntimeException));
+        $promise->expects($this->once())->method('fail')->with($this->callback(fn ($value): bool => $value instanceof \RuntimeException));
 
         $this->getDoctrineObjectRepositoryMock()
             ->expects($this->once())
@@ -446,13 +429,13 @@ trait RepositoryTestTrait
             ->with(['foo' => 'bar'])
             ->willThrowException(new \RuntimeException());
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RepositoryInterface::class,
             $this->buildRepository()->findOneBy(['foo' => 'bar'], $promise)
         );
     }
 
-    public function testFindOneByOneThing()
+    public function testFindOneByOneThing(): void
     {
         $object = new \stdClass();
         $promise = $this->createMock(PromiseInterface::class);
@@ -466,7 +449,7 @@ trait RepositoryTestTrait
                 'foo' => 'bar',
                 'bar' => ['foo'],
                 'notIn' => ['bar2' => ['foo']],
-                'notEqual' => ['barNot' =>'foo'],
+                'notEqual' => ['barNot' => 'foo'],
                 'bwrRegex' => '/foo/i',
                 'or' => [
                     ['foo' => 'bar'],
@@ -476,7 +459,7 @@ trait RepositoryTestTrait
             ])
             ->willReturn($object);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RepositoryInterface::class,
             $this->buildRepository()->findOneBy(
                 [
@@ -496,7 +479,7 @@ trait RepositoryTestTrait
         );
     }
 
-    public function testFindOneByOneThingWithPrime()
+    public function testFindOneByOneThingWithPrime(): void
     {
         $object = new \stdClass();
         $promise = $this->createMock(PromiseInterface::class);
@@ -510,7 +493,7 @@ trait RepositoryTestTrait
                 'foo' => 'bar',
                 'bar' => ['foo'],
                 'notIn' => ['bar2' => ['foo']],
-                'notEqual' => ['barNot' =>'foo'],
+                'notEqual' => ['barNot' => 'foo'],
                 'barGte' => ['gte' => 123],
                 'barLte' => ['lte' => 456],
                 'barGt' => ['gt' => 789,],
@@ -524,18 +507,15 @@ trait RepositoryTestTrait
             ->willReturn($object);
 
         $fail = false;
-        $previous = null;
-        if (!class_exists(Notice::class)) {
-            $previous = set_error_handler(
-                function () use (&$fail) {
-                    $fail = true;
-                },
-                E_USER_NOTICE
-            );
-        }
+        $previous = set_error_handler(
+            function () use (&$fail): void {
+                $fail = true;
+            },
+            E_USER_NOTICE
+        );
 
         try {
-            self::assertInstanceOf(
+            $this->assertInstanceOf(
                 RepositoryInterface::class,
                 $this->buildRepository()->findOneBy(
                     [
@@ -558,25 +538,21 @@ trait RepositoryTestTrait
                 )
             );
         } catch (AssertionFailedError $error) {
-            if (null !== $previous) {
-                restore_error_handler();
-            }
+            restore_error_handler();
 
             throw $error;
         } catch (Throwable) {
             $fail = true;
         }
 
-        if (null !== $previous) {
-            restore_error_handler();
-        }
-        self::assertTrue($fail, 'Notice must be Thrown');
+        restore_error_handler();
+
+        $this->assertTrue($fail, 'Notice must be Thrown');
     }
 
-    public function testConvertExprWithoutManaged()
+    public function testConvertExprWithoutManaged(): void
     {
-        $expr = new class implements ExprInterface {
-
+        $expr = new class () implements ExprInterface {
         };
 
         $promise = $this->createMock(PromiseInterface::class);
@@ -587,7 +563,7 @@ trait RepositoryTestTrait
             ->expects($this->never())
             ->method('findOneBy');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RepositoryInterface::class,
             $this->buildRepository()->findOneBy(
                 [
@@ -598,17 +574,17 @@ trait RepositoryTestTrait
         );
     }
 
-    public function testAddExprMappingConversion()
+    public function testAddExprMappingConversion(): void
     {
         $expr = $this->createMock(ExprInterface::class);
 
         $class = $this->buildRepository()::class;
         $class::addExprMappingConversion(
             $expr::class,
-            static function (array &$final, string $key, ExprInterface $expr) {
+            static function (array &$final, string $key, ExprInterface $expr): void {
                 $final['foo'] = 'bar';
             }
-            );
+        );
 
         $object = new \stdClass();
         $promise = $this->createMock(PromiseInterface::class);
@@ -623,7 +599,7 @@ trait RepositoryTestTrait
             ])
             ->willReturn($object);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RepositoryInterface::class,
             $this->buildRepository()->findOneBy(
                 [

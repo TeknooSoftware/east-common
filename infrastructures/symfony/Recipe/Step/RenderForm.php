@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 
@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\CommonBundle\Recipe\Step;
 
+use DateTimeInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -44,7 +45,7 @@ use Teknoo\Recipe\Ingredient\Attributes\Transform;
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 class RenderForm implements RenderFormInterface
@@ -109,7 +110,7 @@ class RenderForm implements RenderFormInterface
         $headers = [];
         if (
             method_exists($object, 'updatedAt')
-            && null !== ($updatedAt = $object->updatedAt())
+            && ($updatedAt = $object->updatedAt()) instanceof DateTimeInterface
         ) {
             $headers['Last-Modified'] = $updatedAt->format('D, d M Y H:i:s \G\M\T');
         }

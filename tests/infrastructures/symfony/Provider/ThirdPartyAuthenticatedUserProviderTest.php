@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -25,7 +25,9 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\CommonBundle\Provider;
 
+use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface as GoogleTwoFactorInterface;
 use Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface as TotpTwoFactorInterface;
@@ -46,22 +48,19 @@ use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\East\Common\Object\User as BaseUser;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  *
  */
 #[CoversClass(ThirdPartyAuthenticatedUserProvider::class)]
 class ThirdPartyAuthenticatedUserProviderTest extends TestCase
 {
-    /**
-     * @var UserLoader
-     */
-    private $loader;
+    private (UserLoader&MockObject)|null $loader = null;
 
     /**
      * @return UserLoader|\PHPUnit\Framework\MockObject\MockObject
      */
-    public function getLoader(): UserLoader
+    public function getLoader(): UserLoader&MockObject
     {
         if (!$this->loader instanceof UserLoader) {
             $this->loader = $this->createMock(UserLoader::class);
@@ -75,15 +74,15 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
         return new ThirdPartyAuthenticatedUserProvider($this->getLoader());
     }
 
-    public function testLoadUserByUsernameNotFound()
+    public function testLoadUserByUsernameNotFound(): void
     {
         $this->expectException(UserNotFoundException::class);
 
         $this->getLoader()
             ->expects($this->once())
             ->method('fetch')
-            ->willReturnCallback(function ($name, PromiseInterface $promise) {
-                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
+            ->willReturnCallback(function ($name, PromiseInterface $promise): \Teknoo\East\Common\Loader\UserLoader {
+                $this->assertEquals(new UserByEmailQuery('foo@bar'), $name);
                 $promise->fail(new \DomainException());
 
                 return $this->getLoader();
@@ -92,7 +91,7 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
         $this->buildProvider()->loadUserByUsername('foo@bar');
     }
 
-    public function testLoadUserByUsernameFound()
+    public function testLoadUserByUsernameFound(): void
     {
         $user = new BaseUser();
         $user->setEmail('foo@bar');
@@ -101,8 +100,8 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
         $this->getLoader()
             ->expects($this->once())
             ->method('fetch')
-            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
-                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
+            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user): \Teknoo\East\Common\Loader\UserLoader {
+                $this->assertEquals(new UserByEmailQuery('foo@bar'), $name);
                 $promise->success($user);
 
                 return $this->getLoader();
@@ -110,13 +109,13 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
 
         $loadedUser = new ThirdPartyAuthenticatedUser($user, $thirdPartyAuth);
 
-        self::assertEquals(
+        $this->assertEquals(
             $loadedUser,
             $this->buildProvider()->loadUserByUsername('foo@bar')
         );
     }
 
-    public function testLoadUserByUsernameFoundWithoutThirdPartyAuth()
+    public function testLoadUserByUsernameFoundWithoutThirdPartyAuth(): void
     {
         $user = new BaseUser();
         $user->setEmail('foo@bar');
@@ -125,8 +124,8 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
         $this->getLoader()
             ->expects($this->once())
             ->method('fetch')
-            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
-                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
+            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user): \Teknoo\East\Common\Loader\UserLoader {
+                $this->assertEquals(new UserByEmailQuery('foo@bar'), $name);
                 $promise->success($user);
 
                 return $this->getLoader();
@@ -136,15 +135,15 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
         $this->buildProvider()->loadUserByUsername('foo@bar');
     }
 
-    public function testLoadUserByIdentifierNotFound()
+    public function testLoadUserByIdentifierNotFound(): void
     {
         $this->expectException(UserNotFoundException::class);
 
         $this->getLoader()
             ->expects($this->once())
             ->method('fetch')
-            ->willReturnCallback(function ($name, PromiseInterface $promise) {
-                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
+            ->willReturnCallback(function ($name, PromiseInterface $promise): \Teknoo\East\Common\Loader\UserLoader {
+                $this->assertEquals(new UserByEmailQuery('foo@bar'), $name);
                 $promise->fail(new \DomainException());
 
                 return $this->getLoader();
@@ -153,7 +152,7 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
         $this->buildProvider()->loadUserByIdentifier('foo@bar');
     }
 
-    public function testLoadUserByIdentifierFound()
+    public function testLoadUserByIdentifierFound(): void
     {
         $user = new BaseUser();
         $user->setEmail('foo@bar');
@@ -162,8 +161,8 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
         $this->getLoader()
             ->expects($this->once())
             ->method('fetch')
-            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
-                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
+            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user): \Teknoo\East\Common\Loader\UserLoader {
+                $this->assertEquals(new UserByEmailQuery('foo@bar'), $name);
                 $promise->success($user);
 
                 return $this->getLoader();
@@ -171,12 +170,13 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
 
         $loadedUser = new ThirdPartyAuthenticatedUser($user, $thirdPartyAuth);
 
-        self::assertEquals(
+        $this->assertEquals(
             $loadedUser,
             $this->buildProvider()->loadUserByUsername('foo@bar')
         );
     }
-    public function testLoadUserByIdentifierFoundWithGooglAuth()
+
+    public function testLoadUserByIdentifierFoundWithGooglAuth(): void
     {
         $user = new BaseUser();
         $user->setEmail('foo@bar');
@@ -196,8 +196,8 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
         $this->getLoader()
             ->expects($this->once())
             ->method('fetch')
-            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
-                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
+            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user): \Teknoo\East\Common\Loader\UserLoader {
+                $this->assertEquals(new UserByEmailQuery('foo@bar'), $name);
                 $promise->success($user);
 
                 return $this->getLoader();
@@ -205,25 +205,25 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
 
         $loadedUser = new ThirdPartyAuthenticatedUser($user, $thirdPartyAuth);
 
-        self::assertTrue(
+        $this->assertTrue(
             $loadedUser->isEqualTo(
                 $builtUser = $this->buildProvider()
                     ->loadUserByUsername('foo@bar')
             )
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             GoogleTwoFactorInterface::class,
             $builtUser,
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             UserWithTOTPAuthInterface::class,
             $builtUser,
         );
     }
 
-    public function testLoadUserByIdentifierFoundWithTOTP()
+    public function testLoadUserByIdentifierFoundWithTOTP(): void
     {
         $user = new BaseUser();
         $user->setEmail('foo@bar');
@@ -243,8 +243,8 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
         $this->getLoader()
             ->expects($this->once())
             ->method('fetch')
-            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
-                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
+            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user): \Teknoo\East\Common\Loader\UserLoader {
+                $this->assertEquals(new UserByEmailQuery('foo@bar'), $name);
                 $promise->success($user);
 
                 return $this->getLoader();
@@ -252,25 +252,25 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
 
         $loadedUser = new ThirdPartyAuthenticatedUser($user, $thirdPartyAuth);
 
-        self::assertTrue(
+        $this->assertTrue(
             $loadedUser->isEqualTo(
                 $builtUser = $this->buildProvider()
                     ->loadUserByUsername('foo@bar')
             )
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             TotpTwoFactorInterface::class,
             $builtUser,
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             UserWithTOTPAuthInterface::class,
             $builtUser,
         );
     }
 
-    public function testLoadUserByIdentifierFoundWithoutThirdPartyAuth()
+    public function testLoadUserByIdentifierFoundWithoutThirdPartyAuth(): void
     {
         $user = new BaseUser();
         $user->setEmail('foo@bar');
@@ -279,8 +279,8 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
         $this->getLoader()
             ->expects($this->once())
             ->method('fetch')
-            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
-                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
+            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user): \Teknoo\East\Common\Loader\UserLoader {
+                $this->assertEquals(new UserByEmailQuery('foo@bar'), $name);
                 $promise->success($user);
 
                 return $this->getLoader();
@@ -290,15 +290,15 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
         $this->buildProvider()->loadUserByIdentifier('foo@bar');
     }
 
-    public function testrefreshUserNotFound()
+    public function testrefreshUserNotFound(): void
     {
         $this->expectException(UserNotFoundException::class);
 
         $this->getLoader()
             ->expects($this->once())
             ->method('fetch')
-            ->willReturnCallback(function ($name, PromiseInterface $promise) {
-                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
+            ->willReturnCallback(function ($name, PromiseInterface $promise): \Teknoo\East\Common\Loader\UserLoader {
+                $this->assertEquals(new UserByEmailQuery('foo@bar'), $name);
                 $promise->fail(new \DomainException());
 
                 return $this->getLoader();
@@ -306,13 +306,13 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
 
         $this->buildProvider()->refreshUser(
             new ThirdPartyAuthenticatedUser(
-                (new BaseUser())->setEmail('foo@bar'),
+                new BaseUser()->setEmail('foo@bar'),
                 new ThirdPartyAuth()
             )
         );
     }
 
-    public function testRefreshUserFound()
+    public function testRefreshUserFound(): void
     {
         $user = new BaseUser();
         $user->setEmail('foo@bar');
@@ -321,8 +321,8 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
         $this->getLoader()
             ->expects($this->once())
             ->method('fetch')
-            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user) {
-                self::assertEquals(new UserByEmailQuery('foo@bar'), $name);
+            ->willReturnCallback(function ($name, PromiseInterface $promise) use ($user): \Teknoo\East\Common\Loader\UserLoader {
+                $this->assertEquals(new UserByEmailQuery('foo@bar'), $name);
                 $promise->success($user);
 
                 return $this->getLoader();
@@ -330,29 +330,29 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
 
         $loadedUser = new ThirdPartyAuthenticatedUser($user, $thirdPartyAuth);
 
-        self::assertEquals(
+        $this->assertEquals(
             $loadedUser,
             $this->buildProvider()->refreshUser(
                 new ThirdPartyAuthenticatedUser(
-                    (new BaseUser())->setEmail('foo@bar'),
+                    new BaseUser()->setEmail('foo@bar'),
                     $thirdPartyAuth
                 )
             )
         );
     }
 
-    public function testRefreshUserNotSupported()
+    public function testRefreshUserNotSupported(): void
     {
         $this->expectException(MissingUserException::class);
         $this->buildProvider()->refreshUser($this->createMock(UserInterface::class));
     }
 
-    public function testSupportsClass()
+    public function testSupportsClass(): void
     {
-        self::assertTrue($this->buildProvider()->supportsClass(ThirdPartyAuthenticatedUser::class));
-        self::assertTrue($this->buildProvider()->supportsClass(GoogleAuthThirdPartyAuthenticatedUser::class));
-        self::assertTrue($this->buildProvider()->supportsClass(TOTPThirdPartyAuthenticatedUser::class));
-        self::assertFalse($this->buildProvider()->supportsClass(BaseUser::class));
-        self::assertFalse($this->buildProvider()->supportsClass(\DateTime::class));
+        $this->assertTrue($this->buildProvider()->supportsClass(ThirdPartyAuthenticatedUser::class));
+        $this->assertTrue($this->buildProvider()->supportsClass(GoogleAuthThirdPartyAuthenticatedUser::class));
+        $this->assertTrue($this->buildProvider()->supportsClass(TOTPThirdPartyAuthenticatedUser::class));
+        $this->assertFalse($this->buildProvider()->supportsClass(BaseUser::class));
+        $this->assertFalse($this->buildProvider()->supportsClass(\DateTime::class));
     }
 }

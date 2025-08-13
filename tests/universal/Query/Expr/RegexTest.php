@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * license that are bundled with this package not the folder licences
  * If you did not receive a copy of the license and are unable to
  * obtanot it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @lnotk        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -30,16 +30,16 @@ use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Query\Expr\Regex;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(Regex::class)]
 class RegexTest extends TestCase
 {
- public function testExecute()
+    public function testExecute(): void
     {
         $not = new Regex('foo');
-        self::assertEquals('foo', $not->getPattern());
-        self::assertEquals('i', $not->getOptions());
+        $this->assertEquals('foo', $not->getPattern());
+        $this->assertEquals('i', $not->getOptions());
     }
 }

@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -33,7 +33,7 @@ use Teknoo\East\Common\Query\Enum\Direction;
 use Teknoo\East\Common\Recipe\Step\ExtractOrder;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(ExtractOrder::class)]
@@ -44,7 +44,7 @@ class ExtractOrderTest extends TestCase
         return new ExtractOrder();
     }
 
-    public function testInvokeBadRequest()
+    public function testInvokeBadRequest(): void
     {
         $this->expectException(\TypeError::class);
 
@@ -56,7 +56,7 @@ class ExtractOrderTest extends TestCase
         );
     }
 
-    public function testInvokeBadManager()
+    public function testInvokeBadManager(): void
     {
         $this->expectException(\TypeError::class);
 
@@ -68,7 +68,7 @@ class ExtractOrderTest extends TestCase
         );
     }
 
-    public function testInvokeBadDefaultOrder()
+    public function testInvokeBadDefaultOrder(): void
     {
         $this->expectException(\TypeError::class);
 
@@ -79,7 +79,7 @@ class ExtractOrderTest extends TestCase
         );
     }
 
-    public function testInvokeBadDefaultDefault()
+    public function testInvokeBadDefaultDefault(): void
     {
         $this->expectException(\TypeError::class);
 
@@ -91,13 +91,13 @@ class ExtractOrderTest extends TestCase
         );
     }
 
-    public function testInvokeWithNoParameter()
+    public function testInvokeWithNoParameter(): void
     {
         $manager = $this->createMock(ManagerInterface::class);
         $manager->expects($this->once())->method('updateWorkPlan')->with(['order' => ['id' => Direction::Desc]]);
         $manager->expects($this->never())->method('error');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ExtractOrder::class,
             $this->buildStep()(
                 $this->createMock(ServerRequestInterface::class),
@@ -106,13 +106,13 @@ class ExtractOrderTest extends TestCase
         );
     }
 
-    public function testInvokeWithDefaultToAsc()
+    public function testInvokeWithDefaultToAsc(): void
     {
         $manager = $this->createMock(ManagerInterface::class);
         $manager->expects($this->once())->method('updateWorkPlan')->with(['order' => ['createdAt' => Direction::Asc]]);
         $manager->expects($this->never())->method('error');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ExtractOrder::class,
             $this->buildStep()(
                 $this->createMock(ServerRequestInterface::class),
@@ -123,10 +123,10 @@ class ExtractOrderTest extends TestCase
         );
     }
 
-    public function testInvokeWithParameter()
+    public function testInvokeWithParameter(): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects($this->any())->method('getQueryParams')->willReturn([
+        $request->method('getQueryParams')->willReturn([
             'order' => 'createdAt',
             'direction' => 'ASC'
         ]);
@@ -135,7 +135,7 @@ class ExtractOrderTest extends TestCase
         $manager->expects($this->once())->method('updateWorkPlan')->with(['order' => ['createdAt' => Direction::Asc]]);
         $manager->expects($this->never())->method('error');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ExtractOrder::class,
             $this->buildStep()(
                 $request,
@@ -146,10 +146,10 @@ class ExtractOrderTest extends TestCase
         );
     }
 
-    public function testInvokeWithInvalidParameter()
+    public function testInvokeWithInvalidParameter(): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects($this->any())->method('getQueryParams')->willReturn([
+        $request->method('getQueryParams')->willReturn([
             'order' => 'createdAt',
             'direction' => 'Foo'
         ]);
@@ -158,7 +158,7 @@ class ExtractOrderTest extends TestCase
         $manager->expects($this->never())->method('updateWorkPlan');
         $manager->expects($this->once())->method('error');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ExtractOrder::class,
             $this->buildStep()(
                 $request,

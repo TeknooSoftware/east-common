@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -41,40 +41,37 @@ use Twig\Environment;
  *
  * @link        http://teknoo.software/east Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 class ContainerTwigTest extends TestCase
 {
-    /**
-     * @return Container
-     */
-    protected function buildContainer() : Container
+    protected function buildContainer(): Container
     {
         $containerDefinition = new ContainerBuilder();
         $containerDefinition->addDefinitions(__DIR__.'/../../../infrastructures/symfony/Resources/config/twig.php');
         $containerDefinition->useAutowiring(false);
-        
+
         return $containerDefinition->build();
     }
 
-    public function testEngineInterface()
+    public function testEngineInterface(): void
     {
         $container = $this->buildContainer();
         $container->set('twig', $this->createMock(Environment::class));
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             EngineInterface::class,
             $container->get(EngineInterface::class)
         );
     }
 
-    public function testEngine()
+    public function testEngine(): void
     {
         $container = $this->buildContainer();
         $container->set('twig', $this->createMock(Environment::class));
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             Engine::class,
             $container->get(Engine::class)
         );

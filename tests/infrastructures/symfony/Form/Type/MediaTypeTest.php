@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 
@@ -38,24 +38,24 @@ use Teknoo\East\Common\Object\Media;
 use Teknoo\East\CommonBundle\Form\Type\MediaType;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(MediaType::class)]
 class MediaTypeTest extends TestCase
 {
-    public function buildForm()
+    public function buildForm(): \Teknoo\East\CommonBundle\Form\Type\MediaType
     {
         return new MediaType();
     }
 
-    public function testBuildForm()
+    public function testBuildForm(): void
     {
         $builder = $this->createMock(FormBuilderInterface::class);
         $builder->expects($this->once())
             ->method('addEventListener')
-            ->willReturnCallback(function ($name, $callable) use ($builder) {
-                self::assertEquals(FormEvents::PRE_SUBMIT, $name);
+            ->willReturnCallback(function ($name, $callable) use ($builder): \PHPUnit\Framework\MockObject\MockObject {
+                $this->assertEquals(FormEvents::PRE_SUBMIT, $name);
 
                 $form = $this->createMock(FormInterface::class);
                 $event = new FormEvent($form, []);
@@ -64,25 +64,25 @@ class MediaTypeTest extends TestCase
                 return $builder;
             });
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             AbstractType::class,
             $this->buildForm()->buildForm($builder, [])
         );
     }
 
-    public function testBuildFormPopulatedFileError()
+    public function testBuildFormPopulatedFileError(): void
     {
         $builder = $this->createMock(FormBuilderInterface::class);
         $builder->expects($this->once())
             ->method('addEventListener')
-            ->willReturnCallback(function ($name, $callable) use ($builder) {
-                self::assertEquals(FormEvents::PRE_SUBMIT, $name);
+            ->willReturnCallback(function ($name, $callable) use ($builder): \PHPUnit\Framework\MockObject\MockObject {
+                $this->assertEquals(FormEvents::PRE_SUBMIT, $name);
 
                 $form = $this->createMock(FormInterface::class);
                 $form->expects($this->once())->method('getNormData')
                     ->willReturn($this->createMock(Media::class));
                 $image = $this->createMock(UploadedFile::class);
-                $image->expects($this->any())->method('getError')->willReturn(1);
+                $image->method('getError')->willReturn(1);
                 $image->expects($this->never())->method('getSize')->willReturn(123);
                 $form->expects($this->once())->method('addError');
 
@@ -92,26 +92,26 @@ class MediaTypeTest extends TestCase
                 return $builder;
             });
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             AbstractType::class,
             $this->buildForm()->buildForm($builder, [])
         );
     }
 
-    public function testBuildFormPopulatedFile()
+    public function testBuildFormPopulatedFile(): void
     {
         $builder = $this->createMock(FormBuilderInterface::class);
         $builder->expects($this->once())
             ->method('addEventListener')
-            ->willReturnCallback(function ($name, $callable) use ($builder) {
-                self::assertEquals(FormEvents::PRE_SUBMIT, $name);
+            ->willReturnCallback(function ($name, $callable) use ($builder): \PHPUnit\Framework\MockObject\MockObject {
+                $this->assertEquals(FormEvents::PRE_SUBMIT, $name);
 
                 $form = $this->createMock(FormInterface::class);
                 $form->expects($this->once())->method('getNormData')
                     ->willReturn($this->createMock(Media::class));
                 $image = $this->createMock(UploadedFile::class);
-                $image->expects($this->any())->method('getError')->willReturn(0);
-                $image->expects($this->any())->method('getSize')->willReturn(123);
+                $image->method('getError')->willReturn(0);
+                $image->method('getSize')->willReturn(123);
                 $form->expects($this->never())->method('addError');
                 $event = new FormEvent($form, ['image' => $image]);
                 $callable($event);
@@ -119,15 +119,15 @@ class MediaTypeTest extends TestCase
                 return $builder;
             });
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             AbstractType::class,
             $this->buildForm()->buildForm($builder, [])
         );
     }
 
-    public function testConfigureOptions()
+    public function testConfigureOptions(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             MediaType::class,
             $this->buildForm()->configureOptions(
                 $this->createMock(OptionsResolver::class)

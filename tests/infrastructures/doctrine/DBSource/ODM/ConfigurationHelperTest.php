@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -39,7 +39,7 @@ use Teknoo\East\Common\Doctrine\Filter\ODM\SoftDeletableFilter;
 use TypeError;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(ConfigurationHelper::class)]
@@ -52,13 +52,15 @@ class ConfigurationHelperTest extends TestCase
 
     private function buildUsableHelper(): ConfigurationHelper
     {
-        $dm = new class extends DocumentManager {
+        $dm = new class () extends DocumentManager {
             public function __construct(
                 private ?Configuration $configuration = null,
                 private ?FilterCollection $filterCollection = null,
-            ) {}
+            ) {
+            }
 
-            public function getConfiguration(): Configuration {
+            public function getConfiguration(): Configuration
+            {
                 return $this->configuration ??= new Configuration();
             }
 
@@ -74,7 +76,7 @@ class ConfigurationHelperTest extends TestCase
         );
     }
 
-    public function testSetManagerWithNonDocumentManager()
+    public function testSetManagerWithNonDocumentManager(): void
     {
         $this->expectException(TypeError::class);
         $this->buildConfigurationHelper()->setManager(
@@ -83,54 +85,54 @@ class ConfigurationHelperTest extends TestCase
         );
     }
 
-    public function testSetManagerWithDocumentManager()
+    public function testSetManagerWithDocumentManager(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ConfigurationHelperInterface::class,
             $this->buildUsableHelper(),
         );
     }
 
-    public function testRegisterFilterWithNonInitializedHelper()
+    public function testRegisterFilterWithNonInitializedHelper(): void
     {
         $this->expectException(RuntimeException::class);
         $this->buildConfigurationHelper()->registerFilter('foo', ['bar' => 'foo']);
     }
 
-    public function testRegisterFilter()
+    public function testRegisterFilter(): void
     {
         $helper = $this->buildUsableHelper();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ConfigurationHelperInterface::class,
             $helper->registerFilter(SoftDeletableFilter::class, [])
         );
     }
 
-    public function testEnableFilterWithNonInitializedHelper()
+    public function testEnableFilterWithNonInitializedHelper(): void
     {
         $this->expectException(RuntimeException::class);
         $this->buildConfigurationHelper()->registerFilter(SoftDeletableFilter::class, [])->enableFilter('foo');
     }
 
-    public function testEnableFilter()
+    public function testEnableFilter(): void
     {
         $helper = $this->buildUsableHelper();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ConfigurationHelperInterface::class,
             $helper->registerFilter(SoftDeletableFilter::class, [])->enableFilter(SoftDeletableFilter::class)
         );
     }
 
-    public function testDisableFilterWithNonInitializedHelper()
+    public function testDisableFilterWithNonInitializedHelper(): void
     {
         $this->expectException(RuntimeException::class);
         $this->buildConfigurationHelper()->registerFilter(SoftDeletableFilter::class, [])->disableFilter('foo');
     }
 
-    public function testDisableFilter()
+    public function testDisableFilter(): void
     {
         $helper = $this->buildUsableHelper();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ConfigurationHelperInterface::class,
             $helper->registerFilter(SoftDeletableFilter::class, [])->disableFilter(SoftDeletableFilter::class)
         );

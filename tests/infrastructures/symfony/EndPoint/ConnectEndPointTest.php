@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -45,7 +45,7 @@ use Teknoo\East\Common\Writer\UserWriter;
 use Teknoo\East\CommonBundle\EndPoint\ConnectEndPoint;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(ConnectEndPoint::class)]
@@ -74,12 +74,12 @@ class ConnectEndPointTest extends TestCase
         );
 
         $response = $this->createMock(ResponseInterface::class);
-        $response->expects($this->any())
+        $response
             ->method('withHeader')
             ->willReturnSelf();
 
         $factory = $this->createMock(ResponseFactoryInterface::class);
-        $factory->expects($this->any())
+        $factory
             ->method('createResponse')
             ->willReturn($response);
 
@@ -89,7 +89,7 @@ class ConnectEndPointTest extends TestCase
         return $endpoint;
     }
 
-    public function testInvokeWithSession()
+    public function testInvokeWithSession(): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
         $client = $this->createMock(ClientInterface::class);
@@ -97,56 +97,54 @@ class ConnectEndPointTest extends TestCase
 
         $oauthClient = $this->createMock(OAuth2ClientInterface::class);
         $this->getClientRegistry()
-            ->expects($this->any())
             ->method('getClient')
             ->with('foo')
             ->willReturn($oauthClient);
 
         $provider = $this->createMock(AbstractProvider::class);
-        $oauthClient->expects($this->any())
+        $oauthClient
             ->method('getOAuth2Provider')
             ->willReturn($provider);
 
-        $provider->expects($this->any())
+        $provider
             ->method('getAuthorizationUrl')
             ->willReturn('/foo/bar');
 
-        $provider->expects($this->any())
+        $provider
             ->method('getState')
             ->willReturn('/foo/bar');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ConnectEndPoint::class,
             $this->buildEndPoint()($request, $client, $session)
         );
     }
 
-    public function testInvokeWithoutSession()
+    public function testInvokeWithoutSession(): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
         $client = $this->createMock(ClientInterface::class);
 
         $oauthClient = $this->createMock(OAuth2ClientInterface::class);
         $this->getClientRegistry()
-            ->expects($this->any())
             ->method('getClient')
             ->with('foo')
             ->willReturn($oauthClient);
 
         $provider = $this->createMock(AbstractProvider::class);
-        $oauthClient->expects($this->any())
+        $oauthClient
             ->method('getOAuth2Provider')
             ->willReturn($provider);
 
-        $provider->expects($this->any())
+        $provider
             ->method('getAuthorizationUrl')
             ->willReturn('/foo/bar');
 
-        $provider->expects($this->any())
+        $provider
             ->method('getState')
             ->willReturn('/foo/bar');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ConnectEndPoint::class,
             $this->buildEndPoint()($request, $client)
         );

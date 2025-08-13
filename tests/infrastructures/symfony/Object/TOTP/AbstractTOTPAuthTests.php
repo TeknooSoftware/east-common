@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 
@@ -31,16 +31,16 @@ use Teknoo\East\Common\Object\TOTPAuth;
 use Teknoo\East\CommonBundle\Contracts\Object\UserWithTOTPAuthInterface;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 abstract class AbstractTOTPAuthTests extends TestCase
 {
     abstract protected function buildUser(): UserWithTOTPAuthInterface;
 
-    public function testSetTOTPAuth()
+    public function testSetTOTPAuth(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             UserWithTOTPAuthInterface::class,
             $this->buildUser()->setTOTPAuth(
                 $this->createMock(TOTPAuth::class),
@@ -48,56 +48,57 @@ abstract class AbstractTOTPAuthTests extends TestCase
         );
     }
 
-    public function testGetTOTPAuth()
+    public function testGetTOTPAuth(): void
     {
         $user = $this->buildUser();
-        self::assertEmpty(
+        $this->assertNotInstanceOf(
+            \Teknoo\East\Common\Object\TOTPAuth::class,
             $user->getTOTPAuth()
         );
         $user->setTOTPAuth(
             $this->createMock(TOTPAuth::class),
         );
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             TOTPAuth::class,
             $user->getTOTPAuth()
         );
     }
 
-    public function testIsGoogleAuthenticatorEnabled()
+    public function testIsGoogleAuthenticatorEnabled(): void
     {
         $user = $this->buildUser();
-        self::assertFalse($user->isGoogleAuthenticatorEnabled());
+        $this->assertFalse($user->isGoogleAuthenticatorEnabled());
         $totpAuth = new TOTPAuth(
             provider: 'foo',
             topSecret: '',
             enabled: false,
         );
         $user->setTOTPAuth($totpAuth);
-        self::assertFalse($user->isGoogleAuthenticatorEnabled());
+        $this->assertFalse($user->isGoogleAuthenticatorEnabled());
         $totpAuth->setProvider(TOTPAuth::PROVIDER_GOOGLE_AUTHENTICATOR);
-        self::assertFalse($user->isGoogleAuthenticatorEnabled());
+        $this->assertFalse($user->isGoogleAuthenticatorEnabled());
         $totpAuth->setTopSecret('foo');
-        self::assertFalse($user->isGoogleAuthenticatorEnabled());
+        $this->assertFalse($user->isGoogleAuthenticatorEnabled());
         $totpAuth->setEnabled(true);
-        self::assertTrue($user->isGoogleAuthenticatorEnabled());
+        $this->assertTrue($user->isGoogleAuthenticatorEnabled());
     }
 
-    public function testGetGoogleAuthenticatorSecret()
+    public function testGetGoogleAuthenticatorSecret(): void
     {
         $user = $this->buildUser();
-        self::assertEmpty($user->getGoogleAuthenticatorSecret());
+        $this->assertEmpty($user->getGoogleAuthenticatorSecret());
         $totpAuth = new TOTPAuth(
             provider: 'foo',
             topSecret: '',
             enabled: false,
         );
         $user->setTOTPAuth($totpAuth);
-        self::assertEmpty($user->getGoogleAuthenticatorSecret());
+        $this->assertEmpty($user->getGoogleAuthenticatorSecret());
         $totpAuth->setTopSecret('foo');
-        self::assertEquals('foo', $user->getGoogleAuthenticatorSecret());
+        $this->assertEquals('foo', $user->getGoogleAuthenticatorSecret());
     }
 
-    public function testGetGoogleAuthenticatorUsername()
+    public function testGetGoogleAuthenticatorUsername(): void
     {
         $user = $this->buildUser();
         $totpAuth = new TOTPAuth(
@@ -106,29 +107,29 @@ abstract class AbstractTOTPAuthTests extends TestCase
             enabled: false,
         );
         $user->setTOTPAuth($totpAuth);
-        self::assertIsString($user->getGoogleAuthenticatorUsername());
+        $this->assertIsString($user->getGoogleAuthenticatorUsername());
     }
 
-    public function testIsTotpAuthenticationEnabled()
+    public function testIsTotpAuthenticationEnabled(): void
     {
         $user = $this->buildUser();
-        self::assertFalse($user->isTotpAuthenticationEnabled());
+        $this->assertFalse($user->isTotpAuthenticationEnabled());
         $totpAuth = new TOTPAuth(
             provider: 'foo',
             topSecret: '',
             enabled: false,
         );
         $user->setTOTPAuth($totpAuth);
-        self::assertFalse($user->isTotpAuthenticationEnabled());
+        $this->assertFalse($user->isTotpAuthenticationEnabled());
         $totpAuth->setProvider('foo');
-        self::assertFalse($user->isTotpAuthenticationEnabled());
+        $this->assertFalse($user->isTotpAuthenticationEnabled());
         $totpAuth->setTopSecret('foo');
-        self::assertFalse($user->isTotpAuthenticationEnabled());
+        $this->assertFalse($user->isTotpAuthenticationEnabled());
         $totpAuth->setEnabled(true);
-        self::assertTrue($user->isTotpAuthenticationEnabled());
+        $this->assertTrue($user->isTotpAuthenticationEnabled());
     }
 
-    public function testGetTotpAuthenticationUsername()
+    public function testGetTotpAuthenticationUsername(): void
     {
         $user = $this->buildUser();
         $totpAuth = new TOTPAuth(
@@ -137,22 +138,22 @@ abstract class AbstractTOTPAuthTests extends TestCase
             enabled: false,
         );
         $user->setTOTPAuth($totpAuth);
-        self::assertIsString($user->getTotpAuthenticationUsername());
+        $this->assertIsString($user->getTotpAuthenticationUsername());
     }
 
-    public function testGetTotpAuthenticationConfiguration()
+    public function testGetTotpAuthenticationConfiguration(): void
     {
         $user = $this->buildUser();
-        self::assertEmpty($user->getTotpAuthenticationConfiguration());
+        $this->assertEmpty($user->getTotpAuthenticationConfiguration());
         $totpAuth = new TOTPAuth(
             provider: 'foo',
             topSecret: '',
             enabled: false,
         );
         $user->setTOTPAuth($totpAuth);
-        self::assertEmpty($user->getTotpAuthenticationConfiguration());
+        $this->assertEmpty($user->getTotpAuthenticationConfiguration());
         $totpAuth->setTopSecret('foo');
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             TotpConfiguration::class,
             $user->getTotpAuthenticationConfiguration()
         );

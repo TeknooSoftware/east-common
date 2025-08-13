@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -34,7 +34,6 @@ use Teknoo\East\Common\Contracts\FrontAsset\PersisterInterface;
 use Teknoo\East\Common\Contracts\FrontAsset\SourceLoaderInterface;
 use Teknoo\East\Common\Flysystem\FrontAsset\Persister;
 use Teknoo\East\Common\Flysystem\FrontAsset\SourceLoader;
-
 use Teknoo\East\Common\FrontAsset\Extensions\SourceLoader as SourceLoaderExtension;
 
 use function sys_get_temp_dir;
@@ -47,16 +46,15 @@ use function sys_get_temp_dir;
  *
  * @link        http://teknoo.software/east Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 class ContainerTest extends TestCase
 {
     /**
-     * @return Container
      * @throws \Exception
      */
-    protected function buildContainer() : Container
+    protected function buildContainer(): Container
     {
         $containerDefinition = new ContainerBuilder();
         $containerDefinition->addDefinitions(__DIR__.'/../../../infrastructures/flysystem/di.php');
@@ -64,112 +62,112 @@ class ContainerTest extends TestCase
         return $containerDefinition->build();
     }
 
-    public function testFlysystemAdapter()
+    public function testFlysystemAdapter(): void
     {
         $container = $this->buildContainer();
         $callable = $container->get('teknoo.east.common.assets.flysystem.adapter');
-        self::assertIsCallable($callable);
-        self::assertInstanceOf(
+        $this->assertIsCallable($callable);
+        $this->assertInstanceOf(
             FilesystemAdapter::class,
             $callable(sys_get_temp_dir())
         );
     }
 
-    public function testPersisterInterfaceCssMissingPath()
+    public function testPersisterInterfaceCssMissingPath(): void
     {
         $container = $this->buildContainer();
         $container->set('kernel.project_dir', '/bar');
         $container->set(
             'teknoo.east.common.assets.flysystem.adapter',
-            fn () => (fn () => $this->createMock(FilesystemAdapter::class)),
+            fn (): \Closure => (fn (): \PHPUnit\Framework\MockObject\MockObject => $this->createMock(FilesystemAdapter::class)),
         );
 
         $this->expectException(DomainException::class);
         $container->get(PersisterInterface::class . ':css');
     }
 
-    public function testPersisterInterfaceCss()
+    public function testPersisterInterfaceCss(): void
     {
         $container = $this->buildContainer();
         $container->set('kernel.project_dir', '/bar');
         $container->set('teknoo.east.common.assets.destination.css.path', 'foo');
         $container->set(
             'teknoo.east.common.assets.flysystem.adapter',
-            fn () => (fn () => $this->createMock(FilesystemAdapter::class)),
+            fn (): \Closure => (fn (): \PHPUnit\Framework\MockObject\MockObject => $this->createMock(FilesystemAdapter::class)),
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             PersisterInterface::class,
             $container->get(PersisterInterface::class . ':css')
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             PersisterInterface::class,
             $container->get(Persister::class . ':css')
         );
     }
 
-    public function testPersisterInterfaceJsMissingPath()
+    public function testPersisterInterfaceJsMissingPath(): void
     {
         $container = $this->buildContainer();
         $container->set('kernel.project_dir', '/bar');
         $container->set(
             'teknoo.east.common.assets.flysystem.adapter',
-            fn () => (fn () => $this->createMock(FilesystemAdapter::class)),
+            fn (): \Closure => (fn (): \PHPUnit\Framework\MockObject\MockObject => $this->createMock(FilesystemAdapter::class)),
         );
 
         $this->expectException(DomainException::class);
         $container->get(PersisterInterface::class . ':js');
     }
 
-    public function testPersisterInterfaceJs()
+    public function testPersisterInterfaceJs(): void
     {
         $container = $this->buildContainer();
         $container->set('kernel.project_dir', '/bar');
         $container->set('teknoo.east.common.assets.destination.js.path', 'foo');
         $container->set(
             'teknoo.east.common.assets.flysystem.adapter',
-            fn () => (fn () => $this->createMock(FilesystemAdapter::class)),
+            fn (): \Closure => (fn (): \PHPUnit\Framework\MockObject\MockObject => $this->createMock(FilesystemAdapter::class)),
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             PersisterInterface::class,
             $container->get(PersisterInterface::class . ':js')
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             PersisterInterface::class,
             $container->get(Persister::class . ':js')
         );
     }
 
-    public function testSourceLoaderInterfaceCssMissingPath()
+    public function testSourceLoaderInterfaceCssMissingPath(): void
     {
         $container = $this->buildContainer();
         $container->set('kernel.project_dir', '/bar');
         $container->set(
             'teknoo.east.common.assets.flysystem.adapter',
-            fn () => (fn () => $this->createMock(FilesystemAdapter::class)),
+            fn (): \Closure => (fn (): \PHPUnit\Framework\MockObject\MockObject => $this->createMock(FilesystemAdapter::class)),
         );
 
         $this->expectException(DomainException::class);
         $container->get(SourceLoaderInterface::class . ':css');
     }
 
-    public function testSourceLoaderInterfaceCssMissingSet()
+    public function testSourceLoaderInterfaceCssMissingSet(): void
     {
         $container = $this->buildContainer();
         $container->set('teknoo.east.common.assets.source.css.path', '/bar');
         $container->set(
             'teknoo.east.common.assets.flysystem.adapter',
-            fn () => (fn () => $this->createMock(FilesystemAdapter::class)),
+            fn (): \Closure => (fn (): \PHPUnit\Framework\MockObject\MockObject => $this->createMock(FilesystemAdapter::class)),
         );
 
         $this->expectException(DomainException::class);
         $container->get(SourceLoaderInterface::class . ':css');
     }
 
-    public function testSourceLoaderInterfaceCss()
+    public function testSourceLoaderInterfaceCss(): void
     {
         $container = $this->buildContainer();
         $container->set('teknoo.east.common.assets.source.css.path', '/bar');
@@ -177,51 +175,51 @@ class ContainerTest extends TestCase
         $container->set('kernel.project_dir', '/bar');
         $container->set(
             'teknoo.east.common.assets.flysystem.adapter',
-            fn () => (fn () => $this->createMock(FilesystemAdapter::class)),
+            fn (): \Closure => (fn (): \PHPUnit\Framework\MockObject\MockObject => $this->createMock(FilesystemAdapter::class)),
         );
         $container->set(
             SourceLoaderExtension::class,
             $this->createMock(SourceLoaderExtension::class),
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             SourceLoaderInterface::class,
             $container->get(SourceLoaderInterface::class . ':css')
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             SourceLoader::class,
             $container->get(SourceLoader::class . ':css')
         );
     }
 
-    public function testSourceLoaderInterfaceJsMissingPath()
+    public function testSourceLoaderInterfaceJsMissingPath(): void
     {
         $container = $this->buildContainer();
         $container->set('kernel.project_dir', '/bar');
         $container->set(
             'teknoo.east.common.assets.flysystem.adapter',
-            fn () => (fn () => $this->createMock(FilesystemAdapter::class)),
+            fn (): \Closure => (fn (): \PHPUnit\Framework\MockObject\MockObject => $this->createMock(FilesystemAdapter::class)),
         );
 
         $this->expectException(DomainException::class);
         $container->get(SourceLoaderInterface::class . ':js');
     }
 
-    public function testSourceLoaderInterfaceJsMissingSet()
+    public function testSourceLoaderInterfaceJsMissingSet(): void
     {
         $container = $this->buildContainer();
         $container->set('teknoo.east.common.assets.source.js.path', '/bar');
         $container->set(
             'teknoo.east.common.assets.flysystem.adapter',
-            fn () => (fn () => $this->createMock(FilesystemAdapter::class)),
+            fn (): \Closure => (fn (): \PHPUnit\Framework\MockObject\MockObject => $this->createMock(FilesystemAdapter::class)),
         );
 
         $this->expectException(DomainException::class);
         $container->get(SourceLoaderInterface::class . ':js');
     }
 
-    public function testSourceLoaderInterfaceJs()
+    public function testSourceLoaderInterfaceJs(): void
     {
         $container = $this->buildContainer();
         $container->set('teknoo.east.common.assets.source.js.path', '/bar');
@@ -229,19 +227,19 @@ class ContainerTest extends TestCase
         $container->set('kernel.project_dir', '/bar');
         $container->set(
             'teknoo.east.common.assets.flysystem.adapter',
-            fn () => (fn () => $this->createMock(FilesystemAdapter::class)),
+            fn (): \Closure => (fn (): \PHPUnit\Framework\MockObject\MockObject => $this->createMock(FilesystemAdapter::class)),
         );
         $container->set(
             SourceLoaderExtension::class,
             $this->createMock(SourceLoaderExtension::class),
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             SourceLoaderInterface::class,
             $container->get(SourceLoaderInterface::class . ':js')
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             SourceLoader::class,
             $container->get(SourceLoader::class . ':js')
         );

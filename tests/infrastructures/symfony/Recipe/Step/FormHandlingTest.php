@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -42,12 +42,12 @@ use Teknoo\East\CommonBundle\Contracts\Form\FormManagerAwareInterface;
 use Teknoo\East\CommonBundle\Form\Type\UserType;
 use Teknoo\East\CommonBundle\Recipe\Step\FormHandling;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
-
 use Teknoo\East\Foundation\Time\DatesService;
+
 use function json_encode;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(FormHandling::class)]
@@ -89,17 +89,17 @@ class FormHandlingTest extends TestCase
         );
     }
 
-    public function testInvokeBasic()
+    public function testInvokeBasic(): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects($this->any())->method('getAttribute')->willReturnCallback(
-            fn (string $name) => match ($name) {
+        $request->method('getAttribute')->willReturnCallback(
+            fn (string $name): \PHPUnit\Framework\MockObject\MockObject|false => match ($name) {
                 'request' => $this->createMock(Request::class),
                 default => false,
             }
         );
 
-        $request->expects($this->any())->method('getParsedBody')->willReturn([]);
+        $request->method('getParsedBody')->willReturn([]);
 
         $manager = $this->createMock(ManagerInterface::class);
         $formClass = 'Foo/Bar';
@@ -115,11 +115,10 @@ class FormHandlingTest extends TestCase
         $form->expects($this->never())->method('submit');
 
         $this->getFormFactory()
-            ->expects($this->any())
             ->method('create')
             ->willReturn($form);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             FormHandling::class,
             $this->buildStep()(
                 $request,
@@ -131,20 +130,20 @@ class FormHandlingTest extends TestCase
         );
     }
 
-    public function testInvokeWithManagerAware()
+    public function testInvokeWithManagerAware(): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects($this->any())->method('getAttribute')->willReturnCallback(
-            fn (string $name) => match ($name) {
+        $request->method('getAttribute')->willReturnCallback(
+            fn (string $name): \PHPUnit\Framework\MockObject\MockObject|false => match ($name) {
                 'request' => $this->createMock(Request::class),
                 default => false,
             }
         );
 
-        $request->expects($this->any())->method('getParsedBody')->willReturn([]);
+        $request->method('getParsedBody')->willReturn([]);
 
         $manager = $this->createMock(ManagerInterface::class);
-        $formClass = (new class extends AbstractType implements FormManagerAwareInterface {})::class;
+        $formClass = (new class () extends AbstractType implements FormManagerAwareInterface {})::class;
         $formOptions = [];
         $object = $this->createMock(IdentifiedObjectInterface::class);
 
@@ -157,11 +156,10 @@ class FormHandlingTest extends TestCase
         $form->expects($this->never())->method('submit');
 
         $this->getFormFactory()
-            ->expects($this->any())
             ->method('create')
             ->willReturn($form);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             FormHandling::class,
             $this->buildStep()(
                 $request,
@@ -173,17 +171,17 @@ class FormHandlingTest extends TestCase
         );
     }
 
-    public function testInvokeWithPublishableAndNotPublish()
+    public function testInvokeWithPublishableAndNotPublish(): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects($this->any())->method('getAttribute')->willReturnCallback(
-            fn (string $name) => match ($name) {
+        $request->method('getAttribute')->willReturnCallback(
+            fn (string $name): \PHPUnit\Framework\MockObject\MockObject|false => match ($name) {
                 'request' => $this->createMock(Request::class),
                 default => false,
             }
         );
 
-        $request->expects($this->any())->method('getParsedBody')->willReturn([
+        $request->method('getParsedBody')->willReturn([
         ]);
 
         $manager = $this->createMock(ManagerInterface::class);
@@ -197,7 +195,6 @@ class FormHandlingTest extends TestCase
         $form->expects($this->never())->method('submit');
 
         $this->getFormFactory()
-            ->expects($this->any())
             ->method('create')
             ->willReturn($form);
 
@@ -205,7 +202,7 @@ class FormHandlingTest extends TestCase
             ->expects($this->never())
             ->method('passMeTheDate');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             FormHandling::class,
             $this->buildStep()(
                 $request,
@@ -217,16 +214,16 @@ class FormHandlingTest extends TestCase
         );
     }
 
-    public function testInvokeWithPublishableAndNotPublishWithHandlingDisabled()
+    public function testInvokeWithPublishableAndNotPublishWithHandlingDisabled(): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects($this->any())->method('getAttribute')->willReturnCallback(
-            fn (string $name) => match ($name) {
+        $request->method('getAttribute')->willReturnCallback(
+            fn (string $name): \PHPUnit\Framework\MockObject\MockObject|false => match ($name) {
                 'request' => $this->createMock(Request::class),
                 default => false,
             }
         );
-        $request->expects($this->any())->method('getParsedBody')->willReturn([
+        $request->method('getParsedBody')->willReturn([
         ]);
         $manager = $this->createMock(ManagerInterface::class);
         $formClass = 'Foo/Bar';
@@ -238,7 +235,6 @@ class FormHandlingTest extends TestCase
         $form->expects($this->never())->method('submit');
 
         $this->getFormFactory()
-            ->expects($this->any())
             ->method('create')
             ->willReturn($form);
 
@@ -246,7 +242,7 @@ class FormHandlingTest extends TestCase
             ->expects($this->never())
             ->method('passMeTheDate');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             FormHandling::class,
             $this->buildStep()(
                 $request,
@@ -259,17 +255,17 @@ class FormHandlingTest extends TestCase
         );
     }
 
-    public function testInvokeWithPApiWithHandlingDisabled()
+    public function testInvokeWithPApiWithHandlingDisabled(): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects($this->any())->method('getAttribute')->willReturnCallback(
-            fn (string $name) => match ($name) {
+        $request->method('getAttribute')->willReturnCallback(
+            fn (string $name): \PHPUnit\Framework\MockObject\MockObject|string|false => match ($name) {
                 'request' => $this->createMock(Request::class),
                 'api' => 'json',
                 default => false,
             }
         );
-        $request->expects($this->any())->method('getParsedBody')->willReturn([]);
+        $request->method('getParsedBody')->willReturn([]);
         $manager = $this->createMock(ManagerInterface::class);
         $formClass = 'Foo/Bar';
         $formOptions = [];
@@ -280,7 +276,6 @@ class FormHandlingTest extends TestCase
         $form->expects($this->never())->method('submit');
 
         $this->getFormFactory()
-            ->expects($this->any())
             ->method('create')
             ->willReturn($form);
 
@@ -288,7 +283,7 @@ class FormHandlingTest extends TestCase
             ->expects($this->never())
             ->method('passMeTheDate');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             FormHandling::class,
             $this->buildStep()(
                 $request,
@@ -301,16 +296,16 @@ class FormHandlingTest extends TestCase
         );
     }
 
-    public function testInvokeWithNotPublishableAndNotPublish()
+    public function testInvokeWithNotPublishableAndNotPublish(): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects($this->any())->method('getAttribute')->willReturnCallback(
-            fn (string $name) => match ($name) {
+        $request->method('getAttribute')->willReturnCallback(
+            fn (string $name): \PHPUnit\Framework\MockObject\MockObject|false => match ($name) {
                 'request' => $this->createMock(Request::class),
                 default => false,
             }
         );
-        $request->expects($this->any())->method('getParsedBody')->willReturn([
+        $request->method('getParsedBody')->willReturn([
         ]);
         $manager = $this->createMock(ManagerInterface::class);
         $formClass = 'Foo/Bar';
@@ -326,11 +321,10 @@ class FormHandlingTest extends TestCase
         $form->expects($this->never())->method('submit');
 
         $this->getFormFactory()
-            ->expects($this->any())
             ->method('create')
             ->willReturn($form);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             FormHandling::class,
             $this->buildStep()(
                 $request,
@@ -342,17 +336,17 @@ class FormHandlingTest extends TestCase
         );
     }
 
-    public function testInvokeWithPublishableAndPublish()
+    public function testInvokeWithPublishableAndPublish(): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects($this->any())->method('getAttribute')->willReturnCallback(
-            fn (string $name) => match ($name) {
+        $request->method('getAttribute')->willReturnCallback(
+            fn (string $name): \PHPUnit\Framework\MockObject\MockObject|false => match ($name) {
                 'request' => $this->createMock(Request::class),
                 default => false,
             }
         );
 
-        $request->expects($this->any())->method('getParsedBody')->willReturn([
+        $request->method('getParsedBody')->willReturn([
             'publish' => true
         ]);
 
@@ -360,12 +354,18 @@ class FormHandlingTest extends TestCase
         $formClass = 'Foo/Bar';
         $formOptions = [];
 
-        $object = new class implements IdentifiedObjectInterface, PublishableInterface {
-            public function getId(): string {}
+        $object = new class () implements IdentifiedObjectInterface, PublishableInterface {
+            public function getId(): string
+            {
+            }
 
-            public function getPublishedAt(): ?\DateTimeInterface {}
+            public function getPublishedAt(): ?\DateTimeInterface
+            {
+            }
 
-            public function setPublishedAt(\DateTimeInterface $dateTime): PublishableInterface {}
+            public function setPublishedAt(\DateTimeInterface $dateTime): PublishableInterface
+            {
+            }
         };
 
         $form = $this->createMock(FormInterface::class);
@@ -373,7 +373,6 @@ class FormHandlingTest extends TestCase
         $form->expects($this->never())->method('submit');
 
         $this->getFormFactory()
-            ->expects($this->any())
             ->method('create')
             ->willReturn($form);
 
@@ -381,7 +380,7 @@ class FormHandlingTest extends TestCase
             ->expects($this->once())
             ->method('passMeTheDate');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             FormHandling::class,
             $this->buildStep()(
                 $request,
@@ -393,17 +392,17 @@ class FormHandlingTest extends TestCase
         );
     }
 
-    public function testInvokeWithNotPublishableAndPublish()
+    public function testInvokeWithNotPublishableAndPublish(): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects($this->any())->method('getAttribute')->willReturnCallback(
-            fn (string $name) => match ($name) {
+        $request->method('getAttribute')->willReturnCallback(
+            fn (string $name): \PHPUnit\Framework\MockObject\MockObject|false => match ($name) {
                 'request' => $this->createMock(Request::class),
                 default => false,
             }
         );
 
-        $request->expects($this->any())->method('getParsedBody')->willReturn([
+        $request->method('getParsedBody')->willReturn([
             'publish' => true
         ]);
 
@@ -421,11 +420,10 @@ class FormHandlingTest extends TestCase
         $form->expects($this->never())->method('submit');
 
         $this->getFormFactory()
-            ->expects($this->any())
             ->method('create')
             ->willReturn($form);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             FormHandling::class,
             $this->buildStep()(
                 $request,
@@ -437,19 +435,19 @@ class FormHandlingTest extends TestCase
         );
     }
 
-    public function testInvokeApiNoJson()
+    public function testInvokeApiNoJson(): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects($this->any())->method('getAttribute')->willReturnCallback(
-            fn (string $name) => match ($name) {
+        $request->method('getAttribute')->willReturnCallback(
+            fn (string $name): \PHPUnit\Framework\MockObject\MockObject|string|false => match ($name) {
                 'request' => $this->createMock(Request::class),
                 'api' => 'json',
                 default => false,
             }
         );
 
-        $request->expects($this->any())->method('getMethod')->willReturn('POST');
-        $request->expects($this->any())->method('getParsedBody')->willReturn([]);
+        $request->method('getMethod')->willReturn('POST');
+        $request->method('getParsedBody')->willReturn([]);
 
         $manager = $this->createMock(ManagerInterface::class);
         $formClass = 'Foo/Bar';
@@ -465,7 +463,6 @@ class FormHandlingTest extends TestCase
         $form->expects($this->once())->method('submit');
 
         $this->getFormFactory()
-            ->expects($this->any())
             ->method('create')
             ->with(
                 $formClass,
@@ -474,7 +471,7 @@ class FormHandlingTest extends TestCase
             )
             ->willReturn($form);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             FormHandling::class,
             $this->buildStep()(
                 $request,
@@ -486,19 +483,19 @@ class FormHandlingTest extends TestCase
         );
     }
 
-    public function testInvokeApiNoJsonWithFormApiAware()
+    public function testInvokeApiNoJsonWithFormApiAware(): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects($this->any())->method('getAttribute')->willReturnCallback(
-            fn (string $name) => match ($name) {
+        $request->method('getAttribute')->willReturnCallback(
+            fn (string $name): \PHPUnit\Framework\MockObject\MockObject|string|false => match ($name) {
                 'request' => $this->createMock(Request::class),
                 'api' => 'json',
                 default => false,
             }
         );
 
-        $request->expects($this->any())->method('getMethod')->willReturn('POST');
-        $request->expects($this->any())->method('getParsedBody')->willReturn([]);
+        $request->method('getMethod')->willReturn('POST');
+        $request->method('getParsedBody')->willReturn([]);
 
         $manager = $this->createMock(ManagerInterface::class);
         $formClass = UserType::class;
@@ -514,7 +511,6 @@ class FormHandlingTest extends TestCase
         $form->expects($this->once())->method('submit');
 
         $this->getFormFactory()
-            ->expects($this->any())
             ->method('create')
             ->with(
                 $formClass,
@@ -523,7 +519,7 @@ class FormHandlingTest extends TestCase
             )
             ->willReturn($form);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             FormHandling::class,
             $this->buildStep()(
                 $request,
@@ -538,26 +534,26 @@ class FormHandlingTest extends TestCase
     private function runTestForInvokeApiWithJson(string $method): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects($this->any())->method('getAttribute')->willReturnCallback(
-            fn (string $name) => match ($name) {
+        $request->method('getAttribute')->willReturnCallback(
+            fn (string $name): \PHPUnit\Framework\MockObject\MockObject|string|false => match ($name) {
                 'request' => $this->createMock(Request::class),
                 'api' => 'json',
                 default => false,
             }
         );
 
-        $request->expects($this->any())->method('getHeader')->willReturnCallback(
-            fn (string $header) => match ($header) {
+        $request->method('getHeader')->willReturnCallback(
+            fn (string $header): array => match ($header) {
                 'Content-Type' => ['application/json'],
                 default => [],
             }
         );
 
-        $request->expects($this->any())->method('getMethod')->willReturn($method);
-        $request->expects($this->any())->method('getParsedBody')->willReturn([]);
+        $request->method('getMethod')->willReturn($method);
+        $request->method('getParsedBody')->willReturn([]);
         $body = ['foo' => 'bar', 'bar' => ['foo']];
-        $request->expects($this->any())->method('getBody')->willReturn(
-            (new StreamFactory())->createStream(json_encode($body))
+        $request->method('getBody')->willReturn(
+            new StreamFactory()->createStream(json_encode($body))
         );
 
         $manager = $this->createMock(ManagerInterface::class);
@@ -574,7 +570,6 @@ class FormHandlingTest extends TestCase
         $form->expects($this->once())->method('submit')->with($body, false);
 
         $this->getFormFactory()
-            ->expects($this->any())
             ->method('create')
             ->with(
                 $formClass,
@@ -583,7 +578,7 @@ class FormHandlingTest extends TestCase
             )
             ->willReturn($form);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             FormHandling::class,
             $this->buildStep()(
                 $request,
@@ -595,44 +590,44 @@ class FormHandlingTest extends TestCase
         );
     }
 
-    public function testInvokeApiWithJsonAndPOSTMethod()
+    public function testInvokeApiWithJsonAndPOSTMethod(): void
     {
         $this->runTestForInvokeApiWithJson('POST');
     }
 
-    public function testInvokeApiWithJsonAndPUTMethod()
+    public function testInvokeApiWithJsonAndPUTMethod(): void
     {
         $this->runTestForInvokeApiWithJson('PUT');
     }
 
-    public function testInvokeApiWithJsonAndPATCHMethod()
+    public function testInvokeApiWithJsonAndPATCHMethod(): void
     {
         $this->runTestForInvokeApiWithJson('PATCH');
     }
 
-    public function testInvokeApiWithJsonAndGETMethod()
+    public function testInvokeApiWithJsonAndGETMethod(): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects($this->any())->method('getAttribute')->willReturnCallback(
-            fn (string $name) => match ($name) {
+        $request->method('getAttribute')->willReturnCallback(
+            fn (string $name): \PHPUnit\Framework\MockObject\MockObject|string|false => match ($name) {
                 'request' => $this->createMock(Request::class),
                 'api' => 'json',
                 default => false,
             }
         );
 
-        $request->expects($this->any())->method('getHeader')->willReturnCallback(
-            fn (string $header) => match ($header) {
+        $request->method('getHeader')->willReturnCallback(
+            fn (string $header): array => match ($header) {
                 'Content-Type' => ['application/json'],
                 default => [],
             }
         );
 
-        $request->expects($this->any())->method('getMethod')->willReturn('Get');
-        $request->expects($this->any())->method('getParsedBody')->willReturn([]);
+        $request->method('getMethod')->willReturn('Get');
+        $request->method('getParsedBody')->willReturn([]);
         $body = ['foo' => 'bar', 'bar' => ['foo']];
-        $request->expects($this->any())->method('getBody')->willReturn(
-            (new StreamFactory())->createStream(json_encode($body))
+        $request->method('getBody')->willReturn(
+            new StreamFactory()->createStream(json_encode($body))
         );
 
         $manager = $this->createMock(ManagerInterface::class);
@@ -649,7 +644,6 @@ class FormHandlingTest extends TestCase
         $form->expects($this->never())->method('submit');
 
         $this->getFormFactory()
-            ->expects($this->any())
             ->method('create')
             ->with(
                 $formClass,
@@ -658,7 +652,7 @@ class FormHandlingTest extends TestCase
             )
             ->willReturn($form);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             FormHandling::class,
             $this->buildStep()(
                 $request,

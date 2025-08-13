@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -41,14 +41,14 @@ use Teknoo\East\Common\FrontAsset\FileType;
  *
  * @link        http://teknoo.software/east Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  *
  */
 #[CoversClass(SourceLoader::class)]
 class SourceLoaderTest extends TestCase
 {
-    public function testLoadMissingSet()
+    public function testLoadMissingSet(): void
     {
         $flysystem = $this->createMock(Filesystem::class);
 
@@ -67,7 +67,8 @@ class SourceLoaderTest extends TestCase
             fn ($x) => $x,
         );
     }
-    public function testLoad()
+
+    public function testLoad(): void
     {
         $flysystem = $this->createMock(Filesystem::class);
 
@@ -82,7 +83,7 @@ class SourceLoaderTest extends TestCase
             FileType::CSS,
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             SourceLoader::class,
             $loader->load(
                 'foo',

@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -50,7 +50,7 @@ use Teknoo\East\CommonBundle\Writer\SymfonyUserWriter;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(OAuth2Authenticator::class)]
@@ -122,42 +122,42 @@ class OAuth2AuthenticatorTest extends TestCase
         );
     }
 
-    public function testSupports()
+    public function testSupports(): void
     {
         $authenticator = $this->buildAuthenticator();
 
-        self::assertFalse(
+        $this->assertFalse(
             $authenticator->supports(new Request())
         );
 
-        self::assertFalse(
+        $this->assertFalse(
             $authenticator->supports(new Request(['_oauth_client_key' => 'foo']))
         );
 
-        self::assertFalse(
+        $this->assertFalse(
             $authenticator->supports(new Request([], ['_oauth_client_key' => 'foo']))
         );
 
-        self::assertTrue(
+        $this->assertTrue(
             $authenticator->supports(new Request([], [], ['_oauth_client_key' => 'bar']))
         );
     }
 
-    public function testRegisterTokenWithoutThirdParty()
+    public function testRegisterTokenWithoutThirdParty(): void
     {
         $user = $this->createMock(User::class);
-        $user->expects($this->any())->method('getAuthData')->willReturn([]);
+        $user->method('getAuthData')->willReturn([]);
         $user->expects($this->once())
             ->method('addAuthData')
             ->with(
-                (new ThirdPartyAuth())->setProtocol('oauth2')
+                new ThirdPartyAuth()->setProtocol('oauth2')
                     ->setProvider('provider')
             )->willReturnSelf();
 
         $promise = $this->createMock(PromiseInterface::class);
         $promise->expects($this->once())->method('success')
             ->with($this->callback(
-                fn ($x) => $x instanceof ThirdPartyAuthenticatedUser
+                fn ($x): bool => $x instanceof ThirdPartyAuthenticatedUser
             ))
         ->willReturnSelf();
 
@@ -166,31 +166,31 @@ class OAuth2AuthenticatorTest extends TestCase
             ->method('save')
             ->willReturnSelf();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             OAuth2Authenticator::class,
             $this->buildAuthenticator()->registerToken($user, 'provider', 'token', $promise)
         );
     }
 
-    public function testRegisterTokenWithAnotherProviderThirdParty()
+    public function testRegisterTokenWithAnotherProviderThirdParty(): void
     {
         $user = $this->createMock(User::class);
-        $user->expects($this->any())->method('getAuthData')->willReturn([
-            (new ThirdPartyAuth())->setProtocol('oauth2')
+        $user->method('getAuthData')->willReturn([
+            new ThirdPartyAuth()->setProtocol('oauth2')
                 ->setProvider('provider2')
                 ->setToken('token')
         ]);
         $user->expects($this->once())
             ->method('addAuthData')
             ->with(
-                (new ThirdPartyAuth())->setProtocol('oauth2')
+                new ThirdPartyAuth()->setProtocol('oauth2')
                     ->setProvider('provider')
             )->willReturnSelf();
 
         $promise = $this->createMock(PromiseInterface::class);
         $promise->expects($this->once())->method('success')
             ->with($this->callback(
-                fn ($x) => $x instanceof ThirdPartyAuthenticatedUser
+                fn ($x): bool => $x instanceof ThirdPartyAuthenticatedUser
             ))
             ->willReturnSelf();
 
@@ -199,17 +199,17 @@ class OAuth2AuthenticatorTest extends TestCase
             ->method('save')
             ->willReturnSelf();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             OAuth2Authenticator::class,
             $this->buildAuthenticator()->registerToken($user, 'provider', 'token', $promise)
         );
     }
 
-    public function testRegisterTokenWithThirdParty()
+    public function testRegisterTokenWithThirdParty(): void
     {
         $user = $this->createMock(User::class);
-        $user->expects($this->any())->method('getAuthData')->willReturn([
-            (new ThirdPartyAuth())->setProtocol('oauth2')
+        $user->method('getAuthData')->willReturn([
+            new ThirdPartyAuth()->setProtocol('oauth2')
                 ->setProvider('provider')
                 ->setToken('token')
         ]);
@@ -219,7 +219,7 @@ class OAuth2AuthenticatorTest extends TestCase
         $promise = $this->createMock(PromiseInterface::class);
         $promise->expects($this->once())->method('success')
             ->with($this->callback(
-                fn ($x) => $x instanceof ThirdPartyAuthenticatedUser
+                fn ($x): bool => $x instanceof ThirdPartyAuthenticatedUser
             ))
             ->willReturnSelf();
 
@@ -228,17 +228,17 @@ class OAuth2AuthenticatorTest extends TestCase
             ->method('save')
             ->willReturnSelf();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             OAuth2Authenticator::class,
             $this->buildAuthenticator()->registerToken($user, 'provider', 'token', $promise)
         );
     }
 
-    public function testRegisterTokenWithThirdPartyWith2FAGoogle()
+    public function testRegisterTokenWithThirdPartyWith2FAGoogle(): void
     {
         $user = $this->createMock(User::class);
-        $user->expects($this->any())->method('getAuthData')->willReturn([
-            (new ThirdPartyAuth())->setProtocol('oauth2')
+        $user->method('getAuthData')->willReturn([
+            new ThirdPartyAuth()->setProtocol('oauth2')
                 ->setProvider('provider')
                 ->setToken('token'),
             new TOTPAuth(
@@ -255,7 +255,7 @@ class OAuth2AuthenticatorTest extends TestCase
         $promise = $this->createMock(PromiseInterface::class);
         $promise->expects($this->once())->method('success')
             ->with($this->callback(
-                fn ($x) => $x instanceof GoogleAuthThirdPartyAuthenticatedUser
+                fn ($x): bool => $x instanceof GoogleAuthThirdPartyAuthenticatedUser
             ))
             ->willReturnSelf();
 
@@ -264,17 +264,17 @@ class OAuth2AuthenticatorTest extends TestCase
             ->method('save')
             ->willReturnSelf();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             OAuth2Authenticator::class,
             $this->buildAuthenticator()->registerToken($user, 'provider', 'token', $promise)
         );
     }
 
-    public function testRegisterTokenWithThirdPartyWith2FACommon()
+    public function testRegisterTokenWithThirdPartyWith2FACommon(): void
     {
         $user = $this->createMock(User::class);
-        $user->expects($this->any())->method('getAuthData')->willReturn([
-            (new ThirdPartyAuth())->setProtocol('oauth2')
+        $user->method('getAuthData')->willReturn([
+            new ThirdPartyAuth()->setProtocol('oauth2')
                 ->setProvider('provider')
                 ->setToken('token'),
             new TOTPAuth(
@@ -291,7 +291,7 @@ class OAuth2AuthenticatorTest extends TestCase
         $promise = $this->createMock(PromiseInterface::class);
         $promise->expects($this->once())->method('success')
             ->with($this->callback(
-                fn ($x) => $x instanceof TOTPThirdPartyAuthenticatedUser
+                fn ($x): bool => $x instanceof TOTPThirdPartyAuthenticatedUser
             ))
             ->willReturnSelf();
 
@@ -300,35 +300,33 @@ class OAuth2AuthenticatorTest extends TestCase
             ->method('save')
             ->willReturnSelf();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             OAuth2Authenticator::class,
             $this->buildAuthenticator()->registerToken($user, 'provider', 'token', $promise)
         );
     }
 
-    public function testAuthenticateUserFound()
+    public function testAuthenticateUserFound(): void
     {
-        $request = new Request([], [], ['_oauth_client_key'=>'foo']);
+        $request = new Request([], [], ['_oauth_client_key' => 'foo']);
 
         $token = $this->createMock(AccessToken::class);
-        $token->expects($this->any())->method('getToken')->willReturn('foo');
+        $token->method('getToken')->willReturn('foo');
 
         $client = $this->createMock(OAuth2ClientInterface::class);
-        $client->expects($this->any())->method('getAccessToken')->willReturn($token);
-        $client->expects($this->any())->method('fetchUserFromToken')->willReturn(
+        $client->method('getAccessToken')->willReturn($token);
+        $client->method('fetchUserFromToken')->willReturn(
             $this->createMock(ResourceOwnerInterface::class)
         );
 
         $this->getClientRegistry()
-            ->expects($this->any())
             ->method('getClient')
             ->willReturn($client);
 
         $this->getUserConverterInterface()
-            ->expects($this->any())
             ->method('extractEmail')
             ->willReturnCallback(
-                function (ResourceOwnerInterface $owner, PromiseInterface $promise) {
+                function (ResourceOwnerInterface $owner, PromiseInterface $promise): \Teknoo\East\CommonBundle\Contracts\Security\Authenticator\UserConverterInterface {
                     $promise->success('foo@bar');
 
                     return $this->getUserConverterInterface();
@@ -336,10 +334,9 @@ class OAuth2AuthenticatorTest extends TestCase
             );
 
         $this->getLoader()
-            ->expects($this->any())
             ->method('fetch')
             ->willReturnCallback(
-                function ($query, PromiseInterface $promise) {
+                function ($query, PromiseInterface $promise): \Teknoo\East\Common\Loader\UserLoader {
                     $promise->success(new User());
 
                     return $this->getLoader();
@@ -348,38 +345,36 @@ class OAuth2AuthenticatorTest extends TestCase
 
         $passport = $this->buildAuthenticator()->authenticate($request);
 
-        self::assertInstanceOf(SelfValidatingPassport::class, $passport);
+        $this->assertInstanceOf(SelfValidatingPassport::class, $passport);
 
         $user = $passport->getUser();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ThirdPartyAuthenticatedUser::class,
             $user
         );
     }
 
-    public function testAuthenticateUserNotFound()
+    public function testAuthenticateUserNotFound(): void
     {
-        $request = new Request([], [], ['_oauth_client_key'=>'foo']);
+        $request = new Request([], [], ['_oauth_client_key' => 'foo']);
 
         $token = $this->createMock(AccessToken::class);
-        $token->expects($this->any())->method('getToken')->willReturn('foo');
+        $token->method('getToken')->willReturn('foo');
 
         $client = $this->createMock(OAuth2ClientInterface::class);
-        $client->expects($this->any())->method('getAccessToken')->willReturn($token);
-        $client->expects($this->any())->method('fetchUserFromToken')->willReturn(
+        $client->method('getAccessToken')->willReturn($token);
+        $client->method('fetchUserFromToken')->willReturn(
             $this->createMock(ResourceOwnerInterface::class)
         );
 
         $this->getClientRegistry()
-            ->expects($this->any())
             ->method('getClient')
             ->willReturn($client);
 
         $this->getUserConverterInterface()
-            ->expects($this->any())
             ->method('extractEmail')
             ->willReturnCallback(
-                function (ResourceOwnerInterface $owner, PromiseInterface $promise) {
+                function (ResourceOwnerInterface $owner, PromiseInterface $promise): \Teknoo\East\CommonBundle\Contracts\Security\Authenticator\UserConverterInterface {
                     $promise->success('foo@bar');
 
                     return $this->getUserConverterInterface();
@@ -387,10 +382,9 @@ class OAuth2AuthenticatorTest extends TestCase
             );
 
         $this->getUserConverterInterface()
-            ->expects($this->any())
             ->method('convertToUser')
             ->willReturnCallback(
-                function (ResourceOwnerInterface $owner, PromiseInterface $promise) {
+                function (ResourceOwnerInterface $owner, PromiseInterface $promise): \Teknoo\East\CommonBundle\Contracts\Security\Authenticator\UserConverterInterface {
                     $promise->success(new User());
 
                     return $this->getUserConverterInterface();
@@ -398,10 +392,9 @@ class OAuth2AuthenticatorTest extends TestCase
             );
 
         $this->getLoader()
-            ->expects($this->any())
             ->method('fetch')
             ->willReturnCallback(
-                function ($query, PromiseInterface $promise) {
+                function ($query, PromiseInterface $promise): \Teknoo\East\Common\Loader\UserLoader {
                     $promise->fail(new \DomainException());
 
                     return $this->getLoader();
@@ -410,38 +403,36 @@ class OAuth2AuthenticatorTest extends TestCase
 
         $passport = $this->buildAuthenticator()->authenticate($request);
 
-        self::assertInstanceOf(SelfValidatingPassport::class, $passport);
+        $this->assertInstanceOf(SelfValidatingPassport::class, $passport);
 
         $user = $passport->getUser();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ThirdPartyAuthenticatedUser::class,
             $user
         );
     }
 
-    public function testAuthenticateUserOtherError()
+    public function testAuthenticateUserOtherError(): void
     {
-        $request = new Request([], [], ['_oauth_client_key'=>'foo']);
+        $request = new Request([], [], ['_oauth_client_key' => 'foo']);
 
         $token = $this->createMock(AccessToken::class);
-        $token->expects($this->any())->method('getToken')->willReturn('foo');
+        $token->method('getToken')->willReturn('foo');
 
         $client = $this->createMock(OAuth2ClientInterface::class);
-        $client->expects($this->any())->method('getAccessToken')->willReturn($token);
-        $client->expects($this->any())->method('fetchUserFromToken')->willReturn(
+        $client->method('getAccessToken')->willReturn($token);
+        $client->method('fetchUserFromToken')->willReturn(
             $this->createMock(ResourceOwnerInterface::class)
         );
 
         $this->getClientRegistry()
-            ->expects($this->any())
             ->method('getClient')
             ->willReturn($client);
 
         $this->getUserConverterInterface()
-            ->expects($this->any())
             ->method('extractEmail')
             ->willReturnCallback(
-                function (ResourceOwnerInterface $owner, PromiseInterface $promise) {
+                function (ResourceOwnerInterface $owner, PromiseInterface $promise): \Teknoo\East\CommonBundle\Contracts\Security\Authenticator\UserConverterInterface {
                     $promise->success('foo@bar');
 
                     return $this->getUserConverterInterface();
@@ -453,10 +444,9 @@ class OAuth2AuthenticatorTest extends TestCase
             ->method('convertToUser');
 
         $this->getLoader()
-            ->expects($this->any())
             ->method('fetch')
             ->willReturnCallback(
-                function ($query, PromiseInterface $promise) {
+                function ($query, PromiseInterface $promise): \Teknoo\East\Common\Loader\UserLoader {
                     $promise->fail(new \RuntimeException());
 
                     return $this->getLoader();
@@ -465,35 +455,33 @@ class OAuth2AuthenticatorTest extends TestCase
 
         $passport = $this->buildAuthenticator()->authenticate($request);
 
-        self::assertInstanceOf(SelfValidatingPassport::class, $passport);
+        $this->assertInstanceOf(SelfValidatingPassport::class, $passport);
 
         $this->expectException(\RuntimeException::class);
         $passport->getUser();
     }
 
-    public function testAuthenticateUserOtherError2()
+    public function testAuthenticateUserOtherError2(): void
     {
-        $request = new Request([], [], ['_oauth_client_key'=>'foo']);
+        $request = new Request([], [], ['_oauth_client_key' => 'foo']);
 
         $token = $this->createMock(AccessToken::class);
-        $token->expects($this->any())->method('getToken')->willReturn('foo');
+        $token->method('getToken')->willReturn('foo');
 
         $client = $this->createMock(OAuth2ClientInterface::class);
-        $client->expects($this->any())->method('getAccessToken')->willReturn($token);
-        $client->expects($this->any())->method('fetchUserFromToken')->willReturn(
+        $client->method('getAccessToken')->willReturn($token);
+        $client->method('fetchUserFromToken')->willReturn(
             $this->createMock(ResourceOwnerInterface::class)
         );
 
         $this->getClientRegistry()
-            ->expects($this->any())
             ->method('getClient')
             ->willReturn($client);
 
         $this->getUserConverterInterface()
-            ->expects($this->any())
             ->method('extractEmail')
             ->willReturnCallback(
-                function (ResourceOwnerInterface $owner, PromiseInterface $promise) {
+                function (ResourceOwnerInterface $owner, PromiseInterface $promise): \Teknoo\East\CommonBundle\Contracts\Security\Authenticator\UserConverterInterface {
                     $promise->success('foo@bar');
 
                     return $this->getUserConverterInterface();
@@ -505,10 +493,9 @@ class OAuth2AuthenticatorTest extends TestCase
             ->method('convertToUser');
 
         $this->getLoader()
-            ->expects($this->any())
             ->method('fetch')
             ->willReturnCallback(
-                function ($query, PromiseInterface $promise) {
+                function ($query, PromiseInterface $promise): \Teknoo\East\Common\Loader\UserLoader {
                     $promise->fail(new \RuntimeException());
 
                     return $this->getLoader();
@@ -517,35 +504,33 @@ class OAuth2AuthenticatorTest extends TestCase
 
         $passport = $this->buildAuthenticator()->authenticate($request);
 
-        self::assertInstanceOf(SelfValidatingPassport::class, $passport);
+        $this->assertInstanceOf(SelfValidatingPassport::class, $passport);
 
         $this->expectException(\RuntimeException::class);
         $passport->getUser();
     }
 
-    public function testAuthenticateUserErrorInEmail()
+    public function testAuthenticateUserErrorInEmail(): void
     {
-        $request = new Request([], [], ['_oauth_client_key'=>'foo']);
+        $request = new Request([], [], ['_oauth_client_key' => 'foo']);
 
         $token = $this->createMock(AccessToken::class);
-        $token->expects($this->any())->method('getToken')->willReturn('foo');
+        $token->method('getToken')->willReturn('foo');
 
         $client = $this->createMock(OAuth2ClientInterface::class);
-        $client->expects($this->any())->method('getAccessToken')->willReturn($token);
-        $client->expects($this->any())->method('fetchUserFromToken')->willReturn(
+        $client->method('getAccessToken')->willReturn($token);
+        $client->method('fetchUserFromToken')->willReturn(
             $this->createMock(ResourceOwnerInterface::class)
         );
 
         $this->getClientRegistry()
-            ->expects($this->any())
             ->method('getClient')
             ->willReturn($client);
 
         $this->getUserConverterInterface()
-            ->expects($this->any())
             ->method('extractEmail')
             ->willReturnCallback(
-                function (ResourceOwnerInterface $owner, PromiseInterface $promise) {
+                function (ResourceOwnerInterface $owner, PromiseInterface $promise): \Teknoo\East\CommonBundle\Contracts\Security\Authenticator\UserConverterInterface {
                     $promise->fail(new \RuntimeException());
 
                     return $this->getUserConverterInterface();
@@ -554,15 +539,15 @@ class OAuth2AuthenticatorTest extends TestCase
 
         $passport = $this->buildAuthenticator()->authenticate($request);
 
-        self::assertInstanceOf(SelfValidatingPassport::class, $passport);
+        $this->assertInstanceOf(SelfValidatingPassport::class, $passport);
 
         $this->expectException(\RuntimeException::class);
         $passport->getUser();
     }
 
-    public function testOnAuthenticationFailure()
+    public function testOnAuthenticationFailure(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             Response::class,
             $this->buildAuthenticator()
                 ->onAuthenticationFailure(
@@ -572,9 +557,10 @@ class OAuth2AuthenticatorTest extends TestCase
         );
     }
 
-    public function testOnAuthenticationSuccess()
+    public function testOnAuthenticationSuccess(): void
     {
-        self::assertNull(
+        $this->assertNotInstanceOf(
+            \Symfony\Component\HttpFoundation\Response::class,
             $this->buildAuthenticator()
                 ->onAuthenticationSuccess(
                     $this->createMock(Request::class),

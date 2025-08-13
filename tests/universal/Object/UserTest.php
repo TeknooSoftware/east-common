@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -37,7 +37,7 @@ use Teknoo\Tests\East\Common\Object\Traits\ObjectTestTrait;
 use Teknoo\East\Common\Object\User;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(User::class)]
@@ -45,171 +45,168 @@ class UserTest extends TestCase
 {
     use ObjectTestTrait;
 
-    /**
-     * @return User
-     */
     public function buildObject(): User
     {
         return new User();
     }
 
-    public function testGetFirstName()
+    public function testGetFirstName(): void
     {
-        self::assertEquals(
+        $this->assertEquals(
             'fooBar',
             $this->generateObjectPopulated(['firstName' => 'fooBar'])->getFirstName()
         );
     }
 
-    public function testToString()
+    public function testToString(): void
     {
-        self::assertEquals(
+        $this->assertEquals(
             'foo Bar',
             (string) $this->generateObjectPopulated(['firstName' => 'foo', 'lastName' => 'Bar'])
         );
     }
 
-    public function testSetFirstName()
+    public function testSetFirstName(): void
     {
         $object = $this->buildObject();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->setFirstName('fooBar')
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             'fooBar',
             $object->getFirstName()
         );
     }
 
-    public function testSetFirstNameExceptionOnBadArgument()
+    public function testSetFirstNameExceptionOnBadArgument(): void
     {
         $this->expectException(\Throwable::class);
         $this->buildObject()->setFirstName(new \stdClass());
     }
 
-    public function testGetLastName()
+    public function testGetLastName(): void
     {
-        self::assertEquals(
+        $this->assertEquals(
             'fooBar',
             $this->generateObjectPopulated(['lastName' => 'fooBar'])->getLastName()
         );
     }
 
-    public function testSetLastName()
+    public function testSetLastName(): void
     {
         $object = $this->buildObject();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->setLastName('fooBar')
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             'fooBar',
             $object->getLastName()
         );
     }
 
-    public function testSetLastNameExceptionOnBadArgument()
+    public function testSetLastNameExceptionOnBadArgument(): void
     {
         $this->expectException(\Throwable::class);
         $this->buildObject()->setLastName(new \stdClass());
     }
 
-    public function testGetEmail()
+    public function testGetEmail(): void
     {
-        self::assertEquals(
+        $this->assertEquals(
             'fooBar',
             $this->generateObjectPopulated(['email' => 'fooBar'])->getEmail()
         );
     }
 
-    public function testGetUserIdentifier()
+    public function testGetUserIdentifier(): void
     {
-        self::assertEquals(
+        $this->assertEquals(
             'fooBar',
             $this->generateObjectPopulated(['email' => 'fooBar'])->getUserIdentifier()
         );
     }
 
-    public function testGetUserIdentifierExceptionOnEmpty()
+    public function testGetUserIdentifierExceptionOnEmpty(): void
     {
         $this->expectException(\DomainException::class);
         $this->generateObjectPopulated(['email' => ''])->getUserIdentifier();
     }
 
-    public function testSetEmail()
+    public function testSetEmail(): void
     {
         $object = $this->buildObject();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->setEmail('fooBar')
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             'fooBar',
             $object->getEmail()
         );
     }
 
-    public function testSetEmailExceptionOnBadArgument()
+    public function testSetEmailExceptionOnBadArgument(): void
     {
         $this->expectException(\Throwable::class);
         $this->buildObject()->setEmail(new \stdClass());
     }
 
-    public function testGetRoles()
+    public function testGetRoles(): void
     {
-        self::assertEquals(
+        $this->assertEquals(
             [],
             $this->generateObjectPopulated(['roles' => []])->getRoles()
         );
     }
 
-    public function testSetRoles()
+    public function testSetRoles(): void
     {
         $object = $this->buildObject();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
-            $object->setRoles(['foo'=>'bar'])
+            $object->setRoles(['foo' => 'bar'])
         );
 
-        self::assertEquals(
-            ['foo'=>'bar'],
+        $this->assertEquals(
+            ['foo' => 'bar'],
             $object->getRoles()
         );
     }
 
-    public function testSetRolesExceptionOnBadArgument()
+    public function testSetRolesExceptionOnBadArgument(): void
     {
         $this->expectException(\Throwable::class);
         $this->buildObject()->setRoles(new \stdClass());
     }
 
-    public function testGetAuthData()
+    public function testGetAuthData(): void
     {
-        self::assertEquals(
+        $this->assertEquals(
             [],
             $this->generateObjectPopulated(['authData' => []])->getAuthData()
         );
     }
 
-    public function testGetOneAuthData()
+    public function testGetOneAuthData(): void
     {
-        self::assertNull(
+        $this->assertNull(
             $this->generateObjectPopulated(['authData' => []])->getOneAuthData(
                 StoredPassword::class,
             )
         );
-        self::assertNull(
+        $this->assertNull(
             $this->generateObjectPopulated(['authData' => [
                 new ThirdPartyAuth()
             ]])->getOneAuthData(
                 StoredPassword::class,
             )
         );
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             StoredPassword::class,
             $this->generateObjectPopulated(['authData' => [
                 new StoredPassword()
@@ -219,61 +216,61 @@ class UserTest extends TestCase
         );
     }
 
-    public function testSetAuthData()
+    public function testSetAuthData(): void
     {
         $object = $this->buildObject();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->setAuthData([$this->createMock(AuthDataInterface::class)])
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             [$this->createMock(AuthDataInterface::class)],
             $object->getAuthData()
         );
     }
 
-    public function testAddAuthData()
+    public function testAddAuthData(): void
     {
         $object = $this->buildObject();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->addAuthData(
                 $ad1 = $this->createMock(AuthDataInterface::class)
             )
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             [$ad1],
             $object->getAuthData()
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->addAuthData(
                 $ad1b = $this->createMock(AuthDataInterface::class)
             )
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             [$ad1b],
             $object->getAuthData()
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->addAuthData(
                 $ad2 = $this->createMock(StoredPassword::class)
             )
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             [$ad1b, $ad2],
             $object->getAuthData()
         );
     }
 
-    public function testAddAuthDataWithIterator()
+    public function testAddAuthDataWithIterator(): void
     {
         $object = $this->generateObjectPopulated(
             [
@@ -283,26 +280,26 @@ class UserTest extends TestCase
             ]
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->addAuthData(
                 $ad2 = $this->createMock(StoredPassword::class)
             )
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             [$ad1, $ad2],
             $object->getAuthData()
         );
     }
 
-    public function testSetAuthDataExceptionOnBadArgument()
+    public function testSetAuthDataExceptionOnBadArgument(): void
     {
         $this->expectException(\Throwable::class);
         $this->buildObject()->setAuthData(new \stdClass());
     }
 
-    public function testRemoveAuthData()
+    public function testRemoveAuthData(): void
     {
         $object = $this->generateObjectPopulated(
             [
@@ -314,12 +311,12 @@ class UserTest extends TestCase
             ]
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             User::class,
             $object->removeAuthData(ThirdPartyAuth::class),
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             [
                 $a,
                 $b,
@@ -328,7 +325,7 @@ class UserTest extends TestCase
         );
     }
 
-    public function testRemoveAuthDataButDataToRemoveMissing()
+    public function testRemoveAuthDataButDataToRemoveMissing(): void
     {
         $object = $this->generateObjectPopulated(
             [
@@ -339,12 +336,12 @@ class UserTest extends TestCase
             ]
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             User::class,
             $object->removeAuthData(ThirdPartyAuth::class),
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             [
                 $a,
                 $b,
@@ -353,66 +350,66 @@ class UserTest extends TestCase
         );
     }
 
-    public function testRemoveAuthDataExceptionOnBadClass()
+    public function testRemoveAuthDataExceptionOnBadClass(): void
     {
         $this->expectException(\DomainException::class);
         $this->buildObject()->removeAuthData('fooooooooooo');
     }
 
-    public function testRemoveAuthDataExceptionOnBadArgument()
+    public function testRemoveAuthDataExceptionOnBadArgument(): void
     {
         $this->expectException(\Throwable::class);
         $this->buildObject()->removeAuthData(new \stdClass());
     }
 
-    public function testGetActive()
+    public function testGetActive(): void
     {
-        self::assertTrue(
+        $this->assertTrue(
             $this->generateObjectPopulated(['active' => true])->isActive()
         );
-        self::assertFalse(
+        $this->assertFalse(
             $this->generateObjectPopulated(['active' => false])->isActive()
         );
-        self::assertTrue(
+        $this->assertTrue(
             $this->generateObjectPopulated()->isActive()
         );
     }
 
-    public function testSetActive()
+    public function testSetActive(): void
     {
         $object = $this->buildObject();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->setActive(true)
         );
 
-        self::assertTrue(
+        $this->assertTrue(
             $object->isActive()
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->setActive(false)
         );
 
-        self::assertFalse(
+        $this->assertFalse(
             $object->isActive()
         );
     }
 
-    public function testSetActiveExceptionOnBadArgument()
+    public function testSetActiveExceptionOnBadArgument(): void
     {
         $this->expectException(\Throwable::class);
         $this->buildObject()->setActive(new \stdClass());
     }
 
-    public function testExportToMeDataBadNormalizer()
+    public function testExportToMeDataBadNormalizer(): void
     {
         $this->expectException(\TypeError::class);
         $this->buildObject()->exportToMeData(new \stdClass(), []);
     }
 
-    public function testExportToMeDataBadContext()
+    public function testExportToMeDataBadContext(): void
     {
         $this->expectException(\TypeError::class);
         $this->buildObject()->exportToMeData(
@@ -421,7 +418,7 @@ class UserTest extends TestCase
         );
     }
 
-    public function testExportToMe()
+    public function testExportToMe(): void
     {
         $normalizer = $this->createMock(EastNormalizerInterface::class);
         $normalizer->expects($this->once())
@@ -434,7 +431,7 @@ class UserTest extends TestCase
                 'lastName' => '',
             ]);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             User::class,
             $this->buildObject()->setId('123')->setFirstName('fooName')->exportToMeData(
                 $normalizer,
@@ -443,12 +440,12 @@ class UserTest extends TestCase
         );
     }
 
-    public function testSetExportConfiguration()
+    public function testSetExportConfiguration(): void
     {
         User::setExportConfiguration($conf = ['name' => ['default']]);
         $rc = new ReflectionClass(User::class);
 
-        self::assertEquals(
+        $this->assertEquals(
             $conf,
             $rc->getStaticPropertyValue('exportConfigurations'),
         );

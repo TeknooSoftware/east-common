@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 
@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\East\Common\Doctrine\DBSource\ODM;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Doctrine\ODM\MongoDB\Query\Builder;
 use Teknoo\East\Common\Contracts\DBSource\QueryExecutorInterface;
 use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Common\Doctrine\DBSource\ODM\QueryExecutor\Pending;
@@ -45,7 +46,7 @@ use Teknoo\States\Proxy\ProxyTrait;
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  *
  * @implements QueryExecutorInterface<ObjectInterface>
@@ -57,7 +58,7 @@ class QueryExecutor implements QueryExecutorInterface, AutomatedInterface
     use ExprConversionTrait;
 
     /**
-     * @var callable
+     * @var callable(Builder): Builder
      */
     private $queryTypeInitializer;
 
@@ -102,8 +103,8 @@ class QueryExecutor implements QueryExecutorInterface, AutomatedInterface
     protected function listAssertions(): array
     {
         return [
-            (new Property(Pending::class))->with('className', new IsEmpty()),
-            (new Property(Runnable::class))->with('className', new IsNotEmpty()),
+            new Property(Pending::class)->with('className', new IsEmpty()),
+            new Property(Runnable::class)->with('className', new IsNotEmpty()),
         ];
     }
 

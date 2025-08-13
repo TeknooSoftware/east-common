@@ -19,28 +19,16 @@
  *
  * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
- */
+  */
 
 declare(strict_types=1);
 
-namespace Teknoo\East\CommonBundle\Contracts\Object;
+namespace Teknoo\Tests\East\Common\Support\PHPStan;
 
-use Teknoo\East\Common\Object\TOTPAuth;
-use Teknoo\East\Common\Object\User;
+use Teknoo\East\Common\Contracts\Object\VisitableInterface;
+use Teknoo\East\Common\Object\VisitableTrait;
 
-/**
- * Contract defining Symfony users classes able to support an 2FA authentication with TOTP protocoles
- *
- * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
- * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
- * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
- * @author      Richard Déloge <richard@teknoo.software>
- */
-interface UserWithTOTPAuthInterface
+class VisitableExample implements VisitableInterface
 {
-    public function setTOTPAuth(?TOTPAuth $totpAuth): UserWithTOTPAuthInterface;
-
-    public function getTOTPAuth(): ?TOTPAuth;
-
-    public function getWrappedUser(): User;
+    use VisitableTrait;
 }

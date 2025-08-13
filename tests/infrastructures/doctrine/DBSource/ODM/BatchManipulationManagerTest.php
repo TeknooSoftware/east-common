@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -39,7 +39,7 @@ use Teknoo\East\Common\Doctrine\Filter\ODM\SoftDeletableFilter;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(BatchManipulationManager::class)]
@@ -75,14 +75,14 @@ class BatchManipulationManagerTest extends TestCase
         );
     }
 
-    public function testUpdateQuery()
+    public function testUpdateQuery(): void
     {
         $query = $this->createMock(UpdatingQueryInterface::class);
         $query->expects($this->once())
             ->method('update')
             ->willReturnSelf();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             BatchManipulationManagerInterface::class,
             $this->buildBatchManager()->updateQuery(
                 $query,
@@ -91,14 +91,14 @@ class BatchManipulationManagerTest extends TestCase
         );
     }
 
-    public function testDeleteQuery()
+    public function testDeleteQuery(): void
     {
         $query = $this->createMock(DeletingQueryInterface::class);
         $query->expects($this->once())
             ->method('delete')
             ->willReturnSelf();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             BatchManipulationManagerInterface::class,
             $this->buildBatchManager()->deleteQuery(
                 $query,
@@ -107,40 +107,40 @@ class BatchManipulationManagerTest extends TestCase
         );
     }
 
-    public function testOpenBatch()
+    public function testOpenBatch(): void
     {
         $this->getManager()
             ->expects($this->once())
             ->method('openBatch')
             ->willReturnSelf();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             BatchManipulationManagerInterface::class,
             $this->buildBatchManager()->openBatch()
         );
     }
 
-    public function testCloseBatch()
+    public function testCloseBatch(): void
     {
         $this->getManager()
             ->expects($this->once())
             ->method('closeBatch')
             ->willReturnSelf();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             BatchManipulationManagerInterface::class,
             $this->buildBatchManager()->closeBatch()
         );
     }
 
-    public function testPersist()
+    public function testPersist(): void
     {
         $this->getManager()
             ->expects($this->once())
             ->method('persist')
             ->willReturnSelf();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             BatchManipulationManagerInterface::class,
             $this->buildBatchManager()->persist(
                 $this->createMock(ObjectInterface::class),
@@ -148,14 +148,14 @@ class BatchManipulationManagerTest extends TestCase
         );
     }
 
-    public function testRemove()
+    public function testRemove(): void
     {
         $this->getManager()
             ->expects($this->once())
             ->method('remove')
             ->willReturnSelf();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             BatchManipulationManagerInterface::class,
             $this->buildBatchManager()->remove(
                 $this->createMock(ObjectInterface::class),
@@ -163,20 +163,20 @@ class BatchManipulationManagerTest extends TestCase
         );
     }
 
-    public function testFlush()
+    public function testFlush(): void
     {
         $this->getManager()
             ->expects($this->once())
             ->method('flush')
             ->willReturnSelf();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             BatchManipulationManagerInterface::class,
             $this->buildBatchManager()->flush()
         );
     }
 
-    public function testRegisterFilter()
+    public function testRegisterFilter(): void
     {
         $this->getManager()
             ->expects($this->once())
@@ -184,13 +184,13 @@ class BatchManipulationManagerTest extends TestCase
             ->with(SoftDeletableFilter::class, ['foo' => 'bar'])
             ->willReturnSelf();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             BatchManipulationManagerInterface::class,
             $this->buildBatchManager()->registerFilter(SoftDeletableFilter::class, ['foo' => 'bar'])
         );
     }
 
-    public function testEnableFilter()
+    public function testEnableFilter(): void
     {
         $this->getManager()
             ->expects($this->once())
@@ -198,13 +198,13 @@ class BatchManipulationManagerTest extends TestCase
             ->with(SoftDeletableFilter::class)
             ->willReturnSelf();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             BatchManipulationManagerInterface::class,
             $this->buildBatchManager()->enableFilter(SoftDeletableFilter::class)
         );
     }
 
-    public function testDisableFilter()
+    public function testDisableFilter(): void
     {
         $this->getManager()
             ->expects($this->once())
@@ -212,7 +212,7 @@ class BatchManipulationManagerTest extends TestCase
             ->with(SoftDeletableFilter::class)
             ->willReturnSelf();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             BatchManipulationManagerInterface::class,
             $this->buildBatchManager()->disableFilter(SoftDeletableFilter::class)
         );

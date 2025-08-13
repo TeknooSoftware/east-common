@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 
@@ -37,7 +37,7 @@ use Teknoo\East\Common\Recipe\Step\SendMedia;
 use Teknoo\East\Foundation\Client\ClientInterface;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(SendMedia::class)]
@@ -62,7 +62,7 @@ class SendMediaTest extends TestCase
         return new SendMedia($this->getResponseFactory());
     }
 
-    public function testInvokeBadClient()
+    public function testInvokeBadClient(): void
     {
         $this->expectException(\TypeError::class);
 
@@ -73,7 +73,7 @@ class SendMediaTest extends TestCase
         );
     }
 
-    public function testInvokeBadMedia()
+    public function testInvokeBadMedia(): void
     {
         $this->expectException(\TypeError::class);
 
@@ -84,7 +84,7 @@ class SendMediaTest extends TestCase
         );
     }
 
-    public function testInvokeBadStream()
+    public function testInvokeBadStream(): void
     {
         $this->expectException(\TypeError::class);
 
@@ -95,27 +95,26 @@ class SendMediaTest extends TestCase
         );
     }
 
-    public function testInvokeWithMetadata()
+    public function testInvokeWithMetadata(): void
     {
         $client = $this->createMock(ClientInterface::class);
         $client->expects($this->once())->method('acceptResponse');
 
         $media = $this->createMock(Media::class);
-        $media->expects($this->any())->method('getMetadata')->willReturn(
+        $media->method('getMetadata')->willReturn(
             $this->createMock(MediaMetadata::class)
         );
 
         $stream = $this->createMock(StreamInterface::class);
 
         $response = $this->createMock(ResponseInterface::class);
-        $response->expects($this->any())->method('withHeader')->willReturnSelf();
-        $response->expects($this->any())->method('withBody')->willReturnSelf();
+        $response->method('withHeader')->willReturnSelf();
+        $response->method('withBody')->willReturnSelf();
         $this->getResponseFactory()
-            ->expects($this->any())
             ->method('createResponse')
             ->willReturn($response);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             SendMedia::class,
             $this->buildStep()(
                 $client,
@@ -125,25 +124,24 @@ class SendMediaTest extends TestCase
         );
     }
 
-    public function testInvokeWithoutMetadata()
+    public function testInvokeWithoutMetadata(): void
     {
         $client = $this->createMock(ClientInterface::class);
         $client->expects($this->once())->method('acceptResponse');
 
         $media = $this->createMock(Media::class);
-        $media->expects($this->any())->method('getMetadata')->willReturn(null);
+        $media->method('getMetadata')->willReturn(null);
 
         $stream = $this->createMock(StreamInterface::class);
 
         $response = $this->createMock(ResponseInterface::class);
-        $response->expects($this->any())->method('withHeader')->willReturnSelf();
-        $response->expects($this->any())->method('withBody')->willReturnSelf();
+        $response->method('withHeader')->willReturnSelf();
+        $response->method('withBody')->willReturnSelf();
         $this->getResponseFactory()
-            ->expects($this->any())
             ->method('createResponse')
             ->willReturn($response);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             SendMedia::class,
             $this->buildStep()(
                 $client,

@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -28,123 +28,123 @@ namespace Teknoo\Tests\East\Common\Object\Traits;
 use Teknoo\East\Common\Contracts\Object\DeletableInterface;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 trait ObjectTestTrait
 {
     use PopulateObjectTrait;
 
-    public function testGetId()
+    public function testGetId(): void
     {
-        self::assertEquals(
+        $this->assertEquals(
             123,
             $this->generateObjectPopulated(['id' => 123])->getId()
         );
     }
 
-    public function testSetId()
+    public function testSetId(): void
     {
         $object = $this->buildObject();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->setId('fooBar')
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             'fooBar',
             $object->getId()
         );
     }
 
-    public function testSetIdExceptionOnBadArgument()
+    public function testSetIdExceptionOnBadArgument(): void
     {
         $this->expectException(\Throwable::class);
         $this->buildObject()->setId(new \stdClass());
     }
 
-    public function testCreatedAt()
+    public function testCreatedAt(): void
     {
         $date = new \DateTime('2017-06-13');
-        self::assertEquals(
+        $this->assertEquals(
             $date,
             $this->generateObjectPopulated(['createdAt' => $date])->createdAt()
         );
     }
 
-    public function testUpdatedAt()
+    public function testUpdatedAt(): void
     {
         $date = new \DateTime('2017-06-13');
-        self::assertEquals(
+        $this->assertEquals(
             $date,
             $this->generateObjectPopulated(['updatedAt' => $date])->updatedAt()
         );
     }
 
-    public function testSetUpdatedAt()
+    public function testSetUpdatedAt(): void
     {
         $date = new \DateTime('2017-06-13');
 
         $object = $this->buildObject();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->setUpdatedAt($date)
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             $date,
             $object->updatedAt()
         );
     }
 
-    public function testSetUpdatedAtExceptionOnBadArgument()
+    public function testSetUpdatedAtExceptionOnBadArgument(): void
     {
         $this->expectException(\Throwable::class);
         $this->buildObject()->setUpdatedAt(new \stdClass());
     }
 
-    public function testDeletedAt()
+    public function testDeletedAt(): void
     {
         $object = $this->buildObject();
         if (!$object instanceof DeletableInterface) {
-            self::assertTrue(true); //To avoid warning about skipped test
+            $this->assertTrue(true); //To avoid warning about skipped test
             return;
         }
 
         $date = new \DateTime('2017-06-13');
-        self::assertEquals(
+        $this->assertEquals(
             $date,
             $this->generateObjectPopulated(['deletedAt' => $date])->getDeletedAt()
         );
     }
 
-    public function testSetDeletedAt()
+    public function testSetDeletedAt(): void
     {
         $object = $this->buildObject();
         if (!$object instanceof DeletableInterface) {
-            self::assertTrue(true); //To avoid warning about skipped test
+            $this->assertTrue(true); //To avoid warning about skipped test
             return;
         }
 
         $date = new \DateTime('2017-06-13');
 
         $object = $this->buildObject();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->setDeletedAt($date)
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             $date,
             $object->getDeletedAt()
         );
     }
 
-    public function testSetDeletedAtExceptionOnBadArgument()
+    public function testSetDeletedAtExceptionOnBadArgument(): void
     {
         $object = $this->buildObject();
         if (!$object instanceof DeletableInterface) {
-            self::assertTrue(true); //To avoid warning about skipped test
+            $this->assertTrue(true); //To avoid warning about skipped test
             return;
         }
 

@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -55,16 +55,15 @@ use Teknoo\East\Common\Writer\MediaWriter as OriginalWriter;
  *
  * @link        http://teknoo.software/east Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 class ContainerTest extends TestCase
 {
     /**
-     * @return Container
      * @throws \Exception
      */
-    protected function buildContainer() : Container
+    protected function buildContainer(): Container
     {
         $containerDefinition = new ContainerBuilder();
         $containerDefinition->addDefinitions(__DIR__.'/../../../infrastructures/doctrine/di.php');
@@ -72,32 +71,35 @@ class ContainerTest extends TestCase
         return $containerDefinition->build();
     }
 
-    public function testManager()
+    public function testManager(): void
     {
         $container = $this->buildContainer();
         $objectManager = $this->createMock(ObjectManager::class);
 
         $container->set(ObjectManager::class, $objectManager);
-        self::assertInstanceOf(ManagerInterface::class, $container->get(ManagerInterface::class));
+        $this->assertInstanceOf(ManagerInterface::class, $container->get(ManagerInterface::class));
     }
 
-    public function testManagerWithDocumentManager()
+    public function testManagerWithDocumentManager(): void
     {
         $container = $this->buildContainer();
-        $objectManager = new class extends DocumentManager {
-            public function __construct() {}
+        $objectManager = new class () extends DocumentManager {
+            public function __construct()
+            {
+            }
 
-            public function getConfiguration(): Configuration {
+            public function getConfiguration(): Configuration
+            {
                 static $configuration;
                 return $configuration ??= new Configuration();
             }
         };
 
         $container->set(ObjectManager::class, $objectManager);
-        self::assertInstanceOf(ManagerInterface::class, $container->get(ManagerInterface::class));
+        $this->assertInstanceOf(ManagerInterface::class, $container->get(ManagerInterface::class));
     }
 
-    public function testBatchManager()
+    public function testBatchManager(): void
     {
         $container = $this->buildContainer();
         $objectManager = $this->createMock(ObjectManager::class);
@@ -105,52 +107,52 @@ class ContainerTest extends TestCase
 
         $container->set(ObjectManager::class, $objectManager);
         $container->set(BatchManipulationManager::class, $batchManager);
-        self::assertInstanceOf(BatchManipulationManagerInterface::class, $container->get(BatchManipulationManagerInterface::class));
+        $this->assertInstanceOf(BatchManipulationManagerInterface::class, $container->get(BatchManipulationManagerInterface::class));
     }
 
-    private function generateTestForRepository(string $objectClass, string $repositoryClass, string $repositoryType)
+    private function generateTestForRepository(string $objectClass, string $repositoryClass, string $repositoryType): void
     {
         $container = $this->buildContainer();
         $objectManager = $this->createMock(ObjectManager::class);
-        $objectManager->expects($this->any())->method('getRepository')->with($objectClass)->willReturn(
+        $objectManager->method('getRepository')->with($objectClass)->willReturn(
             $this->createMock($repositoryType)
         );
 
         $container->set(ObjectManager::class, $objectManager);
         $repository = $container->get($repositoryClass);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $repositoryClass,
             $repository
         );
     }
 
-    public function testUserRepositoryWithObjectRepository()
+    public function testUserRepositoryWithObjectRepository(): void
     {
         $this->generateTestForRepository(User::class, UserRepositoryInterface::class, ObjectRepository::class);
     }
 
-    public function testUserRepositoryWithDocumentRepository()
+    public function testUserRepositoryWithDocumentRepository(): void
     {
         $this->generateTestForRepository(User::class, UserRepositoryInterface::class, DocumentRepository::class);
     }
 
-    public function testMediaRepositoryWithObjectRepository()
+    public function testMediaRepositoryWithObjectRepository(): void
     {
         $this->generateTestForRepository(Media::class, MediaRepositoryInterface::class, ObjectRepository::class);
     }
 
-    public function testMediaRepositoryWithDocumentRepository()
+    public function testMediaRepositoryWithDocumentRepository(): void
     {
         $this->generateTestForRepository(Media::class, MediaRepositoryInterface::class, DocumentRepository::class);
     }
 
-    public function testMediaWriterWithValidRepository()
+    public function testMediaWriterWithValidRepository(): void
     {
         $this->expectException(\RuntimeException::class);
         $container = $this->buildContainer();
         $objectManager = $this->createMock(ObjectManager::class);
-        $objectManager->expects($this->any())->method('getRepository')->willReturn(
+        $objectManager->method('getRepository')->willReturn(
             $this->createMock(ObjectRepository::class)
         );
 
@@ -158,31 +160,31 @@ class ContainerTest extends TestCase
         $container->get(MediaWriter::class);
     }
 
-    public function testMediaWriter()
+    public function testMediaWriter(): void
     {
         $container = $this->buildContainer();
         $objectManager = $this->createMock(ObjectManager::class);
-        $objectManager->expects($this->any())->method('getRepository')->willReturn(
+        $objectManager->method('getRepository')->willReturn(
             $this->createMock(GridFSRepository::class)
         );
 
         $container->set(ObjectManager::class, $objectManager);
         $container->set(OriginalWriter::class, $this->createMock(OriginalWriter::class));
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             MediaWriter::class,
             $container->get(MediaWriter::class)
         );
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             MediaWriter::class,
             $container->get('teknoo.east.common.doctrine.writer.media.new')
         );
     }
 
-    public function testGetStreamFromMediaBadRepo()
+    public function testGetStreamFromMediaBadRepo(): void
     {
         $container = $this->buildContainer();
         $objectManager = $this->createMock(ObjectManager::class);
-        $objectManager->expects($this->any())->method('getRepository')->willReturn(
+        $objectManager->method('getRepository')->willReturn(
             $this->createMock(ObjectRepository::class)
         );
 
@@ -194,22 +196,22 @@ class ContainerTest extends TestCase
         $container->get(GetStreamFromMedia::class);
     }
 
-    public function testGetStreamFromMedia()
+    public function testGetStreamFromMedia(): void
     {
         $container = $this->buildContainer();
         $objectManager = $this->createMock(ObjectManager::class);
-        $objectManager->expects($this->any())->method('getRepository')->willReturn(
+        $objectManager->method('getRepository')->willReturn(
             $this->createMock(GridFSRepository::class)
         );
 
         $container->set(ObjectManager::class, $objectManager);
 
         $container->set(StreamFactoryInterface::class, $this->createMock(StreamFactoryInterface::class));
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             GetStreamFromMediaInterface::class,
             $container->get(GetStreamFromMediaInterface::class)
         );
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             GetStreamFromMedia::class,
             $container->get(GetStreamFromMedia::class)
         );

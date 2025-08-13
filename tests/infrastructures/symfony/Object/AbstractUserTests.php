@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -37,7 +37,7 @@ use Teknoo\East\Common\Object\User as BaseUser;
 use TypeError;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 abstract class AbstractUserTests extends TestCase
@@ -66,8 +66,8 @@ abstract class AbstractUserTests extends TestCase
         if (!$this->user instanceof BaseUser) {
             $this->user = $this->createMock(BaseUser::class);
 
-            $this->user->expects($this->any())->method('getAuthData')->willReturn([$this->getStoredPassword()]);
-            $this->user->expects($this->any())->method('getOneAuthData')->willReturn($this->getStoredPassword());
+            $this->user->method('getAuthData')->willReturn([$this->getStoredPassword()]);
+            $this->user->method('getOneAuthData')->willReturn($this->getStoredPassword());
         }
 
         return $this->user;
@@ -75,104 +75,102 @@ abstract class AbstractUserTests extends TestCase
 
     abstract public function buildObject(): AbstractUser;
 
-    public function testGetRolesFromArray()
+    public function testGetRolesFromArray(): void
     {
         $this->getUser()
             ->expects($this->once())
             ->method('getRoles')
             ->willReturn(['foo','bar']);
 
-        self::assertEquals(
+        $this->assertEquals(
             ['foo','bar'],
             $this->buildObject()->getRoles()
         );
     }
 
-    public function testGetRolesFromIterable()
+    public function testGetRolesFromIterable(): void
     {
         $this->getUser()
             ->expects($this->once())
             ->method('getRoles')
             ->willReturn(new ArrayIterator(['foo','bar']));
 
-        self::assertEquals(
+        $this->assertEquals(
             ['foo','bar'],
             $this->buildObject()->getRoles()
         );
     }
 
-    public function testGetUserIdentifier()
+    public function testGetUserIdentifier(): void
     {
         $this->getUser()
             ->expects($this->once())
             ->method('getUserIdentifier')
             ->willReturn('username');
 
-        self::assertEquals(
+        $this->assertEquals(
             'username',
             $this->buildObject()->getUserIdentifier()
         );
     }
 
-    public function testGetEmail()
+    public function testGetEmail(): void
     {
         $this->getUser()
             ->expects($this->once())
             ->method('getEmail')
             ->willReturn('foo@bar');
 
-        self::assertEquals(
+        $this->assertEquals(
             'foo@bar',
             $this->buildObject()->getEmail()
         );
     }
 
-    public function testGetHash()
+    public function testGetHash(): void
     {
         $this->getUser()
             ->expects($this->once())
             ->method('getEmail')
             ->willReturn('foo@bar');
 
-        self::assertEquals(
+        $this->assertEquals(
             \hash('sha256', 'foo@bar'),
             $this->buildObject()->getHash()
         );
     }
 
-    public function testExceptionOnIsEqualToWithBadUser()
+    public function testExceptionOnIsEqualToWithBadUser(): void
     {
         $this->expectException(TypeError::class);
         $this->buildObject()->isEqualTo(new stdClass());
     }
 
-    public function testIsEqualToNotSameUserName()
+    public function testIsEqualToNotSameUserName(): void
     {
         $this->getUser()
-            ->expects($this->any())
             ->method('getUserIdentifier')
             ->willReturn('myUserName');
 
         $user = $this->createMock(UserInterface::class);
         $user
-            ->expects($this->any())
             ->method('getUserIdentifier')
             ->willReturn('notUserName');
 
-        self::assertFalse(
+        $this->assertFalse(
             $this->buildObject()->isEqualTo($user)
         );
     }
 
-    public function testGetWrappedUser()
+    public function testGetWrappedUser(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             User::class,
             $this->buildObject()->getWrappedUser()
         );
     }
 
-    public function testEraseCredentials()
+    public function testEraseCredentials(): void
     {
         $this->getStoredPassword()
             ->expects($this->once())

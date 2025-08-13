@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
@@ -34,7 +34,7 @@ use Teknoo\East\Common\User\RecoveryAccess\TimeLimitedToken;
 use Teknoo\Tests\East\Common\Object\Traits\PopulateObjectTrait;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(RecoveryAccess::class)]
@@ -42,80 +42,77 @@ class RecoveryAccessTest extends TestCase
 {
     use PopulateObjectTrait;
 
-    /**
-     * @return RecoveryAccess
-     */
     public function buildObject(): RecoveryAccess
     {
         return new RecoveryAccess(TimeLimitedToken::class);
     }
 
-    public function testWrongAlgorithm()
+    public function testWrongAlgorithm(): void
     {
         $this->expectException(DomainException::class);
         new RecoveryAccess(stdClass::class);
     }
 
-    public function testGetParams()
+    public function testGetParams(): void
     {
-        self::assertEquals(
+        $this->assertEquals(
             ['fooBar'],
             $this->generateObjectPopulated(['params' => ['fooBar']])->getParams()
         );
     }
 
-    public function testSetParams()
+    public function testSetParams(): void
     {
         $object = $this->buildObject();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->setParams(['fooBar'])
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             ['fooBar'],
             $object->getParams()
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->setParams([])
         );
 
-        self::assertEmpty(
+        $this->assertEmpty(
             $object->getParams()
         );
     }
 
-    public function testSetParamsExceptionOnBadArgument()
+    public function testSetParamsExceptionOnBadArgument(): void
     {
         $this->expectException(\Throwable::class);
         $this->buildObject()->setParams(new stdClass());
     }
 
-    public function testGetAlgorithm()
+    public function testGetAlgorithm(): void
     {
-        self::assertEquals(
+        $this->assertEquals(
             'fooBar',
             $this->generateObjectPopulated(['algorithm' => 'fooBar'])->getAlgorithm()
         );
     }
 
-    public function testSetAlgorithm()
+    public function testSetAlgorithm(): void
     {
         $object = $this->buildObject();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             $object::class,
             $object->setAlgorithm('fooBar')
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             'fooBar',
             $object->getAlgorithm()
         );
     }
 
-    public function testSetAlgorithmExceptionOnBadArgument()
+    public function testSetAlgorithmExceptionOnBadArgument(): void
     {
         $this->expectException(\Throwable::class);
         $this->buildObject()->setAlgorithm(new stdClass());

@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * East Common.
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,18 +19,12 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 date_default_timezone_set('UTC');
 
 error_reporting(E_ALL);
-
-if (PHP_VERSION_ID < 80200) {
-    ini_set('memory_limit', '196M');
-} else {
-    ini_set('memory_limit', '128M');
-}
 
 include __DIR__ . '/fakeQuery.php';
 include __DIR__ . '/fakeUOW.php';
@@ -48,4 +44,3 @@ if (!\class_exists(\MongoGridFSFile::class)) {
         }
     }
 }
-

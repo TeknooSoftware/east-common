@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 
@@ -45,7 +45,7 @@ use Teknoo\East\CommonBundle\Recipe\Step\EnableTOTP;
 use Teknoo\East\CommonBundle\Writer\SymfonyUserWriter;
 
 /**
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  *
  */
@@ -82,10 +82,9 @@ class EnableTOTPTest extends TestCase
         );
     }
 
-    public function testWithoutTokenInStorage()
+    public function testWithoutTokenInStorage(): void
     {
         $this->getTokenStorage()
-            ->expects($this->any())
             ->method('getToken')
             ->willReturn(null);
 
@@ -96,15 +95,14 @@ class EnableTOTPTest extends TestCase
         );
     }
 
-    public function testWithoutUserInToken()
+    public function testWithoutUserInToken(): void
     {
         $token = $this->createMock(TokenInterface::class);
-        $token->expects($this->any())
+        $token
             ->method('getUser')
             ->willReturn(null);
 
         $this->getTokenStorage()
-            ->expects($this->any())
             ->method('getToken')
             ->willReturn($token);
 
@@ -115,15 +113,14 @@ class EnableTOTPTest extends TestCase
         );
     }
 
-    public function testWithNonEastUserInToken()
+    public function testWithNonEastUserInToken(): void
     {
         $token = $this->createMock(TokenInterface::class);
-        $token->expects($this->any())
+        $token
             ->method('getUser')
             ->willReturn($this->createMock(UserInterface::class));
 
         $this->getTokenStorage()
-            ->expects($this->any())
             ->method('getToken')
             ->willReturn($token);
 
@@ -134,15 +131,14 @@ class EnableTOTPTest extends TestCase
         );
     }
 
-    public function testWithPasswordAuthenticatedUserInToken()
+    public function testWithPasswordAuthenticatedUserInToken(): void
     {
         $token = $this->createMock(TokenInterface::class);
-        $token->expects($this->any())
+        $token
             ->method('getUser')
             ->willReturn($this->createMock(PasswordAuthenticatedUser::class));
 
         $this->getTokenStorage()
-            ->expects($this->any())
             ->method('getToken')
             ->willReturn($token);
 
@@ -150,7 +146,7 @@ class EnableTOTPTest extends TestCase
             ->expects($this->once())
             ->method('save');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             EnableTOTP::class,
             ($this->buildStep())(
                 $this->createMock(GoogleAuthenticatorInterface::class),
@@ -159,15 +155,14 @@ class EnableTOTPTest extends TestCase
         );
     }
 
-    public function testWithThirdPartyAuthenticatedUserInToken()
+    public function testWithThirdPartyAuthenticatedUserInToken(): void
     {
         $token = $this->createMock(TokenInterface::class);
-        $token->expects($this->any())
+        $token
             ->method('getUser')
             ->willReturn($this->createMock(ThirdPartyAuthenticatedUser::class));
 
         $this->getTokenStorage()
-            ->expects($this->any())
             ->method('getToken')
             ->willReturn($token);
 
@@ -175,7 +170,7 @@ class EnableTOTPTest extends TestCase
             ->expects($this->once())
             ->method('save');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             EnableTOTP::class,
             ($this->buildStep())(
                 $this->createMock(GoogleAuthenticatorInterface::class),
@@ -184,23 +179,22 @@ class EnableTOTPTest extends TestCase
         );
     }
 
-    public function testWithGoogleTwoFactorNotEnabledInToken()
+    public function testWithGoogleTwoFactorNotEnabledInToken(): void
     {
         $wrapperUser = new User();
         $wrapperUser->addAuthData(new TOTPAuth());
 
         $user = $this->createMock(GoogleAuthPasswordAuthenticatedUser::class);
-        $user->expects($this->any())
+        $user
             ->method('getWrappedUser')
             ->willReturn($wrapperUser);
 
         $token = $this->createMock(TokenInterface::class);
-        $token->expects($this->any())
+        $token
             ->method('getUser')
             ->willReturn($user);
 
         $this->getTokenStorage()
-            ->expects($this->any())
             ->method('getToken')
             ->willReturn($token);
 
@@ -208,7 +202,7 @@ class EnableTOTPTest extends TestCase
             ->expects($this->once())
             ->method('save');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             EnableTOTP::class,
             ($this->buildStep())(
                 $this->createMock(GoogleAuthenticatorInterface::class),
@@ -217,23 +211,22 @@ class EnableTOTPTest extends TestCase
         );
     }
 
-    public function testWithTotpTwoFactorNotEnabledInToken()
+    public function testWithTotpTwoFactorNotEnabledInToken(): void
     {
         $wrapperUser = new User();
         $wrapperUser->addAuthData(new TOTPAuth());
 
         $user = $this->createMock(TOTPPasswordAuthenticatedUser::class);
-        $user->expects($this->any())
+        $user
             ->method('getWrappedUser')
             ->willReturn($wrapperUser);
 
         $token = $this->createMock(TokenInterface::class);
-        $token->expects($this->any())
+        $token
             ->method('getUser')
             ->willReturn($user);
 
         $this->getTokenStorage()
-            ->expects($this->any())
             ->method('getToken')
             ->willReturn($token);
 
@@ -241,7 +234,7 @@ class EnableTOTPTest extends TestCase
             ->expects($this->once())
             ->method('save');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             EnableTOTP::class,
             ($this->buildStep())(
                 $this->createMock(TotpAuthenticatorInterface::class),
@@ -250,7 +243,7 @@ class EnableTOTPTest extends TestCase
         );
     }
 
-    public function testWithGoogleTwoFactorEnabledInToken()
+    public function testWithGoogleTwoFactorEnabledInToken(): void
     {
         $wrapperUser = new User();
         $wrapperUser->addAuthData(
@@ -262,20 +255,19 @@ class EnableTOTPTest extends TestCase
         );
 
         $user = $this->createMock(GoogleAuthPasswordAuthenticatedUser::class);
-        $user->expects($this->any())
+        $user
             ->method('getWrappedUser')
             ->willReturn($wrapperUser);
-        $user->expects($this->any())
+        $user
             ->method('isGoogleAuthenticatorEnabled')
             ->willReturn(true);
 
         $token = $this->createMock(TokenInterface::class);
-        $token->expects($this->any())
+        $token
             ->method('getUser')
             ->willReturn($user);
 
         $this->getTokenStorage()
-            ->expects($this->any())
             ->method('getToken')
             ->willReturn($token);
 
@@ -283,7 +275,7 @@ class EnableTOTPTest extends TestCase
             ->expects($this->never())
             ->method('save');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             EnableTOTP::class,
             ($this->buildStep())(
                 $this->createMock(GoogleAuthenticatorInterface::class),
@@ -292,7 +284,7 @@ class EnableTOTPTest extends TestCase
         );
     }
 
-    public function testWithTotpTwoFactorEnabledInToken()
+    public function testWithTotpTwoFactorEnabledInToken(): void
     {
         $wrapperUser = new User();
         $wrapperUser->addAuthData(
@@ -304,20 +296,19 @@ class EnableTOTPTest extends TestCase
         );
 
         $user = $this->createMock(TOTPPasswordAuthenticatedUser::class);
-        $user->expects($this->any())
+        $user
             ->method('getWrappedUser')
             ->willReturn($wrapperUser);
-        $user->expects($this->any())
+        $user
             ->method('isTotpAuthenticationEnabled')
             ->willReturn(true);
 
         $token = $this->createMock(TokenInterface::class);
-        $token->expects($this->any())
+        $token
             ->method('getUser')
             ->willReturn($user);
 
         $this->getTokenStorage()
-            ->expects($this->any())
             ->method('getToken')
             ->willReturn($token);
 
@@ -325,7 +316,7 @@ class EnableTOTPTest extends TestCase
             ->expects($this->never())
             ->method('save');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             EnableTOTP::class,
             ($this->buildStep())(
                 $this->createMock(TotpAuthenticatorInterface::class),

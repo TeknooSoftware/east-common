@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * This source file is subject to the MIT license
+ * This source file is subject to the 3-Clause BSD license
  * it is available in LICENSE file at the root of this package
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -17,7 +17,7 @@
  *
  * @link        https://teknoo.software/east-collection/common Project website
  *
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 
@@ -28,6 +28,7 @@ namespace Teknoo\East\CommonBundle\Security\Authenticator;
 use DomainException;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator as BaseAuthenticator;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
+use League\OAuth2\Client\Token\AccessToken;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface as GoogleTwoFactorInterface;
 use Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface as TotpTwoFactorInterface;
 use SensitiveParameter;
@@ -63,12 +64,12 @@ use function strtr;
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
- * @license     https://teknoo.software/license/mit         MIT License
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
 class OAuth2Authenticator extends BaseAuthenticator
 {
-    private const PROTOCOL = 'oauth2';
+    private const string PROTOCOL = 'oauth2';
 
     public function __construct(
         private readonly ClientRegistry $clientRegistry,
@@ -154,6 +155,8 @@ class OAuth2Authenticator extends BaseAuthenticator
     {
         $provider = (string) $request->attributes->get('_oauth_client_key', '');
         $client = $this->clientRegistry->getClient($provider);
+
+        /** @var AccessToken $accessToken */
         $accessToken = $this->fetchAccessToken($client);
 
         return new SelfValidatingPassport(
@@ -163,28 +166,33 @@ class OAuth2Authenticator extends BaseAuthenticator
                     $oauthUser = $client->fetchUserFromToken($accessToken);
 
                     $returnPromise = new Promise(
-                        static fn(ThirdPartyAuthenticatedUser $user): ThirdPartyAuthenticatedUser => $user,
+                        static fn (ThirdPartyAuthenticatedUser $user): ThirdPartyAuthenticatedUser => $user,
                         static function (#[SensitiveParameter] Throwable $error): never {
                             throw $error;
                         }
                     );
 
                     $registerTokenPromise = new Promise(
-                        function (User $user, PromiseInterface $next) use ($accessToken, $provider): void {
-                            $this->registerToken($user, (string) $provider, $accessToken->getToken(), $next);
+                        onSuccess: function (
+                            User $user,
+                            PromiseInterface $next
+                        ) use (
+                            $accessToken,
+                            $provider
+                        ): void {
+                            $this->registerToken($user, $provider, $accessToken->getToken(), $next);
                         },
-                        static fn(
+                        onFail: static fn (
                             #[SensitiveParameter] Throwable $error,
                             PromiseInterface $next,
                         ): PromiseInterface => $next->fail($error),
-                        true
                     );
 
                     $fetchingPromise = new Promise(
-                        static function (User $user, PromiseInterface $next): void {
+                        onSuccess: static function (User $user, PromiseInterface $next): void {
                             $next->success($user);
                         },
-                        function (
+                        onFail: function (
                             #[SensitiveParameter] Throwable $error,
                             PromiseInterface $next,
                         ) use ($oauthUser): void {
@@ -199,7 +207,6 @@ class OAuth2Authenticator extends BaseAuthenticator
 
                             $next->fail($error);
                         },
-                        true,
                     );
 
                     $extractEmailPromise = new Promise(
@@ -239,7 +246,7 @@ class OAuth2Authenticator extends BaseAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        $message = strtr((string) $exception->getMessageKey(), (array) $exception->getMessageData());
+        $message = strtr((string) $exception->getMessageKey(), $exception->getMessageData());
 
         return new Response($message, Response::HTTP_FORBIDDEN);
     }

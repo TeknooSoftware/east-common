@@ -90,7 +90,6 @@ use Teknoo\East\Common\Recipe\Step\Stop;
 use Teknoo\East\Common\Recipe\Step\User\FindUserByEmail;
 use Teknoo\East\Common\Recipe\Step\User\PrepareRecoveryAccess;
 use Teknoo\East\Common\Recipe\Step\User\RemoveRecoveryAccess;
-use Teknoo\East\Common\Service\DatesService;
 use Teknoo\East\Common\Service\DeletingService;
 use Teknoo\East\Common\Service\FindSlugService;
 use Teknoo\East\Common\User\RecoveryAccess\TimeLimitedToken;
@@ -99,7 +98,7 @@ use Teknoo\East\Common\Writer\UserWriter;
 use Teknoo\East\Foundation\Extension\ManagerInterface as ExtensionManager;
 use Teknoo\East\Foundation\Recipe\PlanInterface;
 use Teknoo\East\Foundation\Template\EngineInterface;
-use Teknoo\East\Foundation\Time\DatesService as CommonDatesService;
+use Teknoo\East\Foundation\Time\DatesService;
 use Teknoo\Recipe\Recipe;
 use Teknoo\Recipe\RecipeInterface as OriginalRecipeInterface;
 
@@ -139,15 +138,15 @@ return [
 
     //Writer
     UserWriter::class => create(UserWriter::class)
-        ->constructor(get(ManagerInterface::class), get(CommonDatesService::class)),
+        ->constructor(get(ManagerInterface::class), get(DatesService::class)),
     MediaWriter::class => create(MediaWriter::class)
-        ->constructor(get(ManagerInterface::class), get(CommonDatesService::class)),
+        ->constructor(get(ManagerInterface::class), get(DatesService::class)),
 
     //Deleting
     'teknoo.east.common.deleting.user' => create(DeletingService::class)
-        ->constructor(get(UserWriter::class), get(CommonDatesService::class)),
+        ->constructor(get(UserWriter::class), get(DatesService::class)),
     'teknoo.east.common.deleting.media' => create(DeletingService::class)
-        ->constructor(get(MediaWriter::class), get(CommonDatesService::class)),
+        ->constructor(get(MediaWriter::class), get(DatesService::class)),
 
     //Service
     FindSlugService::class => create(FindSlugService::class),
@@ -157,7 +156,7 @@ return [
     'teknoo.east.common.user.recovery.time_limited.delay' => '1 hour',
     TimeLimitedToken::class => create(TimeLimitedToken::class)
         ->constructor(
-            get(CommonDatesService::class),
+            get(DatesService::class),
             get('teknoo.east.common.user.recovery.time_limited.delay'),
         ),
 

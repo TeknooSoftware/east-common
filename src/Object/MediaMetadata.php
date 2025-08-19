@@ -41,14 +41,30 @@ class MediaMetadata implements ImmutableInterface
 {
     use ImmutableTrait;
 
+    private ?string $contentType = '';
+
+    private ?string $fileName = '';
+
+    private ?string $alternative = '';
+
+    private ?string $localPath = '';
+
+    private ?string $legacyId = '';
+
     public function __construct(
-        private readonly string $contentType,
-        private readonly string $fileName = '',
-        private readonly string $alternative = '',
-        private readonly string $localPath = '',
-        private readonly string $legacyId = '',
+        string $contentType,
+        string $fileName = '',
+        string $alternative = '',
+        string $localPath = '',
+        string $legacyId = ''
     ) {
         $this->uniqueConstructorCheck();
+
+        $this->contentType = $contentType;
+        $this->fileName = $fileName;
+        $this->alternative = $alternative;
+        $this->localPath = $localPath;
+        $this->legacyId = $legacyId;
     }
 
     public function getContentType(): string

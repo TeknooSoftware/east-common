@@ -7,7 +7,7 @@
 - Support Symfony 6.4.24+ or 7.3+
 - Update to Teknoo States 7
 - Update to Teknoo Recipe 7
-- Update to Teknoo East Foundation 7
+- Update to Teknoo East Foundation 9
 - Update to PHPStan 2
 - Remove deprecated feature `Cookbook`, use `Plan` instead
 - Remove deprecated `DatesService`, use `Foundation\DatesService` instead

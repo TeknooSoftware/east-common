@@ -4,6 +4,9 @@ parameters:
             message: '#mixed#'
             path: infrastructures/doctrine/di.php
         -
+            message: '#Possibly invalid array key type mixe#'
+            path:  infrastructures/doctrine/DBSource/Common/RepositoryTrait.php
+        -
             message: '#mixed#'
             path: infrastructures/flysystem/di.php
         -

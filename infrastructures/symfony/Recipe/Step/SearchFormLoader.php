@@ -31,6 +31,7 @@ use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\SearchFormLoaderInterface;
 
 use function is_array;
+use function is_string;
 use function key;
 
 /**
@@ -73,8 +74,11 @@ class SearchFormLoader implements SearchFormLoaderInterface
         $formName = key($params);
 
         if (
-            !isset($this->formsInstances[$template][$formName])
-            && !isset($this->formsInstances[self::ANY_TEMPLATE][$formName])
+            !is_string($formName)
+            || (
+                !isset($this->formsInstances[$template][$formName])
+                && !isset($this->formsInstances[self::ANY_TEMPLATE][$formName])
+            )
         ) {
             return $this;
         }

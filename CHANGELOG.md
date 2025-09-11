@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [4.0.1] - 2025-08-11
+### Stable Release
+- Fix PHPStan issues
+
 ## [4.0.0] - 2025-08-13
 ### Stable Release
 - Drop support of PHP 8.3

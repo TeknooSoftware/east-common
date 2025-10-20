@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [4.0.2] - 2025-08-11
+### Stable Release
+- Fix TOTPAuth.mongodb.xml issues and some other comment in mapping files
+
 ## [4.0.1] - 2025-08-11
 ### Stable Release
 - Fix PHPStan issues

@@ -12,7 +12,7 @@
         <field field-name="active" name="active" type="bool" nullable="true"/>
         <field field-name="roles" name="roles" type="collection" nullable="false"/>
         <field field-name="email" type="string" unique="true" index="true" nullable="false"/>
-        <embed-many field="authData" store-empty-array="true">
+        <embed-many field="authData" strategy="set" store-empty-array="true">
             <discriminator-field name="type"/>
         </embed-many>
         <field field-name="createdAt" name="created_at" type="date" nullable="false"/>

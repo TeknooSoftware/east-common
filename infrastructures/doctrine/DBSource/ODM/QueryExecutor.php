@@ -32,8 +32,8 @@ use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Common\Doctrine\DBSource\ODM\QueryExecutor\Pending;
 use Teknoo\East\Common\Doctrine\DBSource\ODM\QueryExecutor\Runnable;
 use Teknoo\Recipe\Promise\PromiseInterface;
-use Teknoo\States\Automated\Assertion\AssertionInterface;
-use Teknoo\States\Automated\Assertion\Property;
+use Teknoo\States\Attributes\Assertion\Property;
+use Teknoo\States\Attributes\StateClass;
 use Teknoo\States\Automated\Assertion\Property\IsEmpty;
 use Teknoo\States\Automated\Assertion\Property\IsNotEmpty;
 use Teknoo\States\Automated\AutomatedInterface;
@@ -51,6 +51,10 @@ use Teknoo\States\Proxy\ProxyTrait;
  *
  * @implements QueryExecutorInterface<ObjectInterface>
  */
+#[StateClass(Pending::class)]
+#[StateClass(Runnable::class)]
+#[Property(Pending::class, ['className', IsEmpty::class])]
+#[Property(Runnable::class, ['className', IsNotEmpty::class])]
 class QueryExecutor implements QueryExecutorInterface, AutomatedInterface
 {
     use ProxyTrait;
@@ -84,28 +88,6 @@ class QueryExecutor implements QueryExecutorInterface, AutomatedInterface
         //Init States
         $this->initializeStateProxy();
         $this->updateStates();
-    }
-
-    /**
-     * @return string[]
-     */
-    protected static function statesListDeclaration(): array
-    {
-        return [
-            Pending::class,
-            Runnable::class
-        ];
-    }
-
-    /**
-     * @return array<int, AssertionInterface>
-     */
-    protected function listAssertions(): array
-    {
-        return [
-            new Property(Pending::class)->with('className', new IsEmpty()),
-            new Property(Runnable::class)->with('className', new IsNotEmpty()),
-        ];
     }
 
     public function filterOn(string $className, array $criteria): QueryExecutorInterface

@@ -67,13 +67,6 @@ class QueryExecutorTest extends TestCase
         );
     }
 
-    public function testStatesListDeclaration(): void
-    {
-        $rf = new ReflectionMethod(QueryExecutor::class, 'statesListDeclaration');
-        $rf->setAccessible(true);
-        $this->assertIsArray($rf->getClosure()());
-    }
-
     public function testFilterOn(): void
     {
         $this->assertInstanceOf(

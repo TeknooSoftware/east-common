@@ -2,7 +2,7 @@
 
 ## [4.1.0] - 2025-11-07
 ### Stable Release
-- Fix User.mongodb.xml issues
+- Use Teknoo Stage 7.1 and Recipe 7.2
 
 ## [4.0.3] - 2025-10-21
 ### Stable Release

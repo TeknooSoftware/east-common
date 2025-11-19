@@ -41,5 +41,5 @@ user_index:
     path: '/user/2fa/check'
 
 2fa_common:
-    resource: '@TeknooEastCommonBundle/Resources/config/2fa_routing.yaml'
+    resource: '@TeknooEastCommonBundle/config/2fa_routing.yaml'
     prefix: '/user/common'

@@ -19,7 +19,7 @@ parameters:
             path: infrastructures/doctrine/DBSource/ODM/RepositoryTrait.php
         -
             message: '#mixed#'
-            path: infrastructures/symfony/Resources/config/di.php
+            path: infrastructures/symfony/config/di.php
         -
             message: '#is never assigned#'
             path: infrastructures/doctrine/Object/Media.php

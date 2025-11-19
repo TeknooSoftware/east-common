@@ -31,8 +31,8 @@ di_bridge:
 di_bridge:
     definitions:
         - '%kernel.project_dir%/vendor/teknoo/east-foundation/src/di.php'
-        - '%kernel.project_dir%/vendor/teknoo/east-foundation/infrastructures/symfony/Resources/config/di.php'
-        - '%kernel.project_dir%/vendor/teknoo/east-foundation/infrastructures/symfony/Resources/config/laminas_di.php'
+        - '%kernel.project_dir%/vendor/teknoo/east-foundation/infrastructures/symfony/config/di.php'
+        - '%kernel.project_dir%/vendor/teknoo/east-foundation/infrastructures/symfony/config/laminas_di.php'
     import:
         Psr\Log\LoggerInterface: 'logger'
 
@@ -41,8 +41,8 @@ di_bridge:
     definitions:
         - '%kernel.project_dir%/vendor/teknoo/east-common/src/di.php'
         - '%kernel.project_dir%/vendor/teknoo/east-common/infrastructures/doctrine/di.php'
-        - '%kernel.project_dir%/vendor/teknoo/east-common/infrastructures/symfony/Resources/config/di.php'
-        - '%kernel.project_dir%/vendor/teknoo/east-common/infrastructures/symfony/Resources/config/laminas_di.php'
+        - '%kernel.project_dir%/vendor/teknoo/east-common/infrastructures/symfony/config/di.php'
+        - '%kernel.project_dir%/vendor/teknoo/east-common/infrastructures/symfony/config/laminas_di.php'
         - '%kernel.project_dir%/vendor/teknoo/east-common/infrastructures/di.php'
     import:
         Doctrine\Persistence\ObjectManager: 'doctrine_mongodb.odm.default_document_manager'
@@ -84,11 +84,11 @@ security:
 
 #In routes/common.yaml
 admin_common:
-    resource: '@TeknooEastCommonBundle/Resources/config/admin_routing.yaml'
+    resource: '@TeknooEastCommonBundle/config/admin_routing.yaml'
     prefix: '/admin'
 
 common:
-    resource: '@TeknooEastCommonBundle/Resources/config/routing.yaml'
+    resource: '@TeknooEastCommonBundle/config/routing.yaml'
 ```
 
 Enable third party authentication with an OAuth2 Provider (example with Gitlab)

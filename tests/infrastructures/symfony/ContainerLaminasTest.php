@@ -46,7 +46,7 @@ class ContainerLaminasTest extends TestCase
     protected function buildContainer(): Container
     {
         $containerDefinition = new ContainerBuilder();
-        $containerDefinition->addDefinitions(__DIR__.'/../../../infrastructures/symfony/Resources/config/laminas_di.php');
+        $containerDefinition->addDefinitions(__DIR__.'/../../../infrastructures/symfony/config/laminas_di.php');
         $containerDefinition->useAutowiring(false);
 
         return $containerDefinition->build();

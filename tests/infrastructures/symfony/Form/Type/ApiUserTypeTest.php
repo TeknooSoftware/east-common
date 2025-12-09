@@ -55,19 +55,16 @@ class ApiUserTypeTest extends TestCase
             ->method('add')
             ->willReturnSelf();
 
-        $this->assertInstanceOf(
-            AbstractType::class,
-            $this->buildForm()->buildForm($builder, [])
-        );
+        $this->buildForm()->buildForm($builder, []);
+        $this->assertTrue(true);
     }
 
     public function testConfigureOptions(): void
     {
-        $this->assertInstanceOf(
-            UserType::class,
-            $this->buildForm()->configureOptions(
-                $this->createMock(OptionsResolver::class)
-            )
+        $this->buildForm()->configureOptions(
+            $this->createMock(OptionsResolver::class)
         );
+
+        $this->assertTrue(true);
     }
 }

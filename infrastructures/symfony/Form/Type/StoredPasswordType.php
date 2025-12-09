@@ -47,7 +47,7 @@ class StoredPasswordType extends AbstractType
      * @param FormBuilderInterface<PasswordAuthenticatedUser> $builder
      * @param array<string, mixed> $options
      */
-    public function buildForm(FormBuilderInterface $builder, array $options): self
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add(
             'password',
@@ -60,16 +60,12 @@ class StoredPasswordType extends AbstractType
                 'required' => false
             ]
         );
-
-        return $this;
     }
 
-    public function configureOptions(OptionsResolver $resolver): self
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
 
         $resolver->setDefaults(['data_class' => StoredPassword::class]);
-
-        return $this;
     }
 }

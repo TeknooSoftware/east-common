@@ -86,10 +86,8 @@ class UserTypeTest extends TestCase
                 }
             );
 
-        $this->assertInstanceOf(
-            AbstractType::class,
-            $this->buildForm()->buildForm($builder, [])
-        );
+        $this->buildForm()->buildForm($builder, []);
+        $this->assertTrue(true);
     }
 
     public function testBuildFormWithApi(): void
@@ -103,10 +101,8 @@ class UserTypeTest extends TestCase
         $builder->expects($this->never())
             ->method('addEventListener');
 
-        $this->assertInstanceOf(
-            AbstractType::class,
-            $this->buildForm()->buildForm($builder, ['api' => 'json'])
-        );
+        $this->buildForm()->buildForm($builder, ['api' => 'json']);
+        $this->assertTrue(true);
     }
 
     public function testBuildFormWithNonPopulatedUser(): void
@@ -140,10 +136,8 @@ class UserTypeTest extends TestCase
                 }
             );
 
-        $this->assertInstanceOf(
-            AbstractType::class,
-            $this->buildForm()->buildForm($builder, [])
-        );
+        $this->buildForm()->buildForm($builder, []);
+        $this->assertTrue(true);
     }
 
     public function testBuildFormWithAuthenticatedThirdParyUser(): void
@@ -179,19 +173,15 @@ class UserTypeTest extends TestCase
                 }
             );
 
-        $this->assertInstanceOf(
-            AbstractType::class,
-            $this->buildForm()->buildForm($builder, [])
-        );
+        $this->buildForm()->buildForm($builder, []);
+        $this->assertTrue(true);
     }
 
     public function testConfigureOptions(): void
     {
-        $this->assertInstanceOf(
-            UserType::class,
-            $this->buildForm()->configureOptions(
-                $this->createMock(OptionsResolver::class)
-            )
+        $this->buildForm()->configureOptions(
+            $this->createMock(OptionsResolver::class)
         );
+        $this->assertTrue(true);
     }
 }

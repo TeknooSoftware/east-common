@@ -51,7 +51,7 @@ class MediaType extends AbstractType
      *@param FormBuilderInterface<Media> $builder
      * @param array<string, mixed> $options
      */
-    public function buildForm(FormBuilderInterface $builder, array $options): self
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('name', TextType::class, ['required' => true]);
         $builder->add('alternative', TextType::class, ['required' => true, 'mapped' => false]);
@@ -93,18 +93,14 @@ class MediaType extends AbstractType
                 $mediaObject->setMetadata($meta);
             }
         );
-
-        return $this;
     }
 
-    public function configureOptions(OptionsResolver $resolver): self
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
 
         $resolver->setDefaults([
             'data_class' => Media::class,
         ]);
-
-        return $this;
     }
 }

@@ -49,12 +49,12 @@ class UserType extends ApiUserType implements FormApiAwareInterface
      * @param array<string, mixed> $options
      */
     #[\Override]
-    public function buildForm(FormBuilderInterface $builder, array $options): self
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         parent::buildForm($builder, $options);
 
         if (!empty($options['api'])) {
-            return $this;
+            return;
         }
 
         $builder->add('storedPassword', StoredPasswordType::class, ['mapped' => false]);
@@ -82,12 +82,10 @@ class UserType extends ApiUserType implements FormApiAwareInterface
                 $user->addAuthData($authData);
             }
         );
-
-        return $this;
     }
 
     #[\Override]
-    public function configureOptions(OptionsResolver $resolver): self
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
 
@@ -97,7 +95,5 @@ class UserType extends ApiUserType implements FormApiAwareInterface
         ]);
 
         $resolver->setAllowedTypes('api', ['null', 'string']);
-
-        return $this;
     }
 }

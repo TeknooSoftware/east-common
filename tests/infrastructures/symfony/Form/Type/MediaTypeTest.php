@@ -64,10 +64,8 @@ class MediaTypeTest extends TestCase
                 return $builder;
             });
 
-        $this->assertInstanceOf(
-            AbstractType::class,
-            $this->buildForm()->buildForm($builder, [])
-        );
+        $this->buildForm()->buildForm($builder, []);
+        $this->assertTrue(true);
     }
 
     public function testBuildFormPopulatedFileError(): void
@@ -92,10 +90,9 @@ class MediaTypeTest extends TestCase
                 return $builder;
             });
 
-        $this->assertInstanceOf(
-            AbstractType::class,
-            $this->buildForm()->buildForm($builder, [])
-        );
+        $this->buildForm()->buildForm($builder, []);
+
+        $this->assertTrue(true);
     }
 
     public function testBuildFormPopulatedFile(): void
@@ -119,19 +116,17 @@ class MediaTypeTest extends TestCase
                 return $builder;
             });
 
-        $this->assertInstanceOf(
-            AbstractType::class,
-            $this->buildForm()->buildForm($builder, [])
-        );
+        $this->buildForm()->buildForm($builder, []);
+
+        $this->assertTrue(true);
     }
 
     public function testConfigureOptions(): void
     {
-        $this->assertInstanceOf(
-            MediaType::class,
-            $this->buildForm()->configureOptions(
-                $this->createMock(OptionsResolver::class)
-            )
+        $this->buildForm()->configureOptions(
+            $this->createMock(OptionsResolver::class)
         );
+
+        $this->assertTrue(true);
     }
 }

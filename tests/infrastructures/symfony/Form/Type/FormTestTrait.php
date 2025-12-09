@@ -69,9 +69,8 @@ trait FormTestTrait
                 }
             );
 
-        $this->assertInstanceOf(
-            AbstractType::class,
-            $this->buildForm()->buildForm($builder, ['doctrine_type' => DocumentType::class])
-        );
+        $this->buildForm()->buildForm($builder, ['doctrine_type' => DocumentType::class]);
+
+        $this->assertTrue(true);
     }
 }

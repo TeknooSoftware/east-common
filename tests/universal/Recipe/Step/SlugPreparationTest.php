@@ -27,6 +27,7 @@ namespace Teknoo\Tests\East\Common\Recipe\Step;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
@@ -41,15 +42,16 @@ use Teknoo\East\Common\Service\FindSlugService;
 #[CoversClass(SlugPreparation::class)]
 class SlugPreparationTest extends TestCase
 {
-    private ?FindSlugService $findSlugService = null;
+    private (FindSlugService&Stub)|(FindSlugService&MockObject)|null $findSlugService = null;
 
-    /**
-     * @return FindSlugService|MockObject
-     */
-    private function getFindSlugService(): FindSlugService
+    private function getFindSlugService(bool $stub = false): (FindSlugService&Stub)|(FindSlugService&MockObject)
     {
         if (!$this->findSlugService instanceof FindSlugService) {
-            $this->findSlugService = $this->createMock(FindSlugService::class);
+            if ($stub) {
+                $this->findSlugService = $this->createStub(FindSlugService::class);
+            } else {
+                $this->findSlugService = $this->createMock(FindSlugService::class);
+            }
         }
 
         return $this->findSlugService;
@@ -57,7 +59,9 @@ class SlugPreparationTest extends TestCase
 
     public function buildStep(): SlugPreparation
     {
-        return new SlugPreparation($this->getFindSlugService());
+        return new SlugPreparation(
+            $this->getFindSlugService(true)
+        );
     }
 
     public function testInvokeBadLoader(): void
@@ -66,7 +70,7 @@ class SlugPreparationTest extends TestCase
 
         $this->buildStep()(
             new \stdClass(),
-            $this->createMock(IdentifiedObjectInterface::class),
+            $this->createStub(IdentifiedObjectInterface::class),
             'foo'
         );
     }
@@ -76,7 +80,7 @@ class SlugPreparationTest extends TestCase
         $this->expectException(\TypeError::class);
 
         $this->buildStep()(
-            $this->createMock(LoaderInterface::class),
+            $this->createStub(LoaderInterface::class),
             new \stdClass(),
             'foo'
         );
@@ -107,7 +111,7 @@ class SlugPreparationTest extends TestCase
         };
 
         $this->buildStep()(
-            $this->createMock(LoaderInterface::class),
+            $this->createStub(LoaderInterface::class),
             $object,
             new \stdClass()
         );
@@ -138,7 +142,7 @@ class SlugPreparationTest extends TestCase
         $this->assertInstanceOf(
             SlugPreparation::class,
             $this->buildStep()(
-                $this->createMock(LoaderInterface::class),
+                $this->createStub(LoaderInterface::class),
                 $object,
                 'slug'
             )
@@ -170,7 +174,7 @@ class SlugPreparationTest extends TestCase
         $this->assertInstanceOf(
             SlugPreparation::class,
             $this->buildStep()(
-                $this->createMock(LoaderInterface::class),
+                $this->createStub(LoaderInterface::class),
                 $object,
                 null
             )
@@ -202,7 +206,7 @@ class SlugPreparationTest extends TestCase
         $this->assertInstanceOf(
             SlugPreparation::class,
             $this->buildStep()(
-                $this->createMock(LoaderInterface::class),
+                $this->createStub(LoaderInterface::class),
                 $object,
                 'slug'
             )

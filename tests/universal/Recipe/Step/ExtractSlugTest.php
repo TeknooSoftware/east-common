@@ -50,7 +50,7 @@ class ExtractSlugTest extends TestCase
 
         $this->buildStep()(
             new \stdClass(),
-            $this->createMock(ManagerInterface::class)
+            $this->createStub(ManagerInterface::class)
         );
     }
 
@@ -59,17 +59,17 @@ class ExtractSlugTest extends TestCase
         $this->expectException(\TypeError::class);
 
         $this->buildStep()(
-            $this->createMock(ServerRequestInterface::class),
+            $this->createStub(ServerRequestInterface::class),
             new \stdClass()
         );
     }
 
     public function testInvokeWithoutPath(): void
     {
-        $uri = $this->createMock(UriInterface::class);
+        $uri = $this->createStub(UriInterface::class);
         $uri->method('getPath')->willReturn('/');
 
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request = $this->createStub(ServerRequestInterface::class);
         $request->method('getUri')->willReturn($uri);
 
         $manager = $this->createMock(ManagerInterface::class);
@@ -87,10 +87,10 @@ class ExtractSlugTest extends TestCase
 
     public function testInvokeWithSimplePath(): void
     {
-        $uri = $this->createMock(UriInterface::class);
+        $uri = $this->createStub(UriInterface::class);
         $uri->method('getPath')->willReturn('/foo');
 
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request = $this->createStub(ServerRequestInterface::class);
         $request->method('getUri')->willReturn($uri);
 
         $manager = $this->createMock(ManagerInterface::class);
@@ -108,10 +108,10 @@ class ExtractSlugTest extends TestCase
 
     public function testInvokeWithSubPath(): void
     {
-        $uri = $this->createMock(UriInterface::class);
+        $uri = $this->createStub(UriInterface::class);
         $uri->method('getPath')->willReturn('/foo/bar');
 
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request = $this->createStub(ServerRequestInterface::class);
         $request->method('getUri')->willReturn($uri);
 
         $manager = $this->createMock(ManagerInterface::class);

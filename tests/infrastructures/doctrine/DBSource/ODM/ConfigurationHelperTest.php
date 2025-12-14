@@ -71,7 +71,7 @@ class ConfigurationHelperTest extends TestCase
         };
 
         return $this->buildConfigurationHelper()->setManager(
-            $this->createMock(ManagerInterface::class),
+            $this->createStub(ManagerInterface::class),
             $dm,
         );
     }
@@ -80,8 +80,8 @@ class ConfigurationHelperTest extends TestCase
     {
         $this->expectException(TypeError::class);
         $this->buildConfigurationHelper()->setManager(
-            $this->createMock(ManagerInterface::class),
-            $this->createMock(ObjectManager::class),
+            $this->createStub(ManagerInterface::class),
+            $this->createStub(ObjectManager::class),
         );
     }
 

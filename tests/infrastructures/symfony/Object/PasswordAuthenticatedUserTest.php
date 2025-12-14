@@ -27,6 +27,7 @@ namespace Teknoo\Tests\East\CommonBundle\Object;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use stdClass;
 use Teknoo\East\Common\Object\StoredPassword;
 use Teknoo\East\CommonBundle\Object\AbstractPasswordAuthUser;
@@ -48,16 +49,17 @@ class PasswordAuthenticatedUserTest extends AbstractPasswordAuthUserTests
 
     private ?StoredPassword $storedPassword = null;
 
-    /**
-     * @return BaseUser|MockObject
-     */
     #[\Override]
-    public function getUser(): BaseUser
+    public function getUser(bool $stub = false): (BaseUser&MockObject)|(BaseUser&Stub)
     {
         if (!$this->user instanceof BaseUser) {
-            $this->user = $this->createMock(BaseUser::class);
+            if ($stub) {
+                $this->user = $this->createStub(BaseUser::class);
+            } else {
+                $this->user = $this->createMock(BaseUser::class);
+            }
 
-            $this->user->method('getAuthData')->willReturn([$this->getStoredPassword()]);
+            $this->user->method('getAuthData')->willReturn([$this->getStoredPassword(true)]);
         }
 
         return $this->user;
@@ -67,10 +69,14 @@ class PasswordAuthenticatedUserTest extends AbstractPasswordAuthUserTests
      * @return StoredPassword|MockObject
      */
     #[\Override]
-    public function getStoredPassword(): StoredPassword
+    public function getStoredPassword(bool $stub = false): (StoredPassword&Stub)|(StoredPassword&MockObject)
     {
         if (!$this->storedPassword instanceof StoredPassword) {
-            $this->storedPassword = $this->createMock(StoredPassword::class);
+            if ($stub) {
+                $this->storedPassword = $this->createStub(StoredPassword::class);
+            } else {
+                $this->storedPassword = $this->createMock(StoredPassword::class);
+            }
         }
 
         return $this->storedPassword;
@@ -78,21 +84,21 @@ class PasswordAuthenticatedUserTest extends AbstractPasswordAuthUserTests
 
     public function buildObject(): AbstractUser
     {
-        return new PasswordAuthenticatedUser($this->getUser(), $this->getStoredPassword());
+        return new PasswordAuthenticatedUser($this->getUser(true), $this->getStoredPassword(true));
     }
 
     #[\Override]
     public function testExceptionWithBadUser(): void
     {
         $this->expectException(TypeError::class);
-        new PasswordAuthenticatedUser(new stdClass(), $this->getStoredPassword());
+        new PasswordAuthenticatedUser(new stdClass(), $this->getStoredPassword(true));
     }
 
     #[\Override]
     public function testExceptionWithBadStoredPassword(): void
     {
         $this->expectException(TypeError::class);
-        new PasswordAuthenticatedUser($this->getUser(), new stdClass());
+        new PasswordAuthenticatedUser($this->getUser(true), new stdClass());
     }
 
     public function testGetPasswordHasherName(): void

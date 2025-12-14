@@ -27,6 +27,7 @@ namespace Teknoo\Tests\East\Common\Recipe\Step;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Loader\MediaLoader;
 use Teknoo\East\Common\Object\Media;
@@ -41,15 +42,16 @@ use Teknoo\Recipe\Promise\PromiseInterface;
 #[CoversClass(LoadMedia::class)]
 class LoadMediaTest extends TestCase
 {
-    private ?MediaLoader $mediaLoader = null;
+    private (MediaLoader&Stub)|(MediaLoader&MockObject)|null $mediaLoader = null;
 
-    /**
-     * @return MediaLoader|MockObject
-     */
-    private function getMediaLoader(): MediaLoader
+    private function getMediaLoader(bool $stub = false): (MediaLoader&Stub)|(MediaLoader&MockObject)
     {
         if (!$this->mediaLoader instanceof MediaLoader) {
-            $this->mediaLoader = $this->createMock(MediaLoader::class);
+            if ($stub) {
+                $this->mediaLoader = $this->createStub(MediaLoader::class);
+            } else {
+                $this->mediaLoader = $this->createMock(MediaLoader::class);
+            }
         }
 
         return $this->mediaLoader;
@@ -57,7 +59,7 @@ class LoadMediaTest extends TestCase
 
     public function buildStep(): LoadMedia
     {
-        return new LoadMedia($this->getMediaLoader());
+        return new LoadMedia($this->getMediaLoader(true));
     }
 
     public function testInvokeBadLoader(): void
@@ -66,7 +68,7 @@ class LoadMediaTest extends TestCase
 
         $this->buildStep()(
             new \stdClass(),
-            $this->createMock(ManagerInterface::class)
+            $this->createStub(ManagerInterface::class)
         );
     }
 
@@ -75,14 +77,14 @@ class LoadMediaTest extends TestCase
         $this->expectException(\TypeError::class);
 
         $this->buildStep()(
-            $this->createMock(MediaLoader::class),
+            $this->createStub(MediaLoader::class),
             new \stdClass()
         );
     }
 
     public function testInvokeFound(): void
     {
-        $media = $this->createMock(Media::class);
+        $media = $this->createStub(Media::class);
 
         $manager = $this->createMock(ManagerInterface::class);
         $manager->expects($this->never())->method('error');
@@ -90,7 +92,7 @@ class LoadMediaTest extends TestCase
             Media::class => $media
         ]);
 
-        $this->getMediaLoader()
+        $this->getMediaLoader(true)
             ->method('load')
             ->willReturnCallback(
                 function ($query, PromiseInterface $promise) use ($media): \Teknoo\East\Common\Loader\MediaLoader {
@@ -117,7 +119,7 @@ class LoadMediaTest extends TestCase
         );
         $manager->expects($this->never())->method('updateWorkPlan');
 
-        $this->getMediaLoader()
+        $this->getMediaLoader(true)
             ->method('load')
             ->willReturnCallback(
                 function ($query, PromiseInterface $promise): \Teknoo\East\Common\Loader\MediaLoader {

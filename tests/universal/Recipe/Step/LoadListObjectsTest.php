@@ -25,14 +25,24 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Recipe\Step;
 
+use ArrayIterator;
+use Countable;
+use IteratorAggregate;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
+use stdClass;
 use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
 use Teknoo\East\Common\Contracts\Query\Expr\ExprInterface;
+use Teknoo\East\Common\Contracts\Query\QueryCollectionInterface;
 use Teknoo\East\Common\Recipe\Step\LoadListObjects;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\Recipe\Promise\PromiseInterface;
+use Traversable;
+use TypeError;
 
 /**
  * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
@@ -48,11 +58,11 @@ class LoadListObjectsTest extends TestCase
 
     public function testInvokeBadLoader(): void
     {
-        $this->expectException(\TypeError::class);
+        $this->expectException(TypeError::class);
 
         $this->buildStep()(
-            new \stdClass(),
-            $this->createMock(ManagerInterface::class),
+            new stdClass(),
+            $this->createStub(ManagerInterface::class),
             [],
             10,
             1
@@ -61,11 +71,11 @@ class LoadListObjectsTest extends TestCase
 
     public function testInvokeBadManager(): void
     {
-        $this->expectException(\TypeError::class);
+        $this->expectException(TypeError::class);
 
         $this->buildStep()(
-            $this->createMock(LoaderInterface::class),
-            new \stdClass(),
+            $this->createStub(LoaderInterface::class),
+            new stdClass(),
             [],
             10,
             1
@@ -74,12 +84,12 @@ class LoadListObjectsTest extends TestCase
 
     public function testInvokeBadOrder(): void
     {
-        $this->expectException(\TypeError::class);
+        $this->expectException(TypeError::class);
 
         $this->buildStep()(
-            $this->createMock(LoaderInterface::class),
-            $this->createMock(ManagerInterface::class),
-            new \stdClass(),
+            $this->createStub(LoaderInterface::class),
+            $this->createStub(ManagerInterface::class),
+            new stdClass(),
             10,
             1
         );
@@ -87,33 +97,33 @@ class LoadListObjectsTest extends TestCase
 
     public function testInvokeBadItemsParPage(): void
     {
-        $this->expectException(\TypeError::class);
+        $this->expectException(TypeError::class);
 
         $this->buildStep()(
-            $this->createMock(LoaderInterface::class),
-            $this->createMock(ManagerInterface::class),
+            $this->createStub(LoaderInterface::class),
+            $this->createStub(ManagerInterface::class),
             [],
-            new \stdClass(),
+            new stdClass(),
             1
         );
     }
 
     public function testInvokeBadPage(): void
     {
-        $this->expectException(\TypeError::class);
+        $this->expectException(TypeError::class);
 
         $this->buildStep()(
-            $this->createMock(LoaderInterface::class),
-            $this->createMock(ManagerInterface::class),
+            $this->createStub(LoaderInterface::class),
+            $this->createStub(ManagerInterface::class),
             [],
             10,
-            new \stdClass()
+            new stdClass()
         );
     }
 
     public function testInvokeFoundWithNoCountable(): void
     {
-        $objects = new class ($this->createMock(...)) implements \IteratorAggregate {
+        $objects = new class ($this->createStub(...)) implements IteratorAggregate {
             private $createMock;
 
             public function __construct(
@@ -122,18 +132,18 @@ class LoadListObjectsTest extends TestCase
                 $this->createMock = $createMock;
             }
 
-            public function getIterator(): \Traversable
+            public function getIterator(): Traversable
             {
-                return new \ArrayIterator([
-                    ($this->createMock)(IdentifiedObjectInterface::class),
-                    ($this->createMock)(IdentifiedObjectInterface::class),
+                return new ArrayIterator([
+                    ($this->createStub)(IdentifiedObjectInterface::class),
+                    ($this->createStub)(IdentifiedObjectInterface::class),
                 ]);
             }
         };
 
-        $loader = $this->createMock(LoaderInterface::class);
+        $loader = $this->createStub(LoaderInterface::class);
         $loader->method('query')->willReturnCallback(
-            function (\Teknoo\East\Common\Contracts\Query\QueryCollectionInterface $query, PromiseInterface $promise) use ($objects, $loader): \PHPUnit\Framework\MockObject\MockObject {
+            function (QueryCollectionInterface $query, PromiseInterface $promise) use ($objects, $loader): Stub {
                 $promise->success($objects);
 
                 return $loader;
@@ -162,10 +172,10 @@ class LoadListObjectsTest extends TestCase
     public function testInvokeFoundWithCountable(): void
     {
         $pageCount = 3;
-        $objects = new class () implements \Countable, \IteratorAggregate {
-            public function getIterator(): \Traversable
+        $objects = new class () implements Countable, IteratorAggregate {
+            public function getIterator(): Traversable
             {
-                return new \ArrayIterator([
+                return new ArrayIterator([
                     new Content(),
                     new Content()
                 ]);
@@ -177,9 +187,9 @@ class LoadListObjectsTest extends TestCase
             }
         };
 
-        $loader = $this->createMock(LoaderInterface::class);
+        $loader = $this->createStub(LoaderInterface::class);
         $loader->method('query')->willReturnCallback(
-            function (\Teknoo\East\Common\Contracts\Query\QueryCollectionInterface $query, PromiseInterface $promise) use ($objects, $loader): \PHPUnit\Framework\MockObject\MockObject {
+            function (QueryCollectionInterface $query, PromiseInterface $promise) use ($objects, $loader): Stub {
                 $promise->success($objects);
 
                 return $loader;
@@ -208,10 +218,10 @@ class LoadListObjectsTest extends TestCase
     public function testInvokeFoundWithCountableAndCriteria(): void
     {
         $pageCount = 3;
-        $objects = new class () implements \Countable, \IteratorAggregate {
-            public function getIterator(): \Traversable
+        $objects = new class () implements Countable, IteratorAggregate {
+            public function getIterator(): Traversable
             {
-                return new \ArrayIterator([
+                return new ArrayIterator([
                     new Content(),
                     new Content()
                 ]);
@@ -223,9 +233,9 @@ class LoadListObjectsTest extends TestCase
             }
         };
 
-        $loader = $this->createMock(LoaderInterface::class);
+        $loader = $this->createStub(LoaderInterface::class);
         $loader->method('query')->willReturnCallback(
-            function (\Teknoo\East\Common\Contracts\Query\QueryCollectionInterface $query, PromiseInterface $promise) use ($objects, $loader): \PHPUnit\Framework\MockObject\MockObject {
+            function (QueryCollectionInterface $query, PromiseInterface $promise) use ($objects, $loader): Stub {
                 $promise->success($objects);
 
                 return $loader;
@@ -258,10 +268,10 @@ class LoadListObjectsTest extends TestCase
     public function testInvokeFoundWithCountableAndCriteriaAsExpr(): void
     {
         $pageCount = 3;
-        $objects = new class () implements \Countable, \IteratorAggregate {
-            public function getIterator(): \Traversable
+        $objects = new class () implements Countable, IteratorAggregate {
+            public function getIterator(): Traversable
             {
-                return new \ArrayIterator([
+                return new ArrayIterator([
                     new Content(),
                     new Content()
                 ]);
@@ -273,9 +283,9 @@ class LoadListObjectsTest extends TestCase
             }
         };
 
-        $loader = $this->createMock(LoaderInterface::class);
+        $loader = $this->createStub(LoaderInterface::class);
         $loader->method('query')->willReturnCallback(
-            function (\Teknoo\East\Common\Contracts\Query\QueryCollectionInterface $query, PromiseInterface $promise) use ($objects, $loader): \PHPUnit\Framework\MockObject\MockObject {
+            function (QueryCollectionInterface $query, PromiseInterface $promise) use ($objects, $loader): Stub {
                 $promise->success($objects);
 
                 return $loader;
@@ -299,7 +309,7 @@ class LoadListObjectsTest extends TestCase
                 2,
                 [
                     'foo' => 'bar',
-                    'ba123' => $this->createMock(ExprInterface::class)
+                    'ba123' => $this->createStub(ExprInterface::class)
                 ]
             )
         );
@@ -307,10 +317,10 @@ class LoadListObjectsTest extends TestCase
 
     public function testInvokeErrorInQuery(): void
     {
-        $loader = $this->createMock(LoaderInterface::class);
+        $loader = $this->createStub(LoaderInterface::class);
         $loader->method('query')->willReturnCallback(
-            function (\Teknoo\East\Common\Contracts\Query\QueryCollectionInterface $query, PromiseInterface $promise) use ($loader): \PHPUnit\Framework\MockObject\MockObject {
-                $promise->fail(new \RuntimeException('Error'));
+            function (QueryCollectionInterface $query, PromiseInterface $promise) use ($loader): Stub {
+                $promise->fail(new RuntimeException('Error'));
 
                 return $loader;
             }
@@ -446,7 +456,7 @@ class LoadListObjectsTest extends TestCase
                 10,
                 2,
                 [
-                    'foo' => new \stdClass()
+                    'foo' => new stdClass()
                 ]
             )
         );

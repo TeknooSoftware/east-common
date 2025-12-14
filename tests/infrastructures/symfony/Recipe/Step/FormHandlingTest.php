@@ -28,6 +28,7 @@ namespace Teknoo\Tests\East\CommonBundle\Recipe\Step;
 use Laminas\Diactoros\StreamFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Form\AbstractType;
@@ -53,29 +54,31 @@ use function json_encode;
 #[CoversClass(FormHandling::class)]
 class FormHandlingTest extends TestCase
 {
-    private ?DatesService $datesService = null;
+    private (DatesService&Stub)|(DatesService&MockObject)|null $datesService = null;
 
-    private ?FormFactory $formFactory = null;
+    private (FormFactory&Stub)|(FormFactory&MockObject)|null $formFactory = null;
 
-    /**
-     * @return DatesService|MockObject
-     */
-    private function getDatesService(): DatesService
+    private function getDatesService(bool $stub = false): (DatesService&Stub)|(DatesService&MockObject)
     {
         if (!$this->datesService instanceof DatesService) {
-            $this->datesService = $this->createMock(DatesService::class);
+            if ($stub) {
+                $this->datesService = $this->createStub(DatesService::class);
+            } else {
+                $this->datesService = $this->createMock(DatesService::class);
+            }
         }
 
         return $this->datesService;
     }
 
-    /**
-     * @return FormFactory|MockObject
-     */
-    private function getFormFactory(): FormFactory
+    private function getFormFactory(bool $stub = false): (FormFactory&Stub)|(FormFactory&MockObject)
     {
         if (!$this->formFactory instanceof FormFactory) {
-            $this->formFactory = $this->createMock(FormFactory::class);
+            if ($stub) {
+                $this->formFactory = $this->createStub(FormFactory::class);
+            } else {
+                $this->formFactory = $this->createMock(FormFactory::class);
+            }
         }
 
         return $this->formFactory;
@@ -84,27 +87,27 @@ class FormHandlingTest extends TestCase
     public function buildStep(): FormHandling
     {
         return new FormHandling(
-            $this->getDatesService(),
-            $this->getFormFactory()
+            $this->getDatesService(true),
+            $this->getFormFactory(true)
         );
     }
 
     public function testInvokeBasic(): void
     {
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request = $this->createStub(ServerRequestInterface::class);
         $request->method('getAttribute')->willReturnCallback(
-            fn (string $name): \PHPUnit\Framework\MockObject\MockObject|false => match ($name) {
-                'request' => $this->createMock(Request::class),
+            fn (string $name): Stub|false => match ($name) {
+                'request' => $this->createStub(Request::class),
                 default => false,
             }
         );
 
         $request->method('getParsedBody')->willReturn([]);
 
-        $manager = $this->createMock(ManagerInterface::class);
+        $manager = $this->createStub(ManagerInterface::class);
         $formClass = 'Foo/Bar';
         $formOptions = [];
-        $object = $this->createMock(IdentifiedObjectInterface::class);
+        $object = $this->createStub(IdentifiedObjectInterface::class);
 
         $this->getDatesService()
             ->expects($this->never())
@@ -114,7 +117,7 @@ class FormHandlingTest extends TestCase
         $form->expects($this->once())->method('handleRequest');
         $form->expects($this->never())->method('submit');
 
-        $this->getFormFactory()
+        $this->getFormFactory(true)
             ->method('create')
             ->willReturn($form);
 
@@ -132,20 +135,20 @@ class FormHandlingTest extends TestCase
 
     public function testInvokeWithManagerAware(): void
     {
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request = $this->createStub(ServerRequestInterface::class);
         $request->method('getAttribute')->willReturnCallback(
-            fn (string $name): \PHPUnit\Framework\MockObject\MockObject|false => match ($name) {
-                'request' => $this->createMock(Request::class),
+            fn (string $name): Stub|false => match ($name) {
+                'request' => $this->createStub(Request::class),
                 default => false,
             }
         );
 
         $request->method('getParsedBody')->willReturn([]);
 
-        $manager = $this->createMock(ManagerInterface::class);
+        $manager = $this->createStub(ManagerInterface::class);
         $formClass = (new class () extends AbstractType implements FormManagerAwareInterface {})::class;
         $formOptions = [];
-        $object = $this->createMock(IdentifiedObjectInterface::class);
+        $object = $this->createStub(IdentifiedObjectInterface::class);
 
         $this->getDatesService()
             ->expects($this->never())
@@ -155,7 +158,7 @@ class FormHandlingTest extends TestCase
         $form->expects($this->once())->method('handleRequest');
         $form->expects($this->never())->method('submit');
 
-        $this->getFormFactory()
+        $this->getFormFactory(true)
             ->method('create')
             ->willReturn($form);
 
@@ -173,10 +176,10 @@ class FormHandlingTest extends TestCase
 
     public function testInvokeWithPublishableAndNotPublish(): void
     {
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request = $this->createStub(ServerRequestInterface::class);
         $request->method('getAttribute')->willReturnCallback(
-            fn (string $name): \PHPUnit\Framework\MockObject\MockObject|false => match ($name) {
-                'request' => $this->createMock(Request::class),
+            fn (string $name): Stub|false => match ($name) {
+                'request' => $this->createStub(Request::class),
                 default => false,
             }
         );
@@ -184,17 +187,17 @@ class FormHandlingTest extends TestCase
         $request->method('getParsedBody')->willReturn([
         ]);
 
-        $manager = $this->createMock(ManagerInterface::class);
+        $manager = $this->createStub(ManagerInterface::class);
         $formClass = 'Foo/Bar';
         $formOptions = [];
 
-        $object = $this->createMock(IdentifiedObjectInterface::class);
+        $object = $this->createStub(IdentifiedObjectInterface::class);
 
         $form = $this->createMock(FormInterface::class);
         $form->expects($this->once())->method('handleRequest');
         $form->expects($this->never())->method('submit');
 
-        $this->getFormFactory()
+        $this->getFormFactory(true)
             ->method('create')
             ->willReturn($form);
 
@@ -216,25 +219,25 @@ class FormHandlingTest extends TestCase
 
     public function testInvokeWithPublishableAndNotPublishWithHandlingDisabled(): void
     {
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request = $this->createStub(ServerRequestInterface::class);
         $request->method('getAttribute')->willReturnCallback(
-            fn (string $name): \PHPUnit\Framework\MockObject\MockObject|false => match ($name) {
-                'request' => $this->createMock(Request::class),
+            fn (string $name): Stub|false => match ($name) {
+                'request' => $this->createStub(Request::class),
                 default => false,
             }
         );
         $request->method('getParsedBody')->willReturn([
         ]);
-        $manager = $this->createMock(ManagerInterface::class);
+        $manager = $this->createStub(ManagerInterface::class);
         $formClass = 'Foo/Bar';
         $formOptions = [];
-        $object = $this->createMock(IdentifiedObjectInterface::class);
+        $object = $this->createStub(IdentifiedObjectInterface::class);
 
         $form = $this->createMock(FormInterface::class);
         $form->expects($this->never())->method('handleRequest');
         $form->expects($this->never())->method('submit');
 
-        $this->getFormFactory()
+        $this->getFormFactory(true)
             ->method('create')
             ->willReturn($form);
 
@@ -257,25 +260,25 @@ class FormHandlingTest extends TestCase
 
     public function testInvokeWithPApiWithHandlingDisabled(): void
     {
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request = $this->createStub(ServerRequestInterface::class);
         $request->method('getAttribute')->willReturnCallback(
-            fn (string $name): \PHPUnit\Framework\MockObject\MockObject|string|false => match ($name) {
-                'request' => $this->createMock(Request::class),
+            fn (string $name): Stub|string|false => match ($name) {
+                'request' => $this->createStub(Request::class),
                 'api' => 'json',
                 default => false,
             }
         );
         $request->method('getParsedBody')->willReturn([]);
-        $manager = $this->createMock(ManagerInterface::class);
+        $manager = $this->createStub(ManagerInterface::class);
         $formClass = 'Foo/Bar';
         $formOptions = [];
-        $object = $this->createMock(IdentifiedObjectInterface::class);
+        $object = $this->createStub(IdentifiedObjectInterface::class);
 
         $form = $this->createMock(FormInterface::class);
         $form->expects($this->never())->method('handleRequest');
         $form->expects($this->never())->method('submit');
 
-        $this->getFormFactory()
+        $this->getFormFactory(true)
             ->method('create')
             ->willReturn($form);
 
@@ -298,19 +301,19 @@ class FormHandlingTest extends TestCase
 
     public function testInvokeWithNotPublishableAndNotPublish(): void
     {
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request = $this->createStub(ServerRequestInterface::class);
         $request->method('getAttribute')->willReturnCallback(
-            fn (string $name): \PHPUnit\Framework\MockObject\MockObject|false => match ($name) {
-                'request' => $this->createMock(Request::class),
+            fn (string $name): Stub|false => match ($name) {
+                'request' => $this->createStub(Request::class),
                 default => false,
             }
         );
         $request->method('getParsedBody')->willReturn([
         ]);
-        $manager = $this->createMock(ManagerInterface::class);
+        $manager = $this->createStub(ManagerInterface::class);
         $formClass = 'Foo/Bar';
         $formOptions = [];
-        $object = $this->createMock(IdentifiedObjectInterface::class);
+        $object = $this->createStub(IdentifiedObjectInterface::class);
 
         $this->getDatesService()
             ->expects($this->never())
@@ -320,7 +323,7 @@ class FormHandlingTest extends TestCase
         $form->expects($this->once())->method('handleRequest');
         $form->expects($this->never())->method('submit');
 
-        $this->getFormFactory()
+        $this->getFormFactory(true)
             ->method('create')
             ->willReturn($form);
 
@@ -338,10 +341,10 @@ class FormHandlingTest extends TestCase
 
     public function testInvokeWithPublishableAndPublish(): void
     {
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request = $this->createStub(ServerRequestInterface::class);
         $request->method('getAttribute')->willReturnCallback(
-            fn (string $name): \PHPUnit\Framework\MockObject\MockObject|false => match ($name) {
-                'request' => $this->createMock(Request::class),
+            fn (string $name): Stub|false => match ($name) {
+                'request' => $this->createStub(Request::class),
                 default => false,
             }
         );
@@ -350,7 +353,7 @@ class FormHandlingTest extends TestCase
             'publish' => true
         ]);
 
-        $manager = $this->createMock(ManagerInterface::class);
+        $manager = $this->createStub(ManagerInterface::class);
         $formClass = 'Foo/Bar';
         $formOptions = [];
 
@@ -372,7 +375,7 @@ class FormHandlingTest extends TestCase
         $form->expects($this->once())->method('handleRequest');
         $form->expects($this->never())->method('submit');
 
-        $this->getFormFactory()
+        $this->getFormFactory(true)
             ->method('create')
             ->willReturn($form);
 
@@ -394,10 +397,10 @@ class FormHandlingTest extends TestCase
 
     public function testInvokeWithNotPublishableAndPublish(): void
     {
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request = $this->createStub(ServerRequestInterface::class);
         $request->method('getAttribute')->willReturnCallback(
-            fn (string $name): \PHPUnit\Framework\MockObject\MockObject|false => match ($name) {
-                'request' => $this->createMock(Request::class),
+            fn (string $name): Stub|false => match ($name) {
+                'request' => $this->createStub(Request::class),
                 default => false,
             }
         );
@@ -406,10 +409,10 @@ class FormHandlingTest extends TestCase
             'publish' => true
         ]);
 
-        $manager = $this->createMock(ManagerInterface::class);
+        $manager = $this->createStub(ManagerInterface::class);
         $formClass = 'Foo/Bar';
         $formOptions = [];
-        $object = $this->createMock(IdentifiedObjectInterface::class);
+        $object = $this->createStub(IdentifiedObjectInterface::class);
 
         $this->getDatesService()
             ->expects($this->never())
@@ -419,7 +422,7 @@ class FormHandlingTest extends TestCase
         $form->expects($this->once())->method('handleRequest');
         $form->expects($this->never())->method('submit');
 
-        $this->getFormFactory()
+        $this->getFormFactory(true)
             ->method('create')
             ->willReturn($form);
 
@@ -437,10 +440,10 @@ class FormHandlingTest extends TestCase
 
     public function testInvokeApiNoJson(): void
     {
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request = $this->createStub(ServerRequestInterface::class);
         $request->method('getAttribute')->willReturnCallback(
-            fn (string $name): \PHPUnit\Framework\MockObject\MockObject|string|false => match ($name) {
-                'request' => $this->createMock(Request::class),
+            fn (string $name): Stub|string|false => match ($name) {
+                'request' => $this->createStub(Request::class),
                 'api' => 'json',
                 default => false,
             }
@@ -449,10 +452,10 @@ class FormHandlingTest extends TestCase
         $request->method('getMethod')->willReturn('POST');
         $request->method('getParsedBody')->willReturn([]);
 
-        $manager = $this->createMock(ManagerInterface::class);
+        $manager = $this->createStub(ManagerInterface::class);
         $formClass = 'Foo/Bar';
         $formOptions = [];
-        $object = $this->createMock(IdentifiedObjectInterface::class);
+        $object = $this->createStub(IdentifiedObjectInterface::class);
 
         $this->getDatesService()
             ->expects($this->never())
@@ -462,7 +465,7 @@ class FormHandlingTest extends TestCase
         $form->expects($this->once())->method('handleRequest');
         $form->expects($this->once())->method('submit');
 
-        $this->getFormFactory()
+        $this->getFormFactory(true)
             ->method('create')
             ->with(
                 $formClass,
@@ -485,10 +488,10 @@ class FormHandlingTest extends TestCase
 
     public function testInvokeApiNoJsonWithFormApiAware(): void
     {
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request = $this->createStub(ServerRequestInterface::class);
         $request->method('getAttribute')->willReturnCallback(
-            fn (string $name): \PHPUnit\Framework\MockObject\MockObject|string|false => match ($name) {
-                'request' => $this->createMock(Request::class),
+            fn (string $name): Stub|string|false => match ($name) {
+                'request' => $this->createStub(Request::class),
                 'api' => 'json',
                 default => false,
             }
@@ -497,10 +500,10 @@ class FormHandlingTest extends TestCase
         $request->method('getMethod')->willReturn('POST');
         $request->method('getParsedBody')->willReturn([]);
 
-        $manager = $this->createMock(ManagerInterface::class);
+        $manager = $this->createStub(ManagerInterface::class);
         $formClass = UserType::class;
         $formOptions = [];
-        $object = $this->createMock(IdentifiedObjectInterface::class);
+        $object = $this->createStub(IdentifiedObjectInterface::class);
 
         $this->getDatesService()
             ->expects($this->never())
@@ -510,7 +513,7 @@ class FormHandlingTest extends TestCase
         $form->expects($this->once())->method('handleRequest');
         $form->expects($this->once())->method('submit');
 
-        $this->getFormFactory()
+        $this->getFormFactory(true)
             ->method('create')
             ->with(
                 $formClass,
@@ -533,10 +536,10 @@ class FormHandlingTest extends TestCase
 
     private function runTestForInvokeApiWithJson(string $method): void
     {
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request = $this->createStub(ServerRequestInterface::class);
         $request->method('getAttribute')->willReturnCallback(
-            fn (string $name): \PHPUnit\Framework\MockObject\MockObject|string|false => match ($name) {
-                'request' => $this->createMock(Request::class),
+            fn (string $name): Stub|string|false => match ($name) {
+                'request' => $this->createStub(Request::class),
                 'api' => 'json',
                 default => false,
             }
@@ -556,10 +559,10 @@ class FormHandlingTest extends TestCase
             new StreamFactory()->createStream(json_encode($body))
         );
 
-        $manager = $this->createMock(ManagerInterface::class);
+        $manager = $this->createStub(ManagerInterface::class);
         $formClass = 'Foo/Bar';
         $formOptions = [];
-        $object = $this->createMock(IdentifiedObjectInterface::class);
+        $object = $this->createStub(IdentifiedObjectInterface::class);
 
         $this->getDatesService()
             ->expects($this->never())
@@ -569,7 +572,7 @@ class FormHandlingTest extends TestCase
         $form->expects($this->once())->method('handleRequest');
         $form->expects($this->once())->method('submit')->with($body, false);
 
-        $this->getFormFactory()
+        $this->getFormFactory(true)
             ->method('create')
             ->with(
                 $formClass,
@@ -607,10 +610,10 @@ class FormHandlingTest extends TestCase
 
     public function testInvokeApiWithJsonAndGETMethod(): void
     {
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request = $this->createStub(ServerRequestInterface::class);
         $request->method('getAttribute')->willReturnCallback(
-            fn (string $name): \PHPUnit\Framework\MockObject\MockObject|string|false => match ($name) {
-                'request' => $this->createMock(Request::class),
+            fn (string $name): Stub|string|false => match ($name) {
+                'request' => $this->createStub(Request::class),
                 'api' => 'json',
                 default => false,
             }
@@ -630,10 +633,10 @@ class FormHandlingTest extends TestCase
             new StreamFactory()->createStream(json_encode($body))
         );
 
-        $manager = $this->createMock(ManagerInterface::class);
+        $manager = $this->createStub(ManagerInterface::class);
         $formClass = 'Foo/Bar';
         $formOptions = [];
-        $object = $this->createMock(IdentifiedObjectInterface::class);
+        $object = $this->createStub(IdentifiedObjectInterface::class);
 
         $this->getDatesService()
             ->expects($this->never())
@@ -643,7 +646,7 @@ class FormHandlingTest extends TestCase
         $form->expects($this->once())->method('handleRequest');
         $form->expects($this->never())->method('submit');
 
-        $this->getFormFactory()
+        $this->getFormFactory(true)
             ->method('create')
             ->with(
                 $formClass,

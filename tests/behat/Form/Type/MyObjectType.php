@@ -41,13 +41,11 @@ class MyObjectType extends AbstractType
      * @param FormBuilderInterface<MyObject> $builder
      * @param array<string, mixed> $options
      */
-    public function buildForm(FormBuilderInterface $builder, array $options): self
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('name', TextType::class, ['required' => true]);
         $builder->add('slug', TextType::class, ['required' => true]);
         $builder->add('saved', TextType::class, ['required' => false]);
-
-        return $this;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

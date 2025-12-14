@@ -43,8 +43,8 @@ class PersistAssetTest extends TestCase
         $this->assertInstanceOf(
             PersistAsset::class,
             (new PersistAsset())(
-                $this->createMock(FinalFile::class),
-                $this->createMock(PersisterInterface::class),
+                $this->createStub(FinalFile::class),
+                $this->createStub(PersisterInterface::class),
             ),
         );
     }

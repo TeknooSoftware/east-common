@@ -27,6 +27,7 @@ namespace Teknoo\Tests\East\CommonBundle\Writer;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -46,14 +47,18 @@ use Teknoo\Recipe\Promise\PromiseInterface;
 #[CoversClass(SymfonyUserWriter::class)]
 class SymfonyUserWriterTest extends TestCase
 {
-    private (UniversalWriter&MockObject)|null $universalWriter = null;
+    private (UniversalWriter&Stub)|(UniversalWriter&MockObject)|null $universalWriter = null;
 
     private ?UserPasswordHasherInterface $userPasswordHasher = null;
 
-    public function getUniversalWriter(): UniversalWriter&MockObject
+    public function getUniversalWriter(bool $stub = false): (UniversalWriter&Stub)|(UniversalWriter&MockObject)
     {
         if (!$this->universalWriter instanceof UniversalWriter) {
-            $this->universalWriter = $this->createMock(UniversalWriter::class);
+            if ($stub) {
+                $this->universalWriter = $this->createStub(UniversalWriter::class);
+            } else {
+                $this->universalWriter = $this->createMock(UniversalWriter::class);
+            }
         }
 
         return $this->universalWriter;
@@ -84,8 +89,8 @@ class SymfonyUserWriterTest extends TestCase
     public function buildWriter(): SymfonyUserWriter
     {
         return new SymfonyUserWriter(
-            $this->getUniversalWriter(),
-            $this->getUserPasswordHasher()
+            $this->getUniversalWriter(true),
+            $this->getUserPasswordHasher(true),
         );
     }
 
@@ -98,7 +103,7 @@ class SymfonyUserWriterTest extends TestCase
     public function testSaveWithWrongObject(): void
     {
         $promise = $this->createMock(PromiseInterface::class);
-        $object = $this->createMock(IdentifiedObjectInterface::class);
+        $object = $this->createStub(IdentifiedObjectInterface::class);
 
         $this->getUniversalWriter()
             ->expects($this->never())
@@ -115,9 +120,9 @@ class SymfonyUserWriterTest extends TestCase
 
     public function testSaveWithUserWithNoStoredPassword(): void
     {
-        $promise = $this->createMock(PromiseInterface::class);
-        $user = $this->createMock(BaseUser::class);
-        $authData = $this->createMock(AuthDataInterface::class);
+        $promise = $this->createStub(PromiseInterface::class);
+        $user = $this->createStub(BaseUser::class);
+        $authData = $this->createStub(AuthDataInterface::class);
         $user
             ->method('getAuthData')
             ->willReturn([$authData]);
@@ -136,8 +141,8 @@ class SymfonyUserWriterTest extends TestCase
 
     public function testSaveWithUserWithUpdatedPassword(): void
     {
-        $promise = $this->createMock(PromiseInterface::class);
-        $user = $this->createMock(BaseUser::class);
+        $promise = $this->createStub(PromiseInterface::class);
+        $user = $this->createStub(BaseUser::class);
         $storedPassword = $this->createMock(StoredPassword::class);
 
         $user
@@ -172,8 +177,8 @@ class SymfonyUserWriterTest extends TestCase
 
     public function testSaveWithUserWithUpdatedHashedPassword(): void
     {
-        $promise = $this->createMock(PromiseInterface::class);
-        $user = $this->createMock(BaseUser::class);
+        $promise = $this->createStub(PromiseInterface::class);
+        $user = $this->createStub(BaseUser::class);
         $storedPassword = $this->createMock(StoredPassword::class);
 
         $user
@@ -206,8 +211,8 @@ class SymfonyUserWriterTest extends TestCase
 
     public function testRemove(): void
     {
-        $object = $this->createMock(IdentifiedObjectInterface::class);
-        $promise = $this->createMock(PromiseInterface::class);
+        $object = $this->createStub(IdentifiedObjectInterface::class);
+        $promise = $this->createStub(PromiseInterface::class);
 
         $this->getUniversalWriter()
             ->expects($this->once())

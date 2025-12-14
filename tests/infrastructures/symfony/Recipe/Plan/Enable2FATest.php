@@ -49,12 +49,12 @@ class Enable2FATest extends TestCase
     public function buildPlan(): Enable2FA
     {
         return new Enable2FA(
-            $this->createMock(OriginalRecipeInterface::class),
-            $this->createMock(EnableTOTP::class),
-            $this->createMock(CreateObject::class),
-            $this->createMock(FormHandlingInterface::class),
-            $this->createMock(RenderFormInterface::class),
-            $this->createMock(RenderError::class),
+            $this->createStub(OriginalRecipeInterface::class),
+            $this->createStub(EnableTOTP::class),
+            $this->createStub(CreateObject::class),
+            $this->createStub(FormHandlingInterface::class),
+            $this->createStub(RenderFormInterface::class),
+            $this->createStub(RenderError::class),
             'foo',
         );
     }

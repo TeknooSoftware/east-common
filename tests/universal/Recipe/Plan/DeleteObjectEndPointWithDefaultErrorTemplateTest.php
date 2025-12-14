@@ -27,6 +27,7 @@ namespace Teknoo\Tests\East\Common\Recipe\Plan;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\Recipe\Step\ObjectAccessControlInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RedirectClientInterface;
@@ -64,73 +65,73 @@ class DeleteObjectEndPointWithDefaultErrorTemplateTest extends TestCase
 
     private ?RenderError $renderError = null;
 
-    public function getRecipe(): RecipeInterface&MockObject
+    public function getRecipe(): RecipeInterface&Stub
     {
         if (null === $this->recipe) {
-            $this->recipe = $this->createMock(RecipeInterface::class);
+            $this->recipe = $this->createStub(RecipeInterface::class);
         }
 
         return $this->recipe;
     }
 
-    public function getLoadObject(): LoadObject&MockObject
+    public function getLoadObject(): LoadObject&Stub
     {
         if (null === $this->loadObject) {
-            $this->loadObject = $this->createMock(LoadObject::class);
+            $this->loadObject = $this->createStub(LoadObject::class);
         }
 
         return $this->loadObject;
     }
 
-    public function getJumpIf(): JumpIf&MockObject
+    public function getJumpIf(): JumpIf&Stub
     {
         if (null === $this->jumpIf) {
-            $this->jumpIf = $this->createMock(JumpIf::class);
+            $this->jumpIf = $this->createStub(JumpIf::class);
         }
 
         return $this->jumpIf;
     }
 
-    public function getDeleteObject(): DeleteObject&MockObject
+    public function getDeleteObject(): DeleteObject&Stub
     {
         if (null === $this->deleteObject) {
-            $this->deleteObject = $this->createMock(DeleteObject::class);
+            $this->deleteObject = $this->createStub(DeleteObject::class);
         }
 
         return $this->deleteObject;
     }
 
-    public function getRedirectClient(): RedirectClientInterface&MockObject
+    public function getRedirectClient(): RedirectClientInterface&Stub
     {
         if (null === $this->redirectClient) {
-            $this->redirectClient = $this->createMock(RedirectClientInterface::class);
+            $this->redirectClient = $this->createStub(RedirectClientInterface::class);
         }
 
         return $this->redirectClient;
     }
 
-    public function getRender(): Render&MockObject
+    public function getRender(): Render&Stub
     {
         if (null === $this->render) {
-            $this->render = $this->createMock(Render::class);
+            $this->render = $this->createStub(Render::class);
         }
 
         return $this->render;
     }
 
-    public function getRenderError(): RenderError&MockObject
+    public function getRenderError(): RenderError&Stub
     {
         if (null === $this->renderError) {
-            $this->renderError = $this->createMock(RenderError::class);
+            $this->renderError = $this->createStub(RenderError::class);
         }
 
         return $this->renderError;
     }
 
-    public function getObjectAccessControl(): ObjectAccessControlInterface&MockObject
+    public function getObjectAccessControl(): ObjectAccessControlInterface&Stub
     {
         if (null === $this->objectAccessControl) {
-            $this->objectAccessControl = $this->createMock(ObjectAccessControlInterface::class);
+            $this->objectAccessControl = $this->createStub(ObjectAccessControlInterface::class);
         }
 
         return $this->objectAccessControl;

@@ -44,7 +44,7 @@ class EmailFormType extends AbstractType
     /**
      * @param array<string, mixed> $options
      */
-    public function buildForm(FormBuilderInterface $builder, array $options): self
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add(
             'email',
@@ -53,16 +53,12 @@ class EmailFormType extends AbstractType
                 'required' => true,
             ]
         );
-
-        return $this;
     }
 
-    public function configureOptions(OptionsResolver $resolver): self
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
 
         $resolver->setDefaults(['data_class' => EmailValue::class]);
-
-        return $this;
     }
 }

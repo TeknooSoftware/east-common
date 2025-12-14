@@ -76,7 +76,7 @@ class CreateObjectEndPointWithDefaultErrorTemplateTest extends TestCase
     public function getRecipe(): RecipeInterface
     {
         if (null === $this->recipe) {
-            $this->recipe = $this->createMock(RecipeInterface::class);
+            $this->recipe = $this->createStub(RecipeInterface::class);
         }
 
         return $this->recipe;
@@ -88,7 +88,7 @@ class CreateObjectEndPointWithDefaultErrorTemplateTest extends TestCase
     public function getFormHandling(): FormHandlingInterface
     {
         if (null === $this->formHandling) {
-            $this->formHandling = $this->createMock(FormHandlingInterface::class);
+            $this->formHandling = $this->createStub(FormHandlingInterface::class);
         }
 
         return $this->formHandling;
@@ -100,7 +100,7 @@ class CreateObjectEndPointWithDefaultErrorTemplateTest extends TestCase
     public function getCreateObject(): CreateObject
     {
         if (null === $this->createObject) {
-            $this->createObject = $this->createMock(CreateObject::class);
+            $this->createObject = $this->createStub(CreateObject::class);
         }
 
         return $this->createObject;
@@ -112,7 +112,7 @@ class CreateObjectEndPointWithDefaultErrorTemplateTest extends TestCase
     public function getFormProcessing(): FormProcessingInterface
     {
         if (null === $this->formProcessing) {
-            $this->formProcessing = $this->createMock(FormProcessingInterface::class);
+            $this->formProcessing = $this->createStub(FormProcessingInterface::class);
         }
 
         return $this->formProcessing;
@@ -124,7 +124,7 @@ class CreateObjectEndPointWithDefaultErrorTemplateTest extends TestCase
     public function getSlugPreparation(): SlugPreparation
     {
         if (null === $this->slugPreparation) {
-            $this->slugPreparation = $this->createMock(SlugPreparation::class);
+            $this->slugPreparation = $this->createStub(SlugPreparation::class);
         }
 
         return $this->slugPreparation;
@@ -136,7 +136,7 @@ class CreateObjectEndPointWithDefaultErrorTemplateTest extends TestCase
     public function getSaveObject(): SaveObject
     {
         if (null === $this->saveObject) {
-            $this->saveObject = $this->createMock(SaveObject::class);
+            $this->saveObject = $this->createStub(SaveObject::class);
         }
 
         return $this->saveObject;
@@ -148,7 +148,7 @@ class CreateObjectEndPointWithDefaultErrorTemplateTest extends TestCase
     public function getRedirectClient(): RedirectClientInterface
     {
         if (null === $this->redirectClient) {
-            $this->redirectClient = $this->createMock(RedirectClientInterface::class);
+            $this->redirectClient = $this->createStub(RedirectClientInterface::class);
         }
 
         return $this->redirectClient;
@@ -160,7 +160,7 @@ class CreateObjectEndPointWithDefaultErrorTemplateTest extends TestCase
     public function getRenderForm(): RenderFormInterface
     {
         if (null === $this->renderForm) {
-            $this->renderForm = $this->createMock(RenderFormInterface::class);
+            $this->renderForm = $this->createStub(RenderFormInterface::class);
         }
 
         return $this->renderForm;
@@ -172,7 +172,7 @@ class CreateObjectEndPointWithDefaultErrorTemplateTest extends TestCase
     public function getRenderError(): RenderError
     {
         if (null === $this->renderError) {
-            $this->renderError = $this->createMock(RenderError::class);
+            $this->renderError = $this->createStub(RenderError::class);
         }
 
         return $this->renderError;
@@ -184,7 +184,7 @@ class CreateObjectEndPointWithDefaultErrorTemplateTest extends TestCase
     public function getObjectAccessControl(): ObjectAccessControlInterface
     {
         if (null === $this->objectAccessControl) {
-            $this->objectAccessControl = $this->createMock(ObjectAccessControlInterface::class);
+            $this->objectAccessControl = $this->createStub(ObjectAccessControlInterface::class);
         }
 
         return $this->objectAccessControl;

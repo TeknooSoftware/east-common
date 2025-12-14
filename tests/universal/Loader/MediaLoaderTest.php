@@ -27,6 +27,7 @@ namespace Teknoo\Tests\East\Common\Loader;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\DBSource\Repository\MediaRepositoryInterface;
 use Teknoo\East\Common\Contracts\DBSource\RepositoryInterface;
@@ -44,12 +45,16 @@ use Teknoo\Recipe\Promise\Promise;
 {
     use LoaderTestTrait;
 
-    private (RepositoryInterface&MockObject)|null $repository = null;
+    private (RepositoryInterface&Stub)|(RepositoryInterface&MockObject)|null $repository = null;
 
-    public function getRepositoryMock(): RepositoryInterface&MockObject
+    public function getRepositoryMock(bool $stub = false): (RepositoryInterface&Stub)|(RepositoryInterface&MockObject)
     {
         if (!$this->repository instanceof RepositoryInterface) {
-            $this->repository = $this->createMock(MediaRepositoryInterface::class);
+            if ($stub) {
+                $this->repository = $this->createStub(MediaRepositoryInterface::class);
+            } else {
+                $this->repository = $this->createMock(MediaRepositoryInterface::class);
+            }
         }
 
         return $this->repository;
@@ -57,8 +62,7 @@ use Teknoo\Recipe\Promise\Promise;
 
     public function buildLoader(): LoaderInterface
     {
-        $repository = $this->getRepositoryMock();
-        return new MediaLoader($repository);
+        return new MediaLoader($this->getRepositoryMock(true));
     }
 
     /**
@@ -77,7 +81,7 @@ use Teknoo\Recipe\Promise\Promise;
         $promiseMock->expects($this->never())->method('success');
         $promiseMock->expects($this->never())->method('fail');
 
-        $this->getRepositoryMock()
+        $this->getRepositoryMock(true)
             ->method('findOneBy')
             ->with(
                 [new InclusiveOr(

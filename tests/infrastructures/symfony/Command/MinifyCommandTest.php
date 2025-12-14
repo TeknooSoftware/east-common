@@ -27,6 +27,7 @@ namespace Teknoo\Tests\East\CommonBundle\Command;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\MessageInterface;
 use Symfony\Component\Console\Input\InputInterface;
@@ -51,78 +52,106 @@ use Teknoo\East\FoundationBundle\Command\Client;
 #[CoversClass(MinifyCommand::class)]
 class MinifyCommandTest extends TestCase
 {
-    private ?Executor $executor = null;
+    private (Executor&Stub)|(Executor&MockObject)|null $executor = null;
 
-    private ?Client $client = null;
+    private (Client&Stub)|(Client&MockObject)|null $client = null;
 
-    private ?MinifierCommandInterface $minifierCommand = null;
+    private (MinifierCommandInterface&Stub)|(MinifierCommandInterface&MockObject)|null $minifierCommand = null;
 
-    private ?MessageFactoryInterface $messageFactory = null;
+    private (MessageFactoryInterface&Stub)|(MessageFactoryInterface&MockObject)|null $messageFactory = null;
 
-    private ?SourceLoaderInterface $sourceLoader = null;
+    private (SourceLoaderInterface&Stub)|(SourceLoaderInterface&MockObject)|null $sourceLoader = null;
 
-    private ?PersisterInterface $persister = null;
+    private (PersisterInterface&Stub)|(PersisterInterface&MockObject)|null $persister = null;
 
-    private ?MinifierInterface $minifier = null;
+    private (MinifierInterface&Stub)|(MinifierInterface&MockObject)|null $minifier = null;
 
-    private function getExecutorMock(): Executor|MockObject
+    private function getExecutorMock(bool $stub = false): (Executor&Stub)|(Executor&MockObject)
     {
         if (!$this->executor instanceof Executor) {
-            $this->executor = $this->createMock(Executor::class);
+            if ($stub) {
+                $this->executor = $this->createStub(Executor::class);
+            } else {
+                $this->executor = $this->createMock(Executor::class);
+            }
         }
 
         return $this->executor;
     }
 
-    private function getClientMock(): Client|MockObject
+    private function getClientMock(bool $stub = false): (Client&Stub)|(Client&MockObject)
     {
         if (!$this->client instanceof Client) {
-            $this->client = $this->createMock(Client::class);
+            if ($stub) {
+                $this->client = $this->createStub(Client::class);
+            } else {
+                $this->client = $this->createMock(Client::class);
+            }
         }
 
         return $this->client;
     }
 
-    private function getMinifierCommandMock(): MinifierCommandInterface|MockObject
+    private function getMinifierCommandMock(bool $stub = false): (MinifierCommandInterface&Stub)|(MinifierCommandInterface&MockObject)
     {
         if (!$this->minifierCommand instanceof MinifierCommandInterface) {
-            $this->minifierCommand = $this->createMock(MinifierCommandInterface::class);
+            if ($stub) {
+                $this->minifierCommand = $this->createStub(MinifierCommandInterface::class);
+            } else {
+                $this->minifierCommand = $this->createMock(MinifierCommandInterface::class);
+            }
         }
 
         return $this->minifierCommand;
     }
 
-    private function getMessageFactoryMock(): MessageFactoryInterface|MockObject
+    private function getMessageFactoryMock(bool $stub = false): (MessageFactoryInterface&Stub)|(MessageFactoryInterface&MockObject)
     {
         if (!$this->messageFactory instanceof MessageFactoryInterface) {
-            $this->messageFactory = $this->createMock(MessageFactoryInterface::class);
+            if ($stub) {
+                $this->messageFactory = $this->createStub(MessageFactoryInterface::class);
+            } else {
+                $this->messageFactory = $this->createMock(MessageFactoryInterface::class);
+            }
         }
 
         return $this->messageFactory;
     }
 
-    private function getSourceLoaderMock(): SourceLoaderInterface|MockObject
+    private function getSourceLoaderMock(bool $stub = false): (SourceLoaderInterface&Stub)|(SourceLoaderInterface&MockObject)
     {
         if (!$this->sourceLoader instanceof SourceLoaderInterface) {
-            $this->sourceLoader = $this->createMock(SourceLoaderInterface::class);
+            if ($stub) {
+                $this->sourceLoader = $this->createStub(SourceLoaderInterface::class);
+            } else {
+                $this->sourceLoader = $this->createMock(SourceLoaderInterface::class);
+            }
         }
 
         return $this->sourceLoader;
     }
 
-    private function getPersisterMock(): PersisterInterface|MockObject
+    private function getPersisterMock(bool $stub = false): (PersisterInterface&Stub)|(PersisterInterface&MockObject)
     {
         if (!$this->persister instanceof PersisterInterface) {
-            $this->persister = $this->createMock(PersisterInterface::class);
+            if ($stub) {
+                $this->persister = $this->createStub(PersisterInterface::class);
+            } else {
+                $this->persister = $this->createMock(PersisterInterface::class);
+            }
         }
 
         return $this->persister;
     }
 
-    private function getMinifierMock(): MinifierInterface|MockObject
+    private function getMinifierMock(bool $stub = false): (MinifierInterface&Stub)|(MinifierInterface&MockObject)
     {
         if (!$this->minifier instanceof MinifierInterface) {
-            $this->minifier = $this->createMock(MinifierInterface::class);
+            if ($stub) {
+                $this->minifier = $this->createStub(MinifierInterface::class);
+            } else {
+                $this->minifier = $this->createMock(MinifierInterface::class);
+            }
         }
 
         return $this->minifier;
@@ -133,13 +162,13 @@ class MinifyCommandTest extends TestCase
         return new MinifyCommand(
             'teknoo:common:minify:test',
             'Minify some file',
-            $this->getExecutorMock(),
-            $this->getClientMock(),
-            $this->getMinifierCommandMock(),
-            $this->getMessageFactoryMock(),
-            $this->getSourceLoaderMock(),
-            $this->getPersisterMock(),
-            $this->getMinifierMock(),
+            $this->getExecutorMock(true),
+            $this->getClientMock(true),
+            $this->getMinifierCommandMock(true),
+            $this->getMessageFactoryMock(true),
+            $this->getSourceLoaderMock(true),
+            $this->getPersisterMock(true),
+            $this->getMinifierMock(true),
             'css',
             '/foo',
         );
@@ -147,21 +176,21 @@ class MinifyCommandTest extends TestCase
 
     public function testExecutionFromInput(): void
     {
-        $input = $this->createMock(InputInterface::class);
+        $input = $this->createStub(InputInterface::class);
         $input
             ->method('getArgument')
             ->willReturn('fooBar');
 
-        $request = $this->createMock(MessageInterface::class);
+        $request = $this->createStub(MessageInterface::class);
         $request
             ->method('withBody')
             ->willReturnSelf();
 
-        $this->getMessageFactoryMock()
+        $this->getMessageFactoryMock(true)
             ->method('createMessage')
             ->willReturn($request);
 
-        $output = $this->createMock(OutputInterface::class);
+        $output = $this->createStub(OutputInterface::class);
 
         $this->assertEquals(
             0,

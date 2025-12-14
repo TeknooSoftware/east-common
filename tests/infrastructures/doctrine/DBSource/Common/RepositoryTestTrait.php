@@ -28,6 +28,7 @@ namespace Teknoo\Tests\East\Common\Doctrine\DBSource\Common;
 use Doctrine\Persistence\ObjectRepository;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Teknoo\East\Common\Contracts\DBSource\RepositoryInterface;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
 use Teknoo\East\Common\Contracts\Query\Expr\ExprInterface;
@@ -55,15 +56,16 @@ use const E_USER_NOTICE;
  */
 trait RepositoryTestTrait
 {
-    private (ObjectRepository&MockObject)|null $objectRepository = null;
+    private (ObjectRepository&MockObject)|(ObjectRepository&Stub)|null $objectRepository = null;
 
-    /**
-     * @return ObjectRepository|\PHPUnit\Framework\MockObject\MockObject
-     */
-    protected function getDoctrineObjectRepositoryMock(): ObjectRepository
+    protected function getDoctrineObjectRepositoryMock(bool $stub = false): (ObjectRepository&Stub)|(ObjectRepository&MockObject)
     {
         if (!$this->objectRepository instanceof ObjectRepository) {
-            $this->objectRepository = $this->createMock(ObjectRepository::class);
+            if ($stub) {
+                $this->objectRepository = $this->createStub(ObjectRepository::class);
+            } else {
+                $this->objectRepository = $this->createMock(ObjectRepository::class);
+            }
         }
 
         return $this->objectRepository;
@@ -74,7 +76,7 @@ trait RepositoryTestTrait
     public function testFindBadId(): void
     {
         $this->expectException(\TypeError::class);
-        $this->buildRepository()->find(new \stdClass(), $this->createMock(PromiseInterface::class));
+        $this->buildRepository()->find(new \stdClass(), $this->createStub(PromiseInterface::class));
     }
 
     public function testFindBadPromise(): void
@@ -292,7 +294,7 @@ trait RepositoryTestTrait
     public function testFindByBadCriteria(): void
     {
         $this->expectException(\TypeError::class);
-        $this->buildRepository()->findBy(new \stdClass(), $this->createMock(PromiseInterface::class));
+        $this->buildRepository()->findBy(new \stdClass(), $this->createStub(PromiseInterface::class));
     }
 
     public function testFindByBadPromise(): void
@@ -306,7 +308,7 @@ trait RepositoryTestTrait
         $this->expectException(\TypeError::class);
         $this->buildRepository()->findBy(
             ['foo' => 'bar'],
-            $this->createMock(PromiseInterface::class),
+            $this->createStub(PromiseInterface::class),
             new \stdClass()
         );
     }
@@ -390,7 +392,7 @@ trait RepositoryTestTrait
     public function testFindOneByBadCriteria(): void
     {
         $this->expectException(\TypeError::class);
-        $this->buildRepository()->findOneBy(new \stdClass(), $this->createMock(PromiseInterface::class));
+        $this->buildRepository()->findOneBy(new \stdClass(), $this->createStub(PromiseInterface::class));
     }
 
     public function testFindOneByBadPromise(): void
@@ -472,7 +474,7 @@ trait RepositoryTestTrait
                         ['foo' => 'bar'],
                         ['bar' => 'foo']
                     ),
-                    'hello' => new ObjectReference($this->createMock(IdentifiedObjectInterface::class))
+                    'hello' => new ObjectReference($this->createStub(IdentifiedObjectInterface::class))
                 ],
                 $promise
             )
@@ -531,7 +533,7 @@ trait RepositoryTestTrait
                             ['foo' => 'bar'],
                             ['bar' => 'foo']
                         ),
-                        'hello' => new ObjectReference($this->createMock(IdentifiedObjectInterface::class))
+                        'hello' => new ObjectReference($this->createStub(IdentifiedObjectInterface::class))
                     ],
                     $promise,
                     ['foo'],
@@ -576,15 +578,7 @@ trait RepositoryTestTrait
 
     public function testAddExprMappingConversion(): void
     {
-        $expr = $this->createMock(ExprInterface::class);
-
-        $class = $this->buildRepository()::class;
-        $class::addExprMappingConversion(
-            $expr::class,
-            static function (array &$final, string $key, ExprInterface $expr): void {
-                $final['foo'] = 'bar';
-            }
-        );
+        $expr = $this->createStub(ExprInterface::class);
 
         $object = new \stdClass();
         $promise = $this->createMock(PromiseInterface::class);
@@ -598,6 +592,14 @@ trait RepositoryTestTrait
                 'foo' => 'bar',
             ])
             ->willReturn($object);
+
+        $class = $this->buildRepository()::class;
+        $class::addExprMappingConversion(
+            $expr::class,
+            static function (array &$final, string $key, ExprInterface $expr): void {
+                $final['foo'] = 'bar';
+            }
+        );
 
         $this->assertInstanceOf(
             RepositoryInterface::class,

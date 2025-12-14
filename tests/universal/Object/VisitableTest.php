@@ -36,7 +36,7 @@ use Teknoo\East\Common\Object\VisitableTrait;
  */
 class VisitableTest extends TestCase
 {
-    public function buildObject(): \Teknoo\East\Common\Contracts\Object\VisitableInterface
+    public function buildObject(): VisitableInterface
     {
         return new class () implements VisitableInterface {
             use VisitableTrait;

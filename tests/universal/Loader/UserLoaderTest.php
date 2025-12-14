@@ -27,9 +27,11 @@ namespace Teknoo\Tests\East\Common\Loader;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\DBSource\Repository\UserRepositoryInterface;
 use Teknoo\East\Common\Contracts\DBSource\RepositoryInterface;
+use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
 use Teknoo\East\Common\Loader\UserLoader;
 use Teknoo\East\Common\Object\User;
 
@@ -42,24 +44,24 @@ class UserLoaderTest extends TestCase
 {
     use LoaderTestTrait;
 
-    private (RepositoryInterface&MockObject)|null $repository = null;
+    private (RepositoryInterface&Stub)|(RepositoryInterface&MockObject)|null $repository = null;
 
-    /**
-     * @return \PHPUnit\Framework\MockObject\MockObject|RepositoryInterface
-     */
-    public function getRepositoryMock(): RepositoryInterface
+    public function getRepositoryMock(bool $stub = false): (RepositoryInterface&Stub)|(RepositoryInterface&MockObject)
     {
         if (!$this->repository instanceof RepositoryInterface) {
-            $this->repository = $this->createMock(UserRepositoryInterface::class);
+            if ($stub) {
+                $this->repository = $this->createStub(UserRepositoryInterface::class);
+            } else {
+                $this->repository = $this->createMock(UserRepositoryInterface::class);
+            }
         }
 
         return $this->repository;
     }
 
-    public function buildLoader(): \Teknoo\East\Common\Contracts\Loader\LoaderInterface
+    public function buildLoader(): LoaderInterface
     {
-        $repository = $this->getRepositoryMock();
-        return new UserLoader($repository);
+        return new UserLoader($this->getRepositoryMock(true));
     }
 
     public function getEntity(): \Teknoo\East\Common\Object\User

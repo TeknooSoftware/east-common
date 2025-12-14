@@ -55,7 +55,7 @@ class RenderStaticContentEndPointWithDefaultErrorTemplateTest extends TestCase
     public function getRecipe(): RecipeInterface
     {
         if (null === $this->recipe) {
-            $this->recipe = $this->createMock(RecipeInterface::class);
+            $this->recipe = $this->createStub(RecipeInterface::class);
         }
 
         return $this->recipe;
@@ -67,7 +67,7 @@ class RenderStaticContentEndPointWithDefaultErrorTemplateTest extends TestCase
     public function getRender(): Render
     {
         if (null === $this->render) {
-            $this->render = $this->createMock(Render::class);
+            $this->render = $this->createStub(Render::class);
         }
 
         return $this->render;
@@ -79,7 +79,7 @@ class RenderStaticContentEndPointWithDefaultErrorTemplateTest extends TestCase
     public function getRenderError(): RenderError
     {
         if (null === $this->renderError) {
-            $this->renderError = $this->createMock(RenderError::class);
+            $this->renderError = $this->createStub(RenderError::class);
         }
 
         return $this->renderError;

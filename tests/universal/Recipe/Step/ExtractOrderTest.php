@@ -50,7 +50,7 @@ class ExtractOrderTest extends TestCase
 
         $this->buildStep()(
             new \stdClass(),
-            $this->createMock(ManagerInterface::class),
+            $this->createStub(ManagerInterface::class),
             Direction::Asc,
             'id'
         );
@@ -61,7 +61,7 @@ class ExtractOrderTest extends TestCase
         $this->expectException(\TypeError::class);
 
         $this->buildStep()(
-            $this->createMock(ServerRequestInterface::class),
+            $this->createStub(ServerRequestInterface::class),
             new \stdClass(),
             Direction::Asc,
             'id'
@@ -73,8 +73,8 @@ class ExtractOrderTest extends TestCase
         $this->expectException(\TypeError::class);
 
         $this->buildStep()(
-            $this->createMock(ServerRequestInterface::class),
-            $this->createMock(ManagerInterface::class),
+            $this->createStub(ServerRequestInterface::class),
+            $this->createStub(ManagerInterface::class),
             new \stdClass()
         );
     }
@@ -84,8 +84,8 @@ class ExtractOrderTest extends TestCase
         $this->expectException(\TypeError::class);
 
         $this->buildStep()(
-            $this->createMock(ServerRequestInterface::class),
-            $this->createMock(ManagerInterface::class),
+            $this->createStub(ServerRequestInterface::class),
+            $this->createStub(ManagerInterface::class),
             Direction::Asc,
             new \stdClass()
         );
@@ -100,7 +100,7 @@ class ExtractOrderTest extends TestCase
         $this->assertInstanceOf(
             ExtractOrder::class,
             $this->buildStep()(
-                $this->createMock(ServerRequestInterface::class),
+                $this->createStub(ServerRequestInterface::class),
                 $manager
             )
         );
@@ -115,7 +115,7 @@ class ExtractOrderTest extends TestCase
         $this->assertInstanceOf(
             ExtractOrder::class,
             $this->buildStep()(
-                $this->createMock(ServerRequestInterface::class),
+                $this->createStub(ServerRequestInterface::class),
                 $manager,
                 Direction::Asc,
                 'createdAt'
@@ -125,7 +125,7 @@ class ExtractOrderTest extends TestCase
 
     public function testInvokeWithParameter(): void
     {
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request = $this->createStub(ServerRequestInterface::class);
         $request->method('getQueryParams')->willReturn([
             'order' => 'createdAt',
             'direction' => 'ASC'
@@ -148,7 +148,7 @@ class ExtractOrderTest extends TestCase
 
     public function testInvokeWithInvalidParameter(): void
     {
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request = $this->createStub(ServerRequestInterface::class);
         $request->method('getQueryParams')->willReturn([
             'order' => 'createdAt',
             'direction' => 'Foo'

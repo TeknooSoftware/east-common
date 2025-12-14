@@ -49,7 +49,7 @@ class DeleteObjectTest extends TestCase
 
         $this->buildStep()(
             new \stdClass(),
-            $this->createMock(IdentifiedObjectInterface::class)
+            $this->createStub(IdentifiedObjectInterface::class)
         );
     }
 
@@ -58,7 +58,7 @@ class DeleteObjectTest extends TestCase
         $this->expectException(\TypeError::class);
 
         $this->buildStep()(
-            $this->createMock(DeletingService::class),
+            $this->createStub(DeletingService::class),
             new \stdClass()
         );
     }
@@ -68,8 +68,8 @@ class DeleteObjectTest extends TestCase
         $this->assertInstanceOf(
             DeleteObject::class,
             $this->buildStep()(
-                $this->createMock(DeletingService::class),
-                $this->createMock(IdentifiedObjectInterface::class)
+                $this->createStub(DeletingService::class),
+                $this->createStub(IdentifiedObjectInterface::class)
             )
         );
     }

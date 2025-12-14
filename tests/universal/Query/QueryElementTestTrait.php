@@ -43,8 +43,8 @@ trait QueryElementTestTrait
         $this->expectException(\TypeError::class);
         $this->buildQuery()->fetch(
             new \stdClass(),
-            $this->createMock(RepositoryInterface::class),
-            $this->createMock(PromiseInterface::class)
+            $this->createStub(RepositoryInterface::class),
+            $this->createStub(PromiseInterface::class)
         );
     }
 
@@ -52,9 +52,9 @@ trait QueryElementTestTrait
     {
         $this->expectException(\TypeError::class);
         $this->buildQuery()->fetch(
-            $this->createMock(LoaderInterface::class),
+            $this->createStub(LoaderInterface::class),
             new \stdClass(),
-            $this->createMock(PromiseInterface::class)
+            $this->createStub(PromiseInterface::class)
         );
     }
 
@@ -62,8 +62,8 @@ trait QueryElementTestTrait
     {
         $this->expectException(\TypeError::class);
         $this->buildQuery()->fetch(
-            $this->createMock(LoaderInterface::class),
-            $this->createMock(RepositoryInterface::class),
+            $this->createStub(LoaderInterface::class),
+            $this->createStub(RepositoryInterface::class),
             new \stdClass()
         );
     }

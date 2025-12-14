@@ -90,7 +90,7 @@ class PrepareRecoveryAccessEndPointTest extends TestCase
     public function getRecipe(): RecipeInterface
     {
         if (null === $this->recipe) {
-            $this->recipe = $this->createMock(RecipeInterface::class);
+            $this->recipe = $this->createStub(RecipeInterface::class);
         }
 
         return $this->recipe;
@@ -102,7 +102,7 @@ class PrepareRecoveryAccessEndPointTest extends TestCase
     public function getCreateObject(): CreateObject
     {
         if (null === $this->createObject) {
-            $this->createObject = $this->createMock(CreateObject::class);
+            $this->createObject = $this->createStub(CreateObject::class);
         }
 
         return $this->createObject;
@@ -114,7 +114,7 @@ class PrepareRecoveryAccessEndPointTest extends TestCase
     public function getFormHandling(): FormHandlingInterface
     {
         if (null === $this->formHandling) {
-            $this->formHandling = $this->createMock(FormHandlingInterface::class);
+            $this->formHandling = $this->createStub(FormHandlingInterface::class);
         }
 
         return $this->formHandling;
@@ -126,7 +126,7 @@ class PrepareRecoveryAccessEndPointTest extends TestCase
     public function getFormProcessing(): FormProcessingInterface
     {
         if (null === $this->formProcessing) {
-            $this->formProcessing = $this->createMock(FormProcessingInterface::class);
+            $this->formProcessing = $this->createStub(FormProcessingInterface::class);
         }
 
         return $this->formProcessing;
@@ -138,7 +138,7 @@ class PrepareRecoveryAccessEndPointTest extends TestCase
     public function getFindUserByEmail(): FindUserByEmail
     {
         if (null === $this->findUserByEmail) {
-            $this->findUserByEmail = $this->createMock(FindUserByEmail::class);
+            $this->findUserByEmail = $this->createStub(FindUserByEmail::class);
         }
 
         return $this->findUserByEmail;
@@ -150,7 +150,7 @@ class PrepareRecoveryAccessEndPointTest extends TestCase
     public function getJumpIfNot(): JumpIfNot
     {
         if (null === $this->jumpIfNot) {
-            $this->jumpIfNot = $this->createMock(JumpIfNot::class);
+            $this->jumpIfNot = $this->createStub(JumpIfNot::class);
         }
 
         return $this->jumpIfNot;
@@ -162,7 +162,7 @@ class PrepareRecoveryAccessEndPointTest extends TestCase
     public function getRemoveRecoveryAccess(): RemoveRecoveryAccess
     {
         if (null === $this->removeRecoveryAccess) {
-            $this->removeRecoveryAccess = $this->createMock(RemoveRecoveryAccess::class);
+            $this->removeRecoveryAccess = $this->createStub(RemoveRecoveryAccess::class);
         }
 
         return $this->removeRecoveryAccess;
@@ -174,7 +174,7 @@ class PrepareRecoveryAccessEndPointTest extends TestCase
     public function getPrepareRecoveryAccess(): PrepareRecoveryAccess
     {
         if (null === $this->prepareRecoveryAccess) {
-            $this->prepareRecoveryAccess = $this->createMock(PrepareRecoveryAccess::class);
+            $this->prepareRecoveryAccess = $this->createStub(PrepareRecoveryAccess::class);
         }
 
         return $this->prepareRecoveryAccess;
@@ -186,7 +186,7 @@ class PrepareRecoveryAccessEndPointTest extends TestCase
     public function getSaveObject(): SaveObject
     {
         if (null === $this->saveObject) {
-            $this->saveObject = $this->createMock(SaveObject::class);
+            $this->saveObject = $this->createStub(SaveObject::class);
         }
 
         return $this->saveObject;
@@ -198,7 +198,7 @@ class PrepareRecoveryAccessEndPointTest extends TestCase
     public function getNotifyUserAboutRecoveryAccess(): NotifyUserAboutRecoveryAccessInterface
     {
         if (null === $this->notifyUserAboutRecoveryAccess) {
-            $this->notifyUserAboutRecoveryAccess = $this->createMock(NotifyUserAboutRecoveryAccessInterface::class);
+            $this->notifyUserAboutRecoveryAccess = $this->createStub(NotifyUserAboutRecoveryAccessInterface::class);
         }
 
         return $this->notifyUserAboutRecoveryAccess;
@@ -210,7 +210,7 @@ class PrepareRecoveryAccessEndPointTest extends TestCase
     public function getRender(): Render
     {
         if (null === $this->render) {
-            $this->render = $this->createMock(Render::class);
+            $this->render = $this->createStub(Render::class);
         }
 
         return $this->render;
@@ -222,7 +222,7 @@ class PrepareRecoveryAccessEndPointTest extends TestCase
     public function getStop(): Stop
     {
         if (null === $this->stop) {
-            $this->stop = $this->createMock(Stop::class);
+            $this->stop = $this->createStub(Stop::class);
         }
 
         return $this->stop;
@@ -234,7 +234,7 @@ class PrepareRecoveryAccessEndPointTest extends TestCase
     public function getRenderForm(): RenderFormInterface
     {
         if (null === $this->renderForm) {
-            $this->renderForm = $this->createMock(RenderFormInterface::class);
+            $this->renderForm = $this->createStub(RenderFormInterface::class);
         }
 
         return $this->renderForm;
@@ -246,7 +246,7 @@ class PrepareRecoveryAccessEndPointTest extends TestCase
     public function getRenderError(): RenderError
     {
         if (null === $this->renderError) {
-            $this->renderError = $this->createMock(RenderError::class);
+            $this->renderError = $this->createStub(RenderError::class);
         }
 
         return $this->renderError;

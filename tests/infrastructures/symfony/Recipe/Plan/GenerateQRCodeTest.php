@@ -47,10 +47,10 @@ class GenerateQRCodeTest extends TestCase
     public function buildPlan(): GenerateQRCode
     {
         return new GenerateQRCode(
-            $this->createMock(OriginalRecipeInterface::class),
-            $this->createMock(GenerateQRCodeTextForTOTP::class),
-            $this->createMock(BuildQrCodeInterface::class),
-            $this->createMock(RenderError::class),
+            $this->createStub(OriginalRecipeInterface::class),
+            $this->createStub(GenerateQRCodeTextForTOTP::class),
+            $this->createStub(BuildQrCodeInterface::class),
+            $this->createStub(RenderError::class),
             'foo',
         );
     }

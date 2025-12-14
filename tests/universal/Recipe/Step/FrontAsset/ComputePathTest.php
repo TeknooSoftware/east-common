@@ -43,8 +43,8 @@ class ComputePathTest extends TestCase
         $this->assertInstanceOf(
             ComputePath::class,
             (new ComputePath('build/'))(
-                $this->createMock(ManagerInterface::class),
-                $this->createMock(ServerRequestInterface::class),
+                $this->createStub(ManagerInterface::class),
+                $this->createStub(ServerRequestInterface::class),
             ),
         );
     }

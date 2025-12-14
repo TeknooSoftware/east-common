@@ -58,7 +58,7 @@ class ContainerTwigTest extends TestCase
     public function testEngineInterface(): void
     {
         $container = $this->buildContainer();
-        $container->set('twig', $this->createMock(Environment::class));
+        $container->set('twig', $this->createStub(Environment::class));
 
         $this->assertInstanceOf(
             EngineInterface::class,
@@ -69,7 +69,7 @@ class ContainerTwigTest extends TestCase
     public function testEngine(): void
     {
         $container = $this->buildContainer();
-        $container->set('twig', $this->createMock(Environment::class));
+        $container->set('twig', $this->createStub(Environment::class));
 
         $this->assertInstanceOf(
             Engine::class,

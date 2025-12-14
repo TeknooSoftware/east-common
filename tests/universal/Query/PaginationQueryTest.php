@@ -53,7 +53,7 @@ class PaginationQueryTest extends TestCase
 
     public function testExecute(): void
     {
-        $loader = $this->createMock(LoaderInterface::class);
+        $loader = $this->createStub(LoaderInterface::class);
         $repository = $this->createMock(RepositoryInterface::class);
         $promise = $this->createMock(PromiseInterface::class);
 
@@ -96,7 +96,7 @@ class PaginationQueryTest extends TestCase
                 20
             )->willReturnCallback(
                 function (array $criteria, PromiseInterface $promise) use ($repository): \PHPUnit\Framework\MockObject\MockObject {
-                    $promise->success($this->createMock(\Iterator::class));
+                    $promise->success($this->createStub(\Iterator::class));
 
                     return $repository;
                 }
@@ -110,7 +110,7 @@ class PaginationQueryTest extends TestCase
 
     public function testExecuteErrorOnCount(): void
     {
-        $loader = $this->createMock(LoaderInterface::class);
+        $loader = $this->createStub(LoaderInterface::class);
         $repository = $this->createMock(RepositoryInterface::class);
         $promise = $this->createMock(PromiseInterface::class);
 
@@ -144,7 +144,7 @@ class PaginationQueryTest extends TestCase
                 20
             )->willReturnCallback(
                 function (array $criteria, PromiseInterface $promise) use ($repository): \PHPUnit\Framework\MockObject\MockObject {
-                    $promise->success($this->createMock(\Iterator::class));
+                    $promise->success($this->createStub(\Iterator::class));
 
                     return $repository;
                 }
@@ -158,7 +158,7 @@ class PaginationQueryTest extends TestCase
 
     public function testExecuteErrorOnFin(): void
     {
-        $loader = $this->createMock(LoaderInterface::class);
+        $loader = $this->createStub(LoaderInterface::class);
         $repository = $this->createMock(RepositoryInterface::class);
         $promise = $this->createMock(PromiseInterface::class);
 

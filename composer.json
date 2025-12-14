@@ -68,7 +68,7 @@
         "ext-mongodb" : "*",
         "ext-tidy" : "*",
         "roave/security-advisories": "dev-latest",
-        "phpunit/phpunit": "^12.5.33",
+        "phpunit/phpunit": "^12.5.3",
         "squizlabs/php_codesniffer": "^4.0.1",
         "phpstan/phpstan": "^2.1.33",
         "phpstan/extension-installer": "^1.4.3",

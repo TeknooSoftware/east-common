@@ -28,6 +28,8 @@ namespace Teknoo\Tests\East\Common\Doctrine\Writer\ODM;
 use Doctrine\ODM\MongoDB\Repository\GridFSRepository;
 use Doctrine\ODM\MongoDB\Repository\UploadOptions;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Doctrine\Object\Media;
 use Teknoo\East\Common\Object\Media as OriginalMedia;
@@ -53,25 +55,27 @@ class MediaWriterTest extends TestCase
 
     private ?OriginalWriter $writer = null;
 
-    /**
-     * @return GridFSRepository|\PHPUnit\Framework\MockObject\MockObject
-     */
-    public function getGridFSRepository(): GridFSRepository
+    public function getGridFSRepository(bool $stub = false): (GridFSRepository&Stub)|(GridFSRepository&MockObject)
     {
         if (!$this->repository instanceof GridFSRepository) {
-            $this->repository = $this->createMock(GridFSRepository::class);
+            if ($stub) {
+                $this->repository = $this->createStub(GridFSRepository::class);
+            } else {
+                $this->repository = $this->createMock(GridFSRepository::class);
+            }
         }
 
         return $this->repository;
     }
 
-    /**
-     * @return OriginalWriter|\PHPUnit\Framework\MockObject\MockObject
-     */
-    public function getOriginalWriter(): OriginalWriter
+    public function getOriginalWriter(bool $stub = false): (OriginalWriter&Stub)|(OriginalWriter&MockObject)
     {
         if (!$this->writer instanceof OriginalWriter) {
-            $this->writer = $this->createMock(OriginalWriter::class);
+            if ($stub) {
+                $this->writer = $this->createStub(OriginalWriter::class);
+            } else {
+                $this->writer = $this->createMock(OriginalWriter::class);
+            }
         }
 
         return $this->writer;
@@ -80,8 +84,8 @@ class MediaWriterTest extends TestCase
     public function buildWriter(): MediaWriter
     {
         return new MediaWriter(
-            $this->getGridFSRepository(),
-            $this->getOriginalWriter()
+            $this->getGridFSRepository(true),
+            $this->getOriginalWriter(true)
         );
     }
 
@@ -160,8 +164,8 @@ class MediaWriterTest extends TestCase
 
     public function testRemove(): void
     {
-        $object = $this->createMock(Media::class);
-        $promise = $this->createMock(PromiseInterface::class);
+        $object = $this->createStub(Media::class);
+        $promise = $this->createStub(PromiseInterface::class);
 
         $this->getOriginalWriter()
             ->expects($this->once())

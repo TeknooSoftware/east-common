@@ -28,6 +28,7 @@ namespace Teknoo\Tests\East\CommonBundle\Provider;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface as GoogleTwoFactorInterface;
 use Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface as TotpTwoFactorInterface;
@@ -58,34 +59,46 @@ use Teknoo\Recipe\Promise\PromiseInterface;
 #[CoversClass(RecoveringAccessUserProvider::class)]
 class RecoveringAccessUserProviderTest extends TestCase
 {
-    private (UserLoader&MockObject)|null $loader = null;
+    private (UserLoader&Stub)|(UserLoader&MockObject)|null $loader = null;
 
-    private (SymfonyUserWriter&MockObject)|null $writer = null;
+    private (SymfonyUserWriter&Stub)|(SymfonyUserWriter&MockObject)|null $writer = null;
 
-    private (DatesService&MockObject)|null $datesService = null;
+    private (DatesService&Stub)|(DatesService&MockObject)|null $datesService = null;
 
-    public function getLoader(): UserLoader&MockObject
+    public function getLoader(bool $stub = false): (UserLoader&Stub)|(UserLoader&MockObject)
     {
         if (!$this->loader instanceof UserLoader) {
-            $this->loader = $this->createMock(UserLoader::class);
+            if ($stub) {
+                $this->loader = $this->createStub(UserLoader::class);
+            } else {
+                $this->loader = $this->createMock(UserLoader::class);
+            }
         }
 
         return $this->loader;
     }
 
-    public function getWriter(): SymfonyUserWriter&MockObject
+    public function getWriter(bool $stub = false): (SymfonyUserWriter&Stub)|(SymfonyUserWriter&MockObject)
     {
         if (!$this->writer instanceof SymfonyUserWriter) {
-            $this->writer = $this->createMock(SymfonyUserWriter::class);
+            if ($stub) {
+                $this->writer = $this->createStub(SymfonyUserWriter::class);
+            } else {
+                $this->writer = $this->createMock(SymfonyUserWriter::class);
+            }
         }
 
         return $this->writer;
     }
 
-    public function getDatesService(): DatesService&MockObject
+    public function getDatesService(bool $stub = false): (DatesService&Stub)|(DatesService&MockObject)
     {
         if (!$this->datesService instanceof DatesService) {
-            $this->datesService = $this->createMock(DatesService::class);
+            if ($stub) {
+                $this->datesService = $this->createStub(DatesService::class);
+            } else {
+                $this->datesService = $this->createMock(DatesService::class);
+            }
         }
 
         return $this->datesService;
@@ -94,9 +107,9 @@ class RecoveringAccessUserProviderTest extends TestCase
     public function buildProvider(): RecoveringAccessUserProvider
     {
         return new RecoveringAccessUserProvider(
-            $this->getLoader(),
-            $this->getWriter(),
-            $this->getDatesService(),
+            $this->getLoader(true),
+            $this->getWriter(true),
+            $this->getDatesService(true),
             'ROLE_RECOVERY',
         );
     }
@@ -120,10 +133,10 @@ class RecoveringAccessUserProviderTest extends TestCase
 
     public function testLoadUserByUsernameFound(): void
     {
-        $this->getDatesService()
+        $this->getDatesService(true)
             ->method('passMeTheDate')
             ->willReturnCallback(
-                function (callable $setter): ?\PHPUnit\Framework\MockObject\MockObject {
+                function (callable $setter): DatesService {
                     $setter(new DateTimeImmutable('2024-01-28'));
 
                     return  $this->datesService;
@@ -162,10 +175,10 @@ class RecoveringAccessUserProviderTest extends TestCase
 
     public function testLoadUserByUsernameFoundWithWrongAlgorithm(): void
     {
-        $this->getDatesService()
+        $this->getDatesService(true)
             ->method('passMeTheDate')
             ->willReturnCallback(
-                function (callable $setter): ?\PHPUnit\Framework\MockObject\MockObject {
+                function (callable $setter): DatesService {
                     $setter(new DateTimeImmutable('2024-01-28'));
 
                     return  $this->datesService;
@@ -200,10 +213,10 @@ class RecoveringAccessUserProviderTest extends TestCase
 
     public function testLoadUserByUsernameFoundWithGoogleAuthenticator(): void
     {
-        $this->getDatesService()
+        $this->getDatesService(true)
             ->method('passMeTheDate')
             ->willReturnCallback(
-                function (callable $setter): ?\PHPUnit\Framework\MockObject\MockObject {
+                function (callable $setter): DatesService {
                     $setter(new DateTimeImmutable('2024-01-28'));
 
                     return  $this->datesService;
@@ -263,10 +276,10 @@ class RecoveringAccessUserProviderTest extends TestCase
 
     public function testLoadUserByUsernameFoundWithTOTP(): void
     {
-        $this->getDatesService()
+        $this->getDatesService(true)
             ->method('passMeTheDate')
             ->willReturnCallback(
-                function (callable $setter): ?\PHPUnit\Framework\MockObject\MockObject {
+                function (callable $setter): DatesService {
                     $setter(new DateTimeImmutable('2024-01-28'));
 
                     return  $this->datesService;
@@ -328,7 +341,7 @@ class RecoveringAccessUserProviderTest extends TestCase
     {
         $user = new User();
         $user->setEmail('foo@bar');
-        $user->setAuthData([$this->createMock(AuthDataInterface::class)]);
+        $user->setAuthData([$this->createStub(AuthDataInterface::class)]);
 
         $this->getLoader()
             ->expects($this->once())
@@ -363,10 +376,10 @@ class RecoveringAccessUserProviderTest extends TestCase
 
     public function testLoadUserByIdentifierFound(): void
     {
-        $this->getDatesService()
+        $this->getDatesService(true)
             ->method('passMeTheDate')
             ->willReturnCallback(
-                function (callable $setter): ?\PHPUnit\Framework\MockObject\MockObject {
+                function (callable $setter): DatesService {
                     $setter(new DateTimeImmutable('2024-01-28'));
 
                     return  $this->datesService;
@@ -407,7 +420,7 @@ class RecoveringAccessUserProviderTest extends TestCase
     {
         $user = new User();
         $user->setEmail('foo@bar');
-        $user->setAuthData([$this->createMock(AuthDataInterface::class)]);
+        $user->setAuthData([$this->createStub(AuthDataInterface::class)]);
 
         $this->getLoader()
             ->expects($this->once())
@@ -454,10 +467,10 @@ class RecoveringAccessUserProviderTest extends TestCase
 
     public function testRefreshUserFound(): void
     {
-        $this->getDatesService()
+        $this->getDatesService(true)
             ->method('passMeTheDate')
             ->willReturnCallback(
-                function (callable $setter): ?\PHPUnit\Framework\MockObject\MockObject {
+                function (callable $setter): DatesService {
                     $setter(new DateTimeImmutable('2024-01-28'));
 
                     return  $this->datesService;
@@ -503,7 +516,7 @@ class RecoveringAccessUserProviderTest extends TestCase
     public function testRefreshUserNotSupported(): void
     {
         $this->expectException(MissingUserException::class);
-        $this->buildProvider()->refreshUser($this->createMock(UserInterface::class));
+        $this->buildProvider()->refreshUser($this->createStub(UserInterface::class));
     }
 
     public function testUpgradePasswordNotSupported(): void
@@ -511,14 +524,14 @@ class RecoveringAccessUserProviderTest extends TestCase
         $this->getWriter()->expects($this->never())->method('save');
 
         $this->buildProvider()->upgradePassword(
-            $this->createMock(UserInterface::class),
+            $this->createStub(UserInterface::class),
             'foo'
         );
     }
 
     public function testUpgradePassword(): void
     {
-        $sfUser = $this->createMock(UserWithRecoveryAccess::class);
+        $sfUser = $this->createStub(UserWithRecoveryAccess::class);
         $user = $this->createMock(User::class);
 
         $sfUser->method('getWrappedUser')->willReturn($user);

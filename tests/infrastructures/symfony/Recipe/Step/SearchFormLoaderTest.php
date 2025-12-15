@@ -27,6 +27,7 @@ namespace Teknoo\Tests\East\CommonBundle\Recipe\Step;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Form\FormFactory;
@@ -44,15 +45,16 @@ use Teknoo\East\CommonBundle\Recipe\Step\SearchFormLoader;
 #[CoversClass(SearchFormLoader::class)]
 class SearchFormLoaderTest extends TestCase
 {
-    private ?FormFactory $formFactory = null;
+    private (FormFactory&Stub)|(FormFactory&MockObject)|null $formFactory = null;
 
-    /**
-     * @return FormFactory|MockObject
-     */
-    private function getFormFactory(): FormFactory
+    private function getFormFactory(bool $stub = false): (FormFactory&Stub)|(FormFactory&MockObject)
     {
         if (!$this->formFactory instanceof FormFactory) {
-            $this->formFactory = $this->createMock(FormFactory::class);
+            if ($stub) {
+                $this->formFactory = $this->createStub(FormFactory::class);
+            } else {
+                $this->formFactory = $this->createMock(FormFactory::class);
+            }
         }
 
         return $this->formFactory;
@@ -61,16 +63,16 @@ class SearchFormLoaderTest extends TestCase
     public function buildStep(array $templates): SearchFormLoader
     {
         return new SearchFormLoader(
-            $this->getFormFactory(),
+            $this->getFormFactory(true),
             $templates
         );
     }
 
     public function testInvokeWithNonAllowedInTemplate(): void
     {
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request = $this->createStub(ServerRequestInterface::class);
         $request->method('getAttribute')->willReturn(
-            $this->createMock(Request::class)
+            $this->createStub(Request::class)
         );
         $request->method('getParsedBody')->willReturn([
             'bar1' => []
@@ -90,9 +92,9 @@ class SearchFormLoaderTest extends TestCase
 
     public function testInvokeWithNotArrayInBody(): void
     {
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request = $this->createStub(ServerRequestInterface::class);
         $request->method('getAttribute')->willReturn(
-            $this->createMock(Request::class)
+            $this->createStub(Request::class)
         );
         $request->method('getParsedBody')->willReturn(null);
         $manager = $this->createMock(ManagerInterface::class);
@@ -118,7 +120,7 @@ class SearchFormLoaderTest extends TestCase
 
     public function testInvokeWithNoFormFoundWithAny(): void
     {
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request = $this->createStub(ServerRequestInterface::class);
         $request->method('getParsedBody')->willReturn([
             'bar3' => []
         ]);
@@ -144,9 +146,9 @@ class SearchFormLoaderTest extends TestCase
 
     public function testInvokeWithNoFormFoundWithTemplate(): void
     {
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request = $this->createStub(ServerRequestInterface::class);
         $request->method('getAttribute')->willReturn(
-            $this->createMock(Request::class)
+            $this->createStub(Request::class)
         );
         $request->method('getParsedBody')->willReturn([
             'bar3' => []
@@ -173,9 +175,9 @@ class SearchFormLoaderTest extends TestCase
 
     public function testInvokeWithFormFoundWithTemplate(): void
     {
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request = $this->createStub(ServerRequestInterface::class);
         $request->method('getAttribute')->willReturn(
-            $this->createMock(Request::class)
+            $this->createStub(Request::class)
         );
         $request->method('getParsedBody')->willReturn([
             'bar1' => []
@@ -188,7 +190,7 @@ class SearchFormLoaderTest extends TestCase
         $this->getFormFactory()
             ->expects($this->once())
             ->method('create')
-            ->willReturn($this->createMock(FormInterface::class));
+            ->willReturn($this->createStub(FormInterface::class));
 
         $this->assertInstanceOf(
             SearchFormLoader::class,
@@ -207,9 +209,9 @@ class SearchFormLoaderTest extends TestCase
 
     public function testInvokeWithFormFoundWithAny(): void
     {
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request = $this->createStub(ServerRequestInterface::class);
         $request->method('getAttribute')->willReturn(
-            $this->createMock(Request::class)
+            $this->createStub(Request::class)
         );
         $request->method('getParsedBody')->willReturn([
             'bar2' => []
@@ -222,7 +224,7 @@ class SearchFormLoaderTest extends TestCase
         $this->getFormFactory()
             ->expects($this->once())
             ->method('create')
-            ->willReturn($this->createMock(FormInterface::class));
+            ->willReturn($this->createStub(FormInterface::class));
 
         $this->assertInstanceOf(
             SearchFormLoader::class,

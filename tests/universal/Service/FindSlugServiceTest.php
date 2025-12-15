@@ -153,7 +153,7 @@ class FindSlugServiceTest extends TestCase
             ->willReturnCallback(
                 function ($query, PromiseInterface $promise) use ($loader, &$counter): \PHPUnit\Framework\MockObject\MockObject {
                     if ($counter++ < 2) {
-                        $promise->success($this->createMock(IdentifiedObjectInterface::class));
+                        $promise->success($this->createStub(IdentifiedObjectInterface::class));
                     } else {
                         $promise->fail(new \DomainException('Not Found'));
                     }

@@ -50,7 +50,7 @@ class InitParametersBagTest extends TestCase
         $this->assertInstanceOf(
             InitParametersBag::class,
             $this->buildStep()(
-                $this->createMock(ManagerInterface::class)
+                $this->createStub(ManagerInterface::class)
             )
         );
     }

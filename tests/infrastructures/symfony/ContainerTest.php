@@ -112,9 +112,9 @@ class ContainerTest extends TestCase
     {
         $container = $this->buildContainer();
 
-        $container->set(EngineInterface::class, $this->createMock(EngineInterface::class));
-        $container->set(StreamFactoryInterface::class, $this->createMock(StreamFactoryInterface::class));
-        $container->set(ResponseFactoryInterface::class, $this->createMock(ResponseFactoryInterface::class));
+        $container->set(EngineInterface::class, $this->createStub(EngineInterface::class));
+        $container->set(StreamFactoryInterface::class, $this->createStub(StreamFactoryInterface::class));
+        $container->set(ResponseFactoryInterface::class, $this->createStub(ResponseFactoryInterface::class));
 
         $this->assertInstanceOf(
             RenderFormInterface::class,
@@ -133,12 +133,12 @@ class ContainerTest extends TestCase
 
         $container->set('teknoo.east.common.plan.default_error_template', 'foo');
 
-        $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
-        $container->set(EnableTOTP::class, $this->createMock(EnableTOTP::class));
-        $container->set(CreateObject::class, $this->createMock(CreateObject::class));
-        $container->set(FormHandlingInterface::class, $this->createMock(FormHandlingInterface::class));
-        $container->set(RenderFormInterface::class, $this->createMock(RenderFormInterface::class));
-        $container->set(RenderError::class, $this->createMock(RenderError::class));
+        $container->set(OriginalRecipeInterface::class, $this->createStub(OriginalRecipeInterface::class));
+        $container->set(EnableTOTP::class, $this->createStub(EnableTOTP::class));
+        $container->set(CreateObject::class, $this->createStub(CreateObject::class));
+        $container->set(FormHandlingInterface::class, $this->createStub(FormHandlingInterface::class));
+        $container->set(RenderFormInterface::class, $this->createStub(RenderFormInterface::class));
+        $container->set(RenderError::class, $this->createStub(RenderError::class));
 
         $this->assertInstanceOf(
             Enable2FA::class,
@@ -149,9 +149,9 @@ class ContainerTest extends TestCase
     public function testPlanInterface(): void
     {
         $container = $this->buildContainer();
-        $container->set(\Teknoo\East\Common\Middleware\LocaleMiddleware::class, $this->createMock(\Teknoo\East\Common\Middleware\LocaleMiddleware::class));
-        $container->set(LocaleMiddleware::class, $this->createMock(LocaleMiddleware::class));
-        $container->set(RouterInterface::class, $this->createMock(RouterInterface::class));
+        $container->set(\Teknoo\East\Common\Middleware\LocaleMiddleware::class, $this->createStub(\Teknoo\East\Common\Middleware\LocaleMiddleware::class));
+        $container->set(LocaleMiddleware::class, $this->createStub(LocaleMiddleware::class));
+        $container->set(RouterInterface::class, $this->createStub(RouterInterface::class));
 
         $this->assertInstanceOf(
             PlanInterface::class,
@@ -165,10 +165,10 @@ class ContainerTest extends TestCase
 
         $container->set('teknoo.east.common.plan.default_error_template', 'foo');
 
-        $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
-        $container->set(DisableTOTP::class, $this->createMock(DisableTOTP::class));
-        $container->set(RedirectClientInterface::class, $this->createMock(RedirectClientInterface::class));
-        $container->set(RenderError::class, $this->createMock(RenderError::class));
+        $container->set(OriginalRecipeInterface::class, $this->createStub(OriginalRecipeInterface::class));
+        $container->set(DisableTOTP::class, $this->createStub(DisableTOTP::class));
+        $container->set(RedirectClientInterface::class, $this->createStub(RedirectClientInterface::class));
+        $container->set(RenderError::class, $this->createStub(RenderError::class));
 
         $this->assertInstanceOf(
             Disable2FA::class,
@@ -182,10 +182,10 @@ class ContainerTest extends TestCase
 
         $container->set('teknoo.east.common.plan.default_error_template', 'foo');
 
-        $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
-        $container->set(GenerateQRCodeTextForTOTP::class, $this->createMock(GenerateQRCodeTextForTOTP::class));
-        $container->set(BuildQrCodeInterface::class, $this->createMock(BuildQrCodeInterface::class));
-        $container->set(RenderError::class, $this->createMock(RenderError::class));
+        $container->set(OriginalRecipeInterface::class, $this->createStub(OriginalRecipeInterface::class));
+        $container->set(GenerateQRCodeTextForTOTP::class, $this->createStub(GenerateQRCodeTextForTOTP::class));
+        $container->set(BuildQrCodeInterface::class, $this->createStub(BuildQrCodeInterface::class));
+        $container->set(RenderError::class, $this->createStub(RenderError::class));
 
         $this->assertInstanceOf(
             GenerateQRCode::class,
@@ -199,14 +199,14 @@ class ContainerTest extends TestCase
 
         $container->set('teknoo.east.common.plan.default_error_template', 'foo');
 
-        $container->set(OriginalRecipeInterface::class, $this->createMock(OriginalRecipeInterface::class));
-        $container->set(CreateObject::class, $this->createMock(CreateObject::class));
-        $container->set(FormHandlingInterface::class, $this->createMock(FormHandlingInterface::class));
-        $container->set(FormProcessingInterface::class, $this->createMock(FormProcessingInterface::class));
-        $container->set(ValidateTOTP::class, $this->createMock(ValidateTOTP::class));
-        $container->set(RedirectClientInterface::class, $this->createMock(RedirectClientInterface::class));
-        $container->set(RenderFormInterface::class, $this->createMock(RenderFormInterface::class));
-        $container->set(RenderError::class, $this->createMock(RenderError::class));
+        $container->set(OriginalRecipeInterface::class, $this->createStub(OriginalRecipeInterface::class));
+        $container->set(CreateObject::class, $this->createStub(CreateObject::class));
+        $container->set(FormHandlingInterface::class, $this->createStub(FormHandlingInterface::class));
+        $container->set(FormProcessingInterface::class, $this->createStub(FormProcessingInterface::class));
+        $container->set(ValidateTOTP::class, $this->createStub(ValidateTOTP::class));
+        $container->set(RedirectClientInterface::class, $this->createStub(RedirectClientInterface::class));
+        $container->set(RenderFormInterface::class, $this->createStub(RenderFormInterface::class));
+        $container->set(RenderError::class, $this->createStub(RenderError::class));
 
         $this->assertInstanceOf(
             Validate2FA::class,
@@ -217,7 +217,7 @@ class ContainerTest extends TestCase
     public function testLocaleMiddleware(): void
     {
         $container = $this->buildContainer();
-        $translatableListener = $this->createMock(LocaleAwareInterface::class);
+        $translatableListener = $this->createStub(LocaleAwareInterface::class);
 
         $container->set('translator', $translatableListener);
         $loader = $container->get(LocaleMiddleware::class);
@@ -232,9 +232,9 @@ class ContainerTest extends TestCase
     {
         $container = $this->buildContainer();
 
-        $container->set(LoggerInterface::class, $this->createMock(LoggerInterface::class));
-        $container->set(RouterInterface::class, $this->createMock(RouterInterface::class));
-        $container->set('translator', $this->createMock(LocaleAwareInterface::class));
+        $container->set(LoggerInterface::class, $this->createStub(LoggerInterface::class));
+        $container->set(RouterInterface::class, $this->createStub(RouterInterface::class));
+        $container->set('translator', $this->createStub(LocaleAwareInterface::class));
 
         $this->assertInstanceOf(
             RecipeInterface::class,
@@ -252,13 +252,13 @@ class ContainerTest extends TestCase
             'teknoo.east.common.assets.final_location',
             'foo',
         );
-        $container->set(Executor::class, $this->createMock(Executor::class));
-        $container->set(MinifierCommandInterface::class, $this->createMock(MinifierCommandInterface::class));
-        $container->set(RouterInterface::class, $this->createMock(RouterInterface::class));
-        $container->set(SourceLoaderInterface::class . ':css', $this->createMock(SourceLoaderInterface::class));
-        $container->set(PersisterInterface::class . ':css', $this->createMock(PersisterInterface::class));
-        $container->set(MinifierInterface::class . ':css', $this->createMock(MinifierInterface::class));
-        $container->set(MessageFactoryInterface::class, $this->createMock(MessageFactoryInterface::class));
+        $container->set(Executor::class, $this->createStub(Executor::class));
+        $container->set(MinifierCommandInterface::class, $this->createStub(MinifierCommandInterface::class));
+        $container->set(RouterInterface::class, $this->createStub(RouterInterface::class));
+        $container->set(SourceLoaderInterface::class . ':css', $this->createStub(SourceLoaderInterface::class));
+        $container->set(PersisterInterface::class . ':css', $this->createStub(PersisterInterface::class));
+        $container->set(MinifierInterface::class . ':css', $this->createStub(MinifierInterface::class));
+        $container->set(MessageFactoryInterface::class, $this->createStub(MessageFactoryInterface::class));
 
         $this->assertInstanceOf(
             MinifyCommand::class,
@@ -276,13 +276,13 @@ class ContainerTest extends TestCase
             'teknoo.east.common.assets.final_location',
             'foo',
         );
-        $container->set(Executor::class, $this->createMock(Executor::class));
-        $container->set(MinifierCommandInterface::class, $this->createMock(MinifierCommandInterface::class));
-        $container->set(RouterInterface::class, $this->createMock(RouterInterface::class));
-        $container->set(SourceLoaderInterface::class . ':css', $this->createMock(SourceLoaderInterface::class));
-        $container->set(PersisterInterface::class . ':css', $this->createMock(PersisterInterface::class));
-        $container->set(MinifierInterface::class . ':css', $this->createMock(MinifierInterface::class));
-        $container->set(MessageFactory::class, $this->createMock(MessageFactory::class));
+        $container->set(Executor::class, $this->createStub(Executor::class));
+        $container->set(MinifierCommandInterface::class, $this->createStub(MinifierCommandInterface::class));
+        $container->set(RouterInterface::class, $this->createStub(RouterInterface::class));
+        $container->set(SourceLoaderInterface::class . ':css', $this->createStub(SourceLoaderInterface::class));
+        $container->set(PersisterInterface::class . ':css', $this->createStub(PersisterInterface::class));
+        $container->set(MinifierInterface::class . ':css', $this->createStub(MinifierInterface::class));
+        $container->set(MessageFactory::class, $this->createStub(MessageFactory::class));
 
         $this->assertInstanceOf(
             MinifyCommand::class,
@@ -300,12 +300,12 @@ class ContainerTest extends TestCase
             'teknoo.east.common.assets.final_location',
             'foo',
         );
-        $container->set(Executor::class, $this->createMock(Executor::class));
-        $container->set(MinifierCommandInterface::class, $this->createMock(MinifierCommandInterface::class));
-        $container->set(RouterInterface::class, $this->createMock(RouterInterface::class));
-        $container->set(SourceLoaderInterface::class . ':css', $this->createMock(SourceLoaderInterface::class));
-        $container->set(PersisterInterface::class . ':css', $this->createMock(PersisterInterface::class));
-        $container->set(MinifierInterface::class . ':css', $this->createMock(MinifierInterface::class));
+        $container->set(Executor::class, $this->createStub(Executor::class));
+        $container->set(MinifierCommandInterface::class, $this->createStub(MinifierCommandInterface::class));
+        $container->set(RouterInterface::class, $this->createStub(RouterInterface::class));
+        $container->set(SourceLoaderInterface::class . ':css', $this->createStub(SourceLoaderInterface::class));
+        $container->set(PersisterInterface::class . ':css', $this->createStub(PersisterInterface::class));
+        $container->set(MinifierInterface::class . ':css', $this->createStub(MinifierInterface::class));
 
         $this->expectException(RuntimeException::class);
         $container->get(MinifyCommand::class . ':css');
@@ -321,13 +321,13 @@ class ContainerTest extends TestCase
             'teknoo.east.common.assets.final_location',
             'foo',
         );
-        $container->set(Executor::class, $this->createMock(Executor::class));
-        $container->set(MinifierCommandInterface::class, $this->createMock(MinifierCommandInterface::class));
-        $container->set(RouterInterface::class, $this->createMock(RouterInterface::class));
-        $container->set(SourceLoaderInterface::class . ':js', $this->createMock(SourceLoaderInterface::class));
-        $container->set(PersisterInterface::class . ':js', $this->createMock(PersisterInterface::class));
-        $container->set(MinifierInterface::class . ':js', $this->createMock(MinifierInterface::class));
-        $container->set(MessageFactoryInterface::class, $this->createMock(MessageFactoryInterface::class));
+        $container->set(Executor::class, $this->createStub(Executor::class));
+        $container->set(MinifierCommandInterface::class, $this->createStub(MinifierCommandInterface::class));
+        $container->set(RouterInterface::class, $this->createStub(RouterInterface::class));
+        $container->set(SourceLoaderInterface::class . ':js', $this->createStub(SourceLoaderInterface::class));
+        $container->set(PersisterInterface::class . ':js', $this->createStub(PersisterInterface::class));
+        $container->set(MinifierInterface::class . ':js', $this->createStub(MinifierInterface::class));
+        $container->set(MessageFactoryInterface::class, $this->createStub(MessageFactoryInterface::class));
 
         $this->assertInstanceOf(
             MinifyCommand::class,
@@ -345,13 +345,13 @@ class ContainerTest extends TestCase
             'teknoo.east.common.assets.final_location',
             'foo',
         );
-        $container->set(Executor::class, $this->createMock(Executor::class));
-        $container->set(MinifierCommandInterface::class, $this->createMock(MinifierCommandInterface::class));
-        $container->set(RouterInterface::class, $this->createMock(RouterInterface::class));
-        $container->set(SourceLoaderInterface::class . ':js', $this->createMock(SourceLoaderInterface::class));
-        $container->set(PersisterInterface::class . ':js', $this->createMock(PersisterInterface::class));
-        $container->set(MinifierInterface::class . ':js', $this->createMock(MinifierInterface::class));
-        $container->set(MessageFactory::class, $this->createMock(MessageFactory::class));
+        $container->set(Executor::class, $this->createStub(Executor::class));
+        $container->set(MinifierCommandInterface::class, $this->createStub(MinifierCommandInterface::class));
+        $container->set(RouterInterface::class, $this->createStub(RouterInterface::class));
+        $container->set(SourceLoaderInterface::class . ':js', $this->createStub(SourceLoaderInterface::class));
+        $container->set(PersisterInterface::class . ':js', $this->createStub(PersisterInterface::class));
+        $container->set(MinifierInterface::class . ':js', $this->createStub(MinifierInterface::class));
+        $container->set(MessageFactory::class, $this->createStub(MessageFactory::class));
 
         $this->assertInstanceOf(
             MinifyCommand::class,
@@ -369,12 +369,12 @@ class ContainerTest extends TestCase
             'teknoo.east.common.assets.final_location',
             'foo',
         );
-        $container->set(Executor::class, $this->createMock(Executor::class));
-        $container->set(MinifierCommandInterface::class, $this->createMock(MinifierCommandInterface::class));
-        $container->set(RouterInterface::class, $this->createMock(RouterInterface::class));
-        $container->set(SourceLoaderInterface::class . ':js', $this->createMock(SourceLoaderInterface::class));
-        $container->set(PersisterInterface::class . ':js', $this->createMock(PersisterInterface::class));
-        $container->set(MinifierInterface::class . ':js', $this->createMock(MinifierInterface::class));
+        $container->set(Executor::class, $this->createStub(Executor::class));
+        $container->set(MinifierCommandInterface::class, $this->createStub(MinifierCommandInterface::class));
+        $container->set(RouterInterface::class, $this->createStub(RouterInterface::class));
+        $container->set(SourceLoaderInterface::class . ':js', $this->createStub(SourceLoaderInterface::class));
+        $container->set(PersisterInterface::class . ':js', $this->createStub(PersisterInterface::class));
+        $container->set(MinifierInterface::class . ':js', $this->createStub(MinifierInterface::class));
 
         $this->expectException(RuntimeException::class);
         $container->get(MinifyCommand::class . ':js');

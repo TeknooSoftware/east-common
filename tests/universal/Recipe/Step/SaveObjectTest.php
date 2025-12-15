@@ -25,8 +25,12 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Recipe\Step;
 
+use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface as ObjectWithId;
 use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Common\Contracts\Writer\WriterInterface;
@@ -34,6 +38,7 @@ use Teknoo\East\Common\Recipe\Step\SaveObject;
 use Teknoo\East\Common\View\ParametersBag;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\Recipe\Promise\PromiseInterface;
+use TypeError;
 
 /**
  * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
@@ -49,41 +54,41 @@ class SaveObjectTest extends TestCase
 
     public function testInvokeBadWriter(): void
     {
-        $this->expectException(\TypeError::class);
+        $this->expectException(TypeError::class);
 
         $this->buildStep()(
-            new \stdClass(),
-            $this->createMock(ObjectInterface::class),
-            $this->createMock(ManagerInterface::class)
+            new stdClass(),
+            $this->createStub(ObjectInterface::class),
+            $this->createStub(ManagerInterface::class)
         );
     }
 
     public function testInvokeBadObject(): void
     {
-        $this->expectException(\TypeError::class);
+        $this->expectException(TypeError::class);
 
         $this->buildStep()(
-            $this->createMock(WriterInterface::class),
-            new \stdClass(),
-            $this->createMock(ManagerInterface::class)
+            $this->createStub(WriterInterface::class),
+            new stdClass(),
+            $this->createStub(ManagerInterface::class)
         );
     }
 
     public function testInvokeBadManager(): void
     {
-        $this->expectException(\TypeError::class);
+        $this->expectException(TypeError::class);
 
         $this->buildStep()(
-            $this->createMock(WriterInterface::class),
-            $this->createMock(ObjectInterface::class),
-            new \stdClass()
+            $this->createStub(WriterInterface::class),
+            $this->createStub(ObjectInterface::class),
+            new stdClass()
         );
     }
 
     public function testInvokeWithObjectId(): void
     {
-        $writer = $this->createMock(WriterInterface::class);
-        $object = $this->createMock(ObjectWithId::class);
+        $writer = $this->createStub(WriterInterface::class);
+        $object = $this->createStub(ObjectWithId::class);
         $object->method('getId')->willReturn('foo');
         $manager = $this->createMock(ManagerInterface::class);
 
@@ -101,7 +106,7 @@ class SaveObjectTest extends TestCase
         $writer
             ->method('save')
             ->willReturnCallback(
-                function (\Teknoo\East\Common\Contracts\Object\ObjectInterface $object, PromiseInterface $promise) use ($writer): \PHPUnit\Framework\MockObject\MockObject {
+                function (ObjectInterface $object, PromiseInterface $promise) use ($writer): Stub {
                     $promise->success($object);
 
                     return $writer;
@@ -114,15 +119,15 @@ class SaveObjectTest extends TestCase
                 $writer,
                 $object,
                 $manager,
-                $this->createMock(ParametersBag::class),
+                $this->createStub(ParametersBag::class),
             )
         );
     }
 
     public function testInvokeWithObjectContact(): void
     {
-        $writer = $this->createMock(WriterInterface::class);
-        $object = $this->createMock(ObjectInterface::class);
+        $writer = $this->createStub(WriterInterface::class);
+        $object = $this->createStub(ObjectInterface::class);
         $manager = $this->createMock(ManagerInterface::class);
 
         $manager->expects($this->never())->method('error');
@@ -134,7 +139,7 @@ class SaveObjectTest extends TestCase
         $writer
             ->method('save')
             ->willReturnCallback(
-                function (\Teknoo\East\Common\Contracts\Object\ObjectInterface $object, PromiseInterface $promise) use ($writer): \PHPUnit\Framework\MockObject\MockObject {
+                function (ObjectInterface $object, PromiseInterface $promise) use ($writer): Stub {
                     $promise->success($object);
 
                     return $writer;
@@ -147,15 +152,15 @@ class SaveObjectTest extends TestCase
                 $writer,
                 $object,
                 $manager,
-                $this->createMock(ParametersBag::class),
+                $this->createStub(ParametersBag::class),
             )
         );
     }
 
     public function testInvokeWithErrorWithObjectContract(): void
     {
-        $writer = $this->createMock(WriterInterface::class);
-        $object = $this->createMock(ObjectInterface::class);
+        $writer = $this->createStub(WriterInterface::class);
+        $object = $this->createStub(ObjectInterface::class);
         $manager = $this->createMock(ManagerInterface::class);
 
         $manager->expects($this->once())->method('error');
@@ -164,9 +169,9 @@ class SaveObjectTest extends TestCase
         $writer
             ->method('save')
             ->willReturnCallback(
-                function (\Teknoo\East\Common\Contracts\Object\ObjectInterface $object, PromiseInterface $promise) use ($writer): \PHPUnit\Framework\MockObject\MockObject {
+                function (ObjectInterface $object, PromiseInterface $promise) use ($writer): Stub {
                     $promise->fail(
-                        new \Exception()
+                        new Exception()
                     );
 
                     return $writer;
@@ -179,15 +184,15 @@ class SaveObjectTest extends TestCase
                 $writer,
                 $object,
                 $manager,
-                $this->createMock(ParametersBag::class),
+                $this->createStub(ParametersBag::class),
             )
         );
     }
 
     public function testInvokeWithErrorWithObjectId(): void
     {
-        $writer = $this->createMock(WriterInterface::class);
-        $object = $this->createMock(ObjectWithId::class);
+        $writer = $this->createStub(WriterInterface::class);
+        $object = $this->createStub(ObjectWithId::class);
         $object->method('getId')->willReturn('foo');
         $manager = $this->createMock(ManagerInterface::class);
 
@@ -197,9 +202,9 @@ class SaveObjectTest extends TestCase
         $writer
             ->method('save')
             ->willReturnCallback(
-                function (\Teknoo\East\Common\Contracts\Object\ObjectInterface $object, PromiseInterface $promise) use ($writer): \PHPUnit\Framework\MockObject\MockObject {
+                function (ObjectInterface $object, PromiseInterface $promise) use ($writer): Stub {
                     $promise->fail(
-                        new \Exception()
+                        new Exception()
                     );
 
                     return $writer;
@@ -212,7 +217,7 @@ class SaveObjectTest extends TestCase
                 $writer,
                 $object,
                 $manager,
-                $this->createMock(ParametersBag::class),
+                $this->createStub(ParametersBag::class),
             )
         );
     }

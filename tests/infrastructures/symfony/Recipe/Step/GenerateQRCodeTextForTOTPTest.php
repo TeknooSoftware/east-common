@@ -27,6 +27,7 @@ namespace Teknoo\Tests\East\CommonBundle\Recipe\Step;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Totp\TotpAuthenticatorInterface;
 use Teknoo\East\CommonBundle\Object\TOTP\TOTPPasswordAuthenticatedUser;
@@ -51,12 +52,16 @@ use Teknoo\East\Foundation\Manager\ManagerInterface;
 #[CoversClass(GenerateQRCodeTextForTOTP::class)]
 class GenerateQRCodeTextForTOTPTest extends TestCase
 {
-    private ?TokenStorageInterface $tokenStorage = null;
+    private (TokenStorageInterface&Stub)|(TokenStorageInterface&MockObject)|null $tokenStorage = null;
 
-    private function getTokenStorage(): TokenStorageInterface&MockObject
+    private function getTokenStorage(bool $stub = false): (TokenStorageInterface&Stub)|(TokenStorageInterface&MockObject)
     {
         if (!$this->tokenStorage instanceof TokenStorageInterface) {
-            $this->tokenStorage = $this->createMock(TokenStorageInterface::class);
+            if ($stub) {
+                $this->tokenStorage = $this->createStub(TokenStorageInterface::class);
+            } else {
+                $this->tokenStorage = $this->createMock(TokenStorageInterface::class);
+            }
         }
 
         return $this->tokenStorage;
@@ -65,92 +70,92 @@ class GenerateQRCodeTextForTOTPTest extends TestCase
     private function buildStep(): GenerateQRCodeTextForTOTP
     {
         return new GenerateQRCodeTextForTOTP(
-            $this->getTokenStorage(),
+            $this->getTokenStorage(true),
         );
     }
 
     public function testWithoutTokenInStorage(): void
     {
-        $this->getTokenStorage()
+        $this->getTokenStorage(true)
             ->method('getToken')
             ->willReturn(null);
 
         $this->expectException(UnexpectedValueException::class);
         ($this->buildStep())(
-            $this->createMock(GoogleAuthenticatorInterface::class),
-            $this->createMock(ManagerInterface::class),
+            $this->createStub(GoogleAuthenticatorInterface::class),
+            $this->createStub(ManagerInterface::class),
         );
     }
 
     public function testWithoutUserInToken(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token
             ->method('getUser')
             ->willReturn(null);
 
-        $this->getTokenStorage()
+        $this->getTokenStorage(true)
             ->method('getToken')
             ->willReturn($token);
 
         $this->expectException(UnexpectedValueException::class);
         ($this->buildStep())(
-            $this->createMock(GoogleAuthenticatorInterface::class),
-            $this->createMock(ManagerInterface::class),
+            $this->createStub(GoogleAuthenticatorInterface::class),
+            $this->createStub(ManagerInterface::class),
         );
     }
 
     public function testWithNonEastUserInToken(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token
             ->method('getUser')
-            ->willReturn($this->createMock(UserInterface::class));
+            ->willReturn($this->createStub(UserInterface::class));
 
-        $this->getTokenStorage()
+        $this->getTokenStorage(true)
             ->method('getToken')
             ->willReturn($token);
 
         $this->expectException(UnexpectedValueException::class);
         ($this->buildStep())(
-            $this->createMock(GoogleAuthenticatorInterface::class),
-            $this->createMock(ManagerInterface::class),
+            $this->createStub(GoogleAuthenticatorInterface::class),
+            $this->createStub(ManagerInterface::class),
         );
     }
 
     public function testWithPasswordAuthenticatedUserInToken(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token
             ->method('getUser')
-            ->willReturn($this->createMock(PasswordAuthenticatedUser::class));
+            ->willReturn($this->createStub(PasswordAuthenticatedUser::class));
 
-        $this->getTokenStorage()
+        $this->getTokenStorage(true)
             ->method('getToken')
             ->willReturn($token);
 
         $this->expectException(UnexpectedValueException::class);
         ($this->buildStep())(
-            $this->createMock(GoogleAuthenticatorInterface::class),
-            $this->createMock(ManagerInterface::class),
+            $this->createStub(GoogleAuthenticatorInterface::class),
+            $this->createStub(ManagerInterface::class),
         );
     }
 
     public function testWithThirdPartyAuthenticatedUserInToken(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token
             ->method('getUser')
-            ->willReturn($this->createMock(ThirdPartyAuthenticatedUser::class));
+            ->willReturn($this->createStub(ThirdPartyAuthenticatedUser::class));
 
-        $this->getTokenStorage()
+        $this->getTokenStorage(true)
             ->method('getToken')
             ->willReturn($token);
 
         $this->expectException(UnexpectedValueException::class);
         ($this->buildStep())(
-            $this->createMock(GoogleAuthenticatorInterface::class),
-            $this->createMock(ManagerInterface::class),
+            $this->createStub(GoogleAuthenticatorInterface::class),
+            $this->createStub(ManagerInterface::class),
         );
     }
 
@@ -159,7 +164,7 @@ class GenerateQRCodeTextForTOTPTest extends TestCase
         $wrapperUser = new User();
         $wrapperUser->addAuthData($auth = new TOTPAuth());
 
-        $user = $this->createMock(GoogleAuthPasswordAuthenticatedUser::class);
+        $user = $this->createStub(GoogleAuthPasswordAuthenticatedUser::class);
         $user
             ->method('getWrappedUser')
             ->willReturn($wrapperUser);
@@ -168,16 +173,16 @@ class GenerateQRCodeTextForTOTPTest extends TestCase
             ->method('getTOTPAuth')
             ->willReturn($auth);
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token
             ->method('getUser')
             ->willReturn($user);
 
-        $this->getTokenStorage()
+        $this->getTokenStorage(true)
             ->method('getToken')
             ->willReturn($token);
 
-        $authenticator = $this->createMock(GoogleAuthenticatorInterface::class);
+        $authenticator = $this->createStub(GoogleAuthenticatorInterface::class);
         $authenticator
             ->method('getQRContent')
             ->willReturn('foo');
@@ -186,7 +191,7 @@ class GenerateQRCodeTextForTOTPTest extends TestCase
             GenerateQRCodeTextForTOTP::class,
             ($this->buildStep())(
                 $authenticator,
-                $this->createMock(ManagerInterface::class),
+                $this->createStub(ManagerInterface::class),
             ),
         );
     }
@@ -196,7 +201,7 @@ class GenerateQRCodeTextForTOTPTest extends TestCase
         $wrapperUser = new User();
         $wrapperUser->addAuthData($auth = new TOTPAuth());
 
-        $user = $this->createMock(TOTPPasswordAuthenticatedUser::class);
+        $user = $this->createStub(TOTPPasswordAuthenticatedUser::class);
         $user
             ->method('getWrappedUser')
             ->willReturn($wrapperUser);
@@ -205,16 +210,16 @@ class GenerateQRCodeTextForTOTPTest extends TestCase
             ->method('getTOTPAuth')
             ->willReturn($auth);
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token
             ->method('getUser')
             ->willReturn($user);
 
-        $this->getTokenStorage()
+        $this->getTokenStorage(true)
             ->method('getToken')
             ->willReturn($token);
 
-        $authenticator = $this->createMock(TotpAuthenticatorInterface::class);
+        $authenticator = $this->createStub(TotpAuthenticatorInterface::class);
         $authenticator
             ->method('getQRContent')
             ->willReturn('foo');
@@ -223,7 +228,7 @@ class GenerateQRCodeTextForTOTPTest extends TestCase
             GenerateQRCodeTextForTOTP::class,
             ($this->buildStep())(
                 $authenticator,
-                $this->createMock(ManagerInterface::class),
+                $this->createStub(ManagerInterface::class),
             ),
         );
     }

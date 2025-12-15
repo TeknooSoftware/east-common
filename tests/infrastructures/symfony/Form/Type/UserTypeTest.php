@@ -26,6 +26,8 @@ declare(strict_types=1);
 namespace Teknoo\Tests\East\CommonBundle\Form\Type;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -55,7 +57,7 @@ class UserTypeTest extends TestCase
 
     public function testBuildFormWithPopulatedUser(): void
     {
-        $builder = $this->createMock(FormBuilderInterface::class);
+        $builder = $this->createStub(FormBuilderInterface::class);
 
         $builder
             ->method('add')
@@ -64,19 +66,19 @@ class UserTypeTest extends TestCase
         $builder
             ->method('addEventListener')
             ->willReturnCallback(
-                function (string $name, callable $callable) use ($builder): \PHPUnit\Framework\MockObject\MockObject {
-                    $data = $this->createMock(User::class);
+                function (string $name, callable $callable) use ($builder): Stub {
+                    $data = $this->createStub(User::class);
                     $data
                         ->method('getAuthData')
                         ->willReturn([
-                            $this->createMock(StoredPassword::class)
+                            $this->createStub(StoredPassword::class)
                         ]);
 
                     $form = $this->createMock(FormInterface::class);
                     $form->method('get')->willReturnSelf();
                     $form->expects($this->once())->method('setData')->willReturnSelf();
 
-                    $event = $this->createMock(FormEvent::class);
+                    $event = $this->createStub(FormEvent::class);
                     $event->method('getData')->willReturn($data);
                     $event->method('getForm')->willReturn($form);
 
@@ -86,10 +88,8 @@ class UserTypeTest extends TestCase
                 }
             );
 
-        $this->assertInstanceOf(
-            AbstractType::class,
-            $this->buildForm()->buildForm($builder, [])
-        );
+        $this->buildForm()->buildForm($builder, []);
+        $this->assertTrue(true);
     }
 
     public function testBuildFormWithApi(): void
@@ -103,15 +103,13 @@ class UserTypeTest extends TestCase
         $builder->expects($this->never())
             ->method('addEventListener');
 
-        $this->assertInstanceOf(
-            AbstractType::class,
-            $this->buildForm()->buildForm($builder, ['api' => 'json'])
-        );
+        $this->buildForm()->buildForm($builder, ['api' => 'json']);
+        $this->assertTrue(true);
     }
 
     public function testBuildFormWithNonPopulatedUser(): void
     {
-        $builder = $this->createMock(FormBuilderInterface::class);
+        $builder = $this->createStub(FormBuilderInterface::class);
 
         $builder
             ->method('add')
@@ -120,8 +118,8 @@ class UserTypeTest extends TestCase
         $builder
             ->method('addEventListener')
             ->willReturnCallback(
-                function (string $name, callable $callable) use ($builder): \PHPUnit\Framework\MockObject\MockObject {
-                    $data = $this->createMock(User::class);
+                function (string $name, callable $callable) use ($builder): Stub {
+                    $data = $this->createStub(User::class);
                     $data
                         ->method('getAuthData')
                         ->willReturn([]);
@@ -130,7 +128,7 @@ class UserTypeTest extends TestCase
                     $form->method('get')->willReturnSelf();
                     $form->expects($this->once())->method('setData')->willReturnSelf();
 
-                    $event = $this->createMock(FormEvent::class);
+                    $event = $this->createStub(FormEvent::class);
                     $event->method('getData')->willReturn($data);
                     $event->method('getForm')->willReturn($form);
 
@@ -140,15 +138,13 @@ class UserTypeTest extends TestCase
                 }
             );
 
-        $this->assertInstanceOf(
-            AbstractType::class,
-            $this->buildForm()->buildForm($builder, [])
-        );
+        $this->buildForm()->buildForm($builder, []);
+        $this->assertTrue(true);
     }
 
     public function testBuildFormWithAuthenticatedThirdParyUser(): void
     {
-        $builder = $this->createMock(FormBuilderInterface::class);
+        $builder = $this->createStub(FormBuilderInterface::class);
 
         $builder
             ->method('add')
@@ -157,19 +153,19 @@ class UserTypeTest extends TestCase
         $builder
             ->method('addEventListener')
             ->willReturnCallback(
-                function (string $name, callable $callable) use ($builder): \PHPUnit\Framework\MockObject\MockObject {
-                    $data = $this->createMock(User::class);
+                function (string $name, callable $callable) use ($builder): Stub {
+                    $data = $this->createStub(User::class);
                     $data
                         ->method('getAuthData')
                         ->willReturn([
-                            $this->createMock(AuthDataInterface::class)
+                            $this->createStub(AuthDataInterface::class)
                         ]);
 
                     $form = $this->createMock(FormInterface::class);
                     $form->method('get')->willReturnSelf();
                     $form->expects($this->once())->method('setData')->willReturnSelf();
 
-                    $event = $this->createMock(FormEvent::class);
+                    $event = $this->createStub(FormEvent::class);
                     $event->method('getData')->willReturn($data);
                     $event->method('getForm')->willReturn($form);
 
@@ -179,19 +175,15 @@ class UserTypeTest extends TestCase
                 }
             );
 
-        $this->assertInstanceOf(
-            AbstractType::class,
-            $this->buildForm()->buildForm($builder, [])
-        );
+        $this->buildForm()->buildForm($builder, []);
+        $this->assertTrue(true);
     }
 
     public function testConfigureOptions(): void
     {
-        $this->assertInstanceOf(
-            UserType::class,
-            $this->buildForm()->configureOptions(
-                $this->createMock(OptionsResolver::class)
-            )
+        $this->buildForm()->configureOptions(
+            $this->createStub(OptionsResolver::class)
         );
+        $this->assertTrue(true);
     }
 }

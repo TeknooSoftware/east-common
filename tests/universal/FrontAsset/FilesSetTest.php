@@ -43,7 +43,7 @@ class FilesSetTest extends TestCase
     {
         return new FilesSet(
             [
-                $this->createMock(FileInterface::class),
+                $this->createStub(FileInterface::class),
             ]
         );
     }
@@ -53,7 +53,7 @@ class FilesSetTest extends TestCase
         $this->assertInstanceOf(
             FilesSet::class,
             $this->buildSet()->add(
-                $this->createMock(FileInterface::class),
+                $this->createStub(FileInterface::class),
             )
         );
     }
@@ -61,7 +61,7 @@ class FilesSetTest extends TestCase
     public function testIterator(): void
     {
         $set = $this->buildSet()->add(
-            $this->createMock(FileInterface::class),
+            $this->createStub(FileInterface::class),
         );
 
         $this->assertCount(

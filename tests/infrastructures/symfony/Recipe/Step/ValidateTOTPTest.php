@@ -27,6 +27,7 @@ namespace Teknoo\Tests\East\CommonBundle\Recipe\Step;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticatorInterface;
@@ -52,23 +53,31 @@ use Teknoo\East\CommonBundle\Writer\SymfonyUserWriter;
 #[CoversClass(ValidateTOTP::class)]
 class ValidateTOTPTest extends TestCase
 {
-    private ?SymfonyUserWriter $userWriter = null;
+    private (SymfonyUserWriter&Stub)|(SymfonyUserWriter&MockObject)|null $userWriter = null;
 
-    private ?TokenStorageInterface $tokenStorage = null;
+    private (TokenStorageInterface&Stub)|(TokenStorageInterface&MockObject)|null $tokenStorage = null;
 
-    private function getSymfonyUserWriter(): SymfonyUserWriter&MockObject
+    private function getSymfonyUserWriter(bool $stub = false): (SymfonyUserWriter&Stub)|(SymfonyUserWriter&MockObject)
     {
         if (!$this->userWriter instanceof SymfonyUserWriter) {
-            $this->userWriter = $this->createMock(SymfonyUserWriter::class);
+            if ($stub) {
+                $this->userWriter = $this->createStub(SymfonyUserWriter::class);
+            } else {
+                $this->userWriter = $this->createMock(SymfonyUserWriter::class);
+            }
         }
 
         return $this->userWriter;
     }
 
-    private function getTokenStorage(): TokenStorageInterface&MockObject
+    private function getTokenStorage(bool $stub = false): (TokenStorageInterface&Stub)|(TokenStorageInterface&MockObject)
     {
         if (!$this->tokenStorage instanceof TokenStorageInterface) {
-            $this->tokenStorage = $this->createMock(TokenStorageInterface::class);
+            if ($stub) {
+                $this->tokenStorage = $this->createStub(TokenStorageInterface::class);
+            } else {
+                $this->tokenStorage = $this->createMock(TokenStorageInterface::class);
+            }
         }
 
         return $this->tokenStorage;
@@ -77,68 +86,67 @@ class ValidateTOTPTest extends TestCase
     private function buildStep(): ValidateTOTP
     {
         return new ValidateTOTP(
-            $this->getSymfonyUserWriter(),
-            $this->getTokenStorage(),
+            $this->getSymfonyUserWriter(true),
+            $this->getTokenStorage(true),
         );
     }
 
     public function testWithoutTokenInStorage(): void
     {
-        $this->getTokenStorage()
-            ->method('getToken')
+        $this->getTokenStorage(true)->method('getToken')
             ->willReturn(null);
 
         $this->expectException(RuntimeException::class);
         ($this->buildStep())(
-            $this->createMock(GoogleAuthenticatorInterface::class),
-            $this->createMock(TOTP::class),
+            $this->createStub(GoogleAuthenticatorInterface::class),
+            $this->createStub(TOTP::class),
         );
     }
 
     public function testWithoutUserInToken(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token
             ->method('getUser')
             ->willReturn(null);
 
-        $this->getTokenStorage()
+        $this->getTokenStorage(true)
             ->method('getToken')
             ->willReturn($token);
 
         $this->expectException(RuntimeException::class);
         ($this->buildStep())(
-            $this->createMock(GoogleAuthenticatorInterface::class),
-            $this->createMock(TOTP::class),
+            $this->createStub(GoogleAuthenticatorInterface::class),
+            $this->createStub(TOTP::class),
         );
     }
 
     public function testWithNonEastUserInToken(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token
             ->method('getUser')
-            ->willReturn($this->createMock(UserInterface::class));
+            ->willReturn($this->createStub(UserInterface::class));
 
-        $this->getTokenStorage()
+        $this->getTokenStorage(true)
             ->method('getToken')
             ->willReturn($token);
 
         $this->expectException(RuntimeException::class);
         ($this->buildStep())(
-            $this->createMock(GoogleAuthenticatorInterface::class),
-            $this->createMock(TOTP::class),
+            $this->createStub(GoogleAuthenticatorInterface::class),
+            $this->createStub(TOTP::class),
         );
     }
 
     public function testWithPasswordAuthenticatedUserInToken(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token
             ->method('getUser')
-            ->willReturn($this->createMock(PasswordAuthenticatedUser::class));
+            ->willReturn($this->createStub(PasswordAuthenticatedUser::class));
 
-        $this->getTokenStorage()
+        $this->getTokenStorage(true)
             ->method('getToken')
             ->willReturn($token);
 
@@ -148,19 +156,19 @@ class ValidateTOTPTest extends TestCase
 
         $this->expectException(RuntimeException::class);
         ($this->buildStep())(
-            $this->createMock(GoogleAuthenticatorInterface::class),
-            $this->createMock(TOTP::class),
+            $this->createStub(GoogleAuthenticatorInterface::class),
+            $this->createStub(TOTP::class),
         );
     }
 
     public function testWithThirdPartyAuthenticatedUserInToken(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token
             ->method('getUser')
-            ->willReturn($this->createMock(ThirdPartyAuthenticatedUser::class));
+            ->willReturn($this->createStub(ThirdPartyAuthenticatedUser::class));
 
-        $this->getTokenStorage()
+        $this->getTokenStorage(true)
             ->method('getToken')
             ->willReturn($token);
 
@@ -170,8 +178,8 @@ class ValidateTOTPTest extends TestCase
 
         $this->expectException(RuntimeException::class);
         ($this->buildStep())(
-            $this->createMock(GoogleAuthenticatorInterface::class),
-            $this->createMock(TOTP::class),
+            $this->createStub(GoogleAuthenticatorInterface::class),
+            $this->createStub(TOTP::class),
         );
     }
 
@@ -180,17 +188,17 @@ class ValidateTOTPTest extends TestCase
         $wrapperUser = new User();
         $wrapperUser->addAuthData(new TOTPAuth());
 
-        $user = $this->createMock(GoogleAuthPasswordAuthenticatedUser::class);
+        $user = $this->createStub(GoogleAuthPasswordAuthenticatedUser::class);
         $user
             ->method('getWrappedUser')
             ->willReturn($wrapperUser);
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token
             ->method('getUser')
             ->willReturn($user);
 
-        $this->getTokenStorage()
+        $this->getTokenStorage(true)
             ->method('getToken')
             ->willReturn($token);
 
@@ -198,7 +206,7 @@ class ValidateTOTPTest extends TestCase
             ->expects($this->once())
             ->method('save');
 
-        $authenticator = $this->createMock(GoogleAuthenticatorInterface::class);
+        $authenticator = $this->createStub(GoogleAuthenticatorInterface::class);
         $authenticator
             ->method('checkCode')
             ->willReturn(true);
@@ -207,7 +215,7 @@ class ValidateTOTPTest extends TestCase
             ValidateTOTP::class,
             ($this->buildStep())(
                 $authenticator,
-                $this->createMock(TOTP::class),
+                $this->createStub(TOTP::class),
             ),
         );
     }
@@ -217,17 +225,17 @@ class ValidateTOTPTest extends TestCase
         $wrapperUser = new User();
         $wrapperUser->addAuthData(new TOTPAuth());
 
-        $user = $this->createMock(TOTPPasswordAuthenticatedUser::class);
+        $user = $this->createStub(TOTPPasswordAuthenticatedUser::class);
         $user
             ->method('getWrappedUser')
             ->willReturn($wrapperUser);
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token
             ->method('getUser')
             ->willReturn($user);
 
-        $this->getTokenStorage()
+        $this->getTokenStorage(true)
             ->method('getToken')
             ->willReturn($token);
 
@@ -235,7 +243,7 @@ class ValidateTOTPTest extends TestCase
             ->expects($this->once())
             ->method('save');
 
-        $authenticator = $this->createMock(TotpAuthenticatorInterface::class);
+        $authenticator = $this->createStub(TotpAuthenticatorInterface::class);
         $authenticator
             ->method('checkCode')
             ->willReturn(true);
@@ -244,7 +252,7 @@ class ValidateTOTPTest extends TestCase
             ValidateTOTP::class,
             ($this->buildStep())(
                 $authenticator,
-                $this->createMock(TOTP::class),
+                $this->createStub(TOTP::class),
             ),
         );
     }

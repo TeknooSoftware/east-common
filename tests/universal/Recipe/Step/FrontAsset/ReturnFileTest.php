@@ -44,9 +44,9 @@ class ReturnFileTest extends TestCase
 {
     public function testInvoke(): void
     {
-        $responseFactory = $this->createMock(ResponseFactoryInterface::class);
+        $responseFactory = $this->createStub(ResponseFactoryInterface::class);
 
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->createStub(ResponseInterface::class);
         $responseFactory
             ->method('createResponse')
             ->willReturn($response);
@@ -62,11 +62,11 @@ class ReturnFileTest extends TestCase
         $this->assertInstanceOf(
             ReturnFile::class,
             (new ReturnFile(
-                $this->createMock(StreamFactoryInterface::class),
+                $this->createStub(StreamFactoryInterface::class),
                 $responseFactory,
             ))(
-                $this->createMock(ClientInterface::class),
-                $this->createMock(FinalFile::class),
+                $this->createStub(ClientInterface::class),
+                $this->createStub(FinalFile::class),
                 FileType::JS,
             ),
         );
@@ -74,11 +74,11 @@ class ReturnFileTest extends TestCase
         $this->assertInstanceOf(
             ReturnFile::class,
             (new ReturnFile(
-                $this->createMock(StreamFactoryInterface::class),
+                $this->createStub(StreamFactoryInterface::class),
                 $responseFactory,
             ))(
-                $this->createMock(ClientInterface::class),
-                $this->createMock(FinalFile::class),
+                $this->createStub(ClientInterface::class),
+                $this->createStub(FinalFile::class),
                 FileType::CSS,
             ),
         );
@@ -86,11 +86,11 @@ class ReturnFileTest extends TestCase
         $this->assertInstanceOf(
             ReturnFile::class,
             (new ReturnFile(
-                $this->createMock(StreamFactoryInterface::class),
+                $this->createStub(StreamFactoryInterface::class),
                 $responseFactory,
             ))(
-                $this->createMock(ClientInterface::class),
-                $this->createMock(FinalFile::class),
+                $this->createStub(ClientInterface::class),
+                $this->createStub(FinalFile::class),
                 FileType::JPEG,
             ),
         );
@@ -98,11 +98,11 @@ class ReturnFileTest extends TestCase
         $this->assertInstanceOf(
             ReturnFile::class,
             (new ReturnFile(
-                $this->createMock(StreamFactoryInterface::class),
+                $this->createStub(StreamFactoryInterface::class),
                 $responseFactory,
             ))(
-                $this->createMock(ClientInterface::class),
-                $this->createMock(FinalFile::class),
+                $this->createStub(ClientInterface::class),
+                $this->createStub(FinalFile::class),
                 FileType::GIF,
             ),
         );
@@ -110,11 +110,11 @@ class ReturnFileTest extends TestCase
         $this->assertInstanceOf(
             ReturnFile::class,
             (new ReturnFile(
-                $this->createMock(StreamFactoryInterface::class),
+                $this->createStub(StreamFactoryInterface::class),
                 $responseFactory,
             ))(
-                $this->createMock(ClientInterface::class),
-                $this->createMock(FinalFile::class),
+                $this->createStub(ClientInterface::class),
+                $this->createStub(FinalFile::class),
                 FileType::PNG,
             ),
         );
@@ -122,11 +122,11 @@ class ReturnFileTest extends TestCase
         $this->assertInstanceOf(
             ReturnFile::class,
             (new ReturnFile(
-                $this->createMock(StreamFactoryInterface::class),
+                $this->createStub(StreamFactoryInterface::class),
                 $responseFactory,
             ))(
-                $this->createMock(ClientInterface::class),
-                $this->createMock(FinalFile::class),
+                $this->createStub(ClientInterface::class),
+                $this->createStub(FinalFile::class),
                 FileType::SVG,
             ),
         );
@@ -134,11 +134,11 @@ class ReturnFileTest extends TestCase
         $this->assertInstanceOf(
             ReturnFile::class,
             (new ReturnFile(
-                $this->createMock(StreamFactoryInterface::class),
+                $this->createStub(StreamFactoryInterface::class),
                 $responseFactory,
             ))(
-                $this->createMock(ClientInterface::class),
-                $this->createMock(FinalFile::class),
+                $this->createStub(ClientInterface::class),
+                $this->createStub(FinalFile::class),
                 FileType::WEBP,
             ),
         );

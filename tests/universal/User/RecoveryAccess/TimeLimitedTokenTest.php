@@ -47,7 +47,7 @@ class TimeLimitedTokenTest extends TestCase
     public function testPrepareWithBadUser(): void
     {
         $this->expectException(Throwable::class);
-        new TimeLimitedToken($this->createMock(DatesService::class), '5 days', )->prepare(new stdClass());
+        new TimeLimitedToken($this->createStub(DatesService::class), '5 days', )->prepare(new stdClass());
     }
 
     public function testPrepare(): void

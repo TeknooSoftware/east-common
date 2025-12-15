@@ -27,6 +27,7 @@ namespace Teknoo\Tests\East\CommonBundle\Recipe\Step;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -42,29 +43,31 @@ use Teknoo\East\CommonBundle\Recipe\Step\RedirectClient;
 #[CoversClass(RedirectClient::class)]
 class RedirectClientTest extends TestCase
 {
-    private ?UrlGeneratorInterface $router = null;
+    private (UrlGeneratorInterface&Stub)|(UrlGeneratorInterface&MockObject)|null $router = null;
 
-    private ?ResponseFactoryInterface $responseFactory = null;
+    private (ResponseFactoryInterface&Stub)|(ResponseFactoryInterface&MockObject)|null $responseFactory = null;
 
-    /**
-     * @return UrlGeneratorInterface|MockObject
-     */
-    private function getUrlGenerator(): UrlGeneratorInterface
+    private function getUrlGenerator(bool $stub = false): (UrlGeneratorInterface&Stub)|(UrlGeneratorInterface&MockObject)
     {
         if (!$this->router instanceof UrlGeneratorInterface) {
-            $this->router = $this->createMock(UrlGeneratorInterface::class);
+            if ($stub) {
+                $this->router = $this->createStub(UrlGeneratorInterface::class);
+            } else {
+                $this->router = $this->createMock(UrlGeneratorInterface::class);
+            }
         }
 
         return $this->router;
     }
 
-    /**
-     * @return ResponseFactoryInterface|MockObject
-     */
-    private function getResponseFactory(): ResponseFactoryInterface
+    private function getResponseFactory(bool $stub = false): (ResponseFactoryInterface&Stub)|(ResponseFactoryInterface&MockObject)
     {
         if (!$this->responseFactory instanceof ResponseFactoryInterface) {
-            $this->responseFactory = $this->createMock(ResponseFactoryInterface::class);
+            if ($stub) {
+                $this->responseFactory = $this->createStub(ResponseFactoryInterface::class);
+            } else {
+                $this->responseFactory = $this->createMock(ResponseFactoryInterface::class);
+            }
         }
 
         return $this->responseFactory;
@@ -73,29 +76,29 @@ class RedirectClientTest extends TestCase
     public function buildStep(): RedirectClient
     {
         return new RedirectClient(
-            $this->getResponseFactory(),
-            $this->getUrlGenerator()
+            $this->getResponseFactory(true),
+            $this->getUrlGenerator(true)
         );
     }
 
     public function testInvoke(): void
     {
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->createStub(ResponseInterface::class);
         $response->method('withHeader')->willReturnSelf();
         $response->method('withBody')->willReturnSelf();
-        $this->getResponseFactory()
+        $this->getResponseFactory(true)
             ->method('createResponse')
             ->willReturn($response);
 
-        $this->getUrlGenerator()
+        $this->getUrlGenerator(true)
             ->method('generate')
             ->willReturn('bar');
 
         $this->assertInstanceOf(
             RedirectClient::class,
             $this->buildStep()(
-                $this->createMock(ManagerInterface::class),
-                $this->createMock(ClientInterface::class),
+                $this->createStub(ManagerInterface::class),
+                $this->createStub(ClientInterface::class),
                 'foo',
                 301,
                 ['foo' => 'bar']

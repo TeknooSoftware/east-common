@@ -1,5 +1,11 @@
 # Teknoo Software - Common - Change Log
 
+## [4.1.1] - 2025-12-14
+### Stable Release
+- Fix bc break introduced into patch of phpstan and phpunit
+- Support PHPStan 2.1.33+
+- Support PHPUnit 12.5.1+
+
 ## [4.1.0] - 2025-11-07
 ### Stable Release
 - Use Teknoo Stage 7.1 and Recipe 7.2

@@ -58,7 +58,7 @@ class MinifierCommandTest extends TestCase
     public function getRecipe(): RecipeInterface
     {
         if (null === $this->recipe) {
-            $this->recipe = $this->createMock(RecipeInterface::class);
+            $this->recipe = $this->createStub(RecipeInterface::class);
         }
 
         return $this->recipe;
@@ -70,7 +70,7 @@ class MinifierCommandTest extends TestCase
     public function getLoadSource(): LoadSource
     {
         if (null === $this->loadSource) {
-            $this->loadSource = $this->createMock(LoadSource::class);
+            $this->loadSource = $this->createStub(LoadSource::class);
         }
 
         return $this->loadSource;
@@ -82,7 +82,7 @@ class MinifierCommandTest extends TestCase
     public function getMinifyAssets(): MinifyAssets
     {
         if (null === $this->minifyAssets) {
-            $this->minifyAssets = $this->createMock(MinifyAssets::class);
+            $this->minifyAssets = $this->createStub(MinifyAssets::class);
         }
 
         return $this->minifyAssets;
@@ -94,7 +94,7 @@ class MinifierCommandTest extends TestCase
     public function getPersistAsset(): PersistAsset
     {
         if (null === $this->persistAsset) {
-            $this->persistAsset = $this->createMock(PersistAsset::class);
+            $this->persistAsset = $this->createStub(PersistAsset::class);
         }
 
         return $this->persistAsset;

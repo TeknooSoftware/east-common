@@ -27,6 +27,7 @@ namespace Teknoo\Tests\East\CommonBundle\Provider;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface as GoogleTwoFactorInterface;
 use Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface as TotpTwoFactorInterface;
@@ -53,23 +54,31 @@ use Teknoo\East\Common\Object\User as BaseUser;
 #[CoversClass(PasswordAuthenticatedUserProvider::class)]
 class PasswordAuthenticatedUserProviderTest extends TestCase
 {
-    private (UserLoader&MockObject)|null $loader = null;
+    private (UserLoader&Stub)|(UserLoader&MockObject)|null $loader = null;
 
-    private (SymfonyUserWriter&MockObject)|null $writer = null;
+    private (SymfonyUserWriter&Stub)|(SymfonyUserWriter&MockObject)|null $writer = null;
 
-    public function getLoader(): UserLoader&MockObject
+    public function getLoader(bool $stub = false): (UserLoader&Stub)|(UserLoader&MockObject)
     {
         if (!$this->loader instanceof UserLoader) {
-            $this->loader = $this->createMock(UserLoader::class);
+            if ($stub) {
+                $this->loader = $this->createStub(UserLoader::class);
+            } else {
+                $this->loader = $this->createMock(UserLoader::class);
+            }
         }
 
         return $this->loader;
     }
 
-    public function getWriter(): SymfonyUserWriter&MockObject
+    public function getWriter(bool $stub = false): (SymfonyUserWriter&Stub)|(SymfonyUserWriter&MockObject)
     {
         if (!$this->writer instanceof SymfonyUserWriter) {
-            $this->writer = $this->createMock(SymfonyUserWriter::class);
+            if ($stub) {
+                $this->writer = $this->createStub(SymfonyUserWriter::class);
+            } else {
+                $this->writer = $this->createMock(SymfonyUserWriter::class);
+            }
         }
 
         return $this->writer;
@@ -77,7 +86,10 @@ class PasswordAuthenticatedUserProviderTest extends TestCase
 
     public function buildProvider(): PasswordAuthenticatedUserProvider
     {
-        return new PasswordAuthenticatedUserProvider($this->getLoader(), $this->getWriter());
+        return new PasswordAuthenticatedUserProvider(
+            $this->getLoader(true),
+            $this->getWriter(true),
+        );
     }
 
     public function testLoadUserByUsernameNotFound(): void
@@ -219,7 +231,7 @@ class PasswordAuthenticatedUserProviderTest extends TestCase
     {
         $user = new BaseUser();
         $user->setEmail('foo@bar');
-        $user->setAuthData([$this->createMock(AuthDataInterface::class)]);
+        $user->setAuthData([$this->createStub(AuthDataInterface::class)]);
 
         $this->getLoader()
             ->expects($this->once())
@@ -280,7 +292,7 @@ class PasswordAuthenticatedUserProviderTest extends TestCase
     {
         $user = new BaseUser();
         $user->setEmail('foo@bar');
-        $user->setAuthData([$this->createMock(AuthDataInterface::class)]);
+        $user->setAuthData([$this->createStub(AuthDataInterface::class)]);
 
         $this->getLoader()
             ->expects($this->once())
@@ -350,7 +362,7 @@ class PasswordAuthenticatedUserProviderTest extends TestCase
     public function testRefreshUserNotSupported(): void
     {
         $this->expectException(MissingUserException::class);
-        $this->buildProvider()->refreshUser($this->createMock(UserInterface::class));
+        $this->buildProvider()->refreshUser($this->createStub(UserInterface::class));
     }
 
     public function testUpgradePasswordNotSupported(): void
@@ -358,14 +370,14 @@ class PasswordAuthenticatedUserProviderTest extends TestCase
         $this->getWriter()->expects($this->never())->method('save');
 
         $this->buildProvider()->upgradePassword(
-            $this->createMock(UserInterface::class),
+            $this->createStub(UserInterface::class),
             'foo'
         );
     }
 
     public function testUpgradePassword(): void
     {
-        $user = $this->createMock(PasswordAuthenticatedUser::class);
+        $user = $this->createStub(PasswordAuthenticatedUser::class);
         $storedPassword = $this->createMock(StoredPassword::class);
 
         $user->method('getWrappedStoredPassword')->willReturn($storedPassword);

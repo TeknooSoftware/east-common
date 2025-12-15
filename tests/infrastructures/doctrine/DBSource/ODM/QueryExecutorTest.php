@@ -30,6 +30,7 @@ use Doctrine\ODM\MongoDB\Query\Builder;
 use Doctrine\ODM\MongoDB\Query\Query;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
 use RuntimeException;
@@ -48,12 +49,16 @@ use Teknoo\Recipe\Promise\PromiseInterface;
 #[CoversClass(QueryExecutor::class)]
 class QueryExecutorTest extends TestCase
 {
-    private ?DocumentManager $documentManager = null;
+    private (DocumentManager&MockObject)|(DocumentManager&Stub)|null$documentManager = null;
 
-    private function getDocumentManager(): MockObject&DocumentManager
+    private function getDocumentManagerMock(bool $stub = false): (DocumentManager&MockObject)|(DocumentManager&Stub)
     {
-        if (null === $this->documentManager) {
-            $this->documentManager = $this->createMock(DocumentManager::class);
+        if (!$this->documentManager instanceof DocumentManager) {
+            if ($stub) {
+                $this->documentManager = $this->createStub(DocumentManager::class);
+            } else {
+                $this->documentManager = $this->createMock(DocumentManager::class);
+            }
         }
 
         return $this->documentManager;
@@ -62,7 +67,7 @@ class QueryExecutorTest extends TestCase
     private function buildQuery(callable $callback): QueryExecutor
     {
         return new QueryExecutor(
-            $this->getDocumentManager(),
+            $this->getDocumentManagerMock(true),
             $callback
         );
     }
@@ -146,17 +151,17 @@ class QueryExecutorTest extends TestCase
             ->method('success');
 
 
-        $query = $this->createMock(Query::class);
+        $query = $this->createStub(Query::class);
         $query
             ->method('execute')
             ->willThrowException(new RuntimeException('Error'));
 
-        $builder = $this->createMock(Builder::class);
+        $builder = $this->createStub(Builder::class);
         $builder
             ->method('getQuery')
             ->willReturn($query);
 
-        $this->getDocumentManager()
+        $this->getDocumentManagerMock(true)
             ->method('createQueryBuilder')
             ->willReturn($builder);
 

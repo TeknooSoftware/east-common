@@ -43,8 +43,8 @@ class TOTPPasswordAuthenticatedUserTest extends AbstractTOTPAuthTests
     protected function buildUser(): UserWithTOTPAuthInterface
     {
         return new TOTPPasswordAuthenticatedUser(
-            $this->createMock(User::class),
-            $this->createMock(StoredPassword::class),
+            $this->createStub(User::class),
+            $this->createStub(StoredPassword::class),
         );
     }
 }

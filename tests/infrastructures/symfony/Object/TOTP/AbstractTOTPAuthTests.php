@@ -43,7 +43,7 @@ abstract class AbstractTOTPAuthTests extends TestCase
         $this->assertInstanceOf(
             UserWithTOTPAuthInterface::class,
             $this->buildUser()->setTOTPAuth(
-                $this->createMock(TOTPAuth::class),
+                $this->createStub(TOTPAuth::class),
             )
         );
     }
@@ -56,7 +56,7 @@ abstract class AbstractTOTPAuthTests extends TestCase
             $user->getTOTPAuth()
         );
         $user->setTOTPAuth(
-            $this->createMock(TOTPAuth::class),
+            $this->createStub(TOTPAuth::class),
         );
         $this->assertInstanceOf(
             TOTPAuth::class,

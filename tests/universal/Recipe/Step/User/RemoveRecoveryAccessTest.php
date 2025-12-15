@@ -42,7 +42,7 @@ class RemoveRecoveryAccessTest extends TestCase
         $this->assertInstanceOf(
             RemoveRecoveryAccess::class,
             (new RemoveRecoveryAccess())(
-                $this->createMock(User::class),
+                $this->createStub(User::class),
             ),
         );
     }

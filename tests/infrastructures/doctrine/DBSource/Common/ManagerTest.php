@@ -28,6 +28,7 @@ namespace Teknoo\Tests\East\Common\Doctrine\DBSource\Common;
 use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\DBSource\Manager\AlreadyStartedBatchException;
 use Teknoo\East\Common\DBSource\Manager\NonStartedBatchException;
@@ -42,15 +43,16 @@ use Teknoo\East\Common\Doctrine\Filter\ODM\SoftDeletableFilter;
 #[CoversClass(Manager::class)]
 class ManagerTest extends TestCase
 {
-    private (ObjectManager&MockObject)|null $objectManager = null;
+    private (ObjectManager&MockObject)|(ObjectManager&Stub)|null $objectManager = null;
 
-    /**
-     * @return ObjectManager|\PHPUnit\Framework\MockObject\MockObject
-     */
-    protected function getDoctrineObjectManagerMock(): ObjectManager
+    protected function getDoctrineObjectManagerMock(bool $stub = false): (ObjectManager&Stub)|(ObjectManager&MockObject)
     {
         if (!$this->objectManager instanceof ObjectManager) {
-            $this->objectManager = $this->createMock(ObjectManager::class);
+            if ($stub) {
+                $this->objectManager = $this->createStub(ObjectManager::class);
+            } else {
+                $this->objectManager = $this->createMock(ObjectManager::class);
+            }
         }
 
         return $this->objectManager;
@@ -58,7 +60,7 @@ class ManagerTest extends TestCase
 
     public function buildManager(?ConfigurationHelperInterface $configurationHelper = null): Manager
     {
-        return new Manager($this->getDoctrineObjectManagerMock(), $configurationHelper);
+        return new Manager($this->getDoctrineObjectManagerMock(true), $configurationHelper);
     }
 
     public function testPersist(): void

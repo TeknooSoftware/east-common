@@ -42,10 +42,14 @@ class MediaWriterTest extends TestCase
 
     public function buildWriter(bool $preferRealDateOnUpdate = false): WriterInterface
     {
-        return new MediaWriter($this->getObjectManager(), $this->getDatesServiceMock(), $preferRealDateOnUpdate);
+        return new MediaWriter(
+            $this->getObjectManager(true),
+            $this->getDatesServiceMock(true),
+            $preferRealDateOnUpdate,
+        );
     }
 
-    public function getObject(): \Teknoo\East\Common\Object\Media
+    public function getObject(): Media
     {
         return new class () extends Media {
             public function getResource(): null

@@ -70,7 +70,7 @@ class ListObjectEndPointWithCustomMappingTest extends TestCase
     public function getRecipe(): RecipeInterface
     {
         if (null === $this->recipe) {
-            $this->recipe = $this->createMock(RecipeInterface::class);
+            $this->recipe = $this->createStub(RecipeInterface::class);
         }
 
         return $this->recipe;
@@ -82,7 +82,7 @@ class ListObjectEndPointWithCustomMappingTest extends TestCase
     public function getExtractPage(): ExtractPage
     {
         if (null === $this->extractPage) {
-            $this->extractPage = $this->createMock(ExtractPage::class);
+            $this->extractPage = $this->createStub(ExtractPage::class);
         }
 
         return $this->extractPage;
@@ -94,7 +94,7 @@ class ListObjectEndPointWithCustomMappingTest extends TestCase
     public function getExtractOrder(): ExtractOrder
     {
         if (null === $this->extractOrder) {
-            $this->extractOrder = $this->createMock(ExtractOrder::class);
+            $this->extractOrder = $this->createStub(ExtractOrder::class);
         }
 
         return $this->extractOrder;
@@ -106,7 +106,7 @@ class ListObjectEndPointWithCustomMappingTest extends TestCase
     public function getLoadListObjects(): LoadListObjects
     {
         if (null === $this->loadListObjects) {
-            $this->loadListObjects = $this->createMock(LoadListObjects::class);
+            $this->loadListObjects = $this->createStub(LoadListObjects::class);
         }
 
         return $this->loadListObjects;
@@ -118,7 +118,7 @@ class ListObjectEndPointWithCustomMappingTest extends TestCase
     public function getRenderList(): RenderList
     {
         if (null === $this->renderList) {
-            $this->renderList = $this->createMock(RenderList::class);
+            $this->renderList = $this->createStub(RenderList::class);
         }
 
         return $this->renderList;
@@ -130,7 +130,7 @@ class ListObjectEndPointWithCustomMappingTest extends TestCase
     public function getRenderError(): RenderError
     {
         if (null === $this->renderError) {
-            $this->renderError = $this->createMock(RenderError::class);
+            $this->renderError = $this->createStub(RenderError::class);
         }
 
         return $this->renderError;
@@ -142,7 +142,7 @@ class ListObjectEndPointWithCustomMappingTest extends TestCase
     public function getSearchFormLoader(): SearchFormLoaderInterface
     {
         if (null === $this->searchFormLoader) {
-            $this->searchFormLoader = $this->createMock(SearchFormLoaderInterface::class);
+            $this->searchFormLoader = $this->createStub(SearchFormLoaderInterface::class);
         }
 
         return $this->searchFormLoader;
@@ -154,7 +154,7 @@ class ListObjectEndPointWithCustomMappingTest extends TestCase
     public function getListObjectsAccessControl(): ListObjectsAccessControlInterface
     {
         if (null === $this->listObjectsAccessControl) {
-            $this->listObjectsAccessControl = $this->createMock(ListObjectsAccessControlInterface::class);
+            $this->listObjectsAccessControl = $this->createStub(ListObjectsAccessControlInterface::class);
         }
 
         return $this->listObjectsAccessControl;

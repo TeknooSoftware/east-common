@@ -74,7 +74,7 @@ class ContainerTest extends TestCase
     public function testManager(): void
     {
         $container = $this->buildContainer();
-        $objectManager = $this->createMock(ObjectManager::class);
+        $objectManager = $this->createStub(ObjectManager::class);
 
         $container->set(ObjectManager::class, $objectManager);
         $this->assertInstanceOf(ManagerInterface::class, $container->get(ManagerInterface::class));
@@ -102,8 +102,8 @@ class ContainerTest extends TestCase
     public function testBatchManager(): void
     {
         $container = $this->buildContainer();
-        $objectManager = $this->createMock(ObjectManager::class);
-        $batchManager = $this->createMock(BatchManipulationManager::class);
+        $objectManager = $this->createStub(ObjectManager::class);
+        $batchManager = $this->createStub(BatchManipulationManager::class);
 
         $container->set(ObjectManager::class, $objectManager);
         $container->set(BatchManipulationManager::class, $batchManager);
@@ -114,8 +114,8 @@ class ContainerTest extends TestCase
     {
         $container = $this->buildContainer();
         $objectManager = $this->createMock(ObjectManager::class);
-        $objectManager->method('getRepository')->with($objectClass)->willReturn(
-            $this->createMock($repositoryType)
+        $objectManager->expects($this->atLeastOnce())->method('getRepository')->with($objectClass)->willReturn(
+            $this->createStub($repositoryType)
         );
 
         $container->set(ObjectManager::class, $objectManager);
@@ -152,8 +152,8 @@ class ContainerTest extends TestCase
         $this->expectException(\RuntimeException::class);
         $container = $this->buildContainer();
         $objectManager = $this->createMock(ObjectManager::class);
-        $objectManager->method('getRepository')->willReturn(
-            $this->createMock(ObjectRepository::class)
+        $objectManager->expects($this->atLeastOnce())->method('getRepository')->willReturn(
+            $this->createStub(ObjectRepository::class)
         );
 
         $container->set(ObjectManager::class, $objectManager);
@@ -164,12 +164,12 @@ class ContainerTest extends TestCase
     {
         $container = $this->buildContainer();
         $objectManager = $this->createMock(ObjectManager::class);
-        $objectManager->method('getRepository')->willReturn(
-            $this->createMock(GridFSRepository::class)
+        $objectManager->expects($this->atLeastOnce())->method('getRepository')->willReturn(
+            $this->createStub(GridFSRepository::class)
         );
 
         $container->set(ObjectManager::class, $objectManager);
-        $container->set(OriginalWriter::class, $this->createMock(OriginalWriter::class));
+        $container->set(OriginalWriter::class, $this->createStub(OriginalWriter::class));
         $this->assertInstanceOf(
             MediaWriter::class,
             $container->get(MediaWriter::class)
@@ -184,13 +184,13 @@ class ContainerTest extends TestCase
     {
         $container = $this->buildContainer();
         $objectManager = $this->createMock(ObjectManager::class);
-        $objectManager->method('getRepository')->willReturn(
-            $this->createMock(ObjectRepository::class)
+        $objectManager->expects($this->atLeastOnce())->method('getRepository')->willReturn(
+            $this->createStub(ObjectRepository::class)
         );
 
         $container->set(ObjectManager::class, $objectManager);
 
-        $container->set(StreamFactoryInterface::class, $this->createMock(StreamFactoryInterface::class));
+        $container->set(StreamFactoryInterface::class, $this->createStub(StreamFactoryInterface::class));
 
         $this->expectException(\RuntimeException::class);
         $container->get(GetStreamFromMedia::class);
@@ -200,13 +200,13 @@ class ContainerTest extends TestCase
     {
         $container = $this->buildContainer();
         $objectManager = $this->createMock(ObjectManager::class);
-        $objectManager->method('getRepository')->willReturn(
-            $this->createMock(GridFSRepository::class)
+        $objectManager->expects($this->atLeastOnce())->method('getRepository')->willReturn(
+            $this->createStub(GridFSRepository::class)
         );
 
         $container->set(ObjectManager::class, $objectManager);
 
-        $container->set(StreamFactoryInterface::class, $this->createMock(StreamFactoryInterface::class));
+        $container->set(StreamFactoryInterface::class, $this->createStub(StreamFactoryInterface::class));
         $this->assertInstanceOf(
             GetStreamFromMediaInterface::class,
             $container->get(GetStreamFromMediaInterface::class)

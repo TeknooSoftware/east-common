@@ -44,10 +44,10 @@ class LoadPersistedAssetTest extends TestCase
         $this->assertInstanceOf(
             LoadPersistedAsset::class,
             (new LoadPersistedAsset())(
-                $this->createMock(ManagerInterface::class),
+                $this->createStub(ManagerInterface::class),
                 'build/',
                 FileType::JS,
-                $this->createMock(PersisterInterface::class),
+                $this->createStub(PersisterInterface::class),
                 true,
             ),
         );

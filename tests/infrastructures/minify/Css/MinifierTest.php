@@ -51,7 +51,7 @@ class MinifierTest extends TestCase
 {
     public function testProcess(): void
     {
-        $libMinifier = $this->createMock(Minify::class);
+        $libMinifier = $this->createStub(Minify::class);
 
         $minifier = new Minifier(
             $libMinifier,
@@ -61,8 +61,8 @@ class MinifierTest extends TestCase
             Minifier::class,
             $minifier->process(
                 new FilesSet([
-                    $this->createMock(FileInterface::class),
-                    $this->createMock(FileInterface::class),
+                    $this->createStub(FileInterface::class),
+                    $this->createStub(FileInterface::class),
                 ]),
                 'foo.css',
                 fn ($x) => $x,

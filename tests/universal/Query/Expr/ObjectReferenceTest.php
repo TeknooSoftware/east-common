@@ -39,7 +39,7 @@ class ObjectReferenceTest extends TestCase
 {
     public function testExecute(): void
     {
-        $obj = new ObjectReference($this->createMock(IdentifiedObjectInterface::class));
+        $obj = new ObjectReference($this->createStub(IdentifiedObjectInterface::class));
         $this->assertInstanceOf(IdentifiedObjectInterface::class, $obj->getObject());
     }
 }

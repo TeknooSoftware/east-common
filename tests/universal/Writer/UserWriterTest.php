@@ -27,6 +27,7 @@ namespace Teknoo\Tests\East\Common\Writer;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+use Teknoo\East\Common\Contracts\Writer\WriterInterface;
 use Teknoo\East\Common\Object\User;
 use Teknoo\East\Common\Writer\UserWriter;
 
@@ -39,12 +40,16 @@ class UserWriterTest extends TestCase
 {
     use PersistTestTrait;
 
-    public function buildWriter(bool $preferRealDateOnUpdate = false): \Teknoo\East\Common\Contracts\Writer\WriterInterface
+    public function buildWriter(bool $preferRealDateOnUpdate = false): WriterInterface
     {
-        return new UserWriter($this->getObjectManager(), $this->getDatesServiceMock(), $preferRealDateOnUpdate);
+        return new UserWriter(
+            $this->getObjectManager(true),
+            $this->getDatesServiceMock(true),
+            $preferRealDateOnUpdate,
+        );
     }
 
-    public function getObject(): \Teknoo\East\Common\Object\User
+    public function getObject(): User
     {
         return new User();
     }

@@ -42,8 +42,8 @@ class GoogleAuthPasswordAuthenticatedUserTest extends AbstractTOTPAuthTests
     protected function buildUser(): UserWithTOTPAuthInterface
     {
         return new GoogleAuthPasswordAuthenticatedUser(
-            $this->createMock(User::class),
-            $this->createMock(StoredPassword::class),
+            $this->createStub(User::class),
+            $this->createStub(StoredPassword::class),
         );
     }
 }

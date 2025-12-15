@@ -43,8 +43,8 @@ class LoadSourceTest extends TestCase
         $this->assertInstanceOf(
             LoadSource::class,
             (new LoadSource())(
-                $this->createMock(ManagerInterface::class),
-                $this->createMock(SourceLoaderInterface::class),
+                $this->createStub(ManagerInterface::class),
+                $this->createStub(SourceLoaderInterface::class),
                 'foo',
             ),
         );

@@ -47,7 +47,7 @@ class PrepareRecoveryAccessTest extends TestCase
             ->method('prepare')
             ->willReturnCallback(
                 function (User $user, callable $callback) use ($algorithm): \PHPUnit\Framework\MockObject\MockObject {
-                    $callback($this->createMock(AuthDataInterface::class));
+                    $callback($this->createStub(AuthDataInterface::class));
 
                     return $algorithm;
                 }
@@ -62,7 +62,7 @@ class PrepareRecoveryAccessTest extends TestCase
             PrepareRecoveryAccess::class,
             (new PrepareRecoveryAccess())(
                 $manager,
-                $this->createMock(User::class),
+                $this->createStub(User::class),
                 $algorithm,
             ),
         );

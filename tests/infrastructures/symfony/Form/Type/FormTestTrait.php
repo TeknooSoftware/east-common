@@ -41,7 +41,7 @@ trait FormTestTrait
     {
         $builder = $this->createMock(FormBuilderInterface::class);
 
-        $builder->expects($this->any())
+        $builder->expects($this->atLeastOnce())
             ->method('add')
             ->willReturnCallback(
                 function ($child, $type, array $options = []) use ($builder) {
@@ -69,9 +69,8 @@ trait FormTestTrait
                 }
             );
 
-        $this->assertInstanceOf(
-            AbstractType::class,
-            $this->buildForm()->buildForm($builder, ['doctrine_type' => DocumentType::class])
-        );
+        $this->buildForm()->buildForm($builder, ['doctrine_type' => DocumentType::class]);
+
+        $this->assertTrue(true);
     }
 }

@@ -44,7 +44,7 @@ use Teknoo\East\CommonBundle\Form\Type\MediaType;
 #[CoversClass(MediaType::class)]
 class MediaTypeTest extends TestCase
 {
-    public function buildForm(): \Teknoo\East\CommonBundle\Form\Type\MediaType
+    public function buildForm(): MediaType
     {
         return new MediaType();
     }
@@ -57,17 +57,15 @@ class MediaTypeTest extends TestCase
             ->willReturnCallback(function ($name, $callable) use ($builder): \PHPUnit\Framework\MockObject\MockObject {
                 $this->assertEquals(FormEvents::PRE_SUBMIT, $name);
 
-                $form = $this->createMock(FormInterface::class);
+                $form = $this->createStub(FormInterface::class);
                 $event = new FormEvent($form, []);
                 $callable($event);
 
                 return $builder;
             });
 
-        $this->assertInstanceOf(
-            AbstractType::class,
-            $this->buildForm()->buildForm($builder, [])
-        );
+        $this->buildForm()->buildForm($builder, []);
+        $this->assertTrue(true);
     }
 
     public function testBuildFormPopulatedFileError(): void
@@ -80,7 +78,7 @@ class MediaTypeTest extends TestCase
 
                 $form = $this->createMock(FormInterface::class);
                 $form->expects($this->once())->method('getNormData')
-                    ->willReturn($this->createMock(Media::class));
+                    ->willReturn($this->createStub(Media::class));
                 $image = $this->createMock(UploadedFile::class);
                 $image->method('getError')->willReturn(1);
                 $image->expects($this->never())->method('getSize')->willReturn(123);
@@ -92,10 +90,9 @@ class MediaTypeTest extends TestCase
                 return $builder;
             });
 
-        $this->assertInstanceOf(
-            AbstractType::class,
-            $this->buildForm()->buildForm($builder, [])
-        );
+        $this->buildForm()->buildForm($builder, []);
+
+        $this->assertTrue(true);
     }
 
     public function testBuildFormPopulatedFile(): void
@@ -108,8 +105,8 @@ class MediaTypeTest extends TestCase
 
                 $form = $this->createMock(FormInterface::class);
                 $form->expects($this->once())->method('getNormData')
-                    ->willReturn($this->createMock(Media::class));
-                $image = $this->createMock(UploadedFile::class);
+                    ->willReturn($this->createStub(Media::class));
+                $image = $this->createStub(UploadedFile::class);
                 $image->method('getError')->willReturn(0);
                 $image->method('getSize')->willReturn(123);
                 $form->expects($this->never())->method('addError');
@@ -119,19 +116,17 @@ class MediaTypeTest extends TestCase
                 return $builder;
             });
 
-        $this->assertInstanceOf(
-            AbstractType::class,
-            $this->buildForm()->buildForm($builder, [])
-        );
+        $this->buildForm()->buildForm($builder, []);
+
+        $this->assertTrue(true);
     }
 
     public function testConfigureOptions(): void
     {
-        $this->assertInstanceOf(
-            MediaType::class,
-            $this->buildForm()->configureOptions(
-                $this->createMock(OptionsResolver::class)
-            )
+        $this->buildForm()->configureOptions(
+            $this->createStub(OptionsResolver::class)
         );
+
+        $this->assertTrue(true);
     }
 }

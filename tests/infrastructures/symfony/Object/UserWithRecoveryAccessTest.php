@@ -27,6 +27,7 @@ namespace Teknoo\Tests\East\CommonBundle\Object;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use stdClass;
 use Teknoo\East\Common\Object\RecoveryAccess;
 use Teknoo\East\CommonBundle\Object\AbstractUser;
@@ -46,17 +47,17 @@ class UserWithRecoveryAccessTest extends AbstractUserTests
 
     private ?RecoveryAccess $recoveryAccess = null;
 
-    /**
-     * @return BaseUser|MockObject
-     */
-    #[\Override]
-    public function getUser(): BaseUser
+    public function getUser(bool $stub = false): (BaseUser&MockObject)|(BaseUser&Stub)
     {
         if (!$this->user instanceof BaseUser) {
-            $this->user = $this->createMock(BaseUser::class);
+            if ($stub) {
+                $this->user = $this->createStub(BaseUser::class);
+            } else {
+                $this->user = $this->createMock(BaseUser::class);
+            }
 
             $this->user->method('getAuthData')->willReturn([$this->getRecoveryAccess()]);
-            $this->user->method('getOneAuthData')->willReturn($this->getStoredPassword());
+            $this->user->method('getOneAuthData')->willReturn($this->getStoredPassword(true));
         }
 
         return $this->user;
@@ -68,7 +69,7 @@ class UserWithRecoveryAccessTest extends AbstractUserTests
     public function getRecoveryAccess(): RecoveryAccess
     {
         if (!$this->recoveryAccess instanceof RecoveryAccess) {
-            $this->recoveryAccess = $this->createMock(RecoveryAccess::class);
+            $this->recoveryAccess = $this->createStub(RecoveryAccess::class);
             $this->recoveryAccess->method('getParams')->willReturn(['token' => 'bar']);
         }
 
@@ -78,7 +79,7 @@ class UserWithRecoveryAccessTest extends AbstractUserTests
     public function buildObject(): UserWithRecoveryAccess
     {
         return new UserWithRecoveryAccess(
-            $this->getUser(),
+            $this->getUser(true),
             $this->getRecoveryAccess(),
             'ROLE_RECOVERY',
         );
@@ -93,7 +94,7 @@ class UserWithRecoveryAccessTest extends AbstractUserTests
     public function testExceptionWithBadRecoveryAccess(): void
     {
         $this->expectException(TypeError::class);
-        new UserWithRecoveryAccess($this->getUser(), new stdClass());
+        new UserWithRecoveryAccess($this->getUser(true), new stdClass());
     }
 
     public function testGetToken(): void

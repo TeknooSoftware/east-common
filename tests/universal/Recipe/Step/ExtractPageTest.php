@@ -57,7 +57,7 @@ class ExtractPageTest extends TestCase
         $this->expectException(\TypeError::class);
 
         $this->buildStep()(
-            $this->createMock(ManagerInterface::class),
+            $this->createStub(ManagerInterface::class),
             new \stdClass()
         );
     }

@@ -53,7 +53,7 @@ class FindBySlugQueryTest extends TestCase
 
     public function testFetch(): void
     {
-        $loader = $this->createMock(LoaderInterface::class);
+        $loader = $this->createStub(LoaderInterface::class);
         $repository = $this->createMock(RepositoryInterface::class);
         $promise = $this->createMock(PromiseInterface::class);
 
@@ -72,7 +72,7 @@ class FindBySlugQueryTest extends TestCase
 
     public function testFetchWithDeleted(): void
     {
-        $loader = $this->createMock(LoaderInterface::class);
+        $loader = $this->createStub(LoaderInterface::class);
         $repository = $this->createMock(RepositoryInterface::class);
         $promise = $this->createMock(PromiseInterface::class);
 
@@ -91,14 +91,14 @@ class FindBySlugQueryTest extends TestCase
 
     public function testFetchWithNonSavedObject(): void
     {
-        $loader = $this->createMock(LoaderInterface::class);
+        $loader = $this->createStub(LoaderInterface::class);
         $repository = $this->createMock(RepositoryInterface::class);
         $promise = $this->createMock(PromiseInterface::class);
 
         $promise->expects($this->never())->method('success');
         $promise->expects($this->never())->method('fail');
 
-        $object = $this->createMock(IdentifiedObjectInterface::class);
+        $object = $this->createStub(IdentifiedObjectInterface::class);
 
         $repository->expects($this->once())
             ->method('findOneBy')
@@ -112,14 +112,14 @@ class FindBySlugQueryTest extends TestCase
 
     public function testFetchWithSavedObject(): void
     {
-        $loader = $this->createMock(LoaderInterface::class);
+        $loader = $this->createStub(LoaderInterface::class);
         $repository = $this->createMock(RepositoryInterface::class);
         $promise = $this->createMock(PromiseInterface::class);
 
         $promise->expects($this->never())->method('success');
         $promise->expects($this->never())->method('fail');
 
-        $object = $this->createMock(IdentifiedObjectInterface::class);
+        $object = $this->createStub(IdentifiedObjectInterface::class);
         $object->method('getId')->willReturn('foo');
 
         $repository->expects($this->once())
@@ -134,7 +134,7 @@ class FindBySlugQueryTest extends TestCase
 
     public function testFetchFailing(): void
     {
-        $loader = $this->createMock(LoaderInterface::class);
+        $loader = $this->createStub(LoaderInterface::class);
         $repository = $this->createMock(RepositoryInterface::class);
         $promise = $this->createMock(PromiseInterface::class);
 

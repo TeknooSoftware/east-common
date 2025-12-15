@@ -47,10 +47,10 @@ class Disable2FATest extends TestCase
     public function buildPlan(): Disable2FA
     {
         return new Disable2FA(
-            $this->createMock(OriginalRecipeInterface::class),
-            $this->createMock(DisableTOTP::class),
-            $this->createMock(RedirectClientInterface::class),
-            $this->createMock(RenderError::class),
+            $this->createStub(OriginalRecipeInterface::class),
+            $this->createStub(DisableTOTP::class),
+            $this->createStub(RedirectClientInterface::class),
+            $this->createStub(RenderError::class),
             'foo',
         );
     }

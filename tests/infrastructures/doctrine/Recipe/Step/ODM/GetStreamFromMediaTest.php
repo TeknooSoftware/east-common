@@ -28,6 +28,7 @@ namespace Teknoo\Tests\East\Common\Doctrine\Recipe\Step\ODM;
 use Doctrine\ODM\MongoDB\Repository\GridFSRepository;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
@@ -53,25 +54,27 @@ class GetStreamFromMediaTest extends TestCase
 
     private ?StreamFactoryInterface $streamFactory = null;
 
-    /**
-     * @return GridFSRepository|MockObject
-     */
-    private function getGridFSRepository(): GridFSRepository
+    private function getGridFSRepository(bool $stub = false): (GridFSRepository&Stub)|(GridFSRepository&MockObject)
     {
         if (!$this->repository instanceof GridFSRepository) {
-            $this->repository = $this->createMock(GridFSRepository::class);
+            if ($stub) {
+                $this->repository = $this->createStub(GridFSRepository::class);
+            } else {
+                $this->repository = $this->createMock(GridFSRepository::class);
+            }
         }
 
         return $this->repository;
     }
 
-    /**
-     * @return StreamFactoryInterface|MockObject
-     */
-    private function getStreamFactory(): StreamFactoryInterface
+    private function getStreamFactory(bool $stub = false): (StreamFactoryInterface&Stub)|(StreamFactoryInterface&MockObject)
     {
         if (!$this->streamFactory instanceof StreamFactoryInterface) {
-            $this->streamFactory = $this->createMock(StreamFactoryInterface::class);
+            if ($stub) {
+                $this->streamFactory = $this->createStub(StreamFactoryInterface::class);
+            } else {
+                $this->streamFactory = $this->createMock(StreamFactoryInterface::class);
+            }
         }
 
         return $this->streamFactory;
@@ -80,8 +83,8 @@ class GetStreamFromMediaTest extends TestCase
     public function buildStep(): GetStreamFromMedia
     {
         return new GetStreamFromMedia(
-            $this->getGridFSRepository(),
-            $this->getStreamFactory()
+            $this->getGridFSRepository(true),
+            $this->getStreamFactory(true)
         );
     }
 
@@ -94,7 +97,7 @@ class GetStreamFromMediaTest extends TestCase
         $this->assertInstanceOf(
             GetStreamFromMedia::class,
             $this->buildStep()(
-                $this->createMock(BaseMedia::class),
+                $this->createStub(BaseMedia::class),
                 $manager
             )
         );
@@ -102,8 +105,8 @@ class GetStreamFromMediaTest extends TestCase
 
     public function testInvokeMedia(): void
     {
-        $stream = $this->createMock(StreamInterface::class);
-        $this->getStreamFactory()
+        $stream = $this->createsTUB(StreamInterface::class);
+        $this->getStreamFactory(true)
             ->method('createStreamFromResource')
             ->willReturn($stream);
 
@@ -116,7 +119,7 @@ class GetStreamFromMediaTest extends TestCase
         $this->assertInstanceOf(
             GetStreamFromMedia::class,
             $this->buildStep()(
-                $this->createMock(Media::class),
+                $this->createStub(Media::class),
                 $manager
             )
         );

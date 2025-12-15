@@ -51,7 +51,7 @@ class EndLoopingTest extends TestCase
             ->with([], StartLoopingOn::class)
             ->willReturnSelf();
 
-        $loop = $this->createMock(StartLoopingOn::class);
+        $loop = $this->createStub(StartLoopingOn::class);
         $loop
             ->method('isEnded')
             ->willReturn(false);
@@ -68,7 +68,7 @@ class EndLoopingTest extends TestCase
         $manager->expects($this->never())
             ->method('continue');
 
-        $loop = $this->createMock(StartLoopingOn::class);
+        $loop = $this->createStub(StartLoopingOn::class);
         $loop
             ->method('isEnded')
             ->willReturn(true);

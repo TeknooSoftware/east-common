@@ -28,6 +28,7 @@ namespace Teknoo\Tests\East\CommonBundle\Middleware;
 use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -41,12 +42,16 @@ use Teknoo\East\CommonBundle\Middleware\LocaleMiddleware;
 #[CoversClass(LocaleMiddleware::class)]
 class LocaleMiddlewareTest extends TestCase
 {
-    private (LocaleAwareInterface&MockObject)|null $translator = null;
+    private (LocaleAwareInterface&Stub)|(LocaleAwareInterface&MockObject)|null $translator = null;
 
-    public function getTranslator(): LocaleAwareInterface&MockObject
+    public function getTranslator(bool $stub = false): (LocaleAwareInterface&Stub)|(LocaleAwareInterface&MockObject)
     {
         if (!$this->translator instanceof LocaleAwareInterface) {
-            $this->translator = $this->createMock(LocaleAwareInterface::class);
+            if ($stub) {
+                $this->translator = $this->createStub(LocaleAwareInterface::class);
+            } else {
+                $this->translator = $this->createMock(LocaleAwareInterface::class);
+            }
         }
 
         return $this->translator;
@@ -54,16 +59,15 @@ class LocaleMiddlewareTest extends TestCase
 
     public function buildMiddleware(): LocaleMiddleware
     {
-        return new LocaleMiddleware($this->getTranslator());
+        return new LocaleMiddleware($this->getTranslator(true));
     }
 
     public function testUpdateLocaleInTranslatorIfLocalePresent(): void
     {
-        $serverRequest = $this->createMock(ServerRequestInterface::class);
+        $serverRequest = $this->createStub(ServerRequestInterface::class);
 
         $serverRequest
             ->method('getAttribute')
-            ->with('locale')
             ->willReturn('fr');
 
         $this->getTranslator()
@@ -81,11 +85,10 @@ class LocaleMiddlewareTest extends TestCase
 
     public function testNotUpdateLocaleInTranslatorIfLocaleNotPresent(): void
     {
-        $serverRequest = $this->createMock(ServerRequestInterface::class);
+        $serverRequest = $this->createStub(ServerRequestInterface::class);
 
         $serverRequest
             ->method('getAttribute')
-            ->with('locale')
             ->willReturn(null);
 
         $this->getTranslator()
@@ -102,7 +105,7 @@ class LocaleMiddlewareTest extends TestCase
 
     public function testWithMessage(): void
     {
-        $message = $this->createMock(MessageInterface::class);
+        $message = $this->createStub(MessageInterface::class);
 
         $this->getTranslator()
             ->expects($this->never())

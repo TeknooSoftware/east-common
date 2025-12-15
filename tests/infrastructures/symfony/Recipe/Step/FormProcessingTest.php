@@ -40,7 +40,7 @@ class FormProcessingTest extends TestCase
 {
     public function buildStep(): FormProcessing
     {
-        return new FormProcessing();
+        return new FormProcessing(true);
     }
 
     public function testInvokeFormNotSubmitted(): void
@@ -48,7 +48,7 @@ class FormProcessingTest extends TestCase
         $manager = $this->createMock(ManagerInterface::class);
         $manager->expects($this->once())->method('continue')->with([], 'nextStep');
 
-        $form = $this->createMock(FormInterface::class);
+        $form = $this->createStub(FormInterface::class);
         $form->method('isSubmitted')->willReturn(false);
         $form->method('isValid')->willReturn(false);
 
@@ -67,7 +67,7 @@ class FormProcessingTest extends TestCase
         $manager = $this->createMock(ManagerInterface::class);
         $manager->expects($this->once())->method('continue')->with([], 'nextStep');
 
-        $form = $this->createMock(FormInterface::class);
+        $form = $this->createStub(FormInterface::class);
         $form->method('isSubmitted')->willReturn(true);
         $form->method('isValid')->willReturn(false);
 
@@ -86,7 +86,7 @@ class FormProcessingTest extends TestCase
         $manager = $this->createMock(ManagerInterface::class);
         $manager->expects($this->never())->method('continue');
 
-        $form = $this->createMock(FormInterface::class);
+        $form = $this->createStub(FormInterface::class);
         $form->method('isSubmitted')->willReturn(true);
         $form->method('isValid')->willReturn(true);
 

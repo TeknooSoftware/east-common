@@ -221,11 +221,11 @@ class UserTest extends TestCase
         $object = $this->buildObject();
         $this->assertInstanceOf(
             $object::class,
-            $object->setAuthData([$this->createMock(AuthDataInterface::class)])
+            $object->setAuthData([$this->createStub(AuthDataInterface::class)])
         );
 
         $this->assertEquals(
-            [$this->createMock(AuthDataInterface::class)],
+            [$this->createStub(AuthDataInterface::class)],
             $object->getAuthData()
         );
     }
@@ -236,7 +236,7 @@ class UserTest extends TestCase
         $this->assertInstanceOf(
             $object::class,
             $object->addAuthData(
-                $ad1 = $this->createMock(AuthDataInterface::class)
+                $ad1 = $this->createStub(AuthDataInterface::class)
             )
         );
 
@@ -248,7 +248,7 @@ class UserTest extends TestCase
         $this->assertInstanceOf(
             $object::class,
             $object->addAuthData(
-                $ad1b = $this->createMock(AuthDataInterface::class)
+                $ad1b = $this->createStub(AuthDataInterface::class)
             )
         );
 
@@ -260,7 +260,7 @@ class UserTest extends TestCase
         $this->assertInstanceOf(
             $object::class,
             $object->addAuthData(
-                $ad2 = $this->createMock(StoredPassword::class)
+                $ad2 = $this->createStub(StoredPassword::class)
             )
         );
 
@@ -275,7 +275,7 @@ class UserTest extends TestCase
         $object = $this->generateObjectPopulated(
             [
                 'authData' => new \ArrayIterator([
-                    $ad1 = $this->createMock(AuthDataInterface::class)
+                    $ad1 = $this->createStub(AuthDataInterface::class)
                 ])
             ]
         );
@@ -283,7 +283,7 @@ class UserTest extends TestCase
         $this->assertInstanceOf(
             $object::class,
             $object->addAuthData(
-                $ad2 = $this->createMock(StoredPassword::class)
+                $ad2 = $this->createStub(StoredPassword::class)
             )
         );
 
@@ -304,9 +304,9 @@ class UserTest extends TestCase
         $object = $this->generateObjectPopulated(
             [
                 'authData' => new \ArrayIterator([
-                    $a = $this->createMock(StoredPassword::class),
-                    $this->createMock(ThirdPartyAuth::class),
-                    $b = $this->createMock(TOTPAuth::class),
+                    $a = $this->createStub(StoredPassword::class),
+                    $this->createStub(ThirdPartyAuth::class),
+                    $b = $this->createStub(TOTPAuth::class),
                 ])
             ]
         );
@@ -330,8 +330,8 @@ class UserTest extends TestCase
         $object = $this->generateObjectPopulated(
             [
                 'authData' => new \ArrayIterator([
-                    $a = $this->createMock(StoredPassword::class),
-                    $b = $this->createMock(TOTPAuth::class),
+                    $a = $this->createStub(StoredPassword::class),
+                    $b = $this->createStub(TOTPAuth::class),
                 ])
             ]
         );
@@ -413,7 +413,7 @@ class UserTest extends TestCase
     {
         $this->expectException(\TypeError::class);
         $this->buildObject()->exportToMeData(
-            $this->createMock(EastNormalizerInterface::class),
+            $this->createStub(EastNormalizerInterface::class),
             new \stdClass()
         );
     }

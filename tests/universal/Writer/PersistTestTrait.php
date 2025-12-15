@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Writer;
 
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Teknoo\East\Common\Contracts\DBSource\ManagerInterface;
 use Teknoo\East\Common\Contracts\Object\TimestampableInterface;
 use Teknoo\East\Common\Contracts\Writer\WriterInterface;
@@ -37,35 +39,31 @@ use Teknoo\Recipe\Promise\PromiseInterface;
  */
 trait PersistTestTrait
 {
-    /**
-     * @var \Teknoo\East\Common\Contracts\DBSource\ManagerInterface
-     */
-    private $manager;
+    private (ManagerInterface&Stub)|(ManagerInterface&MockObject)|null $manager = null;
 
-    /**
-     * @var DatesService
-     */
-    private $datesService;
+    private (DatesService&Stub)|(DatesService&MockObject)|null $datesService = null;
 
-    /**
-     * @return \PHPUnit\Framework\MockObject\MockObject|ManagerInterface
-     */
-    public function getObjectManager(): ManagerInterface
+    public function getObjectManager(bool $stub = false): (ManagerInterface&Stub)|(ManagerInterface&MockObject)
     {
         if (!$this->manager instanceof ManagerInterface) {
-            $this->manager = $this->createMock(ManagerInterface::class);
+            if ($stub) {
+                $this->manager = $this->createStub(ManagerInterface::class);
+            } else {
+                $this->manager = $this->createMock(ManagerInterface::class);
+            }
         }
 
         return $this->manager;
     }
 
-    /**
-     * @return DatesService|\PHPUnit\Framework\MockObject\MockObject
-     */
-    public function getDatesServiceMock(): DatesService
+    public function getDatesServiceMock(bool $stub = false): (DatesService&Stub)|(DatesService&MockObject)
     {
         if (!$this->datesService instanceof DatesService) {
-            $this->datesService = $this->createMock(DatesService::class);
+            if ($stub) {
+                $this->datesService = $this->createStub(DatesService::class);
+            } else {
+                $this->datesService = $this->createMock(DatesService::class);
+            }
         }
 
         return $this->datesService;
@@ -120,7 +118,7 @@ trait PersistTestTrait
 
         if ($object instanceof TimestampableInterface) {
             $this->getDatesServiceMock()
-                ->expects($this->any())
+                ->expects($this->atLeastOnce())
                 ->method('passMeTheDate')
                 ->willReturnCallback(
                     function ($setter, $preferRealDate) use ($date) {
@@ -165,7 +163,7 @@ trait PersistTestTrait
 
         if ($object instanceof TimestampableInterface) {
             $this->getDatesServiceMock()
-                ->expects($this->any())
+                ->expects($this->atLeastOnce())
                 ->method('passMeTheDate')
                 ->willReturnCallback(
                     function ($setter, $preferRealDate) use ($date) {
@@ -213,7 +211,7 @@ trait PersistTestTrait
 
         if ($object instanceof TimestampableInterface) {
             $this->getDatesServiceMock()
-                ->expects($this->any())
+                ->expects($this->atLeastOnce())
                 ->method('passMeTheDate')
                 ->willReturnCallback(
                     function ($setter, $preferRealDate) use ($date) {
@@ -258,7 +256,7 @@ trait PersistTestTrait
 
         if ($object instanceof TimestampableInterface) {
             $this->getDatesServiceMock()
-                ->expects($this->any())
+                ->expects($this->atLeastOnce())
                 ->method('passMeTheDate')
                 ->willReturnCallback(
                     function ($setter, $preferRealDate) use ($date) {
@@ -306,7 +304,7 @@ trait PersistTestTrait
 
         if ($object instanceof TimestampableInterface) {
             $this->getDatesServiceMock()
-                ->expects($this->any())
+                ->expects($this->atLeastOnce())
                 ->method('passMeTheDate')
                 ->willReturnCallback(
                     function ($setter, $preferRealDate) use ($date) {

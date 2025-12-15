@@ -27,6 +27,7 @@ namespace Teknoo\Tests\East\Common\Recipe\Step;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -43,15 +44,16 @@ use Teknoo\East\Foundation\Client\ClientInterface;
 #[CoversClass(SendMedia::class)]
 class SendMediaTest extends TestCase
 {
-    private ?ResponseFactoryInterface $responseFactory = null;
+    private (ResponseFactoryInterface&Stub)|(ResponseFactoryInterface&MockObject)|null $responseFactory = null;
 
-    /**
-     * @return ResponseFactoryInterface|MockObject
-     */
-    private function getResponseFactory(): ResponseFactoryInterface
+    private function getResponseFactory(bool $stub = false): (ResponseFactoryInterface&Stub)|(ResponseFactoryInterface&MockObject)
     {
         if (!$this->responseFactory instanceof ResponseFactoryInterface) {
-            $this->responseFactory = $this->createMock(ResponseFactoryInterface::class);
+            if ($stub) {
+                $this->responseFactory = $this->createStub(ResponseFactoryInterface::class);
+            } else {
+                $this->responseFactory = $this->createMock(ResponseFactoryInterface::class);
+            }
         }
 
         return $this->responseFactory;
@@ -59,7 +61,7 @@ class SendMediaTest extends TestCase
 
     public function buildStep(): SendMedia
     {
-        return new SendMedia($this->getResponseFactory());
+        return new SendMedia($this->getResponseFactory(true));
     }
 
     public function testInvokeBadClient(): void
@@ -68,8 +70,8 @@ class SendMediaTest extends TestCase
 
         $this->buildStep()(
             new \stdClass(),
-            $this->createMock(Media::class),
-            $this->createMock(StreamInterface::class)
+            $this->createStub(Media::class),
+            $this->createStub(StreamInterface::class)
         );
     }
 
@@ -78,9 +80,9 @@ class SendMediaTest extends TestCase
         $this->expectException(\TypeError::class);
 
         $this->buildStep()(
-            $this->createMock(ClientInterface::class),
+            $this->createStub(ClientInterface::class),
             new \stdClass(),
-            $this->createMock(StreamInterface::class)
+            $this->createStub(StreamInterface::class)
         );
     }
 
@@ -89,8 +91,8 @@ class SendMediaTest extends TestCase
         $this->expectException(\TypeError::class);
 
         $this->buildStep()(
-            $this->createMock(ClientInterface::class),
-            $this->createMock(Media::class),
+            $this->createStub(ClientInterface::class),
+            $this->createStub(Media::class),
             new \stdClass()
         );
     }
@@ -100,17 +102,17 @@ class SendMediaTest extends TestCase
         $client = $this->createMock(ClientInterface::class);
         $client->expects($this->once())->method('acceptResponse');
 
-        $media = $this->createMock(Media::class);
+        $media = $this->createStub(Media::class);
         $media->method('getMetadata')->willReturn(
-            $this->createMock(MediaMetadata::class)
+            $this->createStub(MediaMetadata::class)
         );
 
-        $stream = $this->createMock(StreamInterface::class);
+        $stream = $this->createsTUB(StreamInterface::class);
 
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->createStub(ResponseInterface::class);
         $response->method('withHeader')->willReturnSelf();
         $response->method('withBody')->willReturnSelf();
-        $this->getResponseFactory()
+        $this->getResponseFactory(true)
             ->method('createResponse')
             ->willReturn($response);
 
@@ -129,15 +131,15 @@ class SendMediaTest extends TestCase
         $client = $this->createMock(ClientInterface::class);
         $client->expects($this->once())->method('acceptResponse');
 
-        $media = $this->createMock(Media::class);
+        $media = $this->createStub(Media::class);
         $media->method('getMetadata')->willReturn(null);
 
-        $stream = $this->createMock(StreamInterface::class);
+        $stream = $this->createStub(StreamInterface::class);
 
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->createStub(ResponseInterface::class);
         $response->method('withHeader')->willReturnSelf();
         $response->method('withBody')->willReturnSelf();
-        $this->getResponseFactory()
+        $this->getResponseFactory(true)
             ->method('createResponse')
             ->willReturn($response);
 

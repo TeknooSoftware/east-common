@@ -61,7 +61,7 @@ class RenderMediaEndPointTest extends TestCase
     public function getRecipe(): RecipeInterface
     {
         if (null === $this->recipe) {
-            $this->recipe = $this->createMock(RecipeInterface::class);
+            $this->recipe = $this->createStub(RecipeInterface::class);
         }
 
         return $this->recipe;
@@ -73,7 +73,7 @@ class RenderMediaEndPointTest extends TestCase
     public function getLoadMedia(): LoadMedia
     {
         if (null === $this->loadMedia) {
-            $this->loadMedia = $this->createMock(LoadMedia::class);
+            $this->loadMedia = $this->createStub(LoadMedia::class);
         }
 
         return $this->loadMedia;
@@ -85,7 +85,7 @@ class RenderMediaEndPointTest extends TestCase
     public function getGetStreamFromMedia(): GetStreamFromMediaInterface
     {
         if (null === $this->getStreamFromMedia) {
-            $this->getStreamFromMedia = $this->createMock(GetStreamFromMediaInterface::class);
+            $this->getStreamFromMedia = $this->createStub(GetStreamFromMediaInterface::class);
         }
 
         return $this->getStreamFromMedia;
@@ -97,7 +97,7 @@ class RenderMediaEndPointTest extends TestCase
     public function getSendMedia(): SendMedia
     {
         if (null === $this->sendMedia) {
-            $this->sendMedia = $this->createMock(SendMedia::class);
+            $this->sendMedia = $this->createStub(SendMedia::class);
         }
 
         return $this->sendMedia;
@@ -109,7 +109,7 @@ class RenderMediaEndPointTest extends TestCase
     public function getRenderError(): RenderError
     {
         if (null === $this->renderError) {
-            $this->renderError = $this->createMock(RenderError::class);
+            $this->renderError = $this->createStub(RenderError::class);
         }
 
         return $this->renderError;

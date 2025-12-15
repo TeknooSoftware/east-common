@@ -27,6 +27,7 @@ namespace Teknoo\Tests\East\CommonBundle\Object;
 
 use ArrayIterator;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -46,28 +47,30 @@ abstract class AbstractUserTests extends TestCase
 
     private ?StoredPassword $storedPassword = null;
 
-    /**
-     * @return StoredPassword|MockObject
-     */
-    public function getStoredPassword(): StoredPassword
+    public function getStoredPassword(bool $stub = false): (StoredPassword&Stub)|(StoredPassword&MockObject)
     {
         if (!$this->storedPassword instanceof StoredPassword) {
-            $this->storedPassword = $this->createMock(StoredPassword::class);
+            if ($stub) {
+                $this->storedPassword = $this->createStub(StoredPassword::class);
+            } else {
+                $this->storedPassword = $this->createMock(StoredPassword::class);
+            }
         }
 
         return $this->storedPassword;
     }
 
-    /**
-     * @return BaseUser|\PHPUnit\Framework\MockObject\MockObject
-     */
-    public function getUser(): BaseUser
+    public function getUser(bool $stub = false): (BaseUser&MockObject)|(BaseUser&Stub)
     {
         if (!$this->user instanceof BaseUser) {
-            $this->user = $this->createMock(BaseUser::class);
+            if ($stub) {
+                $this->user = $this->createStub(BaseUser::class);
+            } else {
+                $this->user = $this->createMock(BaseUser::class);
+            }
 
-            $this->user->method('getAuthData')->willReturn([$this->getStoredPassword()]);
-            $this->user->method('getOneAuthData')->willReturn($this->getStoredPassword());
+            $this->user->method('getAuthData')->willReturn([$this->getStoredPassword($stub)]);
+            $this->user->method('getOneAuthData')->willReturn($this->getStoredPassword($stub));
         }
 
         return $this->user;
@@ -148,11 +151,11 @@ abstract class AbstractUserTests extends TestCase
 
     public function testIsEqualToNotSameUserName(): void
     {
-        $this->getUser()
+        $this->getUser(true)
             ->method('getUserIdentifier')
             ->willReturn('myUserName');
 
-        $user = $this->createMock(UserInterface::class);
+        $user = $this->createStub(UserInterface::class);
         $user
             ->method('getUserIdentifier')
             ->willReturn('notUserName');

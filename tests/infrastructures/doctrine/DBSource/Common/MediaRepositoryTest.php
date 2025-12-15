@@ -45,6 +45,6 @@ class MediaRepositoryTest extends TestCase
      */
     public function buildRepository(): RepositoryInterface
     {
-        return new MediaRepository($this->getDoctrineObjectRepositoryMock());
+        return new MediaRepository($this->getDoctrineObjectRepositoryMock(true));
     }
 }

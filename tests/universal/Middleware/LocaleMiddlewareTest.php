@@ -27,6 +27,7 @@ namespace Teknoo\Tests\East\Common\Middleware;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use PHPUnit\Framework\TestCase;
@@ -67,22 +68,25 @@ class LocaleMiddlewareTest extends TestCase
      */
     public function buildMiddleware($locale = 'en'): LocaleMiddleware
     {
-        return new LocaleMiddleware($this->getTranslatableSetter(), $locale);
+        return new LocaleMiddleware(
+            $this->getTranslatableSetter(true),
+            $locale,
+        );
     }
 
     public function testWithMessage(): void
     {
-        $message = $this->createMock(MessageInterface::class);
+        $message = $this->createStub(MessageInterface::class);
 
-        $manager = $this->createMock(ManagerInterface::class);
+        $manager = $this->createStub(ManagerInterface::class);
 
-        $bag = $this->createMock(ParametersBag::class);
+        $bag = $this->createStub(ParametersBag::class);
 
 
-        $sessionMiddleware = $this->createMock(SessionInterface::class);
+        $sessionMiddleware = $this->createStub(SessionInterface::class);
         $sessionMiddleware
             ->method('get')
-            ->willReturnCallback(function (string $key, PromiseInterface $promise) use ($sessionMiddleware): \PHPUnit\Framework\MockObject\MockObject {
+            ->willReturnCallback(function (string $key, PromiseInterface $promise) use ($sessionMiddleware): MockObject {
                 $promise->fail(new \DomainException());
 
                 return $sessionMiddleware;
@@ -101,22 +105,22 @@ class LocaleMiddlewareTest extends TestCase
 
     public function testExecuteNoInRequestNoInSession(): void
     {
-        $bag = $this->createMock(ParametersBag::class);
+        $bag = $this->createStub(ParametersBag::class);
 
         $serverRequest = $this->createMock(ServerRequestInterface::class);
-        $serverRequestFinal = $this->createMock(ServerRequestInterface::class);
+        $serverRequestFinal = $this->createStub(ServerRequestInterface::class);
 
-        $manager = $this->createMock(ManagerInterface::class);
+        $manager = $this->createStub(ManagerInterface::class);
 
         $serverRequest->expects($this->once())
             ->method('withAttribute')
             ->with('locale', 'en')
             ->willReturn($serverRequestFinal);
 
-        $sessionMiddleware = $this->createMock(SessionInterface::class);
+        $sessionMiddleware = $this->createStub(SessionInterface::class);
         $sessionMiddleware
             ->method('get')
-            ->willReturnCallback(function (string $key, PromiseInterface $promise) use ($sessionMiddleware): \PHPUnit\Framework\MockObject\MockObject {
+            ->willReturnCallback(function (string $key, PromiseInterface $promise) use ($sessionMiddleware): Stub {
                 $promise->fail(new \DomainException());
 
                 return $sessionMiddleware;
@@ -145,20 +149,20 @@ class LocaleMiddlewareTest extends TestCase
     public function testExecuteNoInRequestInSession(): void
     {
         $serverRequest = $this->createMock(ServerRequestInterface::class);
-        $serverRequestFinal = $this->createMock(ServerRequestInterface::class);
-        $bag = $this->createMock(ParametersBag::class);
+        $serverRequestFinal = $this->createStub(ServerRequestInterface::class);
+        $bag = $this->createStub(ParametersBag::class);
 
-        $manager = $this->createMock(ManagerInterface::class);
+        $manager = $this->createStub(ManagerInterface::class);
 
         $serverRequest->expects($this->once())
             ->method('withAttribute')
             ->with('locale', 'fr')
             ->willReturn($serverRequestFinal);
 
-        $sessionMiddleware = $this->createMock(SessionInterface::class);
+        $sessionMiddleware = $this->createStub(SessionInterface::class);
         $sessionMiddleware
             ->method('get')
-            ->willReturnCallback(function (string $key, PromiseInterface $promise) use ($sessionMiddleware): \PHPUnit\Framework\MockObject\MockObject {
+            ->willReturnCallback(function (string $key, PromiseInterface $promise) use ($sessionMiddleware): \PHPUnit\Framework\MockObject\Stub {
                 $promise->success('fr');
 
                 return $sessionMiddleware;
@@ -187,9 +191,9 @@ class LocaleMiddlewareTest extends TestCase
     public function testExecuteInRequestInSession(): void
     {
         $serverRequest = $this->createMock(ServerRequestInterface::class);
-        $serverRequestFinal = $this->createMock(ServerRequestInterface::class);
+        $serverRequestFinal = $this->createStub(ServerRequestInterface::class);
 
-        $bag = $this->createMock(ParametersBag::class);
+        $bag = $this->createStub(ParametersBag::class);
 
         $manager = $this->createMock(ManagerInterface::class);
         $manager->expects($this->once())
@@ -232,12 +236,12 @@ class LocaleMiddlewareTest extends TestCase
 
     public function testExecuteNoSession(): void
     {
-        $serverRequest = $this->createMock(ServerRequestInterface::class);
-        $serverRequestFinal = $this->createMock(ServerRequestInterface::class);
+        $serverRequest = $this->createStub(ServerRequestInterface::class);
+        $serverRequestFinal = $this->createStub(ServerRequestInterface::class);
 
-        $bag = $this->createMock(ParametersBag::class);
+        $bag = $this->createStub(ParametersBag::class);
 
-        $manager = $this->createMock(ManagerInterface::class);
+        $manager = $this->createStub(ManagerInterface::class);
 
         $serverRequest
             ->method('getQueryParams')

@@ -50,11 +50,11 @@ class SourceLoaderTest extends TestCase
 {
     public function testLoadMissingSet(): void
     {
-        $flysystem = $this->createMock(Filesystem::class);
+        $flysystem = $this->createStub(Filesystem::class);
 
         $this->expectException(UnkownSetNameException::class);
         $loader = new SourceLoader(
-            $this->createMock(SourceLoaderExtension::class),
+            $this->createStub(SourceLoaderExtension::class),
             $flysystem,
             [
                 'foo' => [],
@@ -70,10 +70,10 @@ class SourceLoaderTest extends TestCase
 
     public function testLoad(): void
     {
-        $flysystem = $this->createMock(Filesystem::class);
+        $flysystem = $this->createStub(Filesystem::class);
 
         $loader = new SourceLoader(
-            $this->createMock(SourceLoaderExtension::class),
+            $this->createStub(SourceLoaderExtension::class),
             $flysystem,
             [
                 'foo' => [

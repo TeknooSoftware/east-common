@@ -49,7 +49,7 @@ class CreateObjectTest extends TestCase
 
         $this->buildStep()(
             new \stdClass(),
-            $this->createMock(ManagerInterface::class)
+            $this->createStub(ManagerInterface::class)
         );
     }
 

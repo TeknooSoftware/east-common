@@ -27,6 +27,8 @@ namespace Teknoo\Tests\East\Common\Object\Collection;
 
 use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
@@ -45,11 +47,11 @@ class LazyLoadableCollectionTest extends TestCase
 {
     public function testFetchCollectionSuccess(): void
     {
-        $loader = $this->createMock(LoaderInterface::class);
+        $loader = $this->createStub(LoaderInterface::class);
         $loader
             ->method('query')
             ->willReturnCallback(
-                function (\Teknoo\East\Common\Contracts\Query\QueryCollectionInterface $query, Promise $promise) use ($loader): \PHPUnit\Framework\MockObject\MockObject {
+                function (QueryCollectionInterface $query, Promise $promise) use ($loader): Stub {
                     $promise->success([]);
 
                     return $loader;
@@ -60,18 +62,18 @@ class LazyLoadableCollectionTest extends TestCase
             LazyLoadableCollection::class,
             new LazyLoadableCollection(
                 loader: $loader,
-                query: $this->createMock(QueryCollectionInterface::class),
+                query: $this->createStub(QueryCollectionInterface::class),
             )->fetchCollection()
         );
     }
 
     public function testFetchCollectionFail(): void
     {
-        $loader = $this->createMock(LoaderInterface::class);
+        $loader = $this->createStub(LoaderInterface::class);
         $loader
             ->method('query')
             ->willReturnCallback(
-                function (\Teknoo\East\Common\Contracts\Query\QueryCollectionInterface $query, Promise $promise) use ($loader): \PHPUnit\Framework\MockObject\MockObject {
+                function (QueryCollectionInterface $query, Promise $promise) use ($loader): MockObject {
                     $promise->fail(new Exception('error'));
 
                     return $loader;
@@ -83,21 +85,21 @@ class LazyLoadableCollectionTest extends TestCase
             LazyLoadableCollection::class,
             new LazyLoadableCollection(
                 loader: $loader,
-                query: $this->createMock(QueryCollectionInterface::class),
+                query: $this->createStub(QueryCollectionInterface::class),
             )->fetchCollection()
         );
     }
 
     public function testGetIterator(): void
     {
-        $loader = $this->createMock(LoaderInterface::class);
+        $loader = $this->createStub(LoaderInterface::class);
         $loader
             ->method('query')
             ->willReturnCallback(
-                function (\Teknoo\East\Common\Contracts\Query\QueryCollectionInterface $query, Promise $promise) use ($loader): \PHPUnit\Framework\MockObject\MockObject {
+                function (QueryCollectionInterface $query, Promise $promise) use ($loader): Stub {
                     $promise->success([
-                        $this->createMock(ObjectInterface::class),
-                        $this->createMock(ObjectInterface::class),
+                        $this->createStub(ObjectInterface::class),
+                        $this->createStub(ObjectInterface::class),
                     ]);
 
                     return $loader;
@@ -106,7 +108,7 @@ class LazyLoadableCollectionTest extends TestCase
 
         $collection = new LazyLoadableCollection(
             loader: $loader,
-            query: $this->createMock(QueryCollectionInterface::class),
+            query: $this->createStub(QueryCollectionInterface::class),
         );
 
         $i = 0;
@@ -124,8 +126,8 @@ class LazyLoadableCollectionTest extends TestCase
     public function testGetIteratorWithWrongLoading(): void
     {
         $collection = new LazyLoadableCollection(
-            loader: $this->createMock(LoaderInterface::class),
-            query: $this->createMock(QueryCollectionInterface::class),
+            loader: $this->createStub(LoaderInterface::class),
+            query: $this->createStub(QueryCollectionInterface::class),
         );
 
         $this->expectException(RuntimeException::class);

@@ -46,9 +46,9 @@ class MinifyAssetsTest extends TestCase
         $this->assertInstanceOf(
             MinifyAssets::class,
             (new MinifyAssets())(
-                $this->createMock(ManagerInterface::class),
-                $this->createMock(MinifierInterface::class),
-                $this->createMock(FilesSetInterface::class),
+                $this->createStub(ManagerInterface::class),
+                $this->createStub(MinifierInterface::class),
+                $this->createStub(FilesSetInterface::class),
                 'foo',
                 'bar',
             ),

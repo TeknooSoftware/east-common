@@ -27,6 +27,7 @@ namespace Teknoo\Tests\East\Common\Service;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\Object\DeletableInterface;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
@@ -41,37 +42,42 @@ use Teknoo\East\Foundation\Time\DatesService;
 #[CoversClass(DeletingService::class)]
 class DeletingServiceTest extends TestCase
 {
-    private (WriterInterface&MockObject)|null $writer = null;
+    private (WriterInterface&Stub)|(WriterInterface&MockObject)|null $writer = null;
 
-    private (DatesService&MockObject)|null $datesService = null;
+    private (DatesService&Stub)|(DatesService&MockObject)|null $datesService = null;
 
-    /**
-     * @return WriterInterface|\PHPUnit\Framework\MockObject\MockObject
-     */
-    public function getWriterMock(): WriterInterface
+    public function getWriterMock(bool $stub = false): (WriterInterface&Stub)|(WriterInterface&MockObject)
     {
         if (!$this->writer instanceof WriterInterface) {
-            $this->writer = $this->createMock(WriterInterface::class);
+            if ($stub) {
+                $this->writer = $this->createStub(WriterInterface::class);
+            } else {
+                $this->writer = $this->createMock(WriterInterface::class);
+            }
         }
 
         return $this->writer;
     }
 
-    /**
-     * @return DatesService|\PHPUnit\Framework\MockObject\MockObject
-     */
-    public function getDatesServiceMock(): DatesService
+    public function getDatesServiceMock(bool $stub = false): (DatesService&Stub)|(DatesService&MockObject)
     {
         if (!$this->datesService instanceof DatesService) {
-            $this->datesService = $this->createMock(DatesService::class);
+            if ($stub) {
+                $this->datesService = $this->createStub(DatesService::class);
+            } else {
+                $this->datesService = $this->createMock(DatesService::class);
+            }
         }
 
         return $this->datesService;
     }
 
-    public function buildService(): \Teknoo\East\Common\Service\DeletingService
+    public function buildService(): DeletingService
     {
-        return new DeletingService($this->getWriterMock(), $this->getDatesServiceMock());
+        return new DeletingService(
+            $this->getWriterMock(true),
+            $this->getDatesServiceMock(true),
+        );
     }
 
     public function testDeleteWithDeletable(): void
@@ -107,10 +113,10 @@ class DeletingServiceTest extends TestCase
             ->expects($this->never())
             ->method('remove');
 
-        $this->getDatesServiceMock()
+        $this->getDatesServiceMock(true)
             ->method('passMeTheDate')
             ->willReturnCallback(
-                function ($setter) use ($date): \Teknoo\East\Foundation\Time\DatesService {
+                function ($setter) use ($date): DatesService {
                     $setter($date);
 
                     return $this->getDatesServiceMock();

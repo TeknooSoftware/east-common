@@ -51,14 +51,14 @@ class Validate2FATest extends TestCase
     public function buildPlan(): Validate2FA
     {
         return new Validate2FA(
-            $this->createMock(OriginalRecipeInterface::class),
-            $this->createMock(CreateObject::class),
-            $this->createMock(FormHandlingInterface::class),
-            $this->createMock(FormProcessingInterface::class),
-            $this->createMock(ValidateTOTP::class),
-            $this->createMock(RedirectClientInterface::class),
-            $this->createMock(RenderFormInterface::class),
-            $this->createMock(RenderError::class),
+            $this->createStub(OriginalRecipeInterface::class),
+            $this->createStub(CreateObject::class),
+            $this->createStub(FormHandlingInterface::class),
+            $this->createStub(FormProcessingInterface::class),
+            $this->createStub(ValidateTOTP::class),
+            $this->createStub(RedirectClientInterface::class),
+            $this->createStub(RenderFormInterface::class),
+            $this->createStub(RenderError::class),
             'foo',
         );
     }

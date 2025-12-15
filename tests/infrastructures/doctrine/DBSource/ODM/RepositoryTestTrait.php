@@ -28,6 +28,8 @@ namespace Teknoo\Tests\East\Common\Doctrine\DBSource\ODM;
 use Doctrine\ODM\MongoDB\Query\Builder;
 use Doctrine\ODM\MongoDB\Query\Query;
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Teknoo\East\Common\Contracts\DBSource\RepositoryInterface;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
 use Teknoo\East\Common\Query\Enum\Direction;
@@ -49,18 +51,16 @@ use Teknoo\Recipe\Promise\PromiseInterface;
  */
 trait RepositoryTestTrait
 {
-    /**
-     * @var DocumentRepository
-     */
-    private $objectRepository;
+    private (DocumentRepository&Stub)|(DocumentRepository&MockObject)|null $objectRepository = null;
 
-    /**
-     * @return DocumentRepository|\PHPUnit\Framework\MockObject\MockObject
-     */
-    protected function getDoctrineObjectRepositoryMock(): DocumentRepository
+    protected function getDoctrineObjectRepositoryMock(bool $stub = false): (DocumentRepository&Stub)|(DocumentRepository&MockObject)
     {
         if (!$this->objectRepository instanceof DocumentRepository) {
-            $this->objectRepository = $this->createMock(DocumentRepository::class);
+            if ($stub) {
+                $this->objectRepository = $this->createStub(DocumentRepository::class);
+            } else {
+                $this->objectRepository = $this->createMock(DocumentRepository::class);
+            }
         }
 
         return $this->objectRepository;
@@ -71,7 +71,7 @@ trait RepositoryTestTrait
     public function testFindBadId(): void
     {
         $this->expectException(\TypeError::class);
-        $this->buildRepository()->find(new \stdClass(), $this->createMock(PromiseInterface::class));
+        $this->buildRepository()->find(new \stdClass(), $this->createStub(PromiseInterface::class));
     }
 
     public function testFindBadPromise(): void
@@ -91,12 +91,12 @@ trait RepositoryTestTrait
 
         $queryBuilderMock = $this->createMock(Builder::class);
 
-        $queryBuilderMock->expects($this->any())
+        $queryBuilderMock->expects($this->atLeastOnce())
             ->method('equals')
             ->with(['_id' => 'abc'])
             ->willReturnSelf();
 
-        $queryBuilderMock->expects($this->any())
+        $queryBuilderMock->expects($this->atLeastOnce())
             ->method('getQuery')
             ->willReturn($query);
 
@@ -123,12 +123,12 @@ trait RepositoryTestTrait
 
         $queryBuilderMock = $this->createMock(Builder::class);
 
-        $queryBuilderMock->expects($this->any())
+        $queryBuilderMock->expects($this->atLeastOnce())
             ->method('equals')
             ->with(['_id' => 'abc'])
             ->willReturnSelf();
 
-        $queryBuilderMock->expects($this->any())
+        $queryBuilderMock->expects($this->atLeastOnce())
             ->method('getQuery')
             ->willReturn($query);
 
@@ -155,22 +155,22 @@ trait RepositoryTestTrait
 
         $queryBuilderMock = $this->createMock(Builder::class);
 
-        $queryBuilderMock->expects($this->any())
+        $queryBuilderMock->expects($this->atLeastOnce())
             ->method('equals')
             ->with(['_id' => 'abc'])
             ->willReturnSelf();
 
-        $queryBuilderMock->expects($this->any())
+        $queryBuilderMock->expects($this->atLeastOnce())
             ->method('field')
             ->with('foo')
             ->willReturnSelf();
 
-        $queryBuilderMock->expects($this->any())
+        $queryBuilderMock->expects($this->atLeastOnce())
             ->method('prime')
             ->with(true)
             ->willReturnSelf();
 
-        $queryBuilderMock->expects($this->any())
+        $queryBuilderMock->expects($this->atLeastOnce())
             ->method('getQuery')
             ->willReturn($query);
 
@@ -202,7 +202,7 @@ trait RepositoryTestTrait
         $query->expects($this->once())->method('execute')->willReturn($object);
 
         $queryBuilderMock = $this->createMock(Builder::class);
-        $queryBuilderMock->expects($this->any())
+        $queryBuilderMock->expects($this->atLeastOnce())
             ->method('getQuery')
             ->willReturn($query);
 
@@ -229,17 +229,17 @@ trait RepositoryTestTrait
 
         $queryBuilderMock = $this->createMock(Builder::class);
 
-        $queryBuilderMock->expects($this->any())
+        $queryBuilderMock->expects($this->atLeastOnce())
             ->method('field')
             ->with('foo')
             ->willReturnSelf();
 
-        $queryBuilderMock->expects($this->any())
+        $queryBuilderMock->expects($this->atLeastOnce())
             ->method('prime')
             ->with(true)
             ->willReturnSelf();
 
-        $queryBuilderMock->expects($this->any())
+        $queryBuilderMock->expects($this->atLeastOnce())
             ->method('getQuery')
             ->willReturn($query);
 
@@ -257,7 +257,7 @@ trait RepositoryTestTrait
     public function testFindByBadCriteria(): void
     {
         $this->expectException(\TypeError::class);
-        $this->buildRepository()->findBy(new \stdClass(), $this->createMock(PromiseInterface::class));
+        $this->buildRepository()->findBy(new \stdClass(), $this->createStub(PromiseInterface::class));
     }
 
     public function testFindByBadPromise(): void
@@ -283,7 +283,7 @@ trait RepositoryTestTrait
         $query->expects($this->once())->method('execute')->willReturn($object);
 
         $queryBuilderMock = $this->createMock(Builder::class);
-        $queryBuilderMock->expects($this->any())
+        $queryBuilderMock->expects($this->atLeastOnce())
             ->method('getQuery')
             ->willReturn($query);
 
@@ -317,17 +317,17 @@ trait RepositoryTestTrait
 
         $queryBuilderMock = $this->createMock(Builder::class);
 
-        $queryBuilderMock->expects($this->any())
+        $queryBuilderMock->expects($this->atLeastOnce())
             ->method('field')
             ->with('foo')
             ->willReturnSelf();
 
-        $queryBuilderMock->expects($this->any())
+        $queryBuilderMock->expects($this->atLeastOnce())
             ->method('prime')
             ->with(true)
             ->willReturnSelf();
 
-        $queryBuilderMock->expects($this->any())
+        $queryBuilderMock->expects($this->atLeastOnce())
             ->method('getQuery')
             ->willReturn($query);
 
@@ -354,7 +354,7 @@ trait RepositoryTestTrait
         $this->expectException(\TypeError::class);
         $this->buildRepository()->findBy(
             ['foo' => 'bar'],
-            $this->createMock(PromiseInterface::class),
+            $this->createStub(PromiseInterface::class),
             new \stdClass()
         );
     }
@@ -376,7 +376,7 @@ trait RepositoryTestTrait
         $query->expects($this->once())->method('execute')->willReturn($count);
 
         $queryBuilderMock = $this->createMock(Builder::class);
-        $queryBuilderMock->expects($this->any())
+        $queryBuilderMock->expects($this->atLeastOnce())
             ->method('getQuery')
             ->willReturn($query);
 
@@ -408,7 +408,7 @@ trait RepositoryTestTrait
         $query->expects($this->once())->method('execute')->willReturn($values);
 
         $queryBuilderMock = $this->createMock(Builder::class);
-        $queryBuilderMock->expects($this->any())
+        $queryBuilderMock->expects($this->atLeastOnce())
             ->method('getQuery')
             ->willReturn($query);
 
@@ -426,7 +426,7 @@ trait RepositoryTestTrait
     public function testFindOneByBadCriteria(): void
     {
         $this->expectException(\TypeError::class);
-        $this->buildRepository()->findOneBy(new \stdClass(), $this->createMock(PromiseInterface::class));
+        $this->buildRepository()->findOneBy(new \stdClass(), $this->createStub(PromiseInterface::class));
     }
 
     public function testFindOneByBadPromise(): void
@@ -447,12 +447,12 @@ trait RepositoryTestTrait
         $query->expects($this->once())->method('getSingleResult')->willReturn(null);
 
         $queryBuilderMock = $this->createMock(Builder::class);
-        $queryBuilderMock->expects($this->any())
+        $queryBuilderMock->expects($this->atLeastOnce())
             ->method('equals')
             ->with(['foo' => 'bar'])
             ->willReturnSelf();
 
-        $queryBuilderMock->expects($this->any())
+        $queryBuilderMock->expects($this->atLeastOnce())
             ->method('getQuery')
             ->willReturn($query);
 
@@ -477,12 +477,12 @@ trait RepositoryTestTrait
         $query->expects($this->once())->method('getSingleResult')->willThrowException(new \RuntimeException());
 
         $queryBuilderMock = $this->createMock(Builder::class);
-        $queryBuilderMock->expects($this->any())
+        $queryBuilderMock->expects($this->atLeastOnce())
             ->method('equals')
             ->with(['foo' => 'bar'])
             ->willReturnSelf();
 
-        $queryBuilderMock->expects($this->any())
+        $queryBuilderMock->expects($this->atLeastOnce())
             ->method('getQuery')
             ->willReturn($query);
 
@@ -508,7 +508,7 @@ trait RepositoryTestTrait
         $query->expects($this->once())->method('getSingleResult')->willReturn($object);
 
         $queryBuilderMock = $this->createMock(Builder::class);
-        $queryBuilderMock->expects($this->any())
+        $queryBuilderMock->expects($this->atLeastOnce())
             ->method('equals')
             ->with([
                 'foo' => 'bar',
@@ -528,7 +528,7 @@ trait RepositoryTestTrait
             ])
             ->willReturnSelf();
 
-        $queryBuilderMock->expects($this->any())
+        $queryBuilderMock->expects($this->atLeastOnce())
             ->method('getQuery')
             ->willReturn($query);
 
@@ -554,7 +554,7 @@ trait RepositoryTestTrait
                         ['foo' => 'bar'],
                         ['bar' => 'foo']
                     ),
-                    'hello' => new ObjectReference($this->createMock(IdentifiedObjectInterface::class))
+                    'hello' => new ObjectReference($this->createStub(IdentifiedObjectInterface::class))
                 ],
                 $promise
             )
@@ -573,17 +573,17 @@ trait RepositoryTestTrait
 
         $queryBuilderMock = $this->createMock(Builder::class);
 
-        $queryBuilderMock->expects($this->any())
+        $queryBuilderMock->expects($this->atLeastOnce())
             ->method('field')
             ->with('foo')
             ->willReturnSelf();
 
-        $queryBuilderMock->expects($this->any())
+        $queryBuilderMock->expects($this->atLeastOnce())
             ->method('prime')
             ->with(true)
             ->willReturnSelf();
 
-        $queryBuilderMock->expects($this->any())
+        $queryBuilderMock->expects($this->atLeastOnce())
             ->method('equals')
             ->with([
                 'foo' => 'bar',
@@ -602,7 +602,7 @@ trait RepositoryTestTrait
             ])
             ->willReturnSelf();
 
-        $queryBuilderMock->expects($this->any())
+        $queryBuilderMock->expects($this->atLeastOnce())
             ->method('getQuery')
             ->willReturn($query);
 
@@ -627,7 +627,7 @@ trait RepositoryTestTrait
                         ['foo' => 'bar'],
                         ['bar' => 'foo']
                     ),
-                    'hello' => new ObjectReference($this->createMock(IdentifiedObjectInterface::class))
+                    'hello' => new ObjectReference($this->createStub(IdentifiedObjectInterface::class))
                 ],
                 $promise,
                 ['foo']

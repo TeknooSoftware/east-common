@@ -27,6 +27,7 @@ namespace Teknoo\Tests\East\CommonBundle\Recipe\Step;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Notifier\NotifierInterface;
 use Symfony\Component\Security\Http\LoginLink\LoginLinkHandlerInterface;
@@ -47,43 +48,46 @@ use Teknoo\East\CommonBundle\Recipe\Step\RecoveryAccessNotification;
 #[CoversClass(RecoveryAccessNotification::class)]
 class RecoveryAccessNotificationTest extends TestCase
 {
-    private ?LoginLinkHandlerInterface $loginLinkHandler = null;
+    private (LoginLinkHandlerInterface&Stub)|(LoginLinkHandlerInterface&MockObject)|null $loginLinkHandler = null;
 
-    private ?NotifierInterface $notifier = null;
+    private (NotifierInterface&Stub)|(NotifierInterface&MockObject)|null $notifier = null;
 
-    private ?TranslatorInterface $translator = null;
+    private (TranslatorInterface&Stub)|(TranslatorInterface&MockObject)|null $translator = null;
 
-    /**
-     * @return LoginLinkHandlerInterface|MockObject
-     */
-    private function getLoginLinkHandler(): LoginLinkHandlerInterface
+    private function getLoginLinkHandler(bool $stub = false): (LoginLinkHandlerInterface&Stub)|(LoginLinkHandlerInterface&MockObject)
     {
         if (!$this->loginLinkHandler instanceof LoginLinkHandlerInterface) {
-            $this->loginLinkHandler = $this->createMock(LoginLinkHandlerInterface::class);
+            if ($stub) {
+                $this->loginLinkHandler = $this->createStub(LoginLinkHandlerInterface::class);
+            } else {
+                $this->loginLinkHandler = $this->createMock(LoginLinkHandlerInterface::class);
+            }
         }
 
         return $this->loginLinkHandler;
     }
 
-    /**
-     * @return NotifierInterface|MockObject
-     */
-    private function getNotifier(): NotifierInterface
+    private function getNotifier(bool $stub = false): (NotifierInterface&Stub)|(NotifierInterface&MockObject)
     {
         if (!$this->notifier instanceof NotifierInterface) {
-            $this->notifier = $this->createMock(NotifierInterface::class);
+            if ($stub) {
+                $this->notifier = $this->createStub(NotifierInterface::class);
+            } else {
+                $this->notifier = $this->createMock(NotifierInterface::class);
+            }
         }
 
         return $this->notifier;
     }
 
-    /**
-     * @return TranslatorInterface|MockObject
-     */
-    private function getTranslator(): TranslatorInterface
+    private function getTranslator(bool $stub = false): (TranslatorInterface&Stub)|(TranslatorInterface&MockObject)
     {
         if (!$this->translator instanceof TranslatorInterface) {
-            $this->translator = $this->createMock(TranslatorInterface::class);
+            if ($stub) {
+                $this->translator = $this->createStub(TranslatorInterface::class);
+            } else {
+                $this->translator = $this->createMock(TranslatorInterface::class);
+            }
         }
 
         return $this->translator;
@@ -92,11 +96,11 @@ class RecoveryAccessNotificationTest extends TestCase
     public function buildStep(): RecoveryAccessNotification
     {
         return new RecoveryAccessNotification(
-            $this->getLoginLinkHandler(),
-            $this->getNotifier(),
-            $this->getTranslator(),
+            $this->getLoginLinkHandler(true),
+            $this->getNotifier(true),
+            $this->getTranslator(true),
             'teknoo.subject',
-            'teknoo.template'
+            'teknoo.template',
         );
     }
 
@@ -104,55 +108,55 @@ class RecoveryAccessNotificationTest extends TestCase
     {
         $step = new RecoveryAccessNotification(
             null,
-            $this->getNotifier(),
-            $this->getTranslator(),
+            $this->getNotifier(true),
+            $this->getTranslator(true),
             'teknoo.subject',
             'teknoo.template'
         );
 
         $this->expectException(MissingConfigurationException::class);
 
-        $user = $this->createMock(User::class);
+        $user = $this->createStub(User::class);
         $user
             ->method('getEmail')
             ->willReturn('foo@bar');
 
         $step(
-            $this->createMock(ManagerInterface::class),
-            $this->createMock(ClientInterface::class),
+            $this->createStub(ManagerInterface::class),
+            $this->createStub(ClientInterface::class),
             $user,
-            $this->createMock(RecoveryAccess::class),
+            $this->createStub(RecoveryAccess::class),
         );
     }
 
     public function testExceptionWhenMissingNotifier(): void
     {
         $step = new RecoveryAccessNotification(
-            $this->getLoginLinkHandler(),
+            $this->getLoginLinkHandler(true),
             null,
-            $this->getTranslator(),
+            $this->getTranslator(true),
             'teknoo.subject',
             'teknoo.template'
         );
 
         $this->expectException(MissingPackageException::class);
 
-        $user = $this->createMock(User::class);
+        $user = $this->createStub(User::class);
         $user
             ->method('getEmail')
             ->willReturn('foo@bar');
 
         $step(
-            $this->createMock(ManagerInterface::class),
-            $this->createMock(ClientInterface::class),
+            $this->createStub(ManagerInterface::class),
+            $this->createStub(ClientInterface::class),
             $user,
-            $this->createMock(RecoveryAccess::class),
+            $this->createStub(RecoveryAccess::class),
         );
     }
 
     public function testInvoke(): void
     {
-        $user = $this->createMock(User::class);
+        $user = $this->createStub(User::class);
         $user
             ->method('getEmail')
             ->willReturn('foo@bar');
@@ -160,17 +164,17 @@ class RecoveryAccessNotificationTest extends TestCase
         $this->assertInstanceOf(
             RecoveryAccessNotification::class,
             $this->buildStep()(
-                $this->createMock(ManagerInterface::class),
-                $this->createMock(ClientInterface::class),
+                $this->createStub(ManagerInterface::class),
+                $this->createStub(ClientInterface::class),
                 $user,
-                $this->createMock(RecoveryAccess::class),
+                $this->createStub(RecoveryAccess::class),
             )
         );
     }
 
     public function testInvokeWithInvalidNotification(): void
     {
-        $user = $this->createMock(User::class);
+        $user = $this->createStub(User::class);
         $user
             ->method('getEmail')
             ->willReturn('foo@bar');
@@ -179,10 +183,10 @@ class RecoveryAccessNotificationTest extends TestCase
         $this->assertInstanceOf(
             RecoveryAccessNotification::class,
             $this->buildStep()(
-                $this->createMock(ManagerInterface::class),
-                $this->createMock(ClientInterface::class),
+                $this->createStub(ManagerInterface::class),
+                $this->createStub(ClientInterface::class),
                 $user,
-                $this->createMock(RecoveryAccess::class),
+                $this->createStub(RecoveryAccess::class),
                 \stdClass::class,
             )
         );

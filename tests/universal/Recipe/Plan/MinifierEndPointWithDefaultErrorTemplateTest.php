@@ -73,7 +73,7 @@ class MinifierEndPointWithDefaultErrorTemplateTest extends TestCase
     public function getRecipe(): RecipeInterface
     {
         if (null === $this->recipe) {
-            $this->recipe = $this->createMock(RecipeInterface::class);
+            $this->recipe = $this->createStub(RecipeInterface::class);
         }
 
         return $this->recipe;
@@ -85,7 +85,7 @@ class MinifierEndPointWithDefaultErrorTemplateTest extends TestCase
     public function getComputePath(): ComputePath
     {
         if (null === $this->computePath) {
-            $this->computePath = $this->createMock(ComputePath::class);
+            $this->computePath = $this->createStub(ComputePath::class);
         }
 
         return $this->computePath;
@@ -97,7 +97,7 @@ class MinifierEndPointWithDefaultErrorTemplateTest extends TestCase
     public function getLoadPersistedAsset(): LoadPersistedAsset
     {
         if (null === $this->loadPersistedAsset) {
-            $this->loadPersistedAsset = $this->createMock(LoadPersistedAsset::class);
+            $this->loadPersistedAsset = $this->createStub(LoadPersistedAsset::class);
         }
 
         return $this->loadPersistedAsset;
@@ -109,7 +109,7 @@ class MinifierEndPointWithDefaultErrorTemplateTest extends TestCase
     public function getJumpIf(): JumpIf
     {
         if (null === $this->jumpIf) {
-            $this->jumpIf = $this->createMock(JumpIf::class);
+            $this->jumpIf = $this->createStub(JumpIf::class);
         }
 
         return $this->jumpIf;
@@ -121,7 +121,7 @@ class MinifierEndPointWithDefaultErrorTemplateTest extends TestCase
     public function getLoadSource(): LoadSource
     {
         if (null === $this->loadSource) {
-            $this->loadSource = $this->createMock(LoadSource::class);
+            $this->loadSource = $this->createStub(LoadSource::class);
         }
 
         return $this->loadSource;
@@ -133,7 +133,7 @@ class MinifierEndPointWithDefaultErrorTemplateTest extends TestCase
     public function getMinifyAssets(): MinifyAssets
     {
         if (null === $this->minifyAssets) {
-            $this->minifyAssets = $this->createMock(MinifyAssets::class);
+            $this->minifyAssets = $this->createStub(MinifyAssets::class);
         }
 
         return $this->minifyAssets;
@@ -145,7 +145,7 @@ class MinifierEndPointWithDefaultErrorTemplateTest extends TestCase
     public function getPersistAsset(): PersistAsset
     {
         if (null === $this->persistAsset) {
-            $this->persistAsset = $this->createMock(PersistAsset::class);
+            $this->persistAsset = $this->createStub(PersistAsset::class);
         }
 
         return $this->persistAsset;
@@ -157,7 +157,7 @@ class MinifierEndPointWithDefaultErrorTemplateTest extends TestCase
     public function getReturnFile(): ReturnFile
     {
         if (null === $this->returnFile) {
-            $this->returnFile = $this->createMock(ReturnFile::class);
+            $this->returnFile = $this->createStub(ReturnFile::class);
         }
 
         return $this->returnFile;
@@ -169,7 +169,7 @@ class MinifierEndPointWithDefaultErrorTemplateTest extends TestCase
     public function getRenderError(): RenderError
     {
         if (null === $this->renderError) {
-            $this->renderError = $this->createMock(RenderError::class);
+            $this->renderError = $this->createStub(RenderError::class);
         }
 
         return $this->renderError;

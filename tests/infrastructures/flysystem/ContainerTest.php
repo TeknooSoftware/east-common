@@ -25,10 +25,14 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Flysystem;
 
+use Closure;
 use DI\Container;
 use DI\ContainerBuilder;
 use DomainException;
+use Exception;
 use League\Flysystem\FilesystemAdapter;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\FrontAsset\PersisterInterface;
 use Teknoo\East\Common\Contracts\FrontAsset\SourceLoaderInterface;
@@ -52,7 +56,7 @@ use function sys_get_temp_dir;
 class ContainerTest extends TestCase
 {
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     protected function buildContainer(): Container
     {
@@ -79,7 +83,7 @@ class ContainerTest extends TestCase
         $container->set('kernel.project_dir', '/bar');
         $container->set(
             'teknoo.east.common.assets.flysystem.adapter',
-            fn (): \Closure => (fn (): \PHPUnit\Framework\MockObject\MockObject => $this->createMock(FilesystemAdapter::class)),
+            fn (): Closure => (fn (): Stub => $this->createStub(FilesystemAdapter::class)),
         );
 
         $this->expectException(DomainException::class);
@@ -93,7 +97,7 @@ class ContainerTest extends TestCase
         $container->set('teknoo.east.common.assets.destination.css.path', 'foo');
         $container->set(
             'teknoo.east.common.assets.flysystem.adapter',
-            fn (): \Closure => (fn (): \PHPUnit\Framework\MockObject\MockObject => $this->createMock(FilesystemAdapter::class)),
+            fn (): Closure => (fn (): Stub => $this->createStub(FilesystemAdapter::class)),
         );
 
         $this->assertInstanceOf(
@@ -113,7 +117,7 @@ class ContainerTest extends TestCase
         $container->set('kernel.project_dir', '/bar');
         $container->set(
             'teknoo.east.common.assets.flysystem.adapter',
-            fn (): \Closure => (fn (): \PHPUnit\Framework\MockObject\MockObject => $this->createMock(FilesystemAdapter::class)),
+            fn (): Closure => (fn (): Stub => $this->createStub(FilesystemAdapter::class)),
         );
 
         $this->expectException(DomainException::class);
@@ -127,7 +131,7 @@ class ContainerTest extends TestCase
         $container->set('teknoo.east.common.assets.destination.js.path', 'foo');
         $container->set(
             'teknoo.east.common.assets.flysystem.adapter',
-            fn (): \Closure => (fn (): \PHPUnit\Framework\MockObject\MockObject => $this->createMock(FilesystemAdapter::class)),
+            fn (): Closure => (fn (): Stub => $this->createStub(FilesystemAdapter::class)),
         );
 
         $this->assertInstanceOf(
@@ -147,7 +151,7 @@ class ContainerTest extends TestCase
         $container->set('kernel.project_dir', '/bar');
         $container->set(
             'teknoo.east.common.assets.flysystem.adapter',
-            fn (): \Closure => (fn (): \PHPUnit\Framework\MockObject\MockObject => $this->createMock(FilesystemAdapter::class)),
+            fn (): Closure => (fn (): Stub => $this->createStub(FilesystemAdapter::class)),
         );
 
         $this->expectException(DomainException::class);
@@ -160,7 +164,7 @@ class ContainerTest extends TestCase
         $container->set('teknoo.east.common.assets.source.css.path', '/bar');
         $container->set(
             'teknoo.east.common.assets.flysystem.adapter',
-            fn (): \Closure => (fn (): \PHPUnit\Framework\MockObject\MockObject => $this->createMock(FilesystemAdapter::class)),
+            fn (): Closure => (fn (): Stub => $this->createStub(FilesystemAdapter::class)),
         );
 
         $this->expectException(DomainException::class);
@@ -175,11 +179,11 @@ class ContainerTest extends TestCase
         $container->set('kernel.project_dir', '/bar');
         $container->set(
             'teknoo.east.common.assets.flysystem.adapter',
-            fn (): \Closure => (fn (): \PHPUnit\Framework\MockObject\MockObject => $this->createMock(FilesystemAdapter::class)),
+            fn (): Closure => (fn (): Stub => $this->createStub(FilesystemAdapter::class)),
         );
         $container->set(
             SourceLoaderExtension::class,
-            $this->createMock(SourceLoaderExtension::class),
+            $this->createStub(SourceLoaderExtension::class),
         );
 
         $this->assertInstanceOf(
@@ -199,7 +203,7 @@ class ContainerTest extends TestCase
         $container->set('kernel.project_dir', '/bar');
         $container->set(
             'teknoo.east.common.assets.flysystem.adapter',
-            fn (): \Closure => (fn (): \PHPUnit\Framework\MockObject\MockObject => $this->createMock(FilesystemAdapter::class)),
+            fn (): Closure => (fn (): Stub => $this->createStub(FilesystemAdapter::class)),
         );
 
         $this->expectException(DomainException::class);
@@ -212,7 +216,7 @@ class ContainerTest extends TestCase
         $container->set('teknoo.east.common.assets.source.js.path', '/bar');
         $container->set(
             'teknoo.east.common.assets.flysystem.adapter',
-            fn (): \Closure => (fn (): \PHPUnit\Framework\MockObject\MockObject => $this->createMock(FilesystemAdapter::class)),
+            fn (): Closure => (fn (): Stub => $this->createStub(FilesystemAdapter::class)),
         );
 
         $this->expectException(DomainException::class);
@@ -227,11 +231,11 @@ class ContainerTest extends TestCase
         $container->set('kernel.project_dir', '/bar');
         $container->set(
             'teknoo.east.common.assets.flysystem.adapter',
-            fn (): \Closure => (fn (): \PHPUnit\Framework\MockObject\MockObject => $this->createMock(FilesystemAdapter::class)),
+            fn (): Closure => (fn (): Stub => $this->createStub(FilesystemAdapter::class)),
         );
         $container->set(
             SourceLoaderExtension::class,
-            $this->createMock(SourceLoaderExtension::class),
+            $this->createStub(SourceLoaderExtension::class),
         );
 
         $this->assertInstanceOf(

@@ -41,29 +41,29 @@ class SoftDeletableFilterTest extends TestCase
 {
     public function testAddFilterCriteriaNonDeletable(): void
     {
-        $rc = $this->createMock(ReflectionClass::class);
+        $rc = $this->createStub(ReflectionClass::class);
         $rc->method('implementsInterface')->willReturn(false);
 
-        $targetDocument = $this->createMock(ClassMetadata::class);
+        $targetDocument = $this->createStub(ClassMetadata::class);
         $targetDocument->method('getReflectionClass')->willReturn($rc);
 
         $this->assertEquals(
             [],
-            new SoftDeletableFilter($this->createMock(DocumentManager::class))->addFilterCriteria($targetDocument),
+            new SoftDeletableFilter($this->createStub(DocumentManager::class))->addFilterCriteria($targetDocument),
         );
     }
 
     public function testAddFilterCriteriaWithDeletable(): void
     {
-        $rc = $this->createMock(ReflectionClass::class);
+        $rc = $this->createStub(ReflectionClass::class);
         $rc->method('implementsInterface')->willReturn(true);
 
-        $targetDocument = $this->createMock(ClassMetadata::class);
+        $targetDocument = $this->createStub(ClassMetadata::class);
         $targetDocument->method('getReflectionClass')->willReturn($rc);
 
         $this->assertEquals(
             ['deletedAt' => null],
-            new SoftDeletableFilter($this->createMock(DocumentManager::class))->addFilterCriteria($targetDocument),
+            new SoftDeletableFilter($this->createStub(DocumentManager::class))->addFilterCriteria($targetDocument),
         );
     }
 }

@@ -28,6 +28,7 @@ namespace Teknoo\Tests\East\Common\Doctrine\DBSource\ODM;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Contracts\DBSource\BatchManipulationManagerInterface;
 use Teknoo\East\Common\Contracts\DBSource\ManagerInterface;
@@ -45,23 +46,31 @@ use Teknoo\Recipe\Promise\PromiseInterface;
 #[CoversClass(BatchManipulationManager::class)]
 class BatchManipulationManagerTest extends TestCase
 {
-    private ?ManagerInterface $baseManager = null;
+    private (ManagerInterface&MockObject)|(ManagerInterface&Stub)|null $baseManager = null;
 
-    private ?DocumentManager $documentManager = null;
+    private (DocumentManager&MockObject)|(DocumentManager&Stub)|null $documentManager = null;
 
-    private function getManager(): MockObject&ManagerInterface
+    private function getManagerMock(bool $stub = false): (ManagerInterface&MockObject)|(ManagerInterface&Stub)
     {
-        if (null === $this->baseManager) {
-            $this->baseManager = $this->createMock(ManagerInterface::class);
+        if (!$this->baseManager instanceof ManagerInterface) {
+            if ($stub) {
+                $this->baseManager = $this->createStub(ManagerInterface::class);
+            } else {
+                $this->baseManager = $this->createMock(ManagerInterface::class);
+            }
         }
 
         return $this->baseManager;
     }
 
-    private function getDocumentManager(): MockObject&DocumentManager
+    private function getDocumentManagerMock(bool $stub = false): (DocumentManager&MockObject)|(DocumentManager&Stub)
     {
-        if (null === $this->documentManager) {
-            $this->documentManager = $this->createMock(DocumentManager::class);
+        if (!$this->documentManager instanceof DocumentManager) {
+            if ($stub) {
+                $this->documentManager = $this->createStub(DocumentManager::class);
+            } else {
+                $this->documentManager = $this->createMock(DocumentManager::class);
+            }
         }
 
         return $this->documentManager;
@@ -70,8 +79,8 @@ class BatchManipulationManagerTest extends TestCase
     private function buildBatchManager(): BatchManipulationManager
     {
         return new BatchManipulationManager(
-            $this->getManager(),
-            $this->getDocumentManager(),
+            $this->getManagerMock(true),
+            $this->getDocumentManagerMock(true),
         );
     }
 
@@ -86,7 +95,7 @@ class BatchManipulationManagerTest extends TestCase
             BatchManipulationManagerInterface::class,
             $this->buildBatchManager()->updateQuery(
                 $query,
-                $this->createMock(PromiseInterface::class),
+                $this->createStub(PromiseInterface::class),
             )
         );
     }
@@ -102,14 +111,14 @@ class BatchManipulationManagerTest extends TestCase
             BatchManipulationManagerInterface::class,
             $this->buildBatchManager()->deleteQuery(
                 $query,
-                $this->createMock(PromiseInterface::class),
+                $this->createStub(PromiseInterface::class),
             )
         );
     }
 
     public function testOpenBatch(): void
     {
-        $this->getManager()
+        $this->getManagerMock()
             ->expects($this->once())
             ->method('openBatch')
             ->willReturnSelf();
@@ -122,7 +131,7 @@ class BatchManipulationManagerTest extends TestCase
 
     public function testCloseBatch(): void
     {
-        $this->getManager()
+        $this->getManagerMock()
             ->expects($this->once())
             ->method('closeBatch')
             ->willReturnSelf();
@@ -135,7 +144,7 @@ class BatchManipulationManagerTest extends TestCase
 
     public function testPersist(): void
     {
-        $this->getManager()
+        $this->getManagerMock()
             ->expects($this->once())
             ->method('persist')
             ->willReturnSelf();
@@ -143,14 +152,14 @@ class BatchManipulationManagerTest extends TestCase
         $this->assertInstanceOf(
             BatchManipulationManagerInterface::class,
             $this->buildBatchManager()->persist(
-                $this->createMock(ObjectInterface::class),
+                $this->createStub(ObjectInterface::class),
             )
         );
     }
 
     public function testRemove(): void
     {
-        $this->getManager()
+        $this->getManagerMock()
             ->expects($this->once())
             ->method('remove')
             ->willReturnSelf();
@@ -158,14 +167,14 @@ class BatchManipulationManagerTest extends TestCase
         $this->assertInstanceOf(
             BatchManipulationManagerInterface::class,
             $this->buildBatchManager()->remove(
-                $this->createMock(ObjectInterface::class),
+                $this->createStub(ObjectInterface::class),
             )
         );
     }
 
     public function testFlush(): void
     {
-        $this->getManager()
+        $this->getManagerMock()
             ->expects($this->once())
             ->method('flush')
             ->willReturnSelf();
@@ -178,7 +187,7 @@ class BatchManipulationManagerTest extends TestCase
 
     public function testRegisterFilter(): void
     {
-        $this->getManager()
+        $this->getManagerMock()
             ->expects($this->once())
             ->method('registerFilter')
             ->with(SoftDeletableFilter::class, ['foo' => 'bar'])
@@ -192,7 +201,7 @@ class BatchManipulationManagerTest extends TestCase
 
     public function testEnableFilter(): void
     {
-        $this->getManager()
+        $this->getManagerMock()
             ->expects($this->once())
             ->method('enableFilter')
             ->with(SoftDeletableFilter::class)
@@ -206,7 +215,7 @@ class BatchManipulationManagerTest extends TestCase
 
     public function testDisableFilter(): void
     {
-        $this->getManager()
+        $this->getManagerMock()
             ->expects($this->once())
             ->method('disableFilter')
             ->with(SoftDeletableFilter::class)

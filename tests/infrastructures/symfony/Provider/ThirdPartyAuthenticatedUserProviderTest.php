@@ -28,6 +28,7 @@ namespace Teknoo\Tests\East\CommonBundle\Provider;
 use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface as GoogleTwoFactorInterface;
 use Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface as TotpTwoFactorInterface;
@@ -55,15 +56,16 @@ use Teknoo\East\Common\Object\User as BaseUser;
 #[CoversClass(ThirdPartyAuthenticatedUserProvider::class)]
 class ThirdPartyAuthenticatedUserProviderTest extends TestCase
 {
-    private (UserLoader&MockObject)|null $loader = null;
+    private (UserLoader&Stub)|(UserLoader&MockObject)|null $loader = null;
 
-    /**
-     * @return UserLoader|\PHPUnit\Framework\MockObject\MockObject
-     */
-    public function getLoader(): UserLoader&MockObject
+    public function getLoader(bool $stub = false): (UserLoader&Stub)|(UserLoader&MockObject)
     {
         if (!$this->loader instanceof UserLoader) {
-            $this->loader = $this->createMock(UserLoader::class);
+            if ($stub) {
+                $this->loader = $this->createStub(UserLoader::class);
+            } else {
+                $this->loader = $this->createMock(UserLoader::class);
+            }
         }
 
         return $this->loader;
@@ -71,7 +73,9 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
 
     public function buildProvider(): ThirdPartyAuthenticatedUserProvider
     {
-        return new ThirdPartyAuthenticatedUserProvider($this->getLoader());
+        return new ThirdPartyAuthenticatedUserProvider(
+            $this->getLoader(true),
+        );
     }
 
     public function testLoadUserByUsernameNotFound(): void
@@ -119,7 +123,7 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
     {
         $user = new BaseUser();
         $user->setEmail('foo@bar');
-        $user->setAuthData([$this->createMock(AuthDataInterface::class)]);
+        $user->setAuthData([$this->createStub(AuthDataInterface::class)]);
 
         $this->getLoader()
             ->expects($this->once())
@@ -274,7 +278,7 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
     {
         $user = new BaseUser();
         $user->setEmail('foo@bar');
-        $user->setAuthData([$this->createMock(AuthDataInterface::class)]);
+        $user->setAuthData([$this->createStub(AuthDataInterface::class)]);
 
         $this->getLoader()
             ->expects($this->once())
@@ -344,7 +348,7 @@ class ThirdPartyAuthenticatedUserProviderTest extends TestCase
     public function testRefreshUserNotSupported(): void
     {
         $this->expectException(MissingUserException::class);
-        $this->buildProvider()->refreshUser($this->createMock(UserInterface::class));
+        $this->buildProvider()->refreshUser($this->createStub(UserInterface::class));
     }
 
     public function testSupportsClass(): void

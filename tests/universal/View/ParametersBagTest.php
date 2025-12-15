@@ -54,7 +54,7 @@ class ParametersBagTest extends TestCase
 
         $this->assertInstanceOf(
             ParametersBag::class,
-            new ParametersBag()->merge($this->createMock(MergeableInterface::class))
+            new ParametersBag()->merge($this->createStub(MergeableInterface::class))
         );
     }
 

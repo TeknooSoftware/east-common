@@ -49,7 +49,7 @@ class PersisterTest extends TestCase
 {
     public function testLoad(): void
     {
-        $flysystem = $this->createMock(Filesystem::class);
+        $flysystem = $this->createStub(Filesystem::class);
         $flysystem
             ->method('fileExists')
             ->willReturn(true);
@@ -67,7 +67,7 @@ class PersisterTest extends TestCase
 
     public function testWrite(): void
     {
-        $flysystem = $this->createMock(Filesystem::class);
+        $flysystem = $this->createStub(Filesystem::class);
         $flysystem
             ->method('write');
 
@@ -75,7 +75,7 @@ class PersisterTest extends TestCase
         $this->assertInstanceOf(
             Persister::class,
             $persister->write(
-                $this->createMock(FileInterface::class),
+                $this->createStub(FileInterface::class),
             ),
         );
     }

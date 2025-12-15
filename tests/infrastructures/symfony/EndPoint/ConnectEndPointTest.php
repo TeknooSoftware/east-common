@@ -29,6 +29,8 @@ use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Client\OAuth2ClientInterface;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -53,13 +55,14 @@ class ConnectEndPointTest extends TestCase
 {
     private ?ClientRegistry $clientRegistry = null;
 
-    /**
-     * @return ClientRegistry|\PHPUnit\Framework\MockObject\MockObject
-     */
-    public function getClientRegistry(): ClientRegistry
+    public function getClientRegistry(bool $stub = false): (ClientRegistry&Stub)|(ClientRegistry&MockObject)
     {
         if (!$this->clientRegistry instanceof ClientRegistry) {
-            $this->clientRegistry = $this->createMock(ClientRegistry::class);
+            if ($stub) {
+                $this->clientRegistry = $this->createStub(ClientRegistry::class);
+            } else {
+                $this->clientRegistry = $this->createMock(ClientRegistry::class);
+            }
         }
 
         return $this->clientRegistry;
@@ -68,40 +71,40 @@ class ConnectEndPointTest extends TestCase
     public function buildEndPoint(): ConnectEndPoint
     {
         $endpoint = new ConnectEndPoint(
-            $this->getClientRegistry(),
+            $this->getClientRegistry(true),
             'foo',
             ['bar']
         );
 
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->createStub(ResponseInterface::class);
         $response
             ->method('withHeader')
             ->willReturnSelf();
 
-        $factory = $this->createMock(ResponseFactoryInterface::class);
+        $factory = $this->createStub(ResponseFactoryInterface::class);
         $factory
             ->method('createResponse')
             ->willReturn($response);
 
         $endpoint->setResponseFactory($factory);
-        $endpoint->setRouter($this->createMock(UrlGeneratorInterface::class));
+        $endpoint->setRouter($this->createStub(UrlGeneratorInterface::class));
 
         return $endpoint;
     }
 
     public function testInvokeWithSession(): void
     {
-        $request = $this->createMock(ServerRequestInterface::class);
-        $client = $this->createMock(ClientInterface::class);
-        $session = $this->createMock(SessionInterface::class);
+        $request = $this->createStub(ServerRequestInterface::class);
+        $client = $this->createStub(ClientInterface::class);
+        $session = $this->createStub(SessionInterface::class);
 
-        $oauthClient = $this->createMock(OAuth2ClientInterface::class);
-        $this->getClientRegistry()
+        $oauthClient = $this->createStub(OAuth2ClientInterface::class);
+        $this->getClientRegistry(true)
             ->method('getClient')
             ->with('foo')
             ->willReturn($oauthClient);
 
-        $provider = $this->createMock(AbstractProvider::class);
+        $provider = $this->createStub(AbstractProvider::class);
         $oauthClient
             ->method('getOAuth2Provider')
             ->willReturn($provider);
@@ -122,16 +125,16 @@ class ConnectEndPointTest extends TestCase
 
     public function testInvokeWithoutSession(): void
     {
-        $request = $this->createMock(ServerRequestInterface::class);
-        $client = $this->createMock(ClientInterface::class);
+        $request = $this->createStub(ServerRequestInterface::class);
+        $client = $this->createStub(ClientInterface::class);
 
-        $oauthClient = $this->createMock(OAuth2ClientInterface::class);
-        $this->getClientRegistry()
+        $oauthClient = $this->createStub(OAuth2ClientInterface::class);
+        $this->getClientRegistry(true)
             ->method('getClient')
             ->with('foo')
             ->willReturn($oauthClient);
 
-        $provider = $this->createMock(AbstractProvider::class);
+        $provider = $this->createStub(AbstractProvider::class);
         $oauthClient
             ->method('getOAuth2Provider')
             ->willReturn($provider);

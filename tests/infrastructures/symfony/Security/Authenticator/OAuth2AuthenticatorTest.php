@@ -30,6 +30,8 @@ use KnpU\OAuth2ClientBundle\Client\OAuth2ClientInterface;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use League\OAuth2\Client\Token\AccessToken;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -56,57 +58,61 @@ use Teknoo\Recipe\Promise\PromiseInterface;
 #[CoversClass(OAuth2Authenticator::class)]
 class OAuth2AuthenticatorTest extends TestCase
 {
-    private ?ClientRegistry $clientRegistry = null;
+    private (ClientRegistry&Stub)|(ClientRegistry&MockObject)|null $clientRegistry = null;
 
-    private ?UserLoader $loader = null;
+    private (UserLoader&Stub)|(UserLoader&MockObject)|null $loader = null;
 
-    private ?SymfonyUserWriter $userWriter = null;
+    private (SymfonyUserWriter&Stub)|(SymfonyUserWriter&MockObject)|null $userWriter = null;
 
-    private ?UserConverterInterface $userConverter = null;
+    private (UserConverterInterface&Stub)|(UserConverterInterface&MockObject)|null $userConverter = null;
 
-    /**
-     * @return UserLoader|\PHPUnit\Framework\MockObject\MockObject
-     */
-    public function getClientRegistry(): ClientRegistry
+    public function getClientRegistry(bool $stub = false): (ClientRegistry&Stub)|(ClientRegistry&MockObject)
     {
         if (!$this->clientRegistry instanceof ClientRegistry) {
-            $this->clientRegistry = $this->createMock(ClientRegistry::class);
+            if ($stub) {
+                $this->clientRegistry = $this->createStub(ClientRegistry::class);
+            } else {
+                $this->clientRegistry = $this->createMock(ClientRegistry::class);
+            }
         }
 
         return $this->clientRegistry;
     }
 
-    /**
-     * @return UserLoader|\PHPUnit\Framework\MockObject\MockObject
-     */
-    public function getLoader(): UserLoader
+    public function getLoader(bool $stub = false): (UserLoader&Stub)|(UserLoader&MockObject)
     {
         if (!$this->loader instanceof UserLoader) {
-            $this->loader = $this->createMock(UserLoader::class);
+            if ($stub) {
+                $this->loader = $this->createStub(UserLoader::class);
+            } else {
+                $this->loader = $this->createMock(UserLoader::class);
+            }
         }
 
         return $this->loader;
     }
 
-    /**
-     * @return SymfonyUserWriter|\PHPUnit\Framework\MockObject\MockObject
-     */
-    public function getSymfonyUserWriter(): SymfonyUserWriter
+    public function getSymfonyUserWriter(bool $stub = false): (SymfonyUserWriter&Stub)|(SymfonyUserWriter&MockObject)
     {
         if (!$this->userWriter instanceof SymfonyUserWriter) {
-            $this->userWriter = $this->createMock(SymfonyUserWriter::class);
+            if ($stub) {
+                $this->userWriter = $this->createStub(SymfonyUserWriter::class);
+            } else {
+                $this->userWriter = $this->createMock(SymfonyUserWriter::class);
+            }
         }
 
         return $this->userWriter;
     }
 
-    /**
-     * @return UserLoader|\PHPUnit\Framework\MockObject\MockObject
-     */
-    public function getUserConverterInterface(): UserConverterInterface
+    public function getUserConverterInterface(bool $stub = false): (UserConverterInterface&Stub)|(UserConverterInterface&MockObject)
     {
         if (!$this->userConverter instanceof UserConverterInterface) {
-            $this->userConverter = $this->createMock(UserConverterInterface::class);
+            if ($stub) {
+                $this->userConverter = $this->createStub(UserConverterInterface::class);
+            } else {
+                $this->userConverter = $this->createMock(UserConverterInterface::class);
+            }
         }
 
         return $this->userConverter;
@@ -115,10 +121,10 @@ class OAuth2AuthenticatorTest extends TestCase
     public function buildAuthenticator(): OAuth2Authenticator
     {
         return new OAuth2Authenticator(
-            $this->getClientRegistry(),
-            $this->getLoader(),
-            $this->getSymfonyUserWriter(),
-            $this->getUserConverterInterface()
+            $this->getClientRegistry(true),
+            $this->getLoader(true),
+            $this->getSymfonyUserWriter(true),
+            $this->getUserConverterInterface(true)
         );
     }
 
@@ -310,20 +316,20 @@ class OAuth2AuthenticatorTest extends TestCase
     {
         $request = new Request([], [], ['_oauth_client_key' => 'foo']);
 
-        $token = $this->createMock(AccessToken::class);
+        $token = $this->createStub(AccessToken::class);
         $token->method('getToken')->willReturn('foo');
 
-        $client = $this->createMock(OAuth2ClientInterface::class);
+        $client = $this->createStub(OAuth2ClientInterface::class);
         $client->method('getAccessToken')->willReturn($token);
         $client->method('fetchUserFromToken')->willReturn(
-            $this->createMock(ResourceOwnerInterface::class)
+            $this->createStub(ResourceOwnerInterface::class)
         );
 
-        $this->getClientRegistry()
+        $this->getClientRegistry(true)
             ->method('getClient')
             ->willReturn($client);
 
-        $this->getUserConverterInterface()
+        $this->getUserConverterInterface(true)
             ->method('extractEmail')
             ->willReturnCallback(
                 function (ResourceOwnerInterface $owner, PromiseInterface $promise): \Teknoo\East\CommonBundle\Contracts\Security\Authenticator\UserConverterInterface {
@@ -333,7 +339,7 @@ class OAuth2AuthenticatorTest extends TestCase
                 }
             );
 
-        $this->getLoader()
+        $this->getLoader(true)
             ->method('fetch')
             ->willReturnCallback(
                 function ($query, PromiseInterface $promise): \Teknoo\East\Common\Loader\UserLoader {
@@ -358,20 +364,20 @@ class OAuth2AuthenticatorTest extends TestCase
     {
         $request = new Request([], [], ['_oauth_client_key' => 'foo']);
 
-        $token = $this->createMock(AccessToken::class);
+        $token = $this->createStub(AccessToken::class);
         $token->method('getToken')->willReturn('foo');
 
-        $client = $this->createMock(OAuth2ClientInterface::class);
+        $client = $this->createStub(OAuth2ClientInterface::class);
         $client->method('getAccessToken')->willReturn($token);
         $client->method('fetchUserFromToken')->willReturn(
-            $this->createMock(ResourceOwnerInterface::class)
+            $this->createStub(ResourceOwnerInterface::class)
         );
 
-        $this->getClientRegistry()
+        $this->getClientRegistry(true)
             ->method('getClient')
             ->willReturn($client);
 
-        $this->getUserConverterInterface()
+        $this->getUserConverterInterface(true)
             ->method('extractEmail')
             ->willReturnCallback(
                 function (ResourceOwnerInterface $owner, PromiseInterface $promise): \Teknoo\East\CommonBundle\Contracts\Security\Authenticator\UserConverterInterface {
@@ -381,7 +387,7 @@ class OAuth2AuthenticatorTest extends TestCase
                 }
             );
 
-        $this->getUserConverterInterface()
+        $this->getUserConverterInterface(true)
             ->method('convertToUser')
             ->willReturnCallback(
                 function (ResourceOwnerInterface $owner, PromiseInterface $promise): \Teknoo\East\CommonBundle\Contracts\Security\Authenticator\UserConverterInterface {
@@ -391,7 +397,7 @@ class OAuth2AuthenticatorTest extends TestCase
                 }
             );
 
-        $this->getLoader()
+        $this->getLoader(true)
             ->method('fetch')
             ->willReturnCallback(
                 function ($query, PromiseInterface $promise): \Teknoo\East\Common\Loader\UserLoader {
@@ -416,16 +422,16 @@ class OAuth2AuthenticatorTest extends TestCase
     {
         $request = new Request([], [], ['_oauth_client_key' => 'foo']);
 
-        $token = $this->createMock(AccessToken::class);
+        $token = $this->createStub(AccessToken::class);
         $token->method('getToken')->willReturn('foo');
 
-        $client = $this->createMock(OAuth2ClientInterface::class);
+        $client = $this->createStub(OAuth2ClientInterface::class);
         $client->method('getAccessToken')->willReturn($token);
         $client->method('fetchUserFromToken')->willReturn(
-            $this->createMock(ResourceOwnerInterface::class)
+            $this->createStub(ResourceOwnerInterface::class)
         );
 
-        $this->getClientRegistry()
+        $this->getClientRegistry(true)
             ->method('getClient')
             ->willReturn($client);
 
@@ -443,7 +449,7 @@ class OAuth2AuthenticatorTest extends TestCase
             ->expects($this->never())
             ->method('convertToUser');
 
-        $this->getLoader()
+        $this->getLoader(true)
             ->method('fetch')
             ->willReturnCallback(
                 function ($query, PromiseInterface $promise): \Teknoo\East\Common\Loader\UserLoader {
@@ -465,16 +471,16 @@ class OAuth2AuthenticatorTest extends TestCase
     {
         $request = new Request([], [], ['_oauth_client_key' => 'foo']);
 
-        $token = $this->createMock(AccessToken::class);
+        $token = $this->createStub(AccessToken::class);
         $token->method('getToken')->willReturn('foo');
 
-        $client = $this->createMock(OAuth2ClientInterface::class);
+        $client = $this->createStub(OAuth2ClientInterface::class);
         $client->method('getAccessToken')->willReturn($token);
         $client->method('fetchUserFromToken')->willReturn(
-            $this->createMock(ResourceOwnerInterface::class)
+            $this->createStub(ResourceOwnerInterface::class)
         );
 
-        $this->getClientRegistry()
+        $this->getClientRegistry(true)
             ->method('getClient')
             ->willReturn($client);
 
@@ -492,7 +498,7 @@ class OAuth2AuthenticatorTest extends TestCase
             ->expects($this->never())
             ->method('convertToUser');
 
-        $this->getLoader()
+        $this->getLoader(true)
             ->method('fetch')
             ->willReturnCallback(
                 function ($query, PromiseInterface $promise): \Teknoo\East\Common\Loader\UserLoader {
@@ -514,20 +520,20 @@ class OAuth2AuthenticatorTest extends TestCase
     {
         $request = new Request([], [], ['_oauth_client_key' => 'foo']);
 
-        $token = $this->createMock(AccessToken::class);
+        $token = $this->createStub(AccessToken::class);
         $token->method('getToken')->willReturn('foo');
 
-        $client = $this->createMock(OAuth2ClientInterface::class);
+        $client = $this->createStub(OAuth2ClientInterface::class);
         $client->method('getAccessToken')->willReturn($token);
         $client->method('fetchUserFromToken')->willReturn(
-            $this->createMock(ResourceOwnerInterface::class)
+            $this->createStub(ResourceOwnerInterface::class)
         );
 
-        $this->getClientRegistry()
+        $this->getClientRegistry(true)
             ->method('getClient')
             ->willReturn($client);
 
-        $this->getUserConverterInterface()
+        $this->getUserConverterInterface(true)
             ->method('extractEmail')
             ->willReturnCallback(
                 function (ResourceOwnerInterface $owner, PromiseInterface $promise): \Teknoo\East\CommonBundle\Contracts\Security\Authenticator\UserConverterInterface {
@@ -551,8 +557,8 @@ class OAuth2AuthenticatorTest extends TestCase
             Response::class,
             $this->buildAuthenticator()
                 ->onAuthenticationFailure(
-                    $this->createMock(Request::class),
-                    $this->createMock(AuthenticationException::class)
+                    $this->createStub(Request::class),
+                    $this->createStub(AuthenticationException::class)
                 )
         );
     }
@@ -563,8 +569,8 @@ class OAuth2AuthenticatorTest extends TestCase
             \Symfony\Component\HttpFoundation\Response::class,
             $this->buildAuthenticator()
                 ->onAuthenticationSuccess(
-                    $this->createMock(Request::class),
-                    $this->createMock(TokenInterface::class),
+                    $this->createStub(Request::class),
+                    $this->createStub(TokenInterface::class),
                     'foo'
                 )
         );

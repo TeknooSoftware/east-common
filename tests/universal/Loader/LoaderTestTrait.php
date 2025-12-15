@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Loader;
 
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Teknoo\East\Common\Contracts\DBSource\RepositoryInterface;
 use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
 use Teknoo\East\Common\Contracts\Query\QueryCollectionInterface;
@@ -37,10 +39,9 @@ use Teknoo\Recipe\Promise\Promise;
  */
 trait LoaderTestTrait
 {
-    /**
-     * @return \Teknoo\East\Common\Contracts\DBSource\RepositoryInterface|\PHPUnit\Framework\MockObject\MockObject
-     */
-    abstract public function getRepositoryMock(): RepositoryInterface;
+    abstract public function getRepositoryMock(
+        bool $stub = false
+    ): (RepositoryInterface&MockObject)|(RepositoryInterface&Stub);
 
     abstract public function buildLoader(): LoaderInterface;
 
@@ -72,8 +73,7 @@ trait LoaderTestTrait
         $promiseMock->expects($this->once())
             ->method('fail');
 
-        $this->getRepositoryMock()
-            ->expects($this->any())
+        $this->getRepositoryMock(true)
             ->method('findOneBy')
             ->with(['id' => 'fooBar', 'deletedAt' => null], $promiseMock)
             ->willThrowException(new \Exception());
@@ -93,8 +93,7 @@ trait LoaderTestTrait
         $promiseMock->expects($this->never())->method('success');
         $promiseMock->expects($this->never())->method('fail');
 
-        $this->getRepositoryMock()
-            ->expects($this->any())
+        $this->getRepositoryMock(true)
             ->method('findOneBy')
             ->with(['id' => 'fooBar'], $promiseMock);
 
@@ -113,7 +112,7 @@ trait LoaderTestTrait
     public function testQueryBadPromise(): void
     {
         $this->expectException(\Throwable::class);
-        $this->buildLoader()->query($this->createMock(QueryCollectionInterface::class), new \stdClass());
+        $this->buildLoader()->query($this->createStub(QueryCollectionInterface::class), new \stdClass());
     }
 
     public function testQuery(): void
@@ -151,7 +150,7 @@ trait LoaderTestTrait
     public function testFetchBadPromise(): void
     {
         $this->expectException(\Throwable::class);
-        $this->buildLoader()->fetch($this->createMock(QueryElementInterface::class), new \stdClass());
+        $this->buildLoader()->fetch($this->createStub(QueryElementInterface::class), new \stdClass());
     }
 
     public function testFetch(): void

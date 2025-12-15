@@ -27,6 +27,7 @@ namespace Teknoo\Tests\East\CommonBundle\Command;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -42,14 +43,18 @@ use Teknoo\East\Common\Writer\UserWriter;
 #[CoversClass(CreateUserCommand::class)]
 class CreateUserCommandTest extends TestCase
 {
-    private (UserWriter&MockObject)|null $writer = null;
+    private (UserWriter&Stub)|(UserWriter&MockObject)|null $writer = null;
 
     private ?UserPasswordHasherInterface $userPasswordHasher = null;
 
-    public function getWriter(): UserWriter&MockObject
+    public function getWriter(bool $stub = false): (UserWriter&Stub)|(UserWriter&MockObject)
     {
         if (!$this->writer instanceof UserWriter) {
-            $this->writer = $this->createMock(UserWriter::class);
+            if ($stub) {
+                $this->writer = $this->createStub(UserWriter::class);
+            } else {
+                $this->writer = $this->createMock(UserWriter::class);
+            }
         }
 
         return $this->writer;
@@ -79,17 +84,17 @@ class CreateUserCommandTest extends TestCase
         return $this->userPasswordHasher;
     }
 
-    public function buildCommand(): \Teknoo\East\CommonBundle\Command\CreateUserCommand
+    public function buildCommand(): CreateUserCommand
     {
         return new CreateUserCommand(
-            $this->getWriter(),
+            $this->getWriter(true),
             $this->getUserPasswordHasher()
         );
     }
 
     public function testExecution(): void
     {
-        $input = $this->createMock(InputInterface::class);
+        $input = $this->createStub(InputInterface::class);
         $input
             ->method('getArgument')
             ->willReturnMap([
@@ -115,7 +120,7 @@ class CreateUserCommandTest extends TestCase
 
     public function testExecutionWithError(): void
     {
-        $input = $this->createMock(InputInterface::class);
+        $input = $this->createStub(InputInterface::class);
         $input
             ->method('getArgument')
             ->willReturnMap([

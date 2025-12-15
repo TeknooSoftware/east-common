@@ -33,6 +33,8 @@ use MongoDB\BSON\ObjectId;
 use MongoDB\GridFS\Bucket;
 use MongoDB\GridFS\Exception\FileNotFoundException;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Doctrine\Repository\ODM\Media;
 
@@ -49,72 +51,76 @@ use Teknoo\East\Common\Doctrine\Repository\ODM\Media;
 #[CoversClass(Media::class)]
 class MediaTest extends TestCase
 {
-    private ?DocumentManager $dm = null;
+    private (DocumentManager&Stub)|(DocumentManager&MockObject)|null $dm = null;
 
-    private ?UnitOfWork $uow = null;
+    private (UnitOfWork&Stub)|(UnitOfWork&MockObject)|null $uow = null;
 
-    private ?ClassMetadata $class = null;
+    private (ClassMetadata&Stub)|(ClassMetadata&MockObject)|null $class = null;
 
-    /**
-     * @return DocumentManager|\PHPUnit\Framework\MockObject\MockObject
-     */
-    public function getDocumentManager(): DocumentManager
+    public function getDocumentManagerMock(bool $stub = false): (DocumentManager&Stub)|(DocumentManager&MockObject)
     {
         if (!$this->dm instanceof DocumentManager) {
-            $this->dm = $this->createMock(DocumentManager::class);
+            if ($stub) {
+                $this->dm = $this->createStub(DocumentManager::class);
+            } else {
+                $this->dm = $this->createMock(DocumentManager::class);
+            }
         }
 
         return $this->dm;
     }
 
-    /**
-     * @return UnitOfWork|\PHPUnit\Framework\MockObject\MockObject
-     */
-    public function getUnitOfWork(): UnitOfWork
+    public function getUnitOfWork(bool $stub = false): (UnitOfWork&Stub)|(UnitOfWork&MockObject)
     {
         if (!$this->uow instanceof UnitOfWork) {
-            $this->uow = $this->createMock(UnitOfWork::class);
+            if ($stub) {
+                $this->uow = $this->createStub(UnitOfWork::class);
+            } else {
+                $this->uow = $this->createMock(UnitOfWork::class);
+            }
         }
 
         return $this->uow;
     }
 
-    /**
-     * @return ClassMetadata|\PHPUnit\Framework\MockObject\MockObject
-     */
-    public function getClassMetadata(): ClassMetadata
+    public function getClassMetadata(bool $stub = false): (ClassMetadata&Stub)|(ClassMetadata&MockObject)
     {
         if (!$this->class instanceof ClassMetadata) {
-            $this->class = $this->createMock(ClassMetadata::class);
-            $this->class->name = 'fooBar';
+            if ($stub) {
+                $this->class = $this->createStub(ClassMetadata::class);
+                $this->class->name = 'fooBar';
+            } else {
+                $this->class = $this->createMock(ClassMetadata::class);
+                $this->class->name = 'fooBar';
+            }
         }
 
         return $this->class;
     }
 
-    public function buildRepository(): \Teknoo\East\Common\Doctrine\Repository\ODM\Media
+    public function buildRepository(): Media
     {
         return new Media(
-            $this->getDocumentManager(),
-            $this->getUnitOfWork(),
-            $this->getClassMetadata()
+            $this->getDocumentManagerMock(true),
+            $this->getUnitOfWork(true),
+            $this->getClassMetadata(true)
         );
     }
 
     public function testOpenDownloadStreamWithLegacyId(): void
     {
         $id = 'IEdJQ4vbUO7UNyrlmjIZUoQWCW99TYPq';
-        $bucket = $this->createMock(Bucket::class);
+        $bucket = $this->createStub(Bucket::class);
         $bucket
             ->method('openDownloadStream')
             ->with($id)
             ->willReturn(\fopen('php://memory', 'r'));
 
-        $this->getClassMetadata()
+        $this->getClassMetadata(true)
             ->method('getDatabaseIdentifierValue')
-            ->willReturnCallback(fn ($id): \MongoDB\BSON\ObjectId => new ObjectId($id));
+            ->willReturnCallback(fn ($id): ObjectId => new ObjectId($id));
 
-        $this->getDocumentManager()
+        $this->getDocumentManagerMock(true)
             ->method('getDocumentBucket')
             ->willReturn($bucket);
 
@@ -126,17 +132,17 @@ class MediaTest extends TestCase
     public function testOpenDownloadStreamWithObjectId(): void
     {
         $id = '5f0f4a76c0918d70c7759a52';
-        $bucket = $this->createMock(Bucket::class);
+        $bucket = $this->createStub(Bucket::class);
         $bucket
             ->method('openDownloadStream')
             ->with(new ObjectId($id))
             ->willReturn(\fopen('php://memory', 'r'));
 
-        $this->getClassMetadata()
+        $this->getClassMetadata(true)
             ->method('getDatabaseIdentifierValue')
-            ->willReturnCallback(fn ($id): \MongoDB\BSON\ObjectId => new ObjectId($id));
+            ->willReturnCallback(fn ($id): ObjectId => new ObjectId($id));
 
-        $this->getDocumentManager()
+        $this->getDocumentManagerMock(true)
             ->method('getDocumentBucket')
             ->willReturn($bucket);
 
@@ -147,12 +153,12 @@ class MediaTest extends TestCase
 
     public function testOpenDownloadStreamWithObjectIdException(): void
     {
-        $bucket = $this->createMock(Bucket::class);
+        $bucket = $this->createStub(Bucket::class);
         $bucket
             ->method('openDownloadStream')
             ->willThrowException(new FileNotFoundException('foo'));
 
-        $this->getDocumentManager()
+        $this->getDocumentManagerMock(true)
             ->method('getDocumentBucket')
             ->willReturn($bucket);
 

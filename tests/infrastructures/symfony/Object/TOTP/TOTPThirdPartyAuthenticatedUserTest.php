@@ -42,8 +42,8 @@ class TOTPThirdPartyAuthenticatedUserTest extends AbstractTOTPAuthTests
     protected function buildUser(): UserWithTOTPAuthInterface
     {
         return new TOTPThirdPartyAuthenticatedUser(
-            $this->createMock(User::class),
-            $this->createMock(ThirdPartyAuth::class),
+            $this->createStub(User::class),
+            $this->createStub(ThirdPartyAuth::class),
         );
     }
 }

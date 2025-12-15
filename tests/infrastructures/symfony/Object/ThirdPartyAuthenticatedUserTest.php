@@ -27,6 +27,7 @@ namespace Teknoo\Tests\East\CommonBundle\Object;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use stdClass;
 use Teknoo\East\Common\Object\ThirdPartyAuth;
 use Teknoo\East\CommonBundle\Object\AbstractUser;
@@ -46,29 +47,30 @@ class ThirdPartyAuthenticatedUserTest extends AbstractUserTests
 
     private ?ThirdPartyAuth $thirdPartyAuth = null;
 
-    /**
-     * @return BaseUser|MockObject
-     */
-    #[\Override]
-    public function getUser(): BaseUser
+    public function getUser(bool $stub = false): (BaseUser&MockObject)|(BaseUser&Stub)
     {
         if (!$this->user instanceof BaseUser) {
-            $this->user = $this->createMock(BaseUser::class);
+            if ($stub) {
+                $this->user = $this->createStub(BaseUser::class);
+            } else {
+                $this->user = $this->createMock(BaseUser::class);
+            }
 
-            $this->user->method('getAuthData')->willReturn([$this->getThirdPartyAuth()]);
-            $this->user->method('getOneAuthData')->willReturn($this->getStoredPassword());
+            $this->user->method('getAuthData')->willReturn([$this->getThirdPartyAuth(true)]);
+            $this->user->method('getOneAuthData')->willReturn($this->getStoredPassword(true));
         }
 
         return $this->user;
     }
 
-    /**
-     * @return ThirdPartyAuth|MockObject
-     */
-    public function getThirdPartyAuth(): ThirdPartyAuth
+    public function getThirdPartyAuth(bool $stub = false): (ThirdPartyAuth&Stub)|(ThirdPartyAuth&MockObject)
     {
         if (!$this->thirdPartyAuth instanceof ThirdPartyAuth) {
-            $this->thirdPartyAuth = $this->createMock(ThirdPartyAuth::class);
+            if ($stub) {
+                $this->thirdPartyAuth = $this->createStub(ThirdPartyAuth::class);
+            } else {
+                $this->thirdPartyAuth = $this->createMock(ThirdPartyAuth::class);
+            }
         }
 
         return $this->thirdPartyAuth;
@@ -76,19 +78,19 @@ class ThirdPartyAuthenticatedUserTest extends AbstractUserTests
 
     public function buildObject(): ThirdPartyAuthenticatedUser
     {
-        return new ThirdPartyAuthenticatedUser($this->getUser(), $this->getThirdPartyAuth());
+        return new ThirdPartyAuthenticatedUser($this->getUser(true), $this->getThirdPartyAuth(true));
     }
 
     public function testExceptionWithBadUser(): void
     {
         $this->expectException(TypeError::class);
-        new ThirdPartyAuthenticatedUser(new stdClass(), $this->getThirdPartyAuth());
+        new ThirdPartyAuthenticatedUser(new stdClass(), $this->getThirdPartyAuth(true));
     }
 
     public function testExceptionWithBadThirdPartyAuth(): void
     {
         $this->expectException(TypeError::class);
-        new ThirdPartyAuthenticatedUser($this->getUser(), new stdClass());
+        new ThirdPartyAuthenticatedUser($this->getUser(true), new stdClass());
     }
 
     public function testGetWrappedThirdAuth(): void

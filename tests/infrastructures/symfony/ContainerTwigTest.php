@@ -49,7 +49,7 @@ class ContainerTwigTest extends TestCase
     protected function buildContainer(): Container
     {
         $containerDefinition = new ContainerBuilder();
-        $containerDefinition->addDefinitions(__DIR__.'/../../../infrastructures/symfony/Resources/config/twig.php');
+        $containerDefinition->addDefinitions(__DIR__.'/../../../infrastructures/symfony/config/twig.php');
         $containerDefinition->useAutowiring(false);
 
         return $containerDefinition->build();

@@ -31,7 +31,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class MockDoctrineType extends ChoiceType
 {
     #[\Override]
-    public function configureOptions(OptionsResolver $resolver): self
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
 
@@ -39,7 +39,5 @@ class MockDoctrineType extends ChoiceType
             'class' => '',
             'query_builder' => '',
         ]);
-
-        return $this;
     }
 }

@@ -65,7 +65,7 @@ trait LoaderTestTrait
     public function testLoadWithError(): void
     {
         /**
-         * @var \PHPUnit\Framework\MockObject\MockObject $promiseMock
+         * @var MockObject $promiseMock
          *
          */
         $promiseMock = $this->createMock(Promise::class);
@@ -75,7 +75,6 @@ trait LoaderTestTrait
 
         $this->getRepositoryMock(true)
             ->method('findOneBy')
-            ->with(['id' => 'fooBar', 'deletedAt' => null], $promiseMock)
             ->willThrowException(new \Exception());
 
         $this->assertInstanceOf(
@@ -87,7 +86,7 @@ trait LoaderTestTrait
     public function testLoad(): void
     {
         /**
-         * @var \PHPUnit\Framework\MockObject\MockObject $promiseMock
+         * @var MockObject $promiseMock
          */
         $promiseMock = $this->createMock(Promise::class);
         $promiseMock->expects($this->never())->method('success');
@@ -95,10 +94,10 @@ trait LoaderTestTrait
 
         $this->getRepositoryMock(true)
             ->method('findOneBy')
-            ->with(['id' => 'fooBar'], $promiseMock);
+            ->willReturnSelf();
 
         $this->assertInstanceOf(
-            \Teknoo\East\Common\Contracts\Loader\LoaderInterface::class,
+            LoaderInterface::class,
             $this->buildLoader()->load('fooBar', $promiseMock)
         );
     }
@@ -118,7 +117,7 @@ trait LoaderTestTrait
     public function testQuery(): void
     {
         /**
-         * @var \PHPUnit\Framework\MockObject\MockObject $promiseMock
+         * @var MockObject $promiseMock
          *
          */
         $promiseMock = $this->createMock(Promise::class);
@@ -128,7 +127,7 @@ trait LoaderTestTrait
         $loader = $this->buildLoader();
 
         /**
-         * @var \PHPUnit\Framework\MockObject\MockObject $queryMock
+         * @var MockObject $queryMock
          */
         $queryMock = $this->createMock(QueryCollectionInterface::class);
         $queryMock->expects($this->once())
@@ -136,7 +135,7 @@ trait LoaderTestTrait
             ->with($loader, $this->getRepositoryMock(), $promiseMock);
 
         $this->assertInstanceOf(
-            \Teknoo\East\Common\Contracts\Loader\LoaderInterface::class,
+            LoaderInterface::class,
             $loader->query($queryMock, $promiseMock)
         );
     }
@@ -156,7 +155,7 @@ trait LoaderTestTrait
     public function testFetch(): void
     {
         /**
-         * @var \PHPUnit\Framework\MockObject\MockObject $promiseMock
+         * @var MockObject $promiseMock
          *
          */
         $promiseMock = $this->createMock(Promise::class);
@@ -166,7 +165,7 @@ trait LoaderTestTrait
         $loader = $this->buildLoader();
 
         /**
-         * @var \PHPUnit\Framework\MockObject\MockObject $fetchMock
+         * @var MockObject $fetchMock
          */
         $fetchMock = $this->createMock(QueryElementInterface::class);
         $fetchMock->expects($this->once())
@@ -174,7 +173,7 @@ trait LoaderTestTrait
             ->with($loader, $this->getRepositoryMock(), $promiseMock);
 
         $this->assertInstanceOf(
-            \Teknoo\East\Common\Contracts\Loader\LoaderInterface::class,
+            LoaderInterface::class,
             $loader->fetch($fetchMock, $promiseMock)
         );
     }

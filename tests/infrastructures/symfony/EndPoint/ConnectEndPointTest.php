@@ -101,7 +101,6 @@ class ConnectEndPointTest extends TestCase
         $oauthClient = $this->createStub(OAuth2ClientInterface::class);
         $this->getClientRegistry(true)
             ->method('getClient')
-            ->with('foo')
             ->willReturn($oauthClient);
 
         $provider = $this->createStub(AbstractProvider::class);
@@ -131,7 +130,6 @@ class ConnectEndPointTest extends TestCase
         $oauthClient = $this->createStub(OAuth2ClientInterface::class);
         $this->getClientRegistry(true)
             ->method('getClient')
-            ->with('foo')
             ->willReturn($oauthClient);
 
         $provider = $this->createStub(AbstractProvider::class);

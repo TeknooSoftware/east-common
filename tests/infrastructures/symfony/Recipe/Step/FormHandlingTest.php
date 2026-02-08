@@ -465,7 +465,8 @@ class FormHandlingTest extends TestCase
         $form->expects($this->once())->method('handleRequest');
         $form->expects($this->once())->method('submit');
 
-        $this->getFormFactory(true)
+        $this->getFormFactory()
+            ->expects($this->atLeastOnce())
             ->method('create')
             ->with(
                 $formClass,
@@ -513,7 +514,8 @@ class FormHandlingTest extends TestCase
         $form->expects($this->once())->method('handleRequest');
         $form->expects($this->once())->method('submit');
 
-        $this->getFormFactory(true)
+        $this->getFormFactory()
+            ->expects($this->atLeastOnce())
             ->method('create')
             ->with(
                 $formClass,
@@ -572,7 +574,8 @@ class FormHandlingTest extends TestCase
         $form->expects($this->once())->method('handleRequest');
         $form->expects($this->once())->method('submit')->with($body, false);
 
-        $this->getFormFactory(true)
+        $this->getFormFactory()
+            ->expects($this->atLeastOnce())
             ->method('create')
             ->with(
                 $formClass,
@@ -646,7 +649,8 @@ class FormHandlingTest extends TestCase
         $form->expects($this->once())->method('handleRequest');
         $form->expects($this->never())->method('submit');
 
-        $this->getFormFactory(true)
+        $this->getFormFactory()
+            ->expects($this->atLeastOnce())
             ->method('create')
             ->with(
                 $formClass,

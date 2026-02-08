@@ -64,7 +64,7 @@ class UserLoaderTest extends TestCase
         return new UserLoader($this->getRepositoryMock(true));
     }
 
-    public function getEntity(): \Teknoo\East\Common\Object\User
+    public function getEntity(): User
     {
         return new User();
     }

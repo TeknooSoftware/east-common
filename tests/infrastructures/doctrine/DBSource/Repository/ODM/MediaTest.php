@@ -110,8 +110,9 @@ class MediaTest extends TestCase
     public function testOpenDownloadStreamWithLegacyId(): void
     {
         $id = 'IEdJQ4vbUO7UNyrlmjIZUoQWCW99TYPq';
-        $bucket = $this->createStub(Bucket::class);
+        $bucket = $this->createMock(Bucket::class);
         $bucket
+            ->expects($this->atLeastOnce())
             ->method('openDownloadStream')
             ->with($id)
             ->willReturn(\fopen('php://memory', 'r'));
@@ -132,8 +133,9 @@ class MediaTest extends TestCase
     public function testOpenDownloadStreamWithObjectId(): void
     {
         $id = '5f0f4a76c0918d70c7759a52';
-        $bucket = $this->createStub(Bucket::class);
+        $bucket = $this->createMock(Bucket::class);
         $bucket
+            ->expects($this->atLeastOnce())
             ->method('openDownloadStream')
             ->with(new ObjectId($id))
             ->willReturn(\fopen('php://memory', 'r'));

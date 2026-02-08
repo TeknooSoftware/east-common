@@ -81,7 +81,8 @@ use Teknoo\Recipe\Promise\Promise;
         $promiseMock->expects($this->never())->method('success');
         $promiseMock->expects($this->never())->method('fail');
 
-        $this->getRepositoryMock(true)
+        $this->getRepositoryMock()
+            ->expects($this->atLeastOnce())
             ->method('findOneBy')
             ->with(
                 [new InclusiveOr(

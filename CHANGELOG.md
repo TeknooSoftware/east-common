@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [4.1.3] - 2026-02-08
+### Stable Release
+- Fix BC Break introduced into PHPUnit 13.0.1
+
 ## [4.1.2] - 2025-12-22
 ### Stable Release
 - Migrate in Symfony Bundle config files from Resources/config to config.

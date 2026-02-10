@@ -165,21 +165,6 @@ class PaginationQueryTest extends TestCase
         $promise->expects($this->never())->method('success');
         $promise->expects($this->once())->method('fail');
 
-        $repository
-            ->method('count')
-            ->with(
-                ['foo' => 'bar', 'deletedAt' => null,],
-                self::callback(
-                    fn ($p): bool => $p instanceof PromiseInterface
-                )
-            )->willReturnCallback(
-                function (array $criteria, PromiseInterface $promise) use ($repository): \PHPUnit\Framework\MockObject\MockObject {
-                    $promise->fail(new \Exception());
-
-                    return $repository;
-                }
-            );
-
         $repository->expects($this->once())
             ->method('findBy')
             ->with(

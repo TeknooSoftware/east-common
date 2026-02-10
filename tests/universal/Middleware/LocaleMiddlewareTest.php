@@ -127,6 +127,7 @@ class LocaleMiddlewareTest extends TestCase
             });
 
         $serverRequest
+            ->expects($this->atLeastOnce())
             ->method('getAttribute')
             ->with(SessionInterface::ATTRIBUTE_KEY)
             ->willReturn($sessionMiddleware);
@@ -169,6 +170,7 @@ class LocaleMiddlewareTest extends TestCase
             });
 
         $serverRequest
+            ->expects($this->atLeastOnce())
             ->method('getAttribute')
             ->with(SessionInterface::ATTRIBUTE_KEY)
             ->willReturn($sessionMiddleware);
@@ -215,6 +217,7 @@ class LocaleMiddlewareTest extends TestCase
             ->willReturn(['locale' => 'es']);
 
         $serverRequest
+            ->expects($this->atLeastOnce())
             ->method('getAttribute')
             ->with(SessionInterface::ATTRIBUTE_KEY)
             ->willReturn($sessionMiddleware);

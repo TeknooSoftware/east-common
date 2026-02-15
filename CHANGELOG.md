@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [4.1.4] - 2026-02-15
+### Stable Release
+- Fix bug with PHP 8.5 in tests
+
 ## [4.1.3] - 2026-02-08
 ### Stable Release
 - Fix BC Break introduced into PHPUnit 13.0.1

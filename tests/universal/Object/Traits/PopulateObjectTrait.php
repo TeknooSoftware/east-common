@@ -55,11 +55,9 @@ trait PopulateObjectTrait
             foreach ($data as $fieldName => $value) {
                 if ($reflectionClassObject->hasProperty($fieldName)) {
                     $propertyObject = $reflectionClassObject->getProperty($fieldName);
-                    $propertyObject->setAccessible(true);
                     $propertyObject->setValue($object, $value);
                 } elseif ($reflectionClassObject->getParentClass()->hasProperty($fieldName)) {
                     $propertyObject = $reflectionClassObject->getParentClass()->getProperty($fieldName);
-                    $propertyObject->setAccessible(true);
                     $propertyObject->setValue($object, $value);
                 }
             }

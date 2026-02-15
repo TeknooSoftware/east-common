@@ -1033,7 +1033,6 @@ class FeatureContext implements Context
                         continue;
                     }
 
-                    $rp->setAccessible(true);
                     $final[$rp->getName()] = $rp->getValue($object);
                 }
 

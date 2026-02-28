@@ -17,7 +17,7 @@ parameters:
     #Writer
     teknoo.east.common.bundle.writer.user.class: 'Teknoo\East\CommonBundle\Writer\SymfonyUserWriter'
 
-    teknoo.east.common.bundle.recovery.notification.subject: 'teknoo.space.common.recovery_access.notification.subject'
+    teknoo.east.common.bundle.recovery.notification.subject: 'teknoo.east.common.recovery_access.notification.subject'
     teknoo.east.common.bundle.recovery.role: 'ROLE_RECOVERY'
     teknoo.east.common.bundle.recovery.notification_class: 'Symfony\Component\Security\Http\LoginLink\LoginLinkNotification'
 

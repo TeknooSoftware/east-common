@@ -1,5 +1,11 @@
 # Teknoo Software - Common - Change Log
 
+## [4.1.5] - 2026-02-28
+### Stable Release
+- Fix wrong parameter reference to Space instead East for : 
+   `teknoo.east.common.recovery_access.notification.subject` instead
+   `teknoo.space.common.recovery_access.notification.subject`
+
 ## [4.1.4] - 2026-02-15
 ### Stable Release
 - Fix bug with PHP 8.5 in tests

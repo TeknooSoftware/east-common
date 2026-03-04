@@ -1,9 +1,24 @@
 <?php
-/**
- * Created by PhpStorm.
- * Author : Richard Déloge, richarddeloge@gmail.com, https://teknoo.software
- * Date: 04/03/2026
- * Time: 10:33
+
+/*
+ * East Common.
+ *
+ * LICENSE
+ *
+ * This source file is subject to the 3-Clause BSD license
+ * it is available in LICENSE file at the root of this package
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to richard@teknoo.software so we can send you a copy immediately.
+ *
+ *
+ * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
+ *
+ * @link        https://teknoo.software/east-collection/common Project website
+ *
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
+ * @author      Richard Déloge <richard@teknoo.software>
  */
 
 namespace Teknoo\East\CommonBundle\Rendering;
@@ -23,15 +38,25 @@ use Teknoo\East\Common\Contracts\Rendering\LiveComponentBuilderInterface;
 use Throwable;
 
 use function is_callable;
+use function is_object;
 use function property_exists;
+use function trim;
 
+/**
+ * Contract to define rendering hook to manage live components
+ *
+ * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
+ * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
+ * @author      Richard Déloge <richard@teknoo.software>
+ */
 class LiveComponentBuilder implements LiveComponentBuilderInterface
 {
     public function __construct(
+        private ContainerInterface $container,
         private ?ComponentFactory $componentFactory = null,
         private ?LiveComponentHydrator $hydrator = null,
         private ?LiveComponentMetadataFactory $metadataFactory = null,
-        private ContainerInterface $container,
     ) {
     }
 
@@ -39,13 +64,19 @@ class LiveComponentBuilder implements LiveComponentBuilderInterface
         ComponentMetadata $metadata,
     ): object {
         if ($this->container->has($metadata->getServiceId())) {
-            return $this->container->get($metadata->getServiceId());
+            $component = $this->container->get($metadata->getServiceId());
+            if (is_object($component)) {
+                return $component;
+            }
         }
 
         $componentClass = $metadata->getClass();
         return new $componentClass();
     }
 
+    /**
+     * @param array<string, array<string, mixed>> $body
+     */
     private function hydrateComponentObject(
         object $component,
         string $componentName,
@@ -69,6 +100,9 @@ class LiveComponentBuilder implements LiveComponentBuilderInterface
         return $mountedComponent;
     }
 
+    /**
+     * @param array<string, mixed> $parameters
+     */
     private function updateComponentObject(
         object $component,
         array $parameters,
@@ -84,7 +118,7 @@ class LiveComponentBuilder implements LiveComponentBuilderInterface
         object $component,
         ComponentMetadata $metadata,
     ): callable {
-        $defaultAction = trim($metadata->get('default_action', '__invoke'), '()');
+        $defaultAction = trim((string) $metadata->get('default_action', '__invoke'), '()');
 
         if (is_callable([$component, $defaultAction])) {
             return [$component, $defaultAction];

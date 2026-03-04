@@ -339,10 +339,10 @@ services:
     Teknoo\East\Common\Contracts\Rendering\LiveComponentBuilderInterface:
         class: '%teknoo.east.common.live_component_builder.class%'
         arguments:
-            - '@ux.twig_component.component_factory'
-            - '@ux.live_component.component_hydrator'
-            - '@ux.live_component.metadata_factory'
             - '@service_container'
+            - '@?ux.twig_component.component_factory'
+            - '@?ux.live_component.component_hydrator'
+            - '@?ux.live_component.metadata_factory'
         public: true
 
     #Commands

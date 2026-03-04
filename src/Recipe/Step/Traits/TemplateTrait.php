@@ -40,6 +40,8 @@ use tidy;
 
 use function class_exists;
 use function function_exists;
+use function is_array;
+use function is_string;
 use function tidy_get_output;
 use function trim;
 
@@ -108,6 +110,9 @@ trait TemplateTrait
         return $output;
     }
 
+    /**
+     * @param array<string, mixed> $parameters
+     */
     private function catchLiveComponentRefresh(?MessageInterface $message, array $parameters): bool
     {
         if (!$this->liveComponentBuilderInterface) {
@@ -121,17 +126,22 @@ trait TemplateTrait
         $attributes = $message->getAttributes();
         if (
             empty($attributes['_live_parameters'])
+            || !is_array($attributes['_live_parameters'])
             || empty($attributes['_live_parameters']['_live_component'])
+            || !is_string($attributes['_live_parameters']['_live_component'])
             || empty($attributes['_live_body'])
+            || !is_array($attributes['_live_body'])
         ) {
             return false;
         }
 
+        /** @var array<string, array<string, mixed>> $body */
+        $body = $attributes['_live_body'];
         return $this->liveComponentBuilderInterface->buildComponent(
             $message,
             $attributes['_live_parameters']['_live_component'],
             $parameters,
-            $attributes['_live_body'],
+            $body,
         );
     }
 

@@ -39,6 +39,15 @@ parameters:
             message: '#will always evaluate to true#'
             path: infrastructures/symfony/Writer/SymfonyUserWriter.php
         -
+            message: '#Cannot call method#'
+            path: infrastructures/symfony/Rendering/LiveComponentBuilder.php
+        -
+            message: '#Cannot cast mixed to string#'
+            path: infrastructures/symfony/Rendering/LiveComponentBuilder.php
+        -
+            message: '#should return callable#'
+            path: infrastructures/symfony/Rendering/LiveComponentBuilder.php
+        -
             message: '#[a-zA-Z0-9\\_]+::cook\(\) expects \(callable\(\): mixed\)|[a-zA-Z0-9\\_]+#'
             path: src/di.php
         -

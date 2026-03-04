@@ -50,6 +50,7 @@ use Teknoo\East\Common\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RenderFormInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\SearchFormLoaderInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\User\NotifyUserAboutRecoveryAccessInterface;
+use Teknoo\East\Common\Contracts\Rendering\LiveComponentBuilderInterface;
 use Teknoo\East\Common\FrontAsset\Extensions\SourceLoader as SourceLoaderExtension;
 use Teknoo\East\Common\Loader\MediaLoader;
 use Teknoo\East\Common\Loader\UserLoader;
@@ -226,6 +227,10 @@ return [
             $render->setTidyConfig($container->get('teknoo.east.common.rendering.clean_html.configuration'));
         }
 
+        if ($container->has(LiveComponentBuilderInterface::class)) {
+            $render->setLiveComponentBuilder($container->get(LiveComponentBuilderInterface::class));
+        }
+
         return $render;
     },
     RenderError::class => static function (ContainerInterface $container): RenderError {
@@ -240,6 +245,10 @@ return [
             $renderError->setTidyConfig($container->get('teknoo.east.common.rendering.clean_html.configuration'));
         }
 
+        if ($container->has(LiveComponentBuilderInterface::class)) {
+            $renderError->setLiveComponentBuilder($container->get(LiveComponentBuilderInterface::class));
+        }
+
         return $renderError;
     },
     RenderList::class => static function (ContainerInterface $container): RenderList {
@@ -252,6 +261,10 @@ return [
 
         if ($container->has('teknoo.east.common.rendering.clean_html.configuration')) {
             $renderList->setTidyConfig($container->get('teknoo.east.common.rendering.clean_html.configuration'));
+        }
+
+        if ($container->has(LiveComponentBuilderInterface::class)) {
+            $renderList->setLiveComponentBuilder($container->get(LiveComponentBuilderInterface::class));
         }
 
         return $renderList;

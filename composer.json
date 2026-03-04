@@ -121,6 +121,8 @@
         "symfony/validator": "^6.4.24||^7.4||^8",
         "symfony/var-dumper": "^6.4.24||^7.4||^8",
         "symfony/yaml": "^6.4.24||^7.4||^8",
+        "symfony/ux-live-component": "^2.32",
+        "symfony/ux-twig-component": "^2.32",
         "twig/twig": "^3.23",
         "twig/cssinliner-extra": "^3.23",
         "twig/inky-extra": "^3.23"

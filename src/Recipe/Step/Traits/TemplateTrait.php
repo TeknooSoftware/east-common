@@ -25,8 +25,11 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Common\Recipe\Step\Traits;
 
+use Psr\Http\Message\MessageInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use SensitiveParameter;
+use Teknoo\East\Common\Contracts\Rendering\LiveComponentBuilderInterface;
 use Teknoo\East\Foundation\Client\ClientInterface;
 use Teknoo\East\Foundation\Http\Message\CallbackStreamInterface;
 use Teknoo\Recipe\Promise\Promise;
@@ -58,6 +61,8 @@ trait TemplateTrait
 
     private StreamFactoryInterface $streamFactory;
 
+    private ?LiveComponentBuilderInterface $liveComponentBuilderInterface = null;
+
     /**
      * @var array<string, mixed>
      */
@@ -74,6 +79,14 @@ trait TemplateTrait
     public function setTidyConfig(array $config): self
     {
         $this->tidyConfig = $config;
+
+        return $this;
+    }
+
+    public function setLiveComponentBuilder(
+        ?LiveComponentBuilderInterface $liveComponentBuilderInterface
+    ): self {
+        $this->liveComponentBuilderInterface = $liveComponentBuilderInterface;
 
         return $this;
     }
@@ -95,6 +108,33 @@ trait TemplateTrait
         return $output;
     }
 
+    private function catchLiveComponentRefresh(?MessageInterface $message, array $parameters): bool
+    {
+        if (!$this->liveComponentBuilderInterface) {
+            return false;
+        }
+
+        if (!$message instanceof ServerRequestInterface) {
+            return false;
+        }
+
+        $attributes = $message->getAttributes();
+        if (
+            empty($attributes['_live_parameters'])
+            || empty($attributes['_live_parameters']['_live_component'])
+            || empty($attributes['_live_body'])
+        ) {
+            return false;
+        }
+
+        return $this->liveComponentBuilderInterface->buildComponent(
+            $message,
+            $attributes['_live_parameters']['_live_component'],
+            $parameters,
+            $attributes['_live_body'],
+        );
+    }
+
     /**
      * Renders a view.
      *
@@ -111,7 +151,14 @@ trait TemplateTrait
         array $headers = [],
         ?string $api = null,
         bool $cleanHtml = false,
+        ?MessageInterface $message = null,
     ): void {
+        if ($this->catchLiveComponentRefresh($message, $parameters)) {
+            $client->sendAResponseIsOptional();
+
+            return;
+        }
+
         $response = $this->responseFactory->createResponse($status);
 
         $headers['content-type'] = match ($api) {

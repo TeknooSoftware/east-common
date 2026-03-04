@@ -27,6 +27,7 @@ parameters:
     #Rendering
     teknoo.east.common.rendering.clean_html: false
     teknoo.east.common.admin.rendering.clean_html: true
+    teknoo.east.common.live_component_builder.class: 'Teknoo\East\CommonBundle\Rendering\LiveComponentBuilder'
 
     #Steps
     teknoo.east.common.bundle.allowed_forms: []
@@ -333,6 +334,16 @@ services:
             - '@?scheb_two_factor.security.google_authenticator'
         tags:
             - { name: form.type }
+
+    #Live components
+    Teknoo\East\Common\Contracts\Rendering\LiveComponentBuilderInterface:
+        class: '%teknoo.east.common.live_component_builder.class%'
+        arguments:
+            - '@ux.twig_component.component_factory'
+            - '@ux.live_component.component_hydrator'
+            - '@ux.live_component.metadata_factory'
+            - '@service_container'
+        public: true
 
     #Commands
     teknoo.east.command.symfony.command.minify_css:

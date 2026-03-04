@@ -35,6 +35,9 @@ use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentMetadata;
 use Symfony\UX\TwigComponent\MountedComponent;
 use Teknoo\East\Common\Contracts\Rendering\LiveComponentBuilderInterface;
+use Teknoo\East\CommonBundle\Contracts\Rendering\ComponentFactoryInterface;
+use Teknoo\East\CommonBundle\Contracts\Rendering\LiveComponentHydratorInterface;
+use Teknoo\East\CommonBundle\Contracts\Rendering\LiveComponentMetadataFactoryInterface;
 use Throwable;
 
 use function is_callable;
@@ -54,9 +57,9 @@ class LiveComponentBuilder implements LiveComponentBuilderInterface
 {
     public function __construct(
         private ContainerInterface $container,
-        private ?ComponentFactory $componentFactory = null,
-        private ?LiveComponentHydrator $hydrator = null,
-        private ?LiveComponentMetadataFactory $metadataFactory = null,
+        private null|ComponentFactory|ComponentFactoryInterface $componentFactory = null,
+        private null|LiveComponentHydrator|LiveComponentHydratorInterface $hydrator = null,
+        private null|LiveComponentMetadataFactory|LiveComponentMetadataFactoryInterface $metadataFactory = null,
     ) {
     }
 

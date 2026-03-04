@@ -25,8 +25,11 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Common\Recipe\Step\Traits;
 
+use Psr\Http\Message\MessageInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use SensitiveParameter;
+use Teknoo\East\Common\Contracts\Rendering\LiveComponentBuilderInterface;
 use Teknoo\East\Foundation\Client\ClientInterface;
 use Teknoo\East\Foundation\Http\Message\CallbackStreamInterface;
 use Teknoo\Recipe\Promise\Promise;
@@ -37,6 +40,8 @@ use tidy;
 
 use function class_exists;
 use function function_exists;
+use function is_array;
+use function is_string;
 use function tidy_get_output;
 use function trim;
 
@@ -58,6 +63,8 @@ trait TemplateTrait
 
     private StreamFactoryInterface $streamFactory;
 
+    private ?LiveComponentBuilderInterface $liveComponentBuilderInterface = null;
+
     /**
      * @var array<string, mixed>
      */
@@ -74,6 +81,14 @@ trait TemplateTrait
     public function setTidyConfig(array $config): self
     {
         $this->tidyConfig = $config;
+
+        return $this;
+    }
+
+    public function setLiveComponentBuilder(
+        ?LiveComponentBuilderInterface $liveComponentBuilderInterface
+    ): self {
+        $this->liveComponentBuilderInterface = $liveComponentBuilderInterface;
 
         return $this;
     }
@@ -96,6 +111,41 @@ trait TemplateTrait
     }
 
     /**
+     * @param array<string, mixed> $parameters
+     */
+    private function catchLiveComponentRefresh(?MessageInterface $message, array $parameters): bool
+    {
+        if (!$this->liveComponentBuilderInterface) {
+            return false;
+        }
+
+        if (!$message instanceof ServerRequestInterface) {
+            return false;
+        }
+
+        $attributes = $message->getAttributes();
+        if (
+            empty($attributes['_live_parameters'])
+            || !is_array($attributes['_live_parameters'])
+            || empty($attributes['_live_parameters']['_live_component'])
+            || !is_string($attributes['_live_parameters']['_live_component'])
+            || empty($attributes['_live_body'])
+            || !is_array($attributes['_live_body'])
+        ) {
+            return false;
+        }
+
+        /** @var array<string, array<string, mixed>> $body */
+        $body = $attributes['_live_body'];
+        return $this->liveComponentBuilderInterface->buildComponent(
+            $message,
+            $attributes['_live_parameters']['_live_component'],
+            $parameters,
+            $body,
+        );
+    }
+
+    /**
      * Renders a view.
      *
      * @param string          $view       The view name
@@ -111,7 +161,14 @@ trait TemplateTrait
         array $headers = [],
         ?string $api = null,
         bool $cleanHtml = false,
+        ?MessageInterface $message = null,
     ): void {
+        if ($this->catchLiveComponentRefresh($message, $parameters)) {
+            $client->sendAResponseIsOptional();
+
+            return;
+        }
+
         $response = $this->responseFactory->createResponse($status);
 
         $headers['content-type'] = match ($api) {

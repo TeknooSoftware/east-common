@@ -90,6 +90,7 @@ class RenderList
             ] + $viewParameters,
             api: $api,
             cleanHtml: $cleanHtml ?? $this->defaultCleanHtml,
+            message: $request,
         );
 
         return $this;

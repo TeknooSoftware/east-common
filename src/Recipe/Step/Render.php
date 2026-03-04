@@ -102,6 +102,7 @@ class Render
             headers: $headers,
             api: $api,
             cleanHtml: $cleanHtml ?? $this->defaultCleanHtml,
+            message: $message,
         );
 
         return $this;

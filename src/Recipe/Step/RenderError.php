@@ -105,6 +105,7 @@ class RenderError
             status: $errorCode,
             api: $api,
             cleanHtml: $cleanHtml ?? $this->defaultCleanHtml,
+            message: $message,
         );
 
         return $this;

@@ -52,6 +52,7 @@ use Teknoo\East\Common\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RenderFormInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\SearchFormLoaderInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\User\NotifyUserAboutRecoveryAccessInterface;
+use Teknoo\East\Common\Contracts\Rendering\LiveComponentBuilderInterface;
 use Teknoo\East\Common\FrontAsset\Extensions\SourceLoader as SourceLoaderExtension;
 use Teknoo\East\Common\Loader\MediaLoader;
 use Teknoo\East\Common\Loader\UserLoader;
@@ -322,6 +323,7 @@ class ContainerTest extends TestCase
         $container->set(EngineInterface::class, $this->createStub(EngineInterface::class));
         $container->set(StreamFactoryInterface::class, $this->createStub(StreamFactoryInterface::class));
         $container->set(ResponseFactoryInterface::class, $this->createStub(ResponseFactoryInterface::class));
+        $container->set(LiveComponentBuilderInterface::class, $this->createStub(LiveComponentBuilderInterface::class));
 
         $this->assertInstanceOf(
             Render::class,
@@ -335,6 +337,7 @@ class ContainerTest extends TestCase
         $container->set(EngineInterface::class, $this->createStub(EngineInterface::class));
         $container->set(StreamFactoryInterface::class, $this->createStub(StreamFactoryInterface::class));
         $container->set(ResponseFactoryInterface::class, $this->createStub(ResponseFactoryInterface::class));
+        $container->set(LiveComponentBuilderInterface::class, $this->createStub(LiveComponentBuilderInterface::class));
 
         $this->assertInstanceOf(
             RenderError::class,
@@ -348,6 +351,7 @@ class ContainerTest extends TestCase
         $container->set(EngineInterface::class, $this->createStub(EngineInterface::class));
         $container->set(StreamFactoryInterface::class, $this->createStub(StreamFactoryInterface::class));
         $container->set(ResponseFactoryInterface::class, $this->createStub(ResponseFactoryInterface::class));
+        $container->set(LiveComponentBuilderInterface::class, $this->createStub(LiveComponentBuilderInterface::class));
 
         $this->assertInstanceOf(
             RenderList::class,

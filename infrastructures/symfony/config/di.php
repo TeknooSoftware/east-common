@@ -32,6 +32,7 @@ use Teknoo\East\Common\Contracts\FrontAsset\MinifierInterface;
 use Teknoo\East\Common\Contracts\FrontAsset\PersisterInterface;
 use Teknoo\East\Common\Contracts\FrontAsset\SourceLoaderInterface;
 use Teknoo\East\Common\Contracts\Recipe\Plan\MinifierCommandInterface;
+use Teknoo\East\Common\Contracts\Rendering\LiveComponentBuilderInterface;
 use Teknoo\East\Common\FrontAsset\FileType;
 use Teknoo\East\CommonBundle\Command\Exception\MissingMessageFactoryException;
 use Teknoo\East\CommonBundle\Command\MinifyCommand;
@@ -111,6 +112,10 @@ return [
 
         if ($container->has('teknoo.east.common.rendering.clean_html.configuration')) {
             $renderForm->setTidyConfig($container->get('teknoo.east.common.rendering.clean_html.configuration'));
+        }
+
+        if ($container->has(LiveComponentBuilderInterface::class)) {
+            $renderForm->setLiveComponentBuilder($container->get(LiveComponentBuilderInterface::class));
         }
 
         return $renderForm;

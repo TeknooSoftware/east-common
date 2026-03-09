@@ -123,6 +123,7 @@ class RenderForm implements RenderFormInterface
             headers: $headers,
             api: $api,
             cleanHtml: $cleanHtml ?? $this->defaultCleanHtml,
+            message: $request,
         );
 
         return $this;

@@ -1,8 +1,12 @@
 # Teknoo Software - Common - Change Log
 
+## [4.2.1] - 2026-03-09
+### Stable Release
+- Fix RenderForm to support live components too.
+
 ## [4.2.0] - 2026-03-04
 ### Stable Release
-- Support Symfony UX Live Component to hook Live Compoenent rendering with East Recipe, prepare and inject component 
+- Support Symfony UX Live Component to hook Live Component rendering with East Recipe, prepare and inject component 
   into Symfony requests and allow Symfony UX to render it.
 
 ## [4.1.5] - 2026-02-28

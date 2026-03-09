@@ -39,6 +39,7 @@ use Teknoo\East\Common\Contracts\FrontAsset\SourceLoaderInterface;
 use Teknoo\East\Common\Contracts\Recipe\Plan\MinifierCommandInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormHandlingInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RedirectClientInterface;
+use Teknoo\East\Common\Contracts\Rendering\LiveComponentBuilderInterface;
 use Teknoo\East\Common\Recipe\Step\CreateObject;
 use Teknoo\East\Common\Recipe\Step\RenderError;
 use Teknoo\East\CommonBundle\Command\MinifyCommand;
@@ -115,6 +116,7 @@ class ContainerTest extends TestCase
         $container->set(EngineInterface::class, $this->createStub(EngineInterface::class));
         $container->set(StreamFactoryInterface::class, $this->createStub(StreamFactoryInterface::class));
         $container->set(ResponseFactoryInterface::class, $this->createStub(ResponseFactoryInterface::class));
+        $container->set(LiveComponentBuilderInterface::class, $this->createStub(LiveComponentBuilderInterface::class));
 
         $this->assertInstanceOf(
             RenderFormInterface::class,

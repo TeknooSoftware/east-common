@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\CommonBundle\Recipe\Step;
 
+use DateTimeInterface;
 use Laminas\Diactoros\StreamFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -36,6 +37,7 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
 use Teknoo\East\Common\Contracts\Object\PublishableInterface;
@@ -362,11 +364,11 @@ class FormHandlingTest extends TestCase
             {
             }
 
-            public function getPublishedAt(): ?\DateTimeInterface
+            public function getPublishedAt(): ?DateTimeInterface
             {
             }
 
-            public function setPublishedAt(\DateTimeInterface $dateTime): PublishableInterface
+            public function setPublishedAt(DateTimeInterface $dateTime): PublishableInterface
             {
             }
         };
@@ -657,6 +659,142 @@ class FormHandlingTest extends TestCase
                 $object,
                 ['csrf_protection' => false],
             )
+            ->willReturn($form);
+
+        $this->assertInstanceOf(
+            FormHandling::class,
+            $this->buildStep()(
+                $request,
+                $manager,
+                $formClass,
+                $object,
+                $formOptions,
+            )
+        );
+    }
+
+    public function testInvokeWithLiveRequestWithoutFormInPost(): void
+    {
+        $sfRequest = $this->createStub(Request::class);
+        $sfRequest->request = new InputBag([]);
+
+        $request = $this->createStub(ServerRequestInterface::class);
+        $request->method('getAttribute')->willReturnCallback(
+            fn (string $name): Stub|false => match ($name) {
+                'request' => $sfRequest,
+                default => false,
+            }
+        );
+        $request->method('getAttributes')->willReturn(['_live_parameters' => ['foo' => 'bar']]);
+        $request->method('getMethod')->willReturn('POST');
+        $request->method('getParsedBody')->willReturn([]);
+
+        $manager = $this->createStub(ManagerInterface::class);
+        $formClass = 'Foo/Bar';
+        $formOptions = [];
+        $object = $this->createStub(IdentifiedObjectInterface::class);
+
+        $this->getDatesService()
+            ->expects($this->never())
+            ->method('passMeTheDate');
+
+        $form = $this->createMock(FormInterface::class);
+        $form->method('getName')->willReturn('test_form');
+        $form->expects($this->never())->method('handleRequest');
+        $form->expects($this->never())->method('submit');
+
+        $this->getFormFactory(true)
+            ->method('create')
+            ->willReturn($form);
+
+        $this->assertInstanceOf(
+            FormHandling::class,
+            $this->buildStep()(
+                $request,
+                $manager,
+                $formClass,
+                $object,
+                $formOptions,
+            )
+        );
+    }
+
+    public function testInvokeWithLiveRequestWithFormInPost(): void
+    {
+        $sfRequest = $this->createStub(Request::class);
+        $sfRequest->request = new InputBag(['test_form' => []]);
+
+        $request = $this->createStub(ServerRequestInterface::class);
+        $request->method('getAttribute')->willReturnCallback(
+            fn (string $name): Stub|false => match ($name) {
+                'request' => $sfRequest,
+                default => false,
+            }
+        );
+        $request->method('getAttributes')->willReturn(['_live_parameters' => ['foo' => 'bar']]);
+        $request->method('getMethod')->willReturn('POST');
+        $request->method('getParsedBody')->willReturn([]);
+
+        $manager = $this->createStub(ManagerInterface::class);
+        $formClass = 'Foo/Bar';
+        $formOptions = [];
+        $object = $this->createStub(IdentifiedObjectInterface::class);
+
+        $this->getDatesService()
+            ->expects($this->never())
+            ->method('passMeTheDate');
+
+        $form = $this->createMock(FormInterface::class);
+        $form->method('getName')->willReturn('test_form');
+        $form->expects($this->once())->method('handleRequest');
+        $form->expects($this->never())->method('submit');
+
+        $this->getFormFactory(true)
+            ->method('create')
+            ->willReturn($form);
+
+        $this->assertInstanceOf(
+            FormHandling::class,
+            $this->buildStep()(
+                $request,
+                $manager,
+                $formClass,
+                $object,
+                $formOptions,
+            )
+        );
+    }
+
+    public function testInvokeWithLiveRequestButNotPost(): void
+    {
+        $sfRequest = $this->createStub(Request::class);
+
+        $request = $this->createStub(ServerRequestInterface::class);
+        $request->method('getAttribute')->willReturnCallback(
+            fn (string $name): Stub|false => match ($name) {
+                'request' => $sfRequest,
+                default => false,
+            }
+        );
+        $request->method('getAttributes')->willReturn(['_live_parameters' => ['foo' => 'bar']]);
+        $request->method('getMethod')->willReturn('GET');
+        $request->method('getParsedBody')->willReturn([]);
+
+        $manager = $this->createStub(ManagerInterface::class);
+        $formClass = 'Foo/Bar';
+        $formOptions = [];
+        $object = $this->createStub(IdentifiedObjectInterface::class);
+
+        $this->getDatesService()
+            ->expects($this->never())
+            ->method('passMeTheDate');
+
+        $form = $this->createMock(FormInterface::class);
+        $form->expects($this->once())->method('handleRequest');
+        $form->expects($this->never())->method('submit');
+
+        $this->getFormFactory(true)
+            ->method('create')
             ->willReturn($form);
 
         $this->assertInstanceOf(

@@ -28,6 +28,7 @@ namespace Teknoo\East\CommonBundle\Recipe\Step;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Common\Contracts\Object\PublishableInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormHandlingInterface;
@@ -116,7 +117,17 @@ class FormHandling implements FormHandlingInterface
 
         $form = $this->createForm($formClass, $object, $formOptions);
         if (!empty($formHandleRequest)) {
-            $form->handleRequest($request->getAttribute('request'));
+            $attributes = $request->getAttributes();
+            /** @var Request $sfRequest */
+            $sfRequest = $request->getAttribute('request');
+
+            if (
+                'POST' !== $request->getMethod()
+                || empty($attributes['_live_parameters'])
+                || $sfRequest->request->has($form->getName())
+            ) {
+                $form->handleRequest($sfRequest);
+            }
 
             if (
                 !$form->isSubmitted()

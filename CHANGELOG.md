@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [4.2.2] - 2026-03-10
+### Stable Release
+- Fix FornHandling with Non Form submitted Live requests
+
 ## [4.2.1] - 2026-03-09
 ### Stable Release
 - Fix RenderForm to support live components too.

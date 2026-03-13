@@ -27,6 +27,7 @@ namespace Teknoo\East\CommonBundle\Recipe\Step;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\SearchFormLoaderInterface;
 
@@ -71,7 +72,19 @@ class SearchFormLoader implements SearchFormLoaderInterface
             return $this;
         }
 
+        /** @var Request $sfRequest */
+        $sfRequest = $request->getAttribute('request');
+        $liveBody = $request->getAttribute('_live_body', []);
         $formName = key($params);
+
+        if (
+            'data' === $formName
+            && is_array($liveBody)
+            && is_array($liveBody['props'])
+            && is_string($liveBody['props']['formName'])
+        ) {
+            $formName = $liveBody['props']['formName'];
+        }
 
         if (
             !is_string($formName)
@@ -91,8 +104,17 @@ class SearchFormLoader implements SearchFormLoaderInterface
                 'manager' => $manager
             ]
         );
+        $form->handleRequest($sfRequest);
 
-        $form->handleRequest($request->getAttribute('request'));
+        if (
+            !$form->isSubmitted()
+            && is_array($liveBody)
+            && is_array($liveBody['props'])
+            && !empty($liveBody['props'][$form->getName()])
+            && is_array($liveBody['props'][$form->getName()])
+        ) {
+            $form->submit($liveBody['props'][$form->getName()]);
+        }
 
         $manager->updateWorkPlan([
             'searchForm' => $form

@@ -240,4 +240,97 @@ class SearchFormLoaderTest extends TestCase
             )($request, $manager, $template)
         );
     }
+
+    public function testInvokeWithLiveBodyDataFormNameExtraction(): void
+    {
+        $request = $this->createStub(ServerRequestInterface::class);
+        $request->method('getAttribute')->willReturnCallback(
+            fn (string $name): Request|array => match ($name) {
+                'request' => $this->createStub(Request::class),
+                '_live_body' => [
+                    'props' => [
+                        'formName' => 'bar1',
+                    ]
+                ],
+            }
+        );
+        $request->method('getParsedBody')->willReturn([
+            'data' => []
+        ]);
+        $manager = $this->createMock(ManagerInterface::class);
+        $template = 'foo.html.twig';
+
+        $manager->expects($this->never())->method('error');
+
+        $this->getFormFactory()
+            ->expects($this->once())
+            ->method('create')
+            ->willReturn($this->createStub(FormInterface::class));
+
+        $this->assertInstanceOf(
+            SearchFormLoader::class,
+            $this->buildStep(
+                [
+                    'foo.html.twig' => [
+                        'bar1' => \stdClass::class
+                    ],
+                    SearchFormLoader::ANY_TEMPLATE => [
+                        'bar2' => \stdClass::class
+                    ]
+                ]
+            )($request, $manager, $template)
+        );
+    }
+
+    public function testInvokeWithLiveBodySubmitWhenNotSubmitted(): void
+    {
+        $request = $this->createStub(ServerRequestInterface::class);
+        $request->method('getAttribute')->willReturnCallback(
+            fn (string $name): Request|array => match ($name) {
+                'request' => $this->createStub(Request::class),
+                '_live_body' => [
+                    'props' => [
+                        'formName' => 'test_form',
+                        'test_form' => [
+                            'search' => 'keyword',
+                        ]
+                    ]
+                ],
+            }
+        );
+        $request->method('getParsedBody')->willReturn([
+            'bar1' => []
+        ]);
+        $manager = $this->createMock(ManagerInterface::class);
+        $template = 'foo.html.twig';
+
+        $manager->expects($this->never())->method('error');
+
+        $form = $this->createMock(FormInterface::class);
+        $form->method('getName')->willReturn('test_form');
+        $form->method('isSubmitted')->willReturn(false);
+        $form->expects($this->once())->method('handleRequest');
+        $form->expects($this->once())->method('submit')->with([
+            'search' => 'keyword',
+        ]);
+
+        $this->getFormFactory()
+            ->expects($this->once())
+            ->method('create')
+            ->willReturn($form);
+
+        $this->assertInstanceOf(
+            SearchFormLoader::class,
+            $this->buildStep(
+                [
+                    'foo.html.twig' => [
+                        'bar1' => \stdClass::class
+                    ],
+                    SearchFormLoader::ANY_TEMPLATE => [
+                        'bar2' => \stdClass::class
+                    ]
+                ]
+            )($request, $manager, $template)
+        );
+    }
 }

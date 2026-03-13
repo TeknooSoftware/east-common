@@ -1,8 +1,13 @@
 # Teknoo Software - Common - Change Log
 
+## [4.2.3] - 2026-03-13
+### Stable Release
+- Fix `FormHandling` with Form submitted in Live requests
+- Fix `SearchFormLoader` with Form submitted in Live requests
+
 ## [4.2.2] - 2026-03-10
 ### Stable Release
-- Fix FornHandling with Non Form submitted Live requests
+- Fix FormHandling with Non Form submitted Live requests
 
 ## [4.2.1] - 2026-03-09
 ### Stable Release

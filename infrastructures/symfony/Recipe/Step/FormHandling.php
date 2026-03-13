@@ -39,6 +39,7 @@ use Teknoo\East\Foundation\Time\DatesService;
 
 use function in_array;
 use function is_a;
+use function is_array;
 use function is_callable;
 use function json_decode;
 
@@ -127,6 +128,18 @@ class FormHandling implements FormHandlingInterface
                 || $sfRequest->request->has($form->getName())
             ) {
                 $form->handleRequest($sfRequest);
+            }
+
+            if (
+                !$form->isSubmitted()
+                && empty($api)
+                && !empty($liveBody = $request->getAttribute('_live_body', []))
+                && is_array($liveBody)
+                && is_array($liveBody['props'])
+                && !empty($liveBody['props'][$form->getName()])
+                && is_array($liveBody['props'][$form->getName()])
+            ) {
+                $form->submit($liveBody['props'][$form->getName()]);
             }
 
             if (

@@ -808,4 +808,61 @@ class FormHandlingTest extends TestCase
             )
         );
     }
+
+    public function testInvokeWithLiveBodySubmitWhenNotSubmittedAndNoApi(): void
+    {
+        $sfRequest = $this->createStub(Request::class);
+
+        $request = $this->createStub(ServerRequestInterface::class);
+        $request->method('getAttribute')->willReturnCallback(
+            fn (string $name): Stub|array|false => match ($name) {
+                'request' => $sfRequest,
+                '_live_body' => [
+                    'props' => [
+                        'test_form' => [
+                            'field1' => 'value1',
+                            'field2' => 'value2',
+                        ]
+                    ]
+                ],
+                default => false,
+            }
+        );
+        $request->method('getAttributes')->willReturn([]);
+        $request->method('getMethod')->willReturn('POST');
+        $request->method('getParsedBody')->willReturn([]);
+
+        $manager = $this->createStub(ManagerInterface::class);
+        $formClass = 'Foo/Bar';
+        $formOptions = [];
+        $object = $this->createStub(IdentifiedObjectInterface::class);
+
+        $this->getDatesService()
+            ->expects($this->never())
+            ->method('passMeTheDate');
+
+        $form = $this->createMock(FormInterface::class);
+        $form->method('getName')->willReturn('test_form');
+        $form->method('isSubmitted')->willReturn(false);
+        $form->expects($this->once())->method('handleRequest');
+        $form->expects($this->once())->method('submit')->with([
+            'field1' => 'value1',
+            'field2' => 'value2',
+        ]);
+
+        $this->getFormFactory(true)
+            ->method('create')
+            ->willReturn($form);
+
+        $this->assertInstanceOf(
+            FormHandling::class,
+            $this->buildStep()(
+                $request,
+                $manager,
+                $formClass,
+                $object,
+                $formOptions,
+            )
+        );
+    }
 }

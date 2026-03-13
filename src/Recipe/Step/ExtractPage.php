@@ -38,7 +38,7 @@ use Teknoo\East\Foundation\Manager\ManagerInterface;
  */
 class ExtractPage
 {
-    public function __invoke(ManagerInterface $manager, string $page = '1'): self
+    public function __invoke(ManagerInterface $manager, int|string $page = '1'): self
     {
         $page = (int) $page;
 

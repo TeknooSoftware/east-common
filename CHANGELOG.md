@@ -1,5 +1,10 @@
 # Teknoo Software - Common - Change Log
 
+## [4.3.0] - 2026-03-28
+### Stable Release
+- Migrate to `Tekno East Foundation` 9.2 
+- Migrate to `AutoTrait`
+
 ## [4.2.3] - 2026-03-13
 ### Stable Release
 - Fix `FormHandling` with Form submitted in Live requests

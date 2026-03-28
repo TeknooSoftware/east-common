@@ -27,7 +27,6 @@ namespace Teknoo\Tests\East\Common\Object;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
 use Teknoo\East\Common\Contracts\User\AuthDataInterface;
 use Teknoo\East\Common\Object\StoredPassword;
 use Teknoo\East\Common\Object\ThirdPartyAuth;
@@ -440,14 +439,4 @@ class UserTest extends TestCase
         );
     }
 
-    public function testSetExportConfiguration(): void
-    {
-        User::setExportConfiguration($conf = ['name' => ['default']]);
-        $rc = new ReflectionClass(User::class);
-
-        $this->assertEquals(
-            $conf,
-            $rc->getStaticPropertyValue('exportConfigurations'),
-        );
-    }
 }

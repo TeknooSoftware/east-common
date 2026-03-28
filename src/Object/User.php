@@ -32,8 +32,9 @@ use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
 use Teknoo\East\Common\Contracts\Object\TimestampableInterface;
 use Teknoo\East\Common\Contracts\User\AuthDataInterface;
 use Teknoo\East\Common\Contracts\User\UserInterface;
-use Teknoo\East\Foundation\Normalizer\EastNormalizerInterface;
-use Teknoo\East\Foundation\Normalizer\Object\GroupsTrait;
+use Teknoo\East\Foundation\Normalizer\Object\AutoTrait;
+use Teknoo\East\Foundation\Normalizer\Object\ClassGroup;
+use Teknoo\East\Foundation\Normalizer\Object\Normalize;
 use Teknoo\East\Foundation\Normalizer\Object\NormalizableInterface;
 
 use function array_values;
@@ -52,6 +53,7 @@ use function trim;
  * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
+#[ClassGroup('default', 'api', 'crud', 'digest')]
 class User implements
     IdentifiedObjectInterface,
     UserInterface,
@@ -61,46 +63,33 @@ class User implements
     NormalizableInterface
 {
     use ObjectTrait;
-    use GroupsTrait;
+    use AutoTrait;
 
+    #[Normalize(['default', 'api', 'crud', 'digest'])]
+    protected ?string $id = null;
+
+    #[Normalize(['default', 'api', 'crud'])]
     private string $firstName = '';
 
+    #[Normalize(['default', 'api', 'crud'])]
     private string $lastName = '';
 
     /**
      * @var string[]
      */
+    #[Normalize('crud')]
     private iterable $roles = [];
 
+    #[Normalize(['default', 'api', 'crud', 'digest'])]
     private string $email = '';
 
+    #[Normalize(['crud'])]
     private bool $active = true;
 
     /**
      * @var iterable<AuthDataInterface>
      */
     private iterable $authData = [];
-
-    /**
-     * @var array<string, string[]>
-     */
-    private static array $exportConfigurations = [
-        '@class' => ['default', 'api', 'crud', 'digest'],
-        'id' => ['default', 'api', 'crud', 'digest'],
-        'email' => ['default', 'api', 'crud', 'digest'],
-        'firstName' => ['default', 'api', 'crud'],
-        'lastName' => ['default', 'api', 'crud'],
-        'roles' => ['crud'],
-        'active' => ['crud'],
-    ];
-
-    /**
-     * @param array<string, string[]> $configurations
-     */
-    public static function setExportConfiguration(array $configurations): void
-    {
-        self::$exportConfigurations = $configurations;
-    }
 
     public function getFirstName(): string
     {
@@ -249,30 +238,6 @@ class User implements
     public function setActive(bool $active): User
     {
         $this->active = $active;
-
-        return $this;
-    }
-
-    public function exportToMeData(EastNormalizerInterface $normalizer, array $context = []): NormalizableInterface
-    {
-        $data = [
-            '@class' => self::class,
-            'id' => $this->getId(),
-            'email' => $this->getEmail(),
-            'firstName' => $this->getFirstName(),
-            'lastName' => $this->getLastName(),
-            'roles' => $this->getRoles(),
-            'active' => $this->isActive(),
-        ];
-
-        $this->setGroupsConfiguration(self::$exportConfigurations);
-
-        $normalizer->injectData(
-            $this->filterExport(
-                data: $data,
-                groups: (array) ($context['groups'] ?? ['default']),
-            )
-        );
 
         return $this;
     }

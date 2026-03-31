@@ -1,5 +1,17 @@
 # Teknoo Software - Common - Change Log
 
+## [4.4.0] - 2026-03-28
+### Stable Release
+- Create `EastDataMapper` with `ImmutableDataMapper`, `VisitableDataMapper` and `MutableDataMapper` to implement easily
+  Symfony form with East Objects, immutable, or visitable, without recreate a custom datamapper.
+- `EastDataMapper` will select automatically the good mapper to create a new immutable object for Immutable, use
+ `visit` for Visitable object, or fallback to public property direct access, or getter/setter/hasser.
+- Warning, `EastDataMapper` can not manage specific mapping, like for sensitive password form, but, new DataMapper can be
+  passed to `EastDataMapper` if they are tagged with `teknoo.east.common.form.data-mapper`. You can define a `priority`
+  to your tag to be called before provided DataMapper.
+  - `ImmutableDataMapper` and `VisitableDataMapper` have respectively the priority `5` and `4`.
+  - `MutableDataMapper` has the priority set to `0`.
+
 ## [4.3.0] - 2026-03-28
 ### Stable Release
 - Migrate to `Tekno East Foundation` 9.2 

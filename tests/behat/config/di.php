@@ -38,6 +38,10 @@ use Teknoo\Tests\East\Common\Behat\Object\MyObject;
 use Teknoo\Tests\East\Common\Behat\Repository\MyObjectRepository;
 use Teknoo\Tests\East\Common\Behat\Writer\MyObjectTimeStampableWriter;
 use Teknoo\Tests\East\Common\Behat\Writer\MyObjectWriter;
+use Teknoo\Tests\East\Common\Behat\Loader\MyVisitableObjectLoader;
+use Teknoo\Tests\East\Common\Behat\Loader\MyImmutableObjectLoader;
+use Teknoo\Tests\East\Common\Behat\Writer\MyVisitableObjectWriter;
+use Teknoo\Tests\East\Common\Behat\Writer\MyImmutableObjectWriter;
 
 use function DI\create;
 use function DI\get;
@@ -82,6 +86,28 @@ return [
 
     'teknoo.east.common.deleting.my_object_timestampable' => create(DeletingService::class)
         ->constructor(get(MyObjectTimeStampableWriter::class), get(DatesService::class)),
+
+    MyVisitableObjectLoader::class => create()
+        ->constructor(
+            get(MyObjectRepository::class),
+        ),
+
+    MyVisitableObjectWriter::class => create()
+        ->constructor(
+            get(ManagerInterface::class),
+            get(DatesService::class),
+        ),
+
+    MyImmutableObjectLoader::class => create()
+        ->constructor(
+            get(MyObjectRepository::class),
+        ),
+
+    MyImmutableObjectWriter::class => create()
+        ->constructor(
+            get(ManagerInterface::class),
+            get(DatesService::class),
+        ),
 
     'teknoo.east.common.assets.destination.css.path' => 'tests/support/build/css',
     'teknoo.east.common.assets.source.css.path' => 'tests/support',

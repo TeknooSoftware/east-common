@@ -26,6 +26,10 @@ declare(strict_types=1);
 namespace Teknoo\Tests\East\Common\Behat;
 
 use Behat\Behat\Context\Context;
+use Behat\Hook\BeforeScenario;
+use Behat\Step\Given;
+use Behat\Step\Then;
+use Behat\Step\When;
 use DI\Container;
 use DI\ContainerBuilder;
 use DateTime;
@@ -96,8 +100,10 @@ use Teknoo\East\Twig\Template\Engine;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\Tests\East\Common\Behat\Extension\LoaderForTest;
 use Teknoo\Tests\East\Common\Behat\Extension\ManagerForTest;
+use Teknoo\Tests\East\Common\Behat\Object\MyImmutableObject;
 use Teknoo\Tests\East\Common\Behat\Object\MyObject;
 use Teknoo\Tests\East\Common\Behat\Object\MyObjectTimeStampable;
+use Teknoo\Tests\East\Common\Behat\Object\MyVisitableObject;
 use Throwable;
 use Twig\Environment;
 
@@ -108,6 +114,7 @@ use function date_default_timezone_set;
 use function error_reporting;
 use function file_exists;
 use function file_get_contents;
+use function fopen;
 use function function_exists;
 use function in_array;
 use function ini_set;
@@ -174,7 +181,7 @@ class FeatureContext implements Context
         ini_set('memory_limit', '128M');
     }
 
-    #[\Behat\Step\Given('I have DI initialized')]
+    #[Given('I have DI initialized')]
     public function iHaveDiInitialized(): void
     {
         $containerDefinition = new ContainerBuilder();
@@ -197,7 +204,7 @@ class FeatureContext implements Context
         $this->container->set(ObjectManager::class, $this->buildObjectManager());
     }
 
-    #[\Behat\Hook\BeforeScenario]
+    #[BeforeScenario]
     public function clean(): void
     {
         $this->user = null;
@@ -223,7 +230,7 @@ class FeatureContext implements Context
         return ManagerForTest::run(new LoaderForTest());
     }
 
-    #[\Behat\Step\Given('I have DI With Symfony initialized')]
+    #[Given('I have DI With Symfony initialized')]
     public function iHaveDiWithSymfonyInitialized(): void
     {
         $this->symfonyKernel = new class ($this, 'test') extends BaseKernel {
@@ -298,7 +305,7 @@ class FeatureContext implements Context
         };
     }
 
-    #[\Behat\Step\Given('with css non minified files')]
+    #[Given('with css non minified files')]
     public function withCssNonMinifiedFiles(): void
     {
         $file = realpath(__DIR__ . '/../support/build/css/main.min.css');
@@ -312,7 +319,7 @@ class FeatureContext implements Context
         }
     }
 
-    #[\Behat\Step\Given('with css files already minified file into an unique file')]
+    #[Given('with css files already minified file into an unique file')]
     public function withCssFilesAlreadyMinifiedFileIntoAnUniqueFile(): void
     {
         $filePrev = realpath(__DIR__ . '/../support/build/css/prev.min.css');
@@ -329,7 +336,7 @@ class FeatureContext implements Context
         }
     }
 
-    #[\Behat\Step\Given('with js non minified files')]
+    #[Given('with js non minified files')]
     public function withJsNonMinifiedFiles(): void
     {
         $file = realpath(__DIR__ . '/../support/build/js/main.min.js');
@@ -343,7 +350,7 @@ class FeatureContext implements Context
         }
     }
 
-    #[\Behat\Step\Given('with js files already minified file into an unique file')]
+    #[Given('with js files already minified file into an unique file')]
     public function withJsFilesAlreadyMinifiedFileIntoAnUniqueFile(): void
     {
         $filePrev = __DIR__ . '/../support/build/js/prev.min.js';
@@ -360,7 +367,7 @@ class FeatureContext implements Context
         }
     }
 
-    #[\Behat\Step\Given('overriding of minified assets is enabled')]
+    #[Given('overriding of minified assets is enabled')]
     public function overridingOfMinifiedAssetsIsEnabled(): void
     {
         $this->noOverride = false;
@@ -516,7 +523,7 @@ class FeatureContext implements Context
         return $this->objectRepository;
     }
 
-    #[\Behat\Step\Given('a templating engine')]
+    #[Given('a templating engine')]
     public function aTemplatingEngine(): void
     {
         $this->templating = new readonly class ($this) implements EngineInterface {
@@ -558,13 +565,13 @@ class FeatureContext implements Context
         $this->container->set(EngineInterface::class, $this->templating);
     }
 
-    #[\Behat\Step\Given('a Media Loader')]
+    #[Given('a Media Loader')]
     public function aMediaLoader(): void
     {
         $this->mediaLoader = $this->container->get(MediaLoader::class);
     }
 
-    #[\Behat\Step\Given('an available image called :name')]
+    #[Given('an available image called :name')]
     public function anAvailableImageCalled(string $name): void
     {
         $media = new class () extends Media {
@@ -573,7 +580,7 @@ class FeatureContext implements Context
              */
             public function getResource()
             {
-                $hf = \fopen('php://memory', 'rw');
+                $hf = fopen('php://memory', 'rw');
                 fwrite($hf, 'fooBar');
                 fseek($hf, 0);
 
@@ -593,7 +600,7 @@ class FeatureContext implements Context
         );
     }
 
-    #[\Behat\Step\Given('a Endpoint able to serve resource from database.')]
+    #[Given('a Endpoint able to serve resource from database.')]
     public function aEndpointAbleToServeResourceFromDatabase(): void
     {
         $this->container->set(
@@ -631,7 +638,7 @@ class FeatureContext implements Context
         );
     }
 
-    #[\Behat\Step\Given('I register a router')]
+    #[Given('I register a router')]
     public function iRegisterARouter(): void
     {
         $this->router = new class () implements RouterInterface {
@@ -692,7 +699,7 @@ class FeatureContext implements Context
         $this->container->set(RouterInterface::class, $this->router);
     }
 
-    #[\Behat\Step\Given('The router can process the request :url to controller :controllerName')]
+    #[Given('The router can process the request :url to controller :controllerName')]
     public function theRouterCanProcessTheRequestToController(string $url, string $controllerName): void
     {
         $controller = null;
@@ -715,7 +722,7 @@ class FeatureContext implements Context
     private function buildClient(): ClientInterface
     {
         $this->client = new readonly class ($this) implements ClientInterface {
-            private \Teknoo\Tests\East\Common\Behat\FeatureContext $context;
+            private FeatureContext $context;
 
             /**
              *  constructor.
@@ -798,7 +805,7 @@ class FeatureContext implements Context
         return $manager;
     }
 
-    #[\Behat\Step\When('The server will receive the request :url')]
+    #[When('The server will receive the request :url')]
     public function theServerWillReceiveTheRequest(string $url): void
     {
         $request = new ServerRequest();
@@ -812,7 +819,7 @@ class FeatureContext implements Context
         $this->buildManager($request);
     }
 
-    #[\Behat\Step\Then('The client must accept a response')]
+    #[Then('The client must accept a response')]
     public function theClientMustAcceptAResponse(): void
     {
         Assert::assertInstanceOf(ResponseInterface::class, $this->response);
@@ -825,7 +832,7 @@ class FeatureContext implements Context
         }
     }
 
-    #[\Behat\Step\Then('the response must be a css file')]
+    #[Then('the response must be a css file')]
     public function theResponseMustBeACssFile(): void
     {
         Assert::assertEquals(
@@ -834,7 +841,7 @@ class FeatureContext implements Context
         );
     }
 
-    #[\Behat\Step\Then('the response must be a js file')]
+    #[Then('the response must be a js file')]
     public function theResponseMustBeAJsFile(): void
     {
         Assert::assertEquals(
@@ -843,8 +850,8 @@ class FeatureContext implements Context
         );
     }
 
-    #[\Behat\Step\Then('the content must be the new minified css')]
-    #[\Behat\Step\Then('the content must be the new :extended minified css')]
+    #[Then('the content must be the new minified css')]
+    #[Then('the content must be the new :extended minified css')]
     public function theContentMustBeTheNewMinifiedCss(string $extended = ''): void
     {
         if (!empty($extended)) {
@@ -868,7 +875,7 @@ class FeatureContext implements Context
         );
     }
 
-    #[\Behat\Step\Then('the content must be the old minified css')]
+    #[Then('the content must be the old minified css')]
     public function theContentMustBeTheOldMinifiedCss(): void
     {
         $filePrev = realpath(__DIR__ . '/../support/build/css/main.1.0.0.min.css.exp');
@@ -879,7 +886,7 @@ class FeatureContext implements Context
         );
     }
 
-    #[\Behat\Step\Then('the content must be the existing minified css')]
+    #[Then('the content must be the existing minified css')]
     public function theContentMustBeTheExistingMinifiedCss(): void
     {
         $filePrev = realpath(__DIR__ . '/../support/build/css/prev.min.css');
@@ -896,8 +903,8 @@ class FeatureContext implements Context
         );
     }
 
-    #[\Behat\Step\Then('the content must be the new minified js')]
-    #[\Behat\Step\Then('the content must be the new :extended minified js')]
+    #[Then('the content must be the new minified js')]
+    #[Then('the content must be the new :extended minified js')]
     public function theContentMustBeTheNewMinifiedJs(string $extended = ''): void
     {
         if (!empty($extended)) {
@@ -921,7 +928,7 @@ class FeatureContext implements Context
         );
     }
 
-    #[\Behat\Step\Then('the content must be the old minified js')]
+    #[Then('the content must be the old minified js')]
     public function theContentMustBeTheOldMinifiedJs(): void
     {
         $filePrev = realpath(__DIR__ . '/../support/build/js/main.1.0.0.min.js.exp');
@@ -932,7 +939,7 @@ class FeatureContext implements Context
         );
     }
 
-    #[\Behat\Step\Then('the content must be the existing minified js')]
+    #[Then('the content must be the existing minified js')]
     public function theContentMustBeTheExistingMinifiedJs(): void
     {
         $filePrev = realpath(__DIR__ . '/../support/build/js/prev.min.js');
@@ -949,13 +956,13 @@ class FeatureContext implements Context
         );
     }
 
-    #[\Behat\Step\Then('I should get :body')]
+    #[Then('I should get :body')]
     public function iShouldGet(string $body): void
     {
         Assert::assertEquals($body, (string) $this->response->getBody());
     }
 
-    #[\Behat\Step\Then('The client must accept an error')]
+    #[Then('The client must accept an error')]
     public function theClientMustAcceptAnError(): void
     {
         Assert::assertNull($this->response);
@@ -979,7 +986,7 @@ class FeatureContext implements Context
         };
     }
 
-    #[\Behat\Step\Given('a twig templating engine')]
+    #[Given('a twig templating engine')]
     public function aTwigTemplatingEngine(): void
     {
         $this->twig = new class () extends Environment {
@@ -1041,13 +1048,13 @@ class FeatureContext implements Context
         };
     }
 
-    #[\Behat\Step\Given('with an extension in our application')]
+    #[Given('with an extension in our application')]
     public function withAnExtensionInOurApplication(): void
     {
         $this->getExtensionManagerForTest()->enabling();
     }
 
-    #[\Behat\Step\Then('An object must be persisted')]
+    #[Then('An object must be persisted')]
     public function anObjectMustBePersisted(): void
     {
         Assert::assertNotEmpty($this->createdObjects);
@@ -1080,7 +1087,7 @@ class FeatureContext implements Context
         $this->symfonyKernel->terminate($serverRequest, $this->sfResponse);
     }
 
-    #[\Behat\Step\When('the client follows the redirection')]
+    #[When('the client follows the redirection')]
     public function theClientfollowsTheRedirection(): void
     {
         $url = current($this->response->getHeader('location'));
@@ -1097,13 +1104,13 @@ class FeatureContext implements Context
         $this->runSymfony($serverRequest);
     }
 
-    #[\Behat\Step\Then('the last object updated must be deleted')]
+    #[Then('the last object updated must be deleted')]
     public function theLastObjectUpdatedMustBeDeleted(): void
     {
         Assert::assertNotEmpty(current($this->updatedObjects)->getDeletedAt());
     }
 
-    #[\Behat\Step\Then('An object :id must be updated')]
+    #[Then('An object :id must be updated')]
     public function anObjectMustBeUpdated(string $id): void
     {
         Assert::assertNotEmpty($this->updatedObjects[$id]);
@@ -1118,7 +1125,7 @@ class FeatureContext implements Context
         );
     }
 
-    #[\Behat\Step\Then('It is redirect to :url')]
+    #[Then('It is redirect to :url')]
     public function itIsRedirectTo($url): void
     {
         Assert::assertInstanceOf(ResponseInterface::class, $this->response);
@@ -1128,8 +1135,8 @@ class FeatureContext implements Context
         Assert::assertGreaterThan(0, preg_match("#$url#i", $location));
     }
 
-    #[\Behat\Step\Then('I should get in the form :body')]
-    #[\Behat\Step\Then('I should get in the response :body')]
+    #[Then('I should get in the form :body')]
+    #[Then('I should get in the response :body')]
     public function iShouldGetInThe(string $body): void
     {
         $expectedBody = json_decode($body, true);
@@ -1139,7 +1146,7 @@ class FeatureContext implements Context
         Assert::assertEquals($expectedBody, $actualBody);
     }
 
-    #[\Behat\Step\When('Symfony will receive the POST request :url with :body')]
+    #[When('Symfony will receive the POST request :url with :body')]
     public function symfonyWillReceiveThePostRequestWith(string $url, $body): void
     {
         $expectedBody = [];
@@ -1149,7 +1156,7 @@ class FeatureContext implements Context
         $this->runSymfony($serverRequest);
     }
 
-    #[\Behat\Step\When('Symfony will receive the GET request :url')]
+    #[When('Symfony will receive the GET request :url')]
     public function symfonyWillReceiveTheGetRequest(string $url): void
     {
         $serverRequest = SfRequest::create($url, 'GET');
@@ -1158,7 +1165,7 @@ class FeatureContext implements Context
     }
 
 
-    #[\Behat\Step\When('Symfony will receive the JSON request :url with :body')]
+    #[When('Symfony will receive the JSON request :url with :body')]
     public function symfonyWillReceiveTheJsonRequestWith(string $url, string $body): void
     {
         $serverRequest = SfRequest::create(
@@ -1173,7 +1180,7 @@ class FeatureContext implements Context
         $this->runSymfony($serverRequest);
     }
 
-    #[\Behat\Step\When('Symfony will receive a wrong 2FA Code')]
+    #[When('Symfony will receive a wrong 2FA Code')]
     public function symfonyWillReceiveAWrongFaCode(): void
     {
         $serverRequest = SfRequest::create(
@@ -1188,7 +1195,7 @@ class FeatureContext implements Context
         $this->runSymfony($serverRequest);
     }
 
-    #[\Behat\Step\When('Symfony will receive a valid 2FA Code')]
+    #[When('Symfony will receive a valid 2FA Code')]
     public function symfonyWillReceiveAValidFaCode(): void
     {
         $serverRequest = SfRequest::create(
@@ -1205,7 +1212,7 @@ class FeatureContext implements Context
         $this->runSymfony($serverRequest);
     }
 
-    #[\Behat\Step\When('Symfony will receive the DELETE request :url')]
+    #[When('Symfony will receive the DELETE request :url')]
     public function symfonyWillReceiveTheDeleteRequest(string $url): void
     {
         $serverRequest = SfRequest::create($url, 'DELETE', []);
@@ -1213,7 +1220,7 @@ class FeatureContext implements Context
         $this->runSymfony($serverRequest);
     }
 
-    #[\Behat\Step\Given('a object with id :id')]
+    #[Given('a object with id :id')]
     public function aObjectOfTypeWithId($id): void
     {
         $object = new MyObject($id);
@@ -1221,7 +1228,7 @@ class FeatureContext implements Context
         $this->getObjectRepository()->setObject(['id' => $id], $object);
     }
 
-    #[\Behat\Step\Given('a object with id :id and :properties')]
+    #[Given('a object with id :id and :properties')]
     public function aObjectOfTypeWithIdAnd($id, $properties): void
     {
         $object = new MyObject($id, $properties['name'] ?? '', $properties['slug'] ?? '');
@@ -1229,7 +1236,7 @@ class FeatureContext implements Context
         $this->getObjectRepository()->setObject(['id' => $id], $object);
     }
 
-    #[\Behat\Step\Given('a timestampable object with id :id and :properties')]
+    #[Given('a timestampable object with id :id and :properties')]
     public function aTimestampableObjectOfTypeWithIdAnd($id, $properties): void
     {
         $object = new MyObjectTimeStampable(
@@ -1242,7 +1249,32 @@ class FeatureContext implements Context
         $this->getObjectRepository()->setObject(['id' => $id], $object);
     }
 
-    #[\Behat\Step\Then('no session must be opened')]
+    #[Given('a visitable object with id :id and :properties')]
+    public function aVisitableObjectOfTypeWithIdAnd($id, $properties): void
+    {
+        $object = new MyVisitableObject(
+            id: $id,
+            name: $properties['name'] ?? '',
+            slug: $properties['slug'] ?? '',
+            saved: $properties['saved'] ?? '',
+        );
+
+        $this->getObjectRepository()->setObject(['id' => $id], $object);
+    }
+
+    #[Given('an immutable object with id :id and :properties')]
+    public function anImmutableObjectOfTypeWithIdAnd($id, $properties): void
+    {
+        $object = new MyImmutableObject(
+            id: $id,
+            name: $properties['name'] ?? '',
+            slug: $properties['slug'] ?? '',
+        );
+
+        $this->getObjectRepository()->setObject(['id' => $id], $object);
+    }
+
+    #[Then('no session must be opened')]
     public function noSessionMustBeOpened(): void
     {
         $container = $this->symfonyKernel->getContainer()->get(GetTokenStorageService::class);
@@ -1257,7 +1289,7 @@ class FeatureContext implements Context
         Assert::assertEmpty($token->getUser());
     }
 
-    #[\Behat\Step\Then('a session must be opened')]
+    #[Then('a session must be opened')]
     public function aSessionMustBeOpened(): void
     {
         $container = $this->symfonyKernel->getContainer()->get(GetTokenStorageService::class);
@@ -1269,7 +1301,7 @@ class FeatureContext implements Context
         Assert::assertInstanceOf(PasswordAuthenticatedUser::class, $token->getUser());
     }
 
-    #[\Behat\Step\Then('a recovery session must be opened')]
+    #[Then('a recovery session must be opened')]
     public function aRecoverySessionMustBeOpened(): void
     {
         $container = $this->symfonyKernel->getContainer()->get(GetTokenStorageService::class);
@@ -1281,7 +1313,7 @@ class FeatureContext implements Context
         Assert::assertInstanceOf(UserWithRecoveryAccess::class, $token->getUser());
     }
 
-    #[\Behat\Step\Then('a session must be not opened')]
+    #[Then('a session must be not opened')]
     public function aSessionMustBeNotOpened(): void
     {
         $container = $this->symfonyKernel->getContainer()->get(GetTokenStorageService::class);
@@ -1290,7 +1322,7 @@ class FeatureContext implements Context
         }
     }
 
-    #[\Behat\Step\Given('a user with password :password')]
+    #[Given('a user with password :password')]
     public function aUserWithPassword(string $password): void
     {
         $this->symfonyKernel->boot();
@@ -1314,7 +1346,7 @@ class FeatureContext implements Context
         $this->getObjectRepository()->setObject(['email' => 'admin@teknoo.software'], $object);
     }
 
-    #[\Behat\Step\Given('an 2FA authentication with a TOTP provider not enabled')]
+    #[Given('an 2FA authentication with a TOTP provider not enabled')]
     public function anFaAuthenticationWithATotpProviderNotEnabled(): void
     {
         $this->user?->addAuthData(
@@ -1329,7 +1361,7 @@ class FeatureContext implements Context
         );
     }
 
-    #[\Behat\Step\Given('an 2FA authentication with a TOTP provider enabled')]
+    #[Given('an 2FA authentication with a TOTP provider enabled')]
     public function anFaAuthenticationWithATotpProviderEnabled(): void
     {
         $this->user?->addAuthData(
@@ -1344,7 +1376,7 @@ class FeatureContext implements Context
         );
     }
 
-    #[\Behat\Step\When('the date in object must be :date')]
+    #[When('the date in object must be :date')]
     public function theDateInObjectMustBe($date): void
     {
         Assert::assertEquals(
@@ -1353,7 +1385,7 @@ class FeatureContext implements Context
         );
     }
 
-    #[\Behat\Step\Then('the date in object must be newer than :arg1')]
+    #[Then('the date in object must be newer than :arg1')]
     public function theDateInObjectMustBeNewerThan($date): void
     {
         Assert::assertLessThan(
@@ -1362,14 +1394,14 @@ class FeatureContext implements Context
         );
     }
 
-    #[\Behat\Step\Given('set current datetime to :date')]
+    #[Given('set current datetime to :date')]
     public function setCurrentDatetimeTo($date): void
     {
         $this->symfonyKernel->boot();
         $this->symfonyKernel->getContainer()->get(DatesService::class)?->setCurrentDate(new DateTime($date));
     }
 
-    #[\Behat\Step\When('Symfony will receive a request to enable 2FA')]
+    #[When('Symfony will receive a request to enable 2FA')]
     public function symfonyWillReceiveARequestToEnableFa(): void
     {
         $serverRequest = SfRequest::create(
@@ -1381,7 +1413,7 @@ class FeatureContext implements Context
         $this->runSymfony($serverRequest);
     }
 
-    #[\Behat\Step\Then('the user have a disabled TOTPAuth configuration')]
+    #[Then('the user have a disabled TOTPAuth configuration')]
     public function theUserHaveADisabledTotpauthConfiguration(): void
     {
         Assert::assertInstanceOf(ResponseInterface::class, $this->response);
@@ -1393,7 +1425,7 @@ class FeatureContext implements Context
         Assert::assertFalse($json['enabled'] ?? 'error');
     }
 
-    #[\Behat\Step\When('Symfony will receive a valid 2FA Confirmation')]
+    #[When('Symfony will receive a valid 2FA Confirmation')]
     public function symfonyWillReceiveAValidFaConfirmation(): void
     {
         $serverRequest = SfRequest::create(
@@ -1412,7 +1444,7 @@ class FeatureContext implements Context
         $this->runSymfony($serverRequest);
     }
 
-    #[\Behat\Step\Then('the user have an enabled TOTPAuth configuration')]
+    #[Then('the user have an enabled TOTPAuth configuration')]
     public function theUserHaveAnEnabledTotpauthConfiguration(): void
     {
         Assert::assertInstanceOf(ResponseInterface::class, $this->response);
@@ -1429,7 +1461,7 @@ class FeatureContext implements Context
         return $this->symfonyKernel->getContainer()->get('mailer.message_logger_listener')->getEvents();
     }
 
-    #[\Behat\Step\Then('no notification must be sent')]
+    #[Then('no notification must be sent')]
     public function noNotificationMustBeSent(): void
     {
         Assert::assertThat(
@@ -1438,7 +1470,7 @@ class FeatureContext implements Context
         );
     }
 
-    #[\Behat\Step\Then('a notification must be sent')]
+    #[Then('a notification must be sent')]
     public function aNotificationMustBeSent(): void
     {
         Assert::assertThat(
@@ -1447,7 +1479,7 @@ class FeatureContext implements Context
         );
     }
 
-    #[\Behat\Step\When('the user click on the link in the notification')]
+    #[When('the user click on the link in the notification')]
     public function theUserClickOnTheLinkInTheNotification(): void
     {
         $message = $this->getMailerEvents()->getMessages(null)[0];

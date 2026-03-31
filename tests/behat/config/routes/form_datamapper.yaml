@@ -1,0 +1,86 @@
+# Mutable object with EastDataMapper
+_teknoo_common_admin_my_mutable_mapped_edit:
+    path: '/my_mutable_mapped/edit/{id}'
+    methods:  ['GET', 'POST', 'PUT']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.crud.edit'
+        loader: '@Teknoo\Tests\East\Common\Behat\Loader\MyObjectLoader'
+        writer: '@Teknoo\Tests\East\Common\Behat\Writer\MyObjectWriter'
+        formClass: 'Teknoo\Tests\East\Common\Behat\Form\Type\MyMutableMappedObjectType'
+        template: '@@TeknooEastCommon/AdminMyObject/edit.html.twig'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+        cleanHtml: false
+        formOptions: { }
+
+_teknoo_common_admin_my_mutable_mapped_new:
+    path: '/my_mutable_mapped/new'
+    methods:  ['GET', 'POST', 'PUT']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.crud.new'
+        loader: '@Teknoo\Tests\East\Common\Behat\Loader\MyObjectLoader'
+        writer: '@Teknoo\Tests\East\Common\Behat\Writer\MyObjectWriter'
+        objectClass: 'Teknoo\Tests\East\Common\Behat\Object\MyObject'
+        formClass: 'Teknoo\Tests\East\Common\Behat\Form\Type\MyMutableMappedObjectType'
+        template: '@@TeknooEastCommon/AdminMyObject/new.html.twig'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+        route: '_teknoo_common_admin_my_mutable_mapped_edit'
+        cleanHtml: false
+        formOptions: { }
+
+# Visitable object with EastDataMapper
+_teknoo_common_admin_my_visitable_edit:
+    path: '/my_visitable/edit/{id}'
+    methods:  ['GET', 'POST', 'PUT']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.crud.edit'
+        loader: '@Teknoo\Tests\East\Common\Behat\Loader\MyVisitableObjectLoader'
+        writer: '@Teknoo\Tests\East\Common\Behat\Writer\MyVisitableObjectWriter'
+        formClass: 'Teknoo\Tests\East\Common\Behat\Form\Type\MyVisitableObjectType'
+        template: '@@TeknooEastCommon/AdminMyObject/edit.html.twig'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+        cleanHtml: false
+        formOptions: { }
+
+_teknoo_common_admin_my_visitable_new:
+    path: '/my_visitable/new'
+    methods:  ['GET', 'POST', 'PUT']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.crud.new'
+        loader: '@Teknoo\Tests\East\Common\Behat\Loader\MyVisitableObjectLoader'
+        writer: '@Teknoo\Tests\East\Common\Behat\Writer\MyVisitableObjectWriter'
+        objectClass: 'Teknoo\Tests\East\Common\Behat\Object\MyVisitableObject'
+        formClass: 'Teknoo\Tests\East\Common\Behat\Form\Type\MyVisitableObjectType'
+        template: '@@TeknooEastCommon/AdminMyObject/new.html.twig'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+        route: '_teknoo_common_admin_my_visitable_edit'
+        cleanHtml: false
+        formOptions: { }
+
+# Immutable object with EastDataMapper
+_teknoo_common_admin_my_immutable_edit:
+    path: '/my_immutable/edit/{id}'
+    methods:  ['GET', 'POST', 'PUT']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.crud.edit'
+        loader: '@Teknoo\Tests\East\Common\Behat\Loader\MyImmutableObjectLoader'
+        writer: '@Teknoo\Tests\East\Common\Behat\Writer\MyImmutableObjectWriter'
+        formClass: 'Teknoo\Tests\East\Common\Behat\Form\Type\MyImmutableObjectType'
+        template: '@@TeknooEastCommon/AdminMyObject/edit.html.twig'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+        cleanHtml: false
+        formOptions: { }
+
+_teknoo_common_admin_my_immutable_new:
+    path: '/my_immutable/new'
+    methods:  ['GET', 'POST', 'PUT']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.crud.new'
+        loader: '@Teknoo\Tests\East\Common\Behat\Loader\MyImmutableObjectLoader'
+        writer: '@Teknoo\Tests\East\Common\Behat\Writer\MyImmutableObjectWriter'
+        objectClass: 'Teknoo\Tests\East\Common\Behat\Object\MyImmutableObject'
+        formClass: 'Teknoo\Tests\East\Common\Behat\Form\Type\MyImmutableObjectType'
+        template: '@@TeknooEastCommon/AdminMyObject/new.html.twig'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+        route: '_teknoo_common_admin_my_immutable_edit'
+        cleanHtml: false
+        formOptions: { }

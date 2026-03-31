@@ -53,7 +53,8 @@
     "autoload-dev": {
         "psr-4": {
             "Teknoo\\Tests\\East\\Common\\Behat\\": "tests/behat",
-            "Teknoo\\Tests\\East\\Common\\Support\\PHPStan\\": "tests/support/PHPStan"
+            "Teknoo\\Tests\\East\\Common\\Support\\PHPStan\\": "tests/support/PHPStan",
+            "Teknoo\\Tests\\East\\Common\\Support\\Fixtures\\": "tests/support/Fixtures"
         }
     },
     "require": {

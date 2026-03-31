@@ -50,3 +50,21 @@ services:
 
   Teknoo\Tests\East\Common\Behat\Events\BehatSubscriber:
     tags: {name: 'kernel.event_subscriber'}
+
+  Teknoo\Tests\East\Common\Behat\Form\Type\MyMutableMappedObjectType:
+    arguments:
+      - '@Teknoo\East\CommonBundle\Form\DataMapper\EastDataMapper'
+    tags:
+      - { name: form.type }
+
+  Teknoo\Tests\East\Common\Behat\Form\Type\MyVisitableObjectType:
+    arguments:
+      - '@Teknoo\East\CommonBundle\Form\DataMapper\EastDataMapper'
+    tags:
+      - { name: form.type }
+
+  Teknoo\Tests\East\Common\Behat\Form\Type\MyImmutableObjectType:
+    arguments:
+      - '@Teknoo\East\CommonBundle\Form\DataMapper\EastDataMapper'
+    tags:
+      - { name: form.type }

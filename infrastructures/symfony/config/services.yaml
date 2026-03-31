@@ -325,6 +325,28 @@ services:
             - '@security.user_password_hasher'
         public: true
 
+    #DataMapper
+    Teknoo\East\CommonBundle\Form\DataMapper\ImmutableDataMapper:
+        class: 'Teknoo\East\CommonBundle\Form\DataMapper\ImmutableDataMapper'
+        tags:
+            - { name: 'teknoo.east.common.form.data-mapper', priority: 5 }
+
+    Teknoo\East\CommonBundle\Form\DataMapper\VisitableDataMapper:
+        class: 'Teknoo\East\CommonBundle\Form\DataMapper\VisitableDataMapper'
+        tags:
+            - { name: 'teknoo.east.common.form.data-mapper', priority: 4 }
+
+    Teknoo\East\CommonBundle\Form\DataMapper\MutableDataMapper:
+        class: 'Teknoo\East\CommonBundle\Form\DataMapper\MutableDataMapper'
+        tags:
+            - { name: 'teknoo.east.common.form.data-mapper', priority: 0 }
+
+    Teknoo\East\CommonBundle\Form\DataMapper\EastDataMapper:
+        class: 'Teknoo\East\CommonBundle\Form\DataMapper\EastDataMapper'
+        arguments:
+            - !tagged_iterator 'teknoo.east.common.form.data-mapper'
+        public: true
+
     #Form
     Teknoo\East\CommonBundle\Form\Type\TOTPType:
         class: 'Teknoo\East\CommonBundle\Form\Type\TOTPType'

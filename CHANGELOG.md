@@ -1,6 +1,6 @@
 # Teknoo Software - Common - Change Log
 
-## [4.4.0] - 2026-03-28
+## [4.4.0] - 2026-03-31
 ### Stable Release
 - Create `EastDataMapper` with `ImmutableDataMapper`, `VisitableDataMapper` and `MutableDataMapper` to implement easily
   Symfony form with East Objects, immutable, or visitable, without recreate a custom datamapper.

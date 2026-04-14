@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [4.4.1] - 2026-04-14
+### Stable Release
+- Support of Symfony UX 3
+
 ## [4.4.0] - 2026-03-31
 ### Stable Release
 - Create `EastDataMapper` with `ImmutableDataMapper`, `VisitableDataMapper` and `MutableDataMapper` to implement easily

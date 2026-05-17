@@ -6,7 +6,9 @@
                                             http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
 
     <document name="Teknoo\East\Common\Object\User" collection="users" inheritance-type="COLLECTION_PER_CLASS">
-        <id type="string" strategy="UUID"/>
+        <id type="string" strategy="CUSTOM">
+            <generator-option name="class" value="Teknoo\East\Common\Doctrine\IdGenerator\UuidV7Generator"/>
+        </id>
         <field field-name="firstName" name="first_name" type="string" />
         <field field-name="lastName" name="last_name" type="string" />
         <field field-name="active" name="active" type="bool" nullable="true"/>

@@ -119,6 +119,7 @@
         "symfony/string": "^6.4.24||^7.4||^8",
         "symfony/translation-contracts": "^3.6.1",
         "symfony/twig-bridge": "^6.4.24||^7.4||^8",
+        "symfony/uid": "^6.4.24||^7.4||^8",
         "symfony/validator": "^6.4.24||^7.4||^8",
         "symfony/var-dumper": "^6.4.24||^7.4||^8",
         "symfony/yaml": "^6.4.24||^7.4||^8",
@@ -127,6 +128,9 @@
         "twig/twig": "^3.23",
         "twig/cssinliner-extra": "^3.23",
         "twig/inky-extra": "^3.23"
+    },
+    "suggest": {
+        "symfony/uid": "Required when using the Doctrine ODM User mapping shipped by this library (UUID v7 id generation)."
     },
     "archive": {
         "exclude": ["features", "tests", "vendor", ".idea"]

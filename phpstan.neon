@@ -54,8 +54,5 @@ parameters:
             message: '#does not accept iterable#'
             path: src/Object/Collection/LazyLoadableCollection.php
         -
-            message: '#will always evaluate to true#'
-            path: src/Writer/PersistTrait.php
-        -
             message: '#Parameter \#1 \$visitors of method#'
             path: src/Object/VisitableTrait.php

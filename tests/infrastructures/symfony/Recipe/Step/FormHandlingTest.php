@@ -675,12 +675,12 @@ class FormHandlingTest extends TestCase
 
     public function testInvokeWithLiveRequestWithoutFormInPost(): void
     {
-        $sfRequest = $this->createStub(Request::class);
+        $sfRequest = new Request();
         $sfRequest->request = new InputBag([]);
 
         $request = $this->createStub(ServerRequestInterface::class);
         $request->method('getAttribute')->willReturnCallback(
-            fn (string $name): Stub|false => match ($name) {
+            fn (string $name): Request|Stub|false => match ($name) {
                 'request' => $sfRequest,
                 default => false,
             }
@@ -721,12 +721,12 @@ class FormHandlingTest extends TestCase
 
     public function testInvokeWithLiveRequestWithFormInPost(): void
     {
-        $sfRequest = $this->createStub(Request::class);
+        $sfRequest = new Request();
         $sfRequest->request = new InputBag(['test_form' => []]);
 
         $request = $this->createStub(ServerRequestInterface::class);
         $request->method('getAttribute')->willReturnCallback(
-            fn (string $name): Stub|false => match ($name) {
+            fn (string $name): Request|Stub|false => match ($name) {
                 'request' => $sfRequest,
                 default => false,
             }

@@ -53,6 +53,3 @@ parameters:
         -
             message: '#does not accept iterable#'
             path: src/Object/Collection/LazyLoadableCollection.php
-        -
-            message: '#Parameter \#1 \$visitors of method#'
-            path: src/Object/VisitableTrait.php

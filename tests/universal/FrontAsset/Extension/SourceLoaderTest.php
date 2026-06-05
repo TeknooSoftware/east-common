@@ -26,7 +26,9 @@ declare(strict_types=1);
 namespace Teknoo\Tests\East\Common\FrontAsset\Extension;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Teknoo\East\Common\Contracts\FrontAsset\FilesSetInterface;
 use Teknoo\East\Common\FrontAsset\Extensions\SourceLoader;
 use Teknoo\East\Common\FrontAsset\File;
 use Teknoo\East\Common\FrontAsset\FilesSet;
@@ -44,16 +46,16 @@ class SourceLoaderTest extends TestCase
 {
     public function testExtendsBundles(): void
     {
-        $toCall = fn (): string => 'foo';
+        $toCall = 'uniqid';
         $manager = $this->createMock(ManagerInterface::class);
         $manager->expects($this->once())
             ->method('execute')
             ->willReturnCallback(
-                function ($module) use ($manager, $toCall): \PHPUnit\Framework\MockObject\MockObject {
+                function ($module) use ($manager, $toCall): MockObject {
                     $this->assertinstanceOf(SourceLoader::class, $module);
 
                     $module->update(
-                        fn (FileType $fileType, string $setName, FilesSet $set): \Teknoo\East\Common\Contracts\FrontAsset\FilesSetInterface => match ($fileType) {
+                        fn (FileType $fileType, string $setName, FilesSet $set): FilesSetInterface => match ($fileType) {
                             FileType::JS => $set->add(
                                 new File(
                                     'bar2.js',

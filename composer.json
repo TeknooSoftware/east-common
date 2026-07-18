@@ -85,7 +85,7 @@
         "laminas/laminas-diactoros": "^3.8",
         "league/flysystem": "^3.31",
         "league/flysystem-local": "^3.31",
-        "league/mime-type-detection": "1.16",
+        "league/mime-type-detection": "^1.16",
         "league/oauth2-client": "^2.9",
         "matthiasmullie/minify": "^1.3.75",
         "scheb/2fa-backup-code": "^8.3",

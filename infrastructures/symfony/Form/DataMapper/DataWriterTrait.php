@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\East\CommonBundle\Form\DataMapper;
 
 use ReflectionClass;
+use ReflectionNamedType;
 use Symfony\Component\Form\FormInterface;
 use Traversable;
 
@@ -68,13 +69,35 @@ trait DataWriterTrait
             if ($ref->hasProperty($fieldName)) {
                 $prop = $ref->getProperty($fieldName);
                 if ($prop->isPublic() && !$prop->isStatic() && !$prop->isReadOnly()) {
+                    $propType = $prop->getType();
+                    if (
+                        null === $value
+                        && $propType instanceof ReflectionNamedType
+                        && $propType->getName() === 'string'
+                    ) {
+                        $value = '';
+                    }
+
                     $viewData->{$fieldName} = $value;
                     continue;
                 }
             }
 
             $setter = 'set' . ucfirst($fieldName);
-            if (method_exists($viewData, $setter)) {
+            if ($ref->hasMethod($setter)) {
+                $method = $ref->getMethod($setter);
+                $parameter = $method->getParameters()[0] ?? null;
+                $parameterType = $parameter?->getType();
+
+                if (
+                    null === $value
+                    && false === $parameter?->allowsNull()
+                    && $parameterType instanceof ReflectionNamedType
+                    && $parameterType->getName() === 'string'
+                ) {
+                    $value = '';
+                }
+
                 $viewData->{$setter}($value);
             }
         }

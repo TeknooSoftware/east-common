@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\CommonBundle\Form\DataMapper;
 
+use ReflectionNamedType;
 use Symfony\Component\Form\FormInterface;
 use Teknoo\Immutable\ImmutableInterface;
 use Traversable;
@@ -67,21 +68,31 @@ class ImmutableDataMapper extends AbstractDataMapper
         foreach ($constructor->getParameters() as $parameter) {
             $name = $parameter->getName();
 
+            $value = null;
+
+            if ($parameter->isDefaultValueAvailable()) {
+                $value = $parameter->getDefaultValue();
+            }
+
             if (
                 isset($forms[$name])
                 && $forms[$name]->isSubmitted()
                 && !$forms[$name]->isDisabled()
             ) {
-                $params[] = $forms[$name]->getData();
-                continue;
+                $value = $forms[$name]->getData();
             }
 
-            if ($parameter->isDefaultValueAvailable()) {
-                $params[] = $parameter->getDefaultValue();
-                continue;
+            $parameterType = $parameter->getType();
+            if (
+                null === $value
+                && !$parameter->allowsNull()
+                && $parameterType instanceof ReflectionNamedType
+                && $parameterType->getName() === 'string'
+            ) {
+                $value = '';
             }
 
-            $params[] = null;
+            $params[] = $value;
         }
 
         $viewData = $ref->newInstanceArgs($params);

@@ -1,5 +1,9 @@
 # Teknoo Software - Common - Change Log
 
+## [4.5.1] - 2026-07-31
+### Stable Release
+- Fix issues with BC in Symfony Form 8.1
+
 ## [4.5.0] - 2026-05-17
 ### Stable Release
 - New `Teknoo\East\Common\Doctrine\IdGenerator\UuidV7Generator` (`infrastructures/doctrine/IdGenerator/`),

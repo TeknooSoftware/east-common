@@ -48,7 +48,7 @@ class Media extends DefaultGridFSRepository
 {
     private function getDocumentBucket(): Bucket
     {
-        return $this->dm->getDocumentBucket($this->documentName);
+        return $this->dm->getDocumentBucket((string) $this->documentName);
     }
 
     /**

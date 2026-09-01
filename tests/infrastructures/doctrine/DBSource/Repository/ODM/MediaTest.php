@@ -34,6 +34,7 @@ use MongoDB\GridFS\Bucket;
 use MongoDB\GridFS\Exception\FileNotFoundException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Runtime\PropertyHook;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Doctrine\Repository\ODM\Media;
@@ -88,11 +89,13 @@ class MediaTest extends TestCase
         if (!$this->class instanceof ClassMetadata) {
             if ($stub) {
                 $this->class = $this->createStub(ClassMetadata::class);
-                $this->class->name = 'fooBar';
             } else {
                 $this->class = $this->createMock(ClassMetadata::class);
-                $this->class->name = 'fooBar';
             }
+
+            $this->class
+                ->method(PropertyHook::get('name'))
+                ->willReturn('fooBar');
         }
 
         return $this->class;
@@ -160,13 +163,17 @@ class MediaTest extends TestCase
             ->method('openDownloadStream')
             ->willThrowException(new FileNotFoundException('foo'));
 
+        $this->getClassMetadata(true)
+            ->method('getDatabaseIdentifierValue')
+            ->willReturnCallback(fn ($id): ObjectId => new ObjectId($id));
+
         $this->getDocumentManagerMock(true)
             ->method('getDocumentBucket')
             ->willReturn($bucket);
 
         $this->expectException(DocumentNotFoundException::class);
         $this->assertNotEmpty(
-            $this->buildRepository()->openDownloadStream('2MbSIZleD7tjslM4luOgN1ho')
+            $this->buildRepository()->openDownloadStream('5f0f4a76c0918d70c7759a52')
         );
     }
 }

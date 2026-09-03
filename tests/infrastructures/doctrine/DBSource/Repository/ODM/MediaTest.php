@@ -37,6 +37,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Runtime\PropertyHook;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
+use ReflectionProperty;
 use Teknoo\East\Common\Doctrine\Repository\ODM\Media;
 
 /**
@@ -93,9 +94,13 @@ class MediaTest extends TestCase
                 $this->class = $this->createMock(ClassMetadata::class);
             }
 
-            $this->class
-                ->method(PropertyHook::get('name'))
-                ->willReturn('fooBar');
+            if ((new ReflectionProperty(ClassMetadata::class, 'name'))->hasHooks()) {
+                $this->class
+                    ->method(PropertyHook::get('name'))
+                    ->willReturn('fooBar');
+            } else {
+                $this->class->name = 'fooBar';
+            }
         }
 
         return $this->class;

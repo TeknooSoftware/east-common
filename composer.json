@@ -77,7 +77,7 @@
         "behat/behat": "^3.29",
         "teknoo/bridge-phpdi-symfony": "^7.1.2",
         "doctrine/common": "^3.5",
-        "doctrine/mongodb-odm": "^2.17",
+        "doctrine/mongodb-odm": "^2.17.1",
         "doctrine/mongodb-odm-bundle": "^5.6",
         "doctrine/persistence": "^4.2",
         "guzzlehttp/promises": "^2.5.1||^3",

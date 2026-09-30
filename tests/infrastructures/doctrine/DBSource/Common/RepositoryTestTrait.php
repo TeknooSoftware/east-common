@@ -27,6 +27,7 @@ namespace Teknoo\Tests\East\Common\Doctrine\DBSource\Common;
 
 use Doctrine\Persistence\ObjectRepository;
 use PHPUnit\Framework\AssertionFailedError;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use Teknoo\East\Common\Contracts\DBSource\RepositoryInterface;
@@ -46,6 +47,7 @@ use Teknoo\East\Common\Query\Expr\StrictlyLower;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Throwable;
 
+use function define;
 use function restore_error_handler;
 
 use const E_USER_NOTICE;
@@ -159,6 +161,44 @@ trait RepositoryTestTrait
         restore_error_handler();
 
         $this->assertTrue($fail, 'Notice must be Thrown');
+    }
+
+    #[RunInSeparateProcess]
+    public function testFindOneThingWithPrimeInTestMode(): void
+    {
+        define('TEKNOO_EAST_IN_TEST_MODE', true);
+
+        $object = new \stdClass();
+        $promise = $this->createMock(PromiseInterface::class);
+        $promise->expects($this->once())->method('success')->with($object);
+        $promise->expects($this->never())->method('fail');
+
+        $this->getDoctrineObjectRepositoryMock()
+            ->expects($this->once())
+            ->method('find')
+            ->with('abc')
+            ->willReturn($object);
+
+        $noticed = false;
+        set_error_handler(
+            function () use (&$noticed): bool {
+                $noticed = true;
+
+                return true;
+            },
+            E_USER_NOTICE
+        );
+
+        try {
+            $this->assertInstanceOf(
+                RepositoryInterface::class,
+                $this->buildRepository()->find('abc', $promise, ['foo'], )
+            );
+        } finally {
+            restore_error_handler();
+        }
+
+        $this->assertFalse($noticed, 'Notice must not be thrown in test mode');
     }
 
     public function testFindAllBadPromise(): void

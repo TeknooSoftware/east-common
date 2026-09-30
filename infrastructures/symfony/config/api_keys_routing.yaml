@@ -1,0 +1,20 @@
+_teknoo_common_api_keys_manage:
+    path: '/api-keys'
+    methods:  ['GET', 'POST']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.api_keys.manage'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+        formClass: 'Teknoo\East\CommonBundle\Form\Type\ApiKeysAuthType'
+        formOptions: { }
+        objectClass: 'Teknoo\East\Common\Object\ApiKeyToken'
+        template: '@@TeknooEastCommon/User/api_keys.html.twig'
+        writer: '@Teknoo\East\CommonBundle\Writer\SymfonyUserWriter'
+
+_teknoo_common_api_keys_delete:
+    path: '/api-keys/delete/{tokenName}'
+    methods:  ['GET', 'DELETE']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.api_keys.delete'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+        route: '_teknoo_common_api_keys_manage'
+        writer: '@Teknoo\East\CommonBundle\Writer\SymfonyUserWriter'

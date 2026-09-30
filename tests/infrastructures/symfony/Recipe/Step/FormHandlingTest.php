@@ -613,6 +613,132 @@ class FormHandlingTest extends TestCase
         $this->runTestForInvokeApiWithJson('PATCH');
     }
 
+    private function buildApiJsonRequest(string $content): ServerRequestInterface&Stub
+    {
+        $request = $this->createStub(ServerRequestInterface::class);
+        $request->method('getAttribute')->willReturnCallback(
+            fn (string $name): Stub|string|false => match ($name) {
+                'request' => $this->createStub(Request::class),
+                'api' => 'json',
+                default => false,
+            }
+        );
+
+        $request->method('getHeader')->willReturnCallback(
+            fn (string $header): array => match ($header) {
+                'Content-Type' => ['application/json'],
+                default => [],
+            }
+        );
+
+        $request->method('getMethod')->willReturn('POST');
+        $request->method('getParsedBody')->willReturn([]);
+        $request->method('getBody')->willReturn(
+            new StreamFactory()->createStream($content)
+        );
+
+        return $request;
+    }
+
+    public function testInvokeApiWithJsonAndPublishWithPublishable(): void
+    {
+        $request = $this->buildApiJsonRequest(json_encode(['foo' => 'bar', 'publish' => true]));
+
+        $object = new class () implements IdentifiedObjectInterface, PublishableInterface {
+            public function getId(): string
+            {
+            }
+
+            public function getPublishedAt(): ?DateTimeInterface
+            {
+            }
+
+            public function setPublishedAt(DateTimeInterface $dateTime): PublishableInterface
+            {
+            }
+        };
+
+        $this->getDatesService()
+            ->expects($this->once())
+            ->method('passMeTheDate');
+
+        $form = $this->createMock(FormInterface::class);
+        $form->expects($this->once())->method('handleRequest');
+        $form->expects($this->once())->method('submit')->with(['foo' => 'bar'], false);
+
+        $this->getFormFactory(true)
+            ->method('create')
+            ->willReturn($form);
+
+        $this->assertInstanceOf(
+            FormHandling::class,
+            $this->buildStep()(
+                $request,
+                $this->createStub(ManagerInterface::class),
+                'Foo/Bar',
+                $object,
+                [],
+            )
+        );
+    }
+
+    public function testInvokeApiWithJsonAndPublishWithNotPublishable(): void
+    {
+        $request = $this->buildApiJsonRequest(json_encode(['foo' => 'bar', 'publish' => true]));
+
+        $this->getDatesService()
+            ->expects($this->never())
+            ->method('passMeTheDate');
+
+        $form = $this->createMock(FormInterface::class);
+        $form->expects($this->once())->method('handleRequest');
+        $form->expects($this->once())->method('submit')->with(['foo' => 'bar', 'publish' => true], false);
+
+        $this->getFormFactory(true)
+            ->method('create')
+            ->willReturn($form);
+
+        $this->assertInstanceOf(
+            FormHandling::class,
+            $this->buildStep()(
+                $request,
+                $this->createStub(ManagerInterface::class),
+                'Foo/Bar',
+                $this->createStub(IdentifiedObjectInterface::class),
+                [],
+            )
+        );
+    }
+
+    public function testInvokeApiWithMalformedJson(): void
+    {
+        $request = $this->buildApiJsonRequest('{"foo":');
+
+        $manager = $this->createMock(ManagerInterface::class);
+        $manager->expects($this->once())
+            ->method('error')
+            ->with(
+                $this->callback(
+                    fn (\Throwable $error): bool => $error instanceof \DomainException && 400 === $error->getCode()
+                )
+            );
+
+        $this->getFormFactory()
+            ->expects($this->never())
+            ->method('create');
+
+        $this->assertInstanceOf(
+            FormHandling::class,
+            $this->buildStep()(
+                $request,
+                $manager,
+                'Foo/Bar',
+                $this->createStub(IdentifiedObjectInterface::class),
+                [],
+            )
+        );
+    }
+
     public function testInvokeApiWithJsonAndGETMethod(): void
     {
         $request = $this->createStub(ServerRequestInterface::class);

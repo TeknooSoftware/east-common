@@ -1,0 +1,37 @@
+# Web pages (session, firewall `user_area`), with the routes shipped by the bundle. HTML templates of these routes are
+# not shipped by the bundle, they are provided by applications : this test application renders these pages as JSON,
+# with the Twig filters of the bundle (`meta` and `data`), to check their content in features. The CSRF protection is enabled in API mode and these tests do not read the CSRF
+# token from pages, so it is explicitly disabled for these forms.
+api_keys_common:
+    resource: '@TeknooEastCommonBundle/config/api_keys_routing.yaml'
+    prefix: '/user/common'
+    defaults:
+        formOptions: { csrf_protection: false }
+        template: '@@EastCommonTests/User/api_keys.json.twig'
+
+jwt_common:
+    resource: '@TeknooEastCommonBundle/config/jwt_routing.yaml'
+    prefix: '/user/common'
+    defaults:
+        formOptions: { csrf_protection: false }
+        template: '@@EastCommonTests/User/jwt_form.json.twig'
+        tokenTemplate: '@@TeknooEastCommon/api/Jwt/token.json.twig'
+
+# JSON API (stateless, firewall `secured_api_area`), with the routes and the templates shipped by the bundle
+jwt_api_login_common:
+    resource: '@TeknooEastCommonBundle/config/jwt_api_login_routing.yaml'
+    prefix: '/secured-api/v1'
+
+jwt_api_common:
+    resource: '@TeknooEastCommonBundle/config/jwt_api_routing.yaml'
+    prefix: '/secured-api/v1'
+
+# Protected route, only for tests : return the identifier of the user authenticated by the JWT token
+_teknoo_common_tests_secured_api_me:
+    path: '/secured-api/v1/me'
+    methods:  ['GET']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.static'
+        api: 'json'
+        errorTemplate: '@@TeknooEastCommon/Error/default.json.twig'
+        template: '@@EastCommonTests/api/secured/me.json.twig'

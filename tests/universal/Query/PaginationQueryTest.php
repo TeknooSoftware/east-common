@@ -108,6 +108,54 @@ class PaginationQueryTest extends TestCase
         );
     }
 
+    public function testExecuteWithAnArrayResult(): void
+    {
+        $loader = $this->createStub(LoaderInterface::class);
+        $repository = $this->createMock(RepositoryInterface::class);
+        $promise = $this->createMock(PromiseInterface::class);
+
+        $object1 = new \stdClass();
+        $object2 = new \stdClass();
+
+        $promise->expects($this->once())
+            ->method('success')
+            ->with(
+                self::callback(
+                    fn ($r): bool => $r instanceof \Countable
+                        && $r instanceof \IteratorAggregate
+                        && 20 === $r->count()
+                        && $r->getIterator() instanceof \Iterator
+                        && [$object1, $object2] === iterator_to_array($r->getIterator())
+                )
+            );
+        $promise->expects($this->never())->method('fail');
+
+        $repository->expects($this->once())
+            ->method('count')
+            ->willReturnCallback(
+                function (array $criteria, PromiseInterface $promise) use ($repository): \PHPUnit\Framework\MockObject\MockObject {
+                    $promise->success(20);
+
+                    return $repository;
+                }
+            );
+
+        $repository->expects($this->once())
+            ->method('findBy')
+            ->willReturnCallback(
+                function (array $criteria, PromiseInterface $promise) use ($repository, $object1, $object2): \PHPUnit\Framework\MockObject\MockObject {
+                    $promise->success([$object1, $object2]);
+
+                    return $repository;
+                }
+            );
+
+        $this->assertInstanceOf(
+            PaginationQuery::class,
+            $this->buildQuery()->execute($loader, $repository, $promise)
+        );
+    }
+
     public function testExecuteErrorOnCount(): void
     {
         $loader = $this->createStub(LoaderInterface::class);

@@ -1,0 +1,5 @@
+# Only for the HTML mode : Twig is replaced by a mock in the FeatureContext
+services:
+  twig:
+    synthetic: true
+    public: true

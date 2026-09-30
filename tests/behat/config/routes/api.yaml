@@ -1,0 +1,128 @@
+# JSON API routes, rendered with real Twig templates (only in API mode), and the error template shipped by the bundle
+_teknoo_common_tests_api_my_object_new:
+    path: '/api/v1/my_object/new'
+    methods:  ['POST', 'PUT']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.crud.new'
+        api: 'json'
+        errorTemplate: '@@TeknooEastCommon/Error/default.json.twig'
+        formClass: 'Teknoo\Tests\East\Common\Behat\Form\Type\MyObjectType'
+        formOptions: { }
+        loader: '@Teknoo\Tests\East\Common\Behat\Loader\MyObjectLoader'
+        objectClass: 'Teknoo\Tests\East\Common\Behat\Object\MyObject'
+        route: '_teknoo_common_tests_api_my_object_edit'
+        template: '@@EastCommonTests/api/MyObject/item.json.twig'
+        writer: '@Teknoo\Tests\East\Common\Behat\Writer\MyObjectWriter'
+
+_teknoo_common_tests_api_my_object_edit:
+    path: '/api/v1/my_object/{id}'
+    methods:  ['GET', 'POST', 'PUT']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.crud.edit'
+        api: 'json'
+        errorTemplate: '@@TeknooEastCommon/Error/default.json.twig'
+        formClass: 'Teknoo\Tests\East\Common\Behat\Form\Type\MyObjectType'
+        formOptions: { }
+        loader: '@Teknoo\Tests\East\Common\Behat\Loader\MyObjectLoader'
+        template: '@@EastCommonTests/api/MyObject/item.json.twig'
+        writer: '@Teknoo\Tests\East\Common\Behat\Writer\MyObjectWriter'
+
+_teknoo_common_tests_api_my_object_list:
+    path: '/api/v1/my_objects'
+    methods:  ['GET']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.crud.list'
+        api: 'json'
+        defaultOrderDirection: 'ASC'
+        errorTemplate: '@@TeknooEastCommon/Error/default.json.twig'
+        itemsPerPage: 20
+        loader: '@Teknoo\Tests\East\Common\Behat\Loader\MyObjectLoader'
+        template: '@@EastCommonTests/api/MyObject/list.json.twig'
+
+_teknoo_common_tests_api_my_object_delete:
+    path: '/api/v1/my_object/{id}/delete'
+    methods:  ['POST', 'DELETE']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.crud.delete'
+        api: 'json'
+        deleter: '@teknoo.east.common.deleting.my_object'
+        errorTemplate: '@@TeknooEastCommon/Error/default.json.twig'
+        loader: '@Teknoo\Tests\East\Common\Behat\Loader\MyObjectLoader'
+        objectViewKey: 'objectInstance'
+        template: '@@EastCommonTests/api/MyObject/deleted.json.twig'
+
+# Users, with templates shipped by the bundle
+_teknoo_common_tests_api_user_edit:
+    path: '/api/v1/user/{id}'
+    methods:  ['GET', 'POST', 'PUT']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.crud.edit'
+        api: 'json'
+        errorTemplate: '@@TeknooEastCommon/Error/default.json.twig'
+        formClass: 'Teknoo\East\CommonBundle\Form\Type\UserType'
+        formOptions: { }
+        loader: '@Teknoo\East\Common\Loader\UserLoader'
+        template: '@@TeknooEastCommon/api/AdminUser/item.json.twig'
+        writer: '@Teknoo\East\Common\Writer\UserWriter'
+
+_teknoo_common_tests_api_user_list:
+    path: '/api/v1/users'
+    methods:  ['GET']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.crud.list'
+        api: 'json'
+        defaultOrderDirection: 'ASC'
+        errorTemplate: '@@TeknooEastCommon/Error/default.json.twig'
+        itemsPerPage: 20
+        loader: '@Teknoo\East\Common\Loader\UserLoader'
+        template: '@@TeknooEastCommon/api/AdminUser/list.json.twig'
+
+_teknoo_common_tests_api_user_delete:
+    path: '/api/v1/user/{id}/delete'
+    methods:  ['POST', 'DELETE']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.crud.delete'
+        api: 'json'
+        deleter: '@teknoo.east.common.deleting.user'
+        errorTemplate: '@@TeknooEastCommon/Error/default.json.twig'
+        loader: '@Teknoo\East\Common\Loader\UserLoader'
+        objectViewKey: 'objectInstance'
+        template: '@@TeknooEastCommon/api/AdminUser/deleted.json.twig'
+
+# Media, with templates shipped by the bundle. Media can not be updated, only read
+_teknoo_common_tests_api_media_edit:
+    path: '/api/v1/media/{id}'
+    methods:  ['GET']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.crud.edit'
+        api: 'json'
+        errorTemplate: '@@TeknooEastCommon/Error/default.json.twig'
+        formClass: 'Teknoo\East\CommonBundle\Form\Type\MediaType'
+        formOptions: { }
+        loader: '@Teknoo\East\Common\Loader\MediaLoader'
+        template: '@@TeknooEastCommon/api/AdminMedia/item.json.twig'
+        writer: '@Teknoo\East\Common\Writer\MediaWriter'
+
+_teknoo_common_tests_api_media_list:
+    path: '/api/v1/media'
+    methods:  ['GET']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.crud.list'
+        api: 'json'
+        defaultOrderDirection: 'ASC'
+        errorTemplate: '@@TeknooEastCommon/Error/default.json.twig'
+        itemsPerPage: 20
+        loader: '@Teknoo\East\Common\Loader\MediaLoader'
+        template: '@@TeknooEastCommon/api/AdminMedia/list.json.twig'
+
+_teknoo_common_tests_api_media_delete:
+    path: '/api/v1/media/{id}/delete'
+    methods:  ['POST', 'DELETE']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.crud.delete'
+        api: 'json'
+        deleter: '@teknoo.east.common.deleting.media'
+        errorTemplate: '@@TeknooEastCommon/Error/default.json.twig'
+        loader: '@Teknoo\East\Common\Loader\MediaLoader'
+        objectViewKey: 'objectInstance'
+        template: '@@TeknooEastCommon/api/AdminMedia/deleted.json.twig'

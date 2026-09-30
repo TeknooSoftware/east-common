@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--infrastructures/doctrine/config/universal/ApiKeysAuth.mongodb.xml-->
+<doctrine-mongo-mapping xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"
+                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                        xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
+                                            http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
+
+    <embedded-document name="Teknoo\East\Common\Object\ApiKeysAuth">
+        <field field-name="type" type="string" nullable="false"/>
+        <embed-many field="tokens"
+                    store-empty-array="true"
+                    strategy="set"
+                    target-document="Teknoo\East\Common\Object\ApiKeyToken">
+        </embed-many>
+    </embedded-document>
+</doctrine-mongo-mapping>

@@ -28,19 +28,34 @@ namespace Teknoo\Tests\East\Common\Behat\Object;
 use DateTimeInterface;
 use Teknoo\East\Common\Contracts\Object\DeletableInterface;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
+use Teknoo\East\Common\Contracts\Object\PublishableInterface;
+use Teknoo\East\Foundation\Normalizer\Object\AutoTrait;
+use Teknoo\East\Foundation\Normalizer\Object\ClassGroup;
+use Teknoo\East\Foundation\Normalizer\Object\Normalize;
+use Teknoo\East\Foundation\Normalizer\Object\NormalizableInterface;
 
 /**
  * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-class MyObject implements IdentifiedObjectInterface, DeletableInterface
+#[ClassGroup('default', 'api', 'crud', 'digest')]
+class MyObject implements IdentifiedObjectInterface, DeletableInterface, PublishableInterface, NormalizableInterface
 {
+    use AutoTrait;
+
     private ?DateTimeInterface $deletedAt = null;
 
+    #[Normalize(['crud'])]
+    private ?DateTimeInterface $publishedAt = null;
+
     public function __construct(
+        #[Normalize(['default', 'api', 'crud', 'digest'])]
         public ?string $id = null,
+        #[Normalize(['default', 'api', 'crud', 'digest'])]
         public ?string $name = null,
+        #[Normalize(['api', 'crud'])]
         public ?string $slug = null,
+        #[Normalize(['crud'])]
         public ?string $saved = null,
     ) {
     }
@@ -58,6 +73,18 @@ class MyObject implements IdentifiedObjectInterface, DeletableInterface
     public function setDeletedAt(DateTimeInterface $deletedAt): DeletableInterface
     {
         $this->deletedAt = $deletedAt;
+
+        return $this;
+    }
+
+    public function getPublishedAt(): ?DateTimeInterface
+    {
+        return $this->publishedAt;
+    }
+
+    public function setPublishedAt(DateTimeInterface $dateTime): PublishableInterface
+    {
+        $this->publishedAt = $dateTime;
 
         return $this;
     }

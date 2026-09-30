@@ -35,6 +35,8 @@ use Throwable;
 
 use function array_keys;
 use function array_walk;
+use function constant;
+use function defined;
 use function is_array;
 use function is_object;
 use function trigger_error;
@@ -45,6 +47,8 @@ use const E_USER_NOTICE;
  * Default repository implementation of generic doctrine repositories.
  * Usable with ORM or ODM, but a optimized version dedicated to ODM is available into `ODM`
  * namespace.
+ * The `$hydrate` behavior is not available with this implementation, a notice is raised when it is required, unless
+ * the constant `TEKNOO_EAST_IN_TEST_MODE` is defined and enabled.
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
@@ -56,6 +60,21 @@ use const E_USER_NOTICE;
 trait RepositoryTrait
 {
     use ExprConversionTrait;
+
+    /**
+     * @param array<int|string, mixed> $hydrate
+     */
+    private static function noticeHydrateNotAvailable(array $hydrate): void
+    {
+        if (
+            empty($hydrate)
+            || (defined('TEKNOO_EAST_IN_TEST_MODE') && !empty(constant('TEKNOO_EAST_IN_TEST_MODE')))
+        ) {
+            return;
+        }
+
+        trigger_error('$hydrate behavior is not available with common doctrine implementation', E_USER_NOTICE);
+    }
 
     /**
      * @param ObjectRepository<ObjectClass> $repository
@@ -79,9 +98,7 @@ trait RepositoryTrait
             $promise->fail(new DomainException('Object not found', 404));
         }
 
-        if (!empty($hydrate)) {
-            trigger_error('$hydrate behavior is not available with common doctrine implementation', E_USER_NOTICE);
-        }
+        self::noticeHydrateNotAvailable($hydrate);
 
         return $this;
     }
@@ -94,9 +111,7 @@ trait RepositoryTrait
         $result = $this->repository->findAll();
         $promise->success($result);
 
-        if (!empty($hydrate)) {
-            trigger_error('$hydrate behavior is not available with common doctrine implementation', E_USER_NOTICE);
-        }
+        self::noticeHydrateNotAvailable($hydrate);
 
         return $this;
     }
@@ -131,9 +146,7 @@ trait RepositoryTrait
 
         $promise->success($result);
 
-        if (!empty($hydrate)) {
-            trigger_error('$hydrate behavior is not available with common doctrine implementation', E_USER_NOTICE);
-        }
+        self::noticeHydrateNotAvailable($hydrate);
 
         return $this;
     }
@@ -218,9 +231,7 @@ trait RepositoryTrait
             }
         }
 
-        if (!empty($hydrate)) {
-            trigger_error('$hydrate behavior is not available with common doctrine implementation', E_USER_NOTICE);
-        }
+        self::noticeHydrateNotAvailable($hydrate);
 
         return $this;
     }

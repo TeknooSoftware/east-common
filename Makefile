@@ -40,8 +40,16 @@ audit:
 .PHONY: qa qa-offline lint phpstan phpcs audit
 
 ### Testing
+# Isolated tests run in dedicated PHP processes, which do not inherit the `-d` options of the command line: when Xdebug
+# is not already enabled in the PHP configuration, it is loaded from an ini file, also scanned by these processes.
+ifeq ($(shell ${PHP} -r 'echo (int) extension_loaded("xdebug");'),1)
+PHP_WITH_XDEBUG = XDEBUG_MODE=coverage ${PHP}
+else
+PHP_WITH_XDEBUG = XDEBUG_MODE=coverage PHP_INI_SCAN_DIR=":$(CURDIR)/tests/support/xdebug" ${PHP}
+endif
+
 test:
-	XDEBUG_MODE=coverage ${PHP} -dzend_extension=xdebug.so -dxdebug.mode=coverage vendor/bin/phpunit -c phpunit.xml --colors --coverage-text
+	${PHP_WITH_XDEBUG} -dxdebug.mode=coverage vendor/bin/phpunit -c phpunit.xml --colors --coverage-text
 	${PHP} vendor/bin/behat
 	rm -rf tests/var/cache/
 

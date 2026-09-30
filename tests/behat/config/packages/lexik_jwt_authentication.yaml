@@ -1,0 +1,6 @@
+# JWT tokens are signed with a HMAC secret (at least 256 bits), to avoid to generate a pair of keys for tests
+lexik_jwt_authentication:
+    secret_key: 'east-common-behat-hmac-secret-0123456789abcdef'
+    token_ttl: 3600
+    encoder:
+        signature_algorithm: 'HS256'

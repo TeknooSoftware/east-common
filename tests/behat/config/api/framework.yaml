@@ -1,0 +1,14 @@
+# Only for the API mode : real Symfony Serializer and real Twig engine, to render templates shipped by the bundle.
+# Like in Space, CSRF protection is enabled for the application (the form option `csrf_protection` must exist), but it
+# is disabled by East Common on forms of API routes (route attribute `api`)
+framework:
+  csrf_protection:
+    enabled: true
+  serializer:
+    enabled: true
+
+twig:
+  cache: false
+  strict_variables: true
+  paths:
+    '%kernel.project_dir%/tests/behat/templates': 'EastCommonTests'

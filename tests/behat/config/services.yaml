@@ -4,6 +4,7 @@ parameters:
   locale: 'en'
   teknoo.east.common.form_type.doctrine.class: 'Teknoo\Tests\East\Common\Behat\Form\Type\MockDoctrineType'
   teknoo.east.common.assets.no_overwrite: true
+  teknoo.east.common.bundle.api_keys.token_prefix: 'ak_'
 
 services:
   Doctrine\Persistence\ObjectRepository:
@@ -36,10 +37,6 @@ services:
 
   teknoo.east.common.endpoint.media.stream.factory:
     class: 'Laminas\Diactoros\StreamFactory'
-
-  twig:
-    synthetic: true
-    public: true
 
   Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorageFactory: ~
 

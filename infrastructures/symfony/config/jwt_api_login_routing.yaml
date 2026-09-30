@@ -1,0 +1,14 @@
+# Must be the `check_path` of a `json_login` authenticator, to log in with an API key and get a JWT token. It is
+# shipped in its own file, to be imported apart from routes requiring a JWT token.
+_teknoo_common_api_jwt_login:
+    path: '/login'
+    methods:  ['POST']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.jwt.create_token'
+        # The `json_login` authenticator ignores requests which are not in JSON: with this format, the login does not
+        # depend on the header `Content-Type` sent by the client, the body is always read as JSON
+        _format: 'json'
+        api: 'json'
+        errorTemplate: '@@TeknooEastCommon/Error/default.json.twig'
+        objectClass: 'Teknoo\East\Common\Object\DTO\JWTConfiguration'
+        tokenTemplate: '@@TeknooEastCommon/api/Jwt/token.json.twig'

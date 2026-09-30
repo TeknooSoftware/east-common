@@ -1,5 +1,60 @@
 # Teknoo Software - Common - Change Log
 
+## [4.6.0] - 2026-09-30
+### Stable Release
+
+#### Security
+- JSON errors only export `code`, `message` and the `previous` errors (code and message): never the class, the file,
+  the line or the trace of the `Throwable`.
+- Messages of 5xx errors, previous errors included, are hidden in JSON responses, unless
+  `teknoo.east.common.rendering.api.expose_server_error_message` is `true`.
+- `Media` normalization never exports the local path or the legacy id.
+
+#### Fixes
+- `FormHandling`: a malformed JSON body returns a 400 error, instead of an invalid HTTP status.
+- `PaginationQuery`: accepts arrays returned by the common Doctrine repository.
+- `make test`: tests run in a separate process failed when Xdebug was not enabled in the PHP configuration.
+- In the code ported from Teknoo Space:
+  - `ApiKeyToken::setCreatedAt()`: the creation date was never stored for a key created from the form.
+  - `ApiKeysAuthenticatedUserProvider::refreshUser()`: the user could never be reloaded, its key is now found by its
+    hash.
+  - Login with an API key: a request without the header `Content-Type: application/json` got
+    `401 JWT Token not found`, the login route now declares the format `json`.
+
+#### Evolutions
+- JSON API rendering, ported from Teknoo Space:
+  - Twig filters `east_api_object_serialization`, `east_api_collection_serialization` and
+    `east_api_object_with_form_serialization`, and Twig function `east_api_form_errors` (`space_*` in Space).
+    `east_api_form_errors` also returns errors of children forms, without brackets in paths (`.blocks.0.type`).
+  - New Twig filter `east_api_error_serialization`.
+  - Templates `@TeknooEastCommon/Error/default.json.twig`, `@TeknooEastCommon/api/AdminUser/*.json.twig` and
+    `@TeknooEastCommon/api/AdminMedia/*.json.twig`.
+  - `FormHandling`: the `publish` key is also read from JSON bodies.
+  - `Media` implements `NormalizableInterface` (groups `default`, `api`, `crud` and `digest`).
+- API keys and JWT tokens, ported from Teknoo Space, to authenticate API clients without the user's password:
+  - Objects `ApiKeysAuth` and `ApiKeyToken`, with their Doctrine ODM mapping, and DTO `JWTConfiguration`.
+  - Symfony user `ApiKeysAuthUser` and provider `ApiKeysAuthenticatedUserProvider` (identifier `key name:email`), for
+    a `json_login` authenticator.
+  - Forms `ApiKeysAuthType` and `JWTConfigurationType`.
+  - Steps `RemoveApiKey`, `LoadCurrentUser` and `JwtCreateToken`.
+  - Plans `ManageApiKeysEndPoint`, `DeleteApiKeyEndPoint`, `CreateJwtTokenEndPoint` and
+    `CreateJwtTokenFromFormEndPoint`, with the endpoints `teknoo.east.common.endpoint.api_keys.*` and
+    `teknoo.east.common.endpoint.jwt.*`.
+  - Routes `api_keys_routing.yaml`, `jwt_routing.yaml`, `jwt_api_login_routing.yaml` and `jwt_api_routing.yaml`.
+  - Templates `@TeknooEastCommon/api/Jwt/{token,form}.json.twig`.
+  - Parameters `teknoo.east.common.bundle.api_keys.token_prefix` and `teknoo.east.common.bundle.jwt.max_days_to_live`.
+- Authentication failures of lexik/jwt-authentication-bundle (login refused, JWT token not found, invalid or expired)
+  are rendered like other JSON errors (`meta` and `data`), by `ApiAuthenticationFailureListener`.
+- Common Doctrine repositories: the notice about `$hydrate` is not raised when the constant `TEKNOO_EAST_IN_TEST_MODE`
+  is defined and enabled.
+- Behat tests of JSON APIs, API keys and JWT tokens.
+- Requires `teknoo/east-foundation` 9.2.4.
+- New optional dependencies: `symfony/serializer`, `symfony/twig-bundle` 7.3+ and `lexik/jwt-authentication-bundle`
+  3.2+.
+
+#### Docs
+- README: new sections "Render JSON API responses" and "Authenticate API clients with API keys and JWT tokens".
+
 ## [4.5.1] - 2026-07-31
 ### Stable Release
 - Fix issues with BC in Symfony Form 8.1

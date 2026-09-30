@@ -1,0 +1,13 @@
+# Create a new JWT token from a valid one. The login route is shipped in `jwt_api_login_routing.yaml`
+_teknoo_common_api_jwt_create:
+    path: '/jwt/create-token'
+    methods:  ['POST']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.jwt.create_token_from_form'
+        api: 'json'
+        errorTemplate: '@@TeknooEastCommon/Error/default.json.twig'
+        formClass: 'Teknoo\East\CommonBundle\Form\Type\JWTConfigurationType'
+        formOptions: { }
+        objectClass: 'Teknoo\East\Common\Object\DTO\JWTConfiguration'
+        template: '@@TeknooEastCommon/api/Jwt/form.json.twig'
+        tokenTemplate: '@@TeknooEastCommon/api/Jwt/token.json.twig'

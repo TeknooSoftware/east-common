@@ -32,10 +32,14 @@ use Stringable;
 use Teknoo\East\Common\Contracts\DBSource\ManagerInterface;
 use Teknoo\East\Common\Contracts\DBSource\Repository\MediaRepositoryInterface;
 use Teknoo\East\Common\Contracts\DBSource\Repository\UserRepositoryInterface;
+use Teknoo\East\Common\Contracts\Recipe\Plan\CreateJwtTokenEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Plan\CreateJwtTokenFromFormEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Plan\CreateObjectEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Plan\DeleteApiKeyEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Plan\DeleteObjectEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Plan\EditObjectEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Plan\ListObjectEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Plan\ManageApiKeysEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Plan\MinifierCommandInterface;
 use Teknoo\East\Common\Contracts\Recipe\Plan\MinifierEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Plan\PrepareRecoveryAccessEndPointInterface;
@@ -49,16 +53,22 @@ use Teknoo\East\Common\Contracts\Recipe\Step\ObjectAccessControlInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RenderFormInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\SearchFormLoaderInterface;
+use Teknoo\East\Common\Contracts\Recipe\Step\User\JwtCreateTokenInterface;
+use Teknoo\East\Common\Contracts\Recipe\Step\User\LoadCurrentUserInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\User\NotifyUserAboutRecoveryAccessInterface;
 use Teknoo\East\Common\Contracts\Rendering\LiveComponentBuilderInterface;
 use Teknoo\East\Common\FrontAsset\Extensions\SourceLoader as SourceLoaderExtension;
 use Teknoo\East\Common\Loader\MediaLoader;
 use Teknoo\East\Common\Loader\UserLoader;
 use Teknoo\East\Common\Middleware\LocaleMiddleware;
+use Teknoo\East\Common\Recipe\Plan\CreateJwtTokenEndPoint;
+use Teknoo\East\Common\Recipe\Plan\CreateJwtTokenFromFormEndPoint;
 use Teknoo\East\Common\Recipe\Plan\CreateObjectEndPoint;
+use Teknoo\East\Common\Recipe\Plan\DeleteApiKeyEndPoint;
 use Teknoo\East\Common\Recipe\Plan\DeleteObjectEndPoint;
 use Teknoo\East\Common\Recipe\Plan\EditObjectEndPoint;
 use Teknoo\East\Common\Recipe\Plan\ListObjectEndPoint;
+use Teknoo\East\Common\Recipe\Plan\ManageApiKeysEndPoint;
 use Teknoo\East\Common\Recipe\Plan\MinifierCommand;
 use Teknoo\East\Common\Recipe\Plan\MinifierEndPoint;
 use Teknoo\East\Common\Recipe\Plan\PrepareRecoveryAccessEndPoint;
@@ -90,6 +100,7 @@ use Teknoo\East\Common\Recipe\Step\SlugPreparation;
 use Teknoo\East\Common\Recipe\Step\Stop;
 use Teknoo\East\Common\Recipe\Step\User\FindUserByEmail;
 use Teknoo\East\Common\Recipe\Step\User\PrepareRecoveryAccess;
+use Teknoo\East\Common\Recipe\Step\User\RemoveApiKey;
 use Teknoo\East\Common\Recipe\Step\User\RemoveRecoveryAccess;
 use Teknoo\East\Common\Service\DeletingService;
 use Teknoo\East\Common\Service\FindSlugService;
@@ -300,6 +311,7 @@ return [
         ),
     FindUserByEmail::class => create(),
     PrepareRecoveryAccess::class => create(),
+    RemoveApiKey::class => create(),
     RemoveRecoveryAccess::class => create(),
 
     //Base recipe
@@ -460,6 +472,78 @@ return [
             $container->get(Render::class),
             $container->get(Stop::class),
             $container->get(RenderFormInterface::class),
+            $container->get(RenderError::class),
+            $defaultErrorTemplate,
+        );
+    },
+
+    CreateJwtTokenEndPointInterface::class => get(CreateJwtTokenEndPoint::class),
+    CreateJwtTokenEndPoint::class => static function (
+        ContainerInterface $container
+    ): CreateJwtTokenEndPoint {
+        $defaultErrorTemplate = $container->get('teknoo.east.common.get_default_error_template');
+
+        return new CreateJwtTokenEndPoint(
+            $container->get(OriginalRecipeInterface::class . ':Auth'),
+            $container->get(CreateObject::class),
+            $container->get(JwtCreateTokenInterface::class),
+            $container->get(Render::class),
+            $container->get(RenderError::class),
+            $defaultErrorTemplate,
+        );
+    },
+
+    CreateJwtTokenFromFormEndPointInterface::class => get(CreateJwtTokenFromFormEndPoint::class),
+    CreateJwtTokenFromFormEndPoint::class => static function (
+        ContainerInterface $container
+    ): CreateJwtTokenFromFormEndPoint {
+        $defaultErrorTemplate = $container->get('teknoo.east.common.get_default_error_template');
+
+        return new CreateJwtTokenFromFormEndPoint(
+            $container->get(OriginalRecipeInterface::class . ':Auth'),
+            $container->get(CreateObject::class),
+            $container->get(FormHandlingInterface::class),
+            $container->get(FormProcessingInterface::class),
+            $container->get(JwtCreateTokenInterface::class),
+            $container->get(Render::class),
+            $container->get(Stop::class),
+            $container->get(RenderFormInterface::class),
+            $container->get(RenderError::class),
+            $defaultErrorTemplate,
+        );
+    },
+
+    ManageApiKeysEndPointInterface::class => get(ManageApiKeysEndPoint::class),
+    ManageApiKeysEndPoint::class => static function (
+        ContainerInterface $container
+    ): ManageApiKeysEndPoint {
+        $defaultErrorTemplate = $container->get('teknoo.east.common.get_default_error_template');
+
+        return new ManageApiKeysEndPoint(
+            $container->get(OriginalRecipeInterface::class . ':Auth'),
+            $container->get(CreateObject::class),
+            $container->get(LoadCurrentUserInterface::class),
+            $container->get(FormHandlingInterface::class),
+            $container->get(FormProcessingInterface::class),
+            $container->get(SaveObject::class),
+            $container->get(RenderFormInterface::class),
+            $container->get(RenderError::class),
+            $defaultErrorTemplate,
+        );
+    },
+
+    DeleteApiKeyEndPointInterface::class => get(DeleteApiKeyEndPoint::class),
+    DeleteApiKeyEndPoint::class => static function (
+        ContainerInterface $container
+    ): DeleteApiKeyEndPoint {
+        $defaultErrorTemplate = $container->get('teknoo.east.common.get_default_error_template');
+
+        return new DeleteApiKeyEndPoint(
+            $container->get(OriginalRecipeInterface::class . ':Auth'),
+            $container->get(LoadCurrentUserInterface::class),
+            $container->get(RemoveApiKey::class),
+            $container->get(SaveObject::class),
+            $container->get(RedirectClientInterface::class),
             $container->get(RenderError::class),
             $defaultErrorTemplate,
         );

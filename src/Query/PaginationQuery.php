@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Common\Query;
 
+use ArrayIterator;
 use Countable;
 use IteratorAggregate;
 use Teknoo\East\Common\Contracts\DBSource\RepositoryInterface;
@@ -40,7 +41,7 @@ use Traversable;
 
 /**
  * Generic class implementing query to load any persisted instance with a pagination, order behavior and criteria
- * selections.
+ * selections. Results of repositories can be any iterable (arrays are converted to iterator).
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
@@ -74,9 +75,13 @@ class PaginationQuery implements QueryCollectionInterface, ImmutableInterface
         $criteria = $this->criteria;
         $criteria['deletedAt'] = null;
 
-        /** @var Promise<Traversable<ObjectInterface>, mixed, mixed> $findPromise */
+        /** @var Promise<iterable<ObjectInterface>, mixed, mixed> $findPromise */
         $findPromise = new Promise(
-            static function (Traversable $result) use ($criteria, $promise, $repository): void {
+            static function (iterable $result) use ($criteria, $promise, $repository): void {
+                if (!$result instanceof Traversable) {
+                    $result = new ArrayIterator($result);
+                }
+
                 /** @var Promise<int<0, max>, mixed, mixed> $countPromise */
                 $countPromise = new Promise(
                     static function (int $count) use ($promise, $result): void {

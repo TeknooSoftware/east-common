@@ -26,11 +26,15 @@ declare(strict_types=1);
 namespace Teknoo\East\Common\Object;
 
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
-use Teknoo\East\Common\Object\MediaMetadata;
+use Teknoo\East\Foundation\Normalizer\Object\AutoTrait;
+use Teknoo\East\Foundation\Normalizer\Object\ClassGroup;
+use Teknoo\East\Foundation\Normalizer\Object\Normalize;
+use Teknoo\East\Foundation\Normalizer\Object\NormalizableInterface;
 
 /**
  * Abstract class to persist media in the database (image, pdf, or any binary stuff). Metadata of this media are
  * stored into an embedded MediaMetadata instance (content type, filename, alternative name).
+ * Media are normalizable, only the content type, the filename and the alternative name of the metadata are exported.
  *
  * This class is not directly instanciable and must be inherited according to data layer :
  *   (Doctrine ODM, Doctrine ORM, ... other)
@@ -40,15 +44,40 @@ use Teknoo\East\Common\Object\MediaMetadata;
  * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-abstract class Media implements IdentifiedObjectInterface
+#[ClassGroup('default', 'api', 'crud', 'digest')]
+abstract class Media implements IdentifiedObjectInterface, NormalizableInterface
 {
+    use AutoTrait;
+
+    #[Normalize(['default', 'api', 'crud', 'digest'])]
     protected ?string $id = null;
 
+    #[Normalize(['default', 'api', 'crud', 'digest'])]
     protected ?string $name = null;
 
+    #[Normalize(['api', 'crud'])]
     protected ?int $length = null;
 
+    #[Normalize(['api', 'crud'], loader: 'exportMetadata')]
     protected ?MediaMetadata $metadata = null;
+
+    /**
+     * Loaders are cached by the AutoTrait for all instances, they must only use the instance passed as argument
+     *
+     * @return array{contentType: string, fileName: string, alternative: string}|null
+     */
+    protected static function exportMetadata(self $media): ?array
+    {
+        if (null === $media->metadata) {
+            return null;
+        }
+
+        return [
+            'contentType' => $media->metadata->getContentType(),
+            'fileName' => $media->metadata->getFileName(),
+            'alternative' => $media->metadata->getAlternative(),
+        ];
+    }
 
     public function getId(): string
     {

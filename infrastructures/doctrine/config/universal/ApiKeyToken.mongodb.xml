@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--infrastructures/doctrine/config/universal/ApiKeyToken.mongodb.xml-->
+<doctrine-mongo-mapping xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"
+                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                        xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
+                                            http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
+
+    <embedded-document name="Teknoo\East\Common\Object\ApiKeyToken">
+        <field field-name="name" name="name" type="string" nullable="false"/>
+        <field field-name="tokenHash" name="token_hash" type="string" nullable="false"/>
+        <field field-name="createdAt" name="created_at" type="date" nullable="false"/>
+        <field field-name="expiresAt" name="expires_at" type="date" nullable="false"/>
+        <field field-name="isExpired" name="is_expired" type="bool" nullable="false"/>
+    </embedded-document>
+</doctrine-mongo-mapping>

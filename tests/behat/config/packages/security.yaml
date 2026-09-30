@@ -8,15 +8,33 @@ security:
             id: 'Teknoo\East\CommonBundle\Provider\PasswordAuthenticatedUserProvider'
         with_recovery_access:
             id: 'Teknoo\East\CommonBundle\Provider\RecoveringAccessUserProvider'
+        with_api_key:
+            id: 'Teknoo\East\CommonBundle\Provider\ApiKeysAuthenticatedUserProvider'
 
     password_hashers:
         Teknoo\East\CommonBundle\Object\PasswordAuthenticatedUser:
+            algorithm: '%teknoo.east.common.bundle.password_authenticated_user_provider.default_algo%'
+        Teknoo\East\CommonBundle\Object\ApiKeysAuthUser:
             algorithm: '%teknoo.east.common.bundle.password_authenticated_user_provider.default_algo%'
 
     firewalls:
         user_login:
             pattern: '^/user/login$'
             security: false
+
+        #stateless API : log in with an API key (json_login) to get a JWT token, then JWT token for all others routes
+        secured_api_area:
+            pattern: '^/secured-api'
+            stateless: true
+            provider: 'with_password'
+            jwt: ~
+            json_login:
+                provider: 'with_api_key'
+                check_path: '_teknoo_common_api_jwt_login'
+                username_path: 'username'
+                password_path: 'token'
+                # failures are rendered like other errors of the API, by the listener of East Common
+                failure_handler: 'lexik_jwt_authentication.handler.authentication_failure'
 
         #require user role for all others pages
         user_area:
@@ -56,4 +74,5 @@ security:
         - { path: '^/user/2fa', roles: [IS_AUTHENTICATED_2FA_IN_PROGRESS], requires_channel: https }
         - { path: '^/user/2fa/check', roles: [IS_AUTHENTICATED_2FA_IN_PROGRESS], requires_channel: https }
         - { path: '^/user', roles: ROLE_USER, requires_channel: https }
+        - { path: '^/secured-api', roles: [IS_AUTHENTICATED_FULLY], requires_channel: https }
         - { path: '^/', roles: [ROLE_USER,IS_AUTHENTICATED_ANONYMOUSLY], requires_channel: https }

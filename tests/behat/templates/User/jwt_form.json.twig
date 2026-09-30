@@ -1,0 +1,3 @@
+{# @EastCommonTests/User/jwt_form.json.twig : page to generate a JWT token, rendered as JSON to be checked by features #}
+{% set errors = east_api_form_errors(formView) %}
+{{ errors|east_api_object_serialization({}, 'json', {'error': errors is not empty}) }}

@@ -45,6 +45,7 @@ use Laminas\Diactoros\ServerRequestFactory;
 use Laminas\Diactoros\StreamFactory;
 use Laminas\Diactoros\UploadedFileFactory;
 use Laminas\Diactoros\Uri;
+use Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle;
 use OTPHP\TOTP;
 use PHPUnit\Framework\Assert;
 use ParagonIE\ConstantTime\Base32;
@@ -60,6 +61,7 @@ use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
+use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder as SfContainerBuilder;
 use Symfony\Component\HttpFoundation\Request as SfRequest;
@@ -136,9 +138,18 @@ use function unlink;
  */
 class FeatureContext implements Context
 {
+    use ApiTrait;
+    use ApiKeysTrait;
+
     public ?Container $container = null;
 
     private ?BaseKernel $symfonyKernel = null;
+
+    /*
+     * In API mode, the Symfony kernel uses the real Twig engine (with templates shipped by the bundle) and the real
+     * Symfony Serializer, instead of the twig mock
+     */
+    private bool $apiMode = false;
 
     private ?RouterInterface $router = null;
 
@@ -178,7 +189,9 @@ class FeatureContext implements Context
 
         error_reporting(E_ALL);
 
-        ini_set('memory_limit', '128M');
+        //Each scenario compiles its own container (containers of the API mode, with Twig and the Serializer, are
+        //heavier), the memory is not released between scenarios
+        ini_set('memory_limit', '512M');
     }
 
     #[Given('I have DI initialized')]
@@ -209,6 +222,8 @@ class FeatureContext implements Context
     {
         $this->user = null;
         $this->cookies = [];
+        $this->apiHeaders = [];
+        $this->remembered = [];
         $this->noOverride = true;
 
         if (file_exists(__DIR__ . '/../var/cache/url_matching_routes.php')) {
@@ -233,14 +248,30 @@ class FeatureContext implements Context
     #[Given('I have DI With Symfony initialized')]
     public function iHaveDiWithSymfonyInitialized(): void
     {
-        $this->symfonyKernel = new class ($this, 'test') extends BaseKernel {
+        $this->symfonyKernel = $this->buildSymfonyKernel(false);
+    }
+
+    #[Given('I have DI With Symfony initialized for API')]
+    public function iHaveDiWithSymfonyInitializedForApi(): void
+    {
+        $this->symfonyKernel = $this->buildSymfonyKernel(true);
+    }
+
+    private function buildSymfonyKernel(bool $apiMode): BaseKernel
+    {
+        $this->apiMode = $apiMode;
+
+        return new class ($this, 'test', $apiMode) extends BaseKernel {
             use MicroKernelTrait;
 
             private FeatureContext $context;
 
-            public function __construct(FeatureContext $context, string $environment)
+            private bool $apiMode;
+
+            public function __construct(FeatureContext $context, string $environment, bool $apiMode)
             {
                 $this->context = $context;
+                $this->apiMode = $apiMode;
 
                 parent::__construct($environment, false);
             }
@@ -268,12 +299,24 @@ class FeatureContext implements Context
                 yield new FrameworkBundle();
                 yield new SecurityBundle();
                 yield new SchebTwoFactorBundle();
+                yield new LexikJWTAuthenticationBundle();
+
+                if ($this->apiMode) {
+                    yield new TwigBundle();
+                }
             }
 
             protected function configureContainer(SfContainerBuilder $container, LoaderInterface $loader)
             {
                 $loader->load(__DIR__.'/config/packages/*.yaml', 'glob');
                 $loader->load(__DIR__.'/config/services.yaml');
+
+                if ($this->apiMode) {
+                    $loader->load(__DIR__.'/config/api/*.yaml', 'glob');
+                } else {
+                    $loader->load(__DIR__.'/config/html/*.yaml', 'glob');
+                }
+
                 $container->setParameter('container.autowiring.strict_mode', true);
                 $container->setParameter('container.dumper.inline_class_loader', true);
                 $container->setParameter(
@@ -464,6 +507,8 @@ class FeatureContext implements Context
 
             private array $criteria;
 
+            private array $allObjects = [];
+
             /**
              * @param object $object
              * @return $this
@@ -472,6 +517,10 @@ class FeatureContext implements Context
             {
                 $this->criteria = $criteria;
                 $this->object = $object;
+
+                if (null !== $object && !in_array($object, $this->allObjects, true)) {
+                    $this->allObjects[] = $object;
+                }
 
                 return $this;
             }
@@ -486,6 +535,7 @@ class FeatureContext implements Context
 
             public function findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null): array
             {
+                return $this->allObjects;
             }
 
             public function findOneBy(array $criteria): ?object
@@ -1036,6 +1086,9 @@ class FeatureContext implements Context
                         'localeField',
                         'publishedAt',
                         'defaultCallerStatedClassName',
+                        'groupsConfigurations',
+                        'exportConfigurations',
+                        'exportMappings',
                     ])) {
                         continue;
                     }
@@ -1067,11 +1120,14 @@ class FeatureContext implements Context
         $container = $this->symfonyKernel->getContainer();
 
         $container->set(ObjectManager::class, $this->buildObjectManager());
-        $container->set('twig', $this->twig);
-        $container->set(
-            EngineInterface::class,
-            new Engine($this->twig)
-        );
+
+        if (!$this->apiMode) {
+            $container->set('twig', $this->twig);
+            $container->set(
+                EngineInterface::class,
+                new Engine($this->twig)
+            );
+        }
 
         $this->sfResponse = $this->symfonyKernel->handle($serverRequest);
 
@@ -1151,7 +1207,12 @@ class FeatureContext implements Context
     {
         $expectedBody = [];
         parse_str((string) $body, $expectedBody);
-        $serverRequest = SfRequest::create($url, 'POST', $expectedBody);
+        $serverRequest = SfRequest::create(
+            uri: $url,
+            method: 'POST',
+            parameters: $expectedBody,
+            cookies: $this->cookies,
+        );
 
         $this->runSymfony($serverRequest);
     }
@@ -1159,7 +1220,11 @@ class FeatureContext implements Context
     #[When('Symfony will receive the GET request :url')]
     public function symfonyWillReceiveTheGetRequest(string $url): void
     {
-        $serverRequest = SfRequest::create($url, 'GET');
+        $serverRequest = SfRequest::create(
+            uri: $url,
+            method: 'GET',
+            cookies: $this->cookies,
+        );
 
         $this->runSymfony($serverRequest);
     }

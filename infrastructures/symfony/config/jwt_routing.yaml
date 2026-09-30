@@ -1,0 +1,11 @@
+_teknoo_common_jwt_create:
+    path: '/jwt-token'
+    methods:  ['GET', 'POST']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.jwt.create_token_from_form'
+        errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
+        formClass: 'Teknoo\East\CommonBundle\Form\Type\JWTConfigurationType'
+        formOptions: { }
+        objectClass: 'Teknoo\East\Common\Object\DTO\JWTConfiguration'
+        template: '@@TeknooEastCommon/User/jwt_form.html.twig'
+        tokenTemplate: '@@TeknooEastCommon/User/jwt_token.html.twig'

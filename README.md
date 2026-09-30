@@ -220,6 +220,166 @@ admin_connect_gitlab_check:
 //In your template, create a link with {{ path('admin_connect_gitlab_login') }}
 ```
 
+Render JSON API responses
+-------------------------
+
+East Common's endpoints support JSON APIs. Add `api: 'json'` to a route's defaults, and use `.json.twig` templates
+for `template` and `errorTemplate`. CSRF protection is disabled in this mode, and bodies can be sent as JSON (with the
+header `Content-Type: application/json`), urlencoded or multipart. With a JSON body, the key `publish` publishes a
+publishable object.
+
+When `symfony/serializer` (enabled in `framework.serializer`) and `symfony/twig-bundle` (7.3 or later, the extensions
+use Twig attributes) are installed, these Twig filters render JSON with the envelope `{"meta": {...}, "data": ...}`.
+Objects are normalized by the East Foundation normalizer according to the groups passed in the context:
+
+* `east_api_object_serialization(context, format, meta, parentObject)`: serializes an object or an array. The id and
+  the root class of the identified object (or of the parent object) are added to `meta`.
+* `east_api_collection_serialization(page, pageCount, context, format, meta)`: serializes a paginated collection,
+  with `totalPages`, `page` and `count` in `meta`.
+* `east_api_object_with_form_serialization(formView, context, format, meta, parentObject)`: serializes an object
+  edited by a form, or, when the root form has errors (including errors bubbled from its fields), the form's errors,
+  as `{"meta": {"errors": true}, "data": {".field": "message"}}`.
+* `east_api_error_serialization(format, meta)`: serializes an error, as
+  `{"meta": {"error": true}, "data": {"code": 404, "message": "..."}}`. Previous errors are listed in
+  `data.previous`, with their code and their message. The class, the file, the line and the trace of errors are never
+  exported. Messages of server errors (5xx), previous errors included, are hidden unless the parameter
+  `teknoo.east.common.rendering.api.expose_server_error_message` is set to `true`.
+* The function `east_api_form_errors(formView)` returns all errors of a form, indexed by the field's path.
+
+The bundle ships these templates, which applications can override in `templates/bundles/TeknooEastCommonBundle/`:
+
+* `@TeknooEastCommon/Error/default.json.twig`
+* `@TeknooEastCommon/api/AdminUser/{list,item,deleted}.json.twig`
+* `@TeknooEastCommon/api/AdminMedia/{list,item,deleted}.json.twig`
+
+```yaml
+#In routes/api.yaml
+my_api_user_list:
+    path: '/api/v1/admin/users'
+    methods: ['GET']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.crud.list'
+        api: 'json'
+        defaultOrderDirection: 'ASC'
+        errorTemplate: '@@TeknooEastCommon/Error/default.json.twig'
+        itemsPerPage: 20
+        loader: '@Teknoo\East\Common\Loader\UserLoader'
+        template: '@@TeknooEastCommon/api/AdminUser/list.json.twig'
+```
+
+Authenticate API clients with API keys and JWT tokens
+-----------------------------------------------------
+
+East Common can authenticate the clients of a JSON API with JWT tokens, thanks to
+[lexik/jwt-authentication-bundle](https://github.com/lexik/LexikJWTAuthenticationBundle). This bundle is not
+required by East Common: install it (`composer require lexik/jwt-authentication-bundle`) only to use this feature.
+A JWT token can be obtained in two ways:
+
+* From an API key: a signed in user creates keys from a web page. An API client then logs in with a key, without the
+  user's password and without 2FA, on a `json_login` route: the username is `key name:email` and the token is the
+  secret of the key. The secret is displayed only once, when the key is created: only its hash is stored, in an
+  `ApiKeyToken` owned by the `ApiKeysAuth` of the user. A key has an expiration date.
+* From a web form, for a signed in user, or from the API, with a valid JWT token, to get a new one.
+
+The `json_login` authenticator of Symfony ignores requests which are not in JSON, and the JWT authenticator then
+answers `401 JWT Token not found`. The login route shipped by East Common declares the format `json`, so the body of
+the login request is read as JSON even when the client does not send the header `Content-Type: application/json`.
+
+Authentication failures are rendered like other errors of a JSON API, as
+`{"meta": {"error": true}, "data": {"code": 401, "message": "..."}}`: East Common listens to the failures dispatched by
+lexik/jwt-authentication-bundle (JWT token not found, invalid or expired). To get the same response when a login
+fails, set the failure handler of this bundle on the `json_login` authenticator, as below.
+
+The lifetime of a JWT token is the expiration date asked in the form, limited to
+`teknoo.east.common.bundle.jwt.max_days_to_live` days.
+
+```yaml
+#In security.yaml
+security:
+    providers:
+        //...
+        # API key user provider, the identifier is `key name:email`
+        with_api_key:
+            id: 'Teknoo\East\CommonBundle\Provider\ApiKeysAuthenticatedUserProvider'
+
+    password_hashers:
+        //...
+        # Secrets of API keys are hashed like passwords
+        Teknoo\East\CommonBundle\Object\ApiKeysAuthUser:
+            algorithm: '%teknoo.east.common.bundle.password_authenticated_user_provider.default_algo%'
+
+    firewalls:
+        //...
+        api_area:
+            pattern: '^/api'
+            stateless: true
+            # Provider used to load the user of a JWT token, from its email
+            provider: 'with_password'
+            jwt: ~
+            json_login:
+                provider: 'with_api_key'
+                check_path: '_teknoo_common_api_jwt_login'
+                username_path: 'username'
+                password_path: 'token'
+                # Render login failures like other errors of the API
+                failure_handler: 'lexik_jwt_authentication.handler.authentication_failure'
+
+    access_control:
+        //...
+        - { path: '^/api', roles: [IS_AUTHENTICATED_FULLY] }
+
+#In lexik_jwt_authentication.yaml
+lexik_jwt_authentication:
+    secret_key: '%env(resolve:JWT_SECRET_KEY)%'
+    public_key: '%env(resolve:JWT_PUBLIC_KEY)%'
+    pass_phrase: '%env(JWT_PASSPHRASE)%'
+
+#In routes/common.yaml
+# Web pages to manage API keys and to generate a JWT token, in a firewall with a session
+api_keys_common:
+    resource: '@TeknooEastCommonBundle/config/api_keys_routing.yaml'
+    prefix: '/my-settings'
+
+jwt_common:
+    resource: '@TeknooEastCommonBundle/config/jwt_routing.yaml'
+    prefix: '/my-settings'
+
+# JSON API: `POST /api/v1/login`, the `check_path` of the `json_login` authenticator
+jwt_api_login_common:
+    resource: '@TeknooEastCommonBundle/config/jwt_api_login_routing.yaml'
+    prefix: '/api/v1'
+
+# JSON API: `POST /api/v1/jwt/create-token`, with a valid JWT token
+jwt_api_common:
+    resource: '@TeknooEastCommonBundle/config/jwt_api_routing.yaml'
+    prefix: '/api/v1'
+
+#In services.yaml
+parameters:
+    # Prefix of generated secrets, empty by default
+    teknoo.east.common.bundle.api_keys.token_prefix: 'my_'
+    # Maximum lifetime of a JWT token, 1 day by default
+    teknoo.east.common.bundle.jwt.max_days_to_live: 30
+```
+
+The JSON templates `@TeknooEastCommon/api/Jwt/{token,form}.json.twig` are shipped by the bundle: the token is returned
+as `{"meta": {"error": false}, "data": {"token": "..."}}`. HTML templates of the web pages are provided by the
+application, in `templates/bundles/TeknooEastCommonBundle/User/`:
+
+* `api_keys.html.twig`: form to create a key (`formView`, with the fields `name` and `expiresAt`) and list of keys.
+  `objectInstance.token` is the secret of the key just created. Keys are available from the user, for example with
+  `app.user.wrappedUser.getOneAuthData('Teknoo\\East\\Common\\Object\\ApiKeysAuth').tokens`.
+* `jwt_form.html.twig`: form to generate a JWT token (`formView`, with the field `expirationDate`).
+* `jwt_token.html.twig`: the generated token, in `jwtToken`.
+
+The application must also translate these keys: `teknoo.east.common.api_keys.form.name`,
+`teknoo.east.common.api_keys.form.name.regex_error`, `teknoo.east.common.api_keys.form.expiration`,
+`teknoo.east.common.api_keys.error.already_exists`, `teknoo.east.common.api_keys.error.list_not_accessible` and
+`teknoo.east.common.jwt.form.expiration`.
+
+With Doctrine ODM, the mapping of `ApiKeysAuth` and `ApiKeyToken` is shipped in
+`infrastructures/doctrine/config/universal`, with the mapping of `User`.
+
 Support this project
 ---------------------
 This project is free and will remain free. It is fully supported by commercial activities of SASU Teknoo Software

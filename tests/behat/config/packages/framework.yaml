@@ -17,3 +17,6 @@ framework:
       low: ['email']
     admin_recipients:
       - { email: 'contact@teknoo.software' }
+  # Enabled only in API mode (see config/api), to keep light containers of the HTML mode
+  serializer:
+    enabled: false

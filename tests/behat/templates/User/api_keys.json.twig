@@ -1,0 +1,28 @@
+{# @EastCommonTests/User/api_keys.json.twig : page to manage API keys, rendered as JSON to be checked by features #}
+{% set apiKeysAuth = app.user.wrappedUser.getOneAuthData('Teknoo\\East\\Common\\Object\\ApiKeysAuth') %}
+{% set apiKeys = [] %}
+{% if apiKeysAuth is not null %}
+{% for apiKey in apiKeysAuth.tokens %}
+{% set apiKeys = apiKeys|merge([{
+    'name': apiKey.name,
+    'createdAt': apiKey.createdAt|date('Y-m-d H:i:s'),
+    'expiresAt': apiKey.expiresAt|date('Y-m-d H:i:s'),
+    'expired': apiKey.expired,
+}]) %}
+{% endfor %}
+{% endif %}
+{% set errors = east_api_form_errors(formView) %}
+{% set page = {'apiKeys': apiKeys} %}
+{# Errors of the form and the new key are displayed only when the form has been submitted, not in the list of keys #}
+{% if errors is not empty %}
+{% set page = page|merge({'errors': errors}) %}
+{% endif %}
+{% if objectInstance.name is not empty %}
+{% set page = page|merge({
+    'newApiKey': {
+        'name': objectInstance.name,
+        'token': objectInstance.token,
+    },
+}) %}
+{% endif %}
+{{ page|east_api_object_serialization({}, 'json', {'error': errors is not empty}) }}

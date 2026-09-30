@@ -29,6 +29,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\East\Common\Object\Media;
 use Teknoo\East\Common\Object\MediaMetadata;
+use Teknoo\East\Foundation\Normalizer\EastNormalizerInterface;
 use Teknoo\Tests\East\Common\Object\Traits\PopulateObjectTrait;
 
 /**
@@ -157,5 +158,104 @@ class MediaTest extends TestCase
             $mdt,
             $object->getMetadata()
         );
+    }
+
+    public function testExportToMeDataBadNormalizer(): void
+    {
+        $this->expectException(\TypeError::class);
+        $this->buildObject()->exportToMeData(new \stdClass(), []);
+    }
+
+    public function testExportToMeDataBadContext(): void
+    {
+        $this->expectException(\TypeError::class);
+        $this->buildObject()->exportToMeData(
+            $this->createStub(EastNormalizerInterface::class),
+            new \stdClass()
+        );
+    }
+
+    public function testExportToMeWithDefaultGroup(): void
+    {
+        $normalizer = $this->createMock(EastNormalizerInterface::class);
+        $normalizer->expects($this->once())
+            ->method('injectData')
+            ->with([
+                '@class' => Media::class,
+                'id' => 'foo',
+                'name' => 'Max',
+            ]);
+
+        $this->assertInstanceOf(
+            Media::class,
+            $this->buildObject()->setId('foo')->setName('Max')->exportToMeData($normalizer)
+        );
+    }
+
+    public function testExportToMeWithCrudGroup(): void
+    {
+        $normalizer = $this->createMock(EastNormalizerInterface::class);
+        $normalizer->expects($this->once())
+            ->method('injectData')
+            ->with([
+                '@class' => Media::class,
+                'id' => 'foo',
+                'name' => 'bar',
+                'length' => 123,
+                'metadata' => [
+                    'contentType' => 'image/png',
+                    'fileName' => 'foo.png',
+                    'alternative' => 'Foo',
+                ],
+            ]);
+
+        $this->assertInstanceOf(
+            Media::class,
+            $this->buildObject()
+                ->setId('foo')
+                ->setName('bar')
+                ->setLength(123)
+                ->setMetadata(new MediaMetadata('image/png', 'foo.png', 'Foo', '/tmp/foo.png', 'legacy'))
+                ->exportToMeData($normalizer, ['groups' => ['crud']])
+        );
+    }
+
+    public function testExportToMeWithSeveralInstances(): void
+    {
+        $first = $this->buildObject()
+            ->setId('foo')
+            ->setName('foo')
+            ->setMetadata(new MediaMetadata('image/png', 'foo.png', 'Foo'));
+
+        $second = $this->buildObject()
+            ->setId('bar')
+            ->setName('bar')
+            ->setLength(12)
+            ->setMetadata(null);
+
+        $exported = [];
+        $normalizer = $this->createStub(EastNormalizerInterface::class);
+        $normalizer->method('injectData')->willReturnCallback(
+            function (array $data) use (&$exported, $normalizer): EastNormalizerInterface {
+                $exported[] = $data;
+
+                return $normalizer;
+            }
+        );
+
+        $first->exportToMeData($normalizer, ['groups' => ['api']]);
+        $second->exportToMeData($normalizer, ['groups' => ['api']]);
+
+        $this->assertEquals(
+            [
+                'contentType' => 'image/png',
+                'fileName' => 'foo.png',
+                'alternative' => 'Foo',
+            ],
+            $exported[0]['metadata'],
+        );
+        $this->assertNull($exported[1]['metadata']);
+        $this->assertEquals('bar', $exported[1]['id']);
+        $this->assertEquals(12, $exported[1]['length']);
     }
 }

@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Teknoo\East\CommonBundle\Recipe\Step;
 
+use DomainException;
+use JsonException;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
@@ -49,6 +51,8 @@ use const JSON_THROW_ON_ERROR;
  * Recipe step to use into a HTTP EndPoint Recipe to create a form instance and handle the current request.
  * The form must be put into the manager's workplan.
  * If the key `publish` is present into the request, the current date will be passed to the object as published date.
+ * In API mode, the key `publish` is also supported in a JSON body (for publishable objects, it is removed from values
+ * submitted to the form). A malformed JSON body is reported as an error with the code 400.
  * Symfony implementation for `FormHandlingInterface`.
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
@@ -89,12 +93,31 @@ class FormHandling implements FormHandlingInterface
         bool $formHandleRequest = true,
     ): FormHandlingInterface {
         $parsedBody = [];
+        $jsonBody = [];
 
         //To avoid argument injection from HTTP request
         $api = $request->getAttribute('api', false);
 
-        if (['application/json'] !== $request->getHeader('Content-Type')) {
+        $isJsonBody = ['application/json'] === $request->getHeader('Content-Type');
+        if (!$isJsonBody) {
             $parsedBody = (array) $request->getParsedBody();
+        } elseif (!empty($api) && in_array($request->getMethod(), ['POST', 'PUT', 'PATCH'])) {
+            try {
+                $jsonBody = (array) json_decode(
+                    json: (string) $request->getBody(),
+                    associative: true,
+                    flags: JSON_THROW_ON_ERROR,
+                );
+            } catch (JsonException $error) {
+                $manager->error(new DomainException('Malformed JSON body', 400, $error));
+
+                return $this;
+            }
+
+            $parsedBody = $jsonBody;
+            if ($object instanceof PublishableInterface) {
+                unset($jsonBody['publish']);
+            }
         }
 
         if (
@@ -147,16 +170,7 @@ class FormHandling implements FormHandlingInterface
                 && !empty($api)
                 && in_array($request->getMethod(), ['POST', 'PUT', 'PATCH'])
             ) {
-                $values = [];
-                if (['application/json'] === $request->getHeader('Content-Type')) {
-                    $values = (array) json_decode(
-                        json: (string) $request->getBody(),
-                        associative: true,
-                        flags: JSON_THROW_ON_ERROR,
-                    );
-                }
-
-                $form->submit($values, false);
+                $form->submit($jsonBody, false);
             }
         }
 

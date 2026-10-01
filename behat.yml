@@ -1,8 +1,0 @@
-# behat.yml
-default:
-  autoload:
-    '': '%paths.base%/tests/bootstrap.php'
-  suites:
-    default:
-      contexts:
-        - Teknoo\Tests\East\Common\Behat\FeatureContext: ~

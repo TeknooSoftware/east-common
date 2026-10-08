@@ -31,6 +31,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Teknoo\East\Common\Contracts\User\UserInterface as CommonUserInterface;
 use Teknoo\East\Common\Object\User;
 use Teknoo\East\CommonBundle\Object\AbstractUser;
 use Teknoo\East\CommonBundle\Recipe\Step\LoadCurrentUser;
@@ -112,7 +113,10 @@ class LoadCurrentUserTest extends TestCase
         $manager = $this->createMock(ManagerInterface::class);
         $manager->expects($this->once())
             ->method('updateWorkPlan')
-            ->with([User::class => $user])
+            ->with([
+                CommonUserInterface::class => $user,
+                User::class => $user,
+            ])
             ->willReturnSelf();
 
         $step = $this->buildStep();

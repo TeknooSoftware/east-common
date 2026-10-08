@@ -27,6 +27,7 @@ namespace Teknoo\East\CommonBundle\Recipe\Step;
 
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\User\LoadCurrentUserInterface;
+use Teknoo\East\Common\Contracts\User\UserInterface;
 use Teknoo\East\Common\Object\User;
 use Teknoo\East\CommonBundle\Object\AbstractUser;
 use Teknoo\East\CommonBundle\Security\Exception\WrongUserException;
@@ -59,7 +60,10 @@ class LoadCurrentUser implements LoadCurrentUserInterface
             throw new WrongUserException('User instance is not a East Common bundle user instance');
         }
 
-        $manager->updateWorkPlan([User::class => $user->getWrappedUser()]);
+        $manager->updateWorkPlan([
+            UserInterface::class => $user->getWrappedUser(),
+            User::class => $user->getWrappedUser(),
+        ]);
 
         return $this;
     }

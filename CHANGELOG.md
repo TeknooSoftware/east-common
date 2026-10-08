@@ -1,5 +1,10 @@
 # Teknoo Software - Common - Change Log
 
+## [4.6.1] - 2026-10-08
+### Stable Release
+#### Fixes
+- `LoadCurrentUser` define also user interface key `Teknoo\East\Common\Contracts\User\UserInterface` in the workplan
+
 ## [4.6.0] - 2026-09-30
 ### Stable Release
 

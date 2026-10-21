@@ -1,5 +1,42 @@
 # Teknoo Software - Common - Change Log
 
+## [4.8.0] - 2026-10-21
+### Stable Release
+
+#### Security
+- New step `CheckCsrfToken` (contract `CheckCsrfTokenInterface`), checking, with the Symfony CSRF protection, the
+  token sent in the field `_token` of the body or of the query string, when the route defines the default
+  `csrfTokenId`. An invalid or a missing token returns a 403 error. Routes without `csrfTokenId` (like JSON APIs
+  authenticated by JWT) are not checked. The step is added to `DeleteObjectEndPoint` and `Disable2FA`.
+- `_teknoo_common_admin_user_delete` and `_teknoo_common_admin_media_delete` check the CSRF token
+  `teknoo_east_common_admin_delete`, and accept also `POST` requests. Links must add the token
+  (`_token: csrf_token('teknoo_east_common_admin_delete')`).
+- `_teknoo_common_2fa_totp_disable` and `_teknoo_common_2fa_google_disable` only accept `POST` requests and check the
+  CSRF token `teknoo_east_common_2fa_disable`. Applications must replace their links by forms.
+- The check can be disabled when importing routes, with the default `csrfTokenId: ~`.
+
+#### Fixes
+- `User.mongodb.xml`: remove the legacy `safe` option of the unique index on `email`, rejected by recent MongoDB
+  servers.
+- `User.mongodb.xml`: remove the inheritance type `COLLECTION_PER_CLASS`, deprecated by Doctrine ODM 2.17 without
+  replacement (each class is already mapped to its own collection, no migration needed).
+- `LiveComponentBuilder` only updates public properties writable from outside the component: private, protected,
+  static, read-only, `private(set)`, `protected(set)` and virtual properties without `set` hook are ignored.
+- `SearchFormLoader` merges the values updated by a Live request (`_live_body.updated`) into the form's values, to
+  filter in the same request.
+- `ExtractOrder` reads `order` and `direction` from the request's attributes first, then from the query parameters.
+  For a Live Component's request, attributes hold the current props of the component, while East Foundation 9.4
+  restores the query parameters of the page displaying it.
+- `east_api_object_with_form_serialization` serializes errors when a field has errors not bubbled to the root form,
+  instead of the object.
+- `ApiKeysAuthType`: the HTML `pattern` of the key's name is a valid HTML pattern (`[a-z][a-z0-9_\-]{3,}`).
+- `teknoo:common:minify:css` and `teknoo:common:minify:js` are named in their tags to be lazy.
+
+#### Evolutions
+- Requires `teknoo/east-foundation` 9.4.
+- Requires `teknoo/bridge-phpdi-symfony` 7.2 in dev: with older releases, the PHP-DI arrays of definitions of East
+  Foundation 9.3+ (like `teknoo.east.foundation.time.timer.backends`) crash the dump of the Symfony container.
+
 ## [4.7.0] - 2026-10-20
 ### Stable Release
 #### Evolutions

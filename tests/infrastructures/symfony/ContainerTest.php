@@ -38,6 +38,7 @@ use Teknoo\East\Common\Contracts\FrontAsset\PersisterInterface;
 use Teknoo\East\Common\Contracts\FrontAsset\SourceLoaderInterface;
 use Teknoo\East\Common\Contracts\Recipe\Plan\MinifierCommandInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormHandlingInterface;
+use Teknoo\East\Common\Contracts\Recipe\Step\CheckCsrfTokenInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Common\Contracts\Rendering\LiveComponentBuilderInterface;
 use Teknoo\East\Common\Recipe\Step\CreateObject;
@@ -49,6 +50,7 @@ use Teknoo\East\CommonBundle\Recipe\Plan\Disable2FA;
 use Teknoo\East\CommonBundle\Recipe\Plan\Enable2FA;
 use Teknoo\East\CommonBundle\Recipe\Plan\GenerateQRCode;
 use Teknoo\East\CommonBundle\Recipe\Plan\Validate2FA;
+use Teknoo\East\CommonBundle\Recipe\Step\CheckCsrfToken;
 use Teknoo\East\CommonBundle\Recipe\Step\DisableTOTP;
 use Teknoo\East\CommonBundle\Recipe\Step\EnableTOTP;
 use Teknoo\East\CommonBundle\Recipe\Step\GenerateQRCodeTextForTOTP;
@@ -169,12 +171,24 @@ class ContainerTest extends TestCase
 
         $container->set(OriginalRecipeInterface::class, $this->createStub(OriginalRecipeInterface::class));
         $container->set(DisableTOTP::class, $this->createStub(DisableTOTP::class));
+        $container->set(CheckCsrfToken::class, $this->createStub(CheckCsrfToken::class));
         $container->set(RedirectClientInterface::class, $this->createStub(RedirectClientInterface::class));
         $container->set(RenderError::class, $this->createStub(RenderError::class));
 
         $this->assertInstanceOf(
             Disable2FA::class,
             $container->get(Disable2FA::class)
+        );
+    }
+
+    public function testCheckCsrfToken(): void
+    {
+        $container = $this->buildContainer();
+        $container->set(CheckCsrfToken::class, $this->createStub(CheckCsrfToken::class));
+
+        $this->assertInstanceOf(
+            CheckCsrfTokenInterface::class,
+            $container->get(CheckCsrfTokenInterface::class)
         );
     }
 

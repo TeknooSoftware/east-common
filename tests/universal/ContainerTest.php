@@ -51,6 +51,7 @@ use Teknoo\East\Common\Contracts\Recipe\Step\FormHandlingInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormProcessingInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\GetStreamFromMediaInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\ListObjectsAccessControlInterface;
+use Teknoo\East\Common\Contracts\Recipe\Step\CheckCsrfTokenInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\ObjectAccessControlInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RenderFormInterface;
@@ -621,6 +622,28 @@ class ContainerTest extends TestCase
         $container->set(Render::class, $this->createStub(Render::class));
         $container->set(RenderError::class, $this->createStub(RenderError::class));
         $container->set(ObjectAccessControlInterface::class, $this->createStub(ObjectAccessControlInterface::class));
+
+        $this->assertInstanceOf(
+            DeleteObjectEndPoint::class,
+            $container->get(DeleteObjectEndPoint::class)
+        );
+
+        $this->assertInstanceOf(
+            DeleteObjectEndPointInterface::class,
+            $container->get(DeleteObjectEndPointInterface::class)
+        );
+    }
+
+    public function testDeleteObjectEndPointWithCsrfTokenCheck(): void
+    {
+        $container = $this->buildContainer();
+        $container->set(OriginalRecipeInterface::class, $this->createStub(OriginalRecipeInterface::class));
+        $container->set(LoadObject::class, $this->createStub(LoadObject::class));
+        $container->set(DeleteObject::class, $this->createStub(DeleteObject::class));
+        $container->set(RedirectClientInterface::class, $this->createStub(RedirectClientInterface::class));
+        $container->set(Render::class, $this->createStub(Render::class));
+        $container->set(RenderError::class, $this->createStub(RenderError::class));
+        $container->set(CheckCsrfTokenInterface::class, $this->createStub(CheckCsrfTokenInterface::class));
 
         $this->assertInstanceOf(
             DeleteObjectEndPoint::class,

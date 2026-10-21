@@ -91,6 +91,48 @@ common:
     resource: '@TeknooEastCommonBundle/config/routing.yaml'
 ```
 
+CSRF protection of routes deleting objects or disabling the 2FA
+---------------------------------------------------------------
+
+The routes shipped by the bundle which delete an object (`_teknoo_common_admin_user_delete`,
+`_teknoo_common_admin_media_delete`) or disable the 2FA (`_teknoo_common_2fa_totp_disable`,
+`_teknoo_common_2fa_google_disable`) check a CSRF token, with the Symfony CSRF protection (`framework.csrf_protection`
+must be enabled). The token id is defined by the route's default `csrfTokenId`, and the token is read from the field
+`_token` (the default `csrfTokenField` changes it) of the body, or else of the query string. An invalid or a missing
+token returns a 403 error. Routes without `csrfTokenId`, like JSON APIs authenticated by a JWT token, are not checked.
+The check is done by the step registered for `Teknoo\East\Common\Contracts\Recipe\Step\CheckCsrfTokenInterface`: the
+bundle registers its Symfony implementation, without this bundle, applications must register their own.
+
+Deleting routes still accept `GET` requests, so links can be kept, with the token in the query string:
+
+```twig
+<a href="{{ path('_teknoo_common_admin_user_delete', {
+    'id': user.id,
+    '_token': csrf_token('teknoo_east_common_admin_delete')
+}) }}">Delete</a>
+```
+
+Disabling the 2FA only accepts `POST` requests, from a form:
+
+```twig
+<form method="post" action="{{ path('_teknoo_common_2fa_totp_disable') }}">
+    <input type="hidden" name="_token" value="{{ csrf_token('teknoo_east_common_2fa_disable') }}">
+    <button type="submit">Disable</button>
+</form>
+```
+
+The check can be disabled when importing routes, or enabled on your own routes using the endpoints
+`teknoo.east.common.endpoint.crud.delete` and `teknoo.east.common.endpoint.2fa_totp_disable`:
+
+```yaml
+#In routes/common.yaml
+admin_common:
+    resource: '@TeknooEastCommonBundle/config/admin_routing.yaml'
+    prefix: '/admin'
+    defaults:
+        csrfTokenId: ~
+```
+
 Enable third party authentication with an OAuth2 Provider (example with Gitlab)
 -------------------------------------------------------------------------------
 
@@ -237,8 +279,8 @@ Objects are normalized by the East Foundation normalizer according to the groups
 * `east_api_collection_serialization(page, pageCount, context, format, meta)`: serializes a paginated collection,
   with `totalPages`, `page` and `count` in `meta`.
 * `east_api_object_with_form_serialization(formView, context, format, meta, parentObject)`: serializes an object
-  edited by a form, or, when the root form has errors (including errors bubbled from its fields), the form's errors,
-  as `{"meta": {"errors": true}, "data": {".field": "message"}}`.
+  edited by a form, or, when the form or one of its fields has errors (bubbled or not), the form's errors, as
+  `{"meta": {"errors": true}, "data": {".field": "message"}}`.
 * `east_api_error_serialization(format, meta)`: serializes an error, as
   `{"meta": {"error": true}, "data": {"code": 404, "message": "..."}}`. Previous errors are listed in
   `data.previous`, with their code and their message. The class, the file, the line and the trace of errors are never

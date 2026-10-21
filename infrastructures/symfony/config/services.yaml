@@ -296,6 +296,12 @@ services:
             - '@router'
         public: true
 
+    Teknoo\East\CommonBundle\Recipe\Step\CheckCsrfToken:
+        class: 'Teknoo\East\CommonBundle\Recipe\Step\CheckCsrfToken'
+        arguments:
+            - '@?security.csrf.token_manager'
+        public: true
+
     Teknoo\East\CommonBundle\Recipe\Step\EnableTOTP:
         class: 'Teknoo\East\CommonBundle\Recipe\Step\EnableTOTP'
         public: true
@@ -523,13 +529,14 @@ services:
             - { name: 'twig.attribute_extension' }
             - { name: 'twig.runtime' }
 
-    #Commands
+    #Commands, named in their tags to be lazy (names and descriptions must stay in sync with the PHP-DI entries
+    #`teknoo.east.common.symfony.command.minify.*.name` and `teknoo.east.common.symfony.command.minify.*.description`)
     teknoo.east.command.symfony.command.minify_css:
         parent: 'Teknoo\East\CommonBundle\Command\MinifyCommand:css'
         tags:
-            - { name: 'console.command' }
+            - { name: 'console.command', command: 'teknoo:common:minify:css', description: 'Minify a set of css files into an unique file' }
 
     teknoo.east.command.symfony.command.minify_js:
         parent: 'Teknoo\East\CommonBundle\Command\MinifyCommand:js'
         tags:
-            - { name: 'console.command' }
+            - { name: 'console.command', command: 'teknoo:common:minify:js', description: 'Minify a set of javascripts files into an unique file' }

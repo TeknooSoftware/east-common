@@ -5,7 +5,7 @@
                         xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
                                             http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
 
-    <document name="Teknoo\East\Common\Object\User" collection="users" inheritance-type="COLLECTION_PER_CLASS">
+    <document name="Teknoo\East\Common\Object\User" collection="users">
         <id type="string" strategy="CUSTOM">
             <generator-option name="class" value="Teknoo\East\Common\Doctrine\IdGenerator\UuidV7Generator"/>
         </id>
@@ -23,7 +23,6 @@
         <indexes>
             <index unique="true">
                 <key name="email" order="asc" />
-                <option name="safe" value="true" />
             </index>
         </indexes>
     </document>

@@ -42,6 +42,7 @@ use Teknoo\East\CommonBundle\Recipe\Plan\Disable2FA;
 use Teknoo\East\CommonBundle\Recipe\Plan\Enable2FA;
 use Teknoo\East\CommonBundle\Recipe\Plan\GenerateQRCode;
 use Teknoo\East\CommonBundle\Recipe\Plan\Validate2FA;
+use Teknoo\East\CommonBundle\Recipe\Step\CheckCsrfToken;
 use Teknoo\East\CommonBundle\Recipe\Step\DisableTOTP;
 use Teknoo\East\CommonBundle\Recipe\Step\EnableTOTP;
 use Teknoo\East\CommonBundle\Recipe\Step\FormHandling;
@@ -51,6 +52,7 @@ use Teknoo\East\CommonBundle\Recipe\Step\RedirectClient;
 use Teknoo\East\CommonBundle\Recipe\Step\RenderForm;
 use Teknoo\East\CommonBundle\Recipe\Step\SearchFormLoader;
 use Teknoo\East\CommonBundle\Recipe\Step\ValidateTOTP;
+use Teknoo\East\Common\Contracts\Recipe\Step\CheckCsrfTokenInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormHandlingInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormProcessingInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RedirectClientInterface;
@@ -100,6 +102,9 @@ return [
     //Redirect
     RedirectClientInterface::class => get(RedirectClient::class),
 
+    //CSRF
+    CheckCsrfTokenInterface::class => get(CheckCsrfToken::class),
+
     //Rendering
     RenderFormInterface::class => get(RenderForm::class),
     RenderForm::class => static function (ContainerInterface $container): RenderForm {
@@ -144,6 +149,7 @@ return [
             redirectClient: $container->get(RedirectClientInterface::class),
             renderError: $container->get(RenderError::class),
             defaultErrorTemplate: $defaultErrorTemplate,
+            checkCsrfToken: $container->get(CheckCsrfTokenInterface::class),
         );
     },
     GenerateQRCode::class => static function (ContainerInterface $container): GenerateQRCode {

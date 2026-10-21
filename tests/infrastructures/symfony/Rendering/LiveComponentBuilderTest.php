@@ -465,6 +465,100 @@ class LiveComponentBuilderTest extends TestCase
         $this->assertFalse(property_exists($component, 'nonExisting'));
     }
 
+    public function testUpdateComponentObjectIgnoreNotWritableProperties(): void
+    {
+        $component = new class {
+            public string $publicProp = '';
+            public static string $staticProp = '';
+            public private(set) string $privateSetProp = '';
+            public protected(set) string $protectedSetProp = '';
+            public string $virtualProp {
+                get => 'virtual';
+            }
+            public string $hookedProp = '' {
+                set => $this->hookedProp = $value;
+            }
+            protected string $protectedProp = '';
+            private string $privateProp = '';
+            public readonly string $readOnlyProp;
+
+            public function __construct()
+            {
+                $this->readOnlyProp = '';
+            }
+
+            public function getProtectedProp(): string
+            {
+                return $this->protectedProp;
+            }
+
+            public function getPrivateProp(): string
+            {
+                return $this->privateProp;
+            }
+
+            public function __invoke(): void {}
+        };
+
+        $container = $this->createStub(ContainerInterface::class);
+        $container->method('has')->willReturn(true);
+        $container->method('get')->willReturn($component);
+
+        $metadata = $this->createComponentMetadata('service_id', $component::class);
+
+        $factory = $this->createStub(ComponentFactoryInterface::class);
+        $factory->method('metadataFor')->willReturn($metadata);
+
+        $hydrator = $this->createStub(LiveComponentHydratorInterface::class);
+        $hydrator->method('hydrate')->willReturn($this->createWithoutConstructor(ComponentAttributes::class));
+
+        $metadataFactory = $this->createStub(LiveComponentMetadataFactoryInterface::class);
+        $metadataFactory->method('getMetadata')->willReturn(
+            $this->createWithoutConstructor(LiveComponentMetadata::class)
+        );
+
+        $sfRequest = new Request();
+
+        $request = $this->createStub(ServerRequestInterface::class);
+        $request->method('getAttribute')->willReturn($sfRequest);
+
+        $builder = new LiveComponentBuilder(
+            container: $container,
+            componentFactory: $factory,
+            hydrator: $hydrator,
+            metadataFactory: $metadataFactory,
+        );
+
+        $this->assertTrue(
+            $builder->buildComponent(
+                $request,
+                'TestComponent',
+                [
+                    'publicProp' => 'updated',
+                    'staticProp' => 'updated',
+                    'privateSetProp' => 'updated',
+                    'protectedSetProp' => 'updated',
+                    'virtualProp' => 'updated',
+                    'hookedProp' => 'updated',
+                    'protectedProp' => 'updated',
+                    'privateProp' => 'updated',
+                    'readOnlyProp' => 'updated',
+                ],
+                []
+            )
+        );
+
+        $this->assertEquals('updated', $component->publicProp);
+        $this->assertEquals('', $component::$staticProp);
+        $this->assertEquals('', $component->privateSetProp);
+        $this->assertEquals('', $component->protectedSetProp);
+        $this->assertEquals('virtual', $component->virtualProp);
+        $this->assertEquals('updated', $component->hookedProp);
+        $this->assertEquals('', $component->getProtectedProp());
+        $this->assertEquals('', $component->getPrivateProp());
+        $this->assertEquals('', $component->readOnlyProp);
+    }
+
     public function testGetComponentControllerDefaultInvoke(): void
     {
         $component = new class {

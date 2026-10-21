@@ -217,6 +217,19 @@ Feature: Expose objects via a JSON API, with the Twig extensions and the templat
       }
       """
 
+  Scenario: Get errors of a child of a form, not bubbled to the root form, with the template shipped by the bundle
+    Given a user "u1" named "Max" "Doe" with the email "max@teknoo.software"
+    When the API client sends a "PUT" JSON request to "https://foo.com/api/v1/user/u1" with:
+      """
+      {
+        "firstName": "Albert",
+        "roles": ["ROLE_ROOT"]
+      }
+      """
+    Then the API response status code is 400
+    And the API response is a JSON response
+    And the API response contains errors on the fields ".roles"
+
   Scenario: List users, with the template shipped by the bundle
     Given a user "u1" named "Max" "Doe" with the email "max@teknoo.software"
     When the API client sends a "GET" request to "https://foo.com/api/v1/users"

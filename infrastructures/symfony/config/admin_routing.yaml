@@ -39,9 +39,10 @@ _teknoo_common_admin_user_new:
 
 _teknoo_common_admin_user_delete:
     path: '/user/delete/{id}'
-    methods:  ['GET', 'DELETE']
+    methods:  ['GET', 'POST', 'DELETE']
     defaults:
         _controller: 'teknoo.east.common.endpoint.crud.delete'
+        csrfTokenId: 'teknoo_east_common_admin_delete'
         deleter: '@teknoo.east.common.deleting.user'
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
         loader: '@Teknoo\East\Common\Loader\UserLoader'
@@ -77,9 +78,10 @@ _teknoo_common_admin_media_new:
 
 _teknoo_common_admin_media_delete:
     path: '/media/delete/{id}'
-    methods:  ['GET', 'DELETE']
+    methods:  ['GET', 'POST', 'DELETE']
     defaults:
         _controller: 'teknoo.east.common.endpoint.crud.delete'
+        csrfTokenId: 'teknoo_east_common_admin_delete'
         deleter: '@teknoo.east.common.deleting.media'
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
         loader: '@Teknoo\East\Common\Loader\MediaLoader'

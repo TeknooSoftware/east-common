@@ -27,6 +27,7 @@ namespace Teknoo\Tests\East\CommonBundle\Recipe\Plan;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+use Teknoo\East\Common\Contracts\Recipe\Step\CheckCsrfTokenInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Common\Recipe\Step\RenderError;
 use Teknoo\East\CommonBundle\Recipe\Plan\Disable2FA;
@@ -52,6 +53,7 @@ class Disable2FATest extends TestCase
             $this->createStub(RedirectClientInterface::class),
             $this->createStub(RenderError::class),
             'foo',
+            $this->createStub(CheckCsrfTokenInterface::class),
         );
     }
 }

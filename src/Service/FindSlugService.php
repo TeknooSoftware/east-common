@@ -58,13 +58,15 @@ class FindSlugService
      * @param LoaderInterface<IdentifiedObjectInterface&SluggableInterface<IdentifiedObjectInterface>> $loader
      * @param SluggableInterface<IdentifiedObjectInterface> $sluggable
      * @param array<string|int, string|int|float|bool> $parts
+     * @param array<int|string, mixed> $criteria additional filters to restrict the search of the slug
      */
     public function process(
         LoaderInterface $loader,
         string $slugField,
         SluggableInterface $sluggable,
         array $parts,
-        string $glue = '-'
+        string $glue = '-',
+        array $criteria = []
     ): self {
         $counter = 1;
         $candidateAccepted = false;
@@ -97,7 +99,8 @@ class FindSlugService
                     $slugField,
                     $candidate,
                     $sluggable instanceof DeletableInterface,
-                    $object
+                    $object,
+                    $criteria
                 ),
                 $sluggableFetchedPromise
             );

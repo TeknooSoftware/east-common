@@ -132,6 +132,60 @@ class FindBySlugQueryTest extends TestCase
         );
     }
 
+    public function testFetchWithCriteria(): void
+    {
+        $loader = $this->createStub(LoaderInterface::class);
+        $repository = $this->createMock(RepositoryInterface::class);
+        $promise = $this->createMock(PromiseInterface::class);
+
+        $promise->expects($this->never())->method('success');
+        $promise->expects($this->never())->method('fail');
+
+        $repository->expects($this->once())
+            ->method('findOneBy')
+            ->with(
+                ['account' => 'bar', 'fooBarName' => 'HelloWorld', 'deletedAt' => null],
+                $this->callback(fn ($pr): bool => $pr instanceof PromiseInterface)
+            );
+
+        $this->assertInstanceOf(
+            FindBySlugQuery::class,
+            (new FindBySlugQuery('fooBarName', 'HelloWorld', false, null, ['account' => 'bar']))
+                ->fetch($loader, $repository, $promise)
+        );
+    }
+
+    public function testFetchWithCriteriaNotOverridingSlugDeletedAndId(): void
+    {
+        $loader = $this->createStub(LoaderInterface::class);
+        $repository = $this->createMock(RepositoryInterface::class);
+        $promise = $this->createMock(PromiseInterface::class);
+
+        $promise->expects($this->never())->method('success');
+        $promise->expects($this->never())->method('fail');
+
+        $object = $this->createStub(IdentifiedObjectInterface::class);
+        $object->method('getId')->willReturn('foo');
+
+        $repository->expects($this->once())
+            ->method('findOneBy')
+            ->with(
+                ['account' => 'bar', 'fooBarName' => 'HelloWorld', 'deletedAt' => null, 'id' => new NotEqual('foo')],
+                $this->callback(fn ($pr): bool => $pr instanceof PromiseInterface)
+            );
+
+        $this->assertInstanceOf(
+            FindBySlugQuery::class,
+            (new FindBySlugQuery(
+                'fooBarName',
+                'HelloWorld',
+                false,
+                $object,
+                ['account' => 'bar', 'fooBarName' => 'other', 'deletedAt' => 'yesterday', 'id' => 'baz']
+            ))->fetch($loader, $repository, $promise)
+        );
+    }
+
     public function testFetchFailing(): void
     {
         $loader = $this->createStub(LoaderInterface::class);

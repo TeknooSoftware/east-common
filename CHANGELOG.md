@@ -1,5 +1,11 @@
 # Teknoo Software - Common - Change Log
 
+## [4.7.0] - 2026-10-20
+### Stable Release
+#### Evolutions
+- `FindSlugService::process()` and `FindBySlugQuery`: new optional parameter `$criteria`, to restrict the search of a
+  free slug (e.g. to the documents of an account). It never overrides the slug, `deletedAt` and `id` filters.
+
 ## [4.6.1] - 2026-10-08
 ### Stable Release
 #### Fixes

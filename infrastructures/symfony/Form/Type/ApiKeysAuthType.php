@@ -106,7 +106,8 @@ class ApiKeysAuthType extends AbstractType
                 'required' => true,
                 'label' => 'teknoo.east.common.api_keys.form.name',
                 'attr' => [
-                    'pattern' => '/^[a-z][a-z0-9\_\-]{3,}$/',
+                    //HTML pattern: anchored implicitly, without delimiters, and valid with the `v` flag of browsers
+                    'pattern' => '[a-z][a-z0-9_\-]{3,}',
                 ],
                 'constraints' => [
                     new Regex(

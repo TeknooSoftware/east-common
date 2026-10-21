@@ -23,18 +23,20 @@ _teknoo_common_2fa_google_enable:
 
 _teknoo_common_2fa_totp_disable:
     path: '/2fa/disable'
-    methods:  ['GET']
+    methods:  ['POST']
     defaults:
         _controller: 'teknoo.east.common.endpoint.2fa_totp_disable'
+        csrfTokenId: 'teknoo_east_common_2fa_disable'
         template: '@@TeknooEastCommon/2fa/enabling.html.twig'
         route: '_teknoo_common_2fa_totp_enable'
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
 
 _teknoo_common_2fa_google_disable:
     path: '/2fa/google/disable'
-    methods:  ['GET']
+    methods:  ['POST']
     defaults:
         _controller: 'teknoo.east.common.endpoint.2fa_totp_disable'
+        csrfTokenId: 'teknoo_east_common_2fa_disable'
         route: '_teknoo_common_2fa_google_enable'
         template: '@@TeknooEastCommon/2fa/enabling.html.twig'
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'

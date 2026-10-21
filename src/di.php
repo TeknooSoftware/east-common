@@ -45,6 +45,7 @@ use Teknoo\East\Common\Contracts\Recipe\Plan\MinifierEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Plan\PrepareRecoveryAccessEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Plan\RenderMediaEndPointInterface;
 use Teknoo\East\Common\Contracts\Recipe\Plan\RenderStaticContentEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Step\CheckCsrfTokenInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormHandlingInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\FormProcessingInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\GetStreamFromMediaInterface;
@@ -357,6 +358,11 @@ return [
             $accessControl = $container->get(ObjectAccessControlInterface::class);
         }
 
+        $checkCsrfToken = null;
+        if ($container->has(CheckCsrfTokenInterface::class)) {
+            $checkCsrfToken = $container->get(CheckCsrfTokenInterface::class);
+        }
+
         $defaultErrorTemplate = $container->get('teknoo.east.common.get_default_error_template');
 
         return new DeleteObjectEndPoint(
@@ -369,6 +375,7 @@ return [
             $container->get(RenderError::class),
             $accessControl,
             $defaultErrorTemplate,
+            checkCsrfToken: $checkCsrfToken,
         );
     },
     EditObjectEndPointInterface::class => get(EditObjectEndPoint::class),

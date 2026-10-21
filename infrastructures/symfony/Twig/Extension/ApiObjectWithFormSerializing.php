@@ -25,14 +25,13 @@ declare(strict_types=1);
 
 namespace Teknoo\East\CommonBundle\Twig\Extension;
 
-use Symfony\Component\Form\FormErrorIterator;
 use Symfony\Component\Form\FormView;
 use Teknoo\East\Common\Contracts\Object\IdentifiedObjectInterface;
 use Twig\Attribute\AsTwigFilter;
 
 /**
  * Twig filter `east_api_object_with_form_serialization` to serialize an object edited by a form into a JSON API
- * response. If the form has errors (errors of the root form view, including errors bubbled from its children), errors
+ * response. If the form has errors (errors of the root form view or of any of its children, bubbled or not), errors
  * are serialized instead of the object, with the envelope `{"meta": {"errors": true}, "data": {".field": "message"}}`.
  * Else the object is serialized like with the filter `east_api_object_serialization`.
  *
@@ -64,15 +63,13 @@ class ApiObjectWithFormSerializing
         array $meta = [],
         ?IdentifiedObjectInterface $parentObject = null,
     ): string {
-        if (
-            isset($formView->vars['errors'])
-            && $formView->vars['errors'] instanceof FormErrorIterator
-            && $formView->vars['errors']->count() > 0
-        ) {
+        $errors = $this->formError->getFieldErrors(
+            view: $formView,
+        );
+
+        if (!empty($errors)) {
             return $this->objectSerializing->serialize(
-                object: $this->formError->getFieldErrors(
-                    view: $formView,
-                ),
+                object: $errors,
                 context: [],
                 format: $format,
                 meta: [

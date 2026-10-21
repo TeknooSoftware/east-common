@@ -24,8 +24,10 @@
 namespace Teknoo\East\CommonBundle\Rendering;
 
 use InvalidArgumentException;
+use PropertyHookType;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use ReflectionProperty;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\UX\LiveComponent\EventListener\InterceptChildComponentRenderSubscriber;
@@ -103,7 +105,26 @@ class LiveComponentBuilder implements LiveComponentBuilderInterface
         return $mountedComponent;
     }
 
+    private function isWritableProperty(object $component, string $propertyName): bool
+    {
+        if (!property_exists($component, $propertyName)) {
+            return false;
+        }
+
+        $property = new ReflectionProperty($component, $propertyName);
+
+        return $property->isPublic()
+            && !$property->isStatic()
+            && !$property->isReadOnly()
+            && !$property->isPrivateSet()
+            && !$property->isProtectedSet()
+            && (!$property->isVirtual() || $property->hasHook(PropertyHookType::Set));
+    }
+
     /**
+     * Only public properties writable from outside of the component are updated: private, protected, static and
+     * read-only properties (like the form of `ComponentWithFormTrait`) are ignored.
+     *
      * @param array<string, mixed> $parameters
      */
     private function updateComponentObject(
@@ -111,7 +132,7 @@ class LiveComponentBuilder implements LiveComponentBuilderInterface
         array $parameters,
     ): void {
         foreach ($parameters as $parameterName => $parameterValue) {
-            if (property_exists($component, $parameterName)) {
+            if ($this->isWritableProperty($component, $parameterName)) {
                 $component->{$parameterName} = $parameterValue;
             }
         }

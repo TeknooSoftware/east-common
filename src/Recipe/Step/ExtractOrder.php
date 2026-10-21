@@ -38,7 +38,10 @@ use function strtoupper;
 
 /**
  * Recipe step to extract from server request the required order (the column from the key `order` and the direction
- * from the key `direction`). The result is put in the workplan at `order`
+ * from the key `direction`), from the request's attributes, or else from the query parameters. Like for the workplan,
+ * attributes prevail : for a Live Component's request, East Foundation's router fills them with the current props of
+ * the component, while the query parameters are those of the page displaying the component. The result is put in
+ * the workplan at `order`
  *
  * A default column and a default order can be defined as ingredients with name `$defaultOrderColumn` and
  * `$defaultOrderDirection`
@@ -60,16 +63,19 @@ class ExtractOrder
     ): array {
         $order = [];
         $queryParams = $request->getQueryParams();
+        $directionValue = $request->getAttribute('direction') ?? $queryParams['direction'] ?? null;
+        $orderValue = $request->getAttribute('order') ?? $queryParams['order'] ?? null;
+
         $direction = $defaultOrderDirection;
-        if (isset($queryParams['direction']) && is_scalar($queryParams['direction'])) {
-            $direction = match ($value = strtoupper((string) $queryParams['direction'])) {
+        if (is_scalar($directionValue)) {
+            $direction = match ($value = strtoupper((string) $directionValue)) {
                 'ASC', 'DESC' => Direction::from($value),
                 default => throw new InvalidArgumentException('Invalid direction value %value'),
             };
         }
 
-        if (!empty($queryParams['order']) && is_string($queryParams['order'])) {
-            $order[(string) $queryParams['order']] = $direction;
+        if (!empty($orderValue) && is_string($orderValue)) {
+            $order[$orderValue] = $direction;
         } elseif (!empty($defaultOrderColumn)) {
             $order[$defaultOrderColumn] = $direction;
         }

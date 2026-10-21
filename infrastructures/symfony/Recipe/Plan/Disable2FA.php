@@ -27,6 +27,7 @@ namespace Teknoo\East\CommonBundle\Recipe\Plan;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Stringable;
+use Teknoo\East\Common\Contracts\Recipe\Step\CheckCsrfTokenInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Common\Recipe\Step\RenderError;
 use Teknoo\East\CommonBundle\Recipe\Step\DisableTOTP;
@@ -54,6 +55,7 @@ class Disable2FA implements EditablePlanInterface
         private readonly RedirectClientInterface $redirectClient,
         private readonly RenderError $renderError,
         private readonly string|Stringable|null $defaultErrorTemplate = null,
+        private readonly ?CheckCsrfTokenInterface $checkCsrfToken = null,
     ) {
         $this->fill($recipe);
     }
@@ -62,6 +64,10 @@ class Disable2FA implements EditablePlanInterface
     {
         $recipe = $recipe->require(new Ingredient(ServerRequestInterface::class, 'request'));
         $recipe = $recipe->require(new Ingredient('string', 'route'));
+
+        if (null !== $this->checkCsrfToken) {
+            $recipe = $recipe->cook($this->checkCsrfToken, CheckCsrfTokenInterface::class, [], 5);
+        }
 
         $recipe = $recipe->cook($this->disableTOTP, DisableTOTP::class, [], 10);
 

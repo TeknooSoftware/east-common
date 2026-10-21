@@ -164,6 +164,7 @@ class ApiKeysAuthTypeTest extends TestCase
 
         $this->assertArrayHasKey('name', $added);
         $this->assertArrayHasKey('expiresAt', $added);
+        $this->assertSame('[a-z][a-z0-9_\-]{3,}', $added['name']['attr']['pattern']);
 
         $callback = null;
         foreach ($added['name']['constraints'] as $constraint) {

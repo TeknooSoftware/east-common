@@ -31,9 +31,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\SearchFormLoaderInterface;
 
+use function array_pop;
+use function explode;
 use function is_array;
 use function is_string;
 use function key;
+use function str_starts_with;
+use function strlen;
+use function substr;
 
 /**
  * Recipe step to use into a HTTP EndPoint Recipe to load and inject into workplan a form dedicated to
@@ -56,6 +61,51 @@ class SearchFormLoader implements SearchFormLoaderInterface
         private readonly FormFactoryInterface $formFactory,
         private readonly array $formsInstances,
     ) {
+    }
+
+    /**
+     * Merges the values updated by the Live request (`_live_body.updated`, indexed by dotted paths like
+     * `formName.field.subfield`), into the form's values sent in props, to submit them in the same request.
+     *
+     * @param array<mixed> $values
+     * @param array<mixed> $updated
+     * @return array<mixed>
+     */
+    private function mergeLiveUpdatedValues(array $values, array $updated, string $formName): array
+    {
+        foreach ($updated as $path => $value) {
+            if (!is_string($path)) {
+                continue;
+            }
+
+            if ($formName === $path) {
+                if (is_array($value)) {
+                    $values = $value;
+                }
+
+                continue;
+            }
+
+            if (!str_starts_with($path, $formName . '.')) {
+                continue;
+            }
+
+            $keys = explode('.', substr($path, strlen($formName) + 1));
+            $lastKey = array_pop($keys);
+            $current = &$values;
+            foreach ($keys as $key) {
+                if (!isset($current[$key]) || !is_array($current[$key])) {
+                    $current[$key] = [];
+                }
+
+                $current = &$current[$key];
+            }
+
+            $current[$lastKey] = $value;
+            unset($current);
+        }
+
+        return $values;
     }
 
     public function __invoke(
@@ -106,14 +156,22 @@ class SearchFormLoader implements SearchFormLoaderInterface
         );
         $form->handleRequest($sfRequest);
 
-        if (
-            !$form->isSubmitted()
-            && is_array($liveBody)
-            && is_array($liveBody['props'])
-            && !empty($liveBody['props'][$form->getName()])
-            && is_array($liveBody['props'][$form->getName()])
-        ) {
-            $form->submit($liveBody['props'][$form->getName()]);
+        if (!$form->isSubmitted() && is_array($liveBody)) {
+            $values = [];
+            if (
+                is_array($liveBody['props'] ?? null)
+                && is_array($liveBody['props'][$form->getName()] ?? null)
+            ) {
+                $values = $liveBody['props'][$form->getName()];
+            }
+
+            if (is_array($liveBody['updated'] ?? null)) {
+                $values = $this->mergeLiveUpdatedValues($values, $liveBody['updated'], $form->getName());
+            }
+
+            if (!empty($values)) {
+                $form->submit($values);
+            }
         }
 
         $manager->updateWorkPlan([

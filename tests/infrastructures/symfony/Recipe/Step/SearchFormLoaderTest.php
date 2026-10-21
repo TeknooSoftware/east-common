@@ -333,4 +333,164 @@ class SearchFormLoaderTest extends TestCase
             )($request, $manager, $template)
         );
     }
+
+    public function testInvokeWithLiveBodyMergeUpdatedValues(): void
+    {
+        $request = $this->createStub(ServerRequestInterface::class);
+        $request->method('getAttribute')->willReturnCallback(
+            fn (string $name): Request|array => match ($name) {
+                'request' => $this->createStub(Request::class),
+                '_live_body' => [
+                    'props' => [
+                        'formName' => 'test_form',
+                        'test_form' => [
+                            'search' => 'old',
+                            'filters' => ['active' => '1'],
+                        ]
+                    ],
+                    'updated' => [
+                        'test_form.search' => 'dupont',
+                        'test_form.filters.role' => 'admin',
+                        'test_form.options.sort.column' => 'name',
+                        'other_form.search' => 'ignored',
+                        0 => 'ignored',
+                    ],
+                ],
+            }
+        );
+        $request->method('getParsedBody')->willReturn([
+            'bar1' => []
+        ]);
+        $manager = $this->createMock(ManagerInterface::class);
+        $template = 'foo.html.twig';
+
+        $manager->expects($this->never())->method('error');
+
+        $form = $this->createMock(FormInterface::class);
+        $form->method('getName')->willReturn('test_form');
+        $form->method('isSubmitted')->willReturn(false);
+        $form->expects($this->once())->method('handleRequest');
+        $form->expects($this->once())->method('submit')->with([
+            'search' => 'dupont',
+            'filters' => ['active' => '1', 'role' => 'admin'],
+            'options' => ['sort' => ['column' => 'name']],
+        ]);
+
+        $this->getFormFactory()
+            ->expects($this->once())
+            ->method('create')
+            ->willReturn($form);
+
+        $this->assertInstanceOf(
+            SearchFormLoader::class,
+            $this->buildStep(
+                [
+                    'foo.html.twig' => [
+                        'bar1' => \stdClass::class
+                    ],
+                ]
+            )($request, $manager, $template)
+        );
+    }
+
+    public function testInvokeWithLiveBodyUpdatedWholeForm(): void
+    {
+        $request = $this->createStub(ServerRequestInterface::class);
+        $request->method('getAttribute')->willReturnCallback(
+            fn (string $name): Request|array => match ($name) {
+                'request' => $this->createStub(Request::class),
+                '_live_body' => [
+                    'props' => [
+                        'formName' => 'test_form',
+                        'test_form' => [
+                            'search' => 'old',
+                        ]
+                    ],
+                    'updated' => [
+                        'test_form' => ['search' => 'dupont'],
+                    ],
+                ],
+            }
+        );
+        $request->method('getParsedBody')->willReturn([
+            'bar1' => []
+        ]);
+        $manager = $this->createMock(ManagerInterface::class);
+        $template = 'foo.html.twig';
+
+        $manager->expects($this->never())->method('error');
+
+        $form = $this->createMock(FormInterface::class);
+        $form->method('getName')->willReturn('test_form');
+        $form->method('isSubmitted')->willReturn(false);
+        $form->expects($this->once())->method('handleRequest');
+        $form->expects($this->once())->method('submit')->with([
+            'search' => 'dupont',
+        ]);
+
+        $this->getFormFactory()
+            ->expects($this->once())
+            ->method('create')
+            ->willReturn($form);
+
+        $this->assertInstanceOf(
+            SearchFormLoader::class,
+            $this->buildStep(
+                [
+                    'foo.html.twig' => [
+                        'bar1' => \stdClass::class
+                    ],
+                ]
+            )($request, $manager, $template)
+        );
+    }
+
+    public function testInvokeWithLiveBodyUpdatedWithoutPropsValues(): void
+    {
+        $request = $this->createStub(ServerRequestInterface::class);
+        $request->method('getAttribute')->willReturnCallback(
+            fn (string $name): Request|array => match ($name) {
+                'request' => $this->createStub(Request::class),
+                '_live_body' => [
+                    'props' => [
+                        'formName' => 'test_form',
+                    ],
+                    'updated' => [
+                        'test_form.search' => 'dupont',
+                    ],
+                ],
+            }
+        );
+        $request->method('getParsedBody')->willReturn([
+            'bar1' => []
+        ]);
+        $manager = $this->createMock(ManagerInterface::class);
+        $template = 'foo.html.twig';
+
+        $manager->expects($this->never())->method('error');
+
+        $form = $this->createMock(FormInterface::class);
+        $form->method('getName')->willReturn('test_form');
+        $form->method('isSubmitted')->willReturn(false);
+        $form->expects($this->once())->method('handleRequest');
+        $form->expects($this->once())->method('submit')->with([
+            'search' => 'dupont',
+        ]);
+
+        $this->getFormFactory()
+            ->expects($this->once())
+            ->method('create')
+            ->willReturn($form);
+
+        $this->assertInstanceOf(
+            SearchFormLoader::class,
+            $this->buildStep(
+                [
+                    'foo.html.twig' => [
+                        'bar1' => \stdClass::class
+                    ],
+                ]
+            )($request, $manager, $template)
+        );
+    }
 }

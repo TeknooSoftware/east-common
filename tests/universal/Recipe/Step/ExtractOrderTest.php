@@ -168,4 +168,117 @@ class ExtractOrderTest extends TestCase
             )
         );
     }
+
+    public function testInvokeWithParameterInAttributes(): void
+    {
+        $request = $this->createStub(ServerRequestInterface::class);
+        $request->method('getQueryParams')->willReturn([]);
+        $request->method('getAttribute')->willReturnCallback(
+            static fn (string $name): ?string => match ($name) {
+                'order' => 'createdAt',
+                'direction' => 'asc',
+                default => null,
+            }
+        );
+
+        $manager = $this->createMock(ManagerInterface::class);
+        $manager->expects($this->once())->method('updateWorkPlan')->with(['order' => ['createdAt' => Direction::Asc]]);
+        $manager->expects($this->never())->method('error');
+
+        $this->assertInstanceOf(
+            ExtractOrder::class,
+            $this->buildStep()(
+                $request,
+                $manager,
+                Direction::Desc,
+                'id'
+            )
+        );
+    }
+
+    public function testInvokeWithParameterInAttributesPreferredToQuery(): void
+    {
+        $request = $this->createStub(ServerRequestInterface::class);
+        $request->method('getQueryParams')->willReturn([
+            'order' => 'name',
+            'direction' => 'DESC'
+        ]);
+        $request->method('getAttribute')->willReturnCallback(
+            static fn (string $name): ?string => match ($name) {
+                'order' => 'createdAt',
+                'direction' => 'ASC',
+                default => null,
+            }
+        );
+
+        $manager = $this->createMock(ManagerInterface::class);
+        $manager->expects($this->once())->method('updateWorkPlan')->with(['order' => ['createdAt' => Direction::Asc]]);
+        $manager->expects($this->never())->method('error');
+
+        $this->assertInstanceOf(
+            ExtractOrder::class,
+            $this->buildStep()(
+                $request,
+                $manager,
+                Direction::Asc,
+                'id'
+            )
+        );
+    }
+
+    public function testInvokeWithOnlyDirectionInAttributes(): void
+    {
+        $request = $this->createStub(ServerRequestInterface::class);
+        $request->method('getQueryParams')->willReturn([
+            'order' => 'name',
+            'direction' => 'ASC'
+        ]);
+        $request->method('getAttribute')->willReturnCallback(
+            static fn (string $name): ?string => match ($name) {
+                'direction' => 'DESC',
+                default => null,
+            }
+        );
+
+        $manager = $this->createMock(ManagerInterface::class);
+        $manager->expects($this->once())->method('updateWorkPlan')->with(['order' => ['name' => Direction::Desc]]);
+        $manager->expects($this->never())->method('error');
+
+        $this->assertInstanceOf(
+            ExtractOrder::class,
+            $this->buildStep()(
+                $request,
+                $manager,
+                Direction::Asc,
+                'id'
+            )
+        );
+    }
+
+    public function testInvokeWithInvalidParameterInAttributes(): void
+    {
+        $request = $this->createStub(ServerRequestInterface::class);
+        $request->method('getQueryParams')->willReturn([]);
+        $request->method('getAttribute')->willReturnCallback(
+            static fn (string $name): ?string => match ($name) {
+                'order' => 'createdAt',
+                'direction' => 'Foo',
+                default => null,
+            }
+        );
+
+        $manager = $this->createMock(ManagerInterface::class);
+        $manager->expects($this->never())->method('updateWorkPlan');
+        $manager->expects($this->once())->method('error');
+
+        $this->assertInstanceOf(
+            ExtractOrder::class,
+            $this->buildStep()(
+                $request,
+                $manager,
+                Direction::Desc,
+                'id'
+            )
+        );
+    }
 }

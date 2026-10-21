@@ -138,24 +138,28 @@ class ApiObjectWithFormSerializingTest extends TestCase
         );
     }
 
-    public function testSerializeTheObjectWhenOnlyChildrenHaveErrors(): void
+    public function testSerializeErrorsWhenOnlyChildrenHaveErrors(): void
     {
         $factory = Forms::createFormFactoryBuilder()->getFormFactory();
         $builder = $factory->createNamedBuilder('user', FormType::class);
         $builder->add('email', TextType::class, ['error_bubbling' => false]);
+        $builder->add('roles', TextType::class, ['error_bubbling' => false]);
         $form = $builder->getForm();
-        $form->get('email')->addError(new SfFormError('Bad email'));
+        $form->get('roles')->addError(new SfFormError('Bad role'));
 
-        $decoded = json_decode(
-            $this->buildExtension()->rendering(
-                object: $this->buildUser(),
-                formView: $form->createView(),
-                context: ['groups' => ['digest']],
+        $this->assertEquals(
+            [
+                'meta' => ['errors' => true],
+                'data' => ['.roles' => 'Bad role'],
+            ],
+            json_decode(
+                $this->buildExtension()->rendering(
+                    object: $this->buildUser(),
+                    formView: $form->createView(),
+                    context: ['groups' => ['digest']],
+                ),
+                true,
             ),
-            true,
         );
-
-        $this->assertEquals(['id' => 'u1', '@class' => User::class], $decoded['meta']);
-        $this->assertEquals('max@teknoo.software', $decoded['data']['email']);
     }
 }

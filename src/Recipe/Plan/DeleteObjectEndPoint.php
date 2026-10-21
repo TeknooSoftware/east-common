@@ -30,6 +30,7 @@ use Stringable;
 use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
 use Teknoo\East\Common\Contracts\Object\ObjectInterface;
 use Teknoo\East\Common\Contracts\Recipe\Plan\DeleteObjectEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Step\CheckCsrfTokenInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\ObjectAccessControlInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Common\Recipe\Step\DeleteObject;
@@ -70,6 +71,7 @@ class DeleteObjectEndPoint implements DeleteObjectEndPointInterface
         private readonly ?ObjectAccessControlInterface $objectAccessControl = null,
         private readonly string|Stringable|null $defaultErrorTemplate = null,
         private readonly array $loadObjectWiths = [],
+        private readonly ?CheckCsrfTokenInterface $checkCsrfToken = null,
     ) {
         $this->fill($recipe);
     }
@@ -86,6 +88,10 @@ class DeleteObjectEndPoint implements DeleteObjectEndPointInterface
                 name: 'route'
             )
         );
+
+        if (null !== $this->checkCsrfToken) {
+            $recipe = $recipe->cook($this->checkCsrfToken, CheckCsrfTokenInterface::class, [], 5);
+        }
 
         $recipe = $recipe->cook($this->loadObject, LoadObject::class, $this->loadObjectWiths, 10);
 

@@ -61,9 +61,9 @@
         "php": "^8.4",
         "php-di/php-di": "^7.1.1",
         "teknoo/immutable": "^3.0.22",
-        "teknoo/states": "^7.1.11",
+        "teknoo/states": "^7.1.12",
         "teknoo/recipe": "^7.3",
-        "teknoo/east-foundation": "^9.2.4"
+        "teknoo/east-foundation": "^9.4"
     },
     "require-dev": {
         "ext-mongodb" : "*",
@@ -76,7 +76,7 @@
         "symfony/property-access": "^6.4.24||^7.4||^8.1",
         "behat/behat": "^4.0",
         "behat/phpunit-assertions-extension": "^1.0",
-        "teknoo/bridge-phpdi-symfony": "^7.1.2",
+        "teknoo/bridge-phpdi-symfony": "^7.2",
         "doctrine/common": "^3.5",
         "doctrine/mongodb-odm": "^2.17.1",
         "doctrine/mongodb-odm-bundle": "^5.6",

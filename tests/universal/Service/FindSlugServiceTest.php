@@ -123,6 +123,85 @@ class FindSlugServiceTest extends TestCase
         );
     }
 
+    public function testProcessSlugAvailableWithCriteria(): void
+    {
+        $loader = $this->createMock(LoaderInterface::class);
+        $sluggable = $this->createMock(SluggableInterface::class);
+
+        $loader->expects($this->once())
+            ->method('fetch')
+            ->with(new FindBySlugQuery('slugField', 'foo-bar', false, null, ['account' => 'bar']))
+            ->willReturnCallback(
+                function ($query, PromiseInterface $promise) use ($loader): \PHPUnit\Framework\MockObject\MockObject {
+                    $promise->fail(new \DomainException('Not Found'));
+
+                    return $loader;
+                }
+            );
+
+        $sluggable->expects($this->once())
+            ->method('setSlug')
+            ->with('foo-bar')
+            ->willReturnSelf();
+
+        $this->assertInstanceOf(
+            FindSlugService::class,
+            $this->buildService()->process(
+                $loader,
+                'slugField',
+                $sluggable,
+                ['Foo', 'bAr'],
+                '-',
+                ['account' => 'bar']
+            )
+        );
+    }
+
+    public function testProcessSlugFirstNotAvailableWithCriteria(): void
+    {
+        $loader = $this->createMock(LoaderInterface::class);
+        $sluggable = $this->createMock(SluggableInterface::class);
+
+        $criteria = ['account' => 'bar'];
+        $counter = 0;
+        $loader->expects($this->exactly(2))
+            ->method('fetch')
+            ->with(
+                $this->callback(
+                    fn ($value): bool => $value == new FindBySlugQuery('slugField', 'foo-bar', false, null, $criteria)
+                        || $value == new FindBySlugQuery('slugField', 'foo-bar-2', false, null, $criteria)
+                )
+            )
+            ->willReturnCallback(
+                function ($query, PromiseInterface $promise) use ($loader, &$counter): LoaderInterface {
+                    if ($counter++ < 1) {
+                        $promise->success($this->createStub(IdentifiedObjectInterface::class));
+                    } else {
+                        $promise->fail(new \DomainException('Not Found'));
+                    }
+
+                    return $loader;
+                }
+            );
+
+        $sluggable->expects($this->once())
+            ->method('setSlug')
+            ->with('foo-bar-2')
+            ->willReturnSelf();
+
+        $this->assertInstanceOf(
+            FindSlugService::class,
+            $this->buildService()->process(
+                $loader,
+                'slugField',
+                $sluggable,
+                ['Foo', 'bAr'],
+                '-',
+                $criteria
+            )
+        );
+    }
+
     public function testProcessSlugFirstAndSecondNotAvailable(): void
     {
         $loader = $this->createMock(LoaderInterface::class);

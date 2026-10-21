@@ -50,11 +50,15 @@ class FindBySlugQuery implements QueryElementInterface, ImmutableInterface
 {
     use ImmutableTrait;
 
+    /**
+     * @param array<int|string, mixed> $criteria additional filters, they never override slug, deletedAt and id filters
+     */
     public function __construct(
         private readonly string $slugField,
         private readonly string $slugValue,
         private readonly bool $includeDeleted = false,
-        private readonly ?IdentifiedObjectInterface $sluggable = null
+        private readonly ?IdentifiedObjectInterface $sluggable = null,
+        private readonly array $criteria = []
     ) {
         $this->uniqueConstructorCheck();
     }
@@ -64,7 +68,8 @@ class FindBySlugQuery implements QueryElementInterface, ImmutableInterface
         RepositoryInterface $repository,
         PromiseInterface $promise
     ): QueryElementInterface {
-        $filters = [$this->slugField => $this->slugValue];
+        $filters = $this->criteria;
+        $filters[$this->slugField] = $this->slugValue;
 
         if (!$this->includeDeleted) {
             $filters['deletedAt'] = null;

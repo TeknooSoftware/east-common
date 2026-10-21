@@ -1229,6 +1229,38 @@ class FeatureContext implements Context
         $this->runSymfony($serverRequest);
     }
 
+    //Like a page rendering `csrf_token()`, the token is generated in the session of the client
+    private function getCsrfTokenOfTheSession(string $tokenId): string
+    {
+        $container = $this->symfonyKernel->getContainer()->get('test.service_container');
+        $request = SfRequest::create(uri: 'https://foo.com/', cookies: $this->cookies);
+        $requestStack = $container->get('request_stack');
+        $requestStack->push($request);
+
+        try {
+            $session = $container->get('session.factory')->createSession();
+            $sessionId = $request->cookies->get($session->getName());
+            Assert::assertIsString($sessionId, 'No session is opened to get a CSRF token');
+            $session->setId($sessionId);
+            $request->setSession($session);
+
+            $token = $container->get('security.csrf.token_manager')->getToken($tokenId)->getValue();
+            $session->save();
+        } finally {
+            $requestStack->pop();
+        }
+
+        return $token;
+    }
+
+    #[When('Symfony will receive the GET request :url with the CSRF token :tokenId')]
+    public function symfonyWillReceiveTheGetRequestWithTheCsrfToken(string $url, string $tokenId): void
+    {
+        $this->symfonyWillReceiveTheGetRequest(
+            $url . '?' . http_build_query(['_token' => $this->getCsrfTokenOfTheSession($tokenId)]),
+        );
+    }
+
 
     #[When('Symfony will receive the JSON request :url with :body')]
     public function symfonyWillReceiveTheJsonRequestWith(string $url, string $body): void

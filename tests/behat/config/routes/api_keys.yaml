@@ -6,6 +6,7 @@ api_keys_common:
     resource: '@TeknooEastCommonBundle/config/api_keys_routing.yaml'
     prefix: '/user/common'
     defaults:
+        errorTemplate: '@@TeknooEastCommon/Error/default.json.twig'
         formOptions: { csrf_protection: false }
         template: '@@EastCommonTests/User/api_keys.json.twig'
 

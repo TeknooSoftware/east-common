@@ -543,6 +543,11 @@ return [
     DeleteApiKeyEndPoint::class => static function (
         ContainerInterface $container
     ): DeleteApiKeyEndPoint {
+        $checkCsrfToken = null;
+        if ($container->has(CheckCsrfTokenInterface::class)) {
+            $checkCsrfToken = $container->get(CheckCsrfTokenInterface::class);
+        }
+
         $defaultErrorTemplate = $container->get('teknoo.east.common.get_default_error_template');
 
         return new DeleteApiKeyEndPoint(
@@ -553,6 +558,7 @@ return [
             $container->get(RedirectClientInterface::class),
             $container->get(RenderError::class),
             $defaultErrorTemplate,
+            checkCsrfToken: $checkCsrfToken,
         );
     },
 

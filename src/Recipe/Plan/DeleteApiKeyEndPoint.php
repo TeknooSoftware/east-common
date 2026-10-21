@@ -28,6 +28,7 @@ namespace Teknoo\East\Common\Recipe\Plan;
 use Psr\Http\Message\ServerRequestInterface;
 use Stringable;
 use Teknoo\East\Common\Contracts\Recipe\Plan\DeleteApiKeyEndPointInterface;
+use Teknoo\East\Common\Contracts\Recipe\Step\CheckCsrfTokenInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\User\LoadCurrentUserInterface;
 use Teknoo\East\Common\Contracts\Writer\WriterInterface;
@@ -61,6 +62,7 @@ class DeleteApiKeyEndPoint implements DeleteApiKeyEndPointInterface
         private readonly RedirectClientInterface $redirectClient,
         private readonly RenderError $renderError,
         private readonly string|Stringable|null $defaultErrorTemplate = null,
+        private readonly ?CheckCsrfTokenInterface $checkCsrfToken = null,
     ) {
         $this->fill($recipe);
     }
@@ -71,6 +73,10 @@ class DeleteApiKeyEndPoint implements DeleteApiKeyEndPointInterface
         $recipe = $recipe->require(new Ingredient(requiredType: WriterInterface::class, name: 'writer'));
         $recipe = $recipe->require(new Ingredient(requiredType: 'string', name: 'tokenName'));
         $recipe = $recipe->require(new Ingredient(requiredType: 'string', name: 'route'));
+
+        if (null !== $this->checkCsrfToken) {
+            $recipe = $recipe->cook($this->checkCsrfToken, CheckCsrfTokenInterface::class, [], 5);
+        }
 
         $recipe = $recipe->cook($this->loadCurrentUser, LoadCurrentUserInterface::class, [], 10);
 

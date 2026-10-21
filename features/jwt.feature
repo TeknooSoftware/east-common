@@ -120,7 +120,7 @@ Feature: Authenticate API clients with API keys and JWT tokens
     When Symfony will receive the POST request "https://foo.com/user/check" with "_username=admin@teknoo.software&_password=testtest"
     Then The client must accept a response
     And a session must be opened
-    When Symfony will receive the GET request "https://foo.com/user/common/api-keys/delete/behat-key"
+    When Symfony will receive the GET request "https://foo.com/user/common/api-keys/delete/behat-key" with the CSRF token "teknoo_east_common_api_keys_delete"
     Then It is redirect to "/user/common/api-keys"
     When the API client sends a "POST" JSON request to "https://foo.com/secured-api/v1/login" with:
       """

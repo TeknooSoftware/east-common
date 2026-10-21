@@ -188,7 +188,7 @@ Feature: Manage the API keys of a user from web pages
       | createdAt | 2050-02-01 00:00:00                 |
       | expiresAt | 2099-12-31 00:00:00                 |
       | expired   | false                               |
-    When Symfony will receive the GET request "https://foo.com/user/common/api-keys/delete/first-key"
+    When Symfony will receive the GET request "https://foo.com/user/common/api-keys/delete/first-key" with the CSRF token "teknoo_east_common_api_keys_delete"
     Then It is redirect to "/user/common/api-keys"
     And An object "userid" must be updated
     When the client follows the redirection
@@ -204,6 +204,47 @@ Feature: Manage the API keys of a user from web pages
             {
               "name": "second-key",
               "createdAt": "2050-02-01 00:00:00",
+              "expiresAt": "2099-12-31 00:00:00",
+              "expired": false
+            }
+          ]
+        }
+      }
+      """
+
+  Scenario: Refuse to delete an API key without the CSRF token
+    Given an API key "first-key" for the user with:
+      | secret    | ak_first_0123456789abcdef0123456789 |
+      | createdAt | 2050-01-01 00:00:00                 |
+      | expiresAt | 2099-12-31 00:00:00                 |
+      | expired   | false                               |
+    When Symfony will receive the GET request "https://foo.com/user/common/api-keys/delete/first-key"
+    Then the API response status code is 403
+    And the API response is:
+      """
+      {
+        "meta": {
+          "error": true
+        },
+        "data": {
+          "code": 403,
+          "message": "Invalid CSRF token"
+        }
+      }
+      """
+    When Symfony will receive the GET request "https://foo.com/user/common/api-keys"
+    Then The client must accept a response
+    And the API response is:
+      """
+      {
+        "meta": {
+          "error": false
+        },
+        "data": {
+          "apiKeys": [
+            {
+              "name": "first-key",
+              "createdAt": "2050-01-01 00:00:00",
               "expiresAt": "2099-12-31 00:00:00",
               "expired": false
             }

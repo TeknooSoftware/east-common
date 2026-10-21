@@ -945,6 +945,28 @@ class ContainerTest extends TestCase
         );
     }
 
+    public function testDeleteApiKeyEndPointWithCsrfTokenCheck(): void
+    {
+        $container = $this->buildContainer();
+        $container->set(OriginalRecipeInterface::class, $this->createStub(OriginalRecipeInterface::class));
+        $container->set(LoadCurrentUserInterface::class, $this->createStub(LoadCurrentUserInterface::class));
+        $container->set(RemoveApiKey::class, $this->createStub(RemoveApiKey::class));
+        $container->set(SaveObject::class, $this->createStub(SaveObject::class));
+        $container->set(RedirectClientInterface::class, $this->createStub(RedirectClientInterface::class));
+        $container->set(RenderError::class, $this->createStub(RenderError::class));
+        $container->set(CheckCsrfTokenInterface::class, $this->createStub(CheckCsrfTokenInterface::class));
+
+        $this->assertInstanceOf(
+            DeleteApiKeyEndPoint::class,
+            $container->get(DeleteApiKeyEndPoint::class)
+        );
+
+        $this->assertInstanceOf(
+            DeleteApiKeyEndPointInterface::class,
+            $container->get(DeleteApiKeyEndPointInterface::class)
+        );
+    }
+
     public function testPrepareRecoveryAccessEndPoint(): void
     {
         $container = $this->buildContainer();

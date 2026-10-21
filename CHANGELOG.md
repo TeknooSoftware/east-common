@@ -1,5 +1,12 @@
 # Teknoo Software - Common - Change Log
 
+## [4.8.1] - 2026-10-21
+### Stable Release
+#### Security
+- `_teknoo_common_api_keys_delete` checks the CSRF token `teknoo_east_common_api_keys_delete`, and accepts also
+  `POST` requests. Links must add the token (`_token: csrf_token('teknoo_east_common_api_keys_delete')`). The step
+  `CheckCsrfToken` is added to `DeleteApiKeyEndPoint`.
+
 ## [4.8.0] - 2026-10-21
 ### Stable Release
 

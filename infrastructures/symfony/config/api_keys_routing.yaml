@@ -12,9 +12,10 @@ _teknoo_common_api_keys_manage:
 
 _teknoo_common_api_keys_delete:
     path: '/api-keys/delete/{tokenName}'
-    methods:  ['GET', 'DELETE']
+    methods:  ['GET', 'POST', 'DELETE']
     defaults:
         _controller: 'teknoo.east.common.endpoint.api_keys.delete'
+        csrfTokenId: 'teknoo_east_common_api_keys_delete'
         errorTemplate: '@@TeknooEastCommon/Error/<error>.html.twig'
         route: '_teknoo_common_api_keys_manage'
         writer: '@Teknoo\East\CommonBundle\Writer\SymfonyUserWriter'

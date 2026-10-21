@@ -112,6 +112,9 @@ Deleting routes still accept `GET` requests, so links can be kept, with the toke
 }) }}">Delete</a>
 ```
 
+`_teknoo_common_api_keys_delete`, deleting an API key of the signed in user, checks the CSRF token
+`teknoo_east_common_api_keys_delete`, with `'_token': csrf_token('teknoo_east_common_api_keys_delete')`.
+
 Disabling the 2FA only accepts `POST` requests, from a form:
 
 ```twig

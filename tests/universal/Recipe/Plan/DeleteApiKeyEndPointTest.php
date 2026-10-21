@@ -28,6 +28,7 @@ namespace Teknoo\Tests\East\Common\Recipe\Plan;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
+use Teknoo\East\Common\Contracts\Recipe\Step\CheckCsrfTokenInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\RedirectClientInterface;
 use Teknoo\East\Common\Contracts\Recipe\Step\User\LoadCurrentUserInterface;
 use Teknoo\East\Common\Recipe\Plan\DeleteApiKeyEndPoint;
@@ -123,6 +124,7 @@ class DeleteApiKeyEndPointTest extends TestCase
             $this->getRedirectClient(),
             $this->getRenderError(),
             'foo.template',
+            $this->createStub(CheckCsrfTokenInterface::class),
         );
     }
 

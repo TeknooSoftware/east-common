@@ -40,6 +40,7 @@ use Teknoo\Tests\East\Common\Behat\Object\MyObject;
 use function array_keys;
 use function explode;
 use function is_array;
+use function is_string;
 use function json_decode;
 use function parse_str;
 use function sort;
@@ -129,6 +130,43 @@ trait ApiTrait
             if (is_array($value)) {
                 Assert::assertIsArray($actual[$key], "`{$path}.{$key}` must be an array in the response");
                 $this->assertJsonContains($value, $actual[$key], "{$path}.{$key}");
+
+                continue;
+            }
+
+            Assert::assertSame($value, $actual[$key], "Bad value for `{$path}.{$key}` in the response");
+        }
+    }
+
+    /**
+     * Strings of the expected JSON are regular expressions, other values must be the same
+     *
+     * @param array<int|string, mixed> $expected
+     * @param array<int|string, mixed> $actual
+     */
+    private function assertJsonMatches(array $expected, array $actual, string $path = ''): void
+    {
+        Assert::assertEqualsCanonicalizing(
+            array_keys($expected),
+            array_keys($actual),
+            "Bad keys in `{$path}` of the response",
+        );
+
+        foreach ($expected as $key => $value) {
+            if (is_array($value)) {
+                Assert::assertIsArray($actual[$key], "`{$path}.{$key}` must be an array in the response");
+                $this->assertJsonMatches($value, $actual[$key], "{$path}.{$key}");
+
+                continue;
+            }
+
+            if (is_string($value)) {
+                Assert::assertIsString($actual[$key], "`{$path}.{$key}` must be a string in the response");
+                Assert::assertMatchesRegularExpression(
+                    $value,
+                    $actual[$key],
+                    "Bad value for `{$path}.{$key}` in the response",
+                );
 
                 continue;
             }
@@ -271,6 +309,15 @@ trait ApiTrait
         Assert::assertIsArray($expected, 'The expected value is not a JSON object');
 
         $this->assertJsonContains($expected, $this->getJsonResponse());
+    }
+
+    #[Then('the API response matches:')]
+    public function theApiResponseMatches(PyStringNode $json): void
+    {
+        $expected = json_decode(json: $json->getRaw(), associative: true, flags: JSON_THROW_ON_ERROR);
+        Assert::assertIsArray($expected, 'The expected value is not a JSON object');
+
+        $this->assertJsonMatches($expected, $this->getJsonResponse());
     }
 
     private function getValueOfTheApiResponse(string $path): string

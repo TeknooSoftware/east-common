@@ -26,7 +26,8 @@ $ php composer.phar update
 The PHPUnit version to be used is the one installed as a dev- dependency via composer:
 
 ```sh
-$ ./vendor/bin/phpunit
+$ make test
+$ make qa
 ```
 
 Accepted coverage for new contributions is 90%. Any contribution not satisfying this requirement

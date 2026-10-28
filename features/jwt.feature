@@ -383,14 +383,15 @@ Feature: Authenticate API clients with API keys and JWT tokens
     Then The client must accept a response
     When Symfony will receive the POST request "https://foo.com/user/common/jwt-token" with "jwt_configuration[expirationDate]=not-a-date"
     Then The client must accept a response
-    And the API response is:
+    # The English message of Symfony Form for an invalid date changed in its recent versions
+    And the API response matches:
       """
       {
         "meta": {
           "error": true
         },
         "data": {
-          ".expirationDate": "Please enter a valid date."
+          ".expirationDate": "/^(Please enter a valid date|This value is not a valid date)[.]$/"
         }
       }
       """
@@ -508,14 +509,15 @@ Feature: Authenticate API clients with API keys and JWT tokens
       """
     Then the API response status code is 400
     And the API response is a JSON response
-    And the API response is:
+    # The English message of Symfony Form for an invalid date changed in its recent versions
+    And the API response matches:
       """
       {
         "meta": {
           "error": true
         },
         "data": {
-          ".expirationDate": "Please enter a valid date."
+          ".expirationDate": "/^(Please enter a valid date|This value is not a valid date)[.]$/"
         }
       }
       """

@@ -403,6 +403,10 @@ jwt_api_common:
 parameters:
     # Prefix of generated secrets, empty by default
     teknoo.east.common.bundle.api_keys.token_prefix: 'my_'
+    # Scopes of API keys, a key must have one of them. Empty by default: keys have no scope
+    teknoo.east.common.bundle.api_keys.scopes: ['read', 'write']
+    # Read the real date, and not the date of the request, to create a key (`false` by default)
+    teknoo.east.common.bundle.api_keys.prefer_real_date: true
     # Maximum lifetime of a JWT token, 1 day by default
     teknoo.east.common.bundle.jwt.max_days_to_live: 30
 ```
@@ -411,7 +415,8 @@ The JSON templates `@TeknooEastCommon/api/Jwt/{token,form}.json.twig` are shippe
 as `{"meta": {"error": false}, "data": {"token": "..."}}`. HTML templates of the web pages are provided by the
 application, in `templates/bundles/TeknooEastCommonBundle/User/`:
 
-* `api_keys.html.twig`: form to create a key (`formView`, with the fields `name` and `expiresAt`) and list of keys.
+* `api_keys.html.twig`: form to create a key (`formView`, with the fields `name` and `expiresAt`, and `scope` when the
+  application lists scopes) and list of keys.
   `objectInstance.token` is the secret of the key just created. Keys are available from the user, for example with
   `app.user.wrappedUser.getOneAuthData('Teknoo\\East\\Common\\Object\\ApiKeysAuth').tokens`.
 * `jwt_form.html.twig`: form to generate a JWT token (`formView`, with the field `expirationDate`).
@@ -419,8 +424,27 @@ application, in `templates/bundles/TeknooEastCommonBundle/User/`:
 
 The application must also translate these keys: `teknoo.east.common.api_keys.form.name`,
 `teknoo.east.common.api_keys.form.name.regex_error`, `teknoo.east.common.api_keys.form.expiration`,
-`teknoo.east.common.api_keys.error.already_exists`, `teknoo.east.common.api_keys.error.list_not_accessible` and
+`teknoo.east.common.api_keys.form.scope`, `teknoo.east.common.api_keys.error.already_exists`,
+`teknoo.east.common.api_keys.error.invalid_scope`, `teknoo.east.common.api_keys.error.list_not_accessible` and
 `teknoo.east.common.jwt.form.expiration`.
+
+Since East Common 4.9, the key factory (`Teknoo\East\Common\Contracts\User\ApiKeyFactoryInterface`) creates a key
+without the form and without a signed in user, for example in a console command. The form uses it. The caller gives
+the owner and a new `ApiKeyToken`, with its name, its scope and its expiration date (with its time). The factory
+checks the name and the scope, completes the key, adds it to the owner, and gives it to the promise. The secret of
+the key is available only in this instance, during this request. The caller must save the owner.
+
+```php
+$factory->create(
+    $user,
+    new ApiKeyToken(name: 'cli-key', expiresAt: new DateTimeImmutable('+30 days'), scope: 'read'),
+    new Promise(
+        static fn (ApiKeyToken $apiKey) => $output->writeln($apiKey->getToken()),
+        static fn (#[SensitiveParameter] Throwable $error) => throw $error,
+    ),
+);
+$userWriter->save($user);
+```
 
 With Doctrine ODM, the mapping of `ApiKeysAuth` and `ApiKeyToken` is shipped in
 `infrastructures/doctrine/config/universal`, with the mapping of `User`.

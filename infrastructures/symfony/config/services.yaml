@@ -24,6 +24,8 @@ parameters:
 
     #API keys and JWT
     teknoo.east.common.bundle.api_keys.token_prefix: ''
+    teknoo.east.common.bundle.api_keys.scopes: []
+    teknoo.east.common.bundle.api_keys.prefer_real_date: false
     teknoo.east.common.bundle.jwt.max_days_to_live: 1
 
     #Assets
@@ -247,6 +249,20 @@ services:
             - '@teknoo.east.common.endpoint.api_keys.delete.bowl'
             - '@service_container'
 
+    Teknoo\East\Common\Contracts\User\ApiKeyFactoryInterface:
+        alias: 'Teknoo\East\CommonBundle\Security\ApiKeyFactory'
+        public: true
+
+    Teknoo\East\CommonBundle\Security\ApiKeyFactory:
+        class: 'Teknoo\East\CommonBundle\Security\ApiKeyFactory'
+        public: true
+        arguments:
+            - '@Teknoo\East\Foundation\Time\DatesService'
+            - '@security.user_password_hasher'
+            - '%teknoo.east.common.bundle.api_keys.token_prefix%'
+            - '%teknoo.east.common.bundle.api_keys.scopes%'
+            - '%teknoo.east.common.bundle.api_keys.prefer_real_date%'
+
     #JWT
     teknoo.east.common.endpoint.jwt.create_token.bowl:
         class: '%teknoo.east.common.endpoint.jwt.create_token.bowl.class%'
@@ -466,6 +482,9 @@ services:
             - '@security.token_storage'
             - '@security.user_password_hasher'
             - '%teknoo.east.common.bundle.api_keys.token_prefix%'
+            - '%teknoo.east.common.bundle.api_keys.scopes%'
+            - '%teknoo.east.common.bundle.api_keys.prefer_real_date%'
+            - '@Teknoo\East\Common\Contracts\User\ApiKeyFactoryInterface'
         tags:
             - { name: form.type }
 

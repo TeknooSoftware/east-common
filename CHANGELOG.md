@@ -4,6 +4,7 @@
 ### Stable Release
 #### Evolutions
 - API keys keep the `SHA-256` digest of their value (unique sparse index, `UserByApiKeyDigestQuery`) and a scope.
+- `ApiKeyFactoryInterface` creates a key without a form and without a signed in user. `ApiKeysAuthType` uses it.
 
 ## [4.8.1] - 2026-10-21
 ### Stable Release

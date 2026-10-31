@@ -62,3 +62,15 @@ All verification must be performed via the provided `Makefile`.
     - Infrastructure: `Teknoo\East\CommonBundle\` (Symfony), `Teknoo\East\Common\Doctrine\`, etc.
 - **Coding Standard**: PSR-12.
 - **PHP Version**: Minimum requirement is PHP 8.4.
+
+## API keys
+
+- An `ApiKeyToken` keeps the hash of the value of a key (`token_hash`, a slow hash for the JWT flow) and, since 4.9,
+  its SHA-256 digest (`token_digest`, with a unique sparse index in the mapping of `User`) and its scope. A key created
+  before 4.9 has no digest and no scope. The value is never persisted.
+- `Teknoo\East\Common\Contracts\User\ApiKeyFactoryInterface::create(User $owner, ApiKeyToken $apiKey, $promise)` is
+  the only code that completes a new key: value, digest, hash, creation date. The form `ApiKeysAuthType` uses it. Its
+  implementation is `Teknoo\East\CommonBundle\Security\ApiKeyFactory`. The caller saves the owner.
+- `Teknoo\East\Common\Query\User\UserByApiKeyDigestQuery` loads the active user of a key from its digest.
+- Parameters: `teknoo.east.common.bundle.api_keys.token_prefix`, `teknoo.east.common.bundle.api_keys.scopes` (empty:
+  keys without scope) and `teknoo.east.common.bundle.api_keys.prefer_real_date` (`false` by default).

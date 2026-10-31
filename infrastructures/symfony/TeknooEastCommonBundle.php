@@ -25,10 +25,14 @@ declare(strict_types=1);
 
 namespace Teknoo\East\CommonBundle;
 
+use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Teknoo\East\CommonBundle\DependencyInjection\Security\Factory\ApiKeyAuthenticatorFactory;
 
 /**
- * East Common integration in Symfony platform
+ * East Common integration in Symfony platform. With Symfony Security, it adds the key `api_key` to the configuration of
+ * firewalls, for `ApiKeyAuthenticator`.
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
@@ -37,4 +41,17 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class TeknooEastCommonBundle extends Bundle
 {
+    public function build(ContainerBuilder $container): void
+    {
+        parent::build($container);
+
+        if (!$container->hasExtension('security')) {
+            return;
+        }
+
+        $extension = $container->getExtension('security');
+        if ($extension instanceof SecurityExtension) {
+            $extension->addAuthenticatorFactory(new ApiKeyAuthenticatorFactory());
+        }
+    }
 }

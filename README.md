@@ -455,6 +455,42 @@ schema manager of Doctrine ODM (`doctrine:mongodb:schema:update`). A key created
 scope: the index skips it. The query `UserByApiKeyDigestQuery` loads the active user of a key from this digest, with
 this index.
 
+Authenticate each request with an API key
+-----------------------------------------
+
+Since East Common 4.9, an API client can also send an API key with each request, without a JWT token, to a stateless
+firewall with the key `api_key`. The authenticator reads the key in the header `Authorization: Bearer`, and in a
+second header when the firewall gives one. It refuses a request without key, or with 2 different values in the 2
+headers. It finds the key from its digest, with one indexed query, without a slow hash and without cache: a removed
+key fails at the next request. It refuses a key without digest (created before 4.9), an expired key, the key of an
+inactive user, and a key whose scope is not in `accepted_scopes`, when the firewall gives this list. The user does not
+need a password. The token gets the name and the scope of the key, in its attributes `api_key_name` and
+`api_key_scope`. The failure handler of the firewall renders each failure (a Symfony
+`AuthenticationFailureHandlerInterface`), with the message keys `teknoo.east.common.api_keys.error.missing`,
+`teknoo.east.common.api_keys.error.different_values`, `teknoo.east.common.api_keys.error.invalid` and
+`teknoo.east.common.api_keys.error.scope_refused`. No message holds the value of the key.
+
+```yaml
+#In security.yaml
+security:
+    firewalls:
+        //...
+        api_with_key:
+            pattern: '^/api/v2'
+            stateless: true
+            # Required by Symfony when the application has several providers, not used by the authenticator
+            provider: 'with_api_key'
+            api_key:
+                second_header: 'x-api-key'      # optional
+                accepted_scopes: ['read']       # optional, without it the scope is not checked
+                failure_handler: 'my_app.api_key_failure_handler'
+
+#In services.yaml
+parameters:
+    # The authenticator reads the real date, and not the date of the request (`true` by default)
+    teknoo.east.common.bundle.api_keys.authenticator.prefer_real_date: true
+```
+
 Support this project
 ---------------------
 This project is free and will remain free. It is fully supported by commercial activities of SASU Teknoo Software

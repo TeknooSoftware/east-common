@@ -5,6 +5,8 @@ parameters:
   teknoo.east.common.form_type.doctrine.class: 'Teknoo\Tests\East\Common\Behat\Form\Type\MockDoctrineType'
   teknoo.east.common.assets.no_overwrite: true
   teknoo.east.common.bundle.api_keys.token_prefix: 'ak_'
+  # The API key authenticator keeps the date of the scenario
+  teknoo.east.common.bundle.api_keys.authenticator.prefer_real_date: false
 
 services:
   Doctrine\Persistence\ObjectRepository:
@@ -49,6 +51,8 @@ services:
       - '@security.user_password_hasher'
       - '%teknoo.east.common.bundle.api_keys.token_prefix%'
       - ['inference', 'management']
+
+  Teknoo\Tests\East\Common\Behat\ApiKeyFailureHandler: ~
 
   Teknoo\Tests\East\Common\Behat\GetTokenStorageService:
     public: true

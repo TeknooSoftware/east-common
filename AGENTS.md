@@ -72,5 +72,10 @@ All verification must be performed via the provided `Makefile`.
   the only code that completes a new key: value, digest, hash, creation date. The form `ApiKeysAuthType` uses it. Its
   implementation is `Teknoo\East\CommonBundle\Security\ApiKeyFactory`. The caller saves the owner.
 - `Teknoo\East\Common\Query\User\UserByApiKeyDigestQuery` loads the active user of a key from its digest.
+- `Teknoo\East\CommonBundle\Security\Authenticator\ApiKeyAuthenticator` authenticates each request of a stateless
+  firewall with the key `api_key` (options `second_header`, `accepted_scopes`, `failure_handler`), registered by
+  `ApiKeyAuthenticatorFactory` in `TeknooEastCommonBundle::build()`. It supports each request of its firewall, uses
+  no cache and puts `api_key_name` and `api_key_scope` in the attributes of the token. Its date is the real date by
+  default (`teknoo.east.common.bundle.api_keys.authenticator.prefer_real_date`).
 - Parameters: `teknoo.east.common.bundle.api_keys.token_prefix`, `teknoo.east.common.bundle.api_keys.scopes` (empty:
   keys without scope) and `teknoo.east.common.bundle.api_keys.prefer_real_date` (`false` by default).

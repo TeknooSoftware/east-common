@@ -1,0 +1,6 @@
+{# @EastCommonTests/api/api_key/me.json.twig #}
+{{ {
+    'email': app.user.userIdentifier,
+    'apiKeyName': app.token.attribute('api_key_name'),
+    'apiKeyScope': app.token.attribute('api_key_scope'),
+}|east_api_object_serialization }}

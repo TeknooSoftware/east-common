@@ -36,3 +36,22 @@ _teknoo_common_tests_secured_api_me:
         api: 'json'
         errorTemplate: '@@TeknooEastCommon/Error/default.json.twig'
         template: '@@EastCommonTests/api/secured/me.json.twig'
+
+# Protected routes, only for tests : return the user and the API key authenticated by the API key authenticator
+_teknoo_common_tests_api_key_me:
+    path: '/api-key/me'
+    methods:  ['GET']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.static'
+        api: 'json'
+        errorTemplate: '@@TeknooEastCommon/Error/default.json.twig'
+        template: '@@EastCommonTests/api/api_key/me.json.twig'
+
+_teknoo_common_tests_api_key_any_scope_me:
+    path: '/api-key-any-scope/me'
+    methods:  ['GET']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.static'
+        api: 'json'
+        errorTemplate: '@@TeknooEastCommon/Error/default.json.twig'
+        template: '@@EastCommonTests/api/api_key/me.json.twig'

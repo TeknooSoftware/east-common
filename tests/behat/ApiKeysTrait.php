@@ -228,4 +228,56 @@ trait ApiKeysTrait
 
         Assert::assertSame(hash('sha256', $this->replaceRememberedValues($secret)), $apiKey->getTokenDigest());
     }
+
+    #[Given('a user without password')]
+    public function aUserWithoutPassword(): void
+    {
+        $this->symfonyKernel->boot();
+
+        $object = new User();
+        $object->setId('serviceid');
+        $object->setEmail('service@teknoo.software')
+            ->setFirstName('ser')
+            ->setLastName('vice')
+            ->setRoles(['ROLE_USER'])
+            ->setAuthData([]);
+
+        $this->user = $object;
+        $this->getObjectRepository()->setObject(['email' => 'service@teknoo.software'], $object);
+    }
+
+    #[Given('the user is found from the digest of the secret :secret')]
+    public function theUserIsFoundFromTheDigestOfTheSecret(string $secret): void
+    {
+        Assert::assertInstanceOf(User::class, $this->user);
+
+        $this->getObjectRepository()->setObject(
+            ['authData.tokens.token_digest' => hash('sha256', $this->replaceRememberedValues($secret))],
+            $this->user,
+        );
+    }
+
+    #[Given('the API key :name of the user is marked as expired')]
+    public function theApiKeyOfTheUserIsMarkedAsExpired(string $name): void
+    {
+        $apiKey = $this->getApiKeysOfTheUser()?->getToken($name);
+        Assert::assertInstanceOf(ApiKeyToken::class, $apiKey, "The user has no API key `{$name}`");
+
+        $apiKey->setExpired(true);
+    }
+
+    #[Given('the API key :name of the user is removed')]
+    public function theApiKeyOfTheUserIsRemoved(string $name): void
+    {
+        $this->getApiKeysOfTheUser()?->removeToken($name);
+        $this->theUserHasNoApiKey($name);
+    }
+
+    #[Given('the user is disabled')]
+    public function theUserIsDisabled(): void
+    {
+        Assert::assertInstanceOf(User::class, $this->user);
+
+        $this->user->setActive(false);
+    }
 }

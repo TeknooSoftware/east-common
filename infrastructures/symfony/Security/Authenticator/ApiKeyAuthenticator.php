@@ -27,11 +27,13 @@ declare(strict_types=1);
 namespace Teknoo\East\CommonBundle\Security\Authenticator;
 
 use DateTimeInterface;
+use DomainException;
 use SensitiveParameter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\AuthenticationServiceException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
@@ -62,7 +64,8 @@ use function trim;
  * expired, its user must be active and, when the firewall lists accepted scopes (option `accepted_scopes`), its scope
  * must be in this list. The user does not need a password. The token gets the name and the scope of the key, in the
  * attributes `api_key_name` and `api_key_scope`. Failures are rendered by the service of the firewall option
- * `failure_handler`. No message holds the value of the key.
+ * `failure_handler`. A failure of the database gives an `AuthenticationServiceException`, and not a refused key, so
+ * the failure handler can answer with another status. No message holds the value of the key.
  *
  * This authenticator is configured with the key `api_key` of a firewall, thanks to `ApiKeyAuthenticatorFactory`.
  *
@@ -118,15 +121,20 @@ class ApiKeyAuthenticator extends AbstractAuthenticator
 
         $digest = hash('sha256', $value);
 
-        /** @var Promise<User, User, mixed> $promise */
+        /** @var Promise<User, User|Throwable, mixed> $promise */
         $promise = new Promise(
             static fn (User $user): User => $user,
-            static fn (#[SensitiveParameter] Throwable $error): null => null,
+            static fn (#[SensitiveParameter] Throwable $error): Throwable => $error,
         );
 
         $this->loader->fetch(new UserByApiKeyDigestQuery($digest), $promise);
 
         $user = $promise->fetchResult();
+        if ($user instanceof Throwable && !$user instanceof DomainException) {
+            //A repository gives a DomainException when no user is found. Another error is a failure of the database
+            throw new AuthenticationServiceException('teknoo.east.common.api_keys.error.unavailable', 0, $user);
+        }
+
         if (!$user instanceof User || !$user->isActive()) {
             throw new CustomUserMessageAuthenticationException('teknoo.east.common.api_keys.error.invalid');
         }

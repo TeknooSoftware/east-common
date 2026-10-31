@@ -68,6 +68,13 @@ Feature: Authenticate each request of an API client with an API key, without a J
     And the API client sends a "GET" request to "https://foo.com/api-key/me"
     Then the API response is the error 401 with the message "teknoo.east.common.api_keys.error.invalid"
 
+  Scenario: Tell a failure of the database from a wrong API key
+    Given the user is found from the digest of the secret "<inference secret>"
+    And the database is not available
+    When the API client sends the header "Authorization" with the value "Bearer <inference secret>" in its next requests
+    And the API client sends a "GET" request to "https://foo.com/api-key/me"
+    Then the API response is the error 503 with the message "Authentication request could not be processed due to a system problem."
+
   Scenario: Refuse an API key after its expiration date
     Given the key factory with scopes creates the API key "old-key" with the scope "inference", expiring at "2050-06-01 11:59:59"
     And the key factory gives the value of the API key "old-key", remembered as "old secret"

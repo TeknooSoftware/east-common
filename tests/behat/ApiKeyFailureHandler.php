@@ -30,11 +30,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\AuthenticationServiceException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 
 /**
  * Failure handler of the firewalls with an API key of the test application : the failure is rendered like other errors
- * of a JSON API, with the message key of the authentication exception.
+ * of a JSON API, with the message key of the authentication exception. A failure of the database gives a 503.
  *
  * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
@@ -43,12 +44,17 @@ class ApiKeyFailureHandler implements AuthenticationFailureHandlerInterface
 {
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
+        $code = 401;
+        if ($exception instanceof AuthenticationServiceException) {
+            $code = 503;
+        }
+
         return new JsonResponse(
             [
                 'meta' => ['error' => true],
-                'data' => ['code' => 401, 'message' => $exception->getMessageKey()],
+                'data' => ['code' => $code, 'message' => $exception->getMessageKey()],
             ],
-            401,
+            $code,
         );
     }
 }

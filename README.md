@@ -468,7 +468,9 @@ need a password. The token gets the name and the scope of the key, in its attrib
 `api_key_scope`. The failure handler of the firewall renders each failure (a Symfony
 `AuthenticationFailureHandlerInterface`), with the message keys `teknoo.east.common.api_keys.error.missing`,
 `teknoo.east.common.api_keys.error.different_values`, `teknoo.east.common.api_keys.error.invalid` and
-`teknoo.east.common.api_keys.error.scope_refused`. No message holds the value of the key.
+`teknoo.east.common.api_keys.error.scope_refused`. No message holds the value of the key. A failure of the database
+is not a wrong key: the authenticator gives an `AuthenticationServiceException`, with the error as previous, so the
+failure handler can answer with another status, for example 503.
 
 ```yaml
 #In security.yaml

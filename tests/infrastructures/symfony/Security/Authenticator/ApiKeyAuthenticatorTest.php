@@ -30,10 +30,12 @@ use DateTimeImmutable;
 use DomainException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\AuthenticationServiceException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
@@ -265,6 +267,36 @@ class ApiKeyAuthenticatorTest extends TestCase
             $this->buildRequest(['Authorization' => 'Bearer ' . self::VALUE]),
             'teknoo.east.common.api_keys.error.invalid',
         );
+    }
+
+    public function testAuthenticateWhenTheDatabaseIsNotAvailable(): void
+    {
+        //A failure of the database is not a wrong key : the failure handler can answer with another status
+        $databaseError = new RuntimeException('connection refused');
+
+        $loader = $this->createMock(UserLoader::class);
+        $loader->expects($this->once())
+            ->method('fetch')
+            ->willReturnCallback(
+                static function (QueryElementInterface $query, PromiseInterface $promise) use ($loader, $databaseError) {
+                    $promise->fail($databaseError);
+
+                    return $loader;
+                }
+            );
+
+        try {
+            $this->buildAuthenticator($loader)->authenticate(
+                $this->buildRequest(['Authorization' => 'Bearer ' . self::VALUE])
+            );
+        } catch (AuthenticationServiceException $exception) {
+            $this->assertSame($databaseError, $exception->getPrevious());
+            $this->assertFalse(str_contains($exception->getMessage(), self::VALUE));
+
+            return;
+        }
+
+        $this->fail('The request must be refused with an AuthenticationServiceException');
     }
 
     public function testAuthenticateRefusesAKeyWithoutDigest(): void

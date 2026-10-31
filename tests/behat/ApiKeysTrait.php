@@ -31,6 +31,7 @@ use Behat\Step\Then;
 use Behat\Step\When;
 use DateTimeImmutable;
 use PHPUnit\Framework\Assert;
+use RuntimeException;
 use SensitiveParameter;
 use Symfony\Component\PasswordHasher\Hasher\SodiumPasswordHasher;
 use Teknoo\East\Common\Contracts\User\ApiKeyFactoryInterface;
@@ -279,5 +280,11 @@ trait ApiKeysTrait
         Assert::assertInstanceOf(User::class, $this->user);
 
         $this->user->setActive(false);
+    }
+
+    #[Given('the database is not available')]
+    public function theDatabaseIsNotAvailable(): void
+    {
+        $this->getObjectRepository()->failWith(new RuntimeException('Connection refused', 500));
     }
 }

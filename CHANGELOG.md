@@ -4,8 +4,7 @@
 ### Stable Release
 #### Evolutions
 - `BearerToken`, in `BearerTokensAuth`: an API key sent with each request, kept as the `SHA-256` digest of its value.
-- API keys keep the `SHA-256` digest of their value and a scope.
-- `BearerTokenFactoryInterface` and `ApiKeyFactoryInterface` create keys without a form and without a signed in user.
+- `BearerTokenFactoryInterface` and `ApiKeyTokenFactoryInterface` create keys without a form and a signed in user.
 - Firewall key `bearer_token`: a stateless authenticator of bearer tokens. Create the new index of `User.mongodb.xml`.
 
 ## [4.8.1] - 2026-10-21

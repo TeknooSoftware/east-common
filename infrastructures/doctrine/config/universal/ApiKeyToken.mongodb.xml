@@ -11,7 +11,5 @@
         <field field-name="createdAt" name="created_at" type="date" nullable="false"/>
         <field field-name="expiresAt" name="expires_at" type="date" nullable="false"/>
         <field field-name="isExpired" name="is_expired" type="bool" nullable="false"/>
-        <field field-name="tokenDigest" name="token_digest" type="string" nullable="false"/>
-        <field field-name="scope" name="scope" type="string" nullable="false"/>
     </embedded-document>
 </doctrine-mongo-mapping>

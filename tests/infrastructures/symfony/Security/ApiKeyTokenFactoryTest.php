@@ -39,19 +39,17 @@ use Teknoo\East\Common\Object\ApiKeysAuth;
 use Teknoo\East\Common\Object\ApiKeyToken;
 use Teknoo\East\Common\Object\StoredPassword;
 use Teknoo\East\Common\Object\User;
-use Teknoo\East\CommonBundle\Security\ApiKeyFactory;
+use Teknoo\East\CommonBundle\Security\ApiKeyTokenFactory;
 use Teknoo\East\Foundation\Time\DatesService;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Throwable;
-
-use function hash;
 
 /**
  * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-#[CoversClass(ApiKeyFactory::class)]
-class ApiKeyFactoryTest extends TestCase
+#[CoversClass(ApiKeyTokenFactory::class)]
+class ApiKeyTokenFactoryTest extends TestCase
 {
     private function buildHasher(): UserPasswordHasherInterface
     {
@@ -92,49 +90,29 @@ class ApiKeyFactoryTest extends TestCase
         return $promise;
     }
 
-    public function testCreateWithoutScope(): void
+    public function testCreate(): void
     {
         $owner = new User()->setAuthData([new StoredPassword()]);
         $expiresAt = new DateTimeImmutable('2024-02-01 13:14:15');
         $apiKey = new ApiKeyToken(name: 'my-key', expiresAt: $expiresAt);
 
-        $factory = new ApiKeyFactory($this->buildDatesService(), $this->buildHasher(), 'ak_');
+        $factory = new ApiKeyTokenFactory($this->buildDatesService(), $this->buildHasher(), 'ak_');
 
         $this->assertInstanceOf(
-            ApiKeyFactory::class,
+            ApiKeyTokenFactory::class,
             $factory->create($owner, $apiKey, $this->buildSuccessPromise($apiKey)),
         );
 
         $this->assertMatchesRegularExpression('/^ak_[0-9a-f]{64}$/', $apiKey->getToken());
-        $this->assertSame(hash('sha256', $apiKey->getToken()), $apiKey->getTokenDigest());
         $this->assertSame('hashed', $apiKey->getTokenHash());
         $this->assertEquals(new DateTimeImmutable('2024-01-01 10:00:00'), $apiKey->getCreatedAt());
         $this->assertSame($expiresAt, $apiKey->getExpiresAt());
         $this->assertFalse($apiKey->isExpired());
-        $this->assertNull($apiKey->getScope());
 
         $apiKeys = $owner->getOneAuthData(ApiKeysAuth::class);
         $this->assertInstanceOf(ApiKeysAuth::class, $apiKeys);
         $this->assertSame($apiKey, $apiKeys->getToken('my-key'));
         $this->assertCount(2, [...$owner->getAuthData()]);
-    }
-
-    public function testCreateWithScope(): void
-    {
-        $owner = new User();
-        $apiKey = new ApiKeyToken(name: 'my-key', expiresAt: new DateTimeImmutable('2024-02-01'), scope: 'inference');
-
-        $factory = new ApiKeyFactory(
-            $this->buildDatesService(),
-            $this->buildHasher(),
-            scopes: ['inference', 'management'],
-        );
-
-        $factory->create($owner, $apiKey, $this->buildSuccessPromise($apiKey));
-
-        $this->assertMatchesRegularExpression('/^[0-9a-f]{64}$/', $apiKey->getToken());
-        $this->assertSame('inference', $apiKey->getScope());
-        $this->assertSame($apiKey, $owner->getOneAuthData(ApiKeysAuth::class)?->getToken('my-key'));
     }
 
     public function testCreateAddsTheKeyToTheCurrentApiKeysAuth(): void
@@ -144,7 +122,7 @@ class ApiKeyFactoryTest extends TestCase
         $owner = new User()->setAuthData([$apiKeys]);
         $apiKey = new ApiKeyToken('my-key');
 
-        $factory = new ApiKeyFactory($this->buildDatesService(), $this->buildHasher());
+        $factory = new ApiKeyTokenFactory($this->buildDatesService(), $this->buildHasher());
         $factory->create($owner, $apiKey, $this->buildSuccessPromise($apiKey));
 
         $this->assertSame($apiKey, $apiKeys->getToken('my-key'));
@@ -160,7 +138,7 @@ class ApiKeyFactoryTest extends TestCase
             ->willReturn($datesService);
 
         $apiKey = new ApiKeyToken('my-key');
-        $factory = new ApiKeyFactory($datesService, $this->buildHasher());
+        $factory = new ApiKeyTokenFactory($datesService, $this->buildHasher());
         $factory->create(new User(), $apiKey, $this->buildSuccessPromise($apiKey));
     }
 
@@ -173,7 +151,7 @@ class ApiKeyFactoryTest extends TestCase
             ->willReturn($datesService);
 
         $apiKey = new ApiKeyToken('my-key');
-        $factory = new ApiKeyFactory($datesService, $this->buildHasher(), preferRealDate: true);
+        $factory = new ApiKeyTokenFactory($datesService, $this->buildHasher(), preferRealDate: true);
         $factory->create(new User(), $apiKey, $this->buildSuccessPromise($apiKey));
     }
 
@@ -182,7 +160,7 @@ class ApiKeyFactoryTest extends TestCase
         $owner = new User();
         $apiKey = new ApiKeyToken('My key');
 
-        $factory = new ApiKeyFactory($this->buildDatesService(), $this->buildHasher());
+        $factory = new ApiKeyTokenFactory($this->buildDatesService(), $this->buildHasher());
         $factory->create(
             $owner,
             $apiKey,
@@ -199,7 +177,7 @@ class ApiKeyFactoryTest extends TestCase
         $owner = new User()->setAuthData([$apiKeys]);
         $apiKey = new ApiKeyToken('my-key');
 
-        $factory = new ApiKeyFactory($this->buildDatesService(), $this->buildHasher());
+        $factory = new ApiKeyTokenFactory($this->buildDatesService(), $this->buildHasher());
         $factory->create(
             $owner,
             $apiKey,
@@ -208,58 +186,6 @@ class ApiKeyFactoryTest extends TestCase
 
         $this->assertSame('', $apiKey->getToken());
         $this->assertSame($existing, $apiKeys->getToken('my-key'));
-    }
-
-    public function testCreateRefusesAScopeOutsideTheList(): void
-    {
-        $owner = new User();
-        $apiKey = new ApiKeyToken(name: 'my-key', scope: 'other');
-
-        $factory = new ApiKeyFactory(
-            $this->buildDatesService(),
-            $this->buildHasher(),
-            scopes: ['inference', 'management'],
-        );
-        $factory->create(
-            $owner,
-            $apiKey,
-            $this->buildFailPromise('teknoo.east.common.api_keys.error.invalid_scope', 400),
-        );
-
-        $this->assertSame('', $apiKey->getToken());
-        $this->assertNull($owner->getOneAuthData(ApiKeysAuth::class));
-    }
-
-    public function testCreateRefusesAKeyWithoutScopeWhenTheApplicationListsScopes(): void
-    {
-        $apiKey = new ApiKeyToken('my-key');
-
-        $factory = new ApiKeyFactory(
-            $this->buildDatesService(),
-            $this->buildHasher(),
-            scopes: ['inference', 'management'],
-        );
-        $factory->create(
-            new User(),
-            $apiKey,
-            $this->buildFailPromise('teknoo.east.common.api_keys.error.invalid_scope', 400),
-        );
-
-        $this->assertSame('', $apiKey->getToken());
-    }
-
-    public function testCreateRefusesAScopeWhenTheApplicationListsNoScope(): void
-    {
-        $apiKey = new ApiKeyToken(name: 'my-key', scope: 'inference');
-
-        $factory = new ApiKeyFactory($this->buildDatesService(), $this->buildHasher());
-        $factory->create(
-            new User(),
-            $apiKey,
-            $this->buildFailPromise('teknoo.east.common.api_keys.error.invalid_scope', 400),
-        );
-
-        $this->assertSame('', $apiKey->getToken());
     }
 
     public function testCreateWhenTheKeysOfTheOwnerAreNotAccessible(): void
@@ -286,7 +212,7 @@ class ApiKeyFactoryTest extends TestCase
                 )
             );
 
-        $factory = new ApiKeyFactory($this->buildDatesService(), $this->buildHasher());
+        $factory = new ApiKeyTokenFactory($this->buildDatesService(), $this->buildHasher());
         $factory->create($owner, new ApiKeyToken('my-key'), $promise);
     }
 }

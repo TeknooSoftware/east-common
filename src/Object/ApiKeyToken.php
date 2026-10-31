@@ -30,9 +30,8 @@ use SensitiveParameter;
 use Teknoo\East\Common\Contracts\User\AuthDataInterface;
 
 /**
- * Class to defined a persisted user's api key, stored into an `ApiKeysAuth` instance. Only the hash and the SHA-256
- * digest of the token are persisted : the token is available only when the key is created. A key created before
- * East Common 4.9 has no digest and no scope. Values of a key are immutable once they are set.
+ * Class to defined a persisted user's api key, stored into an `ApiKeysAuth` instance. Only the hash of the token is
+ * persisted : the token is available only when the key is created. Values of a key are immutable once they are set.
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
@@ -53,10 +52,6 @@ class ApiKeyToken implements AuthDataInterface
 
     private bool $isExpired = false;
 
-    private ?string $tokenDigest = null;
-
-    private ?string $scope = null;
-
     public function __construct(
         string $name = '',
         #[SensitiveParameter]
@@ -66,9 +61,6 @@ class ApiKeyToken implements AuthDataInterface
         bool $isExpired = false,
         ?DateTimeInterface $createdAt = null,
         ?DateTimeInterface $expiresAt = null,
-        #[SensitiveParameter]
-        ?string $tokenDigest = null,
-        ?string $scope = null,
     ) {
         $this->name = $name;
         $this->token = $token;
@@ -76,8 +68,6 @@ class ApiKeyToken implements AuthDataInterface
         $this->isExpired = $isExpired;
         $this->createdAt = $createdAt;
         $this->expiresAt = $expiresAt;
-        $this->tokenDigest = $tokenDigest;
-        $this->scope = $scope;
     }
 
     public function getName(): string
@@ -163,36 +153,6 @@ class ApiKeyToken implements AuthDataInterface
     {
         if (null === $this->expiresAt) {
             $this->expiresAt = $expiresAt;
-        }
-
-        return $this;
-    }
-
-    public function getTokenDigest(): ?string
-    {
-        return $this->tokenDigest;
-    }
-
-    public function setTokenDigest(
-        #[SensitiveParameter]
-        string $tokenDigest,
-    ): ApiKeyToken {
-        if (null === $this->tokenDigest) {
-            $this->tokenDigest = $tokenDigest;
-        }
-
-        return $this;
-    }
-
-    public function getScope(): ?string
-    {
-        return $this->scope;
-    }
-
-    public function setScope(?string $scope): ApiKeyToken
-    {
-        if (null === $this->scope) {
-            $this->scope = $scope;
         }
 
         return $this;

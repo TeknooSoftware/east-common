@@ -33,7 +33,7 @@ use DateTimeImmutable;
 use PHPUnit\Framework\Assert;
 use SensitiveParameter;
 use Symfony\Component\PasswordHasher\Hasher\SodiumPasswordHasher;
-use Teknoo\East\Common\Contracts\User\ApiKeyFactoryInterface;
+use Teknoo\East\Common\Contracts\User\ApiKeyTokenFactoryInterface;
 use Teknoo\East\Common\Object\ApiKeysAuth;
 use Teknoo\East\Common\Object\ApiKeyToken;
 use Teknoo\East\Common\Object\User;
@@ -42,7 +42,6 @@ use Throwable;
 
 use function base64_decode;
 use function explode;
-use function hash;
 use function json_decode;
 use function strtr;
 
@@ -64,12 +63,12 @@ trait ApiKeysTrait
      */
     private ?Throwable $apiKeyFactoryError = null;
 
-    private function createApiKeyWithTheFactory(string $factoryId, ApiKeyToken $apiKey): void
+    private function createApiKeyWithTheFactory(ApiKeyToken $apiKey): void
     {
         Assert::assertInstanceOf(User::class, $this->user);
 
-        $factory = $this->symfonyKernel->getContainer()->get($factoryId);
-        Assert::assertInstanceOf(ApiKeyFactoryInterface::class, $factory);
+        $factory = $this->symfonyKernel->getContainer()->get(ApiKeyTokenFactoryInterface::class);
+        Assert::assertInstanceOf(ApiKeyTokenFactoryInterface::class, $factory);
 
         $this->createdApiKey = null;
         $this->apiKeyFactoryError = null;
@@ -150,25 +149,10 @@ trait ApiKeysTrait
     }
 
     #[When('the key factory creates the API key :name, expiring at :date')]
-    #[When('the key factory creates the API key :name with the scope :scope, expiring at :date')]
-    public function theKeyFactoryCreatesTheApiKeyForTheUser(string $name, string $date, ?string $scope = null): void
+    public function theKeyFactoryCreatesTheApiKeyForTheUser(string $name, string $date): void
     {
         $this->createApiKeyWithTheFactory(
-            ApiKeyFactoryInterface::class,
-            new ApiKeyToken(name: $name, expiresAt: new DateTimeImmutable($date), scope: $scope),
-        );
-    }
-
-    #[When('the key factory with scopes creates the API key :name, expiring at :date')]
-    #[When('the key factory with scopes creates the API key :name with the scope :scope, expiring at :date')]
-    public function theKeyFactoryWithScopesCreatesTheApiKeyForTheUser(
-        string $name,
-        string $date,
-        ?string $scope = null,
-    ): void {
-        $this->createApiKeyWithTheFactory(
-            'teknoo.east.common.behat.api_key_factory.with_scopes',
-            new ApiKeyToken(name: $name, expiresAt: new DateTimeImmutable($date), scope: $scope),
+            new ApiKeyToken(name: $name, expiresAt: new DateTimeImmutable($date)),
         );
     }
 
@@ -208,24 +192,5 @@ trait ApiKeysTrait
         Assert::assertSame($createdAt, $apiKey->getCreatedAt()?->format('Y-m-d H:i:s'));
         Assert::assertSame($expiresAt, $apiKey->getExpiresAt()?->format('Y-m-d H:i:s'));
         Assert::assertFalse($apiKey->isExpired());
-    }
-
-    #[Then('the API key :name of the user has the scope :scope')]
-    #[Then('the API key :name of the user has no scope')]
-    public function theApiKeyOfTheUserHasTheScope(string $name, ?string $scope = null): void
-    {
-        $apiKey = $this->getApiKeysOfTheUser()?->getToken($name);
-        Assert::assertInstanceOf(ApiKeyToken::class, $apiKey, "The user has no API key `{$name}`");
-
-        Assert::assertSame($scope, $apiKey->getScope());
-    }
-
-    #[Then('the digest of the secret :secret is stored with the API key :name of the user')]
-    public function theDigestOfTheSecretIsStoredWithTheApiKeyOfTheUser(string $secret, string $name): void
-    {
-        $apiKey = $this->getApiKeysOfTheUser()?->getToken($name);
-        Assert::assertInstanceOf(ApiKeyToken::class, $apiKey, "The user has no API key `{$name}`");
-
-        Assert::assertSame(hash('sha256', $this->replaceRememberedValues($secret)), $apiKey->getTokenDigest());
     }
 }

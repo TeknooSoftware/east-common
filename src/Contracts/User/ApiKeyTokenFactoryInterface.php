@@ -21,7 +21,6 @@
  * @author      Richard Déloge <richard@teknoo.software>
  */
 
-
 declare(strict_types=1);
 
 namespace Teknoo\East\Common\Contracts\User;
@@ -31,21 +30,21 @@ use Teknoo\East\Common\Object\User;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
- * Interface to define a factory of API keys, to create a key without a form and without a signed in user (for example
- * from a console command or from an API). The caller gives a new `ApiKeyToken`, with its name, its scope and its
- * expiration date. The factory checks the name and the scope, completes the key (its value, the SHA-256 digest and the
- * hash of its value, its creation date) and adds it to the `ApiKeysAuth` of the owner. The promise gets the key: its
- * value is available only during this request. The caller must save the owner.
+ * Interface to define a factory of API keys of the JWT flow, to create a key without a form and without a signed in
+ * user (for example from a console command or from an API). The caller gives a new `ApiKeyToken`, with its name and
+ * its expiration date. The factory checks the name, completes the key (its value, the hash of its value, its creation
+ * date) and adds it to the `ApiKeysAuth` of the owner. The promise gets the key: its value is available only during
+ * this request. The caller must save the owner.
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-interface ApiKeyFactoryInterface
+interface ApiKeyTokenFactoryInterface
 {
     /**
      * @param PromiseInterface<ApiKeyToken, mixed> $promise
      */
-    public function create(User $owner, ApiKeyToken $apiKey, PromiseInterface $promise): ApiKeyFactoryInterface;
+    public function create(User $owner, ApiKeyToken $apiKey, PromiseInterface $promise): ApiKeyTokenFactoryInterface;
 }

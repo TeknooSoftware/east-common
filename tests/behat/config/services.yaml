@@ -42,16 +42,6 @@ services:
 
   Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorageFactory: ~
 
-  # Key factory of an application which lists scopes
-  teknoo.east.common.behat.api_key_factory.with_scopes:
-    class: 'Teknoo\East\CommonBundle\Security\ApiKeyFactory'
-    public: true
-    arguments:
-      - '@Teknoo\East\Foundation\Time\DatesService'
-      - '@security.user_password_hasher'
-      - '%teknoo.east.common.bundle.api_keys.token_prefix%'
-      - ['inference', 'management']
-
   Teknoo\Tests\East\Common\Behat\BearerTokenFailureHandler: ~
 
   Teknoo\Tests\East\Common\Behat\GetTokenStorageService:

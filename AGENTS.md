@@ -65,15 +65,15 @@ All verification must be performed via the provided `Makefile`.
 
 ## API keys
 
-- An `ApiKeyToken` keeps the hash of the value of a key (`token_hash`, a slow hash for the JWT flow) and, since 4.9,
-  its SHA-256 digest (`token_digest`, with a unique sparse index in the mapping of `User`) and its scope. A key created
-  before 4.9 has no digest and no scope. The value is never persisted.
-- `Teknoo\East\Common\Contracts\User\ApiKeyFactoryInterface::create(User $owner, ApiKeyToken $apiKey, $promise)` is
-  the only code that completes a new key: value, digest, hash, creation date. The form `ApiKeysAuthType` uses it. Its
-  implementation is `Teknoo\East\CommonBundle\Security\ApiKeyFactory`. The caller saves the owner.
-- `BearerTokensAuth` lists the `BearerToken` of a user: API keys sent with each request, kept as the SHA-256 digest
-  of their value. `Teknoo\East\Common\Contracts\User\BearerTokenFactoryInterface::create()` (implementation
-  `Teknoo\East\Common\User\BearerTokenFactory`, in PHP-DI) creates them.
+- An `ApiKeyToken`, in `ApiKeysAuth`, is an API key of the JWT flow: it keeps the hash of its value (`token_hash`, a
+  slow hash). The value is never persisted. The form `ApiKeysAuthType` and, since 4.9, the method `create()` of
+  `Teknoo\East\Common\Contracts\User\ApiKeyTokenFactoryInterface` (implementation
+  `Teknoo\East\CommonBundle\Security\ApiKeyTokenFactory`, without form and signed in user) create it.
+- Since 4.9, a `BearerToken`, in `BearerTokensAuth`, is an API key sent with each request: it keeps only the SHA-256
+  digest of its value (`token_digest`, with a unique sparse index in the mapping of `User`). It is another behavior,
+  so another class: `ApiKeyToken` does not change. The method `create()` of
+  `Teknoo\East\Common\Contracts\User\BearerTokenFactoryInterface` (implementation
+  `Teknoo\East\Common\User\BearerTokenFactory`, in PHP-DI) creates it. The caller saves the owner.
 - `Teknoo\East\Common\Query\User\UserByBearerTokenDigestQuery` loads the active user of a bearer token from its
   digest.
 - `Teknoo\East\CommonBundle\Security\Authenticator\BearerTokenAuthenticator` authenticates each request of a
@@ -83,5 +83,7 @@ All verification must be performed via the provided `Makefile`.
   Its date is the real date by default (`teknoo.east.common.bundle.bearer_tokens.authenticator.prefer_real_date`). A
   failure of the database gives an `AuthenticationServiceException`; a key that is not found (`DomainException` of
   the repository) gives a refusal.
-- Parameters: `teknoo.east.common.bundle.api_keys.token_prefix`, `teknoo.east.common.bundle.api_keys.scopes` (empty:
-  keys without scope) and `teknoo.east.common.bundle.api_keys.prefer_real_date` (`false` by default).
+- Parameters: `teknoo.east.common.bundle.api_keys.token_prefix` and
+  `teknoo.east.common.bundle.api_keys.prefer_real_date` (`false` by default) for the API keys; the PHP-DI values
+  `teknoo.east.common.user.bearer_tokens.token_prefix` and
+  `teknoo.east.common.user.bearer_tokens.prefer_real_date` (`false` by default) for the bearer tokens.

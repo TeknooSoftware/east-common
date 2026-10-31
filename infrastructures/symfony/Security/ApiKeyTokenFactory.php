@@ -21,7 +21,6 @@
  * @author      Richard Déloge <richard@teknoo.software>
  */
 
-
 declare(strict_types=1);
 
 namespace Teknoo\East\CommonBundle\Security;
@@ -29,7 +28,7 @@ namespace Teknoo\East\CommonBundle\Security;
 use DateTimeInterface;
 use DomainException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Teknoo\East\Common\Contracts\User\ApiKeyFactoryInterface;
+use Teknoo\East\Common\Contracts\User\ApiKeyTokenFactoryInterface;
 use Teknoo\East\Common\Object\ApiKeysAuth;
 use Teknoo\East\Common\Object\ApiKeyToken;
 use Teknoo\East\Common\Object\User;
@@ -39,51 +38,33 @@ use Teknoo\Recipe\Promise\PromiseInterface;
 use Throwable;
 
 use function bin2hex;
-use function hash;
-use function in_array;
 use function preg_match;
 use function random_bytes;
 
 /**
- * Default implementation of `ApiKeyFactoryInterface`. The value of a key is the prefix of keys followed by 32 random
- * bytes in hexadecimal. Its SHA-256 digest finds the key without a slow hash, and its hash, with the hasher of
- * `ApiKeysAuthUser` (section `password_hashers` of Symfony Security), keeps the JWT flow. When the application lists
- * scopes, each key must have one scope of this list. Without this list, a key has no scope.
+ * Default implementation of `ApiKeyTokenFactoryInterface`. It makes the key as the form `ApiKeysAuthType` does: the
+ * value of a key is the prefix of keys followed by 32 random bytes in hexadecimal, and its hash comes from the hasher
+ * of `ApiKeysAuthUser` (section `password_hashers` of Symfony Security).
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-class ApiKeyFactory implements ApiKeyFactoryInterface
+class ApiKeyTokenFactory implements ApiKeyTokenFactoryInterface
 {
-    /**
-     * @param array<int, string> $scopes
-     */
     public function __construct(
         private readonly DatesService $datesService,
         private readonly UserPasswordHasherInterface $passwordHasher,
         private readonly string $tokenPrefix = '',
-        private readonly array $scopes = [],
         private readonly bool $preferRealDate = false,
     ) {
     }
 
-    public function create(User $owner, ApiKeyToken $apiKey, PromiseInterface $promise): ApiKeyFactoryInterface
+    public function create(User $owner, ApiKeyToken $apiKey, PromiseInterface $promise): ApiKeyTokenFactoryInterface
     {
         if (1 !== preg_match('/^[a-z][a-z0-9\_\-]{3,}$/', $apiKey->getName())) {
             $promise->fail(new DomainException('teknoo.east.common.api_keys.form.name.regex_error', 400));
-
-            return $this;
-        }
-
-        $scopeIsValid = null === $apiKey->getScope();
-        if ([] !== $this->scopes) {
-            $scopeIsValid = in_array($apiKey->getScope(), $this->scopes, true);
-        }
-
-        if (!$scopeIsValid) {
-            $promise->fail(new DomainException('teknoo.east.common.api_keys.error.invalid_scope', 400));
 
             return $this;
         }
@@ -111,7 +92,6 @@ class ApiKeyFactory implements ApiKeyFactoryInterface
                     $token = $this->tokenPrefix . bin2hex(random_bytes(32));
 
                     $apiKey->setToken($token);
-                    $apiKey->setTokenDigest(hash('sha256', $token));
                     $apiKey->setCreatedAt($now);
                     $apiKey->setExpired(false);
 

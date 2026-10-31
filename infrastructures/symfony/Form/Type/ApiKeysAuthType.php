@@ -25,9 +25,8 @@ declare(strict_types=1);
 
 namespace Teknoo\East\CommonBundle\Form\Type;
 
-use SensitiveParameter;
+use DateTimeInterface;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -40,23 +39,20 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Context\ExecutionContext;
-use Teknoo\East\Common\Contracts\User\ApiKeyFactoryInterface;
 use Teknoo\East\Common\Object\ApiKeysAuth;
 use Teknoo\East\Common\Object\ApiKeyToken;
 use Teknoo\East\Common\Object\User;
 use Teknoo\East\CommonBundle\Object\AbstractUser;
-use Teknoo\East\CommonBundle\Security\ApiKeyFactory;
+use Teknoo\East\CommonBundle\Object\ApiKeysAuthUser;
 use Teknoo\East\Foundation\Time\DatesService;
-use Teknoo\Recipe\Promise\Promise;
-use Throwable;
 
-use function array_combine;
+use function bin2hex;
+use function random_bytes;
 
 /**
  * Symfony form to create a new API key (an ApiKeyToken instance) for the current authenticated user : the form asks
- * the name of the key and its expiration date, and its scope when the option `scopes` lists scopes. When the form is
- * valid, the key factory (`ApiKeyFactoryInterface`) generates the token of the key (with an optional prefix), its
- * digest and its hash, and adds the key to the ApiKeysAuth instance of the user.
+ * the name of the key and its expiration date. When the form is valid, the token of the key is generated (with an
+ * optional prefix), hashed like a password and the key is added to the ApiKeysAuth instance of the user.
  * The token is available, into the ApiKeyToken instance, only during this request : it is not persisted.
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
@@ -66,27 +62,12 @@ use function array_combine;
  */
 class ApiKeysAuthType extends AbstractType
 {
-    private readonly ApiKeyFactoryInterface $apiKeyFactory;
-
-    /**
-     * @param array<int, string> $scopes default choices of the field `scope`, without scope when it is empty
-     */
     public function __construct(
-        DatesService $datesService,
+        private readonly DatesService $datesService,
         private readonly TokenStorageInterface $tokenStorage,
-        UserPasswordHasherInterface $passwordHasher,
-        string $tokenPrefix = '',
-        private readonly array $scopes = [],
-        bool $preferRealDate = false,
-        ?ApiKeyFactoryInterface $apiKeyFactory = null,
+        private readonly UserPasswordHasherInterface $passwordHasher,
+        private readonly string $tokenPrefix = '',
     ) {
-        $this->apiKeyFactory = $apiKeyFactory ?? new ApiKeyFactory(
-            $datesService,
-            $passwordHasher,
-            $tokenPrefix,
-            $scopes,
-            $preferRealDate,
-        );
     }
 
     private function findApiKeysAuth(User $user): ?ApiKeysAuth
@@ -156,20 +137,6 @@ class ApiKeysAuthType extends AbstractType
             ],
         );
 
-        /** @var array<int, string> $scopes */
-        $scopes = $options['scopes'] ?? [];
-        if ([] !== $scopes) {
-            $builder->add(
-                'scope',
-                ChoiceType::class,
-                [
-                    'required' => true,
-                    'label' => 'teknoo.east.common.api_keys.form.scope',
-                    'choices' => array_combine($scopes, $scopes),
-                ],
-            );
-        }
-
         $builder->addEventListener(
             FormEvents::POST_SUBMIT,
             function (FormEvent $event) use ($user): void {
@@ -182,15 +149,29 @@ class ApiKeysAuthType extends AbstractType
                     return;
                 }
 
-                /** @var Promise<ApiKeyToken, mixed, mixed> $promise */
-                $promise = new Promise(
-                    null,
-                    static function (#[SensitiveParameter] Throwable $error): never {
-                        throw $error;
-                    },
-                );
+                $this->datesService->passMeTheDate(
+                    function (DateTimeInterface $now) use ($user, $data): void {
+                        $token = $this->tokenPrefix . bin2hex(random_bytes(32));
 
-                $this->apiKeyFactory->create($user, $data, $promise);
+                        $data->setToken($token);
+                        $data->setCreatedAt($now);
+                        $data->setExpired(false);
+
+                        $data->setTokenHash(
+                            $this->passwordHasher->hashPassword(
+                                new ApiKeysAuthUser(
+                                    $user,
+                                    $data,
+                                ),
+                                $token
+                            )
+                        );
+
+                        $apiKeys = $this->findApiKeysAuth($user) ?? new ApiKeysAuth();
+                        $apiKeys->addToken($data);
+                        $user->addAuthData($apiKeys);
+                    }
+                );
             }
         );
     }
@@ -201,9 +182,6 @@ class ApiKeysAuthType extends AbstractType
 
         $resolver->setDefaults([
             'data_class' => ApiKeyToken::class,
-            'scopes' => $this->scopes,
         ]);
-
-        $resolver->setAllowedTypes('scopes', 'string[]');
     }
 }

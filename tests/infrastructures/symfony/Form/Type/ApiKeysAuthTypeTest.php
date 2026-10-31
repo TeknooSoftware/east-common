@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace Teknoo\Tests\East\CommonBundle\Form\Type;
 
 use DateTimeImmutable;
-use DomainException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -40,7 +39,6 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Context\ExecutionContext;
-use Teknoo\East\Common\Contracts\User\ApiKeyFactoryInterface;
 use Teknoo\East\Common\Object\ApiKeysAuth;
 use Teknoo\East\Common\Object\ApiKeyToken;
 use Teknoo\East\Common\Object\StoredPassword;
@@ -48,9 +46,6 @@ use Teknoo\East\Common\Object\User;
 use Teknoo\East\CommonBundle\Form\Type\ApiKeysAuthType;
 use Teknoo\East\CommonBundle\Object\AbstractUser;
 use Teknoo\East\Foundation\Time\DatesService;
-use Teknoo\Recipe\Promise\PromiseInterface;
-
-use function hash;
 
 /**
  * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
@@ -306,178 +301,5 @@ class ApiKeysAuthTypeTest extends TestCase
         $type->configureOptions($resolver);
 
         $this->assertSame(ApiKeyToken::class, $resolver->resolve([])['data_class']);
-    }
-
-    public function testBuildFormKeepsTheDigestOfTheValue(): void
-    {
-        $user = new User();
-
-        $hasher = $this->createStub(UserPasswordHasherInterface::class);
-        $hasher->method('hashPassword')->willReturn('hashed');
-
-        $type = new ApiKeysAuthType(
-            new DatesService()->setCurrentDate(new DateTimeImmutable('2024-01-01')),
-            $this->buildTokenStorage($this->buildTokenFor($user)),
-            $hasher,
-            'ak_',
-        );
-
-        $added = [];
-        $listeners = [];
-        $type->buildForm($this->buildFormBuilder($added, $listeners), []);
-
-        $validForm = $this->createStub(FormInterface::class);
-        $validForm->method('isValid')->willReturn(true);
-
-        $apiKeyToken = new ApiKeyToken('first');
-        $listeners[FormEvents::POST_SUBMIT][0](new FormEvent($validForm, $apiKeyToken));
-
-        $this->assertSame(hash('sha256', $apiKeyToken->getToken()), $apiKeyToken->getTokenDigest());
-        $this->assertSame('hashed', $apiKeyToken->getTokenHash());
-    }
-
-    public function testBuildFormWithScopes(): void
-    {
-        $type = new ApiKeysAuthType(
-            $this->createStub(DatesService::class),
-            $this->buildTokenStorage($this->buildTokenFor(new User())),
-            $this->createStub(UserPasswordHasherInterface::class),
-        );
-
-        $added = [];
-        $listeners = [];
-        $type->buildForm($this->buildFormBuilder($added, $listeners), ['scopes' => ['inference', 'management']]);
-
-        $this->assertArrayHasKey('scope', $added);
-        $this->assertTrue($added['scope']['required']);
-        $this->assertSame(
-            ['inference' => 'inference', 'management' => 'management'],
-            $added['scope']['choices'],
-        );
-    }
-
-    public function testBuildFormWithoutScopes(): void
-    {
-        $type = new ApiKeysAuthType(
-            $this->createStub(DatesService::class),
-            $this->buildTokenStorage($this->buildTokenFor(new User())),
-            $this->createStub(UserPasswordHasherInterface::class),
-        );
-
-        $added = [];
-        $listeners = [];
-        $type->buildForm($this->buildFormBuilder($added, $listeners), ['scopes' => []]);
-
-        $this->assertArrayHasKey('name', $added);
-        $this->assertArrayNotHasKey('scope', $added);
-    }
-
-    public function testBuildFormCreatesTheKeyWithTheApiKeyFactory(): void
-    {
-        $user = new User();
-        $apiKeyToken = new ApiKeyToken('first');
-
-        $factory = $this->createMock(ApiKeyFactoryInterface::class);
-        $factory->expects($this->once())
-            ->method('create')
-            ->with($user, $apiKeyToken, $this->isInstanceOf(PromiseInterface::class))
-            ->willReturnCallback(
-                static function (User $user, ApiKeyToken $apiKey, PromiseInterface $promise) use ($factory) {
-                    $promise->success($apiKey);
-
-                    return $factory;
-                }
-            );
-
-        $type = new ApiKeysAuthType(
-            $this->createStub(DatesService::class),
-            $this->buildTokenStorage($this->buildTokenFor($user)),
-            $this->createStub(UserPasswordHasherInterface::class),
-            apiKeyFactory: $factory,
-        );
-
-        $added = [];
-        $listeners = [];
-        $type->buildForm($this->buildFormBuilder($added, $listeners), []);
-
-        $validForm = $this->createStub(FormInterface::class);
-        $validForm->method('isValid')->willReturn(true);
-
-        $listeners[FormEvents::POST_SUBMIT][0](new FormEvent($validForm, $apiKeyToken));
-    }
-
-    public function testBuildFormThrowsTheErrorOfTheApiKeyFactory(): void
-    {
-        $user = new User();
-
-        $factory = $this->createStub(ApiKeyFactoryInterface::class);
-        $factory->method('create')
-            ->willReturnCallback(
-                static function (User $user, ApiKeyToken $apiKey, PromiseInterface $promise) use ($factory) {
-                    $promise->fail(new DomainException('teknoo.east.common.api_keys.error.invalid_scope', 400));
-
-                    return $factory;
-                }
-            );
-
-        $type = new ApiKeysAuthType(
-            $this->createStub(DatesService::class),
-            $this->buildTokenStorage($this->buildTokenFor($user)),
-            $this->createStub(UserPasswordHasherInterface::class),
-            apiKeyFactory: $factory,
-        );
-
-        $added = [];
-        $listeners = [];
-        $type->buildForm($this->buildFormBuilder($added, $listeners), []);
-
-        $validForm = $this->createStub(FormInterface::class);
-        $validForm->method('isValid')->willReturn(true);
-
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('teknoo.east.common.api_keys.error.invalid_scope');
-
-        $listeners[FormEvents::POST_SUBMIT][0](new FormEvent($validForm, new ApiKeyToken('first')));
-    }
-
-    public function testBuildFormReadsTheRealDate(): void
-    {
-        $datesService = $this->createMock(DatesService::class);
-        $datesService->expects($this->once())
-            ->method('passMeTheDate')
-            ->with($this->isCallable(), true)
-            ->willReturn($datesService);
-
-        $type = new ApiKeysAuthType(
-            $datesService,
-            $this->buildTokenStorage($this->buildTokenFor(new User())),
-            $this->createStub(UserPasswordHasherInterface::class),
-            preferRealDate: true,
-        );
-
-        $added = [];
-        $listeners = [];
-        $type->buildForm($this->buildFormBuilder($added, $listeners), []);
-
-        $validForm = $this->createStub(FormInterface::class);
-        $validForm->method('isValid')->willReturn(true);
-
-        $listeners[FormEvents::POST_SUBMIT][0](new FormEvent($validForm, new ApiKeyToken('first')));
-    }
-
-    public function testConfigureOptionsWithScopes(): void
-    {
-        $type = new ApiKeysAuthType(
-            $this->createStub(DatesService::class),
-            $this->buildTokenStorage(null),
-            $this->createStub(UserPasswordHasherInterface::class),
-            scopes: ['inference', 'management'],
-        );
-
-        $resolver = new OptionsResolver();
-        $type->configureOptions($resolver);
-
-        $this->assertSame(['inference', 'management'], $resolver->resolve([])['scopes']);
-        $this->assertSame(['inference'], $resolver->resolve(['scopes' => ['inference']])['scopes']);
     }
 }

@@ -458,24 +458,23 @@ expiration date. Only the SHA-256 digest of its value is persisted. The PHP-DI v
 Since East Common 4.9, a new key also keeps the `SHA-256` digest of its value, in `token_digest`, and its scope, in
 `scope`. The mapping of `User` adds a unique sparse index on `authData.tokens.token_digest`: create it with the
 schema manager of Doctrine ODM (`doctrine:mongodb:schema:update`). A key created before 4.9 has no digest and no
-scope: the index skips it. The query `UserByApiKeyDigestQuery` loads the active user of a key from this digest, with
-this index.
+scope: the index skips it.
 
-Authenticate each request with an API key
------------------------------------------
+Authenticate each request with a bearer token
+---------------------------------------------
 
-Since East Common 4.9, an API client can also send an API key with each request, without a JWT token, to a stateless
-firewall with the key `api_key`. The authenticator reads the key in the header `Authorization: Bearer`, and in a
-second header when the firewall gives one. It refuses a request without key, or with 2 different values in the 2
-headers. It finds the key from its digest, with one indexed query, without a slow hash and without cache: a removed
-key fails at the next request. It refuses a key without digest (created before 4.9), an expired key, the key of an
-inactive user, and a key whose scope is not in `accepted_scopes`, when the firewall gives this list. The user does not
-need a password. The token gets the name and the scope of the key, in its attributes `api_key_name` and
-`api_key_scope`. The failure handler of the firewall renders each failure (a Symfony
-`AuthenticationFailureHandlerInterface`), with the message keys `teknoo.east.common.api_keys.error.missing`,
-`teknoo.east.common.api_keys.error.different_values`, `teknoo.east.common.api_keys.error.invalid` and
-`teknoo.east.common.api_keys.error.scope_refused`. No message holds the value of the key. A failure of the database
-is not a wrong key: the authenticator gives an `AuthenticationServiceException`, with the error as previous, so the
+Since East Common 4.9, an API client can also send a bearer token with each request, without a JWT token, to a
+stateless firewall with the key `bearer_token`. A bearer token is a `BearerToken`, in the `BearerTokensAuth` of the
+user, created by the bearer token factory. It is not an API key of the JWT flow (`ApiKeyToken`). The authenticator
+reads the key in the header `Authorization: Bearer`, and in a second header when the firewall gives one. It refuses a
+request without key, or with 2 different values in the 2 headers. It finds the key from its digest, with one indexed
+query (`UserByBearerTokenDigestQuery`), without a slow hash and without cache: a removed key fails at the next
+request. It refuses an expired key and the key of an inactive user. The user does not need a password: it is a
+`BearerTokenAuthenticatedUser`. The token gets the name of the key, in its attribute `bearer_token_name`. The failure
+handler of the firewall renders each failure (a Symfony `AuthenticationFailureHandlerInterface`), with the message
+keys `teknoo.east.common.bearer_tokens.error.missing`, `teknoo.east.common.bearer_tokens.error.different_values` and
+`teknoo.east.common.bearer_tokens.error.invalid`. No message holds the value of the key. A failure of the database is
+not a wrong key: the authenticator gives an `AuthenticationServiceException`, with the error as previous, so the
 failure handler can answer with another status, for example 503.
 
 ```yaml
@@ -483,20 +482,19 @@ failure handler can answer with another status, for example 503.
 security:
     firewalls:
         //...
-        api_with_key:
+        api_with_bearer_token:
             pattern: '^/api/v2'
             stateless: true
             # Required by Symfony when the application has several providers, not used by the authenticator
             provider: 'with_api_key'
-            api_key:
+            bearer_token:
                 second_header: 'x-api-key'      # optional
-                accepted_scopes: ['read']       # optional, without it the scope is not checked
-                failure_handler: 'my_app.api_key_failure_handler'
+                failure_handler: 'my_app.bearer_token_failure_handler'
 
 #In services.yaml
 parameters:
     # The authenticator reads the real date, and not the date of the request (`true` by default)
-    teknoo.east.common.bundle.api_keys.authenticator.prefer_real_date: true
+    teknoo.east.common.bundle.bearer_tokens.authenticator.prefer_real_date: true
 ```
 
 Support this project

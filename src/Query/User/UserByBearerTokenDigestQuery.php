@@ -36,8 +36,8 @@ use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
  * Class implementing query to load a non deleted and active user from the SHA-256 digest of the value of one of its
- * API keys, and pass result to the passed promise. The query uses the unique sparse index of
- * `authData.tokens.token_digest`. The caller must still check the key (expiration, scope).
+ * bearer tokens, and pass result to the passed promise. The query uses the unique sparse index of
+ * `authData.tokens.token_digest`. The caller must still check the key (expiration).
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
@@ -46,7 +46,7 @@ use Teknoo\Recipe\Promise\PromiseInterface;
  *
  * @implements QueryElementInterface<User>
  */
-class UserByApiKeyDigestQuery implements QueryElementInterface, ImmutableInterface
+class UserByBearerTokenDigestQuery implements QueryElementInterface, ImmutableInterface
 {
     use ImmutableTrait;
 

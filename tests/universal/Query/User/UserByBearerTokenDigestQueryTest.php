@@ -31,7 +31,7 @@ use Teknoo\East\Common\Contracts\DBSource\RepositoryInterface;
 use Teknoo\East\Common\Contracts\Loader\LoaderInterface;
 use Teknoo\East\Common\Contracts\Query\QueryElementInterface;
 use Teknoo\East\Common\Query\Expr\InclusiveOr;
-use Teknoo\East\Common\Query\User\UserByApiKeyDigestQuery;
+use Teknoo\East\Common\Query\User\UserByBearerTokenDigestQuery;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\Tests\East\Common\Query\QueryElementTestTrait;
 
@@ -39,8 +39,8 @@ use Teknoo\Tests\East\Common\Query\QueryElementTestTrait;
  * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-#[CoversClass(UserByApiKeyDigestQuery::class)]
-class UserByApiKeyDigestQueryTest extends TestCase
+#[CoversClass(UserByBearerTokenDigestQuery::class)]
+class UserByBearerTokenDigestQueryTest extends TestCase
 {
     use QueryElementTestTrait;
 
@@ -49,7 +49,7 @@ class UserByApiKeyDigestQueryTest extends TestCase
      */
     public function buildQuery(): QueryElementInterface
     {
-        return new UserByApiKeyDigestQuery('digest');
+        return new UserByBearerTokenDigestQuery('digest');
     }
 
     public function testFetch(): void
@@ -75,7 +75,7 @@ class UserByApiKeyDigestQueryTest extends TestCase
             );
 
         $this->assertInstanceOf(
-            UserByApiKeyDigestQuery::class,
+            UserByBearerTokenDigestQuery::class,
             $this->buildQuery()->fetch($loader, $repository, $promise)
         );
     }

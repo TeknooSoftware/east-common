@@ -34,13 +34,13 @@ use Symfony\Component\Security\Core\Exception\AuthenticationServiceException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 
 /**
- * Failure handler of the firewalls with an API key of the test application : the failure is rendered like other errors
+ * Failure handler of the firewalls with a bearer token of the test application : the failure is rendered like other errors
  * of a JSON API, with the message key of the authentication exception. A failure of the database gives a 503.
  *
  * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-class ApiKeyFailureHandler implements AuthenticationFailureHandlerInterface
+class BearerTokenFailureHandler implements AuthenticationFailureHandlerInterface
 {
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {

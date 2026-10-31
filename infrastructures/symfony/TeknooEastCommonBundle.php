@@ -28,11 +28,11 @@ namespace Teknoo\East\CommonBundle;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Teknoo\East\CommonBundle\DependencyInjection\Security\Factory\ApiKeyAuthenticatorFactory;
+use Teknoo\East\CommonBundle\DependencyInjection\Security\Factory\BearerTokenAuthenticatorFactory;
 
 /**
- * East Common integration in Symfony platform. With Symfony Security, it adds the key `api_key` to the configuration of
- * firewalls, for `ApiKeyAuthenticator`.
+ * East Common integration in Symfony platform. With Symfony Security, it adds the key `bearer_token` to the
+ * configuration of firewalls, for `BearerTokenAuthenticator`.
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
@@ -51,7 +51,7 @@ class TeknooEastCommonBundle extends Bundle
 
         $extension = $container->getExtension('security');
         if ($extension instanceof SecurityExtension) {
-            $extension->addAuthenticatorFactory(new ApiKeyAuthenticatorFactory());
+            $extension->addAuthenticatorFactory(new BearerTokenAuthenticatorFactory());
         }
     }
 }

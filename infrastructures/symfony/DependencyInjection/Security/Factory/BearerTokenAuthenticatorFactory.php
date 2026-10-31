@@ -21,7 +21,6 @@
  * @author      Richard Déloge <richard@teknoo.software>
  */
 
-
 declare(strict_types=1);
 
 namespace Teknoo\East\CommonBundle\DependencyInjection\Security\Factory;
@@ -33,21 +32,21 @@ use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
-use Teknoo\East\CommonBundle\Security\Authenticator\ApiKeyAuthenticator;
+use Teknoo\East\CommonBundle\Security\Authenticator\BearerTokenAuthenticator;
 
 use function is_string;
 
 /**
- * Factory of Symfony Security to configure `ApiKeyAuthenticator` in a firewall, with the key `api_key` and its options
- * `second_header` (optional, a second header with the API key), `accepted_scopes` (optional, without it the scope is
- * not checked) and `failure_handler` (required, the service which renders failures).
+ * Factory of Symfony Security to configure `BearerTokenAuthenticator` in a firewall, with the key `bearer_token` and
+ * its options `second_header` (optional, a second header with the bearer token) and `failure_handler` (required, the
+ * service which renders failures).
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-class ApiKeyAuthenticatorFactory implements AuthenticatorFactoryInterface
+class BearerTokenAuthenticatorFactory implements AuthenticatorFactoryInterface
 {
     private const int PRIORITY = -40;
 
@@ -58,7 +57,7 @@ class ApiKeyAuthenticatorFactory implements AuthenticatorFactoryInterface
 
     public function getKey(): string
     {
-        return 'api_key';
+        return 'bearer_token';
     }
 
     public function addConfiguration(NodeDefinition $builder): void
@@ -67,7 +66,6 @@ class ApiKeyAuthenticatorFactory implements AuthenticatorFactoryInterface
         $builder
             ->children()
                 ->scalarNode('second_header')->defaultNull()->end()
-                ->arrayNode('accepted_scopes')->scalarPrototype()->end()->defaultValue([])->end()
                 ->scalarNode('failure_handler')->isRequired()->cannotBeEmpty()->end()
             ->end();
     }
@@ -84,16 +82,16 @@ class ApiKeyAuthenticatorFactory implements AuthenticatorFactoryInterface
         $failureHandler = $config['failure_handler'] ?? null;
         if (!is_string($failureHandler)) {
             throw new InvalidConfigurationException(
-                "The option `failure_handler` of the API key authenticator of the firewall $firewallName is missing",
+                "The option `failure_handler` of the bearer token authenticator of the firewall $firewallName is "
+                . 'missing',
             );
         }
 
-        $authenticatorId = 'teknoo.east.common.security.authenticator.api_key.' . $firewallName;
+        $authenticatorId = 'teknoo.east.common.security.authenticator.bearer_token.' . $firewallName;
 
-        $container->setDefinition($authenticatorId, new ChildDefinition(ApiKeyAuthenticator::class))
+        $container->setDefinition($authenticatorId, new ChildDefinition(BearerTokenAuthenticator::class))
             ->replaceArgument(2, new Reference($failureHandler))
-            ->replaceArgument(3, $config['second_header'])
-            ->replaceArgument(4, $config['accepted_scopes']);
+            ->replaceArgument(3, $config['second_header']);
 
         return $authenticatorId;
     }

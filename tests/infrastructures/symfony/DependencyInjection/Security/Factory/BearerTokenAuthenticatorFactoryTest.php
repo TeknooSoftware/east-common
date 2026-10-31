@@ -21,7 +21,6 @@
  * @author      Richard Déloge <richard@teknoo.software>
   */
 
-
 declare(strict_types=1);
 
 namespace Teknoo\Tests\East\CommonBundle\DependencyInjection\Security\Factory;
@@ -34,15 +33,15 @@ use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
-use Teknoo\East\CommonBundle\DependencyInjection\Security\Factory\ApiKeyAuthenticatorFactory;
-use Teknoo\East\CommonBundle\Security\Authenticator\ApiKeyAuthenticator;
+use Teknoo\East\CommonBundle\DependencyInjection\Security\Factory\BearerTokenAuthenticatorFactory;
+use Teknoo\East\CommonBundle\Security\Authenticator\BearerTokenAuthenticator;
 
 /**
  * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-#[CoversClass(ApiKeyAuthenticatorFactory::class)]
-class ApiKeyAuthenticatorFactoryTest extends TestCase
+#[CoversClass(BearerTokenAuthenticatorFactory::class)]
+class BearerTokenAuthenticatorFactoryTest extends TestCase
 {
     /**
      * @param array<string, mixed> $config
@@ -50,20 +49,20 @@ class ApiKeyAuthenticatorFactoryTest extends TestCase
      */
     private function processConfiguration(array $config): array
     {
-        $node = new ArrayNodeDefinition('api_key');
-        new ApiKeyAuthenticatorFactory()->addConfiguration($node);
+        $node = new ArrayNodeDefinition('bearer_token');
+        new BearerTokenAuthenticatorFactory()->addConfiguration($node);
 
         return new Processor()->process($node->getNode(), [$config]);
     }
 
     public function testGetPriority(): void
     {
-        $this->assertSame(-40, new ApiKeyAuthenticatorFactory()->getPriority());
+        $this->assertSame(-40, new BearerTokenAuthenticatorFactory()->getPriority());
     }
 
     public function testGetKey(): void
     {
-        $this->assertSame('api_key', new ApiKeyAuthenticatorFactory()->getKey());
+        $this->assertSame('bearer_token', new BearerTokenAuthenticatorFactory()->getKey());
     }
 
     public function testAddConfiguration(): void
@@ -71,13 +70,11 @@ class ApiKeyAuthenticatorFactoryTest extends TestCase
         $this->assertSame(
             [
                 'second_header' => 'x-api-key',
-                'accepted_scopes' => ['inference'],
                 'failure_handler' => 'my_failure_handler',
             ],
             $this->processConfiguration(
                 [
                     'second_header' => 'x-api-key',
-                    'accepted_scopes' => ['inference'],
                     'failure_handler' => 'my_failure_handler',
                 ]
             ),
@@ -90,7 +87,6 @@ class ApiKeyAuthenticatorFactoryTest extends TestCase
             [
                 'failure_handler' => 'my_failure_handler',
                 'second_header' => null,
-                'accepted_scopes' => [],
             ],
             $this->processConfiguration(['failure_handler' => 'my_failure_handler']),
         );
@@ -107,35 +103,33 @@ class ApiKeyAuthenticatorFactoryTest extends TestCase
     {
         $container = new ContainerBuilder();
 
-        $id = new ApiKeyAuthenticatorFactory()->createAuthenticator(
+        $id = new BearerTokenAuthenticatorFactory()->createAuthenticator(
             $container,
             'api',
             [
                 'second_header' => 'x-api-key',
-                'accepted_scopes' => ['inference'],
                 'failure_handler' => 'my_failure_handler',
             ],
             'with_api_key',
         );
 
-        $this->assertSame('teknoo.east.common.security.authenticator.api_key.api', $id);
+        $this->assertSame('teknoo.east.common.security.authenticator.bearer_token.api', $id);
 
         $definition = $container->getDefinition($id);
         $this->assertInstanceOf(ChildDefinition::class, $definition);
-        $this->assertSame(ApiKeyAuthenticator::class, $definition->getParent());
+        $this->assertSame(BearerTokenAuthenticator::class, $definition->getParent());
         $this->assertEquals(new Reference('my_failure_handler'), $definition->getArgument(2));
         $this->assertSame('x-api-key', $definition->getArgument(3));
-        $this->assertSame(['inference'], $definition->getArgument(4));
     }
 
     public function testCreateAuthenticatorWithoutFailureHandler(): void
     {
         $this->expectException(InvalidConfigurationException::class);
 
-        new ApiKeyAuthenticatorFactory()->createAuthenticator(
+        new BearerTokenAuthenticatorFactory()->createAuthenticator(
             new ContainerBuilder(),
             'api',
-            ['second_header' => null, 'accepted_scopes' => []],
+            ['second_header' => null],
             'with_api_key',
         );
     }

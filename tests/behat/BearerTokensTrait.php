@@ -31,6 +31,7 @@ use Behat\Step\Then;
 use Behat\Step\When;
 use DateTimeImmutable;
 use PHPUnit\Framework\Assert;
+use RuntimeException;
 use SensitiveParameter;
 use Teknoo\East\Common\Contracts\User\BearerTokenFactoryInterface;
 use Teknoo\East\Common\Object\BearerToken;
@@ -174,5 +175,60 @@ trait BearerTokensTrait
         $secret = $this->replaceRememberedValues($secret);
         Assert::assertSame(hash('sha256', $secret), $bearerToken->getTokenDigest());
         Assert::assertNotEquals($secret, $bearerToken->getTokenDigest());
+    }
+
+    #[Given('a user without password')]
+    public function aUserWithoutPassword(): void
+    {
+        $this->symfonyKernel->boot();
+
+        $object = new User();
+        $object->setId('serviceid');
+        $object->setEmail('service@teknoo.software')
+            ->setFirstName('ser')
+            ->setLastName('vice')
+            ->setRoles(['ROLE_USER'])
+            ->setAuthData([]);
+
+        $this->user = $object;
+        $this->getObjectRepository()->setObject(['email' => 'service@teknoo.software'], $object);
+    }
+
+    #[Given('the user is found from the digest of the secret :secret')]
+    public function theUserIsFoundFromTheDigestOfTheSecret(string $secret): void
+    {
+        Assert::assertInstanceOf(User::class, $this->user);
+
+        $this->getObjectRepository()->setObject(
+            ['authData.tokens.token_digest' => hash('sha256', $this->replaceRememberedValues($secret))],
+            $this->user,
+        );
+    }
+
+    #[Given('the bearer token :name of the user is marked as expired')]
+    public function theBearerTokenOfTheUserIsMarkedAsExpired(string $name): void
+    {
+        $this->getBearerTokenOfTheUser($name)->setExpired(true);
+    }
+
+    #[Given('the bearer token :name of the user is removed')]
+    public function theBearerTokenOfTheUserIsRemoved(string $name): void
+    {
+        $this->getBearerTokensOfTheUser()?->removeToken($name);
+        $this->theUserHasNoBearerToken($name);
+    }
+
+    #[Given('the user is disabled')]
+    public function theUserIsDisabled(): void
+    {
+        Assert::assertInstanceOf(User::class, $this->user);
+
+        $this->user->setActive(false);
+    }
+
+    #[Given('the database is not available')]
+    public function theDatabaseIsNotAvailable(): void
+    {
+        $this->getObjectRepository()->failWith(new RuntimeException('Connection refused', 500));
     }
 }

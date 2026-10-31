@@ -30,7 +30,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Teknoo\East\CommonBundle\DependencyInjection\Security\Factory\ApiKeyAuthenticatorFactory;
+use Teknoo\East\CommonBundle\DependencyInjection\Security\Factory\BearerTokenAuthenticatorFactory;
 use Teknoo\East\CommonBundle\TeknooEastCommonBundle;
 
 /**
@@ -40,13 +40,13 @@ use Teknoo\East\CommonBundle\TeknooEastCommonBundle;
 #[CoversClass(TeknooEastCommonBundle::class)]
 class TeknooEastCommonBundleTest extends TestCase
 {
-    public function testBuildAddsTheApiKeyAuthenticatorFactory(): void
+    public function testBuildAddsTheBearerTokenAuthenticatorFactory(): void
     {
         $extension = $this->createMock(SecurityExtension::class);
         $extension->method('getAlias')->willReturn('security');
         $extension->expects($this->once())
             ->method('addAuthenticatorFactory')
-            ->with($this->isInstanceOf(ApiKeyAuthenticatorFactory::class));
+            ->with($this->isInstanceOf(BearerTokenAuthenticatorFactory::class));
 
         $container = new ContainerBuilder();
         $container->registerExtension($extension);

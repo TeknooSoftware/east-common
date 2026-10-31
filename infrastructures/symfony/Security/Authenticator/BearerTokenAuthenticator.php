@@ -21,7 +21,6 @@
  * @author      Richard Déloge <richard@teknoo.software>
  */
 
-
 declare(strict_types=1);
 
 namespace Teknoo\East\CommonBundle\Security\Authenticator;
@@ -41,50 +40,45 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 use Teknoo\East\Common\Loader\UserLoader;
-use Teknoo\East\Common\Object\ApiKeysAuth;
-use Teknoo\East\Common\Object\ApiKeyToken;
+use Teknoo\East\Common\Object\BearerToken;
+use Teknoo\East\Common\Object\BearerTokensAuth;
 use Teknoo\East\Common\Object\User;
-use Teknoo\East\Common\Query\User\UserByApiKeyDigestQuery;
-use Teknoo\East\CommonBundle\Object\ApiKeysAuthUser;
+use Teknoo\East\Common\Query\User\UserByBearerTokenDigestQuery;
+use Teknoo\East\CommonBundle\Object\BearerTokenAuthenticatedUser;
 use Teknoo\East\Foundation\Time\DatesService;
 use Teknoo\Recipe\Promise\Promise;
 use Throwable;
 
 use function hash;
 use function hash_equals;
-use function in_array;
 use function preg_match;
 use function trim;
 
 /**
- * Stateless Symfony authenticator for the API keys of users, sent by an API client with each request, in the header
- * `Authorization: Bearer`, or in a second header configured on the firewall (option `second_header`). Each request of
- * the firewall is authenticated : a request without key is refused. The key is found, without cache and without a slow
- * hash, from the SHA-256 digest of its value, with one indexed query (`UserByApiKeyDigestQuery`). The key must not be
- * expired, its user must be active and, when the firewall lists accepted scopes (option `accepted_scopes`), its scope
- * must be in this list. The user does not need a password. The token gets the name and the scope of the key, in the
- * attributes `api_key_name` and `api_key_scope`. Failures are rendered by the service of the firewall option
+ * Stateless Symfony authenticator for the bearer tokens of users, sent by an API client with each request, in the
+ * header `Authorization: Bearer`, or in a second header configured on the firewall (option `second_header`). Each
+ * request of the firewall is authenticated : a request without key is refused. The key is found, without cache and
+ * without a slow hash, from the SHA-256 digest of its value, with one indexed query (`UserByBearerTokenDigestQuery`).
+ * The key must not be expired and its user must be active. The user does not need a password. The token gets the name
+ * of the key, in the attribute `bearer_token_name`. Failures are rendered by the service of the firewall option
  * `failure_handler`. A failure of the database gives an `AuthenticationServiceException`, and not a refused key, so
  * the failure handler can answer with another status. No message holds the value of the key.
  *
- * This authenticator is configured with the key `api_key` of a firewall, thanks to `ApiKeyAuthenticatorFactory`.
+ * This authenticator is configured with the key `bearer_token` of a firewall, thanks to
+ * `BearerTokenAuthenticatorFactory`.
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-class ApiKeyAuthenticator extends AbstractAuthenticator
+class BearerTokenAuthenticator extends AbstractAuthenticator
 {
-    /**
-     * @param array<int, string> $acceptedScopes
-     */
     public function __construct(
         private readonly UserLoader $loader,
         private readonly DatesService $datesService,
         private readonly AuthenticationFailureHandlerInterface $failureHandler,
         private readonly ?string $secondHeader = null,
-        private readonly array $acceptedScopes = [],
         private readonly bool $preferRealDate = true,
     ) {
     }
@@ -108,7 +102,9 @@ class ApiKeyAuthenticator extends AbstractAuthenticator
         }
 
         if ('' !== $value && '' !== $secondValue && !hash_equals($value, $secondValue)) {
-            throw new CustomUserMessageAuthenticationException('teknoo.east.common.api_keys.error.different_values');
+            throw new CustomUserMessageAuthenticationException(
+                'teknoo.east.common.bearer_tokens.error.different_values'
+            );
         }
 
         if ('' === $value) {
@@ -116,7 +112,7 @@ class ApiKeyAuthenticator extends AbstractAuthenticator
         }
 
         if ('' === $value) {
-            throw new CustomUserMessageAuthenticationException('teknoo.east.common.api_keys.error.missing');
+            throw new CustomUserMessageAuthenticationException('teknoo.east.common.bearer_tokens.error.missing');
         }
 
         $digest = hash('sha256', $value);
@@ -127,64 +123,59 @@ class ApiKeyAuthenticator extends AbstractAuthenticator
             static fn (#[SensitiveParameter] Throwable $error): Throwable => $error,
         );
 
-        $this->loader->fetch(new UserByApiKeyDigestQuery($digest), $promise);
+        $this->loader->fetch(new UserByBearerTokenDigestQuery($digest), $promise);
 
         $user = $promise->fetchResult();
         if ($user instanceof Throwable && !$user instanceof DomainException) {
             //A repository gives a DomainException when no user is found. Another error is a failure of the database
-            throw new AuthenticationServiceException('teknoo.east.common.api_keys.error.unavailable', 0, $user);
+            throw new AuthenticationServiceException('teknoo.east.common.bearer_tokens.error.unavailable', 0, $user);
         }
 
         if (!$user instanceof User || !$user->isActive()) {
-            throw new CustomUserMessageAuthenticationException('teknoo.east.common.api_keys.error.invalid');
+            throw new CustomUserMessageAuthenticationException('teknoo.east.common.bearer_tokens.error.invalid');
         }
 
-        $apiKey = null;
+        $bearerToken = null;
         foreach ($user->getAuthData() as $authData) {
-            if (!$authData instanceof ApiKeysAuth) {
+            if (!$authData instanceof BearerTokensAuth) {
                 continue;
             }
 
             foreach ($authData->getTokens() as $token) {
                 if (hash_equals($token->getTokenDigest() ?? '', $digest)) {
-                    $apiKey = $token;
+                    $bearerToken = $token;
 
                     break 2;
                 }
             }
         }
 
-        if (!$apiKey instanceof ApiKeyToken) {
-            throw new CustomUserMessageAuthenticationException('teknoo.east.common.api_keys.error.invalid');
+        if (!$bearerToken instanceof BearerToken) {
+            throw new CustomUserMessageAuthenticationException('teknoo.east.common.bearer_tokens.error.invalid');
         }
 
         $isValid = false;
         $this->datesService->passMeTheDate(
-            static function (DateTimeInterface $now) use ($apiKey, &$isValid): void {
-                $isValid = !$apiKey->isExpired() && $apiKey->getExpiresAt() > $now;
+            static function (DateTimeInterface $now) use ($bearerToken, &$isValid): void {
+                $isValid = !$bearerToken->isExpired() && $bearerToken->getExpiresAt() > $now;
             },
             $this->preferRealDate,
         );
 
         if (!$isValid) {
-            throw new CustomUserMessageAuthenticationException('teknoo.east.common.api_keys.error.invalid');
+            throw new CustomUserMessageAuthenticationException('teknoo.east.common.bearer_tokens.error.invalid');
         }
 
-        if ([] !== $this->acceptedScopes && !in_array($apiKey->getScope(), $this->acceptedScopes, true)) {
-            throw new CustomUserMessageAuthenticationException('teknoo.east.common.api_keys.error.scope_refused');
-        }
-
-        $symfonyUser = new ApiKeysAuthUser($user, $apiKey);
+        $symfonyUser = new BearerTokenAuthenticatedUser($user, $bearerToken);
 
         $passport = new SelfValidatingPassport(
             new UserBadge(
                 $symfonyUser->getUserIdentifier(),
-                static fn (): ApiKeysAuthUser => $symfonyUser,
+                static fn (): BearerTokenAuthenticatedUser => $symfonyUser,
             )
         );
 
-        $passport->setAttribute('api_key_name', $apiKey->getName());
-        $passport->setAttribute('api_key_scope', $apiKey->getScope());
+        $passport->setAttribute('bearer_token_name', $bearerToken->getName());
 
         return $passport;
     }
@@ -193,8 +184,7 @@ class ApiKeyAuthenticator extends AbstractAuthenticator
     {
         $token = parent::createToken($passport, $firewallName);
 
-        $token->setAttribute('api_key_name', $passport->getAttribute('api_key_name'));
-        $token->setAttribute('api_key_scope', $passport->getAttribute('api_key_scope'));
+        $token->setAttribute('bearer_token_name', $passport->getAttribute('bearer_token_name'));
 
         return $token;
     }

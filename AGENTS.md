@@ -74,12 +74,14 @@ All verification must be performed via the provided `Makefile`.
 - `BearerTokensAuth` lists the `BearerToken` of a user: API keys sent with each request, kept as the SHA-256 digest
   of their value. `Teknoo\East\Common\Contracts\User\BearerTokenFactoryInterface::create()` (implementation
   `Teknoo\East\Common\User\BearerTokenFactory`, in PHP-DI) creates them.
-- `Teknoo\East\Common\Query\User\UserByApiKeyDigestQuery` loads the active user of a key from its digest.
-- `Teknoo\East\CommonBundle\Security\Authenticator\ApiKeyAuthenticator` authenticates each request of a stateless
-  firewall with the key `api_key` (options `second_header`, `accepted_scopes`, `failure_handler`), registered by
-  `ApiKeyAuthenticatorFactory` in `TeknooEastCommonBundle::build()`. It supports each request of its firewall, uses
-  no cache and puts `api_key_name` and `api_key_scope` in the attributes of the token. Its date is the real date by
-  default (`teknoo.east.common.bundle.api_keys.authenticator.prefer_real_date`). A failure of the database gives an
-  `AuthenticationServiceException`; a key that is not found (`DomainException` of the repository) gives a refusal.
+- `Teknoo\East\Common\Query\User\UserByBearerTokenDigestQuery` loads the active user of a bearer token from its
+  digest.
+- `Teknoo\East\CommonBundle\Security\Authenticator\BearerTokenAuthenticator` authenticates each request of a
+  stateless firewall with the key `bearer_token` (options `second_header`, `failure_handler`), registered by
+  `BearerTokenAuthenticatorFactory` in `TeknooEastCommonBundle::build()`. It supports each request of its firewall,
+  uses no cache, gives a `BearerTokenAuthenticatedUser` and puts `bearer_token_name` in the attributes of the token.
+  Its date is the real date by default (`teknoo.east.common.bundle.bearer_tokens.authenticator.prefer_real_date`). A
+  failure of the database gives an `AuthenticationServiceException`; a key that is not found (`DomainException` of
+  the repository) gives a refusal.
 - Parameters: `teknoo.east.common.bundle.api_keys.token_prefix`, `teknoo.east.common.bundle.api_keys.scopes` (empty:
   keys without scope) and `teknoo.east.common.bundle.api_keys.prefer_real_date` (`false` by default).

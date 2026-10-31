@@ -41,13 +41,13 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerI
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Teknoo\East\Common\Contracts\Query\QueryElementInterface;
 use Teknoo\East\Common\Loader\UserLoader;
-use Teknoo\East\Common\Object\ApiKeysAuth;
-use Teknoo\East\Common\Object\ApiKeyToken;
+use Teknoo\East\Common\Object\BearerToken;
+use Teknoo\East\Common\Object\BearerTokensAuth;
 use Teknoo\East\Common\Object\StoredPassword;
 use Teknoo\East\Common\Object\User;
-use Teknoo\East\Common\Query\User\UserByApiKeyDigestQuery;
-use Teknoo\East\CommonBundle\Object\ApiKeysAuthUser;
-use Teknoo\East\CommonBundle\Security\Authenticator\ApiKeyAuthenticator;
+use Teknoo\East\Common\Query\User\UserByBearerTokenDigestQuery;
+use Teknoo\East\CommonBundle\Object\BearerTokenAuthenticatedUser;
+use Teknoo\East\CommonBundle\Security\Authenticator\BearerTokenAuthenticator;
 use Teknoo\East\Foundation\Time\DatesService;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
@@ -58,23 +58,22 @@ use function str_contains;
  * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-#[CoversClass(ApiKeyAuthenticator::class)]
-class ApiKeyAuthenticatorTest extends TestCase
+#[CoversClass(BearerTokenAuthenticator::class)]
+class BearerTokenAuthenticatorTest extends TestCase
 {
     private const string VALUE = 'ak_0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 
-    private function buildUser(?ApiKeyToken $apiKey = null): User
+    private function buildUser(?BearerToken $bearerToken = null): User
     {
-        $apiKey ??= new ApiKeyToken(
+        $bearerToken ??= new BearerToken(
             name: 'my-key',
-            expiresAt: new DateTimeImmutable('2099-12-31 23:59:59'),
             tokenDigest: hash('sha256', self::VALUE),
-            scope: 'inference',
+            expiresAt: new DateTimeImmutable('2099-12-31 23:59:59'),
         );
 
         return new User()
             ->setEmail('user@teknoo.software')
-            ->setAuthData([new StoredPassword(), new ApiKeysAuth([new ApiKeyToken('other-key'), $apiKey])]);
+            ->setAuthData([new StoredPassword(), new BearerTokensAuth([new BearerToken('other-key'), $bearerToken])]);
     }
 
     private function buildLoader(?User $user, string $value = self::VALUE): UserLoader
@@ -82,7 +81,7 @@ class ApiKeyAuthenticatorTest extends TestCase
         $loader = $this->createMock(UserLoader::class);
         $loader->expects($this->once())
             ->method('fetch')
-            ->with(new UserByApiKeyDigestQuery(hash('sha256', $value)), $this->isInstanceOf(PromiseInterface::class))
+            ->with(new UserByBearerTokenDigestQuery(hash('sha256', $value)), $this->isInstanceOf(PromiseInterface::class))
             ->willReturnCallback(
                 static function (QueryElementInterface $query, PromiseInterface $promise) use ($user, $loader) {
                     if (null === $user) {
@@ -103,22 +102,17 @@ class ApiKeyAuthenticatorTest extends TestCase
         return new DatesService()->setCurrentDate(new DateTimeImmutable('2050-06-01 12:00:00'));
     }
 
-    /**
-     * @param array<int, string> $acceptedScopes
-     */
     private function buildAuthenticator(
         UserLoader $loader,
         ?string $secondHeader = null,
-        array $acceptedScopes = [],
         ?DatesService $datesService = null,
         ?AuthenticationFailureHandlerInterface $failureHandler = null,
-    ): ApiKeyAuthenticator {
-        return new ApiKeyAuthenticator(
+    ): BearerTokenAuthenticator {
+        return new BearerTokenAuthenticator(
             loader: $loader,
             datesService: $datesService ?? $this->buildDatesService(),
             failureHandler: $failureHandler ?? $this->createStub(AuthenticationFailureHandlerInterface::class),
             secondHeader: $secondHeader,
-            acceptedScopes: $acceptedScopes,
             preferRealDate: false,
         );
     }
@@ -136,7 +130,7 @@ class ApiKeyAuthenticatorTest extends TestCase
         return $request;
     }
 
-    private function assertRefused(ApiKeyAuthenticator $authenticator, Request $request, string $message): void
+    private function assertRefused(BearerTokenAuthenticator $authenticator, Request $request, string $message): void
     {
         try {
             $authenticator->authenticate($request);
@@ -150,14 +144,14 @@ class ApiKeyAuthenticatorTest extends TestCase
         $this->fail('The request must be refused');
     }
 
-    private function assertAuthenticated(Passport $passport, User $user, string $name, ?string $scope): void
+    private function assertAuthenticated(Passport $passport, User $user, string $name): void
     {
         $symfonyUser = $passport->getUser();
-        $this->assertInstanceOf(ApiKeysAuthUser::class, $symfonyUser);
+        $this->assertInstanceOf(BearerTokenAuthenticatedUser::class, $symfonyUser);
         $this->assertSame($user, $symfonyUser->getWrappedUser());
+        $this->assertSame($name, $symfonyUser->getWrappedBearerToken()->getName());
         $this->assertSame('user@teknoo.software', $symfonyUser->getUserIdentifier());
-        $this->assertSame($name, $passport->getAttribute('api_key_name'));
-        $this->assertSame($scope, $passport->getAttribute('api_key_scope'));
+        $this->assertSame($name, $passport->getAttribute('bearer_token_name'));
     }
 
     public function testSupportsEachRequest(): void
@@ -174,7 +168,7 @@ class ApiKeyAuthenticatorTest extends TestCase
 
         $passport = $authenticator->authenticate($this->buildRequest(['Authorization' => 'Bearer ' . self::VALUE]));
 
-        $this->assertAuthenticated($passport, $user, 'my-key', 'inference');
+        $this->assertAuthenticated($passport, $user, 'my-key');
     }
 
     public function testAuthenticateWithTheSecondHeader(): void
@@ -184,7 +178,7 @@ class ApiKeyAuthenticatorTest extends TestCase
 
         $passport = $authenticator->authenticate($this->buildRequest(['x-api-key' => self::VALUE]));
 
-        $this->assertAuthenticated($passport, $user, 'my-key', 'inference');
+        $this->assertAuthenticated($passport, $user, 'my-key');
     }
 
     public function testAuthenticateWithTheSameValueInTheTwoHeaders(): void
@@ -196,7 +190,7 @@ class ApiKeyAuthenticatorTest extends TestCase
             $this->buildRequest(['Authorization' => 'Bearer ' . self::VALUE, 'x-api-key' => self::VALUE])
         );
 
-        $this->assertAuthenticated($passport, $user, 'my-key', 'inference');
+        $this->assertAuthenticated($passport, $user, 'my-key');
     }
 
     public function testAuthenticateWithAnEmptySecondHeader(): void
@@ -208,7 +202,7 @@ class ApiKeyAuthenticatorTest extends TestCase
             $this->buildRequest(['Authorization' => 'Bearer ' . self::VALUE, 'x-api-key' => ''])
         );
 
-        $this->assertAuthenticated($passport, $user, 'my-key', 'inference');
+        $this->assertAuthenticated($passport, $user, 'my-key');
     }
 
     public function testAuthenticateRefusesTwoDifferentValues(): void
@@ -219,7 +213,7 @@ class ApiKeyAuthenticatorTest extends TestCase
         $this->assertRefused(
             $this->buildAuthenticator($loader, 'x-api-key'),
             $this->buildRequest(['Authorization' => 'Bearer ' . self::VALUE, 'x-api-key' => 'ak_other']),
-            'teknoo.east.common.api_keys.error.different_values',
+            'teknoo.east.common.bearer_tokens.error.different_values',
         );
     }
 
@@ -231,7 +225,7 @@ class ApiKeyAuthenticatorTest extends TestCase
         $this->assertRefused(
             $this->buildAuthenticator($loader),
             $this->buildRequest(['x-api-key' => self::VALUE]),
-            'teknoo.east.common.api_keys.error.missing',
+            'teknoo.east.common.bearer_tokens.error.missing',
         );
     }
 
@@ -244,19 +238,19 @@ class ApiKeyAuthenticatorTest extends TestCase
         $this->assertRefused(
             $authenticator,
             $this->buildRequest([]),
-            'teknoo.east.common.api_keys.error.missing',
+            'teknoo.east.common.bearer_tokens.error.missing',
         );
 
         $this->assertRefused(
             $authenticator,
             $this->buildRequest(['Authorization' => 'Bearer ', 'x-api-key' => ' ']),
-            'teknoo.east.common.api_keys.error.missing',
+            'teknoo.east.common.bearer_tokens.error.missing',
         );
 
         $this->assertRefused(
             $authenticator,
             $this->buildRequest(['Authorization' => 'Basic ' . self::VALUE]),
-            'teknoo.east.common.api_keys.error.missing',
+            'teknoo.east.common.bearer_tokens.error.missing',
         );
     }
 
@@ -265,7 +259,7 @@ class ApiKeyAuthenticatorTest extends TestCase
         $this->assertRefused(
             $this->buildAuthenticator($this->buildLoader(null)),
             $this->buildRequest(['Authorization' => 'Bearer ' . self::VALUE]),
-            'teknoo.east.common.api_keys.error.invalid',
+            'teknoo.east.common.bearer_tokens.error.invalid',
         );
     }
 
@@ -301,23 +295,23 @@ class ApiKeyAuthenticatorTest extends TestCase
 
     public function testAuthenticateRefusesAKeyWithoutDigest(): void
     {
-        //A key created before East Common 4.9 has no digest : its user can not be found by the database, but the
+        //A key without digest can not be found by the database, but the
         //authenticator checks also the key in the user
         $user = $this->buildUser(
-            new ApiKeyToken(name: 'my-key', expiresAt: new DateTimeImmutable('2099-12-31 23:59:59')),
+            new BearerToken(name: 'my-key', expiresAt: new DateTimeImmutable('2099-12-31 23:59:59')),
         );
 
         $this->assertRefused(
             $this->buildAuthenticator($this->buildLoader($user)),
             $this->buildRequest(['Authorization' => 'Bearer ' . self::VALUE]),
-            'teknoo.east.common.api_keys.error.invalid',
+            'teknoo.east.common.bearer_tokens.error.invalid',
         );
     }
 
     public function testAuthenticateRefusesAnExpiredKey(): void
     {
         $user = $this->buildUser(
-            new ApiKeyToken(
+            new BearerToken(
                 name: 'my-key',
                 expiresAt: new DateTimeImmutable('2050-06-01 11:59:59'),
                 tokenDigest: hash('sha256', self::VALUE),
@@ -327,14 +321,14 @@ class ApiKeyAuthenticatorTest extends TestCase
         $this->assertRefused(
             $this->buildAuthenticator($this->buildLoader($user)),
             $this->buildRequest(['Authorization' => 'Bearer ' . self::VALUE]),
-            'teknoo.east.common.api_keys.error.invalid',
+            'teknoo.east.common.bearer_tokens.error.invalid',
         );
     }
 
     public function testAuthenticateRefusesAKeyMarkedAsExpired(): void
     {
         $user = $this->buildUser(
-            new ApiKeyToken(
+            new BearerToken(
                 name: 'my-key',
                 isExpired: true,
                 expiresAt: new DateTimeImmutable('2099-12-31 23:59:59'),
@@ -345,7 +339,7 @@ class ApiKeyAuthenticatorTest extends TestCase
         $this->assertRefused(
             $this->buildAuthenticator($this->buildLoader($user)),
             $this->buildRequest(['Authorization' => 'Bearer ' . self::VALUE]),
-            'teknoo.east.common.api_keys.error.invalid',
+            'teknoo.east.common.bearer_tokens.error.invalid',
         );
     }
 
@@ -356,43 +350,8 @@ class ApiKeyAuthenticatorTest extends TestCase
         $this->assertRefused(
             $this->buildAuthenticator($this->buildLoader($user)),
             $this->buildRequest(['Authorization' => 'Bearer ' . self::VALUE]),
-            'teknoo.east.common.api_keys.error.invalid',
+            'teknoo.east.common.bearer_tokens.error.invalid',
         );
-    }
-
-    public function testAuthenticateRefusesAScopeThatTheFirewallDoesNotAccept(): void
-    {
-        $this->assertRefused(
-            $this->buildAuthenticator($this->buildLoader($this->buildUser()), acceptedScopes: ['management']),
-            $this->buildRequest(['Authorization' => 'Bearer ' . self::VALUE]),
-            'teknoo.east.common.api_keys.error.scope_refused',
-        );
-    }
-
-    public function testAuthenticateWithAnAcceptedScope(): void
-    {
-        $user = $this->buildUser();
-        $authenticator = $this->buildAuthenticator($this->buildLoader($user), acceptedScopes: ['inference']);
-
-        $passport = $authenticator->authenticate($this->buildRequest(['Authorization' => 'Bearer ' . self::VALUE]));
-
-        $this->assertAuthenticated($passport, $user, 'my-key', 'inference');
-    }
-
-    public function testAuthenticateAKeyWithoutScopeWithoutAcceptedScopes(): void
-    {
-        $user = $this->buildUser(
-            new ApiKeyToken(
-                name: 'my-key',
-                expiresAt: new DateTimeImmutable('2099-12-31 23:59:59'),
-                tokenDigest: hash('sha256', self::VALUE),
-            ),
-        );
-        $authenticator = $this->buildAuthenticator($this->buildLoader($user));
-
-        $passport = $authenticator->authenticate($this->buildRequest(['Authorization' => 'Bearer ' . self::VALUE]));
-
-        $this->assertAuthenticated($passport, $user, 'my-key', null);
     }
 
     public function testAuthenticateReadsTheRealDateByDefault(): void
@@ -410,7 +369,7 @@ class ApiKeyAuthenticatorTest extends TestCase
             );
 
         $user = $this->buildUser();
-        $authenticator = new ApiKeyAuthenticator(
+        $authenticator = new BearerTokenAuthenticator(
             $this->buildLoader($user),
             $datesService,
             $this->createStub(AuthenticationFailureHandlerInterface::class),
@@ -418,10 +377,10 @@ class ApiKeyAuthenticatorTest extends TestCase
 
         $passport = $authenticator->authenticate($this->buildRequest(['Authorization' => 'Bearer ' . self::VALUE]));
 
-        $this->assertAuthenticated($passport, $user, 'my-key', 'inference');
+        $this->assertAuthenticated($passport, $user, 'my-key');
     }
 
-    public function testCreateTokenGivesTheNameAndTheScopeOfTheKey(): void
+    public function testCreateTokenGivesTheNameOfTheKey(): void
     {
         $user = $this->buildUser();
         $authenticator = $this->buildAuthenticator($this->buildLoader($user));
@@ -429,8 +388,7 @@ class ApiKeyAuthenticatorTest extends TestCase
 
         $token = $authenticator->createToken($passport, 'api');
 
-        $this->assertSame('my-key', $token->getAttribute('api_key_name'));
-        $this->assertSame('inference', $token->getAttribute('api_key_scope'));
+        $this->assertSame('my-key', $token->getAttribute('bearer_token_name'));
         $this->assertSame($passport->getUser(), $token->getUser());
     }
 

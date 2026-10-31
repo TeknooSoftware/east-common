@@ -428,7 +428,8 @@ With Doctrine ODM, the mapping of `ApiKeysAuth` and `ApiKeyToken` is shipped in
 Since East Common 4.9, a new key also keeps the `SHA-256` digest of its value, in `token_digest`, and its scope, in
 `scope`. The mapping of `User` adds a unique sparse index on `authData.tokens.token_digest`: create it with the
 schema manager of Doctrine ODM (`doctrine:mongodb:schema:update`). A key created before 4.9 has no digest and no
-scope: the index skips it.
+scope: the index skips it. The query `UserByApiKeyDigestQuery` loads the active user of a key from this digest, with
+this index.
 
 Support this project
 ---------------------

@@ -21,7 +21,6 @@
  * @author      Richard Déloge <richard@teknoo.software>
  */
 
-
 declare(strict_types=1);
 
 namespace Teknoo\Tests\East\Common\Behat;

@@ -3,6 +3,7 @@
 ## [4.9.0] - 2026-10-31
 ### Stable Release
 #### Evolutions
+- `BearerToken`, in `BearerTokensAuth`: an API key sent with each request, kept as the `SHA-256` digest of its value.
 - API keys keep the `SHA-256` digest of their value (unique sparse index, `UserByApiKeyDigestQuery`) and a scope.
 - `ApiKeyFactoryInterface` creates a key without a form and without a signed in user. `ApiKeysAuthType` uses it.
 - Stateless authenticator of the firewall key `api_key`: an API key in each request, found with 1 indexed query.

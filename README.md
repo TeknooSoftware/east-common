@@ -447,7 +447,8 @@ $userWriter->save($user);
 ```
 
 With Doctrine ODM, the mapping of `ApiKeysAuth` and `ApiKeyToken` is shipped in
-`infrastructures/doctrine/config/universal`, with the mapping of `User`.
+`infrastructures/doctrine/config/universal`, with the mapping of `User`. Since East Common 4.9, this folder also has the
+mapping of `BearerTokensAuth` and `BearerToken`: the bearer tokens of a user, sent by an API client with each request.
 
 Since East Common 4.9, a new key also keeps the `SHA-256` digest of its value, in `token_digest`, and its scope, in
 `scope`. The mapping of `User` adds a unique sparse index on `authData.tokens.token_digest`: create it with the

@@ -1,5 +1,10 @@
 # Teknoo Software - Common - Change Log
 
+## [4.9.0] - 2026-10-31
+### Stable Release
+#### Evolutions
+- `ApiKeyToken` keeps the `SHA-256` digest of the value of a new key, with a unique sparse index, and its scope.
+
 ## [4.8.1] - 2026-10-21
 ### Stable Release
 #### Security

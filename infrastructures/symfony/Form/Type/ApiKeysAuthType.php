@@ -47,6 +47,7 @@ use Teknoo\East\CommonBundle\Object\ApiKeysAuthUser;
 use Teknoo\East\Foundation\Time\DatesService;
 
 use function bin2hex;
+use function hash;
 use function random_bytes;
 
 /**
@@ -154,6 +155,7 @@ class ApiKeysAuthType extends AbstractType
                         $token = $this->tokenPrefix . bin2hex(random_bytes(32));
 
                         $data->setToken($token);
+                        $data->setTokenDigest(hash('sha256', $token));
                         $data->setCreatedAt($now);
                         $data->setExpired(false);
 

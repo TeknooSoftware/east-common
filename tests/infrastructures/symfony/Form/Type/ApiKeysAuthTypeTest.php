@@ -47,6 +47,8 @@ use Teknoo\East\CommonBundle\Form\Type\ApiKeysAuthType;
 use Teknoo\East\CommonBundle\Object\AbstractUser;
 use Teknoo\East\Foundation\Time\DatesService;
 
+use function hash;
+
 /**
  * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
@@ -301,5 +303,33 @@ class ApiKeysAuthTypeTest extends TestCase
         $type->configureOptions($resolver);
 
         $this->assertSame(ApiKeyToken::class, $resolver->resolve([])['data_class']);
+    }
+
+    public function testBuildFormKeepsTheDigestOfTheValue(): void
+    {
+        $user = new User();
+
+        $hasher = $this->createStub(UserPasswordHasherInterface::class);
+        $hasher->method('hashPassword')->willReturn('hashed');
+
+        $type = new ApiKeysAuthType(
+            new DatesService()->setCurrentDate(new DateTimeImmutable('2024-01-01')),
+            $this->buildTokenStorage($this->buildTokenFor($user)),
+            $hasher,
+            'ak_',
+        );
+
+        $added = [];
+        $listeners = [];
+        $type->buildForm($this->buildFormBuilder($added, $listeners), []);
+
+        $validForm = $this->createStub(FormInterface::class);
+        $validForm->method('isValid')->willReturn(true);
+
+        $apiKeyToken = new ApiKeyToken('first');
+        $listeners[FormEvents::POST_SUBMIT][0](new FormEvent($validForm, $apiKeyToken));
+
+        $this->assertSame(hash('sha256', $apiKeyToken->getToken()), $apiKeyToken->getTokenDigest());
+        $this->assertSame('hashed', $apiKeyToken->getTokenHash());
     }
 }

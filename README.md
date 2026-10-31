@@ -449,6 +449,11 @@ $userWriter->save($user);
 With Doctrine ODM, the mapping of `ApiKeysAuth` and `ApiKeyToken` is shipped in
 `infrastructures/doctrine/config/universal`, with the mapping of `User`. Since East Common 4.9, this folder also has the
 mapping of `BearerTokensAuth` and `BearerToken`: the bearer tokens of a user, sent by an API client with each request.
+The bearer token factory (`Teknoo\East\Common\Contracts\User\BearerTokenFactoryInterface`) creates a bearer token
+without a form and without a signed in user. The caller gives the owner and a new `BearerToken`, with its name and its
+expiration date. Only the SHA-256 digest of its value is persisted. The PHP-DI values
+`teknoo.east.common.user.bearer_tokens.token_prefix` (empty by default) and
+`teknoo.east.common.user.bearer_tokens.prefer_real_date` (`false` by default) configure it.
 
 Since East Common 4.9, a new key also keeps the `SHA-256` digest of its value, in `token_digest`, and its scope, in
 `scope`. The mapping of `User` adds a unique sparse index on `authData.tokens.token_digest`: create it with the

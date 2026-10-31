@@ -71,6 +71,9 @@ All verification must be performed via the provided `Makefile`.
 - `Teknoo\East\Common\Contracts\User\ApiKeyFactoryInterface::create(User $owner, ApiKeyToken $apiKey, $promise)` is
   the only code that completes a new key: value, digest, hash, creation date. The form `ApiKeysAuthType` uses it. Its
   implementation is `Teknoo\East\CommonBundle\Security\ApiKeyFactory`. The caller saves the owner.
+- `BearerTokensAuth` lists the `BearerToken` of a user: API keys sent with each request, kept as the SHA-256 digest
+  of their value. `Teknoo\East\Common\Contracts\User\BearerTokenFactoryInterface::create()` (implementation
+  `Teknoo\East\Common\User\BearerTokenFactory`, in PHP-DI) creates them.
 - `Teknoo\East\Common\Query\User\UserByApiKeyDigestQuery` loads the active user of a key from its digest.
 - `Teknoo\East\CommonBundle\Security\Authenticator\ApiKeyAuthenticator` authenticates each request of a stateless
   firewall with the key `api_key` (options `second_header`, `accepted_scopes`, `failure_handler`), registered by

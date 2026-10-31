@@ -105,6 +105,8 @@ use Teknoo\East\Common\Recipe\Step\User\RemoveApiKey;
 use Teknoo\East\Common\Recipe\Step\User\RemoveRecoveryAccess;
 use Teknoo\East\Common\Service\DeletingService;
 use Teknoo\East\Common\Service\FindSlugService;
+use Teknoo\East\Common\Contracts\User\BearerTokenFactoryInterface;
+use Teknoo\East\Common\User\BearerTokenFactory;
 use Teknoo\East\Common\User\RecoveryAccess\TimeLimitedToken;
 use Teknoo\East\Common\Writer\MediaWriter;
 use Teknoo\East\Common\Writer\UserWriter;
@@ -171,6 +173,16 @@ return [
         ->constructor(
             get(DatesService::class),
             get('teknoo.east.common.user.recovery.time_limited.delay'),
+        ),
+
+    'teknoo.east.common.user.bearer_tokens.token_prefix' => '',
+    'teknoo.east.common.user.bearer_tokens.prefer_real_date' => false,
+    BearerTokenFactoryInterface::class => get(BearerTokenFactory::class),
+    BearerTokenFactory::class => create(BearerTokenFactory::class)
+        ->constructor(
+            get(DatesService::class),
+            get('teknoo.east.common.user.bearer_tokens.token_prefix'),
+            get('teknoo.east.common.user.bearer_tokens.prefer_real_date'),
         ),
 
     //Middleware

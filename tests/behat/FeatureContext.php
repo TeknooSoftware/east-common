@@ -140,6 +140,7 @@ class FeatureContext implements Context
 {
     use ApiTrait;
     use ApiKeysTrait;
+    use BearerTokensTrait;
 
     public ?Container $container = null;
 

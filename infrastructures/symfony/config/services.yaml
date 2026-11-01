@@ -14,6 +14,7 @@ parameters:
 
     #Authenticator
     teknoo.east.common.bundle.security.authenticator.oauth2.class: 'Teknoo\East\CommonBundle\Security\Authenticator\OAuth2Authenticator'
+    teknoo.east.common.bundle.security.authenticator.bearer_token.class: 'Teknoo\East\CommonBundle\Security\Authenticator\BearerTokenAuthenticator'
 
     #Writer
     teknoo.east.common.bundle.writer.user.class: 'Teknoo\East\CommonBundle\Writer\SymfonyUserWriter'
@@ -24,6 +25,8 @@ parameters:
 
     #API keys and JWT
     teknoo.east.common.bundle.api_keys.token_prefix: ''
+    teknoo.east.common.bundle.api_keys.prefer_real_date: false
+    teknoo.east.common.bundle.bearer_tokens.authenticator.prefer_real_date: true
     teknoo.east.common.bundle.jwt.max_days_to_live: 1
 
     #Assets
@@ -247,6 +250,19 @@ services:
             - '@teknoo.east.common.endpoint.api_keys.delete.bowl'
             - '@service_container'
 
+    Teknoo\East\Common\Contracts\User\ApiKeyTokenFactoryInterface:
+        alias: 'Teknoo\East\CommonBundle\Security\ApiKeyTokenFactory'
+        public: true
+
+    Teknoo\East\CommonBundle\Security\ApiKeyTokenFactory:
+        class: 'Teknoo\East\CommonBundle\Security\ApiKeyTokenFactory'
+        public: true
+        arguments:
+            - '@Teknoo\East\Foundation\Time\DatesService'
+            - '@security.user_password_hasher'
+            - '%teknoo.east.common.bundle.api_keys.token_prefix%'
+            - '%teknoo.east.common.bundle.api_keys.prefer_real_date%'
+
     #JWT
     teknoo.east.common.endpoint.jwt.create_token.bowl:
         class: '%teknoo.east.common.endpoint.jwt.create_token.bowl.class%'
@@ -415,6 +431,17 @@ services:
             - '@Teknoo\East\Common\Loader\UserLoader'
             - '@Teknoo\East\CommonBundle\Writer\SymfonyUserWriter'
             - '@Teknoo\East\CommonBundle\Contracts\Security\Authenticator\UserConverterInterface'
+
+    # Parent of the authenticators of the firewalls with the key `bearer_token` (see BearerTokenAuthenticatorFactory)
+    Teknoo\East\CommonBundle\Security\Authenticator\BearerTokenAuthenticator:
+        class: '%teknoo.east.common.bundle.security.authenticator.bearer_token.class%'
+        abstract: true
+        arguments:
+            - '@Teknoo\East\Common\Loader\UserLoader'
+            - '@Teknoo\East\Foundation\Time\DatesService'
+            - ~ # failure handler of the firewall
+            - ~ # second header of the firewall
+            - '%teknoo.east.common.bundle.bearer_tokens.authenticator.prefer_real_date%'
 
     #Listener
     # Render authentication failures of lexik/jwt-authentication-bundle like other errors of a JSON API

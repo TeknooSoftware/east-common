@@ -47,6 +47,8 @@ use function DI\create;
 use function DI\get;
 
 return [
+    'teknoo.east.common.user.bearer_tokens.token_prefix' => 'bt_',
+
     MyObjectRepository::class => static function (ContainerInterface $container): MyObjectRepository {
         $repository = $container->get(ObjectManager::class)->getRepository(MyObject::class);
         if ($repository instanceof ObjectRepository) {

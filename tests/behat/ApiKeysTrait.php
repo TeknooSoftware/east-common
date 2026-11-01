@@ -28,12 +28,17 @@ namespace Teknoo\Tests\East\Common\Behat;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Step\Given;
 use Behat\Step\Then;
+use Behat\Step\When;
 use DateTimeImmutable;
 use PHPUnit\Framework\Assert;
+use SensitiveParameter;
 use Symfony\Component\PasswordHasher\Hasher\SodiumPasswordHasher;
+use Teknoo\East\Common\Contracts\User\ApiKeyTokenFactoryInterface;
 use Teknoo\East\Common\Object\ApiKeysAuth;
 use Teknoo\East\Common\Object\ApiKeyToken;
 use Teknoo\East\Common\Object\User;
+use Teknoo\Recipe\Promise\Promise;
+use Throwable;
 
 use function base64_decode;
 use function explode;
@@ -48,6 +53,39 @@ use function strtr;
  */
 trait ApiKeysTrait
 {
+    /**
+     * Key given by the key factory to its caller, with its value
+     */
+    private ?ApiKeyToken $createdApiKey = null;
+
+    /**
+     * Error given by the key factory to its caller
+     */
+    private ?Throwable $apiKeyFactoryError = null;
+
+    private function createApiKeyWithTheFactory(ApiKeyToken $apiKey): void
+    {
+        Assert::assertInstanceOf(User::class, $this->user);
+
+        $factory = $this->symfonyKernel->getContainer()->get(ApiKeyTokenFactoryInterface::class);
+        Assert::assertInstanceOf(ApiKeyTokenFactoryInterface::class, $factory);
+
+        $this->createdApiKey = null;
+        $this->apiKeyFactoryError = null;
+
+        /** @var Promise<ApiKeyToken, mixed, mixed> $promise */
+        $promise = new Promise(
+            function (ApiKeyToken $apiKey): void {
+                $this->createdApiKey = $apiKey;
+            },
+            function (#[SensitiveParameter] Throwable $error): void {
+                $this->apiKeyFactoryError = $error;
+            },
+        );
+
+        $factory->create($this->user, $apiKey, $promise);
+    }
+
     private function getApiKeysOfTheUser(): ?ApiKeysAuth
     {
         Assert::assertInstanceOf(User::class, $this->user);
@@ -108,5 +146,51 @@ trait ApiKeysTrait
                 new DateTimeImmutable('@' . ($payload['exp'] ?? 0))->format('Y-m-d H:i:s'),
             );
         }
+    }
+
+    #[When('the key factory creates the API key :name, expiring at :date')]
+    public function theKeyFactoryCreatesTheApiKeyForTheUser(string $name, string $date): void
+    {
+        $this->createApiKeyWithTheFactory(
+            new ApiKeyToken(name: $name, expiresAt: new DateTimeImmutable($date)),
+        );
+    }
+
+    #[Then('the key factory gives the value of the API key :name, remembered as :remembered')]
+    public function theKeyFactoryGivesTheValueOfTheApiKey(string $name, string $remembered): void
+    {
+        Assert::assertNull($this->apiKeyFactoryError);
+        Assert::assertInstanceOf(ApiKeyToken::class, $this->createdApiKey);
+        Assert::assertSame($name, $this->createdApiKey->getName());
+        Assert::assertMatchesRegularExpression('/^ak_[0-9a-f]{64}$/', $this->createdApiKey->getToken());
+        Assert::assertSame($this->createdApiKey, $this->getApiKeysOfTheUser()?->getToken($name));
+
+        $this->remembered[$remembered] = $this->createdApiKey->getToken();
+    }
+
+    #[Then('the key factory refuses the API key with the error :message')]
+    public function theKeyFactoryRefusesTheApiKeyWithTheError(string $message): void
+    {
+        Assert::assertNull($this->createdApiKey);
+        Assert::assertInstanceOf(Throwable::class, $this->apiKeyFactoryError);
+        Assert::assertSame($message, $this->apiKeyFactoryError->getMessage());
+        Assert::assertSame(400, $this->apiKeyFactoryError->getCode());
+    }
+
+    #[Then('the user has no API key :name')]
+    public function theUserHasNoApiKey(string $name): void
+    {
+        Assert::assertNull($this->getApiKeysOfTheUser()?->getToken($name));
+    }
+
+    #[Then('the API key :name of the user was created at :createdAt and expires at :expiresAt')]
+    public function theApiKeyOfTheUserWasCreatedAtAndExpiresAt(string $name, string $createdAt, string $expiresAt): void
+    {
+        $apiKey = $this->getApiKeysOfTheUser()?->getToken($name);
+        Assert::assertInstanceOf(ApiKeyToken::class, $apiKey, "The user has no API key `{$name}`");
+
+        Assert::assertSame($createdAt, $apiKey->getCreatedAt()?->format('Y-m-d H:i:s'));
+        Assert::assertSame($expiresAt, $apiKey->getExpiresAt()?->format('Y-m-d H:i:s'));
+        Assert::assertFalse($apiKey->isExpired());
     }
 }

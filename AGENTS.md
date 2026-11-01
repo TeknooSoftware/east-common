@@ -62,3 +62,28 @@ All verification must be performed via the provided `Makefile`.
     - Infrastructure: `Teknoo\East\CommonBundle\` (Symfony), `Teknoo\East\Common\Doctrine\`, etc.
 - **Coding Standard**: PSR-12.
 - **PHP Version**: Minimum requirement is PHP 8.4.
+
+## API keys
+
+- An `ApiKeyToken`, in `ApiKeysAuth`, is an API key of the JWT flow: it keeps the hash of its value (`token_hash`, a
+  slow hash). The value is never persisted. The form `ApiKeysAuthType` and, since 4.9, the method `create()` of
+  `Teknoo\East\Common\Contracts\User\ApiKeyTokenFactoryInterface` (implementation
+  `Teknoo\East\CommonBundle\Security\ApiKeyTokenFactory`, without form and signed in user) create it.
+- Since 4.9, a `BearerToken`, in `BearerTokensAuth`, is an API key sent with each request: it keeps only the SHA-256
+  digest of its value (`token_digest`, with a unique sparse index in the mapping of `User`). It is another behavior,
+  so another class: `ApiKeyToken` does not change. The method `create()` of
+  `Teknoo\East\Common\Contracts\User\BearerTokenFactoryInterface` (implementation
+  `Teknoo\East\Common\User\BearerTokenFactory`, in PHP-DI) creates it. The caller saves the owner.
+- `Teknoo\East\Common\Query\User\UserByBearerTokenDigestQuery` loads the active user of a bearer token from its
+  digest.
+- `Teknoo\East\CommonBundle\Security\Authenticator\BearerTokenAuthenticator` authenticates each request of a
+  stateless firewall with the key `bearer_token` (options `second_header`, `failure_handler`), registered by
+  `BearerTokenAuthenticatorFactory` in `TeknooEastCommonBundle::build()`. It supports each request of its firewall,
+  uses no cache, gives a `BearerTokenAuthenticatedUser` and puts `bearer_token_name` in the attributes of the token.
+  Its date is the real date by default (`teknoo.east.common.bundle.bearer_tokens.authenticator.prefer_real_date`). A
+  failure of the database gives an `AuthenticationServiceException`; a key that is not found (`DomainException` of
+  the repository) gives a refusal.
+- Parameters: `teknoo.east.common.bundle.api_keys.token_prefix` and
+  `teknoo.east.common.bundle.api_keys.prefer_real_date` (`false` by default) for the API keys; the PHP-DI values
+  `teknoo.east.common.user.bearer_tokens.token_prefix` and
+  `teknoo.east.common.user.bearer_tokens.prefer_real_date` (`false` by default) for the bearer tokens.

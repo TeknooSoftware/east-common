@@ -116,6 +116,32 @@ Feature: Authenticate API clients with API keys and JWT tokens
       }
       """
 
+  Scenario: Log in with an API key created by the key factory
+    Given the key factory creates the API key "cli-key", expiring at "2099-12-31 23:59:59"
+    And the key factory gives the value of the API key "cli-key", remembered as "api key secret"
+    When the API client sends a "POST" JSON request to "https://foo.com/secured-api/v1/login" with:
+      """
+      {
+        "username": "cli-key:admin@teknoo.software",
+        "token": "<api key secret>"
+      }
+      """
+    Then the API response status code is 200
+    And the API response is a JSON response
+    And the value "data.token" of the API response is remembered as "jwt"
+    And the JWT token "<jwt>" is issued to "admin@teknoo.software" and expires at "2050-06-02 12:00:00"
+    When the API client sends the header "Authorization" with the value "Bearer <jwt>" in its next requests
+    And the API client sends a "GET" request to "https://foo.com/secured-api/v1/me"
+    Then the API response status code is 200
+    And the API response contains:
+      """
+      {
+        "data": {
+          "email": "admin@teknoo.software"
+        }
+      }
+      """
+
   Scenario: Refuse a login with an API key deleted from the web page
     When Symfony will receive the POST request "https://foo.com/user/check" with "_username=admin@teknoo.software&_password=testtest"
     Then The client must accept a response
@@ -269,6 +295,30 @@ Feature: Authenticate API clients with API keys and JWT tokens
       {
         "username": "revoked-key:admin@teknoo.software",
         "token": "ak_revoked_0123456789abcdef01234567"
+      }
+      """
+    Then the API response status code is 401
+    And the API response is:
+      """
+      {
+        "meta": {
+          "error": true
+        },
+        "data": {
+          "code": 401,
+          "message": "Invalid credentials."
+        }
+      }
+      """
+
+  Scenario: Refuse a login with an API key of the key factory whose expiration date is passed
+    Given the key factory creates the API key "old-cli-key", expiring at "2050-05-31 00:00:00"
+    And the key factory gives the value of the API key "old-cli-key", remembered as "api key secret"
+    When the API client sends a "POST" JSON request to "https://foo.com/secured-api/v1/login" with:
+      """
+      {
+        "username": "old-cli-key:admin@teknoo.software",
+        "token": "<api key secret>"
       }
       """
     Then the API response status code is 401

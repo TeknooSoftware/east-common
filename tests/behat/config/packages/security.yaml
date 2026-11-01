@@ -36,6 +36,23 @@ security:
                 # failures are rendered like other errors of the API, by the listener of East Common
                 failure_handler: 'lexik_jwt_authentication.handler.authentication_failure'
 
+        #stateless API : each request carries a bearer token, in the header `Authorization: Bearer` or `x-api-key`
+        bearer_token_area:
+            pattern: '^/bearer-token/'
+            stateless: true
+            provider: 'with_api_key'
+            bearer_token:
+                second_header: 'x-api-key'
+                failure_handler: 'Teknoo\Tests\East\Common\Behat\BearerTokenFailureHandler'
+
+        #stateless API : each request carries a bearer token, only in the header `Authorization: Bearer`
+        bearer_token_one_header_area:
+            pattern: '^/bearer-token-one-header/'
+            stateless: true
+            provider: 'with_api_key'
+            bearer_token:
+                failure_handler: 'Teknoo\Tests\East\Common\Behat\BearerTokenFailureHandler'
+
         #require user role for all others pages
         user_area:
             pattern: '^/user'

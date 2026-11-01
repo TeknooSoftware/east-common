@@ -140,6 +140,7 @@ class FeatureContext implements Context
 {
     use ApiTrait;
     use ApiKeysTrait;
+    use BearerTokensTrait;
 
     public ?Container $container = null;
 
@@ -509,6 +510,15 @@ class FeatureContext implements Context
 
             private array $allObjects = [];
 
+            private ?Throwable $failure = null;
+
+            public function failWith(?Throwable $failure): self
+            {
+                $this->failure = $failure;
+
+                return $this;
+            }
+
             /**
              * @param object $object
              * @return $this
@@ -540,6 +550,10 @@ class FeatureContext implements Context
 
             public function findOneBy(array $criteria): ?object
             {
+                if (null !== $this->failure) {
+                    throw $this->failure;
+                }
+
                 if (array_key_exists('deletedAt', $criteria)) {
                     unset($criteria['deletedAt']);
                 }

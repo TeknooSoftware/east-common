@@ -31,6 +31,8 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
+use Teknoo\East\Common\Contracts\User\BearerTokenFactoryInterface;
+use Teknoo\East\Common\User\BearerTokenFactory;
 use Teknoo\East\Common\Contracts\DBSource\ManagerInterface as DbManagerInterface;
 use Teknoo\East\Common\Contracts\DBSource\Repository\MediaRepositoryInterface;
 use Teknoo\East\Common\Contracts\DBSource\Repository\UserRepositoryInterface;
@@ -149,6 +151,17 @@ class ContainerTest extends TestCase
         $this->assertInstanceOf(
             $className,
             $loader
+        );
+    }
+
+    public function testBearerTokenFactory(): void
+    {
+        $container = $this->buildContainer();
+
+        $this->assertInstanceOf(BearerTokenFactory::class, $container->get(BearerTokenFactory::class));
+        $this->assertInstanceOf(
+            BearerTokenFactoryInterface::class,
+            $container->get(BearerTokenFactoryInterface::class),
         );
     }
 

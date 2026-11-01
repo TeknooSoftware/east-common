@@ -1,0 +1,5 @@
+{# @EastCommonTests/api/bearer_token/me.json.twig #}
+{{ {
+    'email': app.user.userIdentifier,
+    'bearerTokenName': app.token.attribute('bearer_token_name'),
+}|east_api_object_serialization }}

@@ -36,3 +36,23 @@ _teknoo_common_tests_secured_api_me:
         api: 'json'
         errorTemplate: '@@TeknooEastCommon/Error/default.json.twig'
         template: '@@EastCommonTests/api/secured/me.json.twig'
+
+# Protected routes, only for tests : return the user and the bearer token authenticated by the bearer token
+# authenticator
+_teknoo_common_tests_bearer_token_me:
+    path: '/bearer-token/me'
+    methods:  ['GET']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.static'
+        api: 'json'
+        errorTemplate: '@@TeknooEastCommon/Error/default.json.twig'
+        template: '@@EastCommonTests/api/bearer_token/me.json.twig'
+
+_teknoo_common_tests_bearer_token_one_header_me:
+    path: '/bearer-token-one-header/me'
+    methods:  ['GET']
+    defaults:
+        _controller: 'teknoo.east.common.endpoint.static'
+        api: 'json'
+        errorTemplate: '@@TeknooEastCommon/Error/default.json.twig'
+        template: '@@EastCommonTests/api/bearer_token/me.json.twig'

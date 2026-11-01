@@ -24,6 +24,9 @@
             <index unique="true">
                 <key name="email" order="asc" />
             </index>
+            <index unique="true" sparse="true">
+                <key name="authData.tokens.token_digest" order="asc" />
+            </index>
         </indexes>
     </document>
 </doctrine-mongo-mapping>

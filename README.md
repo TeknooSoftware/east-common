@@ -403,6 +403,8 @@ jwt_api_common:
 parameters:
     # Prefix of generated secrets, empty by default
     teknoo.east.common.bundle.api_keys.token_prefix: 'my_'
+    # The key factory reads the real date, and not the date of the request (`false` by default)
+    teknoo.east.common.bundle.api_keys.prefer_real_date: true
     # Maximum lifetime of a JWT token, 1 day by default
     teknoo.east.common.bundle.jwt.max_days_to_live: 30
 ```
@@ -422,8 +424,73 @@ The application must also translate these keys: `teknoo.east.common.api_keys.for
 `teknoo.east.common.api_keys.error.already_exists`, `teknoo.east.common.api_keys.error.list_not_accessible` and
 `teknoo.east.common.jwt.form.expiration`.
 
+Since East Common 4.9, the key factory (`Teknoo\East\Common\Contracts\User\ApiKeyTokenFactoryInterface`) creates a
+key without the form and without a signed in user, for example in a console command. It makes the key as the form
+does. The caller gives the owner and a new `ApiKeyToken`, with its name and its expiration date (with its time). The
+factory checks the name, completes the key, adds it to the owner, and gives it to the promise. The secret of the key
+is available only in this instance, during this request. The caller must save the owner.
+
+```php
+$factory->create(
+    $user,
+    new ApiKeyToken(name: 'cli-key', expiresAt: new DateTimeImmutable('+30 days')),
+    new Promise(
+        static fn (ApiKeyToken $apiKey) => $output->writeln($apiKey->getToken()),
+        static fn (#[SensitiveParameter] Throwable $error) => throw $error,
+    ),
+);
+$userWriter->save($user);
+```
+
 With Doctrine ODM, the mapping of `ApiKeysAuth` and `ApiKeyToken` is shipped in
-`infrastructures/doctrine/config/universal`, with the mapping of `User`.
+`infrastructures/doctrine/config/universal`, with the mapping of `User`. Since East Common 4.9, this folder also has the
+mapping of `BearerTokensAuth` and `BearerToken`: the bearer tokens of a user, sent by an API client with each request.
+The bearer token factory (`Teknoo\East\Common\Contracts\User\BearerTokenFactoryInterface`) creates a bearer token
+without a form and without a signed in user. The caller gives the owner and a new `BearerToken`, with its name and its
+expiration date. Only the SHA-256 digest of its value is persisted. The PHP-DI values
+`teknoo.east.common.user.bearer_tokens.token_prefix` (empty by default) and
+`teknoo.east.common.user.bearer_tokens.prefer_real_date` (`false` by default) configure it.
+
+Since East Common 4.9, the mapping of `User` adds a unique sparse index on `authData.tokens.token_digest`, the digest
+of the bearer tokens: create it with the schema manager of Doctrine ODM (`doctrine:mongodb:schema:update`). The other
+documents of `authData` have no digest: the index skips them.
+
+Authenticate each request with a bearer token
+---------------------------------------------
+
+Since East Common 4.9, an API client can also send a bearer token with each request, without a JWT token, to a
+stateless firewall with the key `bearer_token`. A bearer token is a `BearerToken`, in the `BearerTokensAuth` of the
+user, created by the bearer token factory. It is not an API key of the JWT flow (`ApiKeyToken`). The authenticator
+reads the key in the header `Authorization: Bearer`, and in a second header when the firewall gives one. It refuses a
+request without key, or with 2 different values in the 2 headers. It finds the key from its digest, with one indexed
+query (`UserByBearerTokenDigestQuery`), without a slow hash and without cache: a removed key fails at the next
+request. It refuses an expired key and the key of an inactive user. The user does not need a password: it is a
+`BearerTokenAuthenticatedUser`. The token gets the name of the key, in its attribute `bearer_token_name`. The failure
+handler of the firewall renders each failure (a Symfony `AuthenticationFailureHandlerInterface`), with the message
+keys `teknoo.east.common.bearer_tokens.error.missing`, `teknoo.east.common.bearer_tokens.error.different_values` and
+`teknoo.east.common.bearer_tokens.error.invalid`. No message holds the value of the key. A failure of the database is
+not a wrong key: the authenticator gives an `AuthenticationServiceException`, with the error as previous, so the
+failure handler can answer with another status, for example 503.
+
+```yaml
+#In security.yaml
+security:
+    firewalls:
+        //...
+        api_with_bearer_token:
+            pattern: '^/api/v2'
+            stateless: true
+            # Required by Symfony when the application has several providers, not used by the authenticator
+            provider: 'with_api_key'
+            bearer_token:
+                second_header: 'x-api-key'      # optional
+                failure_handler: 'my_app.bearer_token_failure_handler'
+
+#In services.yaml
+parameters:
+    # The authenticator reads the real date, and not the date of the request (`true` by default)
+    teknoo.east.common.bundle.bearer_tokens.authenticator.prefer_real_date: true
+```
 
 Support this project
 ---------------------

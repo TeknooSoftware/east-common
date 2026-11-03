@@ -69,12 +69,13 @@ class VisitableDataMapperTest extends TestCase
         return $form;
     }
 
-    private function createFormStub(string $name): FormInterface&Stub
+    private function createFormStub(string $name, bool $synchronized = true): FormInterface&Stub
     {
         $form = $this->createStub(FormInterface::class);
         $config = $this->createStub(FormConfigInterface::class);
         $config->method('getName')->willReturn($name);
         $form->method('getConfig')->willReturn($config);
+        $form->method('isSynchronized')->willReturn($synchronized);
 
         return $form;
     }
@@ -178,6 +179,21 @@ class VisitableDataMapperTest extends TestCase
         $form->method('isSubmitted')->willReturn(true);
         $form->method('isDisabled')->willReturn(true);
         $form->method('getData')->willReturn('should_not_apply');
+
+        $data = new VisitableTestObject('original', 'title');
+        $mapper->mapFormsToData(new ArrayIterator(['name' => $form]), $data);
+
+        $this->assertSame('original', $data->getName());
+    }
+
+    public function testMapFormsToDataSkipsNotSynchronizedForm(): void
+    {
+        $mapper = $this->buildMapper(VisitableTestObject::class);
+
+        $form = $this->createFormStub('name', false);
+        $form->method('isSubmitted')->willReturn(true);
+        $form->method('isDisabled')->willReturn(false);
+        $form->method('getData')->willReturn(null);
 
         $data = new VisitableTestObject('original', 'title');
         $mapper->mapFormsToData(new ArrayIterator(['name' => $form]), $data);

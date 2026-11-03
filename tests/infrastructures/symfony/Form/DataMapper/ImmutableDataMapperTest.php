@@ -71,12 +71,13 @@ class ImmutableDataMapperTest extends TestCase
         return $form;
     }
 
-    private function createFormStub(string $name): FormInterface&Stub
+    private function createFormStub(string $name, bool $synchronized = true): FormInterface&Stub
     {
         $form = $this->createStub(FormInterface::class);
         $config = $this->createStub(FormConfigInterface::class);
         $config->method('getName')->willReturn($name);
         $form->method('getConfig')->willReturn($config);
+        $form->method('isSynchronized')->willReturn($synchronized);
 
         return $form;
     }
@@ -226,6 +227,31 @@ class ImmutableDataMapperTest extends TestCase
         $data = new ImmutableTestObject('old', 5);
         $mapper->mapFormsToData(
             new ArrayIterator(['value' => $formValue, 'count' => $disabledForm]),
+            $data,
+        );
+
+        $this->assertInstanceOf(ImmutableTestObject::class, $data);
+        $this->assertSame('submitted', $data->value);
+        $this->assertSame(0, $data->count);
+    }
+
+    public function testMapFormsToDataSkipsNotSynchronizedForms(): void
+    {
+        $mapper = $this->buildMapper(ImmutableTestObject::class);
+
+        $formValue = $this->createFormStub('value');
+        $formValue->method('isSubmitted')->willReturn(true);
+        $formValue->method('isDisabled')->willReturn(false);
+        $formValue->method('getData')->willReturn('submitted');
+
+        $formCount = $this->createFormStub('count', false);
+        $formCount->method('isSubmitted')->willReturn(true);
+        $formCount->method('isDisabled')->willReturn(false);
+        $formCount->method('getData')->willReturn(null);
+
+        $data = new ImmutableTestObject('old', 5);
+        $mapper->mapFormsToData(
+            new ArrayIterator(['value' => $formValue, 'count' => $formCount]),
             $data,
         );
 

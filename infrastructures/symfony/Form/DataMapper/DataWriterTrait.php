@@ -59,7 +59,7 @@ trait DataWriterTrait
         $ref = self::getReflectionClass($mappedClass);
 
         foreach ($forms as $form) {
-            if (!$form->isSubmitted() || $form->isDisabled()) {
+            if (!$form->isSubmitted() || $form->isDisabled() || !$form->isSynchronized()) {
                 continue;
             }
 

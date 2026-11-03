@@ -70,12 +70,13 @@ class MutableDataMapperTest extends TestCase
         return $form;
     }
 
-    private function createFormStub(string $name): FormInterface&Stub
+    private function createFormStub(string $name, bool $synchronized = true): FormInterface&Stub
     {
         $form = $this->createStub(FormInterface::class);
         $config = $this->createStub(FormConfigInterface::class);
         $config->method('getName')->willReturn($name);
         $form->method('getConfig')->willReturn($config);
+        $form->method('isSynchronized')->willReturn($synchronized);
 
         return $form;
     }
@@ -152,6 +153,40 @@ class MutableDataMapperTest extends TestCase
         $mapper->mapFormsToData(new ArrayIterator(['title' => $form]), $data);
 
         $this->assertSame('updated', $data->getTitle());
+    }
+
+    public function testMapFormsToDataSkipsNotSynchronizedFormWithPublicProperty(): void
+    {
+        $mapper = $this->buildMapper(MutableObject::class);
+
+        $form = $this->createFormStub('name', false);
+        $form->method('isSubmitted')->willReturn(true);
+        $form->method('isDisabled')->willReturn(false);
+        $form->method('getData')->willReturn(null);
+
+        $data = new MutableObject();
+        $data->name = 'original';
+
+        $mapper->mapFormsToData(new ArrayIterator(['name' => $form]), $data);
+
+        $this->assertSame('original', $data->name);
+    }
+
+    public function testMapFormsToDataSkipsNotSynchronizedFormWithSetter(): void
+    {
+        $mapper = $this->buildMapper(MutableWithAccessorsObject::class);
+
+        $form = $this->createFormStub('title', false);
+        $form->method('isSubmitted')->willReturn(true);
+        $form->method('isDisabled')->willReturn(false);
+        $form->method('getData')->willReturn(null);
+
+        $data = new MutableWithAccessorsObject();
+        $data->setTitle('original');
+
+        $mapper->mapFormsToData(new ArrayIterator(['title' => $form]), $data);
+
+        $this->assertSame('original', $data->getTitle());
     }
 
     public function testMapFormsToDataSkipsReadonlyProperty(): void

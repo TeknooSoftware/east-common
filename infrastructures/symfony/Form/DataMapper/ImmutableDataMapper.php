@@ -78,6 +78,7 @@ class ImmutableDataMapper extends AbstractDataMapper
                 isset($forms[$name])
                 && $forms[$name]->isSubmitted()
                 && !$forms[$name]->isDisabled()
+                && $forms[$name]->isSynchronized()
             ) {
                 $value = $forms[$name]->getData();
             }

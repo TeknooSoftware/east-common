@@ -1,5 +1,11 @@
 # Teknoo Software - Common - Change Log
 
+## [4.9.1] - Release pending
+### Stable Release
+#### Fixes
+- East data mappers no longer write a field whose value cannot be converted (e.g. `abc` in an integer field) to the
+  object: the form is shown again with its error, instead of a `TypeError`.
+
 ## [4.9.0] - 2026-10-31
 ### Stable Release
 #### Evolutions

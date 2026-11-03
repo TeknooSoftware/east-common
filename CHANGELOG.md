@@ -1,6 +1,6 @@
 # Teknoo Software - Common - Change Log
 
-## [4.9.1] - Release pending
+## [4.9.1] - 2026-11-03
 ### Stable Release
 #### Fixes
 - East data mappers no longer write a field whose value cannot be converted (e.g. `abc` in an integer field) to the

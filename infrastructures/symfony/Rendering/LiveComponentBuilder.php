@@ -142,14 +142,30 @@ class LiveComponentBuilder implements LiveComponentBuilderInterface
         }
     }
 
+    /**
+     * @param array<string, mixed> $parameters
+     */
     private function getComponentController(
         object $component,
         ComponentMetadata $metadata,
+        Request $sfRequest,
+        array &$parameters,
+        bool &$isDefaultAction,
     ): callable {
-        $defaultAction = trim((string) $metadata->get('default_action', '__invoke'), '()');
+        $action = $this->getLiveAction(
+            component: $component,
+            sfRequest: $sfRequest,
+            parameters: $parameters,
+        );
 
-        if (is_callable([$component, $defaultAction])) {
-            return [$component, $defaultAction];
+        if (null === $action) {
+            $action = trim((string) $metadata->get('default_action', '__invoke'), '()');
+
+            $isDefaultAction = true;
+        }
+
+        if (is_callable([$component, $action])) {
+            return [$component, $action];
         }
 
         throw new InvalidArgumentException('Missing Component Controller');
@@ -179,7 +195,7 @@ class LiveComponentBuilder implements LiveComponentBuilderInterface
     private function getLiveAction(
         object $component,
         Request $sfRequest,
-        array $parameters,
+        array &$parameters,
     ): ?string {
         $action = $sfRequest->attributes->get('_live_action');
 
@@ -236,29 +252,22 @@ class LiveComponentBuilder implements LiveComponentBuilderInterface
 
             $sfRequest = $this->getSymfonyRequest($request);
 
-            $sfRequest->attributes->set('_mounted_component', $mountedComponent);
-
-            $action = $this->getLiveAction(
-                component: $component,
-                sfRequest: $sfRequest,
-                parameters: $parameters,
-            );
-
-            if (null !== $action) {
-                $sfRequest->attributes->set('_controller', [$component, $action]);
-
-                return true;
-            }
-
+            $isDefaultAction = false;
             $sfRequest->attributes->set(
                 '_controller',
                 $this->getComponentController(
                     component: $component,
                     metadata: $metadata,
+                    sfRequest: $sfRequest,
+                    parameters: $parameters,
+                    isDefaultAction: $isDefaultAction,
                 )
             );
 
-            $sfRequest->attributes->set('_component_default_action', true);
+            $sfRequest->attributes->set('_mounted_component', $mountedComponent);
+            if ($isDefaultAction) {
+                $sfRequest->attributes->set('_component_default_action', true);
+            }
         } catch (Throwable $e) {
             throw new RuntimeException(
                 message: 'Failed to build LiveComponent object.',

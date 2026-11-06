@@ -1,6 +1,6 @@
 # Teknoo Software - Common - Change Log
 
-## [4.10.0] - Release pending
+## [4.10.0] - 2026-11-06
 ### Stable Release
 #### Evolutions
 - `LiveComponentBuilder`: a method with `#[LiveAction]` named by a Live request runs, after the recipe of its route. It

@@ -1,5 +1,12 @@
 # Teknoo Software - Common - Change Log
 
+## [4.10.0] - 2026-11-06
+### Stable Release
+#### Evolutions
+- `LiveComponentBuilder`: a method with `#[LiveAction]` named by a Live request runs, after the recipe of its route. It
+  was ignored, the default action ran instead. Any other action keeps the default action, and the action needs the
+  header `X-Requested-With` and a recipe without error.
+
 ## [4.9.1] - 2026-11-03
 ### Stable Release
 #### Fixes

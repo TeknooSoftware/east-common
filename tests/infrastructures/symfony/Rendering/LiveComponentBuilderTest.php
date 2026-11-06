@@ -25,18 +25,22 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\East\CommonBundle\Rendering;
 
+use DomainException;
 use Exception;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use ReflectionClass;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadata;
 use Symfony\UX\TwigComponent\ComponentAttributes;
 use Symfony\UX\TwigComponent\ComponentMetadata;
+use Symfony\UX\TwigComponent\MountedComponent;
 use Teknoo\East\CommonBundle\Contracts\Rendering\ComponentFactoryInterface;
 use Teknoo\East\CommonBundle\Contracts\Rendering\LiveComponentHydratorInterface;
 use Teknoo\East\CommonBundle\Contracts\Rendering\LiveComponentMetadataFactoryInterface;
@@ -841,5 +845,165 @@ class LiveComponentBuilderTest extends TestCase
 
         $this->assertTrue($result);
         $this->assertEquals('test_value', $component->param1);
+    }
+
+    /**
+     * @param array<string, mixed> $parameters
+     */
+    private function buildComponentForLiveRequest(object $component, Request $sfRequest, array $parameters = []): void
+    {
+        $container = $this->createStub(ContainerInterface::class);
+        $container->method('has')->willReturn(true);
+        $container->method('get')->willReturn($component);
+
+        $factory = $this->createStub(ComponentFactoryInterface::class);
+        $factory->method('metadataFor')->willReturn(
+            $this->createComponentMetadata('service_id', $component::class)
+        );
+
+        $hydrator = $this->createStub(LiveComponentHydratorInterface::class);
+        $hydrator->method('hydrate')->willReturn($this->createWithoutConstructor(ComponentAttributes::class));
+
+        $metadataFactory = $this->createStub(LiveComponentMetadataFactoryInterface::class);
+        $metadataFactory->method('getMetadata')->willReturn(
+            $this->createWithoutConstructor(LiveComponentMetadata::class)
+        );
+
+        $request = $this->createStub(ServerRequestInterface::class);
+        $request->method('getAttribute')->willReturn($sfRequest);
+
+        $builder = new LiveComponentBuilder(
+            container: $container,
+            componentFactory: $factory,
+            hydrator: $hydrator,
+            metadataFactory: $metadataFactory,
+        );
+
+        $this->assertTrue(
+            $builder->buildComponent($request, 'TestComponent', $parameters, [])
+        );
+    }
+
+    private function createLiveRequest(string $action): Request
+    {
+        $sfRequest = new Request();
+        $sfRequest->attributes->set('_live_action', $action);
+        $sfRequest->headers->set('X-Requested-With', 'XMLHttpRequest');
+
+        return $sfRequest;
+    }
+
+    private function createComponentWithActions(): object
+    {
+        return new class {
+            public function __invoke(): void {}
+
+            #[LiveAction]
+            public function refresh(): void {}
+
+            public function save(): void {}
+
+            #[LiveAction]
+            private function secret(): void {}
+
+            #[LiveAction]
+            public function get(): void {}
+        };
+    }
+
+    private function assertDefaultActionIsKept(object $component, Request $sfRequest): void
+    {
+        $this->assertSame([$component, '__invoke'], $sfRequest->attributes->get('_controller'));
+        $this->assertTrue($sfRequest->attributes->get('_component_default_action'));
+        $this->assertInstanceOf(MountedComponent::class, $sfRequest->attributes->get('_mounted_component'));
+    }
+
+    public function testBuildComponentRunsTheLiveActionOfTheRequest(): void
+    {
+        $component = $this->createComponentWithActions();
+        $sfRequest = $this->createLiveRequest('refresh');
+
+        $this->buildComponentForLiveRequest($component, $sfRequest);
+
+        $this->assertSame([$component, 'refresh'], $sfRequest->attributes->get('_controller'));
+        $this->assertFalse($sfRequest->attributes->has('_component_default_action'));
+        $this->assertInstanceOf(MountedComponent::class, $sfRequest->attributes->get('_mounted_component'));
+    }
+
+    public function testBuildComponentRunsTheLiveActionAfterTheViewParameters(): void
+    {
+        $component = new class {
+            public string $param1 = '';
+
+            public function __invoke(): void {}
+
+            #[LiveAction]
+            public function refresh(): void {}
+        };
+        $sfRequest = $this->createLiveRequest('refresh');
+
+        $this->buildComponentForLiveRequest($component, $sfRequest, ['param1' => 'from the recipe']);
+
+        $this->assertSame('from the recipe', $component->param1);
+        $this->assertSame([$component, 'refresh'], $sfRequest->attributes->get('_controller'));
+    }
+
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function actionsKeepingTheDefaultAction(): iterable
+    {
+        yield 'a method without the attribute LiveAction' => ['save'];
+        yield 'a missing method' => ['missing'];
+        yield 'a private method' => ['secret'];
+        yield 'a batch of actions' => ['_batch'];
+        yield 'the default action of the Live route' => ['get'];
+    }
+
+    #[DataProvider('actionsKeepingTheDefaultAction')]
+    public function testBuildComponentKeepsTheDefaultActionForAnActionNotAllowed(string $action): void
+    {
+        $component = $this->createComponentWithActions();
+        $sfRequest = $this->createLiveRequest($action);
+
+        $this->buildComponentForLiveRequest($component, $sfRequest);
+
+        $this->assertDefaultActionIsKept($component, $sfRequest);
+    }
+
+    public function testBuildComponentKeepsTheDefaultActionWithoutAction(): void
+    {
+        $component = $this->createComponentWithActions();
+        $sfRequest = new Request();
+        $sfRequest->headers->set('X-Requested-With', 'XMLHttpRequest');
+
+        $this->buildComponentForLiveRequest($component, $sfRequest);
+
+        $this->assertDefaultActionIsKept($component, $sfRequest);
+    }
+
+    public function testBuildComponentRefusesALiveActionWithoutTheHeaderOfLive(): void
+    {
+        $component = $this->createComponentWithActions();
+        $sfRequest = $this->createLiveRequest('refresh');
+        $sfRequest->headers->remove('X-Requested-With');
+
+        $this->buildComponentForLiveRequest($component, $sfRequest);
+
+        $this->assertDefaultActionIsKept($component, $sfRequest);
+    }
+
+    public function testBuildComponentRefusesALiveActionAfterAnErrorOfTheRecipe(): void
+    {
+        $component = $this->createComponentWithActions();
+        $sfRequest = $this->createLiveRequest('refresh');
+
+        $this->buildComponentForLiveRequest(
+            $component,
+            $sfRequest,
+            ['error' => new DomainException('refused', 403)],
+        );
+
+        $this->assertDefaultActionIsKept($component, $sfRequest);
     }
 }

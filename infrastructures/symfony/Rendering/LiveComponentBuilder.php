@@ -27,9 +27,11 @@ use InvalidArgumentException;
 use PropertyHookType;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use ReflectionMethod;
 use ReflectionProperty;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\EventListener\InterceptChildComponentRenderSubscriber;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
@@ -44,6 +46,8 @@ use Throwable;
 
 use function is_callable;
 use function is_object;
+use function is_string;
+use function method_exists;
 use function property_exists;
 use function trim;
 
@@ -163,6 +167,40 @@ class LiveComponentBuilder implements LiveComponentBuilderInterface
         return $sfRequest;
     }
 
+    /**
+     * The action of the Live request, when it must run instead of the default action of the component: a public method
+     * with the attribute `LiveAction`, as Symfony UX requires. Any other action keeps the default action, like the
+     * `save` sent by a search form without method. The header of the Live requests is checked here, Symfony UX refuses
+     * it after the controller is chosen, too late under East. An action is also refused after an error of the recipe:
+     * the access rules of an object are steps of this recipe.
+     *
+     * @param array<string, mixed> $parameters
+     */
+    private function getLiveAction(
+        object $component,
+        Request $sfRequest,
+        array $parameters,
+    ): ?string {
+        $action = $sfRequest->attributes->get('_live_action');
+
+        if (
+            !is_string($action)
+            || 'get' === $action
+            || !method_exists($component, $action)
+            || 'XMLHttpRequest' !== $sfRequest->headers->get('X-Requested-With')
+            || ($parameters['error'] ?? null) instanceof Throwable
+        ) {
+            return null;
+        }
+
+        $method = new ReflectionMethod($component, $action);
+        if (!$method->isPublic() || empty($method->getAttributes(LiveAction::class))) {
+            return null;
+        }
+
+        return $action;
+    }
+
     public function buildComponent(
         ServerRequestInterface $request,
         string $componentName,
@@ -198,6 +236,20 @@ class LiveComponentBuilder implements LiveComponentBuilderInterface
 
             $sfRequest = $this->getSymfonyRequest($request);
 
+            $sfRequest->attributes->set('_mounted_component', $mountedComponent);
+
+            $action = $this->getLiveAction(
+                component: $component,
+                sfRequest: $sfRequest,
+                parameters: $parameters,
+            );
+
+            if (null !== $action) {
+                $sfRequest->attributes->set('_controller', [$component, $action]);
+
+                return true;
+            }
+
             $sfRequest->attributes->set(
                 '_controller',
                 $this->getComponentController(
@@ -206,7 +258,6 @@ class LiveComponentBuilder implements LiveComponentBuilderInterface
                 )
             );
 
-            $sfRequest->attributes->set('_mounted_component', $mountedComponent);
             $sfRequest->attributes->set('_component_default_action', true);
         } catch (Throwable $e) {
             throw new RuntimeException(

@@ -183,4 +183,81 @@ class JumpIfTest extends TestCase
             )
         );
     }
+
+    public function testInvokeValueExpectedIsStringCallableNotClosure(): void
+    {
+        $manager = $this->createMock(ManagerInterface::class);
+        $manager->expects($this->never())
+            ->method('continue');
+
+        $this->assertInstanceOf(
+            JumpIf::class,
+            $this->buildStep()(
+                $manager,
+                'nextRouteName',
+                'foo',
+                'is_string',
+            )
+        );
+    }
+
+    public function testInvokeValueExpectedIsArrayCallableNotClosure(): void
+    {
+        $manager = $this->createMock(ManagerInterface::class);
+        $manager->expects($this->never())
+            ->method('continue');
+
+        $object = new class () {
+            public int $calls = 0;
+
+            public function check(mixed $value): bool
+            {
+                ++$this->calls;
+
+                return true;
+            }
+        };
+
+        $this->assertInstanceOf(
+            JumpIf::class,
+            $this->buildStep()(
+                $manager,
+                'nextRouteName',
+                'foo',
+                [$object, 'check'],
+            )
+        );
+
+        $this->assertSame(0, $object->calls);
+    }
+
+    public function testInvokeValueExpectedIsInvokableObjectNotClosure(): void
+    {
+        $manager = $this->createMock(ManagerInterface::class);
+        $manager->expects($this->never())
+            ->method('continue');
+
+        $invokable = new class () {
+            public int $calls = 0;
+
+            public function __invoke(mixed $value): bool
+            {
+                ++$this->calls;
+
+                return true;
+            }
+        };
+
+        $this->assertInstanceOf(
+            JumpIf::class,
+            $this->buildStep()(
+                $manager,
+                'nextRouteName',
+                'foo',
+                $invokable,
+            )
+        );
+
+        $this->assertSame(0, $invokable->calls);
+    }
 }

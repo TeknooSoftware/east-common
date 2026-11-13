@@ -1,5 +1,11 @@
 # Teknoo Software - Common - Change Log
 
+## [4.10.2] - 2026-11-13
+### Stable Release
+#### Security
+- `JumpIf` and `JumpIfNot` call `expectedJumpValue` only when it is a `Closure`. Other callables (function names,
+  arrays, invokable objects) are no longer called: wrap them in a closure (`$callable(...)`).
+
 ## [4.10.1] - 2026-11-10
 ### Stable Release
 #### Fix

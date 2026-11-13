@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\East\Common\Recipe\Step;
 
+use Closure;
 use Stringable;
 use Teknoo\East\Foundation\Manager\ManagerInterface;
 
@@ -54,9 +55,13 @@ class JumpIf
         }
 
         $conditionResult = (
-            (is_callable($expectedJumpValue) && $expectedJumpValue($testValue))
+            ($expectedJumpValue instanceof Closure && $expectedJumpValue($testValue))
             || (null === $expectedJumpValue && !empty($testValue))
-            || (null !== $expectedJumpValue && !is_callable($expectedJumpValue) && $testValue === $expectedJumpValue)
+            || (
+                null !== $expectedJumpValue
+                && !($expectedJumpValue instanceof Closure)
+                && $testValue === $expectedJumpValue
+            )
         );
 
         if ($conditionResult === $this->conditionMustBe) {

@@ -420,6 +420,74 @@ class RenderErrorTest extends TestCase
         );
     }
 
+    public static function statusProvider(): \Iterator
+    {
+        // The codes of error defined by the HTTP standard (IANA registry), without 418 (unused) and 510 (obsolete)
+        $standardCodes = [
+            400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417,
+            421, 422, 423, 424, 425, 426, 428, 429, 431, 451,
+            500, 501, 502, 503, 504, 505, 506, 507, 508, 511,
+        ];
+
+        foreach ($standardCodes as $code) {
+            yield 'standard ' . $code => [$code, $code];
+        }
+
+        // No code, codes of success or redirection, codes of another origin (SMTP reply, MongoDB error...) and codes
+        // of the range of errors that the standard does not define
+        $otherCodes = [
+            0, -1, 200, 302, 399, 418, 419, 420, 427, 430, 432, 450, 452, 499, 509, 510, 512, 535, 550, 599, 600,
+            11000,
+        ];
+
+        foreach ($otherCodes as $code) {
+            yield 'other ' . $code => [$code, 500];
+        }
+    }
+
+    #[DataProvider('statusProvider')]
+    public function testInvokeGivesAnHttpErrorStatusToTheResponse(int $code, int $expectedStatus): void
+    {
+        $request = $this->createStub(ServerRequestInterface::class);
+        $request->method('getAttribute')->willReturn([]);
+
+        $response = $this->createStub(ResponseInterface::class);
+        $response->method('withHeader')->willReturnSelf();
+        $response->method('withBody')->willReturnSelf();
+        $this->getResponseFactory()
+            ->expects($this->once())
+            ->method('createResponse')
+            ->with($expectedStatus)
+            ->willReturn($response);
+
+        $this->getStreamFactory(true)
+            ->method('createStream')
+            ->willReturn($this->createStub(StreamInterface::class));
+
+        $this->getEngine(true)
+            ->method('render')
+            ->willReturnCallback(
+                function (PromiseInterface $promise): EngineInterface {
+                    $promise->success(
+                        $this->createStub(ResultInterface::class)
+                    );
+
+                    return $this->getEngine();
+                }
+            );
+
+        $this->assertInstanceOf(
+            RenderError::class,
+            $this->buildStep()(
+                $request,
+                $this->createStub(ClientInterface::class),
+                'foo',
+                new Exception('foo', $code),
+                $this->createStub(ManagerInterface::class)
+            )
+        );
+    }
+
     public function testSetTidyConfig(): void
     {
         $this->assertInstanceOf(

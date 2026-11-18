@@ -79,10 +79,22 @@ class RenderError
         $manager->stopErrorReporting();
         $viewParameters = ['error' => $error] + $viewParameters;
 
+        /*
+         * The code of an error is not always an HTTP status (reply of a SMTP server, error of MongoDB...), and the
+         * response of an error page must always have a status of error defined by the HTTP standard (IANA registry,
+         * without 418, unused, and 510, obsolete).
+         */
         $errorCode = (int) $error->getCode();
-        if (empty($errorCode)) {
-            $errorCode = 500;
-        }
+        $errorCode = match (true) {
+            400 <= $errorCode && 417 >= $errorCode,
+            421 <= $errorCode && 426 >= $errorCode,
+            428 <= $errorCode && 429 >= $errorCode,
+            431 === $errorCode,
+            451 === $errorCode,
+            500 <= $errorCode && 508 >= $errorCode,
+            511 === $errorCode => $errorCode,
+            default => 500,
+        };
 
         $errorView = match ($errorCode) {
             400 => (string) $errorCode,

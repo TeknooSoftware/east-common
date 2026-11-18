@@ -1,5 +1,13 @@
 # Teknoo Software - Common - Change Log
 
+## [4.10.3] - Release pending
+### Stable Release
+#### Fixes
+- `RenderError` gives the code of the error to the response as its HTTP status only when the HTTP standard defines it
+  as an error (400 to 417, 421 to 426, 428, 429, 431, 451, 500 to 508, 511), and 500 otherwise: a code of another
+  origin (a reply of a SMTP server, an error of MongoDB) made an invalid status, and a code of success or redirection
+  a status that is not an error.
+
 ## [4.10.2] - 2026-11-13
 ### Stable Release
 #### Security

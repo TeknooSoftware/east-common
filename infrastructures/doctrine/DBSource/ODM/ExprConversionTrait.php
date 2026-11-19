@@ -66,7 +66,7 @@ trait ExprConversionTrait
             $values = self::convert($values);
         }
 
-        $final['$ne'] = ($final['$ne'] ?? []) + [$key => $values];
+        $final[$key]['$ne'] = $values;
     }
 
     /**

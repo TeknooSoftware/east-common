@@ -1,5 +1,11 @@
 # Teknoo Software - Common - Change Log
 
+## [4.10.4] - Release pending
+### Stable Release
+#### Fixes
+- With Doctrine ODM, a `NotEqual` criteria is converted into `{field: {$ne: value}}`, like the other operators. It was
+  converted into a top-level `{$ne: {field: value}}`, which MongoDB refuses (`FindBySlugQuery` used it).
+
 ## [4.10.3] - Release pending
 ### Stable Release
 #### Fixes
